@@ -186,5 +186,5 @@ export default class KeyList extends Key {
     }
 }
 
-CACHE.keyList = (key) => KeyList.__fromProtobufKeyList(key);
-CACHE.thresholdKey = (key) => KeyList.__fromProtobufThresoldKey(key);
+CACHE.setKeyList((key) => KeyList.__fromProtobufKeyList(key));
+CACHE.setThresholdKey((key) => KeyList.__fromProtobufThresoldKey(key));

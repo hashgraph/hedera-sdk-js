@@ -20,20 +20,8 @@ export default class EthereumTransactionData {
         }
 
         if (bytes[0] != 2) {
-            if (CACHE.ethereumTransactionDataLegacyFromBytes == null) {
-                throw new Error(
-                    "CACHE.ethereumTransactionDataLegacyFromBytes is not set"
-                );
-            }
-
             return CACHE.ethereumTransactionDataLegacyFromBytes(bytes);
         } else {
-            if (CACHE.ethereumTransactionDataEip1559FromBytes == null) {
-                throw new Error(
-                    "CACHE.ethereumTransactionDataEip1559FromBytes is not set"
-                );
-            }
-
             return CACHE.ethereumTransactionDataEip1559FromBytes(bytes);
         }
     }

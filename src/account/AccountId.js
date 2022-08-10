@@ -322,5 +322,6 @@ export default class AccountId {
     }
 }
 
-CACHE.accountIdConstructor = (shard, realm, key) =>
-    new AccountId(shard, realm, Long.ZERO, key);
+CACHE.setAccountIdConstructor(
+    (shard, realm, key) => new AccountId(shard, realm, Long.ZERO, key)
+);

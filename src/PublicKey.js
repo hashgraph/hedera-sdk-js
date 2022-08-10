@@ -252,13 +252,9 @@ export default class PublicKey extends Key {
      * @returns {AccountId}
      */
     toAccountId(shard, realm) {
-        if (CACHE.accountIdConstructor == null) {
-            throw new Error("`AccountId` not loaded");
-        }
-
         return CACHE.accountIdConstructor(shard, realm, this);
     }
 }
 
-CACHE.publicKeyED25519 = (key) => PublicKey.fromBytesED25519(key);
-CACHE.publicKeyECDSA = (key) => PublicKey.fromBytesECDSA(key);
+CACHE.setPublicKeyED25519((key) => PublicKey.fromBytesED25519(key));
+CACHE.setPublicKeyECDSA((key) => PublicKey.fromBytesECDSA(key));
