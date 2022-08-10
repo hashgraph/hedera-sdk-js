@@ -304,38 +304,6 @@ export default class Query extends Executable {
             }
         }
 
-        // The cost of the query.
-        //
-        // FIXME: Not sure why we're setting it to `queryPayment` when this value gets
-        // overwritten immediately afterwards? Looking more closely at the rest of the
-        // code this definitely looks like a bug. We're treating `cost` as both
-        // `queryPayment` and `maxQueryPayment`. To start we should really change
-        // the name of this variable.
-        //
-        // Here is how it should work:
-        // Legend:
-        //  X = Set by user
-        //  O = Not set by user (null)
-        //   | queryPayment | maxQueryPayment | client.maxQueryPayment |
-        // a |      O       |        O        |           O            |
-        // b |      O       |        O        |           X            |
-        // c |      O       |        X        |           O            |
-        // d |      O       |        X        |           X            |
-        // e |      X       |        O        |           O            |
-        // f |      X       |        O        |           X            |
-        // g |      X       |        X        |           O            |
-        // h |      X       |        X        |           X            |
-        //
-        // e, f, g, h:
-        // - Do not query the cost, use the query payment explicity
-        //
-        // c, d:
-        // - Query the cost, and compare it to `maxQueryPayment`
-        //
-        // a, b:
-        // - Query the cost, and compare it to `client.maxQueryPayment`
-        //
-        // TODO: Create a test that matches this table
         let cost = new Hbar(0);
 
         const maxQueryPayment =
