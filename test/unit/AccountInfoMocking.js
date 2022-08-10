@@ -140,7 +140,65 @@ describe("AccountInfoMocking", function () {
         expect(err).to.be.true;
     });
 
-    it("should error when cost is greater than max cost set on request", async function () {
+    it("setQueryPayemnt() avoids querying actual cost", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [{ response: ACCOUNT_INFO_QUERY_RESPONSE }],
+        ]));
+
+        const query = new AccountInfoQuery()
+            .setAccountId("0.0.3")
+            .setQueryPayment(Hbar.fromTinybars(10));
+
+        await query.execute(client, 1);
+
+        expect(query._queryPayment.toTinybars().toInt()).to.be.equal(10);
+    });
+
+    it("setQueryPayemnt() + setMaxQueryPayment() avoids querying actual cost", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [{ response: ACCOUNT_INFO_QUERY_RESPONSE }],
+        ]));
+
+        const query = new AccountInfoQuery()
+            .setAccountId("0.0.3")
+            .setMaxQueryPayment(Hbar.fromTinybars(1))
+            .setQueryPayment(Hbar.fromTinybars(10));
+
+        await query.execute(client, 1);
+
+        expect(query._queryPayment.toTinybars().toInt()).to.be.equal(10);
+    });
+
+    it("actual cost is compared to Client.maxQueryPayment if Query.setMaxQueryPayment is not used", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ],
+        ]));
+
+        client.setMaxQueryPayment(Hbar.fromTinybars(24));
+
+        let err = false;
+
+        const query = new AccountInfoQuery().setAccountId("0.0.3");
+
+        try {
+            await query.execute(client, 1);
+        } catch (error) {
+            err = error instanceof MaxQueryPaymentExceeded;
+        }
+
+        expect(err).to.be.true;
+    });
+
+    it("actual cost is compared to Query.setMaxQueryPayment when set", async function () {
         this.timeout(10000);
 
         ({ client, servers } = await Mocker.withResponses([
@@ -152,11 +210,12 @@ describe("AccountInfoMocking", function () {
 
         let err = false;
 
+        const query = new AccountInfoQuery()
+            .setMaxQueryPayment(Hbar.fromTinybars(24))
+            .setAccountId("0.0.3");
+
         try {
-            await new AccountInfoQuery()
-                .setAccountId("0.0.3")
-                .setMaxQueryPayment(Hbar.fromTinybars(10))
-                .execute(client, 1);
+            await query.execute(client, 1);
         } catch (error) {
             err = error instanceof MaxQueryPaymentExceeded;
         }

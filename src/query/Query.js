@@ -336,64 +336,63 @@ export default class Query extends Executable {
         // - Query the cost, and compare it to `client.maxQueryPayment`
         //
         // TODO: Create a test that matches this table
-        let cost = this._queryPayment;
+        let cost = new Hbar(0);
 
-        // Set cost to either the current max query payment, or the default on
-        // client.
-        if (cost == null && this._maxQueryPayment != null) {
-            cost = this._maxQueryPayment;
-        } else {
-            cost = client.maxQueryPayment;
-        }
+        const maxQueryPayment =
+            this._maxQueryPayment != null
+                ? this._maxQueryPayment
+                : client.maxQueryPayment;
 
-        // If payment transactions are already created or this is a free query
-        // set the cost to 0.
-        if (
-            this._paymentTransactions.length !== 0 ||
-            !this._isPaymentRequired()
+        if (this._queryPayment != null) {
+            cost = this._queryPayment;
+        } else if (
+            this._paymentTransactions.length === 0 &&
+            this._isPaymentRequired()
         ) {
-            cost = new Hbar(0);
-        } else {
             // If the query payment was not explictly set, fetch the actual cost.
-            if (this._queryPayment == null) {
-                const actualCost = await this.getCost(client);
+            const actualCost = await this.getCost(client);
 
-                // Confirm it's less than max query payment
-                if (
-                    cost.toTinybars().toInt() < actualCost.toTinybars().toInt()
-                ) {
-                    throw new MaxQueryPaymentExceeded(cost, actualCost);
-                }
-
-                cost = actualCost;
-                Logger.debug(
-                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
-                );
+            // Confirm it's less than max query payment
+            if (
+                maxQueryPayment.toTinybars().toInt() <
+                actualCost.toTinybars().toInt()
+            ) {
+                throw new MaxQueryPaymentExceeded(maxQueryPayment, actualCost);
             }
+
+            cost = actualCost;
+            Logger.debug(
+                `[${this._getLogId()}] received cost for query ${cost.toString()}`
+            );
         }
 
+        // Set the either queried cost, or the original value back into `queryPayment`
+        // in case a user executes same query multiple times. However, users should
+        // really not be executing the same query multiple times meaning this is
+        // typically not needed.
         this._queryPayment = cost;
-
-        // FIXME: Shouldn't this be `!this._nodeAccountIds.locked`?
-        if (this._nodeAccountIds.locked) {
-            // Generate the payment transactions
-            for (const node of this._nodeAccountIds.list) {
-                this._paymentTransactions.push(
-                    await _makePaymentTransaction(
-                        this._getLogId(),
-                        /** @type {import("../transaction/TransactionId.js").default} */ (
-                            this._paymentTransactionId
-                        ),
-                        node,
-                        this._isPaymentRequired() ? this._operator : null,
-                        /** @type {Hbar} */ (cost)
-                    )
-                );
-            }
-        }
 
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
+
+        if (!this._nodeAccountIds.locked) {
+            return;
+        }
+
+        // Generate the payment transactions
+        for (const node of this._nodeAccountIds.list) {
+            this._paymentTransactions.push(
+                await _makePaymentTransaction(
+                    this._getLogId(),
+                    /** @type {import("../transaction/TransactionId.js").default} */ (
+                        this._paymentTransactionId
+                    ),
+                    node,
+                    this._isPaymentRequired() ? this._operator : null,
+                    /** @type {Hbar} */ (cost)
+                )
+            );
+        }
     }
 
     /**
