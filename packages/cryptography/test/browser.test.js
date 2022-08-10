@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 
 test("can execute @hashgraph/cryptography within browser", async function ({ page }) {
     page.on("pageerror", async (message) => {
-        await browser.close();
         throw new Error(message);
     });
 

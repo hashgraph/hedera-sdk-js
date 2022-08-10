@@ -9,11 +9,11 @@
 
         <meta
             http-equiv="Content-Security-Policy"
-            content="script-src 'self' 'unsafe-inline' localhost:9001 localhost:9002 localhost:9003 localhost:9004 localhost:9011 localhost:9012 localhost:9013 localhost:9014"
+            content="script-src 'self' 'unsafe-inline' localhost:9001 localhost:9002 localhost:9003 localhost:9004 localhost:9011 localhost:9012 localhost:9013 localhost:9014 wasm-unsafe-eval"
         />
 
         <link rel="stylesheet" href="node_modules/mocha/mocha.css" />
-        <base href="/">
+        <base href=".">
     </head>
     <body>
         <div id="mocha"></div>
@@ -32,7 +32,6 @@
 
         <!-- NOTE: all unit tests need to be imported here -->
         <script type="module" src="test/unit/AccountBalanceQuery.js"></script>
-        <script type="module" src="test/unit/AccountAllowanceAdjustTransaction.js"></script>
         <script type="module" src="test/unit/AccountAllowanceApproveTransaction.js"></script>
         <script type="module" src="test/unit/AccountId.js"></script>
         <script type="module" src="test/unit/ChecksumValidation.js"></script>

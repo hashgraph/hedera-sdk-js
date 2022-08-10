@@ -19,14 +19,15 @@ tasks:
 
     install:
         cmds:
-            - pnpm i
+            - pnpm i > /dev/null 2>&1
 
     build:
         cmds:
             - task: install
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
+            - ../../node_modules/.bin/yalc publish > /dev/null
 
     clean:
         cmds:
@@ -49,7 +50,8 @@ tasks:
 
     "lint:dpdm":
         cmds:
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+           # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
 
     "lint:format":
         cmds:

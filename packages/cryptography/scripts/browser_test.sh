@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-./node_modules/.bin/vite --clearScreen false -c vite.config.cjs serve --port 9001 . &
+./node_modules/.bin/vite --clearScreen false -c vite.config.js serve --port 9001 . &
 VITE_PID=$!
 sleep 1
 npx playwright install

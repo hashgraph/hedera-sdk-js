@@ -8,7 +8,9 @@ import { createKeystore, loadKeystore } from "./primitive/keystore.js";
 import { read as readPem } from "./encoding/pem.js";
 import * as hex from "./encoding/hex.js";
 import * as slip10 from "./primitive/slip10.js";
+import * as bip32 from "./primitive/bip32.js";
 import * as derive from "./util/derive.js";
+import * as ecdsa from "./primitive/ecdsa.js";
 import CACHE from "./Cache.js";
 
 /**
@@ -197,8 +199,9 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Recover a private key from a mnemonic phrase (and optionally a password).
+     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
      *
+     * Recover a private key from a mnemonic phrase (and optionally a password).
      * @param {Mnemonic | string} mnemonic
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
@@ -208,7 +211,7 @@ export default class PrivateKey extends Key {
             typeof mnemonic === "string"
                 ? await Mnemonic.fromString(mnemonic)
                 : mnemonic
-        ).toPrivateKey(passphrase);
+        ).toEd25519PrivateKey(passphrase);
     }
 
     /**
@@ -268,17 +271,25 @@ export default class PrivateKey extends Key {
             throw new Error("this private key does not support key derivation");
         }
 
-        const { keyData, chainCode } = await slip10.derive(
-            this.toBytesRaw(),
-            this._key._chainCode,
-            index
-        );
+        if (this._key instanceof Ed25519PrivateKey) {
+            const { keyData, chainCode } = await slip10.derive(
+                this.toBytesRaw(),
+                this._key._chainCode,
+                index
+            );
 
-        /** @type {new (bytes: Uint8Array, chainCode?: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
-        const constructor = /** @type {any} */ (this._key.constructor);
+            return new PrivateKey(new Ed25519PrivateKey(keyData, chainCode));
+        } else {
+            const { keyData, chainCode } = await bip32.derive(
+                this.toBytesRaw(),
+                this._key._chainCode,
+                index
+            );
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        return new PrivateKey(new constructor(keyData, chainCode));
+            return new PrivateKey(
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            );
+        }
     }
 
     /**

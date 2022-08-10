@@ -12,6 +12,9 @@ on:
       - develop
       - release/*
 
+env:
+  PNPM_HOME: /home/runner/work/hedera-sdk-js
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,59 +49,10 @@ jobs:
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 7.6.0
-      
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
 
       - name: Build @hashgraph/sdk
         run: task build
 
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ '14', '16' ]
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: Install Task
-        uses: arduino/setup-task@v1
-        with:
-            version: 3.7.0
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 7.6.0
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
-
-      - name: Lint @hashgraph/sdk
-        run: task build
-             
   test-unit-node:
     runs-on: ubuntu-latest
     strategy:
@@ -132,12 +86,6 @@ jobs:
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 7.6.0
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
 
       - name: Build @hashgraph/sdk
         run: task build
