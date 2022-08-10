@@ -73,6 +73,14 @@ export const Network = {
         "172.105.247.67:50211": new AccountId(18),
         "34.89.87.138:50211": new AccountId(19),
         "34.82.78.255:50211": new AccountId(20),
+        "34.76.140.109:50211": new AccountId(21),
+        "34.64.141.166:50211": new AccountId(22),
+        "35.232.244.145:50211": new AccountId(23),
+        "34.89.103.38:50211": new AccountId(24),
+        "34.93.112.7:50211": new AccountId(25),
+        "34.87.150.174:50211": new AccountId(26),
+        "34.125.200.96:50211": new AccountId(27),
+        "35.198.220.75:50211": new AccountId(28),
     },
 
     TESTNET: {
@@ -81,6 +89,8 @@ export const Network = {
         "2.testnet.hedera.com:50211": new AccountId(5),
         "3.testnet.hedera.com:50211": new AccountId(6),
         "4.testnet.hedera.com:50211": new AccountId(7),
+        "5.testnet.hedera.com:50211": new AccountId(8),
+        "6.testnet.hedera.com:50211": new AccountId(9),
     },
 
     PREVIEWNET: {
@@ -89,6 +99,8 @@ export const Network = {
         "2.previewnet.hedera.com:50211": new AccountId(5),
         "3.previewnet.hedera.com:50211": new AccountId(6),
         "4.previewnet.hedera.com:50211": new AccountId(7),
+        "5.previewnet.hedera.com:50211": new AccountId(8),
+        "6.previewnet.hedera.com:50211": new AccountId(9),
     },
 };
 
@@ -191,8 +203,8 @@ export default class NodeClient extends Client {
         return new NodeClient(
             typeof data === "string"
                 ? /** @type {ClientConfiguration | undefined} */ (
-                      JSON.parse(data)
-                  )
+                    JSON.parse(data)
+                )
                 : data
         );
     }
