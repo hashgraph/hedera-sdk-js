@@ -203,8 +203,8 @@ export default class NodeClient extends Client {
         return new NodeClient(
             typeof data === "string"
                 ? /** @type {ClientConfiguration | undefined} */ (
-                    JSON.parse(data)
-                )
+                      JSON.parse(data)
+                  )
                 : data
         );
     }
