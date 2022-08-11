@@ -17,7 +17,7 @@ async function sync() {
     //
     // Note, to use `https://time.google.com/` within a browser context you must add
     // https://time.google.com to CORS
-    const response = await axios.head("http://time.google.com", {
+    const response = await axios.head("https://time.google.com", {
         maxRedirects: 0,
 
         // By default a status of 302 is considered an erring status
