@@ -252,4 +252,4 @@ export default class ContractId extends Key {
     }
 }
 
-CACHE.contractId = (key) => ContractId.__fromProtobufKey(key);
+CACHE.setContractId((key) => ContractId.__fromProtobufKey(key));

@@ -86,10 +86,6 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     async toPrivateKey(passphrase = "") {
-        if (CACHE.privateKeyConstructor == null) {
-            throw new Error("`PrivateKey` has not been loaded");
-        }
-
         return CACHE.privateKeyConstructor(
             // eslint-disable-next-line deprecation/deprecation
             await this._mnemonic.toPrivateKey(passphrase)
@@ -105,10 +101,6 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     async toEd25519PrivateKey(passphrase = "", path) {
-        if (CACHE.privateKeyConstructor == null) {
-            throw new Error("`PrivateKey` has not been loaded");
-        }
-
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toEd25519PrivateKey(passphrase, path)
         );
@@ -123,10 +115,6 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     async toEcdsaPrivateKey(passphrase = "", path) {
-        if (CACHE.privateKeyConstructor == null) {
-            throw new Error("`PrivateKey` has not been loaded");
-        }
-
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
         );
@@ -146,10 +134,6 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     async toLegacyPrivateKey() {
-        if (CACHE.privateKeyConstructor == null) {
-            throw new Error("`PrivateKey` has not been loaded");
-        }
-
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toLegacyPrivateKey()
         );
