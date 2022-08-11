@@ -325,7 +325,7 @@ export default class Query extends Executable {
                 maxQueryPayment.toTinybars().toInt() <
                 actualCost.toTinybars().toInt()
             ) {
-                throw new MaxQueryPaymentExceeded(maxQueryPayment, actualCost);
+                throw new MaxQueryPaymentExceeded(actualCost, maxQueryPayment);
             }
 
             cost = actualCost;
