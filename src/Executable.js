@@ -22,7 +22,6 @@ import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
-import sync from "./sync.js";
 import * as hex from "./encoding/hex.js";
 
 /**
@@ -509,9 +508,6 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        // Wait for the time sync to finish
-        await sync;
-
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client

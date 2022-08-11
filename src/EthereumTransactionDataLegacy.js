@@ -116,5 +116,6 @@ export default class EthereumTransactionDataLegacy extends EthereumTransactionDa
     }
 }
 
-CACHE.ethereumTransactionDataLegacyFromBytes = (bytes) =>
-    EthereumTransactionDataLegacy.fromBytes(bytes);
+CACHE.setEthereumTransactionDataLegacyFromBytes((bytes) =>
+    EthereumTransactionDataLegacy.fromBytes(bytes)
+);

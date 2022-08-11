@@ -376,4 +376,4 @@ export default class PrivateKey extends Key {
     }
 }
 
-CACHE.privateKeyConstructor = (key) => new PrivateKey(key);
+CACHE.setPrivateKeyConstructor((key) => new PrivateKey(key));

@@ -116,4 +116,4 @@ export default class DelegateContractId extends ContractId {
     }
 }
 
-CACHE.delegateContractId = (key) => DelegateContractId.__fromProtobufKey(key);
+CACHE.setDelegateContractId((key) => DelegateContractId.__fromProtobufKey(key));
