@@ -6,13 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.17.3
 
+### Fixed
+
+ * `Query.queryPayment`, `Query.maxQueryPayment`, and `Client.maxQueryPayment` interactions
+ * Remove making empty requests to `grpc.myhbarwallet.com` to calculate time drift
+
 ### Added
 
  * Expose setters/getters for `Cache` to allow users to set their own calculated values
-
-### Fixed
-
- * Remove making empty requests to `grpc.myhbarwallet.com` to calculate time drift
 
 ## v2.17.2
 
