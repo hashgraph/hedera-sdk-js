@@ -28,6 +28,7 @@ import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
 import * as util from "../util.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -497,7 +498,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );

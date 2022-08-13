@@ -200,7 +200,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );

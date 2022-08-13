@@ -23,6 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -389,7 +390,7 @@ export default class Executable {
      * @internal
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         throw new Error("not implemented");
     }
 
@@ -579,7 +580,7 @@ export default class Executable {
             }
 
             // Get the log ID for the request.
-            const logId = this._getLogId();
+            const logId = this[symbols.getLogId]();
             Logger.debug(
                 `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
             );
@@ -627,7 +628,9 @@ export default class Executable {
                     );
                 }
                 Logger.trace(
-                    `[${this._getLogId()}] sending protobuf ${hex.encode(
+                    `[${this[
+                        symbols.getLogId
+                    ]()}] sending protobuf ${hex.encode(
                         this._requestToBytes(request)
                     )}`
                 );
@@ -664,7 +667,7 @@ export default class Executable {
             }
 
             Logger.trace(
-                `[${this._getLogId()}] sending protobuf ${hex.encode(
+                `[${this[symbols.getLogId]()}] sending protobuf ${hex.encode(
                     this._responseToBytes(response)
                 )}`
             );

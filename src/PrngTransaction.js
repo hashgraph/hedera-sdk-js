@@ -22,6 +22,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "./transaction/Transaction.js";
 import { isNumber } from "./util.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
@@ -155,7 +156,7 @@ export default class PrngTransaction extends Transaction {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         const timestamp = /** @type {import("./Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );

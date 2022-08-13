@@ -245,7 +245,7 @@ export default class AccountBalanceQuery extends Query {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         return `AccountBalanceQuery:${this._timestamp.toString()}`;
     }
 }

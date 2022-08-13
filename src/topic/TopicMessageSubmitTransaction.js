@@ -407,7 +407,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );

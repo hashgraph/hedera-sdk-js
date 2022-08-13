@@ -385,7 +385,7 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         const timestamp =
             this._paymentTransactionId != null &&
             this._paymentTransactionId.validStart != null

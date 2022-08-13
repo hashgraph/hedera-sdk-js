@@ -1368,7 +1368,7 @@ export default class Transaction extends Executable {
         );
 
         Logger.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
+            `[${this[symbols.getLogId]()}] received status ${status.toString()}`
         );
 
         // Based on the status what execution state are we in

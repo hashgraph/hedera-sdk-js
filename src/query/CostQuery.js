@@ -24,6 +24,7 @@ import Executable from "../Executable.js";
 import AccountId from "../account/AccountId.js";
 import { _makePaymentTransaction, COST_QUERY } from "./Query.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -64,8 +65,8 @@ export default class CostQuery extends Executable {
     /**
      * @returns {string}
      */
-    _getLogId() {
-        return `CostQuery:${this._query._getLogId()}`;
+    [symbols.getLogId]() {
+        return `CostQuery:${this._query[symbols.getLogId]()}`;
     }
 
     /**
@@ -96,7 +97,7 @@ export default class CostQuery extends Executable {
 
         this._header = {
             payment: await _makePaymentTransaction(
-                this._getLogId(),
+                this[symbols.getLogId](),
                 /** @type {import("../transaction/TransactionId.js").default} */
                 (TransactionId.generate(new AccountId(0))),
                 new AccountId(0),

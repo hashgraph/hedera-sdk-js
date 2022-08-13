@@ -331,7 +331,9 @@ export default class Query extends Executable {
 
             cost = actualCost;
             Logger.debug(
-                `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                `[${this[
+                    symbols.getLogId
+                ]()}] received cost for query ${cost.toString()}`
             );
         }
 
@@ -352,7 +354,7 @@ export default class Query extends Executable {
         for (const node of this._nodeAccountIds.list) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
-                    this._getLogId(),
+                    this[symbols.getLogId](),
                     /** @type {import("../transaction/TransactionId.js").default} */ (
                         this._paymentTransactionId
                     ),
@@ -439,7 +441,7 @@ export default class Query extends Executable {
                     this._paymentTransactions[this._nodeAccountIds.index];
             } else {
                 header.payment = await _makePaymentTransaction(
-                    this._getLogId(),
+                    this[symbols.getLogId](),
                     /** @type {import("../transaction/TransactionId.js").default} */ (
                         this._paymentTransactionId
                     ),
@@ -472,7 +474,7 @@ export default class Query extends Executable {
         );
 
         Logger.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
+            `[${this[symbols.getLogId]()}] received status ${status.toString()}`
         );
 
         switch (status) {

@@ -191,7 +191,9 @@ export default class TransactionReceiptQuery extends Query {
         );
 
         Logger.debug(
-            `[${this._getLogId()}] received node precheck status ${status.toString()}`
+            `[${this[
+                symbols.getLogId
+            ]()}] received node precheck status ${status.toString()}`
         );
 
         switch (status) {
@@ -221,7 +223,9 @@ export default class TransactionReceiptQuery extends Query {
         status = Status._fromCode(receiptStatusCode);
 
         Logger.debug(
-            `[${this._getLogId()}] received receipt status ${status.toString()}`
+            `[${this[
+                symbols.getLogId
+            ]()}] received receipt status ${status.toString()}`
         );
 
         switch (status) {
@@ -389,7 +393,7 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @returns {string}
      */
-    _getLogId() {
+    [symbols.getLogId]() {
         return `TransactionReceiptQuery:${this._timestamp.toString()}`;
     }
 }
