@@ -120,16 +120,16 @@ export default class ScheduleInfo {
      * @param {HashgraphProto.proto.IScheduleInfo} info
      * @returns {ScheduleInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         return new ScheduleInfo({
-            scheduleId: ScheduleId._fromProtobuf(
+            scheduleId: ScheduleId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IScheduleID} */ (
                     info.scheduleID
                 )
             ),
             creatorAccountID:
                 info.creatorAccountID != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.creatorAccountID
                           )
@@ -137,7 +137,7 @@ export default class ScheduleInfo {
                     : null,
             payerAccountID:
                 info.payerAccountID != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.payerAccountID
                           )
@@ -158,7 +158,7 @@ export default class ScheduleInfo {
             scheduleMemo: info.memo != null ? info.memo : null,
             expirationTime:
                 info.expirationTime != null
-                    ? Timestamp._fromProtobuf(
+                    ? Timestamp[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.expirationTime
                           )
@@ -166,7 +166,7 @@ export default class ScheduleInfo {
                     : null,
             executed:
                 info.executionTime != null
-                    ? Timestamp._fromProtobuf(
+                    ? Timestamp[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.executionTime
                           )
@@ -174,7 +174,7 @@ export default class ScheduleInfo {
                     : null,
             deleted:
                 info.deletionTime != null
-                    ? Timestamp._fromProtobuf(
+                    ? Timestamp[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.deletionTime
                           )
@@ -182,7 +182,9 @@ export default class ScheduleInfo {
                     : null,
             scheduledTransactionId:
                 info.scheduledTransactionID != null
-                    ? TransactionId._fromProtobuf(info.scheduledTransactionID)
+                    ? TransactionId[symbols.fromProtobuf](
+                          info.scheduledTransactionID
+                      )
                     : null,
             waitForExpiry:
                 info.waitForExpiry != null ? info.waitForExpiry : false,

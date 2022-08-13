@@ -45,11 +45,11 @@ export default class TokenRelationshipMap extends ObjectMap {
      * @param {HashgraphProto.proto.ITokenRelationship[]} relationships
      * @returns {TokenRelationshipMap}
      */
-    static _fromProtobuf(relationships) {
+    static [symbols.fromProtobuf](relationships) {
         const tokenRelationships = new TokenRelationshipMap();
 
         for (const relationship of relationships) {
-            const tokenId = TokenId._fromProtobuf(
+            const tokenId = TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     relationship.tokenId
                 )
@@ -57,7 +57,7 @@ export default class TokenRelationshipMap extends ObjectMap {
 
             tokenRelationships._set(
                 tokenId,
-                TokenRelationship._fromProtobuf(relationship)
+                TokenRelationship[symbols.fromProtobuf](relationship)
             );
         }
 

@@ -97,7 +97,7 @@ export default class ContractId extends Key {
      * @param {HashgraphProto.proto.IContractID} id
      * @returns {ContractId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         const contractId = new ContractId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
@@ -141,7 +141,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromBytes(bytes) {
-        return ContractId._fromProtobuf(
+        return ContractId[symbols.fromProtobuf](
             HashgraphProto.proto.ContractID.decode(bytes)
         );
     }
@@ -251,7 +251,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static [fromProtobufKey](key) {
-        return ContractId._fromProtobuf(key);
+        return ContractId[symbols.fromProtobuf](key);
     }
 }
 

@@ -67,7 +67,7 @@ export default class ContractInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info = /** @type {HashgraphProto.proto.IContractGetInfoQuery} */ (
             query.contractGetInfo
         );
@@ -75,7 +75,7 @@ export default class ContractInfoQuery extends Query {
         return new ContractInfoQuery({
             contractId:
                 info.contractID != null
-                    ? ContractId._fromProtobuf(info.contractID)
+                    ? ContractId[symbols.fromProtobuf](info.contractID)
                     : undefined,
         });
     }
@@ -169,7 +169,7 @@ export default class ContractInfoQuery extends Query {
             );
 
         return Promise.resolve(
-            ContractInfo._fromProtobuf(
+            ContractInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} */ (
                     info.contractInfo
                 )
@@ -210,4 +210,4 @@ export default class ContractInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("contractGetInfo", ContractInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("contractGetInfo", ContractInfoQuery[symbols.fromProtobuf]);

@@ -104,7 +104,7 @@ export default class EthereumTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {EthereumTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -125,7 +125,7 @@ export default class EthereumTransaction extends Transaction {
                         : undefined,
                 callData:
                     transaction.callData != null
-                        ? FileId._fromProtobuf(transaction.callData)
+                        ? FileId[symbols.fromProtobuf](transaction.callData)
                         : undefined,
                 maxGasAllowance:
                     transaction.maxGasAllowance != null
@@ -313,5 +313,5 @@ export default class EthereumTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "ethereumTransaction",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    EthereumTransaction._fromProtobuf
+    EthereumTransaction[symbols.fromProtobuf]
 );

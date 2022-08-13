@@ -200,7 +200,7 @@ export default class ContractUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -239,7 +239,7 @@ export default class ContractUpdateTransaction extends Transaction {
             new ContractUpdateTransaction({
                 contractId:
                     update.contractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   update.contractID
                               )
@@ -247,7 +247,7 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 bytecodeFileId:
                     update.fileID != null
-                        ? FileId._fromProtobuf(
+                        ? FileId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   update.fileID
                               )
@@ -255,7 +255,7 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     update.expirationTime != null
-                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](update.expirationTime)
                         : undefined,
                 adminKey:
                     update.adminKey != null
@@ -263,7 +263,7 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.proxyAccountID
                               )
@@ -274,7 +274,9 @@ export default class ContractUpdateTransaction extends Transaction {
                 maxAutomaticTokenAssociations,
                 stakedAccountId:
                     update.stakedAccountId != null
-                        ? AccountId._fromProtobuf(update.stakedAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              update.stakedAccountId
+                          )
                         : undefined,
                 stakedNodeId:
                     update.stakedNodeId != null
@@ -285,7 +287,9 @@ export default class ContractUpdateTransaction extends Transaction {
                     update.declineReward == true,
                 autoRenewAccountId:
                     update.autoRenewAccountId != null
-                        ? AccountId._fromProtobuf(update.autoRenewAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              update.autoRenewAccountId
+                          )
                         : undefined,
             }),
             transactions,
@@ -670,5 +674,5 @@ export default class ContractUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractUpdateInstance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractUpdateTransaction._fromProtobuf
+    ContractUpdateTransaction[symbols.fromProtobuf]
 );

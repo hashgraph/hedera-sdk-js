@@ -107,7 +107,7 @@ export default class PrngTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {PrngTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -167,5 +167,5 @@ export default class PrngTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "utilPrng",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    PrngTransaction._fromProtobuf
+    PrngTransaction[symbols.fromProtobuf]
 );

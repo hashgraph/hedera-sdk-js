@@ -92,15 +92,15 @@ export default class FileInfo {
      * @param {HashgraphProto.proto.FileGetInfoResponse.IFileInfo} info
      * @returns {FileInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const size = /** @type {Long | number} */ (info.size);
 
         return new FileInfo({
-            fileId: FileId._fromProtobuf(
+            fileId: FileId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IFileID} */ (info.fileID)
             ),
             size: size instanceof Long ? size : Long.fromValue(size),
-            expirationTime: Timestamp._fromProtobuf(
+            expirationTime: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
                 )
@@ -139,7 +139,7 @@ export default class FileInfo {
      * @returns {FileInfo}
      */
     static fromBytes(bytes) {
-        return FileInfo._fromProtobuf(
+        return FileInfo[symbols.fromProtobuf](
             HashgraphProto.proto.FileGetInfoResponse.FileInfo.decode(bytes)
         );
     }

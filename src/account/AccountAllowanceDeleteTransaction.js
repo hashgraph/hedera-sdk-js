@@ -77,7 +77,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountAllowanceDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -96,7 +96,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
                     ? allowance.nftAllowances
                     : []
                 ).map((allowance) =>
-                    TokenNftAllowance._fromProtobuf(allowance)
+                    TokenNftAllowance[symbols.fromProtobuf](allowance)
                 ),
             }),
             transactions,
@@ -211,5 +211,5 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDeleteAllowance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountAllowanceDeleteTransaction._fromProtobuf
+    AccountAllowanceDeleteTransaction[symbols.fromProtobuf]
 );

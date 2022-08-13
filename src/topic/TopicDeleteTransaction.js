@@ -77,7 +77,7 @@ export default class TopicDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -94,7 +94,7 @@ export default class TopicDeleteTransaction extends Transaction {
             new TopicDeleteTransaction({
                 topicId:
                     topicDelete.topicID != null
-                        ? TopicId._fromProtobuf(topicDelete.topicID)
+                        ? TopicId[symbols.fromProtobuf](topicDelete.topicID)
                         : undefined,
             }),
             transactions,
@@ -185,5 +185,5 @@ export default class TopicDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusDeleteTopic",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicDeleteTransaction._fromProtobuf
+    TopicDeleteTransaction[symbols.fromProtobuf]
 );

@@ -68,7 +68,7 @@ export default class ScheduleInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {ScheduleInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info = /** @type {HashgraphProto.proto.IScheduleGetInfoQuery} */ (
             query.scheduleGetInfo
         );
@@ -76,7 +76,7 @@ export default class ScheduleInfoQuery extends Query {
         return new ScheduleInfoQuery({
             scheduleId:
                 info.scheduleID != null
-                    ? ScheduleId._fromProtobuf(info.scheduleID)
+                    ? ScheduleId[symbols.fromProtobuf](info.scheduleID)
                     : undefined,
         });
     }
@@ -169,7 +169,7 @@ export default class ScheduleInfoQuery extends Query {
             );
 
         return Promise.resolve(
-            ScheduleInfo._fromProtobuf(
+            ScheduleInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IScheduleInfo} */ (
                     info.scheduleInfo
                 )
@@ -210,4 +210,4 @@ export default class ScheduleInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("scheduleGetInfo", ScheduleInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("scheduleGetInfo", ScheduleInfoQuery[symbols.fromProtobuf]);

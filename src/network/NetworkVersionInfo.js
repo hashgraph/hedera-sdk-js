@@ -55,13 +55,13 @@ export default class NetworkVersionInfo {
      * @param {HashgraphProto.proto.INetworkGetVersionInfoResponse} info
      * @returns {NetworkVersionInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         return new NetworkVersionInfo({
-            protobufVersion: SemanticVersion._fromProtobuf(
+            protobufVersion: SemanticVersion[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hapiProtoVersion)
             ),
-            servicesVesion: SemanticVersion._fromProtobuf(
+            servicesVesion: SemanticVersion[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hederaServicesVersion)
             ),
@@ -84,7 +84,7 @@ export default class NetworkVersionInfo {
      * @returns {NetworkVersionInfo}
      */
     static fromBytes(bytes) {
-        return NetworkVersionInfo._fromProtobuf(
+        return NetworkVersionInfo[symbols.fromProtobuf](
             HashgraphProto.proto.NetworkGetVersionInfoResponse.decode(bytes)
         );
     }

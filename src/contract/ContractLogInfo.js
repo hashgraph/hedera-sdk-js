@@ -76,9 +76,9 @@ export default class ContractLogInfo {
      * @param {HashgraphProto.proto.IContractLoginfo} info
      * @returns {ContractLogInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         return new ContractLogInfo({
-            contractId: ContractId._fromProtobuf(
+            contractId: ContractId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     info.contractID
                 )

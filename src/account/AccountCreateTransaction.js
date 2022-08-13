@@ -194,7 +194,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -223,7 +223,7 @@ export default class AccountCreateTransaction extends Transaction {
                         : undefined,
                 proxyAccountId:
                     create.proxyAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
                               )
@@ -242,7 +242,9 @@ export default class AccountCreateTransaction extends Transaction {
                         : undefined,
                 stakedAccountId:
                     create.stakedAccountId != null
-                        ? AccountId._fromProtobuf(create.stakedAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              create.stakedAccountId
+                          )
                         : undefined,
                 stakedNodeId:
                     create.stakedNodeId != null
@@ -545,5 +547,5 @@ export default class AccountCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoCreateAccount",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountCreateTransaction._fromProtobuf
+    AccountCreateTransaction[symbols.fromProtobuf]
 );

@@ -65,7 +65,7 @@ export default class FileId {
      * @param {HashgraphProto.proto.IFileID} id
      * @returns {FileId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         const fileId = new FileId(
             id.shardNum != null ? Long.fromString(id.shardNum.toString()) : 0,
             id.realmNum != null ? Long.fromString(id.realmNum.toString()) : 0,
@@ -109,7 +109,9 @@ export default class FileId {
      * @returns {FileId}
      */
     static fromBytes(bytes) {
-        return FileId._fromProtobuf(HashgraphProto.proto.FileID.decode(bytes));
+        return FileId[symbols.fromProtobuf](
+            HashgraphProto.proto.FileID.decode(bytes)
+        );
     }
 
     /**

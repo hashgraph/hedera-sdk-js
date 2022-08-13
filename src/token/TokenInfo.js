@@ -246,7 +246,7 @@ export default class TokenInfo {
      * @param {HashgraphProto.proto.ITokenInfo} info
      * @returns {TokenInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const defaultFreezeStatus =
             /** @type {HashgraphProto.proto.TokenFreezeStatus} */ (
                 info.defaultFreezeStatus
@@ -262,11 +262,11 @@ export default class TokenInfo {
 
         const autoRenewAccountId =
             info.autoRenewAccount != null
-                ? AccountId._fromProtobuf(info.autoRenewAccount)
+                ? AccountId[symbols.fromProtobuf](info.autoRenewAccount)
                 : new AccountId(0);
 
         return new TokenInfo({
-            tokenId: TokenId._fromProtobuf(
+            tokenId: TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (info.tokenId)
             ),
             name: /** @type {string} */ (info.name),
@@ -275,7 +275,7 @@ export default class TokenInfo {
             totalSupply: Long.fromValue(/** @type {Long} */ (info.totalSupply)),
             treasuryAccountId:
                 info.treasury != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.treasury
                           )
@@ -324,7 +324,7 @@ export default class TokenInfo {
                 : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
-                    ? Duration._fromProtobuf(
+                    ? Duration[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.IDuration} */ (
                               info.autoRenewPeriod
                           )
@@ -332,7 +332,7 @@ export default class TokenInfo {
                     : null,
             expirationTime:
                 info.expiry != null
-                    ? Timestamp._fromProtobuf(
+                    ? Timestamp[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.expiry
                           )
@@ -343,11 +343,15 @@ export default class TokenInfo {
                 info.customFees != null
                     ? info.customFees.map((fee) => {
                           if (fee.fixedFee != null) {
-                              return CustomFixedFee._fromProtobuf(fee);
+                              return CustomFixedFee[symbols.fromProtobuf](fee);
                           } else if (fee.fractionalFee != null) {
-                              return CustomFractionalFee._fromProtobuf(fee);
+                              return CustomFractionalFee[symbols.fromProtobuf](
+                                  fee
+                              );
                           } else {
-                              return CustomRoyaltyFee._fromProtobuf(fee);
+                              return CustomRoyaltyFee[symbols.fromProtobuf](
+                                  fee
+                              );
                           }
                       })
                     : [],
@@ -450,7 +454,7 @@ export default class TokenInfo {
      * @returns {TokenInfo}
      */
     static fromBytes(bytes) {
-        return TokenInfo._fromProtobuf(
+        return TokenInfo[symbols.fromProtobuf](
             HashgraphProto.proto.TokenInfo.decode(bytes)
         );
     }

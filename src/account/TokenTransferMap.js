@@ -63,18 +63,18 @@ export default class TokenTransferMap extends ObjectMap {
      * @param {HashgraphProto.proto.ITokenTransferList[]} transfers
      * @returns {TokenTransferMap}
      */
-    static _fromProtobuf(transfers) {
+    static [symbols.fromProtobuf](transfers) {
         const tokenTransfersMap = new TokenTransferMap();
 
         for (const transfer of transfers) {
-            const token = TokenId._fromProtobuf(
+            const token = TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token)
             );
 
             for (const aa of transfer.transfers != null
                 ? transfer.transfers
                 : []) {
-                const account = AccountId._fromProtobuf(
+                const account = AccountId[symbols.fromProtobuf](
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         aa.accountID
                     )

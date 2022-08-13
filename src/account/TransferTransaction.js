@@ -159,7 +159,7 @@ export default class TransferTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TransferTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -174,13 +174,13 @@ export default class TransferTransaction extends Transaction {
 
         const transfers = new TransferTransaction();
 
-        transfers._tokenTransfers = TokenTransfer._fromProtobuf(
+        transfers._tokenTransfers = TokenTransfer[symbols.fromProtobuf](
             cryptoTransfer.tokenTransfers != null
                 ? cryptoTransfer.tokenTransfers
                 : []
         );
 
-        transfers._hbarTransfers = Transfer._fromProtobuf(
+        transfers._hbarTransfers = Transfer[symbols.fromProtobuf](
             cryptoTransfer.transfers != null
                 ? cryptoTransfer.transfers.accountAmounts != null
                     ? cryptoTransfer.transfers.accountAmounts
@@ -188,7 +188,7 @@ export default class TransferTransaction extends Transaction {
                 : []
         );
 
-        transfers._nftTransfers = TokenNftTransfer._fromProtobuf(
+        transfers._nftTransfers = TokenNftTransfer[symbols.fromProtobuf](
             cryptoTransfer.tokenTransfers != null
                 ? cryptoTransfer.tokenTransfers
                 : []
@@ -910,5 +910,5 @@ export default class TransferTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoTransfer",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransferTransaction._fromProtobuf
+    TransferTransaction[symbols.fromProtobuf]
 );

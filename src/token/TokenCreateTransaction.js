@@ -307,7 +307,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -331,7 +331,7 @@ export default class TokenCreateTransaction extends Transaction {
                         : undefined,
                 treasuryAccountId:
                     create.treasury != null
-                        ? AccountId._fromProtobuf(create.treasury)
+                        ? AccountId[symbols.fromProtobuf](create.treasury)
                         : undefined,
                 adminKey:
                     create.adminKey != null
@@ -367,26 +367,34 @@ export default class TokenCreateTransaction extends Transaction {
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
-                        ? AccountId._fromProtobuf(create.autoRenewAccount)
+                        ? AccountId[symbols.fromProtobuf](
+                              create.autoRenewAccount
+                          )
                         : undefined,
                 expirationTime:
                     create.expiry != null
-                        ? Timestamp._fromProtobuf(create.expiry)
+                        ? Timestamp[symbols.fromProtobuf](create.expiry)
                         : undefined,
                 autoRenewPeriod:
                     create.autoRenewPeriod != null
-                        ? Duration._fromProtobuf(create.autoRenewPeriod)
+                        ? Duration[symbols.fromProtobuf](create.autoRenewPeriod)
                         : undefined,
                 tokenMemo: create.memo != null ? create.memo : undefined,
                 customFees:
                     create.customFees != null
                         ? create.customFees.map((fee) => {
                               if (fee.fixedFee != null) {
-                                  return CustomFixedFee._fromProtobuf(fee);
+                                  return CustomFixedFee[symbols.fromProtobuf](
+                                      fee
+                                  );
                               } else if (fee.fractionalFee != null) {
-                                  return CustomFractionalFee._fromProtobuf(fee);
+                                  return CustomFractionalFee[
+                                      symbols.fromProtobuf
+                                  ](fee);
                               } else {
-                                  return CustomRoyaltyFee._fromProtobuf(fee);
+                                  return CustomRoyaltyFee[symbols.fromProtobuf](
+                                      fee
+                                  );
                               }
                           })
                         : undefined,
@@ -928,5 +936,5 @@ export default class TokenCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenCreation",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenCreateTransaction._fromProtobuf
+    TokenCreateTransaction[symbols.fromProtobuf]
 );

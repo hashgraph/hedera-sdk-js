@@ -77,7 +77,7 @@ export default class AccountBalance {
      * @returns {AccountBalance}
      */
     static fromBytes(bytes) {
-        return AccountBalance._fromProtobuf(
+        return AccountBalance[symbols.fromProtobuf](
             HashgraphProto.proto.CryptoGetAccountBalanceResponse.decode(bytes)
         );
     }
@@ -87,13 +87,13 @@ export default class AccountBalance {
      * @param {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} accountBalance
      * @returns {AccountBalance}
      */
-    static _fromProtobuf(accountBalance) {
+    static [symbols.fromProtobuf](accountBalance) {
         const tokenBalances = new TokenBalanceMap();
         const tokenDecimals = new TokenDecimalMap();
 
         if (accountBalance.tokenBalances != null) {
             for (const balance of accountBalance.tokenBalances) {
-                const tokenId = TokenId._fromProtobuf(
+                const tokenId = TokenId[symbols.fromProtobuf](
                     /** @type {HashgraphProto.proto.ITokenID} */ (
                         balance.tokenId
                     )

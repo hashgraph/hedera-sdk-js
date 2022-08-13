@@ -75,16 +75,16 @@ export default class HbarAllowance {
      * @param {HashgraphProto.proto.ICryptoAllowance} allowance
      * @returns {HbarAllowance}
      */
-    static _fromProtobuf(allowance) {
+    static [symbols.fromProtobuf](allowance) {
         return new HbarAllowance({
-            spenderAccountId: AccountId._fromProtobuf(
+            spenderAccountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
                 )
             ),
             ownerAccountId:
                 allowance.owner != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
                           )
@@ -104,7 +104,7 @@ export default class HbarAllowance {
      */
     static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new HbarAllowance({
-            spenderAccountId: AccountId._fromProtobuf(
+            spenderAccountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
                 )

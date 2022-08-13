@@ -73,7 +73,7 @@ export default class TokenDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -90,7 +90,7 @@ export default class TokenDeleteTransaction extends Transaction {
             new TokenDeleteTransaction({
                 tokenId:
                     deleteToken.token != null
-                        ? TokenId._fromProtobuf(deleteToken.token)
+                        ? TokenId[symbols.fromProtobuf](deleteToken.token)
                         : undefined,
             }),
             transactions,
@@ -179,5 +179,5 @@ export default class TokenDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenDeletion",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenDeleteTransaction._fromProtobuf
+    TokenDeleteTransaction[symbols.fromProtobuf]
 );

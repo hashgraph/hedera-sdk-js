@@ -97,7 +97,7 @@ export default class TokenMintTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenMintTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -114,7 +114,7 @@ export default class TokenMintTransaction extends Transaction {
             new TokenMintTransaction({
                 tokenId:
                     mintToken.token != null
-                        ? TokenId._fromProtobuf(mintToken.token)
+                        ? TokenId[symbols.fromProtobuf](mintToken.token)
                         : undefined,
                 amount: mintToken.amount != null ? mintToken.amount : undefined,
                 metadata:
@@ -276,5 +276,5 @@ export default class TokenMintTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenMint",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenMintTransaction._fromProtobuf
+    TokenMintTransaction[symbols.fromProtobuf]
 );

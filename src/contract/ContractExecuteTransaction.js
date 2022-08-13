@@ -118,7 +118,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractExecuteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -135,7 +135,7 @@ export default class ContractExecuteTransaction extends Transaction {
             new ContractExecuteTransaction({
                 contractId:
                     call.contractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   call.contractID
                               )
@@ -315,5 +315,5 @@ export default class ContractExecuteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractCall",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractExecuteTransaction._fromProtobuf
+    ContractExecuteTransaction[symbols.fromProtobuf]
 );

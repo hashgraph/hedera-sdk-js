@@ -79,7 +79,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {LiveHashDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -100,7 +100,9 @@ export default class LiveHashDeleteTransaction extends Transaction {
                         : undefined,
                 accountId:
                     hashes.accountOfLiveHash != null
-                        ? AccountId._fromProtobuf(hashes.accountOfLiveHash)
+                        ? AccountId[symbols.fromProtobuf](
+                              hashes.accountOfLiveHash
+                          )
                         : undefined,
             }),
             transactions,
@@ -208,5 +210,5 @@ export default class LiveHashDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDeleteLiveHash",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    LiveHashDeleteTransaction._fromProtobuf
+    LiveHashDeleteTransaction[symbols.fromProtobuf]
 );

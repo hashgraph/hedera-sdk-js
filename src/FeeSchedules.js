@@ -49,7 +49,7 @@ export default class FeeSchedules {
      * @returns {FeeSchedules}
      */
     static fromBytes(bytes) {
-        return FeeSchedules._fromProtobuf(
+        return FeeSchedules[symbols.fromProtobuf](
             HashgraphProto.proto.CurrentAndNextFeeSchedule.decode(bytes)
         );
     }
@@ -59,15 +59,19 @@ export default class FeeSchedules {
      * @param {HashgraphProto.proto.ICurrentAndNextFeeSchedule} feeSchedules
      * @returns {FeeSchedules}
      */
-    static _fromProtobuf(feeSchedules) {
+    static [symbols.fromProtobuf](feeSchedules) {
         return new FeeSchedules({
             currentFeeSchedule:
                 feeSchedules.currentFeeSchedule != null
-                    ? FeeSchedule._fromProtobuf(feeSchedules.currentFeeSchedule)
+                    ? FeeSchedule[symbols.fromProtobuf](
+                          feeSchedules.currentFeeSchedule
+                      )
                     : undefined,
             nextFeeSchedule:
                 feeSchedules.nextFeeSchedule != null
-                    ? FeeSchedule._fromProtobuf(feeSchedules.nextFeeSchedule)
+                    ? FeeSchedule[symbols.fromProtobuf](
+                          feeSchedules.nextFeeSchedule
+                      )
                     : undefined,
         });
     }

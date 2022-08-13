@@ -111,7 +111,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicMessageSubmitTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -128,7 +128,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             new TopicMessageSubmitTransaction({
                 topicId:
                     message.topicID != null
-                        ? TopicId._fromProtobuf(message.topicID)
+                        ? TopicId[symbols.fromProtobuf](message.topicID)
                         : undefined,
                 message: message.message != null ? message.message : undefined,
             }),
@@ -418,5 +418,5 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusSubmitMessage",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicMessageSubmitTransaction._fromProtobuf
+    TopicMessageSubmitTransaction[symbols.fromProtobuf]
 );

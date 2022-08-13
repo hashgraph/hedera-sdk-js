@@ -93,7 +93,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -110,7 +110,7 @@ export default class ContractDeleteTransaction extends Transaction {
             new ContractDeleteTransaction({
                 contractId:
                     contractDelete.contractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   contractDelete.contractID
                               )
@@ -118,7 +118,7 @@ export default class ContractDeleteTransaction extends Transaction {
                         : undefined,
                 transferAccountId:
                     contractDelete.transferAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   contractDelete.transferAccountID
                               )
@@ -126,7 +126,7 @@ export default class ContractDeleteTransaction extends Transaction {
                         : undefined,
                 transferContractId:
                     contractDelete.transferContractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   contractDelete.transferContractID
                               )
@@ -282,5 +282,5 @@ export default class ContractDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractDeleteInstance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractDeleteTransaction._fromProtobuf
+    ContractDeleteTransaction[symbols.fromProtobuf]
 );

@@ -94,7 +94,7 @@ export default class SystemDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {SystemDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -111,7 +111,7 @@ export default class SystemDeleteTransaction extends Transaction {
             new SystemDeleteTransaction({
                 fileId:
                     systemDelete.fileID != null
-                        ? FileId._fromProtobuf(
+                        ? FileId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   systemDelete.fileID
                               )
@@ -119,7 +119,7 @@ export default class SystemDeleteTransaction extends Transaction {
                         : undefined,
                 contractId:
                     systemDelete.contractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   systemDelete.contractID
                               )
@@ -127,7 +127,9 @@ export default class SystemDeleteTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     systemDelete.expirationTime != null
-                        ? Timestamp._fromProtobuf(systemDelete.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](
+                              systemDelete.expirationTime
+                          )
                         : undefined,
             }),
             transactions,
@@ -253,4 +255,7 @@ export default class SystemDeleteTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("systemDelete", SystemDeleteTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set(
+    "systemDelete",
+    SystemDeleteTransaction[symbols.fromProtobuf]
+);

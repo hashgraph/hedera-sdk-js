@@ -85,15 +85,15 @@ export default class TokenNftInfo {
      * @param {HashgraphProto.proto.ITokenNftInfo} info
      * @returns {TokenNftInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         return new TokenNftInfo({
-            nftId: NftId._fromProtobuf(
+            nftId: NftId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.INftID} */ (info.nftID)
             ),
-            accountId: AccountId._fromProtobuf(
+            accountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
             ),
-            creationTime: Timestamp._fromProtobuf(
+            creationTime: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.creationTime
                 )
@@ -105,7 +105,7 @@ export default class TokenNftInfo {
                     : null,
             allowanceSpenderAccountId:
                 info.spenderId != null
-                    ? AccountId._fromProtobuf(info.spenderId)
+                    ? AccountId[symbols.fromProtobuf](info.spenderId)
                     : null,
         });
     }

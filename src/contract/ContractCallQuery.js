@@ -121,7 +121,7 @@ export default class ContractCallQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractCallQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const call =
             /** @type {HashgraphProto.proto.IContractCallLocalQuery} */ (
                 query.contractCallLocal
@@ -130,7 +130,7 @@ export default class ContractCallQuery extends Query {
         return new ContractCallQuery({
             contractId:
                 call.contractID != null
-                    ? ContractId._fromProtobuf(call.contractID)
+                    ? ContractId[symbols.fromProtobuf](call.contractID)
                     : undefined,
             gas: call.gas != null ? call.gas : undefined,
             functionParameters:
@@ -288,7 +288,7 @@ export default class ContractCallQuery extends Query {
             (response.contractCallLocal);
 
         return Promise.resolve(
-            ContractFunctionResult._fromProtobuf(
+            ContractFunctionResult[symbols.fromProtobuf](
                 /**
                  * @type {HashgraphProto.proto.IContractFunctionResult}
                  */
@@ -338,4 +338,7 @@ export default class ContractCallQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("contractCallLocal", ContractCallQuery._fromProtobuf);
+QUERY_REGISTRY.set(
+    "contractCallLocal",
+    ContractCallQuery[symbols.fromProtobuf]
+);

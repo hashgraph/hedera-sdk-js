@@ -83,11 +83,11 @@ export default class TokenNftTransfer {
      * @param {HashgraphProto.proto.ITokenTransferList[]} tokenTransfers
      * @returns {TokenNftTransfer[]}
      */
-    static _fromProtobuf(tokenTransfers) {
+    static [symbols.fromProtobuf](tokenTransfers) {
         const transfers = [];
 
         for (const tokenTransfer of tokenTransfers) {
-            const tokenId = TokenId._fromProtobuf(
+            const tokenId = TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     tokenTransfer.token
                 )
@@ -99,12 +99,12 @@ export default class TokenNftTransfer {
                 transfers.push(
                     new TokenNftTransfer({
                         tokenId,
-                        senderAccountId: AccountId._fromProtobuf(
+                        senderAccountId: AccountId[symbols.fromProtobuf](
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.senderAccountID
                             )
                         ),
-                        receiverAccountId: AccountId._fromProtobuf(
+                        receiverAccountId: AccountId[symbols.fromProtobuf](
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.receiverAccountID
                             )

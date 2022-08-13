@@ -45,7 +45,7 @@ export default class SemanticVersion {
      * @param {HashgraphProto.proto.ISemanticVersion} version
      * @returns {SemanticVersion}
      */
-    static _fromProtobuf(version) {
+    static [symbols.fromProtobuf](version) {
         return new SemanticVersion({
             major: /** @type {number} */ (version.major),
             minor: /** @type {number} */ (version.minor),
@@ -70,7 +70,7 @@ export default class SemanticVersion {
      * @returns {SemanticVersion}
      */
     static fromBytes(bytes) {
-        return SemanticVersion._fromProtobuf(
+        return SemanticVersion[symbols.fromProtobuf](
             HashgraphProto.proto.SemanticVersion.decode(bytes)
         );
     }

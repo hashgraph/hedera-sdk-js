@@ -79,7 +79,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ScheduleDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -96,7 +96,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
             new ScheduleDeleteTransaction({
                 scheduleId:
                     scheduleDelete.scheduleID != null
-                        ? ScheduleId._fromProtobuf(
+                        ? ScheduleId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IScheduleID} */ (
                                   scheduleDelete.scheduleID
                               )
@@ -189,5 +189,5 @@ export default class ScheduleDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "scheduleDelete",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleDeleteTransaction._fromProtobuf
+    ScheduleDeleteTransaction[symbols.fromProtobuf]
 );

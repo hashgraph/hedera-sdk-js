@@ -71,13 +71,13 @@ export default class Transfer {
      * @param {HashgraphProto.proto.IAccountAmount[]} accountAmounts
      * @returns {Transfer[]}
      */
-    static _fromProtobuf(accountAmounts) {
+    static [symbols.fromProtobuf](accountAmounts) {
         const transfers = [];
 
         for (const transfer of accountAmounts) {
             transfers.push(
                 new Transfer({
-                    accountId: AccountId._fromProtobuf(
+                    accountId: AccountId[symbols.fromProtobuf](
                         /** @type {HashgraphProto.proto.IAccountID} */ (
                             transfer.accountID
                         )

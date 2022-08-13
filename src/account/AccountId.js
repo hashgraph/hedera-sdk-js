@@ -111,7 +111,7 @@ export default class AccountId {
      * @param {HashgraphProto.proto.IAccountID} id
      * @returns {AccountId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         let aliasKey = undefined;
         let aliasEvmAddress = undefined;
         if (id.alias != null) {
@@ -177,7 +177,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromBytes(bytes) {
-        return AccountId._fromProtobuf(
+        return AccountId[symbols.fromProtobuf](
             HashgraphProto.proto.AccountID.decode(bytes)
         );
     }

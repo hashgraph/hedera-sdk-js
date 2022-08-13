@@ -132,7 +132,7 @@ export default class CustomRoyalyFee extends CustomFee {
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const fee = /** @type {HashgraphProto.proto.IRoyaltyFee} */ (
             info.royaltyFee
         );
@@ -143,12 +143,14 @@ export default class CustomRoyalyFee extends CustomFee {
         return new CustomRoyalyFee({
             feeCollectorAccountId:
                 info.feeCollectorAccountId != null
-                    ? AccountId._fromProtobuf(info.feeCollectorAccountId)
+                    ? AccountId[symbols.fromProtobuf](
+                          info.feeCollectorAccountId
+                      )
                     : undefined,
             fallbackFee:
                 fee.fallbackFee != null
                     ? /** @type {CustomFixedFee} */ (
-                          CustomFixedFee._fromProtobuf({
+                          CustomFixedFee[symbols.fromProtobuf]({
                               fixedFee: fee.fallbackFee,
                           })
                       )

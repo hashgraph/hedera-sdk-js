@@ -105,7 +105,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {LiveHashAddTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -140,7 +140,7 @@ export default class LiveHashAddTransaction extends Transaction {
                         : undefined,
                 accountId:
                     liveHash_.accountId != null
-                        ? AccountId._fromProtobuf(liveHash_.accountId)
+                        ? AccountId[symbols.fromProtobuf](liveHash_.accountId)
                         : undefined,
             }),
             transactions,
@@ -299,5 +299,5 @@ export default class LiveHashAddTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoAddLiveHash",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    LiveHashAddTransaction._fromProtobuf
+    LiveHashAddTransaction[symbols.fromProtobuf]
 );

@@ -84,7 +84,7 @@ export default class IPv4Address {
      * @param {Uint8Array} bytes
      * @returns {IPv4Address}
      */
-    static _fromProtobuf(bytes) {
+    static [symbols.fromProtobuf](bytes) {
         return new IPv4Address({
             network: new IPv4AddressPart().setLeft(bytes[0]).setRight(bytes[1]),
             host: new IPv4AddressPart().setLeft(bytes[2]).setRight(bytes[3]),

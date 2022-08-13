@@ -65,7 +65,7 @@ export default class TopicId {
      * @param {HashgraphProto.proto.ITopicID} id
      * @returns {TopicId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         const topicId = new TopicId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
@@ -109,7 +109,7 @@ export default class TopicId {
      * @returns {TopicId}
      */
     static fromBytes(bytes) {
-        return TopicId._fromProtobuf(
+        return TopicId[symbols.fromProtobuf](
             HashgraphProto.proto.TopicID.decode(bytes)
         );
     }

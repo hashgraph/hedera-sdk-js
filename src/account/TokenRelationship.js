@@ -96,8 +96,8 @@ export default class TokenRelationship {
      * @param {HashgraphProto.proto.ITokenRelationship} relationship
      * @returns {TokenRelationship}
      */
-    static _fromProtobuf(relationship) {
-        const tokenId = TokenId._fromProtobuf(
+    static [symbols.fromProtobuf](relationship) {
+        const tokenId = TokenId[symbols.fromProtobuf](
             /** @type {HashgraphProto.proto.ITokenID} */ (relationship.tokenId)
         );
         const isKycGranted =

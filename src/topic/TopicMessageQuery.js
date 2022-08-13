@@ -386,7 +386,7 @@ export default class TopicMessageQuery {
                         this._limit = this._limit.sub(1);
                     }
 
-                    this._startTime = Timestamp._fromProtobuf(
+                    this._startTime = Timestamp[symbols.fromProtobuf](
                         /** @type {HashgraphProto.proto.ITimestamp} */ (
                             message.consensusTimestamp
                         )
@@ -409,7 +409,7 @@ export default class TopicMessageQuery {
                             );
                         const total = /** @type {number} */ (chunkInfo.total);
                         const transactionId =
-                            TransactionId._fromProtobuf(
+                            TransactionId[symbols.fromProtobuf](
                                 initialTransactionID
                             ).toString();
 

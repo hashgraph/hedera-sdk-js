@@ -79,11 +79,11 @@ export default class TokenTransfer {
      * @param {HashgraphProto.proto.ITokenTransferList[]} tokenTransfers
      * @returns {TokenTransfer[]}
      */
-    static _fromProtobuf(tokenTransfers) {
+    static [symbols.fromProtobuf](tokenTransfers) {
         const transfers = [];
 
         for (const tokenTransfer of tokenTransfers) {
-            const tokenId = TokenId._fromProtobuf(
+            const tokenId = TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     tokenTransfer.token
                 )
@@ -101,7 +101,7 @@ export default class TokenTransfer {
                 transfers.push(
                     new TokenTransfer({
                         tokenId,
-                        accountId: AccountId._fromProtobuf(
+                        accountId: AccountId[symbols.fromProtobuf](
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.accountID
                             )

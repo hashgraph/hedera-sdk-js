@@ -65,7 +65,7 @@ export default class TokenId {
      * @param {HashgraphProto.proto.ITokenID} id
      * @returns {TokenId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         const tokenId = new TokenId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
@@ -109,7 +109,7 @@ export default class TokenId {
      * @returns {TokenId}
      */
     static fromBytes(bytes) {
-        return TokenId._fromProtobuf(
+        return TokenId[symbols.fromProtobuf](
             HashgraphProto.proto.TokenID.decode(bytes)
         );
     }

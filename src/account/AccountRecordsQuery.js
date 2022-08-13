@@ -69,7 +69,7 @@ export default class AccountRecordsQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountRecordsQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const records =
             /** @type {HashgraphProto.proto.ICryptoGetAccountRecordsQuery} */ (
                 query.cryptoGetAccountRecords
@@ -78,7 +78,7 @@ export default class AccountRecordsQuery extends Query {
         return new AccountRecordsQuery({
             accountId:
                 records.accountID != null
-                    ? AccountId._fromProtobuf(records.accountID)
+                    ? AccountId[symbols.fromProtobuf](records.accountID)
                     : undefined,
         });
     }
@@ -162,7 +162,9 @@ export default class AccountRecordsQuery extends Query {
 
         return Promise.resolve(
             records.map((record) =>
-                TransactionRecord._fromProtobuf({ transactionRecord: record })
+                TransactionRecord[symbols.fromProtobuf]({
+                    transactionRecord: record,
+                })
             )
         );
     }
@@ -202,5 +204,5 @@ export default class AccountRecordsQuery extends Query {
 QUERY_REGISTRY.set(
     "cryptoGetAccountRecords",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountRecordsQuery._fromProtobuf
+    AccountRecordsQuery[symbols.fromProtobuf]
 );

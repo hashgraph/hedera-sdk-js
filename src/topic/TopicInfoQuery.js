@@ -74,7 +74,7 @@ export default class TopicInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {TopicInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info =
             /** @type {HashgraphProto.proto.IConsensusGetTopicInfoQuery} */ (
                 query.consensusGetTopicInfo
@@ -83,7 +83,7 @@ export default class TopicInfoQuery extends Query {
         return new TopicInfoQuery({
             topicId:
                 info.topicID != null
-                    ? TopicId._fromProtobuf(info.topicID)
+                    ? TopicId[symbols.fromProtobuf](info.topicID)
                     : undefined,
         });
     }
@@ -172,7 +172,7 @@ export default class TopicInfoQuery extends Query {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [symbols.mapResponse](response, nodeAccountId, request) {
         return Promise.resolve(
-            TopicInfo._fromProtobuf(
+            TopicInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IConsensusGetTopicInfoResponse} */ (
                     response.consensusGetTopicInfo
                 )
@@ -213,4 +213,7 @@ export default class TopicInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("consensusGetTopicInfo", TopicInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set(
+    "consensusGetTopicInfo",
+    TopicInfoQuery[symbols.fromProtobuf]
+);

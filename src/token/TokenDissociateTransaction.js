@@ -87,7 +87,7 @@ export default class TokenDissociateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenDissociateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -105,12 +105,14 @@ export default class TokenDissociateTransaction extends Transaction {
                 tokenIds:
                     dissociateToken.tokens != null
                         ? dissociateToken.tokens.map((token) =>
-                              TokenId._fromProtobuf(token)
+                              TokenId[symbols.fromProtobuf](token)
                           )
                         : undefined,
                 accountId:
                     dissociateToken.account != null
-                        ? AccountId._fromProtobuf(dissociateToken.account)
+                        ? AccountId[symbols.fromProtobuf](
+                              dissociateToken.account
+                          )
                         : undefined,
             }),
             transactions,
@@ -233,5 +235,5 @@ export default class TokenDissociateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenDissociate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenDissociateTransaction._fromProtobuf
+    TokenDissociateTransaction[symbols.fromProtobuf]
 );

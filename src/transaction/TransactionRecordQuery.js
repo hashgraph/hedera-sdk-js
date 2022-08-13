@@ -94,7 +94,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {TransactionRecordQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const record =
             /** @type {HashgraphProto.proto.ITransactionGetRecordQuery} */ (
                 query.transactionGetRecord
@@ -102,7 +102,7 @@ export default class TransactionRecordQuery extends Query {
 
         return new TransactionRecordQuery({
             transactionId: record.transactionID
-                ? TransactionId._fromProtobuf(record.transactionID)
+                ? TransactionId[symbols.fromProtobuf](record.transactionID)
                 : undefined,
             includeChildren:
                 record.includeChildRecords != null
@@ -300,7 +300,9 @@ export default class TransactionRecordQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf({ receipt }),
+            transactionReceipt: TransactionReceipt[symbols.fromProtobuf]({
+                receipt,
+            }),
         });
     }
 
@@ -359,7 +361,7 @@ export default class TransactionRecordQuery extends Query {
                 response.transactionGetRecord
             );
 
-        return Promise.resolve(TransactionRecord._fromProtobuf(record));
+        return Promise.resolve(TransactionRecord[symbols.fromProtobuf](record));
     }
 
     /**
@@ -399,5 +401,5 @@ export default class TransactionRecordQuery extends Query {
 QUERY_REGISTRY.set(
     "transactionGetRecord",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransactionRecordQuery._fromProtobuf
+    TransactionRecordQuery[symbols.fromProtobuf]
 );

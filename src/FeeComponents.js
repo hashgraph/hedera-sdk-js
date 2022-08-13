@@ -120,7 +120,7 @@ export default class FeeComponents {
      * @returns {FeeComponents}
      */
     static fromBytes(bytes) {
-        return FeeComponents._fromProtobuf(
+        return FeeComponents[symbols.fromProtobuf](
             HashgraphProto.proto.FeeComponents.decode(bytes)
         );
     }
@@ -130,7 +130,7 @@ export default class FeeComponents {
      * @param {HashgraphProto.proto.IFeeComponents} feeComponents
      * @returns {FeeComponents}
      */
-    static _fromProtobuf(feeComponents) {
+    static [symbols.fromProtobuf](feeComponents) {
         return new FeeComponents({
             min: feeComponents.min != null ? feeComponents.min : undefined,
             max: feeComponents.max != null ? feeComponents.max : undefined,

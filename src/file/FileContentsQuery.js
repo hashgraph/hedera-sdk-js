@@ -65,7 +65,7 @@ export default class FileContentsQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {FileContentsQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const contents =
             /** @type {HashgraphProto.proto.IFileGetContentsQuery} */ (
                 query.fileGetContents
@@ -74,7 +74,7 @@ export default class FileContentsQuery extends Query {
         return new FileContentsQuery({
             fileId:
                 contents.fileID != null
-                    ? FileId._fromProtobuf(contents.fileID)
+                    ? FileId[symbols.fromProtobuf](contents.fileID)
                     : undefined,
         });
     }
@@ -190,4 +190,4 @@ export default class FileContentsQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("fileGetContents", FileContentsQuery._fromProtobuf);
+QUERY_REGISTRY.set("fileGetContents", FileContentsQuery[symbols.fromProtobuf]);

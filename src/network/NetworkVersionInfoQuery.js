@@ -49,7 +49,7 @@ export default class NetworkVersionInfoQuery extends Query {
      * @returns {NetworkVersionInfoQuery}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         return new NetworkVersionInfoQuery();
     }
 
@@ -91,7 +91,7 @@ export default class NetworkVersionInfoQuery extends Query {
             /** @type {HashgraphProto.proto.INetworkGetVersionInfoResponse} */ (
                 response.networkGetVersionInfo
             );
-        return Promise.resolve(NetworkVersionInfo._fromProtobuf(info));
+        return Promise.resolve(NetworkVersionInfo[symbols.fromProtobuf](info));
     }
 
     /**
@@ -125,5 +125,5 @@ export default class NetworkVersionInfoQuery extends Query {
 QUERY_REGISTRY.set(
     "networkGetVersionInfo",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    NetworkVersionInfoQuery._fromProtobuf
+    NetworkVersionInfoQuery[symbols.fromProtobuf]
 );

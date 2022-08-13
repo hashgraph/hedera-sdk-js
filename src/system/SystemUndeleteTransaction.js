@@ -84,7 +84,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {SystemUndeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -101,7 +101,7 @@ export default class SystemUndeleteTransaction extends Transaction {
             new SystemUndeleteTransaction({
                 fileId:
                     systemUndelete.fileID != null
-                        ? FileId._fromProtobuf(
+                        ? FileId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   systemUndelete.fileID
                               )
@@ -109,7 +109,7 @@ export default class SystemUndeleteTransaction extends Transaction {
                         : undefined,
                 contractId:
                     systemUndelete.contractID != null
-                        ? ContractId._fromProtobuf(
+                        ? ContractId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   systemUndelete.contractID
                               )
@@ -220,5 +220,5 @@ export default class SystemUndeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "systemUndelete",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    SystemUndeleteTransaction._fromProtobuf
+    SystemUndeleteTransaction[symbols.fromProtobuf]
 );

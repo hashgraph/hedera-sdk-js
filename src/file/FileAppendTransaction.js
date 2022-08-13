@@ -119,7 +119,7 @@ export default class FileAppendTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FileAppendTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -166,7 +166,7 @@ export default class FileAppendTransaction extends Transaction {
             new FileAppendTransaction({
                 fileId:
                     append.fileID != null
-                        ? FileId._fromProtobuf(
+                        ? FileId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   append.fileID
                               )
@@ -474,4 +474,7 @@ export default class FileAppendTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("fileAppend", FileAppendTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set(
+    "fileAppend",
+    FileAppendTransaction[symbols.fromProtobuf]
+);

@@ -68,7 +68,7 @@ export default class CustomFee {
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         throw new Error("not implemented");
     }
 

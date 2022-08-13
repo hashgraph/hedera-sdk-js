@@ -87,7 +87,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenAssociateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -105,12 +105,14 @@ export default class TokenAssociateTransaction extends Transaction {
                 tokenIds:
                     associateToken.tokens != null
                         ? associateToken.tokens.map((token) =>
-                              TokenId._fromProtobuf(token)
+                              TokenId[symbols.fromProtobuf](token)
                           )
                         : undefined,
                 accountId:
                     associateToken.account != null
-                        ? AccountId._fromProtobuf(associateToken.account)
+                        ? AccountId[symbols.fromProtobuf](
+                              associateToken.account
+                          )
                         : undefined,
             }),
             transactions,
@@ -233,5 +235,5 @@ export default class TokenAssociateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenAssociate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenAssociateTransaction._fromProtobuf
+    TokenAssociateTransaction[symbols.fromProtobuf]
 );

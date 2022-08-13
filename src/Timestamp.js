@@ -123,7 +123,7 @@ export default class Timestamp {
      * @param {HashgraphProto.proto.ITimestamp} timestamp
      * @returns {Timestamp}
      */
-    static _fromProtobuf(timestamp) {
+    static [symbols.fromProtobuf](timestamp) {
         return new Timestamp(
             timestamp.seconds instanceof Long
                 ? timestamp.seconds.toInt()

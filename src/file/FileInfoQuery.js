@@ -67,7 +67,7 @@ export default class FileInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {FileInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info = /** @type {HashgraphProto.proto.IFileGetInfoQuery} */ (
             query.fileGetInfo
         );
@@ -75,7 +75,7 @@ export default class FileInfoQuery extends Query {
         return new FileInfoQuery({
             fileId:
                 info.fileID != null
-                    ? FileId._fromProtobuf(info.fileID)
+                    ? FileId[symbols.fromProtobuf](info.fileID)
                     : undefined,
         });
     }
@@ -168,7 +168,7 @@ export default class FileInfoQuery extends Query {
         );
 
         return Promise.resolve(
-            FileInfo._fromProtobuf(
+            FileInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IFileInfo} */ (info.fileInfo)
             )
         );
@@ -207,4 +207,4 @@ export default class FileInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("fileGetInfo", FileInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("fileGetInfo", FileInfoQuery[symbols.fromProtobuf]);

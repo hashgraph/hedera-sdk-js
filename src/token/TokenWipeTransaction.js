@@ -107,7 +107,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenWipeTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -124,11 +124,11 @@ export default class TokenWipeTransaction extends Transaction {
             new TokenWipeTransaction({
                 tokenId:
                     wipeToken.token != null
-                        ? TokenId._fromProtobuf(wipeToken.token)
+                        ? TokenId[symbols.fromProtobuf](wipeToken.token)
                         : undefined,
                 accountId:
                     wipeToken.account != null
-                        ? AccountId._fromProtobuf(wipeToken.account)
+                        ? AccountId[symbols.fromProtobuf](wipeToken.account)
                         : undefined,
                 amount: wipeToken.amount != null ? wipeToken.amount : undefined,
             }),
@@ -287,5 +287,5 @@ export default class TokenWipeTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenWipe",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenWipeTransaction._fromProtobuf
+    TokenWipeTransaction[symbols.fromProtobuf]
 );

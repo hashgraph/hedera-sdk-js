@@ -283,7 +283,7 @@ export default class Transaction extends Executable {
 
             // Make sure the transaction ID within the body is set
             if (body.transactionID != null) {
-                const transactionId = TransactionId._fromProtobuf(
+                const transactionId = TransactionId[symbols.fromProtobuf](
                     /** @type {HashgraphProto.proto.ITransactionID} */ (
                         body.transactionID
                     )
@@ -298,7 +298,7 @@ export default class Transaction extends Executable {
 
             // Make sure the node account ID within the body is set
             if (body.nodeAccountID != null) {
-                const nodeAccountId = AccountId._fromProtobuf(
+                const nodeAccountId = AccountId[symbols.fromProtobuf](
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         body.nodeAccountID
                     )
@@ -362,7 +362,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * This method is called by each `*Transaction._fromProtobuf()` method. It does
+     * This method is called by each `*Transaction[ symbols.fromProtobuf ]()` method. It does
      * all the finalization before the user gets hold of a complete `Transaction`
      *
      * @template {Transaction} TransactionT

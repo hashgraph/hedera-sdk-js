@@ -70,7 +70,7 @@ export default class ExchangeRate {
      * @param {import("@hashgraph/proto").proto.IExchangeRate} rate
      * @returns {ExchangeRate}
      */
-    static _fromProtobuf(rate) {
+    static [symbols.fromProtobuf](rate) {
         return new ExchangeRate({
             hbars: /** @type {number} */ (rate.hbarEquiv),
             cents: /** @type {number} */ (rate.centEquiv),

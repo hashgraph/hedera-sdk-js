@@ -225,7 +225,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -242,7 +242,7 @@ export default class ContractCreateTransaction extends Transaction {
             new ContractCreateTransaction({
                 bytecodeFileId:
                     create.fileID != null
-                        ? FileId._fromProtobuf(
+                        ? FileId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   create.fileID
                               )
@@ -259,7 +259,7 @@ export default class ContractCreateTransaction extends Transaction {
                         : undefined,
                 proxyAccountId:
                     create.proxyAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
                               )
@@ -282,7 +282,9 @@ export default class ContractCreateTransaction extends Transaction {
                         : undefined,
                 stakedAccountId:
                     create.stakedAccountId != null
-                        ? AccountId._fromProtobuf(create.stakedAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              create.stakedAccountId
+                          )
                         : undefined,
                 stakedNodeId:
                     create.stakedNodeId != null
@@ -291,7 +293,9 @@ export default class ContractCreateTransaction extends Transaction {
                 declineStakingReward: create.declineReward == true,
                 autoRenewAccountId:
                     create.autoRenewAccountId != null
-                        ? AccountId._fromProtobuf(create.autoRenewAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              create.autoRenewAccountId
+                          )
                         : undefined,
             }),
             transactions,
@@ -673,5 +677,5 @@ export default class ContractCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractCreateInstance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractCreateTransaction._fromProtobuf
+    ContractCreateTransaction[symbols.fromProtobuf]
 );

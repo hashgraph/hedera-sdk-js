@@ -95,11 +95,11 @@ export default class EndPoint {
      * @param {HashgraphProto.proto.IServiceEndpoint} endpoint
      * @returns {EndPoint}
      */
-    static _fromProtobuf(endpoint) {
+    static [symbols.fromProtobuf](endpoint) {
         return new EndPoint({
             address:
                 endpoint.ipAddressV4 != null
-                    ? IPv4Address._fromProtobuf(endpoint.ipAddressV4)
+                    ? IPv4Address[symbols.fromProtobuf](endpoint.ipAddressV4)
                     : undefined,
             port: endpoint.port != null ? endpoint.port : undefined,
         });

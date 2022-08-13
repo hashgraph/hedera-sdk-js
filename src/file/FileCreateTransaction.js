@@ -116,7 +116,7 @@ export default class FileCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FileCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -141,7 +141,7 @@ export default class FileCreateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     create.expirationTime != null
-                        ? Timestamp._fromProtobuf(create.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](create.expirationTime)
                         : undefined,
                 contents: create.contents != null ? create.contents : undefined,
                 fileMemo: create.memo != null ? create.memo : undefined,
@@ -319,4 +319,7 @@ export default class FileCreateTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("fileCreate", FileCreateTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set(
+    "fileCreate",
+    FileCreateTransaction[symbols.fromProtobuf]
+);

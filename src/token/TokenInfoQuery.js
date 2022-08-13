@@ -67,7 +67,7 @@ export default class TokenInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {TokenInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info = /** @type {HashgraphProto.proto.ITokenGetInfoQuery} */ (
             query.tokenGetInfo
         );
@@ -75,7 +75,7 @@ export default class TokenInfoQuery extends Query {
         return new TokenInfoQuery({
             tokenId:
                 info.token != null
-                    ? TokenId._fromProtobuf(info.token)
+                    ? TokenId[symbols.fromProtobuf](info.token)
                     : undefined,
         });
     }
@@ -168,7 +168,7 @@ export default class TokenInfoQuery extends Query {
         );
 
         return Promise.resolve(
-            TokenInfo._fromProtobuf(
+            TokenInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenInfo} */ (info.tokenInfo)
             )
         );
@@ -207,4 +207,4 @@ export default class TokenInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("tokenGetInfo", TokenInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("tokenGetInfo", TokenInfoQuery[symbols.fromProtobuf]);

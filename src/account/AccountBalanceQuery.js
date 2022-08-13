@@ -84,7 +84,7 @@ export default class AccountBalanceQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountBalanceQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const balance =
             /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceQuery} */ (
                 query.cryptogetAccountBalance
@@ -93,11 +93,11 @@ export default class AccountBalanceQuery extends Query {
         return new AccountBalanceQuery({
             accountId:
                 balance.accountID != null
-                    ? AccountId._fromProtobuf(balance.accountID)
+                    ? AccountId[symbols.fromProtobuf](balance.accountID)
                     : undefined,
             contractId:
                 balance.contractID != null
-                    ? ContractId._fromProtobuf(balance.contractID)
+                    ? ContractId[symbols.fromProtobuf](balance.contractID)
                     : undefined,
         });
     }
@@ -216,7 +216,7 @@ export default class AccountBalanceQuery extends Query {
                 response.cryptogetAccountBalance
             );
         return Promise.resolve(
-            AccountBalance._fromProtobuf(cryptogetAccountBalance)
+            AccountBalance[symbols.fromProtobuf](cryptogetAccountBalance)
         );
     }
 
@@ -253,5 +253,5 @@ export default class AccountBalanceQuery extends Query {
 QUERY_REGISTRY.set(
     "cryptogetAccountBalance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountBalanceQuery._fromProtobuf
+    AccountBalanceQuery[symbols.fromProtobuf]
 );

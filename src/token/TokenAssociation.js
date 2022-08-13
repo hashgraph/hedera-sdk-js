@@ -99,15 +99,15 @@ export default class TokenAssociation {
      * @returns {TokenAssociation}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(association) {
+    static [symbols.fromProtobuf](association) {
         return new TokenAssociation({
             accountId:
                 association.accountId != null
-                    ? AccountId._fromProtobuf(association.accountId)
+                    ? AccountId[symbols.fromProtobuf](association.accountId)
                     : undefined,
             tokenId:
                 association.tokenId != null
-                    ? TokenId._fromProtobuf(association.tokenId)
+                    ? TokenId[symbols.fromProtobuf](association.tokenId)
                     : undefined,
         });
     }

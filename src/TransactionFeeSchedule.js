@@ -58,7 +58,7 @@ export default class TransactionFeeSchedule {
      * @returns {TransactionFeeSchedule}
      */
     static fromBytes(bytes) {
-        return TransactionFeeSchedule._fromProtobuf(
+        return TransactionFeeSchedule[symbols.fromProtobuf](
             HashgraphProto.proto.TransactionFeeSchedule.decode(bytes)
         );
     }
@@ -68,7 +68,7 @@ export default class TransactionFeeSchedule {
      * @param {HashgraphProto.proto.ITransactionFeeSchedule} transactionFeeSchedule
      * @returns {TransactionFeeSchedule}
      */
-    static _fromProtobuf(transactionFeeSchedule) {
+    static [symbols.fromProtobuf](transactionFeeSchedule) {
         return new TransactionFeeSchedule({
             hederaFunctionality:
                 transactionFeeSchedule.hederaFunctionality != null
@@ -78,12 +78,14 @@ export default class TransactionFeeSchedule {
                     : undefined,
             feeData:
                 transactionFeeSchedule.feeData != null
-                    ? FeeData._fromProtobuf(transactionFeeSchedule.feeData)
+                    ? FeeData[symbols.fromProtobuf](
+                          transactionFeeSchedule.feeData
+                      )
                     : undefined,
             fees:
                 transactionFeeSchedule.fees != null
                     ? transactionFeeSchedule.fees.map((fee) =>
-                          FeeData._fromProtobuf(fee)
+                          FeeData[symbols.fromProtobuf](fee)
                       )
                     : undefined,
         });

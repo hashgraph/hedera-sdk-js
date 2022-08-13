@@ -67,7 +67,7 @@ export default class ScheduleId {
      * @param {HashgraphProto.proto.IScheduleID} id
      * @returns {ScheduleId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         const scheduleId = new ScheduleId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
@@ -111,7 +111,7 @@ export default class ScheduleId {
      * @returns {ScheduleId}
      */
     static fromBytes(bytes) {
-        return ScheduleId._fromProtobuf(
+        return ScheduleId[symbols.fromProtobuf](
             HashgraphProto.proto.ScheduleID.decode(bytes)
         );
     }

@@ -140,7 +140,7 @@ export default class FreezeTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FreezeTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -171,11 +171,11 @@ export default class FreezeTransaction extends Transaction {
                         : undefined,
                 startTimestamp:
                     freeze.startTime != null
-                        ? Timestamp._fromProtobuf(freeze.startTime)
+                        ? Timestamp[symbols.fromProtobuf](freeze.startTime)
                         : undefined,
                 updateFileId:
                     freeze.updateFile != null
-                        ? FileId._fromProtobuf(freeze.updateFile)
+                        ? FileId[symbols.fromProtobuf](freeze.updateFile)
                         : undefined,
                 fileHash: freeze.fileHash != null ? freeze.fileHash : undefined,
                 freezeType:
@@ -388,4 +388,4 @@ export default class FreezeTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("freeze", FreezeTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set("freeze", FreezeTransaction[symbols.fromProtobuf]);

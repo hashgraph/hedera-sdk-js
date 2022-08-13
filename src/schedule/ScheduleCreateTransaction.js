@@ -130,7 +130,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ScheduleCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -151,7 +151,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                         : undefined,
                 payerAccountID:
                     create.payerAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.payerAccountID
                               )
@@ -164,7 +164,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     create.expirationTime != null
-                        ? Timestamp._fromProtobuf(create.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](create.expirationTime)
                         : undefined,
             }),
             transactions,
@@ -370,7 +370,7 @@ export default class ScheduleCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "scheduleCreate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleCreateTransaction._fromProtobuf
+    ScheduleCreateTransaction[symbols.fromProtobuf]
 );
 
 SCHEDULE_CREATE_TRANSACTION.push(() => new ScheduleCreateTransaction());

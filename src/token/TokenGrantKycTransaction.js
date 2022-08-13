@@ -84,7 +84,7 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenGrantKycTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -101,11 +101,11 @@ export default class TokenGrantKycTransaction extends Transaction {
             new TokenGrantKycTransaction({
                 tokenId:
                     grantKycToken.token != null
-                        ? TokenId._fromProtobuf(grantKycToken.token)
+                        ? TokenId[symbols.fromProtobuf](grantKycToken.token)
                         : undefined,
                 accountId:
                     grantKycToken.account != null
-                        ? AccountId._fromProtobuf(grantKycToken.account)
+                        ? AccountId[symbols.fromProtobuf](grantKycToken.account)
                         : undefined,
             }),
             transactions,
@@ -223,5 +223,5 @@ export default class TokenGrantKycTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenGrantKyc",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenGrantKycTransaction._fromProtobuf
+    TokenGrantKycTransaction[symbols.fromProtobuf]
 );

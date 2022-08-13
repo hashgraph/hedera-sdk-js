@@ -86,7 +86,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {TransactionReceiptQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const receipt =
             /** @type {HashgraphProto.proto.ITransactionGetReceiptQuery} */ (
                 query.transactionGetReceipt
@@ -94,7 +94,7 @@ export default class TransactionReceiptQuery extends Query {
 
         return new TransactionReceiptQuery({
             transactionId: receipt.transactionID
-                ? TransactionId._fromProtobuf(receipt.transactionID)
+                ? TransactionId[symbols.fromProtobuf](receipt.transactionID)
                 : undefined,
             includeDuplicates:
                 receipt.includeDuplicates != null
@@ -305,7 +305,7 @@ export default class TransactionReceiptQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._transactionId,
-            transactionReceipt: TransactionReceipt._fromProtobuf(
+            transactionReceipt: TransactionReceipt[symbols.fromProtobuf](
                 transactionGetReceipt
             ),
         });
@@ -366,7 +366,7 @@ export default class TransactionReceiptQuery extends Query {
             );
 
         return Promise.resolve(
-            TransactionReceipt._fromProtobuf(transactionGetReceipt)
+            TransactionReceipt[symbols.fromProtobuf](transactionGetReceipt)
         );
     }
 
@@ -401,5 +401,5 @@ export default class TransactionReceiptQuery extends Query {
 QUERY_REGISTRY.set(
     "transactionGetReceipt",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransactionReceiptQuery._fromProtobuf
+    TransactionReceiptQuery[symbols.fromProtobuf]
 );

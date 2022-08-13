@@ -147,7 +147,7 @@ export default class ContractFunctionResult {
      * @param {boolean} _createResult
      * @returns {ContractFunctionResult}
      */
-    static _fromProtobuf(result, _createResult) {
+    static [symbols.fromProtobuf](result, _createResult) {
         const contractId =
             /** @type {HashgraphProto.proto.IContractID | null} */ (
                 result.contractID
@@ -161,7 +161,7 @@ export default class ContractFunctionResult {
             bytes: /** @type {Uint8Array} */ (result.contractCallResult),
             contractId:
                 contractId != null
-                    ? ContractId._fromProtobuf(contractId)
+                    ? ContractId[symbols.fromProtobuf](contractId)
                     : null,
             errorMessage:
                 result.errorMessage != null ? result.errorMessage : null,
@@ -169,12 +169,12 @@ export default class ContractFunctionResult {
             gasUsed:
                 gasUsed instanceof Long ? gasUsed : Long.fromValue(gasUsed),
             logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
-                ContractLogInfo._fromProtobuf(info)
+                ContractLogInfo[symbols.fromProtobuf](info)
             ),
             createdContractIds: (result.createdContractIDs != null
                 ? result.createdContractIDs
                 : []
-            ).map((contractId) => ContractId._fromProtobuf(contractId)),
+            ).map((contractId) => ContractId[symbols.fromProtobuf](contractId)),
             evmAddress:
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
@@ -187,7 +187,7 @@ export default class ContractFunctionResult {
             ),
             senderAccountId:
                 result.senderId != null
-                    ? AccountId._fromProtobuf(result.senderId)
+                    ? AccountId[symbols.fromProtobuf](result.senderId)
                     : null,
         });
     }

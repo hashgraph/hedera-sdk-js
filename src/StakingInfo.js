@@ -108,12 +108,12 @@ export default class StakingInfo {
      * @param {HashgraphProto.proto.IStakingInfo} info
      * @returns {StakingInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         return new StakingInfo({
             declineStakingReward: info.declineReward == true,
             stakePeriodStart:
                 info.stakePeriodStart != null
-                    ? Timestamp._fromProtobuf(info.stakePeriodStart)
+                    ? Timestamp[symbols.fromProtobuf](info.stakePeriodStart)
                     : null,
             pendingReward:
                 info.pendingReward != null
@@ -125,7 +125,7 @@ export default class StakingInfo {
                     : null,
             stakedAccountId:
                 info.stakedAccountId != null
-                    ? AccountId._fromProtobuf(info.stakedAccountId)
+                    ? AccountId[symbols.fromProtobuf](info.stakedAccountId)
                     : null,
             stakedNodeId: info.stakedNodeId != null ? info.stakedNodeId : null,
         });
@@ -160,7 +160,7 @@ export default class StakingInfo {
      * @returns {StakingInfo}
      */
     static fromBytes(bytes) {
-        return StakingInfo._fromProtobuf(
+        return StakingInfo[symbols.fromProtobuf](
             HashgraphProto.proto.StakingInfo.decode(bytes)
         );
     }

@@ -98,7 +98,7 @@ export default class ScheduleSignTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ScheduleSignTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -115,7 +115,7 @@ export default class ScheduleSignTransaction extends Transaction {
             new ScheduleSignTransaction({
                 scheduleId:
                     sign.scheduleID != null
-                        ? ScheduleId._fromProtobuf(sign.scheduleID)
+                        ? ScheduleId[symbols.fromProtobuf](sign.scheduleID)
                         : undefined,
             }),
             transactions,
@@ -204,5 +204,5 @@ export default class ScheduleSignTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "scheduleSign",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleSignTransaction._fromProtobuf
+    ScheduleSignTransaction[symbols.fromProtobuf]
 );

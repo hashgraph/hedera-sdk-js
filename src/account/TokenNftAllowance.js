@@ -90,17 +90,17 @@ export default class TokenNftAllowance {
      * @param {HashgraphProto.proto.INftAllowance} allowance
      * @returns {TokenNftAllowance}
      */
-    static _fromProtobuf(allowance) {
+    static [symbols.fromProtobuf](allowance) {
         const allSerials =
             allowance.approvedForAll != null &&
             allowance.approvedForAll.value == true;
         return new TokenNftAllowance({
-            tokenId: TokenId._fromProtobuf(
+            tokenId: TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId:
                 allowance.spender != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               allowance.spender
                           )
@@ -108,7 +108,7 @@ export default class TokenNftAllowance {
                     : null,
             ownerAccountId:
                 allowance.owner != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
                           )
@@ -133,10 +133,10 @@ export default class TokenNftAllowance {
      */
     static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new TokenNftAllowance({
-            tokenId: TokenId._fromProtobuf(
+            tokenId: TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
-            spenderAccountId: AccountId._fromProtobuf(
+            spenderAccountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
                 )
@@ -154,13 +154,13 @@ export default class TokenNftAllowance {
      */
     static _fromRemoveProtobuf(allowance) {
         return new TokenNftAllowance({
-            tokenId: TokenId._fromProtobuf(
+            tokenId: TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: null,
             ownerAccountId:
                 allowance.owner != null
-                    ? AccountId._fromProtobuf(
+                    ? AccountId[symbols.fromProtobuf](
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
                           )

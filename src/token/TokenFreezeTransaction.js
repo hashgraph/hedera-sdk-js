@@ -84,7 +84,7 @@ export default class TokenFreezeTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenFreezeTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -101,11 +101,11 @@ export default class TokenFreezeTransaction extends Transaction {
             new TokenFreezeTransaction({
                 tokenId:
                     freezeToken.token != null
-                        ? TokenId._fromProtobuf(freezeToken.token)
+                        ? TokenId[symbols.fromProtobuf](freezeToken.token)
                         : undefined,
                 accountId:
                     freezeToken.account != null
-                        ? AccountId._fromProtobuf(freezeToken.account)
+                        ? AccountId[symbols.fromProtobuf](freezeToken.account)
                         : undefined,
             }),
             transactions,
@@ -223,5 +223,5 @@ export default class TokenFreezeTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenFreeze",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenFreezeTransaction._fromProtobuf
+    TokenFreezeTransaction[symbols.fromProtobuf]
 );

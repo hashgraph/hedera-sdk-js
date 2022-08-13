@@ -63,13 +63,13 @@ export default class LiveHash {
      * @param {HashgraphProto.proto.ILiveHash} liveHash
      * @returns {LiveHash}
      */
-    static _fromProtobuf(liveHash) {
+    static [symbols.fromProtobuf](liveHash) {
         const liveHash_ = /** @type {HashgraphProto.proto.ILiveHash} */ (
             liveHash
         );
 
         return new LiveHash({
-            accountId: AccountId._fromProtobuf(
+            accountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     liveHash_.accountId
                 )
@@ -79,7 +79,7 @@ export default class LiveHash {
                 liveHash_.keys != null
                     ? KeyList[symbols.fromProtobufKeyList](liveHash_.keys)
                     : new KeyList(),
-            duration: Duration._fromProtobuf(
+            duration: Duration[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IDuration} */ (
                     liveHash_.duration
                 )

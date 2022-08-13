@@ -174,19 +174,19 @@ export default class ContractInfo {
      * @param {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} info
      * @returns {ContractInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const autoRenewPeriod = /** @type {Long | number} */ (
             /** @type {HashgraphProto.proto.IDuration} */ (info.autoRenewPeriod)
                 .seconds
         );
 
         return new ContractInfo({
-            contractId: ContractId._fromProtobuf(
+            contractId: ContractId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     info.contractID
                 )
             ),
-            accountId: AccountId._fromProtobuf(
+            accountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
             ),
             contractAccountId:
@@ -195,7 +195,7 @@ export default class ContractInfo {
                 info.adminKey != null
                     ? Key[symbols.fromProtobufKey](info.adminKey)
                     : null,
-            expirationTime: Timestamp._fromProtobuf(
+            expirationTime: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
                 )
@@ -203,7 +203,7 @@ export default class ContractInfo {
             autoRenewPeriod: new Duration(autoRenewPeriod),
             autoRenewAccountId:
                 info.autoRenewAccountId != null
-                    ? AccountId._fromProtobuf(info.autoRenewAccountId)
+                    ? AccountId[symbols.fromProtobuf](info.autoRenewAccountId)
                     : null,
             storage:
                 info.storage != null
@@ -214,7 +214,7 @@ export default class ContractInfo {
             contractMemo: info.memo != null ? info.memo : "",
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             isDeleted: /** @type {boolean} */ (info.deleted),
-            tokenRelationships: TokenRelationshipMap._fromProtobuf(
+            tokenRelationships: TokenRelationshipMap[symbols.fromProtobuf](
                 info.tokenRelationships != null ? info.tokenRelationships : []
             ),
             ledgerId:
@@ -223,7 +223,7 @@ export default class ContractInfo {
                     : null,
             stakingInfo:
                 info.stakingInfo != null
-                    ? StakingInfo._fromProtobuf(info.stakingInfo)
+                    ? StakingInfo[symbols.fromProtobuf](info.stakingInfo)
                     : null,
         });
     }
@@ -271,7 +271,7 @@ export default class ContractInfo {
      * @returns {ContractInfo}
      */
     static fromBytes(bytes) {
-        return ContractInfo._fromProtobuf(
+        return ContractInfo[symbols.fromProtobuf](
             proto.ContractGetInfoResponse.ContractInfo.decode(bytes)
         );
     }

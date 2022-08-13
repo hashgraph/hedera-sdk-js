@@ -17,3 +17,4 @@ export const fromProtobufKey = Symbol();
 export const fromProtobufKeyList = Symbol();
 export const fromProtobufThresholdKey = Symbol();
 export const fromProtobufTransactions = Symbol();
+export const fromProtobuf = Symbol();

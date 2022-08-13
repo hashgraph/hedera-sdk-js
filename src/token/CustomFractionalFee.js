@@ -186,7 +186,7 @@ export default class CustomFractionalFee extends CustomFee {
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const fee = /** @type {HashgraphProto.proto.IFractionalFee} */ (
             info.fractionalFee
         );
@@ -197,7 +197,9 @@ export default class CustomFractionalFee extends CustomFee {
         return new CustomFractionalFee({
             feeCollectorAccountId:
                 info.feeCollectorAccountId != null
-                    ? AccountId._fromProtobuf(info.feeCollectorAccountId)
+                    ? AccountId[symbols.fromProtobuf](
+                          info.feeCollectorAccountId
+                      )
                     : undefined,
             numerator:
                 fractional.numerator != null ? fractional.numerator : undefined,

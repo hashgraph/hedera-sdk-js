@@ -66,7 +66,7 @@ export default class AccountInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const info = /** @type {HashgraphProto.proto.ICryptoGetInfoQuery} */ (
             query.cryptoGetInfo
         );
@@ -74,7 +74,7 @@ export default class AccountInfoQuery extends Query {
         return new AccountInfoQuery({
             accountId:
                 info.accountID != null
-                    ? AccountId._fromProtobuf(info.accountID)
+                    ? AccountId[symbols.fromProtobuf](info.accountID)
                     : undefined,
         });
     }
@@ -168,7 +168,7 @@ export default class AccountInfoQuery extends Query {
             );
 
         return Promise.resolve(
-            AccountInfo._fromProtobuf(
+            AccountInfo[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
                     info.accountInfo
                 )
@@ -208,4 +208,4 @@ export default class AccountInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("cryptoGetInfo", AccountInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("cryptoGetInfo", AccountInfoQuery[symbols.fromProtobuf]);

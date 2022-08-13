@@ -242,7 +242,7 @@ export default class AccountInfo {
      * @param {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} info
      * @returns {AccountInfo}
      */
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         let aliasKey =
             info.alias != null && info.alias.length > 0
                 ? Key[symbols.fromProtobufKey](
@@ -254,7 +254,7 @@ export default class AccountInfo {
             aliasKey = null;
         }
 
-        const accountId = AccountId._fromProtobuf(
+        const accountId = AccountId[symbols.fromProtobuf](
             /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
         );
 
@@ -281,7 +281,7 @@ export default class AccountInfo {
                 info.receiverSigRequired != null
                     ? info.receiverSigRequired
                     : false,
-            expirationTime: Timestamp._fromProtobuf(
+            expirationTime: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
                 )
@@ -305,15 +305,15 @@ export default class AccountInfo {
                         info.proxyAccountID.accountNum
                     )
                 ).toInt() !== 0
-                    ? AccountId._fromProtobuf(info.proxyAccountID)
+                    ? AccountId[symbols.fromProtobuf](info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(
                 info.proxyReceived != null ? info.proxyReceived : 0
             ),
             liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(
-                (hash) => LiveHash._fromProtobuf(hash)
+                (hash) => LiveHash[symbols.fromProtobuf](hash)
             ),
-            tokenRelationships: TokenRelationshipMap._fromProtobuf(
+            tokenRelationships: TokenRelationshipMap[symbols.fromProtobuf](
                 info.tokenRelationships != null ? info.tokenRelationships : []
             ),
             accountMemo: info.memo != null ? info.memo : "",
@@ -333,7 +333,7 @@ export default class AccountInfo {
                 info.ethereumNonce != null ? info.ethereumNonce : null,
             stakingInfo:
                 info.stakingInfo != null
-                    ? StakingInfo._fromProtobuf(info.stakingInfo)
+                    ? StakingInfo[symbols.fromProtobuf](info.stakingInfo)
                     : null,
         });
     }
@@ -392,7 +392,7 @@ export default class AccountInfo {
      * @returns {AccountInfo}
      */
     static fromBytes(bytes) {
-        return AccountInfo._fromProtobuf(
+        return AccountInfo[symbols.fromProtobuf](
             HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.decode(bytes)
         );
     }

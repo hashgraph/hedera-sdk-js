@@ -77,7 +77,7 @@ export default class LiveHashQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {LiveHashQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const hash =
             /** @type {HashgraphProto.proto.ICryptoGetLiveHashQuery} */ (
                 query.cryptoGetLiveHash
@@ -86,7 +86,7 @@ export default class LiveHashQuery extends Query {
         return new LiveHashQuery({
             accountId:
                 hash.accountID != null
-                    ? AccountId._fromProtobuf(hash.accountID)
+                    ? AccountId[symbols.fromProtobuf](hash.accountID)
                     : undefined,
             hash: hash.hash != null ? hash.hash : undefined,
         });
@@ -182,7 +182,7 @@ export default class LiveHashQuery extends Query {
             );
 
         return Promise.resolve(
-            LiveHash._fromProtobuf(
+            LiveHash[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ILiveHash} */ (hashes.liveHash)
             )
         );
@@ -223,4 +223,4 @@ export default class LiveHashQuery extends Query {
 
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("cryptoGetLiveHash", LiveHashQuery._fromProtobuf);
+QUERY_REGISTRY.set("cryptoGetLiveHash", LiveHashQuery[symbols.fromProtobuf]);

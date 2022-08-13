@@ -22,6 +22,7 @@ import Timestamp from "../Timestamp.js";
 import TopicMessageChunk from "./TopicMessageChunk.js";
 import Long from "long";
 import TransactionId from "../transaction/TransactionId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -68,7 +69,7 @@ export default class TopicMessage {
      */
     static _ofSingle(response) {
         return new TopicMessage({
-            consensusTimestamp: Timestamp._fromProtobuf(
+            consensusTimestamp: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
@@ -87,11 +88,11 @@ export default class TopicMessage {
             initialTransactionId:
                 response.chunkInfo != null &&
                 response.chunkInfo.initialTransactionID != null
-                    ? TransactionId._fromProtobuf(
+                    ? TransactionId[symbols.fromProtobuf](
                           response.chunkInfo.initialTransactionID
                       )
                     : null,
-            chunks: [TopicMessageChunk._fromProtobuf(response)],
+            chunks: [TopicMessageChunk[symbols.fromProtobuf](response)],
         });
     }
 
@@ -108,7 +109,7 @@ export default class TopicMessage {
                 responses[length - 1]
             );
 
-        const consensusTimestamp = Timestamp._fromProtobuf(
+        const consensusTimestamp = Timestamp[symbols.fromProtobuf](
             /** @type {HashgraphProto.proto.ITimestamp} */
             (last.consensusTimestamp)
         );
@@ -150,7 +151,7 @@ export default class TopicMessage {
         const chunks = responses.map(
             /**
              * @type {com.hedera.mirror.api.proto.IConsensusTopicResponse}
-             */ (m) => TopicMessageChunk._fromProtobuf(m)
+             */ (m) => TopicMessageChunk[symbols.fromProtobuf](m)
         );
 
         const size = chunks
@@ -171,7 +172,7 @@ export default class TopicMessage {
             responses[0].chunkInfo != null &&
             responses[0].chunkInfo.initialTransactionID != null
         ) {
-            initialTransactionId = TransactionId._fromProtobuf(
+            initialTransactionId = TransactionId[symbols.fromProtobuf](
                 responses[0].chunkInfo.initialTransactionID
             );
         }

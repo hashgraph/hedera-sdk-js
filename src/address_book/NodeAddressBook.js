@@ -72,12 +72,12 @@ export default class NodeAddressBook {
      * @param {HashgraphProto.proto.INodeAddressBook} nodeAddressBook
      * @returns {NodeAddressBook}
      */
-    static _fromProtobuf(nodeAddressBook) {
+    static [symbols.fromProtobuf](nodeAddressBook) {
         return new NodeAddressBook({
             nodeAddresses:
                 nodeAddressBook.nodeAddress != null
                     ? nodeAddressBook.nodeAddress.map((nodeAddress) =>
-                          NodeAddress._fromProtobuf(nodeAddress)
+                          NodeAddress[symbols.fromProtobuf](nodeAddress)
                       )
                     : undefined,
         });

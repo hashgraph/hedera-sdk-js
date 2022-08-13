@@ -231,7 +231,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -248,13 +248,13 @@ export default class TokenUpdateTransaction extends Transaction {
             new TokenUpdateTransaction({
                 tokenId:
                     update.token != null
-                        ? TokenId._fromProtobuf(update.token)
+                        ? TokenId[symbols.fromProtobuf](update.token)
                         : undefined,
                 tokenName: update.name != null ? update.name : undefined,
                 tokenSymbol: update.symbol != null ? update.symbol : undefined,
                 treasuryAccountId:
                     update.treasury != null
-                        ? AccountId._fromProtobuf(update.treasury)
+                        ? AccountId[symbols.fromProtobuf](update.treasury)
                         : undefined,
                 adminKey:
                     update.adminKey != null
@@ -278,15 +278,17 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null
-                        ? AccountId._fromProtobuf(update.autoRenewAccount)
+                        ? AccountId[symbols.fromProtobuf](
+                              update.autoRenewAccount
+                          )
                         : undefined,
                 expirationTime:
                     update.expiry != null
-                        ? Timestamp._fromProtobuf(update.expiry)
+                        ? Timestamp[symbols.fromProtobuf](update.expiry)
                         : undefined,
                 autoRenewPeriod:
                     update.autoRenewPeriod != null
-                        ? Duration._fromProtobuf(update.autoRenewPeriod)
+                        ? Duration[symbols.fromProtobuf](update.autoRenewPeriod)
                         : undefined,
                 tokenMemo:
                     update.memo != null
@@ -726,5 +728,5 @@ export default class TokenUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenUpdate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenUpdateTransaction._fromProtobuf
+    TokenUpdateTransaction[symbols.fromProtobuf]
 );

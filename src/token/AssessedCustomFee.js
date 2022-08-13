@@ -148,21 +148,21 @@ export default class AssessedCustomFee {
      * @param {HashgraphProto.proto.IAssessedCustomFee} fee
      * @returns {AssessedCustomFee}
      */
-    static _fromProtobuf(fee) {
+    static [symbols.fromProtobuf](fee) {
         return new AssessedCustomFee({
             feeCollectorAccountId:
                 fee.feeCollectorAccountId != null
-                    ? AccountId._fromProtobuf(fee.feeCollectorAccountId)
+                    ? AccountId[symbols.fromProtobuf](fee.feeCollectorAccountId)
                     : undefined,
             tokenId:
                 fee.tokenId != null
-                    ? TokenId._fromProtobuf(fee.tokenId)
+                    ? TokenId[symbols.fromProtobuf](fee.tokenId)
                     : undefined,
             amount: fee.amount != null ? fee.amount : undefined,
             payerAccountIds:
                 fee.effectivePayerAccountId != null
                     ? fee.effectivePayerAccountId.map((id) =>
-                          AccountId._fromProtobuf(id)
+                          AccountId[symbols.fromProtobuf](id)
                       )
                     : undefined,
         });

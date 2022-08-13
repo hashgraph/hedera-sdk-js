@@ -88,7 +88,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenFeeScheduleUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -105,17 +105,25 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
             new TokenFeeScheduleUpdateTransaction({
                 tokenId:
                     feeScheduleUpdate.tokenId != null
-                        ? TokenId._fromProtobuf(feeScheduleUpdate.tokenId)
+                        ? TokenId[symbols.fromProtobuf](
+                              feeScheduleUpdate.tokenId
+                          )
                         : undefined,
                 customFees:
                     feeScheduleUpdate.customFees != null
                         ? feeScheduleUpdate.customFees.map((fee) => {
                               if (fee.fixedFee != null) {
-                                  return CustomFixedFee._fromProtobuf(fee);
+                                  return CustomFixedFee[symbols.fromProtobuf](
+                                      fee
+                                  );
                               } else if (fee.fractionalFee != null) {
-                                  return CustomFractionalFee._fromProtobuf(fee);
+                                  return CustomFractionalFee[
+                                      symbols.fromProtobuf
+                                  ](fee);
                               } else {
-                                  return CustomRoyaltyFee._fromProtobuf(fee);
+                                  return CustomRoyaltyFee[symbols.fromProtobuf](
+                                      fee
+                                  );
                               }
                           })
                         : undefined,
@@ -144,7 +152,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId[symbols.toProtobuf]());
+                : TokenId[symbols.fromProtobuf](tokenId[symbols.toProtobuf]());
 
         return this;
     }
@@ -218,5 +226,5 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenFeeScheduleUpdate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenFeeScheduleUpdateTransaction._fromProtobuf
+    TokenFeeScheduleUpdateTransaction[symbols.fromProtobuf]
 );

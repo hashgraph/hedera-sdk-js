@@ -213,7 +213,7 @@ export default class AddresesBookQuery {
                 request,
                 (data) => {
                     this._addresses.push(
-                        NodeAddress._fromProtobuf(
+                        NodeAddress[symbols.fromProtobuf](
                             HashgraphProto.proto.NodeAddress.decode(data)
                         )
                     );

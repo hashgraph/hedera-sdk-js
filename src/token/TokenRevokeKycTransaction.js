@@ -84,7 +84,7 @@ export default class TokenRevokeKycTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenRevokeKycTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -101,11 +101,13 @@ export default class TokenRevokeKycTransaction extends Transaction {
             new TokenRevokeKycTransaction({
                 tokenId:
                     revokeKycToken.token != null
-                        ? TokenId._fromProtobuf(revokeKycToken.token)
+                        ? TokenId[symbols.fromProtobuf](revokeKycToken.token)
                         : undefined,
                 accountId:
                     revokeKycToken.account != null
-                        ? AccountId._fromProtobuf(revokeKycToken.account)
+                        ? AccountId[symbols.fromProtobuf](
+                              revokeKycToken.account
+                          )
                         : undefined,
             }),
             transactions,
@@ -223,5 +225,5 @@ export default class TokenRevokeKycTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenRevokeKyc",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenRevokeKycTransaction._fromProtobuf
+    TokenRevokeKycTransaction[symbols.fromProtobuf]
 );

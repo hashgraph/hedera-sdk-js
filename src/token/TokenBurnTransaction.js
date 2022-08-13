@@ -96,7 +96,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenBurnTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -113,7 +113,7 @@ export default class TokenBurnTransaction extends Transaction {
             new TokenBurnTransaction({
                 tokenId:
                     burnToken.token != null
-                        ? TokenId._fromProtobuf(burnToken.token)
+                        ? TokenId[symbols.fromProtobuf](burnToken.token)
                         : undefined,
                 amount: burnToken.amount != null ? burnToken.amount : undefined,
                 serials:
@@ -247,5 +247,5 @@ export default class TokenBurnTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenBurn",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenBurnTransaction._fromProtobuf
+    TokenBurnTransaction[symbols.fromProtobuf]
 );

@@ -59,9 +59,9 @@ export default class TopicMessageChunk {
      * @param {com.hedera.mirror.api.proto.IConsensusTopicResponse} response
      * @returns {TopicMessageChunk}
      */
-    static _fromProtobuf(response) {
+    static [symbols.fromProtobuf](response) {
         return new TopicMessageChunk({
-            consensusTimestamp: Timestamp._fromProtobuf(
+            consensusTimestamp: Timestamp[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),

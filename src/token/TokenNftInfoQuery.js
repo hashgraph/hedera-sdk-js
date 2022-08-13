@@ -116,7 +116,7 @@ export default class TokenNftInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {TokenNftInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         if (query.tokenGetNftInfo != null) {
             const info =
                 /** @type {HashgraphProto.proto.ITokenGetNftInfoQuery} */ (
@@ -126,7 +126,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 nftId:
                     info.nftID != null
-                        ? NftId._fromProtobuf(info.nftID)
+                        ? NftId[symbols.fromProtobuf](info.nftID)
                         : undefined,
             });
         } else if (query.tokenGetAccountNftInfos != null) {
@@ -138,7 +138,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 accountId:
                     info.accountID != null
-                        ? AccountId._fromProtobuf(info.accountID)
+                        ? AccountId[symbols.fromProtobuf](info.accountID)
                         : undefined,
                 start: info.start != null ? info.start : undefined,
                 end: info.end != null ? info.end : undefined,
@@ -152,7 +152,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 tokenId:
                     info.tokenID != null
-                        ? TokenId._fromProtobuf(info.tokenID)
+                        ? TokenId[symbols.fromProtobuf](info.tokenID)
                         : undefined,
                 start: info.start != null ? info.start : undefined,
                 end: info.end != null ? info.end : undefined,
@@ -177,7 +177,7 @@ export default class TokenNftInfoQuery extends Query {
         this._nftId =
             typeof nftId === "string"
                 ? NftId.fromString(nftId)
-                : NftId._fromProtobuf(nftId[symbols.toProtobuf]());
+                : NftId[symbols.fromProtobuf](nftId[symbols.toProtobuf]());
 
         return this;
     }
@@ -206,7 +206,9 @@ export default class TokenNftInfoQuery extends Query {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId[symbols.toProtobuf]());
+                : AccountId[symbols.fromProtobuf](
+                      accountId[symbols.toProtobuf]()
+                  );
 
         return this;
     }
@@ -235,7 +237,7 @@ export default class TokenNftInfoQuery extends Query {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId[symbols.toProtobuf]());
+                : TokenId[symbols.fromProtobuf](tokenId[symbols.toProtobuf]());
 
         return this;
     }
@@ -357,7 +359,7 @@ export default class TokenNftInfoQuery extends Query {
 
         return Promise.resolve(
             nfts.map((nft) =>
-                TokenNftInfo._fromProtobuf(
+                TokenNftInfo[symbols.fromProtobuf](
                     /** @type {HashgraphProto.proto.ITokenNftInfo} */ (nft)
                 )
             )
@@ -397,4 +399,4 @@ export default class TokenNftInfoQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("tokenGetNftInfo", TokenNftInfoQuery._fromProtobuf);
+QUERY_REGISTRY.set("tokenGetNftInfo", TokenNftInfoQuery[symbols.fromProtobuf]);

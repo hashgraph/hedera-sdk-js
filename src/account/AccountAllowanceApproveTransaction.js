@@ -94,7 +94,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountAllowanceApproveTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -112,15 +112,21 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                 hbarApprovals: (allowanceApproval.cryptoAllowances != null
                     ? allowanceApproval.cryptoAllowances
                     : []
-                ).map((approval) => HbarAllowance._fromProtobuf(approval)),
+                ).map((approval) =>
+                    HbarAllowance[symbols.fromProtobuf](approval)
+                ),
                 tokenApprovals: (allowanceApproval.tokenAllowances != null
                     ? allowanceApproval.tokenAllowances
                     : []
-                ).map((approval) => TokenAllowance._fromProtobuf(approval)),
+                ).map((approval) =>
+                    TokenAllowance[symbols.fromProtobuf](approval)
+                ),
                 nftApprovals: (allowanceApproval.nftAllowances != null
                     ? allowanceApproval.nftAllowances
                     : []
-                ).map((approval) => TokenNftAllowance._fromProtobuf(approval)),
+                ).map((approval) =>
+                    TokenNftAllowance[symbols.fromProtobuf](approval)
+                ),
             }),
             transactions,
             signedTransactions,
@@ -480,5 +486,5 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoApproveAllowance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountAllowanceApproveTransaction._fromProtobuf
+    AccountAllowanceApproveTransaction[symbols.fromProtobuf]
 );

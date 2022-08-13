@@ -71,7 +71,7 @@ export default class AccountStakersQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountStakersQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const stakers =
             /** @type {HashgraphProto.proto.ICryptoGetStakersQuery} */ (
                 query.cryptoGetProxyStakers
@@ -80,7 +80,7 @@ export default class AccountStakersQuery extends Query {
         return new AccountStakersQuery({
             accountId:
                 stakers.accountID != null
-                    ? AccountId._fromProtobuf(stakers.accountID)
+                    ? AccountId[symbols.fromProtobuf](stakers.accountID)
                     : undefined,
         });
     }
@@ -160,7 +160,7 @@ export default class AccountStakersQuery extends Query {
 
         return Promise.resolve(
             (stakers.proxyStaker != null ? stakers.proxyStaker : []).map(
-                (staker) => ProxyStaker._fromProtobuf(staker)
+                (staker) => ProxyStaker[symbols.fromProtobuf](staker)
             )
         );
     }
@@ -199,4 +199,7 @@ export default class AccountStakersQuery extends Query {
 
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("cryptoGetProxyStakers", AccountStakersQuery._fromProtobuf);
+QUERY_REGISTRY.set(
+    "cryptoGetProxyStakers",
+    AccountStakersQuery[symbols.fromProtobuf]
+);

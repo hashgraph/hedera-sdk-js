@@ -50,14 +50,14 @@ export default class ExchangeRates {
      * @param {HashgraphProto.proto.IExchangeRateSet} rateSet
      * @returns {ExchangeRates}
      */
-    static _fromProtobuf(rateSet) {
+    static [symbols.fromProtobuf](rateSet) {
         return new ExchangeRates({
-            currentRate: ExchangeRate._fromProtobuf(
+            currentRate: ExchangeRate[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IExchangeRate} */ (
                     rateSet.currentRate
                 )
             ),
-            nextRate: ExchangeRate._fromProtobuf(
+            nextRate: ExchangeRate[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IExchangeRate} */ (
                     rateSet.nextRate
                 )
@@ -81,6 +81,8 @@ export default class ExchangeRates {
      * @returns {ExchangeRates}
      */
     static fromBytes(bytes) {
-        return ExchangeRates._fromProtobuf(proto.ExchangeRateSet.decode(bytes));
+        return ExchangeRates[symbols.fromProtobuf](
+            proto.ExchangeRateSet.decode(bytes)
+        );
     }
 }

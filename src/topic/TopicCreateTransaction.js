@@ -118,7 +118,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicCreateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -143,7 +143,9 @@ export default class TopicCreateTransaction extends Transaction {
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
-                        ? AccountId._fromProtobuf(create.autoRenewAccount)
+                        ? AccountId[symbols.fromProtobuf](
+                              create.autoRenewAccount
+                          )
                         : undefined,
                 autoRenewPeriod:
                     create.autoRenewPeriod != null
@@ -326,5 +328,5 @@ export default class TopicCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusCreateTopic",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicCreateTransaction._fromProtobuf
+    TopicCreateTransaction[symbols.fromProtobuf]
 );

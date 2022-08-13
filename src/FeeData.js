@@ -66,7 +66,7 @@ export default class FeeData {
      * @returns {FeeData}
      */
     static fromBytes(bytes) {
-        return FeeData._fromProtobuf(
+        return FeeData[symbols.fromProtobuf](
             HashgraphProto.proto.FeeData.decode(bytes)
         );
     }
@@ -76,19 +76,19 @@ export default class FeeData {
      * @param {HashgraphProto.proto.IFeeData} feeData
      * @returns {FeeData}
      */
-    static _fromProtobuf(feeData) {
+    static [symbols.fromProtobuf](feeData) {
         return new FeeData({
             nodedata:
                 feeData.nodedata != null
-                    ? FeeComponents._fromProtobuf(feeData.nodedata)
+                    ? FeeComponents[symbols.fromProtobuf](feeData.nodedata)
                     : undefined,
             networkdata:
                 feeData.networkdata != null
-                    ? FeeComponents._fromProtobuf(feeData.networkdata)
+                    ? FeeComponents[symbols.fromProtobuf](feeData.networkdata)
                     : undefined,
             servicedata:
                 feeData.servicedata != null
-                    ? FeeComponents._fromProtobuf(feeData.servicedata)
+                    ? FeeComponents[symbols.fromProtobuf](feeData.servicedata)
                     : undefined,
             feeDataType:
                 feeData.subType != null

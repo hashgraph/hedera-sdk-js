@@ -87,7 +87,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -104,7 +104,7 @@ export default class AccountDeleteTransaction extends Transaction {
             new AccountDeleteTransaction({
                 accountId:
                     accountDelete.deleteAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.deleteAccountID
                               )
@@ -112,7 +112,7 @@ export default class AccountDeleteTransaction extends Transaction {
                         : undefined,
                 transferAccountId:
                     accountDelete.transferAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.transferAccountID
                               )
@@ -238,5 +238,5 @@ export default class AccountDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDelete",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountDeleteTransaction._fromProtobuf
+    AccountDeleteTransaction[symbols.fromProtobuf]
 );

@@ -73,7 +73,7 @@ export default class TokenPauseTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenPauseTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -90,7 +90,7 @@ export default class TokenPauseTransaction extends Transaction {
             new TokenPauseTransaction({
                 tokenId:
                     pauseToken.token != null
-                        ? TokenId._fromProtobuf(pauseToken.token)
+                        ? TokenId[symbols.fromProtobuf](pauseToken.token)
                         : undefined,
             }),
             transactions,
@@ -179,5 +179,5 @@ export default class TokenPauseTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenPause",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenPauseTransaction._fromProtobuf
+    TokenPauseTransaction[symbols.fromProtobuf]
 );

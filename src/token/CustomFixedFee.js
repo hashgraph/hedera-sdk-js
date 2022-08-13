@@ -130,7 +130,7 @@ export default class CustomFixedFee extends CustomFee {
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static _fromProtobuf(info) {
+    static [symbols.fromProtobuf](info) {
         const fee = /** @type {HashgraphProto.proto.IFixedFee} */ (
             info.fixedFee
         );
@@ -138,11 +138,13 @@ export default class CustomFixedFee extends CustomFee {
         return new CustomFixedFee({
             feeCollectorAccountId:
                 info.feeCollectorAccountId != null
-                    ? AccountId._fromProtobuf(info.feeCollectorAccountId)
+                    ? AccountId[symbols.fromProtobuf](
+                          info.feeCollectorAccountId
+                      )
                     : undefined,
             denominatingTokenId:
                 fee.denominatingTokenId != null
-                    ? TokenId._fromProtobuf(fee.denominatingTokenId)
+                    ? TokenId[symbols.fromProtobuf](fee.denominatingTokenId)
                     : undefined,
             amount: fee.amount != null ? fee.amount : undefined,
         });

@@ -64,7 +64,7 @@ export default class ContractByteCodeQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractByteCodeQuery}
      */
-    static _fromProtobuf(query) {
+    static [symbols.fromProtobuf](query) {
         const bytecode =
             /** @type {HashgraphProto.proto.IContractGetBytecodeQuery} */ (
                 query.contractGetBytecode
@@ -73,7 +73,7 @@ export default class ContractByteCodeQuery extends Query {
         return new ContractByteCodeQuery({
             contractId:
                 bytecode.contractID != null
-                    ? ContractId._fromProtobuf(bytecode.contractID)
+                    ? ContractId[symbols.fromProtobuf](bytecode.contractID)
                     : undefined,
         });
     }
@@ -188,4 +188,7 @@ export default class ContractByteCodeQuery extends Query {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("contractGetBytecode", ContractByteCodeQuery._fromProtobuf);
+QUERY_REGISTRY.set(
+    "contractGetBytecode",
+    ContractByteCodeQuery[symbols.fromProtobuf]
+);

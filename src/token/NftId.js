@@ -68,9 +68,9 @@ export default class NftId {
      * @param {HashgraphProto.proto.INftID} id
      * @returns {NftId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         return new NftId(
-            TokenId._fromProtobuf(
+            TokenId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITokenID} */ (id.tokenID)
             ),
             id.serialNumber != null ? id.serialNumber : Long.ZERO
@@ -82,7 +82,9 @@ export default class NftId {
      * @returns {NftId}
      */
     static fromBytes(bytes) {
-        return NftId._fromProtobuf(HashgraphProto.proto.NftID.decode(bytes));
+        return NftId[symbols.fromProtobuf](
+            HashgraphProto.proto.NftID.decode(bytes)
+        );
     }
 
     /**

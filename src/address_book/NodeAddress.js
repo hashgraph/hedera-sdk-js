@@ -240,7 +240,7 @@ export default class NodeAddress {
      * @param {HashgraphProto.proto.INodeAddress} nodeAddress
      * @returns {NodeAddress}
      */
-    static _fromProtobuf(nodeAddress) {
+    static [symbols.fromProtobuf](nodeAddress) {
         return new NodeAddress({
             publicKey:
                 nodeAddress.RSA_PubKey != null
@@ -249,7 +249,7 @@ export default class NodeAddress {
             nodeId: nodeAddress.nodeId != null ? nodeAddress.nodeId : undefined,
             accountId:
                 nodeAddress.nodeAccountId != null
-                    ? AccountId._fromProtobuf(nodeAddress.nodeAccountId)
+                    ? AccountId[symbols.fromProtobuf](nodeAddress.nodeAccountId)
                     : undefined,
             certHash:
                 nodeAddress.nodeCertHash != null
@@ -258,7 +258,7 @@ export default class NodeAddress {
             addresses:
                 nodeAddress.serviceEndpoint != null
                     ? nodeAddress.serviceEndpoint.map((address) =>
-                          Endpoint._fromProtobuf(address)
+                          Endpoint[symbols.fromProtobuf](address)
                       )
                     : undefined,
             description:

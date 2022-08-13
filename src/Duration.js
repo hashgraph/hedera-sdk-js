@@ -61,7 +61,7 @@ export default class Duration {
      * @param {HashgraphProto.proto.IDuration} duration
      * @returns {Duration}
      */
-    static _fromProtobuf(duration) {
+    static [symbols.fromProtobuf](duration) {
         return new Duration(/** @type {Long} */ (duration.seconds));
     }
 }

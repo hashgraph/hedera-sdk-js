@@ -69,9 +69,9 @@ export default class ProxyStaker {
      * @param {HashgraphProto.proto.IProxyStaker} transfer
      * @returns {ProxyStaker}
      */
-    static _fromProtobuf(transfer) {
+    static [symbols.fromProtobuf](transfer) {
         return new ProxyStaker({
-            accountId: AccountId._fromProtobuf(
+            accountId: AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     transfer.accountID
                 )

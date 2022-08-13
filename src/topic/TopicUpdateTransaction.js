@@ -148,7 +148,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -165,7 +165,7 @@ export default class TopicUpdateTransaction extends Transaction {
             new TopicUpdateTransaction({
                 topicId:
                     update.topicID != null
-                        ? TopicId._fromProtobuf(update.topicID)
+                        ? TopicId[symbols.fromProtobuf](update.topicID)
                         : undefined,
                 adminKey:
                     update.adminKey != null
@@ -177,7 +177,9 @@ export default class TopicUpdateTransaction extends Transaction {
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null
-                        ? AccountId._fromProtobuf(update.autoRenewAccount)
+                        ? AccountId[symbols.fromProtobuf](
+                              update.autoRenewAccount
+                          )
                         : undefined,
                 autoRenewPeriod:
                     update.autoRenewPeriod != null
@@ -193,7 +195,7 @@ export default class TopicUpdateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     update.expirationTime != null
-                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](update.expirationTime)
                         : undefined,
             }),
             transactions,
@@ -482,5 +484,5 @@ export default class TopicUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusUpdateTopic",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicUpdateTransaction._fromProtobuf
+    TopicUpdateTransaction[symbols.fromProtobuf]
 );

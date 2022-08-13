@@ -21,6 +21,7 @@
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
 import ObjectMap from "../ObjectMap.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -45,13 +46,13 @@ export default class HbarTransferMap extends ObjectMap {
      * @param {HashgraphProto.proto.ITransferList} transfers
      * @returns {HbarTransferMap}
      */
-    static _fromProtobuf(transfers) {
+    static [symbols.fromProtobuf](transfers) {
         const accountTransfers = new HbarTransferMap();
 
         for (const transfer of transfers.accountAmounts != null
             ? transfers.accountAmounts
             : []) {
-            const account = AccountId._fromProtobuf(
+            const account = AccountId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     transfer.accountID
                 )

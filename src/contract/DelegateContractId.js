@@ -68,8 +68,8 @@ export default class DelegateContractId extends ContractId {
      * @param {HashgraphProto.proto.IContractID} id
      * @returns {DelegateContractId}
      */
-    static _fromProtobuf(id) {
-        return new DelegateContractId(ContractId._fromProtobuf(id));
+    static [symbols.fromProtobuf](id) {
+        return new DelegateContractId(ContractId[symbols.fromProtobuf](id));
     }
 
     /**
@@ -113,7 +113,7 @@ export default class DelegateContractId extends ContractId {
      * @returns {DelegateContractId}
      */
     static __fromProtobufKey(key) {
-        return DelegateContractId._fromProtobuf(key);
+        return DelegateContractId[symbols.fromProtobuf](key);
     }
 }
 

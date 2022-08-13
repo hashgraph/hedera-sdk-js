@@ -120,7 +120,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FileUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -137,7 +137,7 @@ export default class FileUpdateTransaction extends Transaction {
             new FileUpdateTransaction({
                 fileId:
                     update.fileID != null
-                        ? FileId._fromProtobuf(update.fileID)
+                        ? FileId[symbols.fromProtobuf](update.fileID)
                         : undefined,
                 keys:
                     update.keys != null
@@ -149,7 +149,7 @@ export default class FileUpdateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     update.expirationTime != null
-                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](update.expirationTime)
                         : undefined,
                 contents: update.contents != null ? update.contents : undefined,
                 fileMemo:
@@ -396,4 +396,7 @@ export default class FileUpdateTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("fileUpdate", FileUpdateTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set(
+    "fileUpdate",
+    FileUpdateTransaction[symbols.fromProtobuf]
+);

@@ -80,7 +80,7 @@ export default class FileDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FileDeleteTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -97,7 +97,7 @@ export default class FileDeleteTransaction extends Transaction {
             new FileDeleteTransaction({
                 fileId:
                     fileDelete.fileID != null
-                        ? FileId._fromProtobuf(fileDelete.fileID)
+                        ? FileId[symbols.fromProtobuf](fileDelete.fileID)
                         : undefined,
             }),
             transactions,
@@ -186,4 +186,7 @@ export default class FileDeleteTransaction extends Transaction {
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
-TRANSACTION_REGISTRY.set("fileDelete", FileDeleteTransaction._fromProtobuf);
+TRANSACTION_REGISTRY.set(
+    "fileDelete",
+    FileDeleteTransaction[symbols.fromProtobuf]
+);

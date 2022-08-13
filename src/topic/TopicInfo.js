@@ -116,13 +116,13 @@ export default class TopicInfo {
      * @param {HashgraphProto.proto.IConsensusGetTopicInfoResponse} infoResponse
      * @returns {TopicInfo}
      */
-    static _fromProtobuf(infoResponse) {
+    static [symbols.fromProtobuf](infoResponse) {
         const info = /** @type {HashgraphProto.proto.IConsensusTopicInfo} */ (
             infoResponse.topicInfo
         );
 
         return new TopicInfo({
-            topicId: TopicId._fromProtobuf(
+            topicId: TopicId[symbols.fromProtobuf](
                 /** @type {HashgraphProto.proto.ITopicID} */ (
                     infoResponse.topicID
                 )
@@ -138,7 +138,7 @@ export default class TopicInfo {
                     : Long.ZERO,
             expirationTime:
                 info.expirationTime != null
-                    ? Timestamp._fromProtobuf(info.expirationTime)
+                    ? Timestamp[symbols.fromProtobuf](info.expirationTime)
                     : null,
             adminKey:
                 info.adminKey != null
@@ -156,7 +156,7 @@ export default class TopicInfo {
                     : null,
             autoRenewAccountId:
                 info.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(info.autoRenewAccount)
+                    ? AccountId[symbols.fromProtobuf](info.autoRenewAccount)
                     : null,
             ledgerId:
                 info.ledgerId != null
@@ -205,7 +205,7 @@ export default class TopicInfo {
      * @returns {TopicInfo}
      */
     static fromBytes(bytes) {
-        return TopicInfo._fromProtobuf({
+        return TopicInfo[symbols.fromProtobuf]({
             topicInfo: HashgraphProto.proto.ConsensusTopicInfo.decode(bytes),
         });
     }

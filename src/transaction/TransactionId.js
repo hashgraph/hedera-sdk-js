@@ -167,11 +167,11 @@ export default class TransactionId {
      * @param {HashgraphProto.proto.ITransactionID} id
      * @returns {TransactionId}
      */
-    static _fromProtobuf(id) {
+    static [symbols.fromProtobuf](id) {
         if (id.accountID != null && id.transactionValidStart != null) {
             return new TransactionId(
-                AccountId._fromProtobuf(id.accountID),
-                Timestamp._fromProtobuf(id.transactionValidStart),
+                AccountId[symbols.fromProtobuf](id.accountID),
+                Timestamp[symbols.fromProtobuf](id.transactionValidStart),
                 id.scheduled != null ? id.scheduled : undefined,
                 id.nonce != null ? id.nonce : undefined
             );
@@ -206,7 +206,7 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static fromBytes(bytes) {
-        return TransactionId._fromProtobuf(
+        return TransactionId[symbols.fromProtobuf](
             HashgraphProto.proto.TransactionID.decode(bytes)
         );
     }

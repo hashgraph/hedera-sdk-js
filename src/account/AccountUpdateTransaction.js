@@ -196,7 +196,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountUpdateTransaction}
      */
-    static _fromProtobuf(
+    static [symbols.fromProtobuf](
         transactions,
         signedTransactions,
         transactionIds,
@@ -213,7 +213,7 @@ export default class AccountUpdateTransaction extends Transaction {
             new AccountUpdateTransaction({
                 accountId:
                     update.accountIDToUpdate != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.accountIDToUpdate
                               )
@@ -229,7 +229,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null
-                        ? AccountId._fromProtobuf(
+                        ? AccountId[symbols.fromProtobuf](
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.proxyAccountID
                               )
@@ -243,7 +243,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     update.expirationTime != null
-                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        ? Timestamp[symbols.fromProtobuf](update.expirationTime)
                         : undefined,
                 accountMemo:
                     update.memo != null
@@ -260,7 +260,9 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 stakedAccountId:
                     update.stakedAccountId != null
-                        ? AccountId._fromProtobuf(update.stakedAccountId)
+                        ? AccountId[symbols.fromProtobuf](
+                              update.stakedAccountId
+                          )
                         : undefined,
                 stakedNodeId:
                     update.stakedNodeId != null
@@ -642,5 +644,5 @@ export default class AccountUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoUpdateAccount",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountUpdateTransaction._fromProtobuf
+    AccountUpdateTransaction[symbols.fromProtobuf]
 );
