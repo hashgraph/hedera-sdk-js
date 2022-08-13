@@ -292,7 +292,7 @@ export default class Executable {
      * @protected
      * @returns {Promise<RequestT>}
      */
-    _makeRequestAsync() {
+    [symbols.makeRequestAsync]() {
         throw new Error("not implemented");
     }
 
@@ -586,7 +586,7 @@ export default class Executable {
             );
 
             const channel = node.getChannel();
-            const request = await this._makeRequestAsync();
+            const request = await this[symbols.makeRequestAsync]();
 
             // advance the internal index
             // non-free queries and transactions map to more than 1 actual transaction and this will cause

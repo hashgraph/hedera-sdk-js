@@ -113,7 +113,7 @@ export default class CostQuery extends Executable {
      * @internal
      * @returns {Promise<HashgraphProto.proto.IQuery>}
      */
-    _makeRequestAsync() {
+    [symbols.makeRequestAsync]() {
         return Promise.resolve(
             this._query._onMakeRequest(
                 /** @type {HashgraphProto.proto.IQueryHeader} */ (this._header)

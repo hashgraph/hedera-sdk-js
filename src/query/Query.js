@@ -429,7 +429,7 @@ export default class Query extends Executable {
      * @internal
      * @returns {Promise<HashgraphProto.proto.IQuery>}
      */
-    async _makeRequestAsync() {
+    async [symbols.makeRequestAsync]() {
         /** @type {HashgraphProto.proto.IQueryHeader} */
         let header = {
             responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,

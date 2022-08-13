@@ -1199,7 +1199,7 @@ export default class Transaction extends Executable {
      * @internal
      * @returns {Promise<HashgraphProto.proto.ITransaction>}
      */
-    async _makeRequestAsync() {
+    async [symbols.makeRequestAsync]() {
         // The index for the transaction
         const index =
             this._transactionIds.index * this._nodeAccountIds.length +
