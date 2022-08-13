@@ -572,7 +572,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoUpdateAccount";
     }
 
@@ -581,7 +581,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoUpdateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             accountIDToUpdate:
                 this._accountId != null

@@ -153,7 +153,7 @@ export default class TopicDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "consensusDeleteTopic";
     }
 
@@ -162,7 +162,7 @@ export default class TopicDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IConsensusDeleteTopicTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             topicID:
                 this._topicId != null

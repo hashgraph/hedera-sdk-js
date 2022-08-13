@@ -156,7 +156,7 @@ export default class FileDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "fileDelete";
     }
 
@@ -165,7 +165,7 @@ export default class FileDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IFileDeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             fileID:
                 this._fileId != null

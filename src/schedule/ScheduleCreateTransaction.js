@@ -287,7 +287,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "scheduleCreate";
     }
 
@@ -296,7 +296,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IScheduleCreateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,

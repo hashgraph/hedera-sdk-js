@@ -147,7 +147,7 @@ export default class TokenDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenDeletion";
     }
 
@@ -156,7 +156,7 @@ export default class TokenDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenDeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

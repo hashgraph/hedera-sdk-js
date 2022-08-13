@@ -845,7 +845,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenCreation";
     }
 
@@ -854,7 +854,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenCreateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             name: this._tokenName,
             symbol: this._tokenSymbol,

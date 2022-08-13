@@ -594,7 +594,7 @@ export default class ContractUpdateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "contractUpdateInstance";
     }
 
@@ -603,7 +603,7 @@ export default class ContractUpdateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IContractUpdateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             contractID:
                 this._contractId != null

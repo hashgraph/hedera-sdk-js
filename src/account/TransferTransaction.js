@@ -711,7 +711,7 @@ export default class TransferTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoTransfer";
     }
 
@@ -720,7 +720,7 @@ export default class TransferTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoTransferTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         /** @type {{tokenId: TokenId; expectedDecimals: number | null; transfers: TokenTransfer[]; nftTransfers: TokenNftTransfer[];}[]} */
         const tokenTransferList = [];
 

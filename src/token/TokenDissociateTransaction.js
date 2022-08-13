@@ -195,7 +195,7 @@ export default class TokenDissociateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenDissociate";
     }
 
@@ -204,7 +204,7 @@ export default class TokenDissociateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenDissociateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             tokens:
                 this._tokenIds != null

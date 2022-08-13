@@ -243,7 +243,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "contractDeleteInstance";
     }
 
@@ -252,7 +252,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IContractDeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             contractID:
                 this._contractId != null

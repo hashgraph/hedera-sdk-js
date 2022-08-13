@@ -481,7 +481,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         throw new Error("This feature has been deprecated for this class.");
     }
 
@@ -491,7 +491,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @protected
      * @returns {object}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         throw new Error("This feature has been deprecated.");
     }
 

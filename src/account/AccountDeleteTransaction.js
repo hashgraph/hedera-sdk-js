@@ -202,7 +202,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoDelete";
     }
 
@@ -211,7 +211,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoDeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             deleteAccountID:
                 this._accountId != null

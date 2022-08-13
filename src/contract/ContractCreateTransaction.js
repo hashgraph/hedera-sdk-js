@@ -613,7 +613,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "contractCreateInstance";
     }
 
@@ -622,7 +622,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IContractCreateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             fileID:
                 this._bytecodeFileId != null

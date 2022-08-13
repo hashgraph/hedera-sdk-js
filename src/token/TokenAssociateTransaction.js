@@ -195,7 +195,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenAssociate";
     }
 
@@ -204,7 +204,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenAssociateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             tokens:
                 this._tokenIds != null

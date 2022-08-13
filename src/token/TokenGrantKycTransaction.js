@@ -187,7 +187,7 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenGrantKyc";
     }
 
@@ -196,7 +196,7 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenGrantKycTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

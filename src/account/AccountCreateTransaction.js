@@ -493,7 +493,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoCreateAccount";
     }
 
@@ -502,7 +502,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoCreateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             key: this._key != null ? this._key._toProtobufKey() : null,
             initialBalance:

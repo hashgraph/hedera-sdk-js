@@ -282,7 +282,7 @@ export default class FileCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "fileCreate";
     }
 
@@ -291,7 +291,7 @@ export default class FileCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IFileCreateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             keys:
                 this._keys != null

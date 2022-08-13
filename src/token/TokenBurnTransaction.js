@@ -213,7 +213,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenBurn";
     }
 
@@ -222,7 +222,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenBurnTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             amount: this._amount,
             serialNumbers: this._serials,

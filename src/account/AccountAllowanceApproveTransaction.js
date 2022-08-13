@@ -443,7 +443,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoApproveAllowance";
     }
 
@@ -452,7 +452,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoApproveAllowanceTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             cryptoAllowances: this._hbarApprovals.map((approval) =>
                 approval[symbols.toProtobuf]()

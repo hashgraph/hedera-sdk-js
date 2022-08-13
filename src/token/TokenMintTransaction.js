@@ -242,7 +242,7 @@ export default class TokenMintTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenMint";
     }
 
@@ -251,7 +251,7 @@ export default class TokenMintTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenMintTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             amount: this._amount,
             token:

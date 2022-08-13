@@ -642,7 +642,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenUpdate";
     }
 
@@ -651,7 +651,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenUpdateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

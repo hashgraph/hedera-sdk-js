@@ -424,7 +424,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "consensusUpdateTopic";
     }
 
@@ -433,7 +433,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IConsensusUpdateTopicTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             topicID:
                 this._topicId != null

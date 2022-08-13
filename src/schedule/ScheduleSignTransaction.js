@@ -172,7 +172,7 @@ export default class ScheduleSignTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "scheduleSign";
     }
 
@@ -181,7 +181,7 @@ export default class ScheduleSignTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IScheduleSignTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             scheduleID:
                 this._scheduleId != null

@@ -180,7 +180,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoDeleteAllowance";
     }
 
@@ -189,7 +189,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoDeleteAllowanceTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             nftAllowances: this._nftAllowances.map((allowance) =>
                 allowance[symbols.toProtobuf]()

@@ -183,7 +183,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenFeeScheduleUpdate";
     }
 
@@ -192,7 +192,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenFeeScheduleUpdateTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             tokenId:
                 this._tokenId != null

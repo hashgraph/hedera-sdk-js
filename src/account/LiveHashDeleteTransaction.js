@@ -175,7 +175,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoDeleteLiveHash";
     }
 
@@ -184,7 +184,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoDeleteLiveHashTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             liveHashToDelete: this._hash,
             accountOfLiveHash:

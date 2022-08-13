@@ -187,7 +187,7 @@ export default class TokenFreezeTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenFreeze";
     }
 
@@ -196,7 +196,7 @@ export default class TokenFreezeTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenFreezeAccountTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

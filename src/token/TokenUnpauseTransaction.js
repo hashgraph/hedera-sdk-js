@@ -147,7 +147,7 @@ export default class TokenUnpauseTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenUnpause";
     }
 
@@ -156,7 +156,7 @@ export default class TokenUnpauseTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenUnpauseTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

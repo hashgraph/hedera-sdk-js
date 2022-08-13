@@ -157,7 +157,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "scheduleDelete";
     }
 
@@ -166,7 +166,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IScheduleDeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             scheduleID:
                 this._scheduleId != null

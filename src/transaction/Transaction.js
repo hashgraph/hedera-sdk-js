@@ -1491,7 +1491,8 @@ export default class Transaction extends Executable {
      */
     _makeTransactionBody(nodeId) {
         return {
-            [this._getTransactionDataCase()]: this._makeTransactionData(),
+            [this[symbols.getTransactionDataCase]()]:
+                this[symbols.makeTransactionData](),
             transactionFee:
                 this._maxTransactionFee != null
                     ? this._maxTransactionFee.toTinybars()
@@ -1514,7 +1515,7 @@ export default class Transaction extends Executable {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         throw new Error("not implemented");
     }
 
@@ -1532,7 +1533,8 @@ export default class Transaction extends Executable {
                 this._maxTransactionFee == null
                     ? this._defaultMaxTransactionFee.toTinybars()
                     : this._maxTransactionFee.toTinybars(),
-            [this._getTransactionDataCase()]: this._makeTransactionData(),
+            [this[symbols.getTransactionDataCase]()]:
+                this[symbols.makeTransactionData](),
         };
     }
 
@@ -1543,7 +1545,7 @@ export default class Transaction extends Executable {
      * @protected
      * @returns {object}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         throw new Error("not implemented");
     }
 

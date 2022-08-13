@@ -252,7 +252,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "cryptoAddLiveHash";
     }
 
@@ -261,7 +261,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ICryptoAddLiveHashTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             liveHash: {
                 hash: this._hash,

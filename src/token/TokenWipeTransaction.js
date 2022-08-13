@@ -249,7 +249,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenWipe";
     }
 
@@ -258,7 +258,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenWipeAccountTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             amount: this._amount,
             token:

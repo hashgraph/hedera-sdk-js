@@ -351,7 +351,7 @@ export default class FreezeTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "freeze";
     }
 
@@ -360,7 +360,7 @@ export default class FreezeTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IFreezeTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             startTime:
                 this._startTimestamp != null

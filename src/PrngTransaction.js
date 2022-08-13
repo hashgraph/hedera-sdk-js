@@ -138,7 +138,7 @@ export default class PrngTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "utilPrng";
     }
 
@@ -147,7 +147,7 @@ export default class PrngTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IUtilPrngTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             range: this.range,
         };

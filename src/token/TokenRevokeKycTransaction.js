@@ -187,7 +187,7 @@ export default class TokenRevokeKycTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "tokenRevokeKyc";
     }
 
@@ -196,7 +196,7 @@ export default class TokenRevokeKycTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ITokenRevokeKycTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             token:
                 this._tokenId != null

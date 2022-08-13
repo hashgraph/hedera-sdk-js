@@ -276,7 +276,7 @@ export default class EthereumTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "ethereumTransaction";
     }
 
@@ -285,7 +285,7 @@ export default class EthereumTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IEthereumTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             ethereumData: this._ethereumData,
             callData:

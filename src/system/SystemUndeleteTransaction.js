@@ -184,7 +184,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "systemUndelete";
     }
 
@@ -193,7 +193,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.ISystemUndeleteTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             fileID:
                 this._fileId != null

@@ -284,7 +284,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "consensusCreateTopic";
     }
 
@@ -293,7 +293,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IConsensusCreateTopicTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         return {
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,

@@ -436,7 +436,7 @@ export default class FileAppendTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "fileAppend";
     }
 
@@ -445,7 +445,7 @@ export default class FileAppendTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IFileAppendTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         const length = this._contents != null ? this._contents.length : 0;
         const startIndex = this._transactionIds.index * this._chunkSize;
         const endIndex = Math.min(startIndex + this._chunkSize, length);

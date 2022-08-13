@@ -366,7 +366,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
-    _getTransactionDataCase() {
+    [symbols.getTransactionDataCase]() {
         return "consensusSubmitMessage";
     }
 
@@ -375,7 +375,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @protected
      * @returns {HashgraphProto.proto.IConsensusSubmitMessageTransactionBody}
      */
-    _makeTransactionData() {
+    [symbols.makeTransactionData]() {
         if (this._chunkInfo != null && this._message != null) {
             const num = /** @type {number} */ (this._chunkInfo.number);
             const startIndex = (num - 1) * this._chunkSize;
