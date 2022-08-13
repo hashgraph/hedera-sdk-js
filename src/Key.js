@@ -42,7 +42,7 @@ export default class Key {
      * @param {HashgraphProto.proto.IKey} key
      * @returns {Key}
      */
-    static _fromProtobufKey(key) {
+    static [symbols.fromProtobufKey](key) {
         if (key.contractID != null) {
             return CACHE.contractId(key.contractID);
         }

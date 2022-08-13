@@ -258,23 +258,23 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? Key._fromProtobufKey(update.adminKey)
+                        ? Key[symbols.fromProtobufKey](update.adminKey)
                         : undefined,
                 kycKey:
                     update.kycKey != null
-                        ? Key._fromProtobufKey(update.kycKey)
+                        ? Key[symbols.fromProtobufKey](update.kycKey)
                         : undefined,
                 freezeKey:
                     update.freezeKey != null
-                        ? Key._fromProtobufKey(update.freezeKey)
+                        ? Key[symbols.fromProtobufKey](update.freezeKey)
                         : undefined,
                 wipeKey:
                     update.wipeKey != null
-                        ? Key._fromProtobufKey(update.wipeKey)
+                        ? Key[symbols.fromProtobufKey](update.wipeKey)
                         : undefined,
                 supplyKey:
                     update.supplyKey != null
-                        ? Key._fromProtobufKey(update.supplyKey)
+                        ? Key[symbols.fromProtobufKey](update.supplyKey)
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null
@@ -296,7 +296,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 feeScheduleKey:
                     update.feeScheduleKey != null
-                        ? Key._fromProtobufKey(update.feeScheduleKey)
+                        ? Key[symbols.fromProtobufKey](update.feeScheduleKey)
                         : undefined,
             }),
             transactions,

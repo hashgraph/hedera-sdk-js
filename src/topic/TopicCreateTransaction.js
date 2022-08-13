@@ -135,11 +135,11 @@ export default class TopicCreateTransaction extends Transaction {
             new TopicCreateTransaction({
                 adminKey:
                     create.adminKey != null
-                        ? Key._fromProtobufKey(create.adminKey)
+                        ? Key[symbols.fromProtobufKey](create.adminKey)
                         : undefined,
                 submitKey:
                     create.submitKey != null
-                        ? Key._fromProtobufKey(create.submitKey)
+                        ? Key[symbols.fromProtobufKey](create.submitKey)
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null

@@ -128,7 +128,7 @@ export default class LiveHashAddTransaction extends Transaction {
                     liveHash_.keys != null
                         ? liveHash_.keys.keys != null
                             ? liveHash_.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key[symbols.fromProtobufKey](key)
                               )
                             : undefined
                         : undefined,

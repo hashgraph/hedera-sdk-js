@@ -250,7 +250,7 @@ export default class ContractCreateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     create.adminKey != null
-                        ? Key._fromProtobufKey(create.adminKey)
+                        ? Key[symbols.fromProtobufKey](create.adminKey)
                         : undefined,
                 gas: create.gas != null ? create.gas : undefined,
                 initialBalance:

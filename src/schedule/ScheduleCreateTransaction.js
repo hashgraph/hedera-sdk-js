@@ -147,7 +147,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             new ScheduleCreateTransaction({
                 adminKey:
                     create.adminKey != null
-                        ? Key._fromProtobufKey(create.adminKey)
+                        ? Key[symbols.fromProtobufKey](create.adminKey)
                         : undefined,
                 payerAccountID:
                     create.payerAccountID != null

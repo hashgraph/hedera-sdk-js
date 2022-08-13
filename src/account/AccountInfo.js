@@ -245,7 +245,7 @@ export default class AccountInfo {
     static _fromProtobuf(info) {
         let aliasKey =
             info.alias != null && info.alias.length > 0
-                ? Key._fromProtobufKey(
+                ? Key[symbols.fromProtobufKey](
                       HashgraphProto.proto.Key.decode(info.alias)
                   )
                 : null;
@@ -263,7 +263,7 @@ export default class AccountInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: Key._fromProtobufKey(
+            key: Key[symbols.fromProtobufKey](
                 /** @type {HashgraphProto.proto.IKey} */ (info.key)
             ),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),

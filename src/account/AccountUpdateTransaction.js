@@ -221,7 +221,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 key:
                     update.key != null
-                        ? Key._fromProtobufKey(update.key)
+                        ? Key[symbols.fromProtobufKey](update.key)
                         : undefined,
                 receiverSignatureRequired:
                     update.receiverSigRequired != null

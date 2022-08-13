@@ -135,7 +135,7 @@ export default class FileCreateTransaction extends Transaction {
                     create.keys != null
                         ? create.keys.keys != null
                             ? create.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key[symbols.fromProtobufKey](key)
                               )
                             : undefined
                         : undefined,

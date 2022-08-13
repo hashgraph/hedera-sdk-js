@@ -118,7 +118,7 @@ export default class AccountId {
             if (id.alias.length === 20) {
                 aliasEvmAddress = EvmAddress.fromBytes(id.alias);
             } else {
-                aliasKey = Key._fromProtobufKey(
+                aliasKey = Key[symbols.fromProtobufKey](
                     HashgraphProto.proto.Key.decode(id.alias)
                 );
             }

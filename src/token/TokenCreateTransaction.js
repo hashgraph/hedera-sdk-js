@@ -335,31 +335,31 @@ export default class TokenCreateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     create.adminKey != null
-                        ? Key._fromProtobufKey(create.adminKey)
+                        ? Key[symbols.fromProtobufKey](create.adminKey)
                         : undefined,
                 kycKey:
                     create.kycKey != null
-                        ? Key._fromProtobufKey(create.kycKey)
+                        ? Key[symbols.fromProtobufKey](create.kycKey)
                         : undefined,
                 freezeKey:
                     create.freezeKey != null
-                        ? Key._fromProtobufKey(create.freezeKey)
+                        ? Key[symbols.fromProtobufKey](create.freezeKey)
                         : undefined,
                 pauseKey:
                     create.pauseKey != null
-                        ? Key._fromProtobufKey(create.pauseKey)
+                        ? Key[symbols.fromProtobufKey](create.pauseKey)
                         : undefined,
                 wipeKey:
                     create.wipeKey != null
-                        ? Key._fromProtobufKey(create.wipeKey)
+                        ? Key[symbols.fromProtobufKey](create.wipeKey)
                         : undefined,
                 supplyKey:
                     create.supplyKey != null
-                        ? Key._fromProtobufKey(create.supplyKey)
+                        ? Key[symbols.fromProtobufKey](create.supplyKey)
                         : undefined,
                 feeScheduleKey:
                     create.feeScheduleKey != null
-                        ? Key._fromProtobufKey(create.feeScheduleKey)
+                        ? Key[symbols.fromProtobufKey](create.feeScheduleKey)
                         : undefined,
                 freezeDefault:
                     create.freezeDefault != null

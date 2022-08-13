@@ -149,7 +149,7 @@ export default class ScheduleInfo {
                     : null,
             adminKey:
                 info.adminKey != null
-                    ? Key._fromProtobufKey(info.adminKey)
+                    ? Key[symbols.fromProtobufKey](info.adminKey)
                     : null,
             signers:
                 info.signers != null

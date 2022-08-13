@@ -143,7 +143,7 @@ export default class FileUpdateTransaction extends Transaction {
                     update.keys != null
                         ? update.keys.keys != null
                             ? update.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key[symbols.fromProtobufKey](key)
                               )
                             : undefined
                         : undefined,

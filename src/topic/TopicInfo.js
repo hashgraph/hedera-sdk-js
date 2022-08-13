@@ -142,11 +142,11 @@ export default class TopicInfo {
                     : null,
             adminKey:
                 info.adminKey != null
-                    ? Key._fromProtobufKey(info.adminKey)
+                    ? Key[symbols.fromProtobufKey](info.adminKey)
                     : null,
             submitKey:
                 info.submitKey != null
-                    ? Key._fromProtobufKey(info.submitKey)
+                    ? Key[symbols.fromProtobufKey](info.submitKey)
                     : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null

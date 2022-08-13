@@ -283,29 +283,31 @@ export default class TokenInfo {
                     : null,
             adminKey:
                 info.adminKey != null
-                    ? Key._fromProtobufKey(info.adminKey)
+                    ? Key[symbols.fromProtobufKey](info.adminKey)
                     : null,
             kycKey:
-                info.kycKey != null ? Key._fromProtobufKey(info.kycKey) : null,
+                info.kycKey != null
+                    ? Key[symbols.fromProtobufKey](info.kycKey)
+                    : null,
             freezeKey:
                 info.freezeKey != null
-                    ? Key._fromProtobufKey(info.freezeKey)
+                    ? Key[symbols.fromProtobufKey](info.freezeKey)
                     : null,
             pauseKey:
                 info.pauseKey != null
-                    ? Key._fromProtobufKey(info.pauseKey)
+                    ? Key[symbols.fromProtobufKey](info.pauseKey)
                     : null,
             wipeKey:
                 info.wipeKey != null
-                    ? Key._fromProtobufKey(info.wipeKey)
+                    ? Key[symbols.fromProtobufKey](info.wipeKey)
                     : null,
             supplyKey:
                 info.supplyKey != null
-                    ? Key._fromProtobufKey(info.supplyKey)
+                    ? Key[symbols.fromProtobufKey](info.supplyKey)
                     : null,
             feeScheduleKey:
                 info.feeScheduleKey != null
-                    ? Key._fromProtobufKey(info.feeScheduleKey)
+                    ? Key[symbols.fromProtobufKey](info.feeScheduleKey)
                     : null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,

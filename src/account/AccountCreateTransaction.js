@@ -211,7 +211,7 @@ export default class AccountCreateTransaction extends Transaction {
             new AccountCreateTransaction({
                 key:
                     create.key != null
-                        ? Key._fromProtobufKey(create.key)
+                        ? Key[symbols.fromProtobufKey](create.key)
                         : undefined,
                 initialBalance:
                     create.initialBalance != null

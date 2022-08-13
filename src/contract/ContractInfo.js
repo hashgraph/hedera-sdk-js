@@ -193,7 +193,7 @@ export default class ContractInfo {
                 info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
                 info.adminKey != null
-                    ? Key._fromProtobufKey(info.adminKey)
+                    ? Key[symbols.fromProtobufKey](info.adminKey)
                     : null,
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */ (

@@ -402,7 +402,7 @@ export default class TransactionRecord {
 
         let aliasKey =
             record.alias != null && record.alias.length > 0
-                ? Key._fromProtobufKey(
+                ? Key[symbols.fromProtobufKey](
                       HashgraphProto.proto.Key.decode(record.alias)
                   )
                 : null;

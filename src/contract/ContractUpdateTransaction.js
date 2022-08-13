@@ -259,7 +259,7 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? Key._fromProtobufKey(update.adminKey)
+                        ? Key[symbols.fromProtobufKey](update.adminKey)
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null

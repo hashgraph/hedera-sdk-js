@@ -169,11 +169,11 @@ export default class TopicUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? Key._fromProtobufKey(update.adminKey)
+                        ? Key[symbols.fromProtobufKey](update.adminKey)
                         : undefined,
                 submitKey:
                     update.submitKey != null
-                        ? Key._fromProtobufKey(update.submitKey)
+                        ? Key[symbols.fromProtobufKey](update.submitKey)
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null

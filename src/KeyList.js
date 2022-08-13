@@ -169,7 +169,7 @@ export default class KeyList extends Key {
      */
     static __fromProtobufKeyList(key) {
         const keys = (key.keys != null ? key.keys : []).map((key) =>
-            Key._fromProtobufKey(key)
+            Key[symbols.fromProtobufKey](key)
         );
         return new KeyList(keys);
     }
