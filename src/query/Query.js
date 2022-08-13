@@ -256,7 +256,7 @@ export default class Query extends Executable {
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
-    async _beforeExecute(client) {
+    async [symbols.beforeExecute](client) {
         // If we're executing this query multiple times the the payment transaction ID list
         // will already be set
         if (this._paymentTransactions.length > 0) {

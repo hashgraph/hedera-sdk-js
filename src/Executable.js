@@ -281,7 +281,7 @@ export default class Executable {
      * @returns {Promise<void>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _beforeExecute(client) {
+    [symbols.beforeExecute](client) {
         throw new Error("not implemented");
     }
 
@@ -520,7 +520,7 @@ export default class Executable {
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
-        await this._beforeExecute(client);
+        await this[symbols.beforeExecute](client);
 
         // If the max backoff on the request is not set, use the default value in client
         if (this._maxBackoff == null) {

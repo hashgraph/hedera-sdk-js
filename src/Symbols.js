@@ -6,3 +6,4 @@ export const toProtobufKey = Symbol();
 export const requireNotFrozen = Symbol();
 export const requireFrozen = Symbol();
 export const isFrozen = Symbol();
+export const beforeExecute = Symbol();

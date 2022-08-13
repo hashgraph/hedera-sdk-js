@@ -75,7 +75,7 @@ export default class CostQuery extends Executable {
      * @param {import("../client/Client.js").default<*, *>} client
      * @returns {Promise<void>}
      */
-    async _beforeExecute(client) {
+    async [symbols.beforeExecute](client) {
         if (client == null) {
             throw new Error("Cannot do CostQuery without Client");
         }

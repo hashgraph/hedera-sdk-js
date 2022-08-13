@@ -1165,7 +1165,7 @@ export default class Transaction extends Executable {
      * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<void>}
      */
-    async _beforeExecute(client) {
+    async [symbols.beforeExecute](client) {
         // Makes ure we're frozen
         if (!this[symbols.isFrozen]()) {
             this.freezeWith(client);
