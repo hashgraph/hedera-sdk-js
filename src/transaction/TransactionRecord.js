@@ -375,7 +375,7 @@ export default class TransactionRecord {
                 alias:
                     this.aliasKey != null
                         ? HashgraphProto.proto.Key.encode(
-                              this.aliasKey._toProtobufKey()
+                              this.aliasKey[symbols.toProtobufKey]()
                           ).finish()
                         : null,
                 ethereumHash: this.ethereumHash,

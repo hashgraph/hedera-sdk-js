@@ -614,7 +614,9 @@ export default class ContractUpdateTransaction extends Transaction {
                     ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
             proxyAccountID:
                 this._proxyAccountId != null
                     ? this._proxyAccountId[symbols.toProtobuf]()

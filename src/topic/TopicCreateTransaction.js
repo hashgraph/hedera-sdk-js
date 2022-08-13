@@ -296,10 +296,12 @@ export default class TopicCreateTransaction extends Transaction {
     [symbols.makeTransactionData]() {
         return {
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
             submitKey:
                 this._submitKey != null
-                    ? this._submitKey._toProtobufKey()
+                    ? this._submitKey[symbols.toProtobufKey]()
                     : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null

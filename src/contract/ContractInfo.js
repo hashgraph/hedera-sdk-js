@@ -238,7 +238,9 @@ export default class ContractInfo {
             accountID: this.accountId[symbols.toProtobuf](),
             contractAccountID: this.contractAccountId,
             adminKey:
-                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
+                this.adminKey != null
+                    ? this.adminKey[symbols.toProtobufKey]()
+                    : null,
             expirationTime: this.expirationTime[symbols.toProtobuf](),
             autoRenewPeriod:
                 this.autoRenewPeriod != null

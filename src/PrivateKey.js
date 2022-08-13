@@ -23,6 +23,7 @@ import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -362,8 +363,8 @@ export default class PrivateKey extends Key {
     /**
      * @returns {HashgraphProto.proto.IKey}
      */
-    _toProtobufKey() {
-        return this.publicKey._toProtobufKey();
+    [symbols.toProtobufKey]() {
+        return this.publicKey[symbols.toProtobufKey]();
     }
 
     /**

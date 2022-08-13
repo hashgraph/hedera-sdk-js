@@ -182,11 +182,11 @@ export default class TopicInfo {
                         : null,
                 adminKey:
                     this.adminKey != null
-                        ? this.adminKey._toProtobufKey()
+                        ? this.adminKey[symbols.toProtobufKey]()
                         : null,
                 submitKey:
                     this.submitKey != null
-                        ? this.submitKey._toProtobufKey()
+                        ? this.submitKey[symbols.toProtobufKey]()
                         : null,
                 autoRenewPeriod:
                     this.autoRenewPeriod != null

@@ -299,7 +299,9 @@ export default class ScheduleCreateTransaction extends Transaction {
     [symbols.makeTransactionData]() {
         return {
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
             payerAccountID:
                 this._payerAccountId != null
                     ? this._payerAccountId[symbols.toProtobuf]()

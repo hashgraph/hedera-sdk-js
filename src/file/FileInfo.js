@@ -128,7 +128,7 @@ export default class FileInfo {
             size: this.size,
             expirationTime: this.expirationTime[symbols.toProtobuf](),
             deleted: this.isDeleted,
-            keys: this.keys._toProtobufKey().keyList,
+            keys: this.keys[symbols.toProtobufKey]().keyList,
             memo: this.fileMemo,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };

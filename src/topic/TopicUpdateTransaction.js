@@ -440,10 +440,12 @@ export default class TopicUpdateTransaction extends Transaction {
                     ? this._topicId[symbols.toProtobuf]()
                     : null,
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
             submitKey:
                 this._submitKey != null
-                    ? this._submitKey._toProtobufKey()
+                    ? this._submitKey[symbols.toProtobufKey]()
                     : null,
             memo:
                 this._topicMemo != null

@@ -630,7 +630,9 @@ export default class ContractCreateTransaction extends Transaction {
                     : null,
             initcode: this._bytecode,
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
             gas: this._gas,
             initialBalance:
                 this._initialBalance != null

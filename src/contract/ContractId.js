@@ -238,7 +238,7 @@ export default class ContractId extends Key {
     /**
      * @returns {HashgraphProto.proto.IKey}
      */
-    _toProtobufKey() {
+    [symbols.toProtobufKey]() {
         return {
             contractID: this[symbols.toProtobuf](),
         };

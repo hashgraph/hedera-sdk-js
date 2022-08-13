@@ -19,6 +19,7 @@
  */
 
 import CACHE from "./Cache.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -32,7 +33,7 @@ export default class Key {
      * @returns {HashgraphProto.proto.IKey}
      */
     // eslint-disable-next-line jsdoc/require-returns-check
-    _toProtobufKey() {
+    [symbols.toProtobufKey]() {
         throw new Error("not implemented");
     }
 

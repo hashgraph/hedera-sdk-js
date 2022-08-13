@@ -22,6 +22,7 @@ import * as cryptography from "@hashgraph/cryptography";
 import { arrayEqual } from "./array.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -210,7 +211,7 @@ export default class PublicKey extends Key {
     /**
      * @returns {HashgraphProto.proto.IKey}
      */
-    _toProtobufKey() {
+    [symbols.toProtobufKey]() {
         switch (this._key._type) {
             case "ED25519":
                 return {

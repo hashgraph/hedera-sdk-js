@@ -269,7 +269,7 @@ export default class LiveHashAddTransaction extends Transaction {
                     this._keys != null
                         ? {
                               keys: this._keys.map((key) =>
-                                  key._toProtobufKey()
+                                  key[symbols.toProtobufKey]()
                               ),
                           }
                         : undefined,

@@ -95,7 +95,7 @@ export default class LiveHash {
         return {
             accountId: this.accountId[symbols.toProtobuf](),
             hash: this.hash,
-            keys: this.keys._toProtobufKey().keyList,
+            keys: this.keys[symbols.toProtobufKey]().keyList,
             duration: this.duration[symbols.toProtobuf](),
         };
     }

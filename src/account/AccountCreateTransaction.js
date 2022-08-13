@@ -504,7 +504,7 @@ export default class AccountCreateTransaction extends Transaction {
      */
     [symbols.makeTransactionData]() {
         return {
-            key: this._key != null ? this._key._toProtobufKey() : null,
+            key: this._key != null ? this._key[symbols.toProtobufKey]() : null,
             initialBalance:
                 this._initialBalance != null
                     ? this._initialBalance.toTinybars()

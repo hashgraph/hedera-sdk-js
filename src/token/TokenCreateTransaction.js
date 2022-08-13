@@ -865,23 +865,32 @@ export default class TokenCreateTransaction extends Transaction {
                     ? this._treasuryAccountId[symbols.toProtobuf]()
                     : null,
             adminKey:
-                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
-            kycKey: this._kycKey != null ? this._kycKey._toProtobufKey() : null,
+                this._adminKey != null
+                    ? this._adminKey[symbols.toProtobufKey]()
+                    : null,
+            kycKey:
+                this._kycKey != null
+                    ? this._kycKey[symbols.toProtobufKey]()
+                    : null,
             freezeKey:
                 this._freezeKey != null
-                    ? this._freezeKey._toProtobufKey()
+                    ? this._freezeKey[symbols.toProtobufKey]()
                     : null,
             pauseKey:
-                this._pauseKey != null ? this._pauseKey._toProtobufKey() : null,
+                this._pauseKey != null
+                    ? this._pauseKey[symbols.toProtobufKey]()
+                    : null,
             wipeKey:
-                this._wipeKey != null ? this._wipeKey._toProtobufKey() : null,
+                this._wipeKey != null
+                    ? this._wipeKey[symbols.toProtobufKey]()
+                    : null,
             supplyKey:
                 this._supplyKey != null
-                    ? this._supplyKey._toProtobufKey()
+                    ? this._supplyKey[symbols.toProtobufKey]()
                     : null,
             feeScheduleKey:
                 this._feeScheduleKey != null
-                    ? this._feeScheduleKey._toProtobufKey()
+                    ? this._feeScheduleKey[symbols.toProtobufKey]()
                     : null,
             freezeDefault: this._freezeDefault,
             autoRenewAccount:

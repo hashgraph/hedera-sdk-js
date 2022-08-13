@@ -102,7 +102,7 @@ export default class DelegateContractId extends ContractId {
     /**
      * @returns {HashgraphProto.proto.IKey}
      */
-    _toProtobufKey() {
+    [symbols.toProtobufKey]() {
         return {
             delegatableContractId: this[symbols.toProtobuf](),
         };

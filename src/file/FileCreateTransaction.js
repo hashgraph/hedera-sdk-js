@@ -296,7 +296,9 @@ export default class FileCreateTransaction extends Transaction {
             keys:
                 this._keys != null
                     ? {
-                          keys: this._keys.map((key) => key._toProtobufKey()),
+                          keys: this._keys.map((key) =>
+                              key[symbols.toProtobufKey]()
+                          ),
                       }
                     : null,
             expirationTime: this._expirationTime[symbols.toProtobuf](),

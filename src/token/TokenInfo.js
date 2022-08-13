@@ -380,19 +380,32 @@ export default class TokenInfo {
                     ? this.treasuryAccountId[symbols.toProtobuf]()
                     : null,
             adminKey:
-                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
-            kycKey: this.kycKey != null ? this.kycKey._toProtobufKey() : null,
+                this.adminKey != null
+                    ? this.adminKey[symbols.toProtobufKey]()
+                    : null,
+            kycKey:
+                this.kycKey != null
+                    ? this.kycKey[symbols.toProtobufKey]()
+                    : null,
             freezeKey:
-                this.freezeKey != null ? this.freezeKey._toProtobufKey() : null,
+                this.freezeKey != null
+                    ? this.freezeKey[symbols.toProtobufKey]()
+                    : null,
             pauseKey:
-                this.pauseKey != null ? this.pauseKey._toProtobufKey() : null,
+                this.pauseKey != null
+                    ? this.pauseKey[symbols.toProtobufKey]()
+                    : null,
             wipeKey:
-                this.wipeKey != null ? this.wipeKey._toProtobufKey() : null,
+                this.wipeKey != null
+                    ? this.wipeKey[symbols.toProtobufKey]()
+                    : null,
             supplyKey:
-                this.supplyKey != null ? this.supplyKey._toProtobufKey() : null,
+                this.supplyKey != null
+                    ? this.supplyKey[symbols.toProtobufKey]()
+                    : null,
             feeScheduleKey:
                 this.feeScheduleKey != null
-                    ? this.feeScheduleKey._toProtobufKey()
+                    ? this.feeScheduleKey[symbols.toProtobufKey]()
                     : null,
             defaultFreezeStatus:
                 this.defaultFreezeStatus == null

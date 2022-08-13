@@ -20,6 +20,7 @@
 
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -147,8 +148,8 @@ export default class KeyList extends Key {
     /**
      * @returns {HashgraphProto.proto.IKey}
      */
-    _toProtobufKey() {
-        const keys = this._keys.map((key) => key._toProtobufKey());
+    [symbols.toProtobufKey]() {
+        const keys = this._keys.map((key) => key[symbols.toProtobufKey]());
 
         if (this.threshold == null) {
             return { keyList: { keys } };

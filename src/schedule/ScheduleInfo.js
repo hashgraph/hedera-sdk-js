@@ -211,10 +211,12 @@ export default class ScheduleInfo {
                     ? this.schedulableTransactionBody
                     : null,
             adminKey:
-                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
+                this.adminKey != null
+                    ? this.adminKey[symbols.toProtobufKey]()
+                    : null,
             signers:
                 this.signers != null
-                    ? this.signers._toProtobufKey().keyList
+                    ? this.signers[symbols.toProtobufKey]().keyList
                     : null,
             memo: this.scheduleMemo != null ? this.scheduleMemo : "",
             expirationTime:

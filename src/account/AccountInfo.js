@@ -353,7 +353,7 @@ export default class AccountInfo {
                       this.proxyAccountId[symbols.toProtobuf]()
                     : null,
             proxyReceived: this.proxyReceived.toTinybars(),
-            key: this.key._toProtobufKey(),
+            key: this.key[symbols.toProtobufKey](),
             balance: this.balance.toTinybars(),
             generateSendRecordThreshold: this.sendRecordThreshold.toTinybars(),
             generateReceiveRecordThreshold:
@@ -375,7 +375,7 @@ export default class AccountInfo {
             alias:
                 this.aliasKey != null
                     ? HashgraphProto.proto.Key.encode(
-                          this.aliasKey._toProtobufKey()
+                          this.aliasKey[symbols.toProtobufKey]()
                       ).finish()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
