@@ -344,21 +344,6 @@ export default class Executable {
     }
 
     /**
-     * Return the current node account ID for the request attempt
-     *
-     * FIXME: This method can most likely be removed as all the implementations
-     * of this method are identical. At one point there were different, but
-     * not anymore.
-     *
-     * @abstract
-     * @protected
-     * @returns {AccountId}
-     */
-    _getNodeAccountId() {
-        throw new Error("not implemented");
-    }
-
-    /**
      * Return the current transaction ID for the request. All requests which are
      * use the same transaction ID for each node, but the catch is that `Transaction`
      * implicitly supports chunked transactions. Meaning there could be multiple
@@ -564,7 +549,7 @@ export default class Executable {
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
             if (this._nodeAccountIds.locked) {
-                nodeAccountId = this._getNodeAccountId();
+                nodeAccountId = this._nodeAccountIds.current;
                 node = client._network.getNode(nodeAccountId);
             } else {
                 node = client._network.getNode();

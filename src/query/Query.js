@@ -544,21 +544,6 @@ export default class Query extends Executable {
     }
 
     /**
-     * @returns {AccountId}
-     */
-    _getNodeAccountId() {
-        if (!this._nodeAccountIds.isEmpty) {
-            // if there are payment transactions,
-            // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.current;
-        } else {
-            throw new Error(
-                "(BUG) nodeAccountIds were not set for query before executing"
-            );
-        }
-    }
-
-    /**
      * @param {HashgraphProto.proto.Query} request
      * @returns {Uint8Array}
      */
