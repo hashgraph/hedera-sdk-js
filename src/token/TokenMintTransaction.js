@@ -110,7 +110,7 @@ export default class TokenMintTransaction extends Transaction {
                 body.tokenMint
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenMintTransaction({
                 tokenId:
                     mintToken.token != null

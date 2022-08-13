@@ -209,7 +209,7 @@ export default class AccountUpdateTransaction extends Transaction {
                 body.cryptoUpdateAccount
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new AccountUpdateTransaction({
                 accountId:
                     update.accountIDToUpdate != null

@@ -100,7 +100,7 @@ export default class TokenDissociateTransaction extends Transaction {
                 body.tokenDissociate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenDissociateTransaction({
                 tokenIds:
                     dissociateToken.tokens != null

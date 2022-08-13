@@ -86,7 +86,7 @@ export default class TokenPauseTransaction extends Transaction {
                 body.tokenPause
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenPauseTransaction({
                 tokenId:
                     pauseToken.token != null

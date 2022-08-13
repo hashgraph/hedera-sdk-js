@@ -121,7 +121,7 @@ export default class PrngTransaction extends Transaction {
 
         const transactionRange = body.range;
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new PrngTransaction({
                 range: transactionRange,
             }),

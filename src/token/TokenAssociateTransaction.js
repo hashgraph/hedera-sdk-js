@@ -100,7 +100,7 @@ export default class TokenAssociateTransaction extends Transaction {
                 body.tokenAssociate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenAssociateTransaction({
                 tokenIds:
                     associateToken.tokens != null

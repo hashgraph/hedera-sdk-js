@@ -117,7 +117,7 @@ export default class EthereumTransaction extends Transaction {
                 body.ethereumTransaction
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new EthereumTransaction({
                 ethereumData:
                     transaction.ethereumData != null

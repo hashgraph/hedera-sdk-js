@@ -90,7 +90,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
                 body.cryptoDeleteAllowance
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new AccountAllowanceDeleteTransaction({
                 nftAllowances: (allowance.nftAllowances != null
                     ? allowance.nftAllowances

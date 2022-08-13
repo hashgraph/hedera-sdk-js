@@ -131,7 +131,7 @@ export default class TopicCreateTransaction extends Transaction {
                 body.consensusCreateTopic
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TopicCreateTransaction({
                 adminKey:
                     create.adminKey != null

@@ -111,7 +111,7 @@ export default class ScheduleSignTransaction extends Transaction {
                 body.scheduleSign
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ScheduleSignTransaction({
                 scheduleId:
                     sign.scheduleID != null

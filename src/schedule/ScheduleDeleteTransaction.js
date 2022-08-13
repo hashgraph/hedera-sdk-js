@@ -92,7 +92,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
                 body.scheduleDelete
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ScheduleDeleteTransaction({
                 scheduleId:
                     scheduleDelete.scheduleID != null

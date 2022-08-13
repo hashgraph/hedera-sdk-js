@@ -109,7 +109,7 @@ export default class TokenBurnTransaction extends Transaction {
                 body.tokenBurn
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenBurnTransaction({
                 tokenId:
                     burnToken.token != null

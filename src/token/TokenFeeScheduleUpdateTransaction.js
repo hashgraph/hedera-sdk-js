@@ -101,7 +101,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
                 body.tokenFeeScheduleUpdate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenFeeScheduleUpdateTransaction({
                 tokenId:
                     feeScheduleUpdate.tokenId != null

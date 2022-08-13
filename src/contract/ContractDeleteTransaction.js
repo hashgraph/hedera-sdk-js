@@ -106,7 +106,7 @@ export default class ContractDeleteTransaction extends Transaction {
                 body.contractDeleteInstance
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ContractDeleteTransaction({
                 contractId:
                     contractDelete.contractID != null

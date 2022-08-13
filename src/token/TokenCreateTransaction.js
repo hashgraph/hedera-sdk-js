@@ -320,7 +320,7 @@ export default class TokenCreateTransaction extends Transaction {
                 body.tokenCreation
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenCreateTransaction({
                 tokenName: create.name != null ? create.name : undefined,
                 tokenSymbol: create.symbol != null ? create.symbol : undefined,

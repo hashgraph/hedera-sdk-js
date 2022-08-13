@@ -97,7 +97,7 @@ export default class TokenRevokeKycTransaction extends Transaction {
                 body.tokenRevokeKyc
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenRevokeKycTransaction({
                 tokenId:
                     revokeKycToken.token != null

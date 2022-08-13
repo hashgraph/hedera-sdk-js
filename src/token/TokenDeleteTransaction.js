@@ -86,7 +86,7 @@ export default class TokenDeleteTransaction extends Transaction {
                 body.tokenDeletion
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenDeleteTransaction({
                 tokenId:
                     deleteToken.token != null

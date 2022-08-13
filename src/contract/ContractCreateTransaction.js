@@ -238,7 +238,7 @@ export default class ContractCreateTransaction extends Transaction {
                 body.contractCreateInstance
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ContractCreateTransaction({
                 bytecodeFileId:
                     create.fileID != null

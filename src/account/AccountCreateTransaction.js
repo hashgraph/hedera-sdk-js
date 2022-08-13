@@ -207,7 +207,7 @@ export default class AccountCreateTransaction extends Transaction {
                 body.cryptoCreateAccount
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new AccountCreateTransaction({
                 key:
                     create.key != null

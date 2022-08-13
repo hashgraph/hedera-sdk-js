@@ -194,7 +194,7 @@ export default class TransferTransaction extends Transaction {
                 : []
         );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             transfers,
             transactions,
             signedTransactions,

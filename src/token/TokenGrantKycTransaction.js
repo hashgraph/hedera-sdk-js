@@ -97,7 +97,7 @@ export default class TokenGrantKycTransaction extends Transaction {
                 body.tokenGrantKyc
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenGrantKycTransaction({
                 tokenId:
                     grantKycToken.token != null

@@ -92,7 +92,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
                 body.cryptoDeleteLiveHash
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new LiveHashDeleteTransaction({
                 hash:
                     hashes.liveHashToDelete != null

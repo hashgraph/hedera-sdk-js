@@ -107,7 +107,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                 body.cryptoApproveAllowance
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new AccountAllowanceApproveTransaction({
                 hbarApprovals: (allowanceApproval.cryptoAllowances != null
                     ? allowanceApproval.cryptoAllowances

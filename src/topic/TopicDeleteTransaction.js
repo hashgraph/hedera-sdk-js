@@ -90,7 +90,7 @@ export default class TopicDeleteTransaction extends Transaction {
                 body.consensusDeleteTopic
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TopicDeleteTransaction({
                 topicId:
                     topicDelete.topicID != null

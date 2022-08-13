@@ -86,7 +86,7 @@ export default class TokenUnpauseTransaction extends Transaction {
                 body.tokenUnpause
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenUnpauseTransaction({
                 tokenId:
                     unpauseToken.token != null

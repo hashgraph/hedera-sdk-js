@@ -162,7 +162,7 @@ export default class FileAppendTransaction extends Transaction {
             contents = concat;
         }
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new FileAppendTransaction({
                 fileId:
                     append.fileID != null

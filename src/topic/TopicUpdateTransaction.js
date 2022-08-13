@@ -161,7 +161,7 @@ export default class TopicUpdateTransaction extends Transaction {
                 body.consensusUpdateTopic
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TopicUpdateTransaction({
                 topicId:
                     update.topicID != null

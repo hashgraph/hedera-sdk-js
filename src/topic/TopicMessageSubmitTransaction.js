@@ -124,7 +124,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 body.consensusSubmitMessage
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TopicMessageSubmitTransaction({
                 topicId:
                     message.topicID != null

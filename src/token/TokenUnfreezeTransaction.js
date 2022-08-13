@@ -97,7 +97,7 @@ export default class TokenUnfreezeTransaction extends Transaction {
                 body.tokenUnfreeze
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenUnfreezeTransaction({
                 tokenId:
                     unfreezeToken.token != null

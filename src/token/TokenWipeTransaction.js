@@ -120,7 +120,7 @@ export default class TokenWipeTransaction extends Transaction {
                 body.tokenWipe
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenWipeTransaction({
                 tokenId:
                     wipeToken.token != null

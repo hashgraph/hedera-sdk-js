@@ -131,7 +131,7 @@ export default class ContractExecuteTransaction extends Transaction {
                 body.contractCall
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ContractExecuteTransaction({
                 contractId:
                     call.contractID != null

@@ -107,7 +107,7 @@ export default class SystemDeleteTransaction extends Transaction {
                 body.systemDelete
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new SystemDeleteTransaction({
                 fileId:
                     systemDelete.fileID != null

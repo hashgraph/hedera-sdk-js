@@ -121,7 +121,7 @@ export default class LiveHashAddTransaction extends Transaction {
             hashes.liveHash
         );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new LiveHashAddTransaction({
                 hash: liveHash_.hash != null ? liveHash_.hash : undefined,
                 keys:

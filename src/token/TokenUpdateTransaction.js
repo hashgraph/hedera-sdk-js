@@ -244,7 +244,7 @@ export default class TokenUpdateTransaction extends Transaction {
                 body.tokenUpdate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new TokenUpdateTransaction({
                 tokenId:
                     update.token != null

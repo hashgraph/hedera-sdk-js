@@ -133,7 +133,7 @@ export default class FileUpdateTransaction extends Transaction {
                 body.fileUpdate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new FileUpdateTransaction({
                 fileId:
                     update.fileID != null

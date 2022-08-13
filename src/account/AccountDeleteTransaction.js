@@ -100,7 +100,7 @@ export default class AccountDeleteTransaction extends Transaction {
                 body.cryptoDelete
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new AccountDeleteTransaction({
                 accountId:
                     accountDelete.deleteAccountID != null

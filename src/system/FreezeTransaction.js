@@ -153,7 +153,7 @@ export default class FreezeTransaction extends Transaction {
                 body.freeze
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new FreezeTransaction({
                 startTime:
                     freeze.startHour != null && freeze.startMin != null

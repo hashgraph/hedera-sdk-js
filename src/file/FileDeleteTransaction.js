@@ -93,7 +93,7 @@ export default class FileDeleteTransaction extends Transaction {
                 body.fileDelete
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new FileDeleteTransaction({
                 fileId:
                     fileDelete.fileID != null

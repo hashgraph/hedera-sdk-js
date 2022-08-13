@@ -143,7 +143,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                 body.scheduleCreate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ScheduleCreateTransaction({
                 adminKey:
                     create.adminKey != null

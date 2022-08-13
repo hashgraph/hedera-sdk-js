@@ -235,7 +235,7 @@ export default class ContractUpdateTransaction extends Transaction {
                 update.maxAutomaticTokenAssociations.value;
         }
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new ContractUpdateTransaction({
                 contractId:
                     update.contractID != null

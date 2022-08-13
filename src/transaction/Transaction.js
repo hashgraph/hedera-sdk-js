@@ -374,7 +374,7 @@ export default class Transaction extends Executable {
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TransactionT}
      */
-    static _fromProtobufTransactions(
+    static [symbols.fromProtobufTransactions](
         transaction,
         transactions,
         signedTransactions,

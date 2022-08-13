@@ -129,7 +129,7 @@ export default class FileCreateTransaction extends Transaction {
                 body.fileCreate
             );
 
-        return Transaction._fromProtobufTransactions(
+        return Transaction[symbols.fromProtobufTransactions](
             new FileCreateTransaction({
                 keys:
                     create.keys != null
