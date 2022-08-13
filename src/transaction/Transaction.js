@@ -43,6 +43,12 @@ const buildAllTransactions = Symbol();
 const buildAllTransactionsAsync = Symbol();
 const requireNotSignOnDemand = Symbol();
 const requireOneNodeAccountId = Symbol();
+const buildSignedTransactions = Symbol();
+const signTransaction = Symbol();
+const buildNewTransactionIdList = Symbol();
+const buildTransactionAsync = Symbol();
+const buildTransaction = Symbol();
+const makeTransactionBody = Symbol();
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -889,14 +895,14 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    _buildSignedTransactions() {
+    [buildSignedTransactions]() {
         if (this._signedTransactions.locked) {
             return;
         }
 
         this._signedTransactions.setList(
             this._nodeAccountIds.list.map((nodeId) =>
-                this._makeSignedTransaction(nodeId)
+                this[symbols.makeSignedTransaction](nodeId)
             )
         );
     }
@@ -975,11 +981,11 @@ export default class Transaction extends Executable {
 
         // Build a list of transaction IDs so that if a user calls `.transactionId` they'll
         // get a value, but if they dont' we'll just regenerate transaction IDs during execution
-        this._buildNewTransactionIdList();
+        this[buildNewTransactionIdList]();
 
         // If sign on demand is disabled we need to build out all the signed transactions
         if (!this._signOnDemand) {
-            this._buildSignedTransactions();
+            this[buildSignedTransactions]();
         }
 
         return this;
@@ -1208,14 +1214,14 @@ export default class Transaction extends Executable {
         // If sign on demand is disabled we need to simply build that transaction
         // and return the result, without signing
         if (!this._signOnDemand) {
-            this._buildTransaction(index);
+            this[buildTransaction](index);
             return /** @type {HashgraphProto.proto.ITransaction} */ (
                 this._transactions.get(index)
             );
         }
 
         // Build and sign a transaction
-        return await this._buildTransactionAsync();
+        return await this[buildTransactionAsync]();
     }
 
     /**
@@ -1224,8 +1230,8 @@ export default class Transaction extends Executable {
      * @private
      * @returns {Promise<HashgraphProto.proto.ISignedTransaction>}
      */
-    async _signTransaction() {
-        const signedTransaction = this._makeSignedTransaction(
+    async [signTransaction]() {
+        const signedTransaction = this[symbols.makeSignedTransaction](
             this._nodeAccountIds.next
         );
 
@@ -1264,7 +1270,7 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    _buildNewTransactionIdList() {
+    [buildNewTransactionIdList]() {
         if (this._transactionIds.locked || this._operatorAccountId == null) {
             return;
         }
@@ -1284,7 +1290,7 @@ export default class Transaction extends Executable {
      */
     [buildAllTransactions]() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
-            this._buildTransaction(i);
+            this[buildTransaction](i);
         }
     }
 
@@ -1302,14 +1308,14 @@ export default class Transaction extends Executable {
             return;
         }
 
-        this._buildSignedTransactions();
+        this[buildSignedTransactions]();
 
         if (this._transactions.locked) {
             return;
         }
 
         for (let i = 0; i < this._signedTransactions.length; i++) {
-            this._transactions.push(await this._buildTransactionAsync());
+            this._transactions.push(await this[buildTransactionAsync]());
         }
     }
 
@@ -1319,7 +1325,7 @@ export default class Transaction extends Executable {
      * @private
      * @param {number} index
      */
-    _buildTransaction(index) {
+    [buildTransaction](index) {
         if (this._transactions.length < index) {
             for (let i = this._transactions.length; i < index; i++) {
                 this._transactions.push(null);
@@ -1344,11 +1350,11 @@ export default class Transaction extends Executable {
      * @private
      * @returns {Promise<HashgraphProto.proto.ITransaction>}
      */
-    async _buildTransactionAsync() {
+    async [buildTransactionAsync]() {
         return {
             signedTransactionBytes:
                 HashgraphProto.proto.SignedTransaction.encode(
-                    await this._signTransaction()
+                    await this[signTransaction]()
                 ).finish(),
         };
     }
@@ -1391,7 +1397,7 @@ export default class Transaction extends Executable {
                     this._regenerateTransactionId == null ||
                     this._regenerateTransactionId
                 ) {
-                    this._buildNewTransactionIdList();
+                    this[buildNewTransactionIdList]();
                     return [status, ExecutionState.Retry];
                 } else {
                     return [status, ExecutionState.Error];
@@ -1475,8 +1481,8 @@ export default class Transaction extends Executable {
      * @param {?AccountId} nodeId
      * @returns {HashgraphProto.proto.ISignedTransaction}
      */
-    _makeSignedTransaction(nodeId) {
-        const body = this._makeTransactionBody(nodeId);
+    [symbols.makeSignedTransaction](nodeId) {
+        const body = this[makeTransactionBody](nodeId);
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
@@ -1495,7 +1501,7 @@ export default class Transaction extends Executable {
      * @param {?AccountId} nodeId
      * @returns {HashgraphProto.proto.ITransactionBody}
      */
-    _makeTransactionBody(nodeId) {
+    [makeTransactionBody](nodeId) {
         return {
             [this[symbols.getTransactionDataCase]()]:
                 this[symbols.makeTransactionData](),
@@ -1532,7 +1538,7 @@ export default class Transaction extends Executable {
      * @internal
      * @returns {HashgraphProto.proto.ISchedulableTransactionBody}
      */
-    _getScheduledTransactionBody() {
+    [symbols.getScheduledTransactionBody]() {
         return {
             memo: this.transactionMemo,
             transactionFee:

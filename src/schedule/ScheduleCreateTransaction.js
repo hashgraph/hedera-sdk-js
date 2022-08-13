@@ -308,7 +308,9 @@ export default class ScheduleCreateTransaction extends Transaction {
                     : null,
             scheduledTransactionBody:
                 this._scheduledTransaction != null
-                    ? this._scheduledTransaction._getScheduledTransactionBody()
+                    ? this._scheduledTransaction[
+                          symbols.getScheduledTransactionBody
+                      ]()
                     : null,
             memo: this._scheduleMemo,
             waitForExpiry: this._waitForExpiry,

@@ -321,7 +321,7 @@ export default class FileAppendTransaction extends Transaction {
 
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
-                    this._makeSignedTransaction(nodeAccountId)
+                    this[symbols.makeSignedTransaction](nodeAccountId)
                 );
             }
 

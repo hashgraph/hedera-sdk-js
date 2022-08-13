@@ -11,3 +11,5 @@ export const makeRequestAsync = Symbol();
 export const mapStatusError = Symbol();
 export const mapResponse = Symbol();
 export const execute = Symbol();
+export const getScheduledTransactionBody = Symbol();
+export const makeSignedTransaction = Symbol();
