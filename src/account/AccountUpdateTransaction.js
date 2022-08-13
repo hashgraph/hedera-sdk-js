@@ -292,7 +292,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {AccountUpdateTransaction}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
@@ -313,7 +313,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._key = key;
 
         return this;
@@ -331,7 +331,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setReceiverSignatureRequired(receiverSignatureRequired) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._receiverSignatureRequired = receiverSignatureRequired;
 
         return this;
@@ -351,7 +351,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setProxyAccountId(proxyAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._proxyAccountId = proxyAccountId;
 
         return this;
@@ -369,7 +369,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewPeriod =
             autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
@@ -390,7 +390,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setExpirationTime(expirationTime) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._expirationTime =
             expirationTime instanceof Date
                 ? Timestamp.fromDate(expirationTime)
@@ -411,7 +411,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setAccountMemo(memo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountMemo = memo;
 
         return this;
@@ -421,7 +421,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     clearAccountMemo() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountMemo = null;
 
         return this;
@@ -439,7 +439,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociations) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._maxAutomaticTokenAssociations =
             typeof maxAutomaticTokenAssociations === "number"
                 ? Long.fromNumber(maxAutomaticTokenAssociations)
@@ -478,7 +478,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setStakedAccountId(stakedAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedAccountId =
             typeof stakedAccountId === "string"
                 ? AccountId.fromString(stakedAccountId)
@@ -491,7 +491,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     clearStakedAccountId() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedAccountId = new AccountId(0, 0, 0);
 
         return this;
@@ -509,7 +509,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setStakedNodeId(stakedNodeId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedNodeId = Long.fromValue(stakedNodeId);
 
         return this;
@@ -519,7 +519,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     clearStakedNodeId() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedNodeId = Long.fromNumber(-1);
 
         return this;
@@ -537,7 +537,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setDeclineStakingReward(declineStakingReward) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._declineStakingReward = declineStakingReward;
 
         return this;

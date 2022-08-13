@@ -216,7 +216,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setExpirationTime(expirationTime) {
-        this._requireFrozen();
+        this[symbols.requireFrozen]();
 
         this._expirationTime =
             expirationTime instanceof Date
@@ -238,7 +238,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setTopicId(topicId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._topicId =
             typeof topicId === "string"
                 ? TopicId.fromString(topicId)
@@ -251,7 +251,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     clearTopicId() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._topicId = null;
 
         return this;
@@ -269,7 +269,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setTopicMemo(topicMemo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._topicMemo = topicMemo;
 
         return this;
@@ -279,7 +279,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     clearTopicMemo() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._topicMemo = null;
 
         return this;
@@ -297,7 +297,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setAdminKey(adminKey) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._adminKey = adminKey;
 
         return this;
@@ -307,7 +307,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     clearAdminKey() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._adminKey = null;
 
         return this;
@@ -325,7 +325,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setSubmitKey(submitKey) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._submitKey = submitKey;
 
         return this;
@@ -335,7 +335,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     clearSubmitKey() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._submitKey = null;
 
         return this;
@@ -353,7 +353,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setAutoRenewAccountId(autoRenewAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewAccountId =
             autoRenewAccountId instanceof AccountId
                 ? autoRenewAccountId
@@ -366,7 +366,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     clearAutoRenewAccountId() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewAccountId = null;
 
         return this;
@@ -386,7 +386,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewPeriod =
             autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod

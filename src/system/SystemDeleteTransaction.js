@@ -150,7 +150,7 @@ export default class SystemDeleteTransaction extends Transaction {
      * @returns {this}
      */
     setFileId(fileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileId =
             fileId instanceof FileId ? fileId : FileId.fromString(fileId);
 
@@ -169,7 +169,7 @@ export default class SystemDeleteTransaction extends Transaction {
      * @returns {this}
      */
     setContractId(contractId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contractId =
             contractId instanceof ContractId
                 ? contractId
@@ -190,7 +190,7 @@ export default class SystemDeleteTransaction extends Transaction {
      * @returns {SystemDeleteTransaction}
      */
     setExpirationTime(expirationTime) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._expirationTime = expirationTime;
         return this;
     }

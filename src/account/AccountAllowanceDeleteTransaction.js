@@ -120,7 +120,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      * @returns {AccountAllowanceDeleteTransaction}
      */
     deleteAllTokenNftAllowances(nftId, ownerAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
 

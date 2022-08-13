@@ -155,7 +155,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @returns {ContractDeleteTransaction}
      */
     setContractId(contractId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
@@ -178,7 +178,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @returns {ContractDeleteTransaction}
      */
     setTransferContractId(transferContractId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transferContractId =
             transferContractId instanceof ContractId
                 ? transferContractId
@@ -201,7 +201,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @returns {ContractDeleteTransaction}
      */
     setTransferAccountId(transferAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transferAccountId =
             transferAccountId instanceof AccountId
                 ? transferAccountId

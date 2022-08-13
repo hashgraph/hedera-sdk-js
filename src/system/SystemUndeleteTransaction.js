@@ -136,7 +136,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @returns {this}
      */
     setFileId(fileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileId =
             fileId instanceof FileId ? fileId : FileId.fromString(fileId);
 
@@ -155,7 +155,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @returns {this}
      */
     setContractId(contractId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contractId =
             contractId instanceof ContractId
                 ? contractId

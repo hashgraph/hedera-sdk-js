@@ -133,7 +133,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenIds(tokenIds) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenIds = tokenIds.map((tokenId) =>
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -155,7 +155,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @returns {this}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)

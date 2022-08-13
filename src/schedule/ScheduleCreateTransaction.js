@@ -205,7 +205,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {this}
      */
     setAdminKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._adminKey = key;
 
         return this;
@@ -223,7 +223,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {this}
      */
     setPayerAccountId(account) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._payerAccountId = account;
 
         return this;
@@ -234,7 +234,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {this}
      */
     setScheduleMemo(memo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._scheduleMemo = memo;
 
         return this;
@@ -244,7 +244,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {?string}
      */
     get getScheduleMemo() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         return this._scheduleMemo;
     }
 
@@ -253,8 +253,8 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {this}
      */
     setScheduledTransaction(transaction) {
-        this._requireNotFrozen();
-        transaction._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
+        transaction[symbols.requireNotFrozen]();
 
         this._scheduledTransaction =
             transaction.schedule()._scheduledTransaction;
@@ -342,7 +342,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {?Timestamp}
      */
     get expirationTime() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         return this._expirationTime;
     }
 
@@ -360,7 +360,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {?boolean}
      */
     get waitForExpiry() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         return this._waitForExpiry;
     }
 }

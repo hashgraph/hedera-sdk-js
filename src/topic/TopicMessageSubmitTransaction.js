@@ -152,7 +152,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @returns {this}
      */
     setTopicId(topicId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._topicId =
             typeof topicId === "string"
@@ -174,7 +174,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @returns {this}
      */
     setMessage(message) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         message = util.requireStringOrUint8Array(message);
         this._message =
             message instanceof Uint8Array ? message : utf8.encode(message);
@@ -193,7 +193,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @returns {this}
      */
     setMaxChunks(maxChunks) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._maxChunks = maxChunks;
         return this;
     }
@@ -291,7 +291,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @returns {ScheduleCreateTransaction}
      */
     schedule() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         if (this._message != null && this._message.length > this._chunkSize) {
             throw new Error(
@@ -317,7 +317,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client, requestTimeout) {
-        if (!super._isFrozen()) {
+        if (!super[symbols.isFrozen]()) {
             this.freezeWith(client);
         }
 

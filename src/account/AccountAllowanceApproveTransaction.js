@@ -144,7 +144,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @returns {AccountAllowanceApproveTransaction}
      */
     approveHbarAllowance(ownerAccountId, spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._hbarApprovals.push(
             new HbarAllowance({
@@ -170,7 +170,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @returns {AccountAllowanceApproveTransaction}
      */
     addHbarAllowance(spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._hbarApprovals.push(
             new HbarAllowance({
@@ -201,7 +201,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @returns {AccountAllowanceApproveTransaction}
      */
     approveTokenAllowance(tokenId, ownerAccountId, spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._tokenApprovals.push(
             new TokenAllowance({
@@ -235,7 +235,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @returns {AccountAllowanceApproveTransaction}
      */
     addTokenAllowance(tokenId, spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._tokenApprovals.push(
             new TokenAllowance({
@@ -282,7 +282,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @returns {AccountAllowanceApproveTransaction}
      */
     _approveTokenNftAllowance(nftId, ownerAccountId, spenderAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
         const spender =
@@ -353,7 +353,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
         spenderAccountId,
         allSerials
     ) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._nftApprovals.push(
             new TokenNftAllowance({

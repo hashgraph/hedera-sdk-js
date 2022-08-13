@@ -163,7 +163,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @returns {LiveHashAddTransaction}
      */
     setHash(hash) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._hash = hash;
 
         return this;
@@ -181,7 +181,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @returns {LiveHashAddTransaction}
      */
     setKeys(keys) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._keys = keys instanceof KeyList ? keys.toArray() : keys;
 
         return this;
@@ -199,7 +199,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @returns {LiveHashAddTransaction}
      */
     setDuration(duration) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._duration =
             duration instanceof Duration ? duration : new Duration(duration);
 
@@ -218,7 +218,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @returns {LiveHashAddTransaction}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)

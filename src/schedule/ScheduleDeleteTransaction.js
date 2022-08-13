@@ -123,7 +123,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @returns {this}
      */
     setScheduleId(scheduleId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._scheduleId =
             typeof scheduleId === "string"
                 ? ScheduleId.fromString(scheduleId)

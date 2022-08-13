@@ -128,7 +128,7 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -149,7 +149,7 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @returns {this}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)

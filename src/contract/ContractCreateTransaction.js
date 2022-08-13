@@ -314,7 +314,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setBytecodeFileId(bytecodeFileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._bytecodeFileId =
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
@@ -336,7 +336,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setBytecode(bytecode) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._bytecode = bytecode;
         this._bytecodeFileId = null;
 
@@ -355,7 +355,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setAdminKey(adminKey) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._adminKey = adminKey;
 
         return this;
@@ -373,7 +373,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setGas(gas) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
 
         return this;
@@ -393,7 +393,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setInitialBalance(initialBalance) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._initialBalance =
             initialBalance instanceof Hbar
                 ? initialBalance
@@ -416,7 +416,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setProxyAccountId(proxyAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._proxyAccountId =
             proxyAccountId instanceof AccountId
                 ? proxyAccountId
@@ -441,7 +441,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewPeriod =
             autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
@@ -462,7 +462,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setConstructorParameters(constructorParameters) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._constructorParameters =
             constructorParameters instanceof ContractFunctionParameters
                 ? constructorParameters._build()
@@ -483,7 +483,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setContractMemo(contractMemo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contractMemo = contractMemo;
 
         return this;
@@ -518,7 +518,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setStakedAccountId(stakedAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedAccountId =
             typeof stakedAccountId === "string"
                 ? AccountId.fromString(stakedAccountId)
@@ -539,7 +539,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setStakedNodeId(stakedNodeId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._stakedNodeId = Long.fromValue(stakedNodeId);
 
         return this;
@@ -557,7 +557,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setDeclineStakingReward(declineStakingReward) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._declineStakingReward = declineStakingReward;
 
         return this;
@@ -575,7 +575,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @returns {this}
      */
     setAutoRenewAccountId(autoRenewAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewAccountId =
             typeof autoRenewAccountId === "string"
                 ? AccountId.fromString(autoRenewAccountId)

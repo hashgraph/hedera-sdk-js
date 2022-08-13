@@ -38,6 +38,12 @@ import Logger from "js-logger";
 import * as util from "../util.js";
 import * as symbols from "../Symbols.js";
 
+const privateSetTransactionId = Symbol();
+const buildAllTransactions = Symbol();
+const buildAllTransactionsAsync = Symbol();
+const requireNotSignOnDemand = Symbol();
+const requireOneNodeAccountId = Symbol();
+
 /**
  * @typedef {import("bignumber.js").default} BigNumber
  */
@@ -338,7 +344,7 @@ export default class Transaction extends Executable {
      * @returns {ScheduleCreateTransaction}
      */
     schedule() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         if (SCHEDULE_CREATE_TRANSACTION.length != 1) {
             throw new Error(
@@ -468,7 +474,7 @@ export default class Transaction extends Executable {
         // Now that I think of it, we could just add an abstract method `setterPrerequiest()` which
         // by default does nothing, and `Executable` can call. Then we'd only need to overwrite that
         // method once.
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         super.setNodeAccountIds(nodeIds);
         return this;
     }
@@ -491,7 +497,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setTransactionValidDuration(validDuration) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transactionValidDuration = validDuration;
 
         return this;
@@ -514,7 +520,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setMaxTransactionFee(maxTransactionFee) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._maxTransactionFee =
             maxTransactionFee instanceof Hbar
                 ? maxTransactionFee
@@ -540,7 +546,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setRegenerateTransactionId(regenerateTransactionId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._regenerateTransactionId = regenerateTransactionId;
 
         return this;
@@ -563,7 +569,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setTransactionMemo(transactionMemo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transactionMemo = transactionMemo;
 
         return this;
@@ -604,7 +610,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setTransactionId(transactionId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transactionIds.setList([transactionId]).setLocked();
 
         return this;
@@ -639,7 +645,7 @@ export default class Transaction extends Executable {
         // If signing on demand is disabled, we need to make sure
         // the request is frozen
         if (!this._signOnDemand) {
-            this._requireFrozen();
+            this[symbols.requireFrozen]();
         }
 
         const publicKeyData = publicKey.toBytesRaw();
@@ -718,7 +724,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        if (!this._isFrozen()) {
+        if (!this[symbols.isFrozen]()) {
             this.freezeWith(client);
         }
 
@@ -741,7 +747,7 @@ export default class Transaction extends Executable {
         // Require that only one node is set on this transaction
         // FIXME: This doesn't consider if we have one node account ID set, but we're
         // also a chunked transaction. We should also check transaction IDs is of length 1
-        this._requireOneNodeAccountId();
+        this[requireOneNodeAccountId]();
 
         // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
@@ -800,14 +806,14 @@ export default class Transaction extends Executable {
     getSignatures() {
         // If a user is attempting to get signatures for a transaction, then the
         // transaction must be frozen.
-        this._requireFrozen();
+        this[symbols.requireFrozen]();
 
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
-        this._requireNotSignOnDemand();
+        this[requireNotSignOnDemand]();
 
         // Build all the transactions
-        this._buildAllTransactions();
+        this[buildAllTransactions]();
 
         // Lock transaction IDs, and node account IDs
         this._transactionIds.setLocked();
@@ -835,7 +841,7 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
 
         // Build all transactions, and sign them
-        await this._buildAllTransactionsAsync();
+        await this[buildAllTransactionsAsync]();
 
         // Lock transaction IDs, and node account IDs
         this._transactions.setLocked();
@@ -849,7 +855,7 @@ export default class Transaction extends Executable {
      * Not sure why this is called `setTransactionId()` when it doesn't set anything...
      * FIXME: Remove this?
      */
-    _setTransactionId() {
+    [privateSetTransactionId]() {
         if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
@@ -955,7 +961,7 @@ export default class Transaction extends Executable {
         this._setNodeAccountIds(client);
 
         // Make sure a transaction ID or operator is set.
-        this._setTransactionId();
+        this[privateSetTransactionId]();
 
         // If a client was not provided, we need to make sure the transaction ID already set
         // validates aginst the client.
@@ -1017,11 +1023,11 @@ export default class Transaction extends Executable {
     toBytes() {
         // If a user is attempting to serialize a transaction into bytes, then the
         // transaction must be frozen.
-        this._requireFrozen();
+        this[symbols.requireFrozen]();
 
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
-        this._requireNotSignOnDemand();
+        this[requireNotSignOnDemand]();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
@@ -1029,7 +1035,7 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
 
         // Build all the transactions withot signing
-        this._buildAllTransactions();
+        this[buildAllTransactions]();
 
         // Construct and encode the transaction list
         return HashgraphProto.proto.TransactionList.encode({
@@ -1058,7 +1064,7 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
 
         // Build all transactions, and sign them
-        await this._buildAllTransactionsAsync();
+        await this[buildAllTransactionsAsync]();
 
         // Lock transaction IDs, and node account IDs
         this._transactions.setLocked();
@@ -1079,14 +1085,14 @@ export default class Transaction extends Executable {
      * @returns {Promise<Uint8Array>}
      */
     async getTransactionHash() {
-        this._requireFrozen();
+        this[symbols.requireFrozen]();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
         this._nodeAccountIds.setLocked();
 
-        await this._buildAllTransactionsAsync();
+        await this[buildAllTransactionsAsync]();
 
         this._transactions.setLocked();
         this._signedTransactions.setLocked();
@@ -1106,14 +1112,14 @@ export default class Transaction extends Executable {
      * @returns {Promise<TransactionHashMap>}
      */
     async getTransactionHashPerNode() {
-        this._requireFrozen();
+        this[symbols.requireFrozen]();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
         this._nodeAccountIds.setLocked();
 
-        await this._buildAllTransactionsAsync();
+        await this[buildAllTransactionsAsync]();
 
         return await TransactionHashMap._fromTransaction(this);
     }
@@ -1161,7 +1167,7 @@ export default class Transaction extends Executable {
      */
     async _beforeExecute(client) {
         // Makes ure we're frozen
-        if (!this._isFrozen()) {
+        if (!this[symbols.isFrozen]()) {
             this.freezeWith(client);
         }
 
@@ -1276,7 +1282,7 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    _buildAllTransactions() {
+    [buildAllTransactions]() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
@@ -1290,9 +1296,9 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    async _buildAllTransactionsAsync() {
+    async [buildAllTransactionsAsync]() {
         if (!this._signOnDemand) {
-            this._buildAllTransactions();
+            this[buildAllTransactions]();
             return;
         }
 
@@ -1555,7 +1561,7 @@ export default class Transaction extends Executable {
      * @protected
      * @returns {boolean}
      */
-    _isFrozen() {
+    [symbols.isFrozen]() {
         return (
             this._signOnDemand ||
             this._signedTransactions.length > 0 ||
@@ -1568,8 +1574,8 @@ export default class Transaction extends Executable {
      *
      * @internal
      */
-    _requireNotFrozen() {
-        if (this._isFrozen()) {
+    [symbols.requireNotFrozen]() {
+        if (this[symbols.isFrozen]()) {
             throw new Error(
                 "transaction is immutable; it has at least one signature or has been explicitly frozen"
             );
@@ -1581,7 +1587,7 @@ export default class Transaction extends Executable {
      *
      * @internal
      */
-    _requireNotSignOnDemand() {
+    [requireNotSignOnDemand]() {
         if (this._signOnDemand) {
             throw new Error(
                 "Please use `toBytesAsync()` if `signOnDemand` is enabled"
@@ -1594,8 +1600,8 @@ export default class Transaction extends Executable {
      *
      * @internal
      */
-    _requireFrozen() {
-        if (!this._isFrozen()) {
+    [symbols.requireFrozen]() {
+        if (!this[symbols.isFrozen]()) {
             throw new Error(
                 "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
             );
@@ -1608,7 +1614,7 @@ export default class Transaction extends Executable {
      * @internal
      * @protected
      */
-    _requireOneNodeAccountId() {
+    [requireOneNodeAccountId]() {
         if (this._nodeAccountIds.length != 1) {
             throw "transaction did not have exactly one node ID set";
         }

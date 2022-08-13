@@ -119,7 +119,7 @@ export default class TopicDeleteTransaction extends Transaction {
      * @returns {TopicDeleteTransaction}
      */
     setTopicId(topicId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._topicId =
             typeof topicId === "string"
                 ? TopicId.fromString(topicId)

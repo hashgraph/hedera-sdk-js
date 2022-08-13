@@ -141,7 +141,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @returns {AccountDeleteTransaction}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
@@ -164,7 +164,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @returns {AccountDeleteTransaction}
      */
     setTransferAccountId(transferAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._transferAccountId =
             typeof transferAccountId === "string"
                 ? AccountId.fromString(transferAccountId)

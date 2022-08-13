@@ -319,7 +319,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -340,7 +340,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenName(name) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenName = name;
 
         return this;
@@ -358,7 +358,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenSymbol(symbol) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenSymbol = symbol;
 
         return this;
@@ -376,7 +376,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTreasuryAccountId(id) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._treasuryAccountId =
             typeof id === "string" ? AccountId.fromString(id) : id.clone();
 
@@ -395,7 +395,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setAdminKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._adminKey = key;
 
         return this;
@@ -413,7 +413,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setKycKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._kycKey = key;
 
         return this;
@@ -431,7 +431,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setFreezeKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._freezeKey = key;
 
         return this;
@@ -449,7 +449,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setWipeKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._wipeKey = key;
 
         return this;
@@ -467,7 +467,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setSupplyKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._supplyKey = key;
 
         return this;
@@ -479,7 +479,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setsupplyKey(key) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._supplyKey = key;
 
         return this;
@@ -497,7 +497,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setExpirationTime(time) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._expirationTime =
             time instanceof Timestamp ? time : Timestamp.fromDate(time);
 
@@ -516,7 +516,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setAutoRenewAccountId(id) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);
 
@@ -537,7 +537,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._autoRenewPeriod =
             autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
@@ -558,7 +558,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenMemo(tokenMemo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenMemo = tokenMemo;
 
         return this;
@@ -576,7 +576,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setFeeScheduleKey(feeScheduleKey) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._feeScheduleKey = feeScheduleKey;
 
         return this;
@@ -594,7 +594,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setPauseKey(pauseKey) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._pauseKey = pauseKey;
         return this;
     }
@@ -603,7 +603,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {this}
      */
     clearTokenMemo() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenMemo = null;
 
         return this;

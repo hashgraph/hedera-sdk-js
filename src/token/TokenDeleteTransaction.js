@@ -113,7 +113,7 @@ export default class TokenDeleteTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)

@@ -206,7 +206,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {this}
      */
     setFileId(fileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
@@ -239,7 +239,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {this}
      */
     setContents(contents) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contents =
             contents instanceof Uint8Array ? contents : utf8.encode(contents);
 
@@ -258,7 +258,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {this}
      */
     setMaxChunks(maxChunks) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._maxChunks = maxChunks;
         return this;
     }
@@ -348,7 +348,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {ScheduleCreateTransaction}
      */
     schedule() {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         if (this._contents != null && this._contents.length > this._chunkSize) {
             throw new Error(
@@ -374,7 +374,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client, requestTimeout) {
-        if (!super._isFrozen()) {
+        if (!super[symbols.isFrozen]()) {
             this.freezeWith(client);
         }
 

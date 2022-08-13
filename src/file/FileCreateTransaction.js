@@ -178,7 +178,7 @@ export default class FileCreateTransaction extends Transaction {
      * @returns {this}
      */
     setKeys(keys) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         if (keys instanceof KeyList && keys.threshold != null) {
             throw new Error("Cannot set threshold key as file key");
         }
@@ -208,7 +208,7 @@ export default class FileCreateTransaction extends Transaction {
      * @returns {this}
      */
     setExpirationTime(expirationTime) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._expirationTime =
             expirationTime instanceof Timestamp
                 ? expirationTime
@@ -241,7 +241,7 @@ export default class FileCreateTransaction extends Transaction {
      * @returns {this}
      */
     setContents(contents) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contents =
             contents instanceof Uint8Array ? contents : utf8.encode(contents);
 
@@ -260,7 +260,7 @@ export default class FileCreateTransaction extends Transaction {
      * @returns {this}
      */
     setFileMemo(memo) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileMemo = memo;
 
         return this;

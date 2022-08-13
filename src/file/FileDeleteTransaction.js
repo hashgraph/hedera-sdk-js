@@ -122,7 +122,7 @@ export default class FileDeleteTransaction extends Transaction {
      * @returns {FileDeleteTransaction}
      */
     setFileId(fileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)

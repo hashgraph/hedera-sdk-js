@@ -233,7 +233,7 @@ export default class TransferTransaction extends Transaction {
      * @returns {this}
      */
     _addTokenTransfer(tokenId, accountId, amount, isApproved) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const token =
             tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
@@ -295,7 +295,7 @@ export default class TransferTransaction extends Transaction {
      * @returns {this}
      */
     addTokenTransferWithDecimals(tokenId, accountId, amount, decimals) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const token =
             tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
@@ -377,7 +377,7 @@ export default class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     _addHbarTransfer(accountId, amount, isApproved) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const account =
             accountId instanceof AccountId
@@ -487,7 +487,7 @@ export default class TransferTransaction extends Transaction {
         receiverAccountIdOrSenderAccountId,
         receiver
     ) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         let nftId;
         let senderAccountId;

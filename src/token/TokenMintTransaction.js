@@ -140,7 +140,7 @@ export default class TokenMintTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -161,7 +161,7 @@ export default class TokenMintTransaction extends Transaction {
      * @returns {this}
      */
     setAmount(amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
 
         return this;
@@ -188,7 +188,7 @@ export default class TokenMintTransaction extends Transaction {
      * @returns {this}
      */
     addMetadata(metadata) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         if (typeof metadata === "string") {
             console.warn(
@@ -208,7 +208,7 @@ export default class TokenMintTransaction extends Transaction {
      * @returns {this}
      */
     setMetadata(metadata) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         for (const data of metadata) {
             if (typeof data === "string") {

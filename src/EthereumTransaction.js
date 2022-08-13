@@ -155,7 +155,7 @@ export default class EthereumTransaction extends Transaction {
      * @returns {this}
      */
     setEthereumData(ethereumData) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._ethereumData = ethereumData;
         return this;
     }
@@ -201,7 +201,7 @@ export default class EthereumTransaction extends Transaction {
      * @returns {this}
      */
     setCallDataFileId(callDataFileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._callDataFileId = callDataFileId;
         return this;
     }
@@ -240,7 +240,7 @@ export default class EthereumTransaction extends Transaction {
      * @returns {this}
      */
     setMaxGasAllowanceHbar(maxGasAllowance) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._maxGasAllowance =
             maxGasAllowance instanceof Hbar
                 ? maxGasAllowance

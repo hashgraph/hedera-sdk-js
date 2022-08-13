@@ -206,7 +206,7 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setStartTime(startHourOrString, startMinute) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         if (typeof startHourOrString === "string") {
             const split = startHourOrString.split(":");
             this._startTime = {
@@ -235,7 +235,7 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setStartTimestamp(startTimestamp) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._startTimestamp = startTimestamp;
 
         return this;
@@ -258,7 +258,7 @@ export default class FreezeTransaction extends Transaction {
      */
     setEndTime(endHourOrString, endMinute) {
         console.warn("`FreezeTransaction.endTime` is deprecated");
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         if (typeof endHourOrString === "string") {
             const split = endHourOrString.split(":");
             this._endTime = {
@@ -304,7 +304,7 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setFileId(fileId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileId = fileId;
 
         return this;
@@ -322,7 +322,7 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setFileHash(fileHash) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._fileHash =
             typeof fileHash === "string" ? hex.decode(fileHash) : fileHash;
 
@@ -341,7 +341,7 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setFreezeType(freezeType) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._freezeType = freezeType;
         return this;
     }

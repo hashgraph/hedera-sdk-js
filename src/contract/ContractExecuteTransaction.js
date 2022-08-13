@@ -173,7 +173,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     setContractId(contractId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
@@ -196,7 +196,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     setGas(gas) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
 
         return this;
@@ -216,7 +216,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     setPayableAmount(amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._amount = amount instanceof Hbar ? amount : new Hbar(amount);
 
         return this;
@@ -234,7 +234,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {this}
      */
     setFunctionParameters(functionParameters) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._functionParameters = functionParameters;
 
         return this;
@@ -246,7 +246,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {this}
      */
     setFunction(name, functionParameters) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._functionParameters =
             functionParameters != null
                 ? functionParameters._build(name)

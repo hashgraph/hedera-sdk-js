@@ -113,7 +113,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @returns {AccountAllowanceAdjustTransaction}
      */
     _adjustHbarAllowance(ownerAccountId, spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._hbarAllowances.push(
             new HbarAllowance({
@@ -195,7 +195,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @returns {AccountAllowanceAdjustTransaction}
      */
     _adjustTokenAllowance(tokenId, ownerAccountId, spenderAccountId, amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._tokenAllowances.push(
             new TokenAllowance({
@@ -273,7 +273,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @returns {AccountAllowanceAdjustTransaction}
      */
     _adjustTokenNftAllowance(nftId, ownerAccountId, spenderAccountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         const spender =
             typeof spenderAccountId === "string"
@@ -419,7 +419,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         spenderAccountId,
         allSerials
     ) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
 
         this._nftAllowances.push(
             new TokenNftAllowance({

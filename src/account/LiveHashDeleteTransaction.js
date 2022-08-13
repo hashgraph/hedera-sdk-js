@@ -123,7 +123,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @returns {LiveHashDeleteTransaction}
      */
     setHash(hash) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._hash = hash;
 
         return this;
@@ -141,7 +141,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @returns {LiveHashDeleteTransaction}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)

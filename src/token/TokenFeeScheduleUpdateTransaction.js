@@ -140,7 +140,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -161,7 +161,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      * @returns {this}
      */
     setCustomFees(fees) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._customFees = fees;
 
         return this;

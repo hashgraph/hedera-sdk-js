@@ -152,7 +152,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {this}
      */
     setTokenId(tokenId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -173,7 +173,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {this}
      */
     setAccountId(accountId) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
@@ -194,7 +194,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {this}
      */
     setAmount(amount) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
 
         return this;
@@ -225,7 +225,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {this}
      */
     setSerials(serials) {
-        this._requireNotFrozen();
+        this[symbols.requireNotFrozen]();
         this._serials = serials.map((serial) =>
             typeof serial === "number" ? Long.fromNumber(serial) : serial
         );
