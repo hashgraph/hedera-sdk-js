@@ -77,7 +77,7 @@ export default class LiveHash {
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:
                 liveHash_.keys != null
-                    ? KeyList.__fromProtobufKeyList(liveHash_.keys)
+                    ? KeyList[symbols.fromProtobufKeyList](liveHash_.keys)
                     : new KeyList(),
             duration: Duration._fromProtobuf(
                 /** @type {HashgraphProto.proto.IDuration} */ (

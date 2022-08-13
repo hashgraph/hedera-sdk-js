@@ -14,3 +14,5 @@ export const execute = Symbol();
 export const getScheduledTransactionBody = Symbol();
 export const makeSignedTransaction = Symbol();
 export const fromProtobufKey = Symbol();
+export const fromProtobufKeyList = Symbol();
+export const fromProtobufThresholdKey = Symbol();

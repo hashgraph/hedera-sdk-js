@@ -153,7 +153,7 @@ export default class ScheduleInfo {
                     : null,
             signers:
                 info.signers != null
-                    ? KeyList.__fromProtobufKeyList(info.signers)
+                    ? KeyList[symbols.fromProtobufKeyList](info.signers)
                     : null,
             scheduleMemo: info.memo != null ? info.memo : null,
             expirationTime:

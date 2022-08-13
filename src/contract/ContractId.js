@@ -26,6 +26,8 @@ import * as hex from "../encoding/hex.js";
 import Long from "long";
 import * as symbols from "../Symbols.js";
 
+const fromProtobufKey = Symbol();
+
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
@@ -248,9 +250,9 @@ export default class ContractId extends Key {
      * @param {HashgraphProto.proto.IContractID} key
      * @returns {ContractId}
      */
-    static __fromProtobufKey(key) {
+    static [fromProtobufKey](key) {
         return ContractId._fromProtobuf(key);
     }
 }
 
-CACHE.setContractId((key) => ContractId.__fromProtobufKey(key));
+CACHE.setContractId((key) => ContractId[fromProtobufKey](key));

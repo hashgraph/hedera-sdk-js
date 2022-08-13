@@ -167,7 +167,7 @@ export default class KeyList extends Key {
      * @param {HashgraphProto.proto.IKeyList} key
      * @returns {KeyList}
      */
-    static __fromProtobufKeyList(key) {
+    static [symbols.fromProtobufKeyList](key) {
         const keys = (key.keys != null ? key.keys : []).map((key) =>
             Key[symbols.fromProtobufKey](key)
         );
@@ -178,8 +178,8 @@ export default class KeyList extends Key {
      * @param {HashgraphProto.proto.IThresholdKey} key
      * @returns {KeyList}
      */
-    static __fromProtobufThresoldKey(key) {
-        const list = KeyList.__fromProtobufKeyList(
+    static [symbols.fromProtobufThresholdKey](key) {
+        const list = KeyList[symbols.fromProtobufKeyList](
             key.keys != null ? key.keys : {}
         );
         list.setThreshold(key.threshold != null ? key.threshold : 0);
@@ -187,5 +187,5 @@ export default class KeyList extends Key {
     }
 }
 
-CACHE.setKeyList((key) => KeyList.__fromProtobufKeyList(key));
-CACHE.setThresholdKey((key) => KeyList.__fromProtobufThresoldKey(key));
+CACHE.setKeyList((key) => KeyList[symbols.fromProtobufKeyList](key));
+CACHE.setThresholdKey((key) => KeyList[symbols.fromProtobufThresholdKey](key));

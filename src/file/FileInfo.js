@@ -108,7 +108,7 @@ export default class FileInfo {
             isDeleted: /** @type {boolean} */ (info.deleted),
             keys:
                 info.keys != null
-                    ? KeyList.__fromProtobufKeyList(info.keys)
+                    ? KeyList[symbols.fromProtobufKeyList](info.keys)
                     : new KeyList(),
             fileMemo: info.memo != null ? info.memo : "",
             ledgerId:
