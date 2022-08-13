@@ -340,7 +340,7 @@ export default class Executable {
      * @returns {Promise<ResponseT>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         throw new Error("not implemented");
     }
 
@@ -634,7 +634,7 @@ export default class Executable {
                         this._requestToBytes(request)
                     )}`
                 );
-                promises.push(this._execute(channel, request));
+                promises.push(this[symbols.execute](channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
                     await Promise.race(promises)

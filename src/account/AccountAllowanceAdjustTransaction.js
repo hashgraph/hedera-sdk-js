@@ -468,7 +468,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return Promise.reject(
             new Error("This feature has been deprecated for this class.")
         );

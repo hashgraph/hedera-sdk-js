@@ -204,7 +204,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return channel.token.burnToken(request);
     }
 

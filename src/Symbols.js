@@ -10,3 +10,4 @@ export const beforeExecute = Symbol();
 export const makeRequestAsync = Symbol();
 export const mapStatusError = Symbol();
 export const mapResponse = Symbol();
+export const execute = Symbol();

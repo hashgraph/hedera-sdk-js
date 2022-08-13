@@ -338,7 +338,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return channel.file.updateFile(request);
     }
 

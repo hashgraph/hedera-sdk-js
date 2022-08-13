@@ -168,8 +168,8 @@ export default class CostQuery extends Executable {
      * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
-    _execute(channel, request) {
-        return this._query._execute(channel, request);
+    [symbols.execute](channel, request) {
+        return this._query[symbols.execute](channel, request);
     }
 
     /**

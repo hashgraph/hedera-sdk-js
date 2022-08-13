@@ -193,7 +193,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return channel.crypto.cryptoDelete(request);
     }
 

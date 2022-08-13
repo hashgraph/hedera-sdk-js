@@ -171,7 +171,7 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         if (this._fileId != null) {
             return channel.file.systemUndelete(request);
         } else {

@@ -121,7 +121,7 @@ export default class AccountRecordsQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return channel.crypto.getAccountRecords(request);
     }
 

@@ -94,7 +94,7 @@ export default class PrngTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.TransactionResponse>}
      */
-    _execute(channel, request) {
+    [symbols.execute](channel, request) {
         return channel.util.prng(request);
     }
 
