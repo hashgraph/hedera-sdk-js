@@ -86,7 +86,7 @@ export default class NetworkVersionInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<NetworkVersionInfo>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const info =
             /** @type {HashgraphProto.proto.INetworkGetVersionInfoResponse} */ (
                 response.networkGetVersionInfo

@@ -161,7 +161,7 @@ export default class AccountInfoQuery extends Query {
      * @returns {Promise<AccountInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const info =
             /** @type {HashgraphProto.proto.ICryptoGetInfoResponse} */ (
                 response.cryptoGetInfo

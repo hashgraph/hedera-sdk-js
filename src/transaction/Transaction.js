@@ -1432,11 +1432,11 @@ export default class Transaction extends Executable {
      * @override
      * @protected
      * @param {HashgraphProto.proto.ITransactionResponse} response
-     * @param {AccountId} nodeId
+     * @param {AccountId} nodeAccountId
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<TransactionResponse>}
      */
-    async _mapResponse(response, nodeId, request) {
+    async [symbols.mapResponse](response, nodeAccountId, request) {
         const transactionHash = await sha384.digest(
             /** @type {Uint8Array} */ (request.signedTransactionBytes)
         );
@@ -1445,7 +1445,7 @@ export default class Transaction extends Executable {
         this._transactionIds.advance();
 
         return new TransactionResponse({
-            nodeId,
+            nodeId: nodeAccountId,
             transactionHash,
             transactionId,
         });

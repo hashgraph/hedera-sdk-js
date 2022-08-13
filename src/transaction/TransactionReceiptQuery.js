@@ -359,7 +359,7 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const transactionGetReceipt =
             /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt

@@ -280,7 +280,7 @@ export default class ContractCallQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<ContractFunctionResult>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const call =
             /**
              *@type {HashgraphProto.proto.IContractCallLocalResponse}

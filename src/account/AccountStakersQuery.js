@@ -149,7 +149,7 @@ export default class AccountStakersQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<ProxyStaker[]>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const cryptoGetProxyStakers =
             /** @type {HashgraphProto.proto.ICryptoGetStakersResponse} */ (
                 response.cryptoGetProxyStakers

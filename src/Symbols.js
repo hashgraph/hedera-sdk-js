@@ -9,3 +9,4 @@ export const isFrozen = Symbol();
 export const beforeExecute = Symbol();
 export const makeRequestAsync = Symbol();
 export const mapStatusError = Symbol();
+export const mapResponse = Symbol();

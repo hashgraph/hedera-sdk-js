@@ -324,7 +324,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         throw new Error("not implemented");
     }
 
@@ -695,7 +695,11 @@ export default class Executable {
                     );
                     continue;
                 case ExecutionState.Finished:
-                    return this._mapResponse(response, nodeAccountId, request);
+                    return this[symbols.mapResponse](
+                        response,
+                        nodeAccountId,
+                        request
+                    );
                 case ExecutionState.Error:
                     throw this[symbols.mapStatusError](request, response);
                 default:

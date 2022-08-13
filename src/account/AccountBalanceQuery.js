@@ -210,7 +210,7 @@ export default class AccountBalanceQuery extends Query {
      * @returns {Promise<AccountBalance>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const cryptogetAccountBalance =
             /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
                 response.cryptogetAccountBalance

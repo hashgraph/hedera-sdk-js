@@ -162,7 +162,7 @@ export default class ContractInfoQuery extends Query {
      * @returns {Promise<ContractInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const info =
             /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
                 response.contractGetInfo

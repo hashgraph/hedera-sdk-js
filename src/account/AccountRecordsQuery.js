@@ -150,7 +150,7 @@ export default class AccountRecordsQuery extends Query {
      * @returns {Promise<TransactionRecord[]>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const cryptoGetAccountRecords =
             /** @type {HashgraphProto.proto.ICryptoGetAccountRecordsResponse} */ (
                 response.cryptoGetAccountRecords

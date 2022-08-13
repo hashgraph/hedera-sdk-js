@@ -170,7 +170,7 @@ export default class TopicInfoQuery extends Query {
      * @returns {Promise<TopicInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         return Promise.resolve(
             TopicInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.IConsensusGetTopicInfoResponse} */ (

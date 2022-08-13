@@ -345,7 +345,7 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {Promise<TokenNftInfo[]>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const nfts = [
             /** @type {HashgraphProto.proto.ITokenNftInfo} */
             (

@@ -175,7 +175,7 @@ export default class LiveHashQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<LiveHash>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const hashes =
             /** @type {HashgraphProto.proto.ICryptoGetLiveHashResponse} */ (
                 response.cryptoGetLiveHash

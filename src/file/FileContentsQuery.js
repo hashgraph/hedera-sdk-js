@@ -143,7 +143,7 @@ export default class FileContentsQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<Uint8Array>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const fileContentsResponse =
             /** @type {HashgraphProto.proto.IFileGetContentsResponse} */ (
                 response.fileGetContents

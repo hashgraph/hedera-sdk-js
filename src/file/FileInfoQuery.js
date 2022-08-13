@@ -162,7 +162,7 @@ export default class FileInfoQuery extends Query {
      * @returns {Promise<FileInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    [symbols.mapResponse](response, nodeAccountId, request) {
         const info = /** @type {HashgraphProto.proto.IFileGetInfoResponse} */ (
             response.fileGetInfo
         );

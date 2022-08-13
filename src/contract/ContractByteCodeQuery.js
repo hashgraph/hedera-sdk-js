@@ -142,7 +142,7 @@ export default class ContractByteCodeQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<Uint8Array>}
      */
-    _mapResponse(response) {
+    [symbols.mapResponse](response) {
         const contractGetBytecodeResponse =
             /** @type {HashgraphProto.proto.IContractGetBytecodeResponse} */ (
                 response.contractGetBytecodeResponse
