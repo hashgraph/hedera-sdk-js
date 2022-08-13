@@ -25,6 +25,7 @@ import Transaction, {
 import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -292,7 +293,7 @@ export default class ContractExecuteTransaction extends Transaction {
         return {
             contractID:
                 this._contractId != null
-                    ? this._contractId._toProtobuf()
+                    ? this._contractId[symbols.toProtobuf]()
                     : null,
             gas: this._gas,
             amount: this._amount != null ? this._amount.toTinybars() : null,

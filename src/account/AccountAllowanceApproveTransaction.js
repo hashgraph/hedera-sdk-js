@@ -29,6 +29,7 @@ import Hbar from "../Hbar.js";
 import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -454,13 +455,13 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     _makeTransactionData() {
         return {
             cryptoAllowances: this._hbarApprovals.map((approval) =>
-                approval._toProtobuf()
+                approval[symbols.toProtobuf]()
             ),
             tokenAllowances: this._tokenApprovals.map((approval) =>
-                approval._toProtobuf()
+                approval[symbols.toProtobuf]()
             ),
             nftAllowances: this._nftApprovals.map((approval) =>
-                approval._toProtobuf()
+                approval[symbols.toProtobuf]()
             ),
         };
     }

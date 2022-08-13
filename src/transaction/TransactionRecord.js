@@ -33,6 +33,7 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -270,9 +271,9 @@ export default class TransactionRecord {
      * @internal
      * @returns {HashgraphProto.proto.ITransactionGetRecordResponse}
      */
-    _toProtobuf() {
-        const tokenTransfers = this.tokenTransfers._toProtobuf();
-        const nftTransfers = this.nftTransfers._toProtobuf();
+    [symbols.toProtobuf]() {
+        const tokenTransfers = this.tokenTransfers[symbols.toProtobuf]();
+        const nftTransfers = this.nftTransfers[symbols.toProtobuf]();
 
         const tokenTransferLists = [];
 
@@ -302,13 +303,13 @@ export default class TransactionRecord {
         const duplicates = this.duplicates.map(
             (record) =>
                 /** @type {HashgraphProto.proto.ITransactionRecord} */ (
-                    record._toProtobuf().transactionRecord
+                    record[symbols.toProtobuf]().transactionRecord
                 )
         );
         const children = this.children.map(
             (record) =>
                 /** @type {HashgraphProto.proto.ITransactionRecord} */ (
-                    record._toProtobuf().transactionRecord
+                    record[symbols.toProtobuf]().transactionRecord
                 )
         );
 
@@ -316,17 +317,17 @@ export default class TransactionRecord {
             duplicateTransactionRecords: duplicates,
             childTransactionRecords: children,
             transactionRecord: {
-                receipt: this.receipt._toProtobuf().receipt,
+                receipt: this.receipt[symbols.toProtobuf]().receipt,
 
                 transactionHash:
                     this.transactionHash != null ? this.transactionHash : null,
                 consensusTimestamp:
                     this.consensusTimestamp != null
-                        ? this.consensusTimestamp._toProtobuf()
+                        ? this.consensusTimestamp[symbols.toProtobuf]()
                         : null,
                 transactionID:
                     this.transactionId != null
-                        ? this.transactionId._toProtobuf()
+                        ? this.transactionId[symbols.toProtobuf]()
                         : null,
                 memo:
                     this.transactionMemo != null ? this.transactionMemo : null,
@@ -339,37 +340,37 @@ export default class TransactionRecord {
                 contractCallResult:
                     this.contractFunctionResult != null &&
                     !this.contractFunctionResult._createResult
-                        ? this.contractFunctionResult._toProtobuf()
+                        ? this.contractFunctionResult[symbols.toProtobuf]()
                         : null,
 
                 contractCreateResult:
                     this.contractFunctionResult != null &&
                     this.contractFunctionResult._createResult
-                        ? this.contractFunctionResult._toProtobuf()
+                        ? this.contractFunctionResult[symbols.toProtobuf]()
                         : null,
 
                 transferList:
                     this.transfers != null
                         ? {
                               accountAmounts: this.transfers.map((transfer) =>
-                                  transfer._toProtobuf()
+                                  transfer[symbols.toProtobuf]()
                               ),
                           }
                         : null,
                 tokenTransferLists,
                 scheduleRef:
                     this.scheduleRef != null
-                        ? this.scheduleRef._toProtobuf()
+                        ? this.scheduleRef[symbols.toProtobuf]()
                         : null,
                 assessedCustomFees: this.assessedCustomFees.map((fee) =>
-                    fee._toProtobuf()
+                    fee[symbols.toProtobuf]()
                 ),
                 automaticTokenAssociations: this.automaticTokenAssociations.map(
-                    (association) => association._toProtobuf()
+                    (association) => association[symbols.toProtobuf]()
                 ),
                 parentConsensusTimestamp:
                     this.parentConsensusTimestamp != null
-                        ? this.parentConsensusTimestamp._toProtobuf()
+                        ? this.parentConsensusTimestamp[symbols.toProtobuf]()
                         : null,
                 alias:
                     this.aliasKey != null
@@ -380,7 +381,7 @@ export default class TransactionRecord {
                 ethereumHash: this.ethereumHash,
 
                 paidStakingRewards: this.paidStakingRewards.map((transfer) =>
-                    transfer._toProtobuf()
+                    transfer[symbols.toProtobuf]()
                 ),
 
                 prngBytes: this.prngBytes,
@@ -540,7 +541,7 @@ export default class TransactionRecord {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionGetRecordResponse.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

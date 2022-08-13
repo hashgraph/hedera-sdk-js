@@ -24,6 +24,7 @@ import Long from "long";
 import KeyList from "../KeyList.js";
 import LedgerId from "../LedgerId.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 const { proto } = HashgraphProto;
 
@@ -121,11 +122,11 @@ export default class FileInfo {
      * @internal
      * @returns {HashgraphProto.proto.FileGetInfoResponse.IFileInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            fileID: this.fileId._toProtobuf(),
+            fileID: this.fileId[symbols.toProtobuf](),
             size: this.size,
-            expirationTime: this.expirationTime._toProtobuf(),
+            expirationTime: this.expirationTime[symbols.toProtobuf](),
             deleted: this.isDeleted,
             keys: this.keys._toProtobufKey().keyList,
             memo: this.fileMemo,
@@ -148,7 +149,7 @@ export default class FileInfo {
      */
     toBytes() {
         return proto.FileGetInfoResponse.FileInfo.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

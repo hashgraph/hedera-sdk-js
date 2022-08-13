@@ -26,6 +26,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -652,12 +653,15 @@ export default class TokenUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
             name: this.tokenName,
             symbol: this.tokenSymbol,
             treasury:
                 this._treasuryAccountId != null
-                    ? this._treasuryAccountId._toProtobuf()
+                    ? this._treasuryAccountId[symbols.toProtobuf]()
                     : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
@@ -676,15 +680,15 @@ export default class TokenUpdateTransaction extends Transaction {
                     : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
             expiry:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this._autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             memo:
                 this._tokenMemo != null

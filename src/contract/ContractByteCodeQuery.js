@@ -20,6 +20,7 @@
 
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -166,7 +167,7 @@ export default class ContractByteCodeQuery extends Query {
                 header,
                 contractID:
                     this._contractId != null
-                        ? this._contractId._toProtobuf()
+                        ? this._contractId[symbols.toProtobuf]()
                         : null,
             },
         };

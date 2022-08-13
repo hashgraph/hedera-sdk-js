@@ -19,6 +19,7 @@
  */
 
 import NodeAddress from "./NodeAddress.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -85,10 +86,10 @@ export default class NodeAddressBook {
     /**
      * @returns {HashgraphProto.proto.INodeAddressBook}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             nodeAddress: this._nodeAddresses.map((nodeAddress) =>
-                nodeAddress._toProtobuf()
+                nodeAddress[symbols.toProtobuf]()
             ),
         };
     }

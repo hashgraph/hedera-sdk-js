@@ -29,6 +29,7 @@ import Transaction, {
 import Long from "long";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -625,7 +626,7 @@ export default class ContractCreateTransaction extends Transaction {
         return {
             fileID:
                 this._bytecodeFileId != null
-                    ? this._bytecodeFileId._toProtobuf()
+                    ? this._bytecodeFileId[symbols.toProtobuf]()
                     : null,
             initcode: this._bytecode,
             adminKey:
@@ -637,21 +638,21 @@ export default class ContractCreateTransaction extends Transaction {
                     : null,
             proxyAccountID:
                 this._proxyAccountId != null
-                    ? this._proxyAccountId._toProtobuf()
+                    ? this._proxyAccountId[symbols.toProtobuf]()
                     : null,
-            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+            autoRenewPeriod: this._autoRenewPeriod[symbols.toProtobuf](),
             constructorParameters: this._constructorParameters,
             memo: this._contractMemo,
             maxAutomaticTokenAssociations: this._maxAutomaticTokenAssociations,
             stakedAccountId:
                 this.stakedAccountId != null
-                    ? this.stakedAccountId._toProtobuf()
+                    ? this.stakedAccountId[symbols.toProtobuf]()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,
             autoRenewAccountId:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
         };
     }

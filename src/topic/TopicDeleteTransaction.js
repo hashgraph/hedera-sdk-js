@@ -22,6 +22,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import TopicId from "./TopicId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -163,7 +164,10 @@ export default class TopicDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
+            topicID:
+                this._topicId != null
+                    ? this._topicId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

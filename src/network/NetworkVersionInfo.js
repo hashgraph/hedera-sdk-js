@@ -20,6 +20,7 @@
 
 import SemanticVersion from "./SemanticVersion.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.
@@ -71,10 +72,10 @@ export default class NetworkVersionInfo {
      * @internal
      * @returns {HashgraphProto.proto.INetworkGetVersionInfoResponse}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            hapiProtoVersion: this.protobufVersion._toProtobuf(),
-            hederaServicesVersion: this.servicesVesion._toProtobuf(),
+            hapiProtoVersion: this.protobufVersion[symbols.toProtobuf](),
+            hederaServicesVersion: this.servicesVesion[symbols.toProtobuf](),
         };
     }
 
@@ -93,7 +94,7 @@ export default class NetworkVersionInfo {
      */
     toBytes() {
         return HashgraphProto.proto.NetworkGetVersionInfoResponse.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

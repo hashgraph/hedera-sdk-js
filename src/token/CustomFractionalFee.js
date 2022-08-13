@@ -21,6 +21,7 @@
 import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("./FeeAssessmentMethod.js").default} FeeAssessmentMethod
@@ -214,11 +215,11 @@ export default class CustomFractionalFee extends CustomFee {
      * @abstract
      * @returns {HashgraphProto.proto.ICustomFee}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             feeCollectorAccountId:
                 this.feeCollectorAccountId != null
-                    ? this.feeCollectorAccountId._toProtobuf()
+                    ? this.feeCollectorAccountId[symbols.toProtobuf]()
                     : null,
             fractionalFee: {
                 fractionalAmount: {

@@ -24,6 +24,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -174,7 +175,7 @@ export default class ContractId extends Key {
      * @internal
      * @returns {HashgraphProto.proto.IContractID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             contractNum: this.num,
             shardNum: this.shard,
@@ -209,7 +210,7 @@ export default class ContractId extends Key {
      */
     toBytes() {
         return HashgraphProto.proto.ContractID.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 
@@ -239,7 +240,7 @@ export default class ContractId extends Key {
      */
     _toProtobufKey() {
         return {
-            contractID: this._toProtobuf(),
+            contractID: this[symbols.toProtobuf](),
         };
     }
 

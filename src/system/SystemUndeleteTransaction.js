@@ -23,6 +23,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import FileId from "../file/FileId.js";
 import ContractId from "../contract/ContractId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -194,10 +195,13 @@ export default class SystemUndeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            fileID:
+                this._fileId != null
+                    ? this._fileId[symbols.toProtobuf]()
+                    : null,
             contractID:
                 this._contractId != null
-                    ? this._contractId._toProtobuf()
+                    ? this._contractId[symbols.toProtobuf]()
                     : null,
         };
     }

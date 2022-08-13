@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import AccountInfo from "./AccountInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -187,7 +188,7 @@ export default class AccountInfoQuery extends Query {
                 header,
                 accountID:
                     this._accountId != null
-                        ? this._accountId._toProtobuf()
+                        ? this._accountId[symbols.toProtobuf]()
                         : null,
             },
         };

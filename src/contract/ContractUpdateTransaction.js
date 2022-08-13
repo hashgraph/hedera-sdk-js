@@ -28,6 +28,7 @@ import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Key from "../Key.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -606,24 +607,24 @@ export default class ContractUpdateTransaction extends Transaction {
         return {
             contractID:
                 this._contractId != null
-                    ? this._contractId._toProtobuf()
+                    ? this._contractId[symbols.toProtobuf]()
                     : null,
             expirationTime:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             proxyAccountID:
                 this._proxyAccountId != null
-                    ? this._proxyAccountId._toProtobuf()
+                    ? this._proxyAccountId[symbols.toProtobuf]()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this._autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             fileID: this._bytecodeFileId
-                ? this._bytecodeFileId._toProtobuf()
+                ? this._bytecodeFileId[symbols.toProtobuf]()
                 : null,
             memoWrapper:
                 this._contractMemo != null
@@ -639,7 +640,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     : null,
             stakedAccountId:
                 this.stakedAccountId != null
-                    ? this.stakedAccountId._toProtobuf()
+                    ? this.stakedAccountId[symbols.toProtobuf]()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward:
@@ -648,7 +649,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     : null,
             autoRenewAccountId:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
         };
     }

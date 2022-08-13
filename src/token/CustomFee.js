@@ -19,6 +19,7 @@
  */
 
 import AccountId from "../account/AccountId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -76,7 +77,7 @@ export default class CustomFee {
      * @abstract
      * @returns {HashgraphProto.proto.ICustomFee}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         throw new Error("not implemented");
     }
 }

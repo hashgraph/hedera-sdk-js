@@ -20,6 +20,7 @@
 
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -167,7 +168,9 @@ export default class FileContentsQuery extends Query {
             fileGetContents: {
                 header,
                 fileID:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
+                    this._fileId != null
+                        ? this._fileId[symbols.toProtobuf]()
+                        : null,
             },
         };
     }

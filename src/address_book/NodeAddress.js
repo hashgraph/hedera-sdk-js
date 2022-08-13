@@ -21,6 +21,7 @@
 import AccountId from "../account/AccountId.js";
 import Endpoint from "./Endpoint.js";
 import * as utf8 from "../encoding/utf8.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -271,15 +272,17 @@ export default class NodeAddress {
     /**
      * @returns {HashgraphProto.proto.INodeAddress}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             RSA_PubKey: this._publicKey,
             nodeId: this._nodeId,
             nodeAccountId:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
             nodeCertHash: this._certHash,
             serviceEndpoint: this._addresses.map((address) =>
-                address._toProtobuf()
+                address[symbols.toProtobuf]()
             ),
             description: this._description,
             stake: this._stake,

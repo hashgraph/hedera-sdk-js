@@ -19,6 +19,7 @@
  */
 
 import ContractId from "./ContractId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -92,9 +93,9 @@ export default class ContractLogInfo {
      * @internal
      * @returns {HashgraphProto.proto.IContractLoginfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            contractID: this.contractId._toProtobuf(),
+            contractID: this.contractId[symbols.toProtobuf](),
             bloom: this.bloom,
             topic: this.topics,
             data: this.data,

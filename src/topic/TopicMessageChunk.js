@@ -20,6 +20,7 @@
 
 import Timestamp from "../Timestamp.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -83,9 +84,9 @@ export default class TopicMessageChunk {
      * @internal
      * @returns {com.hedera.mirror.api.proto.IConsensusTopicResponse}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            consensusTimestamp: this.consensusTimestamp._toProtobuf(),
+            consensusTimestamp: this.consensusTimestamp[symbols.toProtobuf](),
             message: this.contents,
             runningHash: this.runningHash,
             sequenceNumber: this.sequenceNumber,

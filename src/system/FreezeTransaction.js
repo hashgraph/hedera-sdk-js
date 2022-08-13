@@ -25,6 +25,7 @@ import Timestamp from "../Timestamp.js";
 import FileId from "../file/FileId.js";
 import * as hex from "../encoding/hex.js";
 import FreezeType from "../FreezeType.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -363,10 +364,12 @@ export default class FreezeTransaction extends Transaction {
         return {
             startTime:
                 this._startTimestamp != null
-                    ? this._startTimestamp._toProtobuf()
+                    ? this._startTimestamp[symbols.toProtobuf]()
                     : null,
             updateFile:
-                this._fileId != null ? this._fileId._toProtobuf() : null,
+                this._fileId != null
+                    ? this._fileId[symbols.toProtobuf]()
+                    : null,
             fileHash: this._fileHash,
             freezeType:
                 this._freezeType != null ? this._freezeType.valueOf() : null,

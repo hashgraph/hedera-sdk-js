@@ -20,6 +20,7 @@
 
 import Long from "long";
 import TokenId from "../token/TokenId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -129,9 +130,9 @@ export default class TokenRelationship {
     /**
      * @returns {HashgraphProto.proto.ITokenRelationship}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            tokenId: this.tokenId._toProtobuf(),
+            tokenId: this.tokenId[symbols.toProtobuf](),
             symbol: this.symbol,
             balance: this.balance,
             kycStatus:

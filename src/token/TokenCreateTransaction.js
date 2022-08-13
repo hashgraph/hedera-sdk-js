@@ -33,6 +33,7 @@ import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -861,7 +862,7 @@ export default class TokenCreateTransaction extends Transaction {
             initialSupply: this._initialSupply,
             treasury:
                 this._treasuryAccountId != null
-                    ? this._treasuryAccountId._toProtobuf()
+                    ? this._treasuryAccountId[symbols.toProtobuf]()
                     : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
@@ -885,18 +886,18 @@ export default class TokenCreateTransaction extends Transaction {
             freezeDefault: this._freezeDefault,
             autoRenewAccount:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
             expiry:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this._autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             memo: this._tokenMemo,
-            customFees: this.customFees.map((fee) => fee._toProtobuf()),
+            customFees: this.customFees.map((fee) => fee[symbols.toProtobuf]()),
             tokenType: this._tokenType != null ? this._tokenType._code : null,
             supplyType:
                 this._supplyType != null ? this._supplyType._code : null,

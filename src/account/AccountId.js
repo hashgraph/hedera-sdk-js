@@ -25,6 +25,7 @@ import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
 import EvmAddress from "../EvmAddress.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -200,7 +201,7 @@ export default class AccountId {
      * @internal
      * @returns {HashgraphProto.proto.IAccountID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         let alias = null;
         if (this.aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
@@ -226,7 +227,7 @@ export default class AccountId {
      */
     toBytes() {
         return HashgraphProto.proto.AccountID.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

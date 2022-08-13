@@ -19,6 +19,7 @@
  */
 
 import Long from "long";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -49,7 +50,7 @@ export default class Duration {
      * @internal
      * @returns {HashgraphProto.proto.IDuration}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             seconds: this.seconds,
         };

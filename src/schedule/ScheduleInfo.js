@@ -26,6 +26,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
+import * as symbols from "../Symbols.js";
 
 const { proto } = HashgraphProto;
 
@@ -191,17 +192,19 @@ export default class ScheduleInfo {
     /**
      * @returns {HashgraphProto.proto.IScheduleInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             scheduleID:
-                this.scheduleId != null ? this.scheduleId._toProtobuf() : null,
+                this.scheduleId != null
+                    ? this.scheduleId[symbols.toProtobuf]()
+                    : null,
             creatorAccountID:
                 this.creatorAccountId != null
-                    ? this.creatorAccountId._toProtobuf()
+                    ? this.creatorAccountId[symbols.toProtobuf]()
                     : null,
             payerAccountID:
                 this.payerAccountId != null
-                    ? this.payerAccountId._toProtobuf()
+                    ? this.payerAccountId[symbols.toProtobuf]()
                     : null,
             scheduledTransactionBody:
                 this.schedulableTransactionBody != null
@@ -216,11 +219,11 @@ export default class ScheduleInfo {
             memo: this.scheduleMemo != null ? this.scheduleMemo : "",
             expirationTime:
                 this.expirationTime != null
-                    ? this.expirationTime._toProtobuf()
+                    ? this.expirationTime[symbols.toProtobuf]()
                     : null,
             scheduledTransactionID:
                 this.scheduledTransactionId != null
-                    ? this.scheduledTransactionId._toProtobuf()
+                    ? this.scheduledTransactionId[symbols.toProtobuf]()
                     : null,
             waitForExpiry: this.waitForExpiry,
         };

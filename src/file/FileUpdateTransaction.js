@@ -26,6 +26,7 @@ import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -357,7 +358,10 @@ export default class FileUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            fileID:
+                this._fileId != null
+                    ? this._fileId[symbols.toProtobuf]()
+                    : null,
             keys:
                 this._keys != null
                     ? {
@@ -366,7 +370,7 @@ export default class FileUpdateTransaction extends Transaction {
                     : null,
             expirationTime:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             contents: this._contents,
             memo:

@@ -22,6 +22,7 @@ import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -157,7 +158,10 @@ export default class TokenUnpauseTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

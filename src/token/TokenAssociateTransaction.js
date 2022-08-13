@@ -24,6 +24,7 @@ import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -207,10 +208,14 @@ export default class TokenAssociateTransaction extends Transaction {
         return {
             tokens:
                 this._tokenIds != null
-                    ? this._tokenIds.map((tokenId) => tokenId._toProtobuf())
+                    ? this._tokenIds.map((tokenId) =>
+                          tokenId[symbols.toProtobuf]()
+                      )
                     : null,
             account:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

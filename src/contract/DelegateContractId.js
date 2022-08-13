@@ -21,6 +21,7 @@
 import CACHE from "../Cache.js";
 import ContractId from "./ContractId.js";
 import * as hex from "../encoding/hex.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace {proto}
@@ -103,7 +104,7 @@ export default class DelegateContractId extends ContractId {
      */
     _toProtobufKey() {
         return {
-            delegatableContractId: this._toProtobuf(),
+            delegatableContractId: this[symbols.toProtobuf](),
         };
     }
 

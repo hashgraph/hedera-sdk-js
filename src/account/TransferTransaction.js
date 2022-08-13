@@ -34,6 +34,7 @@ import TokenNftTransferMap from "./TokenNftTransferMap.js";
 import TokenTransferAccountMap from "./TokenTransferAccountMap.js";
 import TokenNftTransfer from "../token/TokenNftTransfer.js";
 import NftId from "../token/NftId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
@@ -871,7 +872,7 @@ export default class TransferTransaction extends Transaction {
             transfers: {
                 accountAmounts: this._hbarTransfers.map((transfer) => {
                     return {
-                        accountID: transfer.accountId._toProtobuf(),
+                        accountID: transfer.accountId[symbols.toProtobuf](),
                         amount: transfer.amount.toTinybars(),
                         isApproval: transfer.isApproved,
                     };
@@ -879,16 +880,16 @@ export default class TransferTransaction extends Transaction {
             },
             tokenTransfers: tokenTransferList.map((tokenTransfer) => {
                 return {
-                    token: tokenTransfer.tokenId._toProtobuf(),
+                    token: tokenTransfer.tokenId[symbols.toProtobuf](),
                     expectedDecimals:
                         tokenTransfer.expectedDecimals != null
                             ? { value: tokenTransfer.expectedDecimals }
                             : null,
                     transfers: tokenTransfer.transfers.map((transfer) =>
-                        transfer._toProtobuf()
+                        transfer[symbols.toProtobuf]()
                     ),
                     nftTransfers: tokenTransfer.nftTransfers.map((transfer) =>
-                        transfer._toProtobuf()
+                        transfer[symbols.toProtobuf]()
                     ),
                 };
             }),

@@ -22,6 +22,7 @@ import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
 import CustomFixedFee from "./CustomFixedFee.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -164,11 +165,11 @@ export default class CustomRoyalyFee extends CustomFee {
      * @abstract
      * @returns {HashgraphProto.proto.ICustomFee}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             feeCollectorAccountId:
                 this.feeCollectorAccountId != null
-                    ? this.feeCollectorAccountId._toProtobuf()
+                    ? this.feeCollectorAccountId[symbols.toProtobuf]()
                     : null,
             royaltyFee: {
                 exchangeValueFraction: {
@@ -177,7 +178,7 @@ export default class CustomRoyalyFee extends CustomFee {
                 },
                 fallbackFee:
                     this._fallbackFee != null
-                        ? this._fallbackFee._toProtobuf().fixedFee
+                        ? this._fallbackFee[symbols.toProtobuf]().fixedFee
                         : null,
             },
         };

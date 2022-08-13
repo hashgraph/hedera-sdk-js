@@ -20,6 +20,7 @@
 
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -119,15 +120,15 @@ export default class HbarAllowance {
      * @internal
      * @returns {HashgraphProto.proto.ICryptoAllowance}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             owner:
                 this.ownerAccountId != null
-                    ? this.ownerAccountId._toProtobuf()
+                    ? this.ownerAccountId[symbols.toProtobuf]()
                     : null,
             spender:
                 this.spenderAccountId != null
-                    ? this.spenderAccountId._toProtobuf()
+                    ? this.spenderAccountId[symbols.toProtobuf]()
                     : null,
             amount: this.amount != null ? this.amount.toTinybars() : null,
         };

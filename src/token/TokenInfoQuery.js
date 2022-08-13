@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -184,7 +185,9 @@ export default class TokenInfoQuery extends Query {
             tokenGetInfo: {
                 header,
                 token:
-                    this._tokenId != null ? this._tokenId._toProtobuf() : null,
+                    this._tokenId != null
+                        ? this._tokenId[symbols.toProtobuf]()
+                        : null,
             },
         };
     }

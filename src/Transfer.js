@@ -20,6 +20,7 @@
 
 import AccountId from "./account/AccountId.js";
 import Hbar from "./Hbar.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -96,9 +97,9 @@ export default class Transfer {
      * @internal
      * @returns {HashgraphProto.proto.IAccountAmount}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            accountID: this.accountId._toProtobuf(),
+            accountID: this.accountId[symbols.toProtobuf](),
             amount: this.amount.toTinybars(),
             isApproval: this.isApproved,
         };

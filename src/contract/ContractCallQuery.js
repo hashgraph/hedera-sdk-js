@@ -24,6 +24,7 @@ import AccountId from "../account/AccountId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -309,14 +310,14 @@ export default class ContractCallQuery extends Query {
                 header,
                 contractID:
                     this._contractId != null
-                        ? this._contractId._toProtobuf()
+                        ? this._contractId[symbols.toProtobuf]()
                         : null,
                 gas: this._gas,
                 maxResultSize: this._maxResultSize,
                 functionParameters: this._functionParameters,
                 senderId:
                     this._senderAccountId != null
-                        ? this._senderAccountId._toProtobuf()
+                        ? this._senderAccountId[symbols.toProtobuf]()
                         : null,
             },
         };

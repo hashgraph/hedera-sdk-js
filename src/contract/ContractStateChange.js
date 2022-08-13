@@ -21,6 +21,7 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @deprecated - Use mirror node for contract traceability instead
@@ -76,11 +77,11 @@ export default class ContractStateChange {
      * @internal
      * @returns {HashgraphProto.proto.IContractStateChange} change
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            contractId: this.contractId._toProtobuf(),
+            contractId: this.contractId[symbols.toProtobuf](),
             storageChanges: this.storageChanges.map((storageChange) =>
-                storageChange._toProtobuf()
+                storageChange[symbols.toProtobuf]()
             ),
         };
     }
@@ -91,7 +92,7 @@ export default class ContractStateChange {
     toBytes() {
         // eslint-disable-next-line deprecation/deprecation
         return HashgraphProto.proto.ContractStateChange.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

@@ -29,6 +29,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
+import * as symbols from "../Symbols.js";
 
 const { proto } = HashgraphProto;
 
@@ -231,21 +232,21 @@ export default class ContractInfo {
      * @internal
      * @returns {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            contractID: this.contractId._toProtobuf(),
-            accountID: this.accountId._toProtobuf(),
+            contractID: this.contractId[symbols.toProtobuf](),
+            accountID: this.accountId[symbols.toProtobuf](),
             contractAccountID: this.contractAccountId,
             adminKey:
                 this.adminKey != null ? this.adminKey._toProtobufKey() : null,
-            expirationTime: this.expirationTime._toProtobuf(),
+            expirationTime: this.expirationTime[symbols.toProtobuf](),
             autoRenewPeriod:
                 this.autoRenewPeriod != null
-                    ? this.autoRenewPeriod._toProtobuf()
+                    ? this.autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             autoRenewAccountId:
                 this.autoRenewAccountId != null
-                    ? this.autoRenewAccountId._toProtobuf()
+                    ? this.autoRenewAccountId[symbols.toProtobuf]()
                     : null,
             storage: this.storage,
             memo: this.contractMemo,
@@ -253,12 +254,12 @@ export default class ContractInfo {
             deleted: this.isDeleted,
             tokenRelationships:
                 this.tokenRelationships != null
-                    ? this.tokenRelationships._toProtobuf()
+                    ? this.tokenRelationships[symbols.toProtobuf]()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
             stakingInfo:
                 this.stakingInfo != null
-                    ? this.stakingInfo._toProtobuf()
+                    ? this.stakingInfo[symbols.toProtobuf]()
                     : null,
         };
     }
@@ -278,7 +279,7 @@ export default class ContractInfo {
      */
     toBytes() {
         return proto.ContractGetInfoResponse.ContractInfo.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

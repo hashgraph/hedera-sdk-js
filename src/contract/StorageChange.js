@@ -19,6 +19,7 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * @deprecated - Use mirror node for contract traceability instead
@@ -69,7 +70,7 @@ export default class StorageChange {
      * @internal
      * @returns {HashgraphProto.proto.IStorageChange}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             slot: this.slot,
             valueRead: this.valueRead,
@@ -83,7 +84,7 @@ export default class StorageChange {
      */
     toBytes() {
         return HashgraphProto.proto.StorageChange.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

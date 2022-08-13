@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
 import FileInfo from "./FileInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -184,7 +185,9 @@ export default class FileInfoQuery extends Query {
             fileGetInfo: {
                 header,
                 fileID:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
+                    this._fileId != null
+                        ? this._fileId[symbols.toProtobuf]()
+                        : null,
             },
         };
     }

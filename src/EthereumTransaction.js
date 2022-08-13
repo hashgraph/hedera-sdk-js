@@ -23,6 +23,7 @@ import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "./transaction/Transaction.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -289,7 +290,7 @@ export default class EthereumTransaction extends Transaction {
             ethereumData: this._ethereumData,
             callData:
                 this._callDataFileId != null
-                    ? this._callDataFileId._toProtobuf()
+                    ? this._callDataFileId[symbols.toProtobuf]()
                     : null,
             maxGasAllowance:
                 this._maxGasAllowance != null

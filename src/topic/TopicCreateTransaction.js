@@ -25,6 +25,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -302,9 +303,9 @@ export default class TopicCreateTransaction extends Transaction {
                     : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
-            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+            autoRenewPeriod: this._autoRenewPeriod[symbols.toProtobuf](),
             memo: this._topicMemo,
         };
     }

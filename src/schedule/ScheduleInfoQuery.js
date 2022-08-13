@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ScheduleId from "./ScheduleId.js";
 import ScheduleInfo from "./ScheduleInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -188,7 +189,7 @@ export default class ScheduleInfoQuery extends Query {
                 header,
                 scheduleID:
                     this._scheduleId != null
-                        ? this._scheduleId._toProtobuf()
+                        ? this._scheduleId[symbols.toProtobuf]()
                         : null,
             },
         };

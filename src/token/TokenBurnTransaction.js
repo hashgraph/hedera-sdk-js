@@ -23,6 +23,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -225,7 +226,10 @@ export default class TokenBurnTransaction extends Transaction {
         return {
             amount: this._amount,
             serialNumbers: this._serials,
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

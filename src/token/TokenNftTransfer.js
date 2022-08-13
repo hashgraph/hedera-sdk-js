@@ -21,6 +21,7 @@
 import Long from "long";
 import AccountId from "../account/AccountId.js";
 import TokenId from "./TokenId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -125,10 +126,10 @@ export default class TokenNftTransfer {
      * @internal
      * @returns {HashgraphProto.proto.INftTransfer}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            senderAccountID: this.senderAccountId._toProtobuf(),
-            receiverAccountID: this.receiverAccountId._toProtobuf(),
+            senderAccountID: this.senderAccountId[symbols.toProtobuf](),
+            receiverAccountID: this.receiverAccountId[symbols.toProtobuf](),
             serialNumber: this.serialNumber,
             isApproval: this.isApproved,
         };

@@ -21,6 +21,7 @@
 import Long from "long";
 import AccountId from "../account/AccountId.js";
 import TokenId from "./TokenId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -123,9 +124,9 @@ export default class TokenTransfer {
      * @internal
      * @returns {HashgraphProto.proto.IAccountAmount}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            accountID: this.accountId._toProtobuf(),
+            accountID: this.accountId[symbols.toProtobuf](),
             amount: this.amount,
             isApproval: this.isApproved,
         };

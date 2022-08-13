@@ -23,6 +23,7 @@ import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -197,9 +198,14 @@ export default class TokenRevokeKycTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
             account:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

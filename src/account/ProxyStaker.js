@@ -20,6 +20,7 @@
 
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -85,9 +86,9 @@ export default class ProxyStaker {
      * @internal
      * @returns {HashgraphProto.proto.IProxyStaker}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            accountID: this.accountId._toProtobuf(),
+            accountID: this.accountId[symbols.toProtobuf](),
             amount: this.amount.toTinybars(),
         };
     }

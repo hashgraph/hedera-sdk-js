@@ -27,6 +27,7 @@ import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import Logger from "js-logger";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 const { proto } = HashgraphProto;
 
@@ -377,7 +378,7 @@ export default class TransactionReceiptQuery extends Query {
                 header,
                 transactionID:
                     this._transactionId != null
-                        ? this._transactionId._toProtobuf()
+                        ? this._transactionId[symbols.toProtobuf]()
                         : null,
                 includeDuplicates: this._includeDuplicates,
                 includeChildReceipts: this._includeChildren,

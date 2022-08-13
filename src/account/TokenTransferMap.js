@@ -22,6 +22,7 @@ import TokenId from "../token/TokenId.js";
 import AccountId from "../account/AccountId.js";
 import TokenTransferAccountMap from "./TokenTransferAccountMap.js";
 import ObjectMap from "../ObjectMap.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -93,7 +94,7 @@ export default class TokenTransferMap extends ObjectMap {
     /**
      * @returns {HashgraphProto.proto.ITokenTransferList[]}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         /** @type {HashgraphProto.proto.ITokenTransferList[]} */
         const tokenTransferList = [];
 
@@ -103,13 +104,13 @@ export default class TokenTransferMap extends ObjectMap {
 
             for (const [accountId, amount] of value) {
                 transfers.push({
-                    accountID: accountId._toProtobuf(),
+                    accountID: accountId[symbols.toProtobuf](),
                     amount: amount,
                 });
             }
 
             tokenTransferList.push({
-                token: tokenId._toProtobuf(),
+                token: tokenId[symbols.toProtobuf](),
                 transfers: transfers,
             });
         }

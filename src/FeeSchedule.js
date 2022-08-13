@@ -21,6 +21,7 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import TransactionFeeSchedule from "./TransactionFeeSchedule.js";
 import Timestamp from "./Timestamp.js";
+import * as symbols from "./Symbols.js";
 
 export default class FeeSchedule {
     /**
@@ -78,17 +79,17 @@ export default class FeeSchedule {
      * @internal
      * @returns {HashgraphProto.proto.IFeeSchedule}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             transactionFeeSchedule:
                 this.transactionFeeSchedule != null
                     ? this.transactionFeeSchedule.map((transaction) =>
-                          transaction._toProtobuf()
+                          transaction[symbols.toProtobuf]()
                       )
                     : undefined,
             expiryTime:
                 this.expirationTime != null
-                    ? this.expirationTime._toProtobuf()
+                    ? this.expirationTime[symbols.toProtobuf]()
                     : undefined,
         };
     }
@@ -98,7 +99,7 @@ export default class FeeSchedule {
      */
     toBytes() {
         return HashgraphProto.proto.FeeSchedule.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

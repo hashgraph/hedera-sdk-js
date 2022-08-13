@@ -27,6 +27,7 @@ import * as utf8 from "../encoding/utf8.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
 import * as util from "../util.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -240,7 +241,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             );
         }
 
-        const initialTransactionId = this._getTransactionId()._toProtobuf();
+        const initialTransactionId =
+            this._getTransactionId()[symbols.toProtobuf]();
         let nextTransactionId = this._getTransactionId();
 
         // Hack around the locked list. Should refactor a bit to remove such code
@@ -385,14 +387,18 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
             return {
                 topicID:
-                    this._topicId != null ? this._topicId._toProtobuf() : null,
+                    this._topicId != null
+                        ? this._topicId[symbols.toProtobuf]()
+                        : null,
                 message: this._message.slice(startIndex, endIndex),
                 chunkInfo: this._chunkInfo,
             };
         } else {
             return {
                 topicID:
-                    this._topicId != null ? this._topicId._toProtobuf() : null,
+                    this._topicId != null
+                        ? this._topicId[symbols.toProtobuf]()
+                        : null,
                 message: this._message,
             };
         }

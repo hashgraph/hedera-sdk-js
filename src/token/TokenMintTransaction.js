@@ -24,6 +24,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import Long from "long";
 import * as hex from "../encoding/hex.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -253,7 +254,10 @@ export default class TokenMintTransaction extends Transaction {
     _makeTransactionData() {
         return {
             amount: this._amount,
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
             metadata: this._metadata,
         };
     }

@@ -24,6 +24,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -260,9 +261,14 @@ export default class TokenWipeTransaction extends Transaction {
     _makeTransactionData() {
         return {
             amount: this._amount,
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            token:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
             account:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
             serialNumbers: this.serials,
         };
     }

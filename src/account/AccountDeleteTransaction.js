@@ -22,6 +22,7 @@ import AccountId from "./AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -213,10 +214,12 @@ export default class AccountDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             deleteAccountID:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
             transferAccountID:
                 this._transferAccountId != null
-                    ? this._transferAccountId._toProtobuf()
+                    ? this._transferAccountId[symbols.toProtobuf]()
                     : null,
         };
     }

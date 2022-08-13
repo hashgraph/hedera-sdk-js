@@ -27,6 +27,7 @@ import Long from "long";
 import Timestamp from "../Timestamp.js";
 import { RST_STREAM } from "../Executable.js";
 import Logger from "js-logger";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -354,15 +355,15 @@ export default class TopicMessageQuery {
                 {
                     topicID:
                         this._topicId != null
-                            ? this._topicId._toProtobuf()
+                            ? this._topicId[symbols.toProtobuf]()
                             : null,
                     consensusStartTime:
                         this._startTime != null
-                            ? this._startTime._toProtobuf()
+                            ? this._startTime[symbols.toProtobuf]()
                             : null,
                     consensusEndTime:
                         this._endTime != null
-                            ? this._endTime._toProtobuf()
+                            ? this._endTime[symbols.toProtobuf]()
                             : null,
                     limit: this._limit,
                 }

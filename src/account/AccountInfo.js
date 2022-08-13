@@ -30,6 +30,7 @@ import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("./HbarAllowance.js").default} HbarAllowance
@@ -340,16 +341,16 @@ export default class AccountInfo {
     /**
      * @returns {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            accountID: this.accountId._toProtobuf(),
+            accountID: this.accountId[symbols.toProtobuf](),
             contractAccountID: this.contractAccountId,
             deleted: this.isDeleted,
             proxyAccountID:
                 // eslint-disable-next-line deprecation/deprecation
                 this.proxyAccountId != null
                     ? // eslint-disable-next-line deprecation/deprecation
-                      this.proxyAccountId._toProtobuf()
+                      this.proxyAccountId[symbols.toProtobuf]()
                     : null,
             proxyReceived: this.proxyReceived.toTinybars(),
             key: this.key._toProtobufKey(),
@@ -358,12 +359,14 @@ export default class AccountInfo {
             generateReceiveRecordThreshold:
                 this.receiveRecordThreshold.toTinybars(),
             receiverSigRequired: this.isReceiverSignatureRequired,
-            expirationTime: this.expirationTime._toProtobuf(),
-            autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
-            liveHashes: this.liveHashes.map((hash) => hash._toProtobuf()),
+            expirationTime: this.expirationTime[symbols.toProtobuf](),
+            autoRenewPeriod: this.autoRenewPeriod[symbols.toProtobuf](),
+            liveHashes: this.liveHashes.map((hash) =>
+                hash[symbols.toProtobuf]()
+            ),
             tokenRelationships:
                 this.tokenRelationships != null
-                    ? this.tokenRelationships._toProtobuf()
+                    ? this.tokenRelationships[symbols.toProtobuf]()
                     : null,
             memo: this.accountMemo,
             ownedNfts: this.ownedNfts,
@@ -379,7 +382,7 @@ export default class AccountInfo {
             ethereumNonce: this.ethereumNonce,
             stakingInfo:
                 this.stakingInfo != null
-                    ? this.stakingInfo._toProtobuf()
+                    ? this.stakingInfo[symbols.toProtobuf]()
                     : null,
         };
     }
@@ -399,7 +402,7 @@ export default class AccountInfo {
      */
     toBytes() {
         return HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

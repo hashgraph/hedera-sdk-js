@@ -22,6 +22,7 @@ import Long from "long";
 import TokenId from "../token/TokenId.js";
 import AccountId from "../account/AccountId.js";
 import ObjectMap from "../ObjectMap.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -109,7 +110,7 @@ export default class TokenNftTransferMap extends ObjectMap {
     /**
      * @returns {HashgraphProto.proto.ITokenTransferList[]}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         /** @type {HashgraphProto.proto.ITokenTransferList[]} */
         const tokenTransferList = [];
 
@@ -119,14 +120,14 @@ export default class TokenNftTransferMap extends ObjectMap {
 
             for (const transfer of value) {
                 transfers.push({
-                    senderAccountID: transfer.sender._toProtobuf(),
-                    receiverAccountID: transfer.recipient._toProtobuf(),
+                    senderAccountID: transfer.sender[symbols.toProtobuf](),
+                    receiverAccountID: transfer.recipient[symbols.toProtobuf](),
                     serialNumber: transfer.serial,
                 });
             }
 
             tokenTransferList.push({
-                token: tokenId._toProtobuf(),
+                token: tokenId[symbols.toProtobuf](),
                 nftTransfers: transfers,
             });
         }

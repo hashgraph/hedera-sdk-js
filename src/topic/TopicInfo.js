@@ -26,6 +26,7 @@ import Duration from "../Duration.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * Current state of a topic.
@@ -168,16 +169,16 @@ export default class TopicInfo {
      * @internal
      * @returns {HashgraphProto.proto.IConsensusGetTopicInfoResponse}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            topicID: this.topicId._toProtobuf(),
+            topicID: this.topicId[symbols.toProtobuf](),
             topicInfo: {
                 memo: this.topicMemo,
                 runningHash: this.runningHash,
                 sequenceNumber: this.sequenceNumber,
                 expirationTime:
                     this.expirationTime != null
-                        ? this.expirationTime._toProtobuf()
+                        ? this.expirationTime[symbols.toProtobuf]()
                         : null,
                 adminKey:
                     this.adminKey != null
@@ -189,11 +190,11 @@ export default class TopicInfo {
                         : null,
                 autoRenewPeriod:
                     this.autoRenewPeriod != null
-                        ? this.autoRenewPeriod._toProtobuf()
+                        ? this.autoRenewPeriod[symbols.toProtobuf]()
                         : null,
                 autoRenewAccount:
                     this.autoRenewAccountId != null
-                        ? this.autoRenewAccountId._toProtobuf()
+                        ? this.autoRenewAccountId[symbols.toProtobuf]()
                         : null,
             },
         };
@@ -215,7 +216,7 @@ export default class TopicInfo {
     toBytes() {
         return HashgraphProto.proto.ConsensusTopicInfo.encode(
             /** @type {HashgraphProto.proto.IConsensusTopicInfo} */ (
-                this._toProtobuf().topicInfo
+                this[symbols.toProtobuf]().topicInfo
             )
         ).finish();
     }

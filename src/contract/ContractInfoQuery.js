@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
 import ContractInfo from "./ContractInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -188,7 +189,7 @@ export default class ContractInfoQuery extends Query {
                 header,
                 contractID:
                     this._contractId != null
-                        ? this._contractId._toProtobuf()
+                        ? this._contractId[symbols.toProtobuf]()
                         : null,
             },
         };

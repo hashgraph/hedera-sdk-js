@@ -24,6 +24,7 @@ import Transaction, {
 import AccountId from "./AccountId.js";
 import NftId from "../token/NftId.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -191,7 +192,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             nftAllowances: this._nftAllowances.map((allowance) =>
-                allowance._toProtobuf()
+                allowance[symbols.toProtobuf]()
             ),
         };
     }

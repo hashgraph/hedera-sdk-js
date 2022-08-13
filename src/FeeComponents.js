@@ -19,6 +19,7 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "./Symbols.js";
 
 export default class FeeComponents {
     /**
@@ -160,7 +161,7 @@ export default class FeeComponents {
      * @internal
      * @returns {HashgraphProto.proto.IFeeComponents}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             min: this.min != null ? this.min : undefined,
             max: this.max != null ? this.max : undefined,
@@ -205,7 +206,7 @@ export default class FeeComponents {
      */
     toBytes() {
         return HashgraphProto.proto.FeeComponents.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

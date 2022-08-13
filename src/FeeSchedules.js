@@ -20,6 +20,7 @@
 
 import * as HashgraphProto from "@hashgraph/proto";
 import FeeSchedule from "./FeeSchedule.js";
+import * as symbols from "./Symbols.js";
 
 export default class FeeSchedules {
     /**
@@ -75,12 +76,14 @@ export default class FeeSchedules {
      * @internal
      * @returns {HashgraphProto.proto.ICurrentAndNextFeeSchedule}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             currentFeeSchedule:
-                this.current != null ? this.current._toProtobuf() : undefined,
+                this.current != null
+                    ? this.current[symbols.toProtobuf]()
+                    : undefined,
             nextFeeSchedule:
-                this.next != null ? this.next._toProtobuf() : undefined,
+                this.next != null ? this.next[symbols.toProtobuf]() : undefined,
         };
     }
 
@@ -89,7 +92,7 @@ export default class FeeSchedules {
      */
     toBytes() {
         return HashgraphProto.proto.CurrentAndNextFeeSchedule.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

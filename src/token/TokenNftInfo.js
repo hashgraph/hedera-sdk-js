@@ -23,6 +23,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as hex from "../encoding/hex.js";
 import LedgerId from "../LedgerId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -112,16 +113,16 @@ export default class TokenNftInfo {
     /**
      * @returns {HashgraphProto.proto.ITokenNftInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            nftID: this.nftId._toProtobuf(),
-            accountID: this.accountId._toProtobuf(),
-            creationTime: this.creationTime._toProtobuf(),
+            nftID: this.nftId[symbols.toProtobuf](),
+            accountID: this.accountId[symbols.toProtobuf](),
+            creationTime: this.creationTime[symbols.toProtobuf](),
             metadata: this.metadata,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
             spenderId:
                 this.allowanceSpenderAccountId != null
-                    ? this.allowanceSpenderAccountId._toProtobuf()
+                    ? this.allowanceSpenderAccountId[symbols.toProtobuf]()
                     : null,
         };
     }

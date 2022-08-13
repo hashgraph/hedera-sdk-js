@@ -29,6 +29,7 @@ import Status from "../Status.js";
 import Long from "long";
 import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * The consensus result for a transaction, which might not be currently known,
@@ -153,17 +154,17 @@ export default class TransactionReceipt {
      * @internal
      * @returns {HashgraphProto.proto.ITransactionGetReceiptResponse}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         const duplicates = this.duplicates.map(
             (receipt) =>
                 /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
-                    receipt._toProtobuf().receipt
+                    receipt[symbols.toProtobuf]().receipt
                 )
         );
         const children = this.children.map(
             (receipt) =>
                 /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
-                    receipt._toProtobuf().receipt
+                    receipt[symbols.toProtobuf]().receipt
                 )
         );
 
@@ -175,20 +176,27 @@ export default class TransactionReceipt {
 
                 accountID:
                     this.accountId != null
-                        ? this.accountId._toProtobuf()
+                        ? this.accountId[symbols.toProtobuf]()
                         : null,
-                fileID: this.fileId != null ? this.fileId._toProtobuf() : null,
+                fileID:
+                    this.fileId != null
+                        ? this.fileId[symbols.toProtobuf]()
+                        : null,
                 contractID:
                     this.contractId != null
-                        ? this.contractId._toProtobuf()
+                        ? this.contractId[symbols.toProtobuf]()
                         : null,
                 topicID:
-                    this.topicId != null ? this.topicId._toProtobuf() : null,
+                    this.topicId != null
+                        ? this.topicId[symbols.toProtobuf]()
+                        : null,
                 tokenID:
-                    this.tokenId != null ? this.tokenId._toProtobuf() : null,
+                    this.tokenId != null
+                        ? this.tokenId[symbols.toProtobuf]()
+                        : null,
                 scheduleID:
                     this.scheduleId != null
-                        ? this.scheduleId._toProtobuf()
+                        ? this.scheduleId[symbols.toProtobuf]()
                         : null,
 
                 topicRunningHash:
@@ -202,13 +210,13 @@ export default class TransactionReceipt {
                     nextRate: null,
                     currentRate:
                         this.exchangeRate != null
-                            ? this.exchangeRate._toProtobuf()
+                            ? this.exchangeRate[symbols.toProtobuf]()
                             : null,
                 },
 
                 scheduledTransactionID:
                     this.scheduledTransactionId != null
-                        ? this.scheduledTransactionId._toProtobuf()
+                        ? this.scheduledTransactionId[symbols.toProtobuf]()
                         : null,
 
                 serialNumbers: this.serials,
@@ -337,7 +345,7 @@ export default class TransactionReceipt {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

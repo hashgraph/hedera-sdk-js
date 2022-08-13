@@ -22,6 +22,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -187,7 +188,9 @@ export default class LiveHashDeleteTransaction extends Transaction {
         return {
             liveHashToDelete: this._hash,
             accountOfLiveHash:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

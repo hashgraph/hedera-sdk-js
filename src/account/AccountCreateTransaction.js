@@ -28,6 +28,7 @@ import Transaction, {
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -508,10 +509,10 @@ export default class AccountCreateTransaction extends Transaction {
                 this._initialBalance != null
                     ? this._initialBalance.toTinybars()
                     : null,
-            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+            autoRenewPeriod: this._autoRenewPeriod[symbols.toProtobuf](),
             proxyAccountID:
                 this._proxyAccountId != null
-                    ? this._proxyAccountId._toProtobuf()
+                    ? this._proxyAccountId[symbols.toProtobuf]()
                     : null,
             receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
             sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
@@ -523,7 +524,7 @@ export default class AccountCreateTransaction extends Transaction {
                     : null,
             stakedAccountId:
                 this.stakedAccountId != null
-                    ? this.stakedAccountId._toProtobuf()
+                    ? this.stakedAccountId[symbols.toProtobuf]()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,

@@ -31,6 +31,7 @@ import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("./CustomFee.js").default} CustomFee
@@ -367,16 +368,16 @@ export default class TokenInfo {
     /**
      * @returns {HashgraphProto.proto.ITokenInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            tokenId: this.tokenId._toProtobuf(),
+            tokenId: this.tokenId[symbols.toProtobuf](),
             name: this.name,
             symbol: this.symbol,
             decimals: this.decimals,
             totalSupply: this.totalSupply,
             treasury:
                 this.treasuryAccountId != null
-                    ? this.treasuryAccountId._toProtobuf()
+                    ? this.treasuryAccountId[symbols.toProtobuf]()
                     : null,
             adminKey:
                 this.adminKey != null ? this.adminKey._toProtobufKey() : null,
@@ -410,18 +411,18 @@ export default class TokenInfo {
             deleted: this.isDeleted,
             autoRenewAccount:
                 this.autoRenewAccountId != null
-                    ? this.autoRenewAccountId._toProtobuf()
+                    ? this.autoRenewAccountId[symbols.toProtobuf]()
                     : undefined,
             autoRenewPeriod:
                 this.autoRenewPeriod != null
-                    ? this.autoRenewPeriod._toProtobuf()
+                    ? this.autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             expiry:
                 this.expirationTime != null
-                    ? this.expirationTime._toProtobuf()
+                    ? this.expirationTime[symbols.toProtobuf]()
                     : null,
             memo: this.tokenMemo,
-            customFees: this.customFees.map((fee) => fee._toProtobuf()),
+            customFees: this.customFees.map((fee) => fee[symbols.toProtobuf]()),
             tokenType: this.tokenType != null ? this.tokenType._code : null,
             supplyType: this.supplyType != null ? this.supplyType._code : null,
             maxSupply: this.maxSupply,
@@ -444,7 +445,7 @@ export default class TokenInfo {
      */
     toBytes() {
         return HashgraphProto.proto.TokenInfo.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

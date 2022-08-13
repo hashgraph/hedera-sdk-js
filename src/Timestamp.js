@@ -20,6 +20,7 @@
 
 import Long from "long";
 import Cache from "./Cache.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @namespace proto
@@ -110,7 +111,7 @@ export default class Timestamp {
      * @internal
      * @returns {HashgraphProto.proto.ITimestamp}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             seconds: this.seconds,
             nanos: this.nanos.toInt(),

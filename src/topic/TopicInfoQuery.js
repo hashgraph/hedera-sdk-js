@@ -22,6 +22,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TopicId from "./TopicId.js";
 import TopicInfo from "./TopicInfo.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -190,7 +191,9 @@ export default class TopicInfoQuery extends Query {
             consensusGetTopicInfo: {
                 header,
                 topicID:
-                    this._topicId != null ? this._topicId._toProtobuf() : null,
+                    this._topicId != null
+                        ? this._topicId[symbols.toProtobuf]()
+                        : null,
             },
         };
     }

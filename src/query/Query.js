@@ -28,6 +28,7 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
 import Logger from "js-logger";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -570,22 +571,22 @@ export async function _makePaymentTransaction(
     // empty account amounts
     if (operator != null) {
         accountAmounts.push({
-            accountID: operator.accountId._toProtobuf(),
+            accountID: operator.accountId[symbols.toProtobuf](),
             amount: paymentAmount.negated().toTinybars(),
         });
         accountAmounts.push({
-            accountID: nodeId._toProtobuf(),
+            accountID: nodeId[symbols.toProtobuf](),
             amount: paymentAmount.toTinybars(),
         });
     } else {
         accountAmounts.push({
-            accountID: new AccountId(0)._toProtobuf(),
+            accountID: new AccountId(0)[symbols.toProtobuf](),
             // If the account ID is 0, shouldn't we just hard
             // code this value to 0? Same for the latter.
             amount: paymentAmount.negated().toTinybars(),
         });
         accountAmounts.push({
-            accountID: nodeId._toProtobuf(),
+            accountID: nodeId[symbols.toProtobuf](),
             amount: paymentAmount.toTinybars(),
         });
     }
@@ -593,8 +594,8 @@ export async function _makePaymentTransaction(
      * @type {HashgraphProto.proto.ITransactionBody}
      */
     const body = {
-        transactionID: paymentTransactionId._toProtobuf(),
-        nodeAccountID: nodeId._toProtobuf(),
+        transactionID: paymentTransactionId[symbols.toProtobuf](),
+        nodeAccountID: nodeId[symbols.toProtobuf](),
         transactionFee: new Hbar(1).toTinybars(),
         transactionValidDuration: {
             seconds: Long.fromNumber(120),

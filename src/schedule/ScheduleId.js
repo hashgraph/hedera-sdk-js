@@ -20,6 +20,7 @@
 
 import * as entity_id from "../EntityIdHelper.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -134,7 +135,7 @@ export default class ScheduleId {
      * @internal
      * @returns {HashgraphProto.proto.ScheduleID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             scheduleNum: this.num,
             shardNum: this.shard,
@@ -162,7 +163,7 @@ export default class ScheduleId {
      */
     toBytes() {
         return HashgraphProto.proto.ScheduleID.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

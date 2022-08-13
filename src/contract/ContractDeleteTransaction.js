@@ -23,6 +23,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import ContractId from "./ContractId.js";
 import AccountId from "../account/AccountId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -255,14 +256,14 @@ export default class ContractDeleteTransaction extends Transaction {
         return {
             contractID:
                 this._contractId != null
-                    ? this._contractId._toProtobuf()
+                    ? this._contractId[symbols.toProtobuf]()
                     : null,
             transferAccountID: this._transferAccountId
-                ? this._transferAccountId._toProtobuf()
+                ? this._transferAccountId[symbols.toProtobuf]()
                 : null,
             transferContractID:
                 this._transferContractId != null
-                    ? this._transferContractId._toProtobuf()
+                    ? this._transferContractId[symbols.toProtobuf]()
                     : null,
         };
     }

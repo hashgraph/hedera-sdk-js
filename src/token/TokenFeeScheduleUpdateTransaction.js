@@ -25,6 +25,7 @@ import Transaction, {
 import CustomFixedFee from "./CustomFixedFee.js";
 import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -143,7 +144,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : TokenId._fromProtobuf(tokenId[symbols.toProtobuf]());
 
         return this;
     }
@@ -193,8 +194,13 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-            customFees: this._customFees.map((fee) => fee._toProtobuf()),
+            tokenId:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
+            customFees: this._customFees.map((fee) =>
+                fee[symbols.toProtobuf]()
+            ),
         };
     }
 

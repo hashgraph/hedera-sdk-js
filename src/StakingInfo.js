@@ -22,6 +22,7 @@ import AccountId from "./account/AccountId.js";
 import Hbar from "./Hbar.js";
 import Timestamp from "./Timestamp.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "./Symbols.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -133,12 +134,12 @@ export default class StakingInfo {
     /**
      * @returns {HashgraphProto.proto.IStakingInfo}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             declineReward: this.declineStakingReward,
             stakePeriodStart:
                 this.stakePeriodStart != null
-                    ? this.stakePeriodStart._toProtobuf()
+                    ? this.stakePeriodStart[symbols.toProtobuf]()
                     : null,
             pendingReward:
                 this.pendingReward != null
@@ -148,7 +149,7 @@ export default class StakingInfo {
                 this.stakedToMe != null ? this.stakedToMe.toTinybars() : null,
             stakedAccountId:
                 this.stakedAccountId != null
-                    ? this.stakedAccountId._toProtobuf()
+                    ? this.stakedAccountId[symbols.toProtobuf]()
                     : null,
             stakedNodeId: this.stakedNodeId,
         };
@@ -169,7 +170,7 @@ export default class StakingInfo {
      */
     toBytes() {
         return HashgraphProto.proto.StakingInfo.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

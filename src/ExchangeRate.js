@@ -19,6 +19,7 @@
  */
 
 import Long from "long";
+import * as symbols from "./Symbols.js";
 
 export default class ExchangeRate {
     /**
@@ -89,7 +90,7 @@ export default class ExchangeRate {
      * @internal
      * @returns {import("@hashgraph/proto").proto.IExchangeRate}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             hbarEquiv: this.hbars,
             centEquiv: this.cents,

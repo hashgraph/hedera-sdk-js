@@ -21,6 +21,7 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import RequestType from "./RequestType.js";
 import FeeData from "./FeeData.js";
+import * as symbols from "./Symbols.js";
 
 export default class TransactionFeeSchedule {
     /**
@@ -92,17 +93,19 @@ export default class TransactionFeeSchedule {
      * @internal
      * @returns {HashgraphProto.proto.ITransactionFeeSchedule}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             hederaFunctionality:
                 this.hederaFunctionality != null
                     ? this.hederaFunctionality.valueOf()
                     : undefined,
             feeData:
-                this.feeData != null ? this.feeData._toProtobuf() : undefined,
+                this.feeData != null
+                    ? this.feeData[symbols.toProtobuf]()
+                    : undefined,
             fees:
                 this.fees != null
-                    ? this.fees.map((fee) => fee._toProtobuf())
+                    ? this.fees.map((fee) => fee[symbols.toProtobuf]())
                     : undefined,
         };
     }
@@ -112,7 +115,7 @@ export default class TransactionFeeSchedule {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionFeeSchedule.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

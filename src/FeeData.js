@@ -21,6 +21,7 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents.js";
 import FeeDataType from "./FeeDataType.js";
+import * as symbols from "./Symbols.js";
 
 export default class FeeData {
     /**
@@ -100,19 +101,21 @@ export default class FeeData {
      * @internal
      * @returns {HashgraphProto.proto.IFeeData}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             nodedata:
-                this.nodedata != null ? this.nodedata._toProtobuf() : undefined,
+                this.nodedata != null
+                    ? this.nodedata[symbols.toProtobuf]()
+                    : undefined,
 
             networkdata:
                 this.networkdata != null
-                    ? this.networkdata._toProtobuf()
+                    ? this.networkdata[symbols.toProtobuf]()
                     : undefined,
 
             servicedata:
                 this.servicedata != null
-                    ? this.servicedata._toProtobuf()
+                    ? this.servicedata[symbols.toProtobuf]()
                     : undefined,
 
             subType:
@@ -126,6 +129,8 @@ export default class FeeData {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.FeeData.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.FeeData.encode(
+            this[symbols.toProtobuf]()
+        ).finish();
     }
 }

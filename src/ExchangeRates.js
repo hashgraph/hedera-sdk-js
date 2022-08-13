@@ -20,6 +20,7 @@
 
 import ExchangeRate from "./ExchangeRate.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "./Symbols.js";
 
 const { proto } = HashgraphProto;
 
@@ -68,10 +69,10 @@ export default class ExchangeRates {
      * @internal
      * @returns {HashgraphProto.proto.IExchangeRateSet}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            currentRate: this.currentRate._toProtobuf(),
-            nextRate: this.nextRate._toProtobuf(),
+            currentRate: this.currentRate[symbols.toProtobuf](),
+            nextRate: this.nextRate[symbols.toProtobuf](),
         };
     }
 

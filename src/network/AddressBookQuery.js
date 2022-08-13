@@ -23,6 +23,7 @@ import NodeAddressBook from "../address_book/NodeAddressBook.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -197,7 +198,9 @@ export default class AddresesBookQuery {
         const request =
             HashgraphProto.com.hedera.mirror.api.proto.AddressBookQuery.encode({
                 fileId:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
+                    this._fileId != null
+                        ? this._fileId[symbols.toProtobuf]()
+                        : null,
                 limit: this._limit,
             }).finish();
 

@@ -21,6 +21,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ProxyStaker from "./ProxyStaker.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -176,7 +177,7 @@ export default class AccountStakersQuery extends Query {
                 header,
                 accountID:
                     this._accountId != null
-                        ? this._accountId._toProtobuf()
+                        ? this._accountId[symbols.toProtobuf]()
                         : null,
             },
         };

@@ -26,6 +26,7 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("./ContractStateChange.js").default} ContractStateChange
@@ -976,18 +977,20 @@ export default class ContractFunctionResult {
     /**
      * @returns {HashgraphProto.proto.IContractFunctionResult}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             contractID:
-                this.contractId != null ? this.contractId._toProtobuf() : null,
+                this.contractId != null
+                    ? this.contractId[symbols.toProtobuf]()
+                    : null,
             contractCallResult: this.bytes,
             errorMessage: this.errorMessage,
             bloom: this.bloom,
             gasUsed: this.gasUsed,
-            logInfo: this.logs.map((log) => log._toProtobuf()),
+            logInfo: this.logs.map((log) => log[symbols.toProtobuf]()),
             // eslint-disable-next-line deprecation/deprecation
             createdContractIDs: this.createdContractIds.map((id) =>
-                id._toProtobuf()
+                id[symbols.toProtobuf]()
             ),
             evmAddress:
                 this.evmAddress != null
@@ -1000,7 +1003,7 @@ export default class ContractFunctionResult {
             functionParameters: this.functionParameters,
             senderId:
                 this.senderAccountId != null
-                    ? this.senderAccountId._toProtobuf()
+                    ? this.senderAccountId[symbols.toProtobuf]()
                     : null,
         };
     }

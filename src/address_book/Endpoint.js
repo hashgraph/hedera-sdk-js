@@ -19,6 +19,7 @@
  */
 
 import IPv4Address from "./IPv4Address.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -107,10 +108,12 @@ export default class EndPoint {
     /**
      * @returns {HashgraphProto.proto.IServiceEndpoint}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             ipAddressV4:
-                this._address != null ? this._address._toProtobuf() : null,
+                this._address != null
+                    ? this._address[symbols.toProtobuf]()
+                    : null,
             port: this._port,
         };
     }

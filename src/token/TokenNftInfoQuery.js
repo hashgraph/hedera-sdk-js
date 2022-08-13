@@ -25,6 +25,7 @@ import TokenId from "../token/TokenId.js";
 import TokenNftInfo from "./TokenNftInfo.js";
 import Hbar from "../Hbar.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -176,7 +177,7 @@ export default class TokenNftInfoQuery extends Query {
         this._nftId =
             typeof nftId === "string"
                 ? NftId.fromString(nftId)
-                : NftId._fromProtobuf(nftId._toProtobuf());
+                : NftId._fromProtobuf(nftId[symbols.toProtobuf]());
 
         return this;
     }
@@ -205,7 +206,7 @@ export default class TokenNftInfoQuery extends Query {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : AccountId._fromProtobuf(accountId[symbols.toProtobuf]());
 
         return this;
     }
@@ -234,7 +235,7 @@ export default class TokenNftInfoQuery extends Query {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : TokenId._fromProtobuf(tokenId[symbols.toProtobuf]());
 
         return this;
     }
@@ -373,7 +374,10 @@ export default class TokenNftInfoQuery extends Query {
         return {
             tokenGetNftInfo: {
                 header,
-                nftID: this._nftId != null ? this._nftId._toProtobuf() : null,
+                nftID:
+                    this._nftId != null
+                        ? this._nftId[symbols.toProtobuf]()
+                        : null,
             },
         };
     }

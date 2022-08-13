@@ -20,6 +20,7 @@
 
 import * as entity_id from "../EntityIdHelper.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -132,7 +133,7 @@ export default class TopicId {
     /**
      * @returns {HashgraphProto.proto.ITopicID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             topicNum: this.num,
             shardNum: this.shard,
@@ -159,7 +160,9 @@ export default class TopicId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.TopicID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TopicID.encode(
+            this[symbols.toProtobuf]()
+        ).finish();
     }
 
     /**

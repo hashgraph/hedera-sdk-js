@@ -19,6 +19,7 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 export default class SemanticVersion {
     /**
@@ -56,7 +57,7 @@ export default class SemanticVersion {
      * @internal
      * @returns {HashgraphProto.proto.ISemanticVersion}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             major: this.major,
             minor: this.minor,
@@ -79,7 +80,7 @@ export default class SemanticVersion {
      */
     toBytes() {
         return HashgraphProto.proto.SemanticVersion.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 }

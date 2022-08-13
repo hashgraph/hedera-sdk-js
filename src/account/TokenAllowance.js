@@ -21,6 +21,7 @@
 import TokenId from "../token/TokenId.js";
 import AccountId from "./AccountId.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -135,16 +136,16 @@ export default class TokenAllowance {
      * @internal
      * @returns {HashgraphProto.proto.ITokenAllowance}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            tokenId: this.tokenId._toProtobuf(),
+            tokenId: this.tokenId[symbols.toProtobuf](),
             spender:
                 this.spenderAccountId != null
-                    ? this.spenderAccountId._toProtobuf()
+                    ? this.spenderAccountId[symbols.toProtobuf]()
                     : null,
             owner:
                 this.ownerAccountId != null
-                    ? this.ownerAccountId._toProtobuf()
+                    ? this.ownerAccountId[symbols.toProtobuf]()
                     : null,
             amount: this.amount,
         };

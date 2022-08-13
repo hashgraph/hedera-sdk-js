@@ -21,6 +21,7 @@
 import TokenId from "../token/TokenId.js";
 import TokenRelationship from "./TokenRelationship.js";
 import ObjectMap from "../ObjectMap.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -66,12 +67,12 @@ export default class TokenRelationshipMap extends ObjectMap {
     /**
      * @returns {HashgraphProto.proto.ITokenRelationship[]}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         const list = [];
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, relationship] of this) {
-            list.push(relationship._toProtobuf());
+            list.push(relationship[symbols.toProtobuf]());
         }
 
         return list;

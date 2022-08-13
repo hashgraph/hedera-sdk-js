@@ -27,6 +27,7 @@ import FileId from "./FileId.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
 import List from "../transaction/List.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -450,7 +451,10 @@ export default class FileAppendTransaction extends Transaction {
         const endIndex = Math.min(startIndex + this._chunkSize, length);
 
         return {
-            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            fileID:
+                this._fileId != null
+                    ? this._fileId[symbols.toProtobuf]()
+                    : null,
             contents:
                 this._contents != null
                     ? this._contents.slice(startIndex, endIndex)

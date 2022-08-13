@@ -26,6 +26,7 @@ import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -583,19 +584,21 @@ export default class AccountUpdateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             accountIDToUpdate:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
+                this._accountId != null
+                    ? this._accountId[symbols.toProtobuf]()
+                    : null,
             key: this._key != null ? this._key._toProtobufKey() : null,
             expirationTime:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
             proxyAccountID:
                 this._proxyAccountId != null
-                    ? this._proxyAccountId._toProtobuf()
+                    ? this._proxyAccountId[symbols.toProtobuf]()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this._autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             receiverSigRequiredWrapper:
                 this._receiverSignatureRequired == null
@@ -615,7 +618,7 @@ export default class AccountUpdateTransaction extends Transaction {
                     : null,
             stakedAccountId:
                 this.stakedAccountId != null
-                    ? this.stakedAccountId._toProtobuf()
+                    ? this.stakedAccountId[symbols.toProtobuf]()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward:

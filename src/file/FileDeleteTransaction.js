@@ -22,6 +22,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import FileId from "./FileId.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -166,7 +167,10 @@ export default class FileDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            fileID:
+                this._fileId != null
+                    ? this._fileId[symbols.toProtobuf]()
+                    : null,
         };
     }
 

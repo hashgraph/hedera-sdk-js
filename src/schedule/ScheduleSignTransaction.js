@@ -23,6 +23,7 @@ import Hbar from "../Hbar.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -184,7 +185,7 @@ export default class ScheduleSignTransaction extends Transaction {
         return {
             scheduleID:
                 this._scheduleId != null
-                    ? this._scheduleId._toProtobuf()
+                    ? this._scheduleId[symbols.toProtobuf]()
                     : null,
         };
     }

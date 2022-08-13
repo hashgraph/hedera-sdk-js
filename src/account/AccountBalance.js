@@ -24,6 +24,7 @@ import TokenId from "../token/TokenId.js";
 import TokenBalanceMap from "./TokenBalanceMap.js";
 import TokenDecimalMap from "./TokenDecimalMap.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {object} TokenBalanceJson
@@ -121,14 +122,14 @@ export default class AccountBalance {
     /**
      * @returns {HashgraphProto.proto.ICryptoGetAccountBalanceResponse}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         /** @type {HashgraphProto.proto.ITokenBalance[]} */
         const list = [];
 
         // eslint-disable-next-line deprecation/deprecation
         for (const [key, value] of this.tokens != null ? this.tokens : []) {
             list.push({
-                tokenId: key._toProtobuf(),
+                tokenId: key[symbols.toProtobuf](),
                 balance: value,
                 decimals:
                     // eslint-disable-next-line deprecation/deprecation
@@ -150,7 +151,7 @@ export default class AccountBalance {
      */
     toBytes() {
         return HashgraphProto.proto.CryptoGetAccountBalanceResponse.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

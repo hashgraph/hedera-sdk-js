@@ -21,6 +21,7 @@
 import TokenId from "./TokenId.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -172,17 +173,22 @@ export default class AssessedCustomFee {
      * @abstract
      * @returns {HashgraphProto.proto.IAssessedCustomFee}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             feeCollectorAccountId:
                 this.feeCollectorAccountId != null
-                    ? this.feeCollectorAccountId._toProtobuf()
+                    ? this.feeCollectorAccountId[symbols.toProtobuf]()
                     : null,
-            tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            tokenId:
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : null,
             amount: this._amount,
             effectivePayerAccountId:
                 this._payerAccountIds != null
-                    ? this._payerAccountIds.map((id) => id._toProtobuf())
+                    ? this._payerAccountIds.map((id) =>
+                          id[symbols.toProtobuf]()
+                      )
                     : null,
         };
     }

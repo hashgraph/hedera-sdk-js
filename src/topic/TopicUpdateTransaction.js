@@ -26,6 +26,7 @@ import TopicId from "./TopicId.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import Timestamp from "../Timestamp.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -434,7 +435,10 @@ export default class TopicUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
+            topicID:
+                this._topicId != null
+                    ? this._topicId[symbols.toProtobuf]()
+                    : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             submitKey:
@@ -449,15 +453,15 @@ export default class TopicUpdateTransaction extends Transaction {
                     : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null
-                    ? this._autoRenewAccountId._toProtobuf()
+                    ? this._autoRenewAccountId[symbols.toProtobuf]()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this._autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod[symbols.toProtobuf]()
                     : null,
             expirationTime:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
         };
     }

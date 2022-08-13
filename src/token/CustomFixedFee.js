@@ -23,6 +23,7 @@ import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -152,16 +153,16 @@ export default class CustomFixedFee extends CustomFee {
      * @abstract
      * @returns {HashgraphProto.proto.ICustomFee}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             feeCollectorAccountId:
                 this.feeCollectorAccountId != null
-                    ? this.feeCollectorAccountId._toProtobuf()
+                    ? this.feeCollectorAccountId[symbols.toProtobuf]()
                     : null,
             fixedFee: {
                 denominatingTokenId:
                     this._denominatingTokenId != null
-                        ? this._denominatingTokenId._toProtobuf()
+                        ? this._denominatingTokenId[symbols.toProtobuf]()
                         : null,
                 amount: this._amount,
             },

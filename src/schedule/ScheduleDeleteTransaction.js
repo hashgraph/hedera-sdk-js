@@ -23,6 +23,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -169,7 +170,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
         return {
             scheduleID:
                 this._scheduleId != null
-                    ? this._scheduleId._toProtobuf()
+                    ? this._scheduleId[symbols.toProtobuf]()
                     : null,
         };
     }

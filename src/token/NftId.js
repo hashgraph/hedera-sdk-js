@@ -21,6 +21,7 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import TokenId from "../token/TokenId.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * The ID for a crypto-currency token on Hedera.
@@ -88,9 +89,9 @@ export default class NftId {
      * @internal
      * @returns {HashgraphProto.proto.INftID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            tokenID: this.tokenId._toProtobuf(),
+            tokenID: this.tokenId[symbols.toProtobuf](),
             serialNumber: Long.fromValue(
                 this.serial !== undefined ? this.serial : 0
             ),
@@ -108,6 +109,8 @@ export default class NftId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.NftID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.NftID.encode(
+            this[symbols.toProtobuf]()
+        ).finish();
     }
 }

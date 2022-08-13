@@ -26,6 +26,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import Key from "../Key.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -301,7 +302,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             payerAccountID:
                 this._payerAccountId != null
-                    ? this._payerAccountId._toProtobuf()
+                    ? this._payerAccountId[symbols.toProtobuf]()
                     : null,
             scheduledTransactionBody:
                 this._scheduledTransaction != null
@@ -311,7 +312,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             waitForExpiry: this._waitForExpiry,
             expirationTime:
                 this._expirationTime != null
-                    ? this._expirationTime._toProtobuf()
+                    ? this._expirationTime[symbols.toProtobuf]()
                     : null,
         };
     }

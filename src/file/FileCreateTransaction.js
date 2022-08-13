@@ -28,6 +28,7 @@ import Timestamp from "../Timestamp.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -298,7 +299,7 @@ export default class FileCreateTransaction extends Transaction {
                           keys: this._keys.map((key) => key._toProtobufKey()),
                       }
                     : null,
-            expirationTime: this._expirationTime._toProtobuf(),
+            expirationTime: this._expirationTime[symbols.toProtobuf](),
             contents: this._contents,
             memo: this._fileMemo,
         };

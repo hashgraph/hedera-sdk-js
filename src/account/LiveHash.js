@@ -21,6 +21,7 @@
 import AccountId from "./AccountId.js";
 import Duration from "../Duration.js";
 import KeyList from "../KeyList.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -90,12 +91,12 @@ export default class LiveHash {
      * @internal
      * @returns {HashgraphProto.proto.ILiveHash}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
-            accountId: this.accountId._toProtobuf(),
+            accountId: this.accountId[symbols.toProtobuf](),
             hash: this.hash,
             keys: this.keys._toProtobufKey().keyList,
-            duration: this.duration._toProtobuf(),
+            duration: this.duration[symbols.toProtobuf](),
         };
     }
 }

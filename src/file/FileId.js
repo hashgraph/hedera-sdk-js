@@ -21,6 +21,7 @@
 import * as entity_id from "../EntityIdHelper.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -131,7 +132,7 @@ export default class FileId {
      * @internal
      * @returns {HashgraphProto.proto.IFileID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             fileNum: this.num,
             shardNum: this.shard,
@@ -158,7 +159,9 @@ export default class FileId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.FileID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.FileID.encode(
+            this[symbols.toProtobuf]()
+        ).finish();
     }
 
     /**

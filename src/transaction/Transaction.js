@@ -36,6 +36,7 @@ import List from "./List.js";
 import Timestamp from "../Timestamp.js";
 import Logger from "js-logger";
 import * as util from "../util.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -1496,8 +1497,8 @@ export default class Transaction extends Executable {
                     ? this._maxTransactionFee.toTinybars()
                     : null,
             memo: this._transactionMemo,
-            transactionID: this._transactionIds.current._toProtobuf(),
-            nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
+            transactionID: this._transactionIds.current[symbols.toProtobuf](),
+            nodeAccountID: nodeId != null ? nodeId[symbols.toProtobuf]() : null,
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),
             },

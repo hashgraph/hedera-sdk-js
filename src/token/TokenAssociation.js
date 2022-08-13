@@ -21,6 +21,7 @@
 import AccountId from "../account/AccountId.js";
 import TokenId from "../token/TokenId.js";
 import Hbar from "../Hbar.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -116,14 +117,16 @@ export default class TokenAssociation {
      * @abstract
      * @returns {HashgraphProto.proto.ITokenAssociation}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             accountId:
                 this._accountId != null
-                    ? this._accountId._toProtobuf()
+                    ? this._accountId[symbols.toProtobuf]()
                     : undefined,
             tokenId:
-                this._tokenId != null ? this._tokenId._toProtobuf() : undefined,
+                this._tokenId != null
+                    ? this._tokenId[symbols.toProtobuf]()
+                    : undefined,
         };
     }
 }

@@ -22,6 +22,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+import * as symbols from "../Symbols.js";
 
 /**
  * The client-generated ID for a transaction.
@@ -185,12 +186,16 @@ export default class TransactionId {
      * @internal
      * @returns {HashgraphProto.proto.ITransactionID}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return {
             accountID:
-                this.accountId != null ? this.accountId._toProtobuf() : null,
+                this.accountId != null
+                    ? this.accountId[symbols.toProtobuf]()
+                    : null,
             transactionValidStart:
-                this.validStart != null ? this.validStart._toProtobuf() : null,
+                this.validStart != null
+                    ? this.validStart[symbols.toProtobuf]()
+                    : null,
             scheduled: this.scheduled,
             nonce: this.nonce != null ? this.nonce.toInt() : null,
         };
@@ -211,7 +216,7 @@ export default class TransactionId {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionID.encode(
-            this._toProtobuf()
+            this[symbols.toProtobuf]()
         ).finish();
     }
 

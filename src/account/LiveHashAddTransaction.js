@@ -25,6 +25,7 @@ import AccountId from "./AccountId.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -274,11 +275,11 @@ export default class LiveHashAddTransaction extends Transaction {
                         : undefined,
                 duration:
                     this._duration != null
-                        ? this._duration._toProtobuf()
+                        ? this._duration[symbols.toProtobuf]()
                         : null,
                 accountId:
                     this._accountId != null
-                        ? this._accountId._toProtobuf()
+                        ? this._accountId[symbols.toProtobuf]()
                         : null,
             },
         };

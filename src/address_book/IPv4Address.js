@@ -19,6 +19,7 @@
  */
 
 import IPv4AddressPart from "./IPv4AddressPart.js";
+import * as symbols from "../Symbols.js";
 
 export default class IPv4Address {
     /**
@@ -93,7 +94,7 @@ export default class IPv4Address {
     /**
      * @returns {Uint8Array}
      */
-    _toProtobuf() {
+    [symbols.toProtobuf]() {
         return Uint8Array.of(
             this._network != null && this._network._left != null
                 ? this._network._left
