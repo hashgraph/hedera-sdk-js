@@ -21,6 +21,7 @@
 import AccountId from "../account/AccountId.js";
 import * as sha384 from "../cryptography/sha384.js";
 import ObjectMap from "../ObjectMap.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @namespace proto
@@ -42,8 +43,8 @@ export default class TransactionHashMap extends ObjectMap {
     static async _fromTransaction(transaction) {
         const hashes = new TransactionHashMap();
 
-        for (let i = 0; i < transaction._nodeAccountIds.length; i++) {
-            const nodeAccountId = transaction._nodeAccountIds.list[i];
+        for (let i = 0; i < transaction[symbols.nodeAccountIds].length; i++) {
+            const nodeAccountId = transaction[symbols.nodeAccountIds].list[i];
             const tx = /** @type {HashgraphProto.proto.ITransaction} */ (
                 transaction._transactions.get(i)
             );

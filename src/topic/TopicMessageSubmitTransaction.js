@@ -262,7 +262,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
-            for (const nodeAccountId of this._nodeAccountIds.list) {
+            for (const nodeAccountId of this[symbols.nodeAccountIds].list) {
                 this._signedTransactions.push(
                     this[symbols.makeSignedTransaction](nodeAccountId)
                 );

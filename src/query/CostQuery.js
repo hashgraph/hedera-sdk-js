@@ -44,10 +44,12 @@ export default class CostQuery extends Executable {
         super();
 
         this._query = query;
-        this._grpcDeadline = query._grpcDeadline;
-        this._requestTimeout = query._requestTimeout;
-        this._nodeAccountIds = query._nodeAccountIds.clone();
-        this._operator = query._operator;
+        this[symbols.grpcDeadline] = query[symbols.grpcDeadline];
+        this[symbols.requestTimeout] = query[symbols.requestTimeout];
+        this[symbols.nodeAccountIds] = query[symbols.nodeAccountIds].clone();
+        this[symbols.operator] = query[symbols.operator];
+
+        // TODO: We should copy _all_ `Executable.*` fields
 
         /**
          * @type {HashgraphProto.proto.IQueryHeader | null}
@@ -81,7 +83,9 @@ export default class CostQuery extends Executable {
         }
 
         const operator =
-            this._operator != null ? this._operator : client._operator;
+            this[symbols.operator] != null
+                ? this[symbols.operator]
+                : client._operator;
 
         if (operator == null) {
             throw new Error(
@@ -89,8 +93,8 @@ export default class CostQuery extends Executable {
             );
         }
 
-        if (this._query._nodeAccountIds.isEmpty) {
-            this._query._nodeAccountIds.setList(
+        if (this._query[symbols.nodeAccountIds].isEmpty) {
+            this._query[symbols.nodeAccountIds].setList(
                 client._network.getNodeAccountIdsForExecute()
             );
         }
@@ -177,10 +181,10 @@ export default class CostQuery extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (!this._nodeAccountIds.isEmpty) {
+        if (!this[symbols.nodeAccountIds].isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.current;
+            return this[symbols.nodeAccountIds].current;
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"

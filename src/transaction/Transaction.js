@@ -425,7 +425,7 @@ export default class Transaction extends Executable {
 
         // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
-        transaction._nodeAccountIds.setList(nodeIds).setLocked();
+        transaction[symbols.nodeAccountIds].setList(nodeIds).setLocked();
 
         // Make sure to update the rest of the fields
         transaction._transactionValidDuration =
@@ -687,7 +687,7 @@ export default class Transaction extends Executable {
         // and transaction IDs.
         // Now that I think of it, this code should likely exist in `freezeWith()`?
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         // Sign each signed transatcion
         for (const signedTransaction of this._signedTransactions.list) {
@@ -774,7 +774,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
         this._signedTransactions.setLocked();
 
         // Add the signature to the signed transaction list. This is a copy paste
@@ -823,7 +823,7 @@ export default class Transaction extends Executable {
 
         // Lock transaction IDs, and node account IDs
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         // Construct a signature map from this transaction
         return SignatureMap._fromTransaction(this);
@@ -844,7 +844,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         // Build all transactions, and sign them
         await this[buildAllTransactionsAsync]();
@@ -875,7 +875,7 @@ export default class Transaction extends Executable {
      * @param {?import("../client/Client.js").default<Channel, *>} client
      */
     _setNodeAccountIds(client) {
-        if (!this._nodeAccountIds.isEmpty) {
+        if (!this[symbols.nodeAccountIds].isEmpty) {
             return;
         }
 
@@ -885,7 +885,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        this._nodeAccountIds.setList(
+        this[symbols.nodeAccountIds].setList(
             client._network.getNodeAccountIdsForExecute()
         );
     }
@@ -901,7 +901,7 @@ export default class Transaction extends Executable {
         }
 
         this._signedTransactions.setList(
-            this._nodeAccountIds.list.map((nodeId) =>
+            this[symbols.nodeAccountIds].list.map((nodeId) =>
                 this[symbols.makeSignedTransaction](nodeId)
             )
         );
@@ -941,7 +941,7 @@ export default class Transaction extends Executable {
         this._signOnDemand = client != null ? client._signOnDemand : false;
 
         // Save the operator
-        this._operator = client != null ? client._operator : null;
+        super[symbols.operator] = client != null ? client._operator : null;
         this._freezeWithAccountId(
             client != null ? client.operatorAccountId : null
         );
@@ -1038,7 +1038,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         // Build all the transactions withot signing
         this[buildAllTransactions]();
@@ -1067,7 +1067,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         // Build all transactions, and sign them
         await this[buildAllTransactionsAsync]();
@@ -1096,7 +1096,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         await this[buildAllTransactionsAsync]();
 
@@ -1123,7 +1123,7 @@ export default class Transaction extends Executable {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        this[symbols.nodeAccountIds].setLocked();
 
         await this[buildAllTransactionsAsync]();
 
@@ -1183,17 +1183,17 @@ export default class Transaction extends Executable {
         }
 
         // Set the operator if the client has one
-        this._operator = client != null ? client._operator : null;
+        super[symbols.operator] = client != null ? client._operator : null;
         this._operatorAccountId =
             client != null && client._operator != null
                 ? client._operator.accountId
                 : null;
 
         // If the client has an operaator, sign this request with the operator
-        if (this._operator != null) {
+        if (super[symbols.operator] != null) {
             await this.signWith(
-                this._operator.publicKey,
-                this._operator.transactionSigner
+                super[symbols.operator].publicKey,
+                super[symbols.operator].transactionSigner
             );
         }
     }
@@ -1208,8 +1208,8 @@ export default class Transaction extends Executable {
     async [symbols.makeRequestAsync]() {
         // The index for the transaction
         const index =
-            this._transactionIds.index * this._nodeAccountIds.length +
-            this._nodeAccountIds.index;
+            this._transactionIds.index * this[symbols.nodeAccountIds].length +
+            this[symbols.nodeAccountIds].index;
 
         // If sign on demand is disabled we need to simply build that transaction
         // and return the result, without signing
@@ -1232,7 +1232,7 @@ export default class Transaction extends Executable {
      */
     async [signTransaction]() {
         const signedTransaction = this[symbols.makeSignedTransaction](
-            this._nodeAccountIds.next
+            this[symbols.nodeAccountIds].next
         );
 
         const bodyBytes = /** @type {Uint8Array} */ (
@@ -1344,7 +1344,7 @@ export default class Transaction extends Executable {
 
     /**
      * Build a trransaction using the current index, where the current
-     * index is determined by `this._nodeAccountIds.index` and
+     * index is determined by `this[symbols.nodeAccountIds].index` and
      * `this._transactionIds.index`
      *
      * @private
@@ -1465,13 +1465,13 @@ export default class Transaction extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (this._nodeAccountIds.isEmpty) {
+        if (this[symbols.nodeAccountIds].isEmpty) {
             throw new Error(
                 "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
             );
         }
 
-        return this._nodeAccountIds.current;
+        return this[symbols.nodeAccountIds].current;
     }
 
     /**
@@ -1621,7 +1621,7 @@ export default class Transaction extends Executable {
      * @protected
      */
     [requireOneNodeAccountId]() {
-        if (this._nodeAccountIds.length != 1) {
+        if (this[symbols.nodeAccountIds].length != 1) {
             throw "transaction did not have exactly one node ID set";
         }
     }

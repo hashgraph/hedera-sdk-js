@@ -61,7 +61,7 @@ export default class Executable {
          * @private
          * @type {number}
          */
-        this._maxAttempts = 10;
+        this[symbols.maxAttempts] = 10;
 
         /**
          * List of node account IDs for each transaction that has been
@@ -70,12 +70,14 @@ export default class Executable {
          * @internal
          * @type {List<AccountId>}
          */
-        this._nodeAccountIds = new List();
+        this[symbols.nodeAccountIds] = /** @type {List<AccountId>} */ (
+            new List()
+        );
 
         /**
          * @internal
          */
-        this._signOnDemand = false;
+        this[symbols.signOnDemand] = false;
 
         /**
          * This is the request's min backoff
@@ -83,7 +85,7 @@ export default class Executable {
          * @internal
          * @type {number | null}
          */
-        this._minBackoff = null;
+        this[symbols.minBackoff] = null;
 
         /**
          * This is the request's max backoff
@@ -91,7 +93,7 @@ export default class Executable {
          * @internal
          * @type {number | null}
          */
-        this._maxBackoff = null;
+        this[symbols.maxBackoff] = null;
 
         /**
          * The operator that was used to execute this request.
@@ -103,7 +105,7 @@ export default class Executable {
          * @internal
          * @type {ClientOperator | null}
          */
-        this._operator = null;
+        this[symbols.operator] = null;
 
         /**
          * The complete timeout for running the `execute()` method
@@ -111,7 +113,7 @@ export default class Executable {
          * @internal
          * @type {number | null}
          */
-        this._requestTimeout = null;
+        this[symbols.requestTimeout] = null;
 
         /**
          * The grpc request timeout aka deadline.
@@ -124,7 +126,7 @@ export default class Executable {
          * @internal
          * @type {number | null}
          */
-        this._grpcDeadline = null;
+        this[symbols.grpcDeadline] = null;
     }
 
     /**
@@ -134,11 +136,11 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
-        if (this._nodeAccountIds.isEmpty) {
+        if (this[symbols.nodeAccountIds].isEmpty) {
             return null;
         } else {
-            this._nodeAccountIds.setLocked();
-            return this._nodeAccountIds.list;
+            this[symbols.nodeAccountIds].setLocked();
+            return this[symbols.nodeAccountIds].list;
         }
     }
 
@@ -151,7 +153,7 @@ export default class Executable {
     setNodeAccountIds(nodeIds) {
         // Set the node account IDs, and lock the list. This will require `execute`
         // to use these nodes instead of random nodes from the network.
-        this._nodeAccountIds.setList(nodeIds).setLocked();
+        this[symbols.nodeAccountIds].setList(nodeIds).setLocked();
         return this;
     }
 
@@ -179,7 +181,7 @@ export default class Executable {
      * @returns {number}
      */
     get maxAttempts() {
-        return this._maxAttempts;
+        return this[symbols.maxAttempts];
     }
 
     /**
@@ -189,7 +191,7 @@ export default class Executable {
      * @returns {this}
      */
     setMaxAttempts(maxAttempts) {
-        this._maxAttempts = maxAttempts;
+        this[symbols.maxAttempts] = maxAttempts;
 
         return this;
     }
@@ -200,7 +202,7 @@ export default class Executable {
      * @returns {?number}
      */
     get grpcDeadline() {
-        return this._grpcDeadline;
+        return this[symbols.grpcDeadline];
     }
 
     /**
@@ -210,7 +212,7 @@ export default class Executable {
      * @returns {this}
      */
     setGrpcDeadline(grpcDeadline) {
-        this._grpcDeadline = grpcDeadline;
+        this[symbols.grpcDeadline] = grpcDeadline;
 
         return this;
     }
@@ -226,10 +228,13 @@ export default class Executable {
         // Also verify that min backoff is not greater than max backoff.
         if (minBackoff == null) {
             throw new Error("minBackoff cannot be null.");
-        } else if (this._maxBackoff != null && minBackoff > this._maxBackoff) {
+        } else if (
+            this[symbols.maxBackoff] != null &&
+            minBackoff > this[symbols.maxBackoff]
+        ) {
             throw new Error("minBackoff cannot be larger than maxBackoff.");
         }
-        this._minBackoff = minBackoff;
+        this[symbols.minBackoff] = minBackoff;
         return this;
     }
 
@@ -239,7 +244,7 @@ export default class Executable {
      * @returns {number | null}
      */
     get minBackoff() {
-        return this._minBackoff;
+        return this[symbols.minBackoff];
     }
 
     /**
@@ -253,10 +258,13 @@ export default class Executable {
         // Also verify that max backoff is not less than min backoff.
         if (maxBackoff == null) {
             throw new Error("maxBackoff cannot be null.");
-        } else if (this._minBackoff != null && maxBackoff < this._minBackoff) {
+        } else if (
+            this[symbols.minBackoff] != null &&
+            maxBackoff < this[symbols.minBackoff]
+        ) {
             throw new Error("maxBackoff cannot be smaller than minBackoff.");
         }
-        this._maxBackoff = maxBackoff;
+        this[symbols.maxBackoff] = maxBackoff;
         return this;
     }
 
@@ -266,7 +274,7 @@ export default class Executable {
      * @returns {number | null}
      */
     get maxBackoff() {
-        return this._maxBackoff;
+        return this[symbols.maxBackoff];
     }
 
     /**
@@ -464,7 +472,7 @@ export default class Executable {
      * @returns {this}
      */
     _setOperatorWith(accountId, publicKey, transactionSigner) {
-        this._operator = {
+        this[symbols.operator] = {
             transactionSigner,
             accountId,
             publicKey,
@@ -498,8 +506,8 @@ export default class Executable {
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
-        if (this._requestTimeout == null) {
-            this._requestTimeout =
+        if (this[symbols.requestTimeout] == null) {
+            this[symbols.requestTimeout] =
                 requestTimeout != null ? requestTimeout : client.requestTimeout;
         }
 
@@ -509,13 +517,13 @@ export default class Executable {
         await this[symbols.beforeExecute](client);
 
         // If the max backoff on the request is not set, use the default value in client
-        if (this._maxBackoff == null) {
-            this._maxBackoff = client.maxBackoff;
+        if (this[symbols.maxBackoff] == null) {
+            this[symbols.maxBackoff] = client.maxBackoff;
         }
 
         // If the min backoff on the request is not set, use the default value in client
-        if (this._minBackoff == null) {
-            this._minBackoff = client.minBackoff;
+        if (this[symbols.minBackoff] == null) {
+            this[symbols.minBackoff] = client.minBackoff;
         }
 
         // If the max attempts on the request is not set, use the default value in client
@@ -525,7 +533,7 @@ export default class Executable {
         const maxAttempts =
             client._maxAttempts != null
                 ? client._maxAttempts
-                : this._maxAttempts;
+                : this[symbols.maxAttempts];
 
         // Save the start time to be used later with request timeout
         const startTime = Date.now();
@@ -538,8 +546,8 @@ export default class Executable {
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             // Determine if we've exceeded request timeout
             if (
-                this._requestTimeout != null &&
-                startTime + this._requestTimeout <= Date.now()
+                this[symbols.requestTimeout] != null &&
+                startTime + this[symbols.requestTimeout] <= Date.now()
             ) {
                 throw new Error("timeout exceeded");
             }
@@ -550,13 +558,13 @@ export default class Executable {
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
-            if (this._nodeAccountIds.locked) {
+            if (this[symbols.nodeAccountIds].locked) {
                 nodeAccountId = this._getNodeAccountId();
                 node = client._network.getNode(nodeAccountId);
             } else {
                 node = client._network.getNode();
                 nodeAccountId = node.accountId;
-                this._nodeAccountIds.setList([nodeAccountId]);
+                this[symbols.nodeAccountIds].setList([nodeAccountId]);
             }
 
             if (node == null) {
@@ -574,7 +582,7 @@ export default class Executable {
             const channel = node.getChannel();
             const request = await this[symbols.makeRequestAsync]();
 
-            this._nodeAccountIds.advance();
+            this[symbols.nodeAccountIds].advance();
 
             let response;
 
@@ -595,7 +603,7 @@ export default class Executable {
 
                 // If a grpc deadline is est, we should race it, otherwise the only thing in the
                 // list of promises will be the execution promise.
-                if (this._grpcDeadline != null) {
+                if (this[symbols.grpcDeadline] != null) {
                     promises.push(
                         // eslint-disable-next-line ie11/no-loop-func
                         new Promise((_, reject) =>
@@ -603,7 +611,9 @@ export default class Executable {
                                 // eslint-disable-next-line ie11/no-loop-func
                                 () =>
                                     reject(new Error("grpc deadline exceeded")),
-                                /** @type {number=} */ (this._grpcDeadline)
+                                /** @type {number=} */ (
+                                    this[symbols.grpcDeadline]
+                                )
                             )
                         )
                     );
@@ -671,8 +681,8 @@ export default class Executable {
                 case ExecutionState.Retry:
                     await delayForAttempt(
                         attempt,
-                        this._minBackoff,
-                        this._maxBackoff
+                        this[symbols.minBackoff],
+                        this[symbols.maxBackoff]
                     );
                     continue;
                 case ExecutionState.Finished:

@@ -176,8 +176,8 @@ export default class Query extends Executable {
      */
     getCost(client) {
         // The node account IDs must be set to execute a cost query
-        if (this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setList(
+        if (this[symbols.nodeAccountIds].isEmpty) {
+            this[symbols.nodeAccountIds].setList(
                 client._network.getNodeAccountIdsForExecute()
             );
         }
@@ -269,25 +269,27 @@ export default class Query extends Executable {
         }
 
         // If the nodes aren't set, set them.
-        if (this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setList(
+        if (this[symbols.nodeAccountIds].isEmpty) {
+            this[symbols.nodeAccountIds].setList(
                 client._network.getNodeAccountIdsForExecute()
             );
         }
 
         // Save the operator
-        this._operator =
-            this._operator != null ? this._operator : client._operator;
+        super[symbols.operator] =
+            super[symbols.operator] != null
+                ? super[symbols.operator]
+                : client._operator;
 
         // If the payment transaction ID is not set
         if (this._paymentTransactionId == null) {
             // And payment is required
             if (this._isPaymentRequired()) {
                 // And the client has an operator
-                if (this._operator != null) {
+                if (super[symbols.operator] != null) {
                     // Generate the payment transaction ID
                     this._paymentTransactionId = TransactionId.generate(
-                        this._operator.accountId
+                        super[symbols.operator].accountId
                     );
                 } else {
                     // If payment is required, but an operator did not exist, throw an error
@@ -346,12 +348,12 @@ export default class Query extends Executable {
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
 
-        if (!this._nodeAccountIds.locked) {
+        if (!this[symbols.nodeAccountIds].locked) {
             return;
         }
 
         // Generate the payment transactions
-        for (const node of this._nodeAccountIds.list) {
+        for (const node of this[symbols.nodeAccountIds].list) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
                     this[symbols.getLogId](),
@@ -359,7 +361,7 @@ export default class Query extends Executable {
                         this._paymentTransactionId
                     ),
                     node,
-                    this._isPaymentRequired() ? this._operator : null,
+                    this._isPaymentRequired() ? super[symbols.operator] : null,
                     /** @type {Hbar} */ (cost)
                 )
             );
@@ -388,7 +390,10 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
                 responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
-                payment: this._paymentTransactions[this._nodeAccountIds.index],
+                payment:
+                    this._paymentTransactions[
+                        this[symbols.nodeAccountIds].index
+                    ],
             };
         }
 
@@ -416,7 +421,10 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment: this._paymentTransactions[this._nodeAccountIds.index],
+                payment:
+                    this._paymentTransactions[
+                        this[symbols.nodeAccountIds].index
+                    ],
                 responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
             };
         }
@@ -436,17 +444,19 @@ export default class Query extends Executable {
         };
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
-            if (this._nodeAccountIds.locked) {
+            if (this[symbols.nodeAccountIds].locked) {
                 header.payment =
-                    this._paymentTransactions[this._nodeAccountIds.index];
+                    this._paymentTransactions[
+                        this[symbols.nodeAccountIds].index
+                    ];
             } else {
                 header.payment = await _makePaymentTransaction(
                     this[symbols.getLogId](),
                     /** @type {import("../transaction/TransactionId.js").default} */ (
                         this._paymentTransactionId
                     ),
-                    this._nodeAccountIds.current,
-                    this._isPaymentRequired() ? this._operator : null,
+                    this[symbols.nodeAccountIds].current,
+                    this._isPaymentRequired() ? super[symbols.operator] : null,
                     /** @type {Hbar} */ (this._queryPayment)
                 );
             }
@@ -517,10 +527,10 @@ export default class Query extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (!this._nodeAccountIds.isEmpty) {
+        if (!this[symbols.nodeAccountIds].isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.current;
+            return this[symbols.nodeAccountIds].current;
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
