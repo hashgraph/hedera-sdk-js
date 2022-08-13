@@ -125,7 +125,7 @@ export default class TokenPauseTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._tokenId != null) {
             this._tokenId.validateChecksum(client);
         }

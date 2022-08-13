@@ -244,7 +244,7 @@ export default class Query extends Executable {
      * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         // Shouldn't we be checking `paymentTransactionId` here sine it contains an `accountId`?
         // Do nothing
     }
@@ -265,7 +265,7 @@ export default class Query extends Executable {
 
         // Check checksums if enabled
         if (client.isAutoValidateChecksumsEnabled()) {
-            this._validateChecksums(client);
+            this[symbols.validateChecksums](client);
         }
 
         // If the nodes aren't set, set them.

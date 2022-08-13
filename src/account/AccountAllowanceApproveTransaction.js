@@ -421,15 +421,15 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         this._hbarApprovals.map((approval) =>
-            approval._validateChecksums(client)
+            approval[symbols.validateChecksums](client)
         );
         this._tokenApprovals.map((approval) =>
-            approval._validateChecksums(client)
+            approval[symbols.validateChecksums](client)
         );
         this._nftApprovals.map((approval) =>
-            approval._validateChecksums(client)
+            approval[symbols.validateChecksums](client)
         );
     }
 

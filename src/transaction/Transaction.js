@@ -1159,7 +1159,7 @@ export default class Transaction extends Executable {
      * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         // Do nothing
     }
 
@@ -1179,7 +1179,7 @@ export default class Transaction extends Executable {
 
         // Valid checksums if the option is enabled
         if (client.isAutoValidateChecksumsEnabled()) {
-            this._validateChecksums(client);
+            this[symbols.validateChecksums](client);
         }
 
         // Set the operator if the client has one

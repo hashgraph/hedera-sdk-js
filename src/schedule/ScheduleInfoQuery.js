@@ -120,7 +120,7 @@ export default class ScheduleInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._scheduleId != null) {
             this._scheduleId.validateChecksum(client);
         }

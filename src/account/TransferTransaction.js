@@ -428,7 +428,7 @@ export default class TransferTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const transfer of this._hbarTransfers) {
             transfer.accountId.validateChecksum(client);

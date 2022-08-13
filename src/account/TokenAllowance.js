@@ -154,7 +154,7 @@ export default class TokenAllowance {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         this.tokenId.validateChecksum(client);
 
         if (this.ownerAccountId != null) {

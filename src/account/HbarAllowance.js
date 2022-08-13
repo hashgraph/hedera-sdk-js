@@ -137,7 +137,7 @@ export default class HbarAllowance {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this.spenderAccountId != null) {
             this.spenderAccountId.validateChecksum(client);
         }

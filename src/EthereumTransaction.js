@@ -251,7 +251,7 @@ export default class EthereumTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (
             this._ethereumData != null &&
             this._ethereumData instanceof FileId

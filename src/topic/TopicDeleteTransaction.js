@@ -131,7 +131,7 @@ export default class TopicDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._topicId != null) {
             this._topicId.validateChecksum(client);
         }

@@ -81,9 +81,9 @@ export default class PrngTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._range != null && isNumber(this._range)) {
-            this._validateChecksums(client);
+            this[symbols.validateChecksums](client);
         }
     }
 

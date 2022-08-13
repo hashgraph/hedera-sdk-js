@@ -265,7 +265,7 @@ export default class ScheduleCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._payerAccountId != null) {
             this._payerAccountId.validateChecksum(client);
         }

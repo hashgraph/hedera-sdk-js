@@ -135,7 +135,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._scheduleId != null) {
             this._scheduleId.validateChecksum(client);
         }

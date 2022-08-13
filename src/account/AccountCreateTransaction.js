@@ -473,7 +473,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._proxyAccountId != null) {
             this._proxyAccountId.validateChecksum(client);
         }

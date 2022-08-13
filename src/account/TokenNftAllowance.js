@@ -200,7 +200,7 @@ export default class TokenNftAllowance {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         this.tokenId.validateChecksum(client);
 
         if (this.ownerAccountId != null) {

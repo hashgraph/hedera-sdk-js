@@ -827,7 +827,7 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._treasuryAccountId != null) {
             this._treasuryAccountId.validateChecksum(client);
         }

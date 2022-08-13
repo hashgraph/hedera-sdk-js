@@ -213,7 +213,7 @@ export default class ContractDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._contractId != null) {
             this._contractId.validateChecksum(client);
         }

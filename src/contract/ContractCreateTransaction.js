@@ -591,7 +591,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._bytecodeFileId != null) {
             this._bytecodeFileId.validateChecksum(client);
         }

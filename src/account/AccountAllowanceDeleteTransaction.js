@@ -158,9 +158,9 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         this._nftAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
+            allowance[symbols.validateChecksums](client)
         );
     }
 

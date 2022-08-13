@@ -325,7 +325,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._fileId != null) {
             this._fileId.validateChecksum(client);
         }

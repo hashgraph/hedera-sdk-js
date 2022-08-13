@@ -169,7 +169,7 @@ export default class TokenAssociateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (this._accountId != null) {
             this._accountId.validateChecksum(client);
         }

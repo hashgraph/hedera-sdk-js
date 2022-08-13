@@ -314,7 +314,7 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateChecksums(client) {
+    [symbols.validateChecksums](client) {
         if (
             this._transactionId != null &&
             this._transactionId.accountId != null
