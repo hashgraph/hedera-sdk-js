@@ -497,7 +497,7 @@ export default class Query extends Executable {
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    [symbols.mapStatusError](request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 

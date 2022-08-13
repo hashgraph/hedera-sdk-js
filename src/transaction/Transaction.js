@@ -1411,7 +1411,7 @@ export default class Transaction extends Executable {
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    [symbols.mapStatusError](request, response) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(

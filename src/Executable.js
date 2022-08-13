@@ -308,7 +308,7 @@ export default class Executable {
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    [symbols.mapStatusError](request, response) {
         throw new Error("not implemented");
     }
 
@@ -697,7 +697,7 @@ export default class Executable {
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
                 case ExecutionState.Error:
-                    throw this._mapStatusError(request, response);
+                    throw this[symbols.mapStatusError](request, response);
                 default:
                     throw new Error(
                         "(BUG) non-exhuastive switch statement for `ExecutionState`"

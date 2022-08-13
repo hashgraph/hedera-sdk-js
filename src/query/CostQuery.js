@@ -141,8 +141,8 @@ export default class CostQuery extends Executable {
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
-        return this._query._mapStatusError(request, response);
+    [symbols.mapStatusError](request, response) {
+        return this._query[symbols.mapStatusError](request, response);
     }
 
     /**
