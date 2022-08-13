@@ -143,7 +143,7 @@ export default class ContractInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const contractGetInfo =
             /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
                 response.contractGetInfo
@@ -183,7 +183,7 @@ export default class ContractInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             contractGetInfo: {
                 header,

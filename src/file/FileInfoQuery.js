@@ -143,7 +143,7 @@ export default class FileInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const fileGetInfo =
             /** @type {HashgraphProto.proto.IFileGetInfoResponse} */ (
                 response.fileGetInfo
@@ -180,7 +180,7 @@ export default class FileInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             fileGetInfo: {
                 header,

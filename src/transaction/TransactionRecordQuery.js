@@ -171,7 +171,7 @@ export default class TransactionRecordQuery extends Query {
      */
     _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -259,7 +259,7 @@ export default class TransactionRecordQuery extends Query {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [symbols.mapStatusError](request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -336,7 +336,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const transactionGetRecord =
             /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
@@ -370,7 +370,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             transactionGetRecord: {
                 header,

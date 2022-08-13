@@ -182,7 +182,7 @@ export default class TransactionReceiptQuery extends Query {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -261,7 +261,7 @@ export default class TransactionReceiptQuery extends Query {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [symbols.mapStatusError](request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -340,7 +340,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const transactionGetReceipt =
             /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
@@ -376,7 +376,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             transactionGetReceipt: {
                 header,

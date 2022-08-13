@@ -151,7 +151,7 @@ export default class TopicInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const consensusGetTopicInfo =
             /** @type {HashgraphProto.proto.IConsensusGetTopicInfoResponse} */ (
                 response.consensusGetTopicInfo
@@ -186,7 +186,7 @@ export default class TopicInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             consensusGetTopicInfo: {
                 header,

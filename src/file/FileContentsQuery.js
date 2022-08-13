@@ -127,7 +127,7 @@ export default class FileContentsQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const fileGetContents =
             /** @type {HashgraphProto.proto.IFileGetContentsResponse} */ (
                 response.fileGetContents
@@ -163,7 +163,7 @@ export default class FileContentsQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             fileGetContents: {
                 header,

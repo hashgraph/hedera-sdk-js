@@ -19,3 +19,5 @@ export const fromProtobufThresholdKey = Symbol();
 export const fromProtobufTransactions = Symbol();
 export const fromProtobuf = Symbol();
 export const validateChecksums = Symbol();
+export const mapResponseHeader = Symbol();
+export const onMakeRequest = Symbol();

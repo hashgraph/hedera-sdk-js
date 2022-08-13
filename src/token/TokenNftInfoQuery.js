@@ -327,7 +327,7 @@ export default class TokenNftInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const infos =
             /** @type {HashgraphProto.proto.ITokenGetNftInfoResponse} */ (
                 response.tokenGetNftInfo
@@ -372,7 +372,7 @@ export default class TokenNftInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             tokenGetNftInfo: {
                 header,

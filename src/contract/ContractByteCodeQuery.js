@@ -126,7 +126,7 @@ export default class ContractByteCodeQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const contractGetBytecodeResponse =
             /** @type {HashgraphProto.proto.IContractGetBytecodeResponse} */ (
                 response.contractGetBytecodeResponse
@@ -161,7 +161,7 @@ export default class ContractByteCodeQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             contractGetBytecode: {
                 header,

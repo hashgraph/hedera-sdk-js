@@ -373,7 +373,7 @@ export default class Query extends Executable {
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         throw new Error("not implemented");
     }
 
@@ -402,7 +402,7 @@ export default class Query extends Executable {
      * @returns {HashgraphProto.proto.IQuery}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         throw new Error("not implemented");
     }
 
@@ -421,7 +421,7 @@ export default class Query extends Executable {
             };
         }
 
-        return this._onMakeRequest(header);
+        return this[symbols.onMakeRequest](header);
     }
 
     /**
@@ -452,7 +452,7 @@ export default class Query extends Executable {
             }
         }
 
-        return this._onMakeRequest(header);
+        return this[symbols.onMakeRequest](header);
     }
 
     /**
@@ -465,7 +465,7 @@ export default class Query extends Executable {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -499,7 +499,7 @@ export default class Query extends Executable {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [symbols.mapStatusError](request, response) {
         const { nodeTransactionPrecheckCode } =
-            this._mapResponseHeader(response);
+            this[symbols.mapResponseHeader](response);
 
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null

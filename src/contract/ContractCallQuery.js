@@ -264,7 +264,7 @@ export default class ContractCallQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const contractCallLocal =
             /** @type {HashgraphProto.proto.IContractCallLocalResponse} */ (
                 response.contractCallLocal
@@ -304,7 +304,7 @@ export default class ContractCallQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             contractCallLocal: {
                 header,

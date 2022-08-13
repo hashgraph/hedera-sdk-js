@@ -115,7 +115,7 @@ export default class CostQuery extends Executable {
      */
     [symbols.makeRequestAsync]() {
         return Promise.resolve(
-            this._query._onMakeRequest(
+            this._query[symbols.onMakeRequest](
                 /** @type {HashgraphProto.proto.IQueryHeader} */ (this._header)
             )
         );
@@ -155,7 +155,7 @@ export default class CostQuery extends Executable {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [symbols.mapResponse](response, nodeAccountId, request) {
-        const cost = this._query._mapResponseHeader(response).cost;
+        const cost = this._query[symbols.mapResponseHeader](response).cost;
         return Promise.resolve(
             Hbar.fromTinybars(/** @type {Long | number} */ (cost))
         );

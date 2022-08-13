@@ -70,7 +70,7 @@ export default class NetworkVersionInfoQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {HashgraphProto.proto.IResponseHeader}
      */
-    _mapResponseHeader(response) {
+    [symbols.mapResponseHeader](response) {
         const networkGetVersionInfo =
             /** @type {HashgraphProto.proto.INetworkGetVersionInfoResponse} */ (
                 response.networkGetVersionInfo
@@ -100,7 +100,7 @@ export default class NetworkVersionInfoQuery extends Query {
      * @param {HashgraphProto.proto.IQueryHeader} header
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _onMakeRequest(header) {
+    [symbols.onMakeRequest](header) {
         return {
             networkGetVersionInfo: {
                 header,
