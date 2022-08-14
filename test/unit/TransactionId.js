@@ -2,13 +2,14 @@ import { expect } from "chai";
 
 import { TransactionId, AccountId, Timestamp } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TransactionId", function () {
     it("[to|from]Bytes()", function () {
         let transactionId = TransactionId.fromString("1.2.3@4.5/6");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())[symbols.toProtobuf]()
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),
@@ -27,7 +28,7 @@ describe("TransactionId", function () {
         transactionId = TransactionId.fromString("1.2.3@4.5?scheduled/6");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())[symbols.toProtobuf]()
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),
@@ -46,7 +47,7 @@ describe("TransactionId", function () {
         transactionId = TransactionId.fromString("1.2.3@4.5");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())[symbols.toProtobuf]()
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),

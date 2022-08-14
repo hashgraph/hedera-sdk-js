@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import { TokenNftAllowance, TokenId, AccountId } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TokenNftAllowance", function () {
     it("toProtobuf() with serial numbers", function () {
@@ -18,10 +19,10 @@ describe("TokenNftAllowance", function () {
             allSerials: false,
         });
 
-        expect(allowance._toProtobuf()).to.deep.equal({
-            owner: ownerAccountId._toProtobuf(),
-            tokenId: tokenId._toProtobuf(),
-            spender: spenderAccountId._toProtobuf(),
+        expect(allowance[symbols.toProtobuf]()).to.deep.equal({
+            owner: ownerAccountId[symbols.toProtobuf](),
+            tokenId: tokenId[symbols.toProtobuf](),
+            spender: spenderAccountId[symbols.toProtobuf](),
             serialNumbers: [serial],
             approvedForAll: null,
         });
@@ -40,10 +41,10 @@ describe("TokenNftAllowance", function () {
             allSerials: true,
         });
 
-        expect(allowance._toProtobuf()).to.deep.equal({
-            owner: ownerAccountId._toProtobuf(),
-            tokenId: tokenId._toProtobuf(),
-            spender: spenderAccountId._toProtobuf(),
+        expect(allowance[symbols.toProtobuf]()).to.deep.equal({
+            owner: ownerAccountId[symbols.toProtobuf](),
+            tokenId: tokenId[symbols.toProtobuf](),
+            spender: spenderAccountId[symbols.toProtobuf](),
             serialNumbers: null,
             approvedForAll: { value: true },
         });

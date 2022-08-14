@@ -9,6 +9,7 @@ import {
     FileId,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("FileAppendTransaction", function () {
     it("setChunkSize()", function () {
@@ -37,54 +38,54 @@ describe("FileAppendTransaction", function () {
         // ).setChunkSize(1000);
 
         expect(transaction._transactionIds.list.length).to.be.equal(3);
-        expect(transaction._nodeAccountIds.list.length).to.be.equal(1);
+        expect(transaction[symbols.nodeAccountIds].list.length).to.be.equal(1);
 
-        let body = transaction._makeTransactionBody(nodeAccountId);
+        let body = transaction[symbols.makeTransactionBody](nodeAccountId);
 
-        expect(body.transactionID).to.deep.equal(transactionId._toProtobuf());
+        expect(body.transactionID).to.deep.equal(transactionId[symbols.toProtobuf]());
 
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[0]._toProtobuf()
+            transaction._transactionIds.list[0][symbols.toProtobuf]()
         );
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId[symbols.toProtobuf]());
         expect(body.transactionValidDuration).to.deep.equal({
             seconds: Long.fromNumber(120),
         });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.fileID).to.deep.equal(fileId[symbols.toProtobuf]());
         expect(body.fileAppend.contents.length).to.be.equal(1000);
         expect(body.fileAppend.contents[0]).to.be.equal(49);
 
         transaction._transactionIds.advance();
-        body = transaction._makeTransactionBody(nodeAccountId);
+        body = transaction[symbols.makeTransactionBody](nodeAccountId);
 
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[1]._toProtobuf()
+            transaction._transactionIds.list[1][symbols.toProtobuf]()
         );
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId[symbols.toProtobuf]());
         expect(body.transactionValidDuration).to.deep.equal({
             seconds: Long.fromNumber(120),
         });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.fileID).to.deep.equal(fileId[symbols.toProtobuf]());
         expect(body.fileAppend.contents.length).to.be.equal(1000);
         expect(body.fileAppend.contents[0]).to.be.equal(50);
 
         transaction._transactionIds.advance();
-        body = transaction._makeTransactionBody(nodeAccountId);
+        body = transaction[symbols.makeTransactionBody](nodeAccountId);
 
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[2]._toProtobuf()
+            transaction._transactionIds.list[2][symbols.toProtobuf]()
         );
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId[symbols.toProtobuf]());
         expect(body.transactionValidDuration).to.deep.equal({
             seconds: Long.fromNumber(120),
         });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.fileID).to.deep.equal(fileId[symbols.toProtobuf]());
         expect(body.fileAppend.contents.length).to.be.equal(1000);
         expect(body.fileAppend.contents[0]).to.be.equal(51);
     });

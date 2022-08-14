@@ -12,6 +12,7 @@ import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
 import { proto } from "@hashgraph/proto";
 import * as hex from "../../src/encoding/hex.js";
+import * as symbols from "../../src/Symbols.js";
 
 const ACCOUNT_INFO_QUERY_COST_RESPONSE = {
     cryptoGetInfo: {
@@ -55,6 +56,7 @@ describe("AccountInfoMocking", function () {
 
     it("payment transaction is correctly constructed", async function () {
         this.timeout(10000);
+
 
         ({ client, servers } = await Mocker.withResponses([
             [
@@ -347,7 +349,7 @@ describe("AccountInfoMocking", function () {
             );
 
             expect(transactionBody.transactionId).to.not.be.null;
-            const transactionId = TransactionId._fromProtobuf(
+            const transactionId = TransactionId[symbols.fromProtobuf](
                 transactionBody.transactionID
             ).toString();
             expect(transactionId).to.not.be.equal("");
@@ -433,7 +435,7 @@ describe("AccountInfoMocking", function () {
             );
 
             expect(transactionBody.transactionId).to.not.be.null;
-            const transactionId = TransactionId._fromProtobuf(
+            const transactionId = TransactionId[symbols.fromProtobuf](
                 transactionBody.transactionID
             ).toString();
             expect(transactionId).to.not.be.equal("");
@@ -613,7 +615,7 @@ describe("AccountInfoMocking", function () {
         // Sets the nodeAccountIds to a different list, but doesn't lock the list
         // this similates when `freezeWith()` sets the node account IDs to a list
         // without locking it, but this list overwritten when executing.
-        transaction._nodeAccountIds.setList([new AccountId(4)]);
+        transaction[symbols.nodeAccountIds].setList([new AccountId(4)]);
 
         await transaction.signWithOperator(client);
         await transaction.execute(client);

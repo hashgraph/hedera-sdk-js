@@ -5,8 +5,9 @@ import {
     Timestamp,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
-describe("TokenPauseTransaction", function () {
+describe("TokenUnpauseTransaction", function () {
     it("encodes to correct protobuf", function () {
         const transaction = new TokenPauseTransaction()
             .setTransactionId(
@@ -20,7 +21,7 @@ describe("TokenPauseTransaction", function () {
             .setTransactionMemo("random memo")
             .freeze();
 
-        const protobuf = transaction._makeTransactionBody();
+        const protobuf = transaction[symbols.makeTransactionBody]();
 
         expect(protobuf).to.deep.include({
             tokenPause: {

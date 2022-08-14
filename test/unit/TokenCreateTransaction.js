@@ -7,6 +7,7 @@ import {
     Timestamp,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TokenCreateTransaction", function () {
     it("encodes to correct protobuf", function () {
@@ -59,7 +60,7 @@ describe("TokenCreateTransaction", function () {
             .setTransactionMemo("random memo")
             .freeze();
 
-        const protobuf = transaction._makeTransactionBody();
+        const protobuf = transaction[symbols.makeTransactionBody]();
 
         expect(protobuf).to.deep.include({
             tokenCreation: {
@@ -73,12 +74,12 @@ describe("TokenCreateTransaction", function () {
                 freezeDefault: null,
                 customFees: [],
                 decimals: 7,
-                autoRenewAccount: autoRenewAccountId._toProtobuf(),
+                autoRenewAccount: autoRenewAccountId[symbols.toProtobuf](),
                 autoRenewPeriod: {
                     seconds: Long.fromValue(7776000),
                 },
                 expiry: null,
-                treasury: treasuryAccountId._toProtobuf(),
+                treasury: treasuryAccountId[symbols.toProtobuf](),
                 adminKey: {
                     ed25519: key1.publicKey.toBytesRaw(),
                 },

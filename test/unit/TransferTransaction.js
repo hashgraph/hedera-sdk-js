@@ -12,6 +12,7 @@ import {
     NftId,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TransferTransaction", function () {
     const tokenId1 = new TokenId(1, 1, 1);
@@ -188,7 +189,7 @@ describe("TransferTransaction", function () {
             transaction.toBytes()
         );
 
-        const data = transferTransaction._makeTransactionData();
+        const data = transferTransaction[symbols.makeTransactionData]();
 
         expect(data.transfers.accountAmounts).to.deep.equal([
             {

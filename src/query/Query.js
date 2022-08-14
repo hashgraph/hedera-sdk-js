@@ -284,19 +284,20 @@ export default class Query extends Executable {
 
         // Save the operator
         super[symbols.operator] =
-            super[symbols.operator] != null
-                ? super[symbols.operator]
+            this[symbols.operator] != null
+                ? this[symbols.operator]
                 : client._operator;
+        super[symbols.setOperatorAccountId](this[symbols.operator] != null ? this[symbols.operator].accountId : null);
 
         // If the payment transaction ID is not set
         if (this._paymentTransactionId == null) {
             // And payment is required
             if (this._isPaymentRequired()) {
                 // And the client has an operator
-                if (super[symbols.operator] != null) {
+                if (this[symbols.operator] != null) {
                     // Generate the payment transaction ID
                     this._paymentTransactionId = TransactionId.generate(
-                        super[symbols.operator].accountId
+                        this[symbols.operator].accountId
                     );
                 } else {
                     // If payment is required, but an operator did not exist, throw an error
@@ -368,7 +369,7 @@ export default class Query extends Executable {
                         this._paymentTransactionId
                     ),
                     node,
-                    this._isPaymentRequired() ? super[symbols.operator] : null,
+                    this._isPaymentRequired() ? this[symbols.operator] : null,
                     /** @type {Hbar} */ (cost)
                 )
             );
@@ -463,7 +464,7 @@ export default class Query extends Executable {
                         this._paymentTransactionId
                     ),
                     this[symbols.nodeAccountIds].current,
-                    this._isPaymentRequired() ? super[symbols.operator] : null,
+                    this._isPaymentRequired() ? this[symbols.operator] : null,
                     /** @type {Hbar} */ (this._queryPayment)
                 );
             }

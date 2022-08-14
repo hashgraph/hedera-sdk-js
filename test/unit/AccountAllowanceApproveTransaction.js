@@ -12,6 +12,7 @@ import {
     Transaction,
     TransactionId,
 } from "../../src/index.js";
+import * as symbols from "../../src/Symbols.js";
 
 describe("AccountAllowanceApproveTransaction", function () {
     it("should round trip from bytes and maintain order", function () {
@@ -53,45 +54,45 @@ describe("AccountAllowanceApproveTransaction", function () {
 
         transaction = Transaction.fromBytes(transaction.toBytes());
 
-        const data = transaction._makeTransactionData();
+        const data = transaction[symbols.makeTransactionData]();
 
         expect(data).to.deep.equal({
             cryptoAllowances: [
                 {
-                    owner: ownerAccountId._toProtobuf(),
+                    owner: ownerAccountId[symbols.toProtobuf](),
                     amount: hbarAmount.toTinybars(),
-                    spender: spenderAccountId1._toProtobuf(),
+                    spender: spenderAccountId1[symbols.toProtobuf](),
                 },
             ],
             nftAllowances: [
                 {
-                    owner: ownerAccountId._toProtobuf(),
+                    owner: ownerAccountId[symbols.toProtobuf](),
                     serialNumbers: [serialNumber1, serialNumber2],
-                    spender: spenderAccountId1._toProtobuf(),
-                    tokenId: tokenId2._toProtobuf(),
+                    spender: spenderAccountId1[symbols.toProtobuf](),
+                    tokenId: tokenId2[symbols.toProtobuf](),
                     approvedForAll: null,
                 },
                 {
-                    owner: ownerAccountId._toProtobuf(),
+                    owner: ownerAccountId[symbols.toProtobuf](),
                     serialNumbers: [serialNumber2],
-                    spender: spenderAccountId2._toProtobuf(),
-                    tokenId: tokenId2._toProtobuf(),
+                    spender: spenderAccountId2[symbols.toProtobuf](),
+                    tokenId: tokenId2[symbols.toProtobuf](),
                     approvedForAll: null,
                 },
                 {
-                    owner: ownerAccountId._toProtobuf(),
+                    owner: ownerAccountId[symbols.toProtobuf](),
                     serialNumbers: null,
-                    spender: spenderAccountId1._toProtobuf(),
-                    tokenId: tokenId1._toProtobuf(),
+                    spender: spenderAccountId1[symbols.toProtobuf](),
+                    tokenId: tokenId1[symbols.toProtobuf](),
                     approvedForAll: { value: true },
                 },
             ],
             tokenAllowances: [
                 {
-                    owner: ownerAccountId._toProtobuf(),
+                    owner: ownerAccountId[symbols.toProtobuf](),
                     amount: tokenAmount,
-                    spender: spenderAccountId1._toProtobuf(),
-                    tokenId: tokenId1._toProtobuf(),
+                    spender: spenderAccountId1[symbols.toProtobuf](),
+                    tokenId: tokenId1[symbols.toProtobuf](),
                 },
             ],
         });

@@ -1,6 +1,7 @@
 import { expect } from "chai";
 
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 import * as hex from "../../src/encoding/hex.js";
 import {
@@ -34,11 +35,11 @@ describe("EthereumTransaction", function () {
 
         transaction = Transaction.fromBytes(transaction.toBytes());
 
-        const data = transaction._makeTransactionData();
+        const data = transaction[symbols.makeTransactionData]();
 
         expect(data).to.deep.equal({
             ethereumData,
-            callData: callData._toProtobuf(),
+            callData: callData[symbols.toProtobuf](),
             maxGasAllowance: maxGasAllowance.toTinybars(),
         });
     });
@@ -61,7 +62,7 @@ describe("EthereumTransaction", function () {
 
         transaction = Transaction.fromBytes(transaction.toBytes());
 
-        const data = transaction._makeTransactionData();
+        const data = transaction[symbols.makeTransactionData]();
 
         expect(data).to.deep.equal({
             ethereumData,

@@ -14,6 +14,7 @@ import {
     TransactionReceipt,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TransactionReceipt", function () {
     it("[from|to]Bytes()", function () {
@@ -56,21 +57,21 @@ describe("TransactionReceipt", function () {
                 duplicates: [],
                 children: [],
             }).toBytes()
-        )._toProtobuf();
+        )[symbols.toProtobuf]();
 
         expect(receipt.receipt.status).to.deep.equal(status._code);
         expect(receipt.receipt.accountID).to.deep.equal(
-            accountId._toProtobuf()
+            accountId[symbols.toProtobuf]()
         );
         expect(receipt.receipt.contractID).to.deep.equal(
-            contractId._toProtobuf()
+            contractId[symbols.toProtobuf]()
         );
-        expect(receipt.receipt.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(receipt.receipt.fileID).to.deep.equal(fileId[symbols.toProtobuf]());
         expect(receipt.receipt.scheduleID).to.deep.equal(
-            scheduleId._toProtobuf()
+            scheduleId[symbols.toProtobuf]()
         );
-        expect(receipt.receipt.tokenID).to.deep.equal(tokenId._toProtobuf());
-        expect(receipt.receipt.topicID).to.deep.equal(topicId._toProtobuf());
+        expect(receipt.receipt.tokenID).to.deep.equal(tokenId[symbols.toProtobuf]());
+        expect(receipt.receipt.topicID).to.deep.equal(topicId[symbols.toProtobuf]());
         expect(receipt.receipt.topicRunningHash).to.deep.equal(
             topicRunningHash
         );
@@ -78,11 +79,11 @@ describe("TransactionReceipt", function () {
             topicSequenceNumber
         );
         expect(receipt.receipt.exchangeRate).to.deep.equal({
-            currentRate: exchangeRate._toProtobuf(),
+            currentRate: exchangeRate[symbols.toProtobuf](),
             nextRate: null,
         });
         expect(receipt.receipt.scheduledTransactionID).to.deep.equal(
-            scheduledTransactionId._toProtobuf()
+            scheduledTransactionId[symbols.toProtobuf]()
         );
         expect(receipt.receipt.serialNumbers).to.deep.equal(serials);
         expect(receipt.receipt.newTotalSupply).to.deep.equal(totalSupply);

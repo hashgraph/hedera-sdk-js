@@ -12,6 +12,7 @@ import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -141,23 +142,23 @@ describe("Transaction", function () {
 
         /** @type {proto.ITransactionBody} */
         const body1 = {
-            transactionID: transactionID._toProtobuf(),
-            nodeAccountID: nodeAccountID1._toProtobuf(),
+            transactionID: transactionID[symbols.toProtobuf](),
+            nodeAccountID: nodeAccountID1[symbols.toProtobuf](),
             transactionFee: Long.fromNumber(1),
             transactionValidDuration: { seconds: 120 },
             cryptoCreateAccount: {
-                key: key1.publicKey._toProtobufKey(),
+                key: key1.publicKey[symbols.toProtobufKey](),
             },
         };
 
         /** @type {proto.ITransactionBody} */
         const body2 = {
-            transactionID: transactionID._toProtobuf(),
-            nodeAccountID: nodeAccountID2._toProtobuf(),
+            transactionID: transactionID[symbols.toProtobuf](),
+            nodeAccountID: nodeAccountID2[symbols.toProtobuf](),
             transactionFee: Long.fromNumber(1),
             transactionValidDuration: { seconds: 120 },
             cryptoCreateAccount: {
-                key: key2.publicKey._toProtobufKey(),
+                key: key2.publicKey[symbols.toProtobufKey](),
             },
         };
 

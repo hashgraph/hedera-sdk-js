@@ -48,7 +48,6 @@ const signTransaction = Symbol();
 const buildNewTransactionIdList = Symbol();
 const buildTransactionAsync = Symbol();
 const buildTransaction = Symbol();
-const makeTransactionBody = Symbol();
 const setNodeAccountIdsFromClient = Symbol();
 
 /**
@@ -1207,10 +1206,10 @@ export default class Transaction extends Executable {
         );
 
         // If the client has an operaator, sign this request with the operator
-        if (super[symbols.operator] != null) {
+        if (this[symbols.operator] != null) {
             await this.signWith(
-                super[symbols.operator].publicKey,
-                super[symbols.operator].transactionSigner
+                this[symbols.operator].publicKey,
+                this[symbols.operator].transactionSigner
             );
         }
     }
@@ -1504,7 +1503,7 @@ export default class Transaction extends Executable {
      * @returns {HashgraphProto.proto.ISignedTransaction}
      */
     [symbols.makeSignedTransaction](nodeId) {
-        const body = this[makeTransactionBody](nodeId);
+        const body = this[symbols.makeTransactionBody](nodeId);
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
@@ -1523,7 +1522,7 @@ export default class Transaction extends Executable {
      * @param {?AccountId} nodeId
      * @returns {HashgraphProto.proto.ITransactionBody}
      */
-    [makeTransactionBody](nodeId) {
+    [symbols.makeTransactionBody](nodeId) {
         return {
             [this[symbols.getTransactionDataCase]()]:
                 this[symbols.makeTransactionData](),

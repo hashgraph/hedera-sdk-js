@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import { ContractId, DelegateContractId, Key } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("DelegateContractId", function () {
     it("constructors", function () {
@@ -23,14 +24,14 @@ describe("DelegateContractId", function () {
         const idProtoKey = {
             delegatableContractId: idProto,
         };
-        const keyToId = Key._fromProtobufKey(idProtoKey);
+        const keyToId = Key[symbols.fromProtobufKey](idProtoKey);
 
         expect(id.toString()).to.be.equal("1.2.3");
 
-        expect(id._toProtobuf()).to.deep.equal(idProto);
-        expect(id._toProtobufKey()).to.deep.equal(idProtoKey);
+        expect(id[symbols.toProtobuf]()).to.deep.equal(idProto);
+        expect(id[symbols.toProtobufKey]()).to.deep.equal(idProtoKey);
         expect(
-            DelegateContractId._fromProtobuf(idProto).toString()
+            DelegateContractId[symbols.fromProtobuf](idProto).toString()
         ).to.deep.equal("1.2.3");
         expect(keyToId.toString()).to.deep.equal("1.2.3");
         expect(keyToId instanceof DelegateContractId).to.be.true;

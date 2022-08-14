@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import { TokenAllowance, AccountId, TokenId } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TokenAllowance", function () {
     it("toProtobuf()", function () {
@@ -17,10 +18,10 @@ describe("TokenAllowance", function () {
             amount: tokenAmount,
         });
 
-        expect(allowance._toProtobuf()).to.deep.equal({
-            owner: ownerAccountId._toProtobuf(),
-            tokenId: tokenId._toProtobuf(),
-            spender: spenderAccountId._toProtobuf(),
+        expect(allowance[symbols.toProtobuf]()).to.deep.equal({
+            owner: ownerAccountId[symbols.toProtobuf](),
+            tokenId: tokenId[symbols.toProtobuf](),
+            spender: spenderAccountId[symbols.toProtobuf](),
             amount: tokenAmount,
         });
     });

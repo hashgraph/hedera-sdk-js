@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { ContractId } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("ContractId", function () {
     const evmAddress = "0011223344556677889900112233445577889900";
@@ -33,7 +34,7 @@ describe("ContractId", function () {
     it("toProtobuf() with evmAddres", function () {
         const emvAddresContractId = ContractId.fromEvmAddress(1, 2, evmAddress);
 
-        expect(emvAddresContractId._toProtobuf()).to.deep.equal({
+        expect(emvAddresContractId[symbols.toProtobuf]()).to.deep.equal({
             shardNum: Long.fromNumber(1),
             realmNum: Long.fromNumber(2),
             contractNum: Long.ZERO,
@@ -44,7 +45,7 @@ describe("ContractId", function () {
     it("toProtobuf() with evmAddress", function () {
         const contractId = new ContractId(1, 2, 3);
 
-        expect(contractId._toProtobuf()).to.deep.equal({
+        expect(contractId[symbols.toProtobuf]()).to.deep.equal({
             shardNum: Long.fromNumber(1),
             realmNum: Long.fromNumber(2),
             contractNum: Long.fromNumber(3),

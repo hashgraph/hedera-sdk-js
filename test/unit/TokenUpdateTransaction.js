@@ -6,6 +6,7 @@ import {
     Timestamp,
 } from "../../src/index.js";
 import Long from "long";
+import * as symbols from "../../src/Symbols.js";
 
 describe("TokenUpdateTransaction", function () {
     it("encodes to correct protobuf", function () {
@@ -57,7 +58,7 @@ describe("TokenUpdateTransaction", function () {
             .setTransactionMemo("random memo")
             .freeze();
 
-        const protobuf = transaction._makeTransactionBody();
+        const protobuf = transaction[symbols.makeTransactionBody]();
 
         expect(protobuf).to.deep.include({
             tokenUpdate: {
@@ -71,10 +72,10 @@ describe("TokenUpdateTransaction", function () {
                 memo: {
                     value: "memo",
                 },
-                autoRenewAccount: autoRenewAccountId._toProtobuf(),
+                autoRenewAccount: autoRenewAccountId[symbols.toProtobuf](),
                 autoRenewPeriod: null,
                 expiry: null,
-                treasury: treasuryAccountId._toProtobuf(),
+                treasury: treasuryAccountId[symbols.toProtobuf](),
                 adminKey: {
                     ed25519: key1.publicKey.toBytesRaw(),
                 },

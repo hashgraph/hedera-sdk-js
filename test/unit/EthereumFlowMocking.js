@@ -5,6 +5,7 @@ import * as rlp from "@ethersproject/rlp";
 import { proto } from "@hashgraph/proto";
 import Mocker from "./Mocker.js";
 import { EthereumFlow, FileId } from "../../src/index.js";
+import * as symbols from "../../src/Symbols.js";
 
 const TRANSACTION_RECEIPT_SUCCESS_RESPONSE = {
     transactionGetReceipt: {
@@ -142,7 +143,7 @@ describe("EthereumFlowMocking", function () {
                             },
                             receipt: {
                                 status: proto.ResponseCodeEnum.SUCCESS,
-                                fileID: callDataFileId._toProtobuf(),
+                                fileID: callDataFileId[symbols.toProtobuf](),
                             },
                         },
                     },
@@ -184,7 +185,7 @@ describe("EthereumFlowMocking", function () {
                             encodedWithoutCallData
                         );
                         expect(
-                            FileId._fromProtobuf(
+                            FileId[symbols.fromProtobuf](
                                 ethereumTransaction.callData
                             ).toString()
                         ).to.equal(callDataFileId.toString());
