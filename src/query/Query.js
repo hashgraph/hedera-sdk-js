@@ -63,6 +63,7 @@ export default class Query extends Executable {
         /**
          * The payment transaction ID
          *
+         * @protected
          * @type {?TransactionId}
          */
         this._paymentTransactionId = null;
@@ -70,6 +71,7 @@ export default class Query extends Executable {
         /**
          * The payment transactions list where each index points to a different node
          *
+         * @protected
          * @type {HashgraphProto.proto.ITransaction[]}
          */
         this._paymentTransactions = [];
@@ -78,6 +80,7 @@ export default class Query extends Executable {
          * The amount being paid to the node for this query.
          * A user can set this field explicitly, or we'll query the value during execution.
          *
+         * @protected
          * @type {?Hbar}
          */
         this._queryPayment = null;
@@ -88,6 +91,7 @@ export default class Query extends Executable {
          * we query the actual cost of the query and the cost is greater than the max query payment
          * we'll throw a `MaxQueryPaymentExceeded` error.
          *
+         * @protected
          * @type {?Hbar}
          */
         this._maxQueryPayment = null;
@@ -97,6 +101,7 @@ export default class Query extends Executable {
          * uses comes from the payment transaction ID, but that field is not set if this query is free.
          * For those occasions we use this timestamp field generated at query construction instead.
          *
+         * @protected
          * @type {number}
          */
         this._timestamp = Date.now();
@@ -138,7 +143,9 @@ export default class Query extends Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.Query.encode(this._makeRequest()).finish();
+        return HashgraphProto.proto.Query.encode(
+            this[symbols.makeRequest]()
+        ).finish();
     }
 
     /**
@@ -415,7 +422,7 @@ export default class Query extends Executable {
      * @internal
      * @returns {HashgraphProto.proto.IQuery}
      */
-    _makeRequest() {
+    [symbols.makeRequest]() {
         /** @type {HashgraphProto.proto.IQueryHeader} */
         let header = {};
 

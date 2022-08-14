@@ -38,3 +38,4 @@ export const operatorAccountId = Symbol();
 export const setOperatorAccountId = Symbol();
 export const requestToBytes = Symbol();
 export const responseToBytes = Symbol();
+export const makeRequest = Symbol();
