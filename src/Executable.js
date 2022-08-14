@@ -127,6 +127,12 @@ export default class Executable {
          * @type {number | null}
          */
         this[symbols.grpcDeadline] = null;
+
+        /**
+         * @internal
+         * @type {AccountId | null}
+         */
+        this[symbols.operatorAccountId] = null;
     }
 
     /**
@@ -471,12 +477,24 @@ export default class Executable {
      * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
      * @returns {this}
      */
-    _setOperatorWith(accountId, publicKey, transactionSigner) {
+    [symbols.setOperatorWith](accountId, publicKey, transactionSigner) {
         this[symbols.operator] = {
             transactionSigner,
             accountId,
             publicKey,
         };
+        return this;
+    }
+
+    /**
+     * A helper method for setting the operator on the request
+     *
+     * @internal
+     * @param {AccountId | null} accountId
+     * @returns {this}
+     */
+    [symbols.setOperatorAccountId](accountId) {
+        this[symbols.operatorAccountId] = accountId;
         return this;
     }
 

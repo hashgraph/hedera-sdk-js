@@ -26,6 +26,7 @@ import AccountInfoQuery from "./account/AccountInfoQuery.js";
 import AccountRecordsQuery from "./account/AccountRecordsQuery.js";
 import TransactionId from "./transaction/TransactionId.js";
 import * as util from "./util.js";
+import * as symbols from "./Symbols.js";
 
 /**
  * @template RequestT
@@ -248,7 +249,7 @@ export default class Wallet {
      * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
-        transaction._freezeWithAccountId(this.accountId);
+        transaction[symbols.setOperatorAccountId](this.accountId);
 
         if (transaction.transactionId == null) {
             transaction.setTransactionId(
@@ -293,7 +294,7 @@ export default class Wallet {
         }
 
         return this.provider.call(
-            request._setOperatorWith(
+            request[symbols.setOperatorWith](
                 this.accountId,
                 this.publicKey,
                 this.signer

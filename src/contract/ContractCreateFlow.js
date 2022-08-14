@@ -24,6 +24,7 @@ import FileDeleteTransaction from "../file/FileDeleteTransaction.js";
 import ContractCreateTransaction from "./ContractCreateTransaction.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
+import * as symbols from "../Symbols.js";
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -55,12 +56,12 @@ export default class ContractCreateFlow {
         this._contractCreate = new ContractCreateTransaction();
 
         /**
-         * Read `Transaction._signerPublicKeys`
+         * Read `Transaction[symbols.signerPublicKeys]`
          *
          * @internal
          * @type {Set<string>}
          */
-        this._signerPublicKeys = new Set();
+        this[symbols.signerPublicKeys] = new Set();
 
         /**
          * Read `Transaction._publicKeys`
@@ -327,7 +328,7 @@ export default class ContractCreateFlow {
         const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
 
-        if (this._signerPublicKeys.has(publicKeyHex)) {
+        if (this[symbols.signerPublicKeys].has(publicKeyHex)) {
             // this public key has already signed this transaction
             return this;
         }

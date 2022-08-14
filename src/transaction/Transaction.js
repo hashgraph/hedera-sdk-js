@@ -49,6 +49,7 @@ const buildNewTransactionIdList = Symbol();
 const buildTransactionAsync = Symbol();
 const buildTransaction = Symbol();
 const makeTransactionBody = Symbol();
+const setNodeAccountIdsFromClient = Symbol();
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -108,7 +109,7 @@ export default class Transaction extends Executable {
          * @internal
          * @type {List<HashgraphProto.proto.ITransaction | null>}
          */
-        this._transactions = new List();
+        this[symbols.transactions] = new List();
 
         /**
          * List of proto transactions that have been built from this SDK
@@ -121,7 +122,10 @@ export default class Transaction extends Executable {
          * @internal
          * @type {List<HashgraphProto.proto.ISignedTransaction>}
          */
-        this._signedTransactions = new List();
+        this[symbols.signedTransactions] =
+            /** @type {List<HashgraphProto.proto.ISignedTransaction>} */ (
+                new List()
+            );
 
         /**
          * Set of public keys (as string) who have signed this transaction so
@@ -130,7 +134,7 @@ export default class Transaction extends Executable {
          * @internal
          * @type {Set<string>}
          */
-        this._signerPublicKeys = new Set();
+        this[symbols.signerPublicKeys] = /** @type {Set<string>} */ (new Set());
 
         /**
          * The transaction valid duration
@@ -205,6 +209,12 @@ export default class Transaction extends Executable {
          * @type {?boolean}
          */
         this._regenerateTransactionId = null;
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this._signOnDemand = false;
     }
 
     /**
@@ -412,12 +422,14 @@ export default class Transaction extends Executable {
 
         // Set the transactions accordingly, but don't lock the list because transactions can
         // be regenerated if more signatures are added
-        transaction._transactions.setList(transactions);
+        transaction[symbols.transactions].setList(transactions);
 
         // Set the signed transactions accordingly, and lock the list since signed transaction
         // will not be regenerated. Although, they can be manipulated if for instance more
         // signatures are added
-        transaction._signedTransactions.setList(signedTransactions).setLocked();
+        transaction[symbols.signedTransactions]
+            .setList(signedTransactions)
+            .setLocked();
 
         // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
         // be regenerated if we're deserializing a request from bytes
@@ -449,7 +461,7 @@ export default class Transaction extends Executable {
                 signedTransaction.sigMap.sigPair != null
             ) {
                 for (const sigPair of signedTransaction.sigMap.sigPair) {
-                    transaction._signerPublicKeys.add(
+                    transaction[symbols.signerPublicKeys].add(
                         hex.encode(
                             /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
                         )
@@ -658,20 +670,20 @@ export default class Transaction extends Executable {
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
         // support that in the protobuf. this means that we would fail
-        // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
+        // to re-inflate [this[symbols.signerPublicKeys]] during [fromBytes] if we used DER
         // prefixes here
         const publicKeyHex = hex.encode(publicKeyData);
 
-        if (this._signerPublicKeys.has(publicKeyHex)) {
+        if (this[symbols.signerPublicKeys].has(publicKeyHex)) {
             // this public key has already signed this transaction
             return this;
         }
 
         // If we add a new signer, then we need to re-create all transactions
-        this._transactions.clear();
+        this[symbols.transactions].clear();
 
         // Save the current public key so we don't attempt to sign twice
-        this._signerPublicKeys.add(publicKeyHex);
+        this[symbols.signerPublicKeys].add(publicKeyHex);
 
         // If signing on demand is enabled we will save the public key and signer and return
         if (this._signOnDemand) {
@@ -690,7 +702,7 @@ export default class Transaction extends Executable {
         this[symbols.nodeAccountIds].setLocked();
 
         // Sign each signed transatcion
-        for (const signedTransaction of this._signedTransactions.list) {
+        for (const signedTransaction of this[symbols.signedTransactions].list) {
             const bodyBytes = /** @type {Uint8Array} */ (
                 signedTransaction.bodyBytes
             );
@@ -763,25 +775,25 @@ export default class Transaction extends Executable {
         const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
 
-        if (this._signerPublicKeys.has(publicKeyHex)) {
+        if (this[symbols.signerPublicKeys].has(publicKeyHex)) {
             // this public key has already signed this transaction
             return this;
         }
 
         // Transactions will have to be regenerated
-        this._transactions.clear();
+        this[symbols.transactions].clear();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
         this[symbols.nodeAccountIds].setLocked();
-        this._signedTransactions.setLocked();
+        this[symbols.signedTransactions].setLocked();
 
         // Add the signature to the signed transaction list. This is a copy paste
         // of `.signWith()`, but it really shouldn't be if `_signedTransactions.list`
         // must be a length of one.
         // FIXME: Remove unnecessary for loop.
-        for (const transaction of this._signedTransactions.list) {
+        for (const transaction of this[symbols.signedTransactions].list) {
             if (transaction.sigMap == null) {
                 transaction.sigMap = {};
             }
@@ -795,7 +807,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        this._signerPublicKeys.add(publicKeyHex);
+        this[symbols.signerPublicKeys].add(publicKeyHex);
         this._publicKeys.push(publicKey);
         this._transactionSigners.push(null);
 
@@ -850,8 +862,8 @@ export default class Transaction extends Executable {
         await this[buildAllTransactionsAsync]();
 
         // Lock transaction IDs, and node account IDs
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
+        this[symbols.transactions].setLocked();
+        this[symbols.signedTransactions].setLocked();
 
         // Construct a signature map from this transaction
         return SignatureMap._fromTransaction(this);
@@ -862,7 +874,10 @@ export default class Transaction extends Executable {
      * FIXME: Remove this?
      */
     [privateSetTransactionId]() {
-        if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
+        if (
+            this[symbols.operatorAccountId] == null &&
+            this._transactionIds.isEmpty
+        ) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
             );
@@ -874,7 +889,7 @@ export default class Transaction extends Executable {
      *
      * @param {?import("../client/Client.js").default<Channel, *>} client
      */
-    _setNodeAccountIds(client) {
+    [setNodeAccountIdsFromClient](client) {
         if (!this[symbols.nodeAccountIds].isEmpty) {
             return;
         }
@@ -896,11 +911,11 @@ export default class Transaction extends Executable {
      * @private
      */
     [buildSignedTransactions]() {
-        if (this._signedTransactions.locked) {
+        if (this[symbols.signedTransactions].locked) {
             return;
         }
 
-        this._signedTransactions.setList(
+        this[symbols.signedTransactions].setList(
             this[symbols.nodeAccountIds].list.map((nodeId) =>
                 this[symbols.makeSignedTransaction](nodeId)
             )
@@ -918,11 +933,12 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @protected
      * @param {?AccountId} accountId
      */
     _freezeWithAccountId(accountId) {
-        if (this._operatorAccountId == null) {
-            this._operatorAccountId = accountId;
+        if (this[symbols.operatorAccountId] == null) {
+            this[symbols.operatorAccountId] = accountId;
         }
     }
 
@@ -964,7 +980,7 @@ export default class Transaction extends Executable {
                 : this._regenerateTransactionId;
 
         // Set the node account IDs via client
-        this._setNodeAccountIds(client);
+        this[setNodeAccountIdsFromClient](client);
 
         // Make sure a transaction ID or operator is set.
         this[privateSetTransactionId]();
@@ -1047,7 +1063,7 @@ export default class Transaction extends Executable {
         return HashgraphProto.proto.TransactionList.encode({
             transactionList:
                 /** @type {HashgraphProto.proto.ITransaction[]} */ (
-                    this._transactions.list
+                    this[symbols.transactions].list
                 ),
         }).finish();
     }
@@ -1073,14 +1089,14 @@ export default class Transaction extends Executable {
         await this[buildAllTransactionsAsync]();
 
         // Lock transaction IDs, and node account IDs
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
+        this[symbols.transactions].setLocked();
+        this[symbols.signedTransactions].setLocked();
 
         // Construct and encode the transaction list
         return HashgraphProto.proto.TransactionList.encode({
             transactionList:
                 /** @type {HashgraphProto.proto.ITransaction[]} */ (
-                    this._transactions.list
+                    this[symbols.transactions].list
                 ),
         }).finish();
     }
@@ -1100,13 +1116,13 @@ export default class Transaction extends Executable {
 
         await this[buildAllTransactionsAsync]();
 
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
+        this[symbols.transactions].setLocked();
+        this[symbols.signedTransactions].setLocked();
 
         return sha384.digest(
             /** @type {Uint8Array} */ (
                 /** @type {HashgraphProto.proto.ITransaction} */ (
-                    this._transactions.get(0)
+                    this[symbols.transactions].get(0)
                 ).signedTransactionBytes
             )
         );
@@ -1136,7 +1152,7 @@ export default class Transaction extends Executable {
      * @returns {boolean}
      */
     isFrozen() {
-        return this._signedTransactions.length > 0;
+        return this[symbols.signedTransactions].length > 0;
     }
 
     /**
@@ -1184,10 +1200,11 @@ export default class Transaction extends Executable {
 
         // Set the operator if the client has one
         super[symbols.operator] = client != null ? client._operator : null;
-        this._operatorAccountId =
+        super[symbols.setOperatorAccountId](
             client != null && client._operator != null
                 ? client._operator.accountId
-                : null;
+                : null
+        );
 
         // If the client has an operaator, sign this request with the operator
         if (super[symbols.operator] != null) {
@@ -1216,7 +1233,7 @@ export default class Transaction extends Executable {
         if (!this._signOnDemand) {
             this[buildTransaction](index);
             return /** @type {HashgraphProto.proto.ITransaction} */ (
-                this._transactions.get(index)
+                this[symbols.transactions].get(index)
             );
         }
 
@@ -1271,12 +1288,15 @@ export default class Transaction extends Executable {
      * @private
      */
     [buildNewTransactionIdList]() {
-        if (this._transactionIds.locked || this._operatorAccountId == null) {
+        if (
+            this._transactionIds.locked ||
+            this[symbols.operatorAccountId] == null
+        ) {
             return;
         }
 
         const transactionId = TransactionId.withValidStart(
-            this._operatorAccountId,
+            this[symbols.operatorAccountId],
             Timestamp.generate()
         );
 
@@ -1289,7 +1309,7 @@ export default class Transaction extends Executable {
      * @private
      */
     [buildAllTransactions]() {
-        for (let i = 0; i < this._signedTransactions.length; i++) {
+        for (let i = 0; i < this[symbols.signedTransactions].length; i++) {
             this[buildTransaction](i);
         }
     }
@@ -1310,12 +1330,14 @@ export default class Transaction extends Executable {
 
         this[buildSignedTransactions]();
 
-        if (this._transactions.locked) {
+        if (this[symbols.transactions].locked) {
             return;
         }
 
-        for (let i = 0; i < this._signedTransactions.length; i++) {
-            this._transactions.push(await this[buildTransactionAsync]());
+        for (let i = 0; i < this[symbols.signedTransactions].length; i++) {
+            this[symbols.transactions].push(
+                await this[buildTransactionAsync]()
+            );
         }
     }
 
@@ -1326,17 +1348,17 @@ export default class Transaction extends Executable {
      * @param {number} index
      */
     [buildTransaction](index) {
-        if (this._transactions.length < index) {
-            for (let i = this._transactions.length; i < index; i++) {
-                this._transactions.push(null);
+        if (this[symbols.transactions].length < index) {
+            for (let i = this[symbols.transactions].length; i < index; i++) {
+                this[symbols.transactions].push(null);
             }
         }
 
-        this._transactions.setIfAbsent(index, () => {
+        this[symbols.transactions].setIfAbsent(index, () => {
             return {
                 signedTransactionBytes:
                     HashgraphProto.proto.SignedTransaction.encode(
-                        this._signedTransactions.get(index)
+                        this[symbols.signedTransactions].get(index)
                     ).finish(),
             };
         });
@@ -1570,8 +1592,8 @@ export default class Transaction extends Executable {
     [symbols.isFrozen]() {
         return (
             this._signOnDemand ||
-            this._signedTransactions.length > 0 ||
-            this._transactions.length > 0
+            this[symbols.signedTransactions].length > 0 ||
+            this[symbols.transactions].length > 0
         );
     }
 

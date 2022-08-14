@@ -108,7 +108,8 @@ export default class PublicKey extends Key {
             transaction.freeze();
         }
 
-        for (const signedTransaction of transaction._signedTransactions.list) {
+        for (const signedTransaction of transaction[symbols.signedTransactions]
+            .list) {
             if (
                 signedTransaction.sigMap != null &&
                 signedTransaction.sigMap.sigPair != null

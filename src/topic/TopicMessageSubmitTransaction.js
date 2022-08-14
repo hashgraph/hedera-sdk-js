@@ -248,9 +248,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         // Hack around the locked list. Should refactor a bit to remove such code
         this._transactionIds.locked = false;
 
-        this._transactions.clear();
+        this[symbols.transactions].clear();
         this._transactionIds.clear();
-        this._signedTransactions.clear();
+        this[symbols.signedTransactions].clear();
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._chunkInfo = {
@@ -263,7 +263,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             this._transactionIds.advance();
 
             for (const nodeAccountId of this[symbols.nodeAccountIds].list) {
-                this._signedTransactions.push(
+                this[symbols.signedTransactions].push(
                     this[symbols.makeSignedTransaction](nodeAccountId)
                 );
             }

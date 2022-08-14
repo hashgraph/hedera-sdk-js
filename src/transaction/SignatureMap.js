@@ -39,7 +39,8 @@ export default class SignatureMap extends ObjectMap {
         const signatures = new SignatureMap();
 
         for (let i = 0; i < transaction[symbols.nodeAccountIds].length; i++) {
-            const sigMap = transaction._signedTransactions.get(i).sigMap;
+            const sigMap =
+                transaction[symbols.signedTransactions].get(i).sigMap;
 
             if (sigMap != null) {
                 signatures._set(
