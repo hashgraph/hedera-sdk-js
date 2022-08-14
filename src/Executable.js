@@ -416,7 +416,7 @@ export default class Executable {
      * @returns {Uint8Array}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _requestToBytes(request) {
+    [symbols.requestToBytes](request) {
         throw new Error("not implemented");
     }
 
@@ -428,7 +428,7 @@ export default class Executable {
      * @returns {Uint8Array}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _responseToBytes(response) {
+    [symbols.responseToBytes](response) {
         throw new Error("not implemented");
     }
 
@@ -640,7 +640,7 @@ export default class Executable {
                     `[${this[
                         symbols.getLogId
                     ]()}] sending protobuf ${hex.encode(
-                        this._requestToBytes(request)
+                        this[symbols.requestToBytes](request)
                     )}`
                 );
                 promises.push(this[symbols.execute](channel, request));
@@ -677,7 +677,7 @@ export default class Executable {
 
             Logger.trace(
                 `[${this[symbols.getLogId]()}] sending protobuf ${hex.encode(
-                    this._responseToBytes(response)
+                    this[symbols.responseToBytes](response)
                 )}`
             );
 

@@ -196,16 +196,16 @@ export default class CostQuery extends Executable {
      * @param {HashgraphProto.proto.Query} request
      * @returns {Uint8Array}
      */
-    _requestToBytes(request) {
-        return this._query._requestToBytes(request);
+    [symbols.requestToBytes](request) {
+        return this._query[symbols.requestToBytes](request);
     }
 
     /**
      * @param {HashgraphProto.proto.Response} response
      * @returns {Uint8Array}
      */
-    _responseToBytes(response) {
-        return this._query._responseToBytes(response);
+    [symbols.responseToBytes](response) {
+        return this._query[symbols.responseToBytes](response);
     }
 }
 

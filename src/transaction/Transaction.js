@@ -1652,7 +1652,7 @@ export default class Transaction extends Executable {
      * @param {HashgraphProto.proto.Transaction} request
      * @returns {Uint8Array}
      */
-    _requestToBytes(request) {
+    [symbols.requestToBytes](request) {
         return HashgraphProto.proto.Transaction.encode(request).finish();
     }
 
@@ -1660,7 +1660,7 @@ export default class Transaction extends Executable {
      * @param {HashgraphProto.proto.TransactionResponse} response
      * @returns {Uint8Array}
      */
-    _responseToBytes(response) {
+    [symbols.responseToBytes](response) {
         return HashgraphProto.proto.TransactionResponse.encode(
             response
         ).finish();

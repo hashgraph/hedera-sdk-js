@@ -542,7 +542,7 @@ export default class Query extends Executable {
      * @param {HashgraphProto.proto.Query} request
      * @returns {Uint8Array}
      */
-    _requestToBytes(request) {
+    [symbols.requestToBytes](request) {
         return HashgraphProto.proto.Query.encode(request).finish();
     }
 
@@ -550,7 +550,7 @@ export default class Query extends Executable {
      * @param {HashgraphProto.proto.Response} response
      * @returns {Uint8Array}
      */
-    _responseToBytes(response) {
+    [symbols.responseToBytes](response) {
         return HashgraphProto.proto.Response.encode(response).finish();
     }
 }
