@@ -180,7 +180,7 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _shouldRetry(request, response) {
+    [symbols.shouldRetry](request, response) {
         const { nodeTransactionPrecheckCode } =
             this[symbols.mapResponseHeader](response);
 

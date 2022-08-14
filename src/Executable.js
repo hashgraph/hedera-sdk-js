@@ -440,7 +440,7 @@ export default class Executable {
      * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _shouldRetry(request, response) {
+    [symbols.shouldRetry](request, response) {
         throw new Error("not implemented");
     }
 
@@ -671,7 +671,10 @@ export default class Executable {
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
-            const [err, shouldRetry] = this._shouldRetry(request, response);
+            const [err, shouldRetry] = this[symbols.shouldRetry](
+                request,
+                response
+            );
             if (err != null) {
                 persistentError = err;
             }

@@ -29,3 +29,4 @@ export const maxBackoff = Symbol();
 export const operator = Symbol();
 export const requestTimeout = Symbol();
 export const grpcDeadline = Symbol();
+export const shouldRetry = Symbol();

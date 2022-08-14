@@ -133,8 +133,8 @@ export default class CostQuery extends Executable {
      * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _shouldRetry(request, response) {
-        return this._query._shouldRetry(request, response);
+    [symbols.shouldRetry](request, response) {
+        return this._query[symbols.shouldRetry](request, response);
     }
 
     /**

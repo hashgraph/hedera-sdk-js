@@ -169,7 +169,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {HashgraphProto.proto.IResponse} response
      * @returns {[Status, ExecutionState]}
      */
-    _shouldRetry(request, response) {
+    [symbols.shouldRetry](request, response) {
         const { nodeTransactionPrecheckCode } =
             this[symbols.mapResponseHeader](response);
 
