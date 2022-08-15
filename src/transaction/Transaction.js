@@ -1445,23 +1445,6 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Get the current node account ID
-     *
-     * @override
-     * @internal
-     * @returns {AccountId}
-     */
-    _getNodeAccountId() {
-        if (this._nodeAccountIds.isEmpty) {
-            throw new Error(
-                "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
-            );
-        }
-
-        return this._nodeAccountIds.current;
-    }
-
-    /**
      * Make a signed tranaction given a node account ID
      *
      * @internal
