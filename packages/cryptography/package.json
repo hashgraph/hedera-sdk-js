@@ -69,6 +69,17 @@
         "expo-crypto": "^10.1.2",
         "expo-random": "^12.1.2"
     },
+    "peerDependenciesMeta": {
+        "expo": {
+            "optional": true
+        },
+        "expo-crypto": {
+            "optional": true
+        },
+        "expo-random": {
+            "optional": true
+        }
+    },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.17.9",
