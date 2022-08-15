@@ -56,19 +56,19 @@ async function main() {
     }
 
     await sync();
-    
+
     const newKey = PrivateKey.generate();
-    
+
     console.log(`private key = ${newKey.toString()}`);
     console.log(`public key = ${newKey.publicKey.toString()}`);
-    
+
     const response = await new AccountCreateTransaction()
         .setInitialBalance(10) // 10 h
         .setKey(newKey.publicKey)
         .execute(client);
-    
+
     const receipt = await response.getReceipt(client);
-    
+
     console.log(`account id = ${receipt.accountId.toString()}`);
 }
 
