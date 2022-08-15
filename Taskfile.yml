@@ -31,12 +31,12 @@ tasks:
     docs:
         cmds:
             - ./node_modules/.bin/typedoc
-                --excludeInternal 
-                --excludePrivate 
-                --excludeProtected 
-                --out docs 
-                --validation.invalidLink 
-                --entryPoints src/index.js src/browser.js src/native.js
+              --excludeInternal
+              --excludePrivate
+              --excludeProtected
+              --out docs
+              --validation.invalidLink
+              --entryPoints src/index.js src/browser.js src/native.js
 
     "install:deps":
         run: once
@@ -45,25 +45,24 @@ tasks:
 
     "install:cryptography:local":
         cmds:
-          - task: "install:deps"
-          - task: "cryptography:build"
-          - ./node_modules/.bin/yalc add @hashgraph/cryptography > /dev/null
+            - task: "install:deps"
+            - task: "cryptography:build"
+            - ./node_modules/.bin/yalc add @hashgraph/cryptography > /dev/null
         status:
-          - ./check_yalc_dep.sh @hashgraph/cryptography
+            - ./check_yalc_dep.sh @hashgraph/cryptography
 
     "install:proto:local":
         cmds:
-          - task: "install:deps"
-          - task: "proto:build"
-          - ./node_modules/.bin/yalc add @hashgraph/proto > /dev/null
+            - task: "install:deps"
+            - task: "proto:build"
+            - ./node_modules/.bin/yalc add @hashgraph/proto > /dev/null
         status:
-          - ./check_yalc_dep.sh @hashgraph/proto
-
+            - ./check_yalc_dep.sh @hashgraph/proto
 
     install:
         deps:
-          - "install:cryptography:local"
-          - "install:proto:local"
+            - "install:cryptography:local"
+            - "install:proto:local"
         cmds:
             - pnpm i > /dev/null
 
@@ -102,7 +101,7 @@ tasks:
 
     "lint:dpdm":
         cmds:
-           # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
+            # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
             - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
 
     "lint:format":
@@ -133,7 +132,12 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 report
+
+    "test:unit:codecov":
+        cmds:
+           - ./node_modules/.bin/codecov
 
     "test:unit:browser":
         cmds:
@@ -145,7 +149,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
     "update:proto":
         deps:

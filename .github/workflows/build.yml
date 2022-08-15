@@ -92,3 +92,6 @@ jobs:
 
       - name: Unit Test @hashgraph/sdk
         run: task test:unit
+
+      - name: Codecov @hashgraph/sdk
+        run: task test:unit:codecov
