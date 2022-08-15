@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.18.0
 
+### Added
+
+ * `Mnemonic.to[Ed25519|Ecdsa]PrivateKey()`
+
+### Deprecated
+
+ * `Mnemonic.toPrivateKey()` - Use `Mnemonic.to[Ed25519|Ecdsa]PrivateKey()`
+
 ### Fixed
 
  * #1188 - Undeprecate `*ContractId.fromSolidityAddress()`
