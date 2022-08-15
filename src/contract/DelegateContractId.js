@@ -80,7 +80,6 @@ export default class DelegateContractId extends ContractId {
     }
 
     /**
-     * @deprecated - Use `DelegateContractId.fromEvmAddress()` instead
      * @param {string} address
      * @returns {DelegateContractId}
      */
