@@ -243,7 +243,10 @@ export class SimpleRestSigner {
 
         const id = hashgraph.AccountId.fromString(response.accountId);
         const publicKey = hashgraph.PublicKey.fromString(response.publicKey);
-        const ledgerId = hashgraph.LedgerId.fromString(response.ledgerId);
+        const ledgerId =
+            response.ledgerId != null
+                ? hashgraph.LedgerId.fromString(response.ledgerId)
+                : null;
         const provider = new SimpleRestProvider(
             ledgerId,
             response.network,
@@ -346,7 +349,7 @@ export class SimpleRestSigner {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const response = (
             await instance.post("/sign", {
-                request: Buffer.from(transaction.toBytes()).toString("hex"),
+                transaction: Buffer.from(transaction.toBytes()).toString("hex"),
             })
         ).data;
 

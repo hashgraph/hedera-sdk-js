@@ -1,4 +1,9 @@
 import * as hashgraph from "@hashgraph/sdk";
+import axios from "axios";
+
+const instance = axios.create({
+    baseURL: "http://127.0.0.1:3000/",
+});
 
 /**
  * @type {hashgraph.Transaction[]}
@@ -227,6 +232,22 @@ async function testExecuteWithSigner(signer, requests, expects, callback) {
             condition,
             error,
         });
+
+        if (request instanceof hashgraph.Transaction) {
+            const transactionId = request.transactionId;
+
+            const response = (
+                await instance.get(`/transactions/${transactionId}`)
+            ).data;
+
+            console.log(JSON.stringify(response));
+
+            // expects.push({
+            //     name: `${request.constructor.name}: can execute request`,
+            //     condition,
+            //     error,
+            // });
+        }
     }
 }
 

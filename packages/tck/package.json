@@ -24,7 +24,7 @@
         "not ie > 0"
     ],
     "dependencies": {
-        "@hashgraph/sdk": "2.15.0"
+        "@hashgraph/sdk": "link:../.."
     },
     "devDependencies": {
         "@babel/cli": "^7.17.10",

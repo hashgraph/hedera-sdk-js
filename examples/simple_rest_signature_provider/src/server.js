@@ -65,13 +65,9 @@ const validateSign = ajv.compile({
     properties: {
         transaction: { type: "string", format: "TransactionHex" },
     },
-    required: ["type"],
+    required: ["transaction"],
     additionalProperties: false,
 });
-
-if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
-    throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
-}
 
 // @ts-ignore
 const rl = readline.createInterface({
@@ -87,9 +83,13 @@ const provider = new LocalProvider();
 provider._client.setNetwork({ "127.0.0.1:50211": "0.0.3" });
 provider._client.setMirrorNetwork(["127.0.0.1:5600"]);
 
+// if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
+//     throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
+// }
+
 const wallet = new Wallet(
-    process.env.OPERATOR_ID,
-    process.env.OPERATOR_KEY,
+    "0.0.1032",
+    "0x7f109a9e3b0d8ecfba9cc23a3614433ce0fa7ddcc80f2a8f10b222179a5a80d6",
     provider
 );
 
