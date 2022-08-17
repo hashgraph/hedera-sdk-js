@@ -173,6 +173,8 @@ export { default as LedgerId } from "./LedgerId.js";
 
 export { default as Logger } from "js-logger";
 
+// TODO: The rest of the InfoJson types
+
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
  * @typedef {import("./Provider.js").Provider} Provider
@@ -180,6 +182,7 @@ export { default as Logger } from "js-logger";
  * @typedef {import("./StatusError.js").StatusErrorJSON} StatusErrorJSON
  * @typedef {import("./account/AccountBalance.js").AccountBalanceJson} AccountBalanceJson
  * @typedef {import("./account/AccountBalance.js").TokenBalanceJson} TokenBalanceJson
+ * @typedef {import("./account/AccountInfo.js").AccountInfoJson} AccountInfoJson
  * @typedef {import("./transaction/TransactionResponse.js").TransactionResponseJSON} TransactionResponseJSON
  */
 

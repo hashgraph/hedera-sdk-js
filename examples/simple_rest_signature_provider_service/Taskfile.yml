@@ -1,0 +1,71 @@
+version: "3"
+
+silent: true
+
+# includes:
+#     tck-chai:
+#         taskfile: ../../packages/tck-chai/Taskfile.yml
+#         dir: ../../packages/tck-jest
+
+tasks:
+    default:
+        deps:
+            - build
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        cmds:
+            - task: install
+            - task: format
+            - task: lint
+            - ./node_modules/.bin/rimraf dist
+            - ./node_modules/.bin/nest build
+
+    start:
+        cmds:
+            - ./node_modules/.bin/nest start
+
+    "start:dev":
+        cmds:
+            - ./node_modules/.bin/nest start --watch
+
+    "start:debug":
+        cmds:
+            - ./node_modules/.bin/nest start --debug --watch
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier --write "src/**/*.ts" "test/**/*.ts" > /dev/null
+
+    lint:
+        cmds:
+            - ./node_modules/.bin/eslint "{src,apps,libs,test}/**/*.ts" --fix
+
+    test:
+        deps:
+            - "test:unit"
+
+    "test:unit":
+        deps:
+            - "test:unit:node"
+
+    "test:unit:node":
+        cmds:
+            - ./node_modules/.bin/jest {{.CLI_ARGS}}
+
+    "test:integration:node":
+        cmds:
+            - ./node_modules/.bin/jest --config ./test/jest-e2e.json
+      
+    update:
+        cmds:
+            - task: tck:build
+            - task: tck-chai:build
+            - task: build
