@@ -112,5 +112,10 @@
     },
     "peerDependencies": {
         "expo": "^45.0.3"
+    },
+    "peerDependenciesMeta": {
+        "expo": {
+            "optional": true
+        }
     }
 }
