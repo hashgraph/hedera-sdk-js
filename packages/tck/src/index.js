@@ -239,6 +239,31 @@ export async function test(signer, callback) {
     /** @type {ExpectClause[]} */
     const expects = [];
 
+    const network = signer.getNetwork();
+    if (
+        Object.keys(network).length !== 1 ||
+        network["127.0.0.1:50211"] !== "0.0.3"
+    ) {
+        expects.push({
+            name: "Local Hedera Network",
+            condition: false,
+            error: new Error(
+                "invalid network, expecting connection to local hedera node: 127.0.0.1:50211, and node account ID 0.0.3"
+            ),
+        });
+    }
+
+    const mirrorNetwork = signer.getMirrorNetwork();
+    if (mirrorNetwork.length !== 1 || mirrorNetwork[0] !== "127.0.0.1:5600") {
+        expects.push({
+            name: "Local Hedera MirrorNetwork",
+            condition: false,
+            error: new Error(
+                "invalid mirrorNetwork, expecting connection to local hedera mirror node: 127.0.0.1:5600"
+            ),
+        });
+    }
+
     try {
         await testFreezeWithSigner(signer, TRANSACTIONS, expects, callback);
         await testSignWithSigner(signer, TRANSACTIONS, expects, callback);

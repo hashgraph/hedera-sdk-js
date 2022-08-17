@@ -167,11 +167,21 @@ export class SimpleRestProvider {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const bytes = Buffer.from(request.toBytes()).toString("hex");
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let response = (
             await instance.post("/request", {
-                type: request instanceof hashgraph.Transaction ? "Transaction" : "Query",
-                transaction: request instanceof hashgraph.Transaction ? bytes : undefined,
-                query: request instanceof hashgraph.Transaction ? undefined : bytes,
+                type:
+                    request instanceof hashgraph.Transaction
+                        ? "Transaction"
+                        : "Query",
+                transaction:
+                    request instanceof hashgraph.Transaction
+                        ? bytes
+                        : undefined,
+                query:
+                    request instanceof hashgraph.Transaction
+                        ? undefined
+                        : bytes,
             })
         ).data;
 
@@ -447,7 +457,10 @@ async function main() {
     // Transaction
     const transaction = await new hashgraph.TransferTransaction()
         .addHbarTransfer("0.0.3", hashgraph.Hbar.fromTinybars(1))
-        .addHbarTransfer(signer.accountId, hashgraph.Hbar.fromTinybars(1).negated())
+        .addHbarTransfer(
+            signer.accountId,
+            hashgraph.Hbar.fromTinybars(1).negated()
+        )
         .freezeWithSigner(signer);
     const response = await transaction.executeWithSigner(signer);
     const hash = Buffer.from(response.transactionHash).toString("hex");

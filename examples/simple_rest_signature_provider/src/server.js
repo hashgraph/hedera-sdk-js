@@ -84,6 +84,9 @@ app.use(express.json());
 
 const provider = new LocalProvider();
 
+provider._client.setNetwork({ "127.0.0.1:50211": "0.0.3" });
+provider._client.setMirrorNetwork(["127.0.0.1:5600"]);
+
 const wallet = new Wallet(
     process.env.OPERATOR_ID,
     process.env.OPERATOR_KEY,
@@ -151,7 +154,9 @@ app.post("/request", async function (req, res) {
                  */
                 const queryResponse = await wallet.call(query);
                 return res.json({
-                    response: Buffer.from(query._serializeResponse(queryResponse)).toString("hex"),
+                    response: Buffer.from(
+                        query._serializeResponse(queryResponse)
+                    ).toString("hex"),
                 });
             }
             case "Transaction": {
@@ -160,7 +165,11 @@ app.post("/request", async function (req, res) {
                 );
                 await transaction.signWithSigner(wallet);
                 const transactionResponse = await wallet.call(transaction);
-                return res.json({ response: Buffer.from(transaction._serializeResponse(transactionResponse)).toString("hex") });
+                return res.json({
+                    response: Buffer.from(
+                        transaction._serializeResponse(transactionResponse)
+                    ).toString("hex"),
+                });
             }
             default:
                 throw new Error(
