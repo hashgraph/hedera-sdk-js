@@ -248,7 +248,20 @@ export default class Wallet {
      * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
-        transaction.setTransactionId(TransactionId.generate(this.accountId));
+        transaction._freezeWithAccountId(this.accountId);
+
+        if (transaction.transactionId == null) {
+            transaction.setTransactionId(
+                TransactionId.generate(this.accountId)
+            );
+        }
+
+        if (
+            transaction.nodeAccountIds != null &&
+            transaction.nodeAccountIds.length != 0
+        ) {
+            return Promise.resolve(transaction.freeze());
+        }
 
         if (this.provider == null) {
             return Promise.resolve(transaction);

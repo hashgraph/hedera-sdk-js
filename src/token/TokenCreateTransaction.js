@@ -798,7 +798,7 @@ export default class TokenCreateTransaction extends Transaction {
     _freezeWithAccountId(accountId) {
         super._freezeWithAccountId(accountId);
 
-        if (this._autoRenewPeriod != null) {
+        if (this._autoRenewPeriod != null && accountId != null) {
             this._autoRenewAccountId = accountId;
         }
     }

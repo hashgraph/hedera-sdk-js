@@ -23,6 +23,7 @@ import FileAppendTransaction from "../file/FileAppendTransaction.js";
 import FileDeleteTransaction from "../file/FileDeleteTransaction.js";
 import ContractCreateTransaction from "./ContractCreateTransaction.js";
 import * as utf8 from "../encoding/utf8.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -37,6 +38,9 @@ import * as utf8 from "../encoding/utf8.js";
  * @typedef {import("../transaction/TransactionReceipt.js").default} TransactionReceipt
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("../Signer.js").Signer} Signer
+ * @typedef {import("../PrivateKey.js").default} PrivateKey
+ * @typedef {import("../PublicKey.js").default} PublicKey
+ * @typedef {import("../transaction/Transaction.js").default} Transaction
  */
 
 /**
@@ -49,6 +53,30 @@ export default class ContractCreateFlow {
         /** @type {Uint8Array | null} */
         this._bytecode = null;
         this._contractCreate = new ContractCreateTransaction();
+
+        /**
+         * Read `Transaction._signerPublicKeys`
+         *
+         * @internal
+         * @type {Set<string>}
+         */
+        this._signerPublicKeys = new Set();
+
+        /**
+         * Read `Transaction._publicKeys`
+         *
+         * @private
+         * @type {PublicKey[]}
+         */
+        this._publicKeys = [];
+
+        /**
+         * Read `Transaction._transactionSigners`
+         *
+         * @private
+         * @type {((message: Uint8Array) => Promise<Uint8Array>)[]}
+         */
+        this._transactionSigners = [];
     }
 
     /**
@@ -239,6 +267,78 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @returns {boolean}
+     */
+    get declineStakingRewards() {
+        return this._contractCreate.declineStakingRewards;
+    }
+
+    /**
+     * @param {boolean} declineStakingReward
+     * @returns {this}
+     */
+    setDeclineStakingReward(declineStakingReward) {
+        this._contractCreate.setDeclineStakingReward(declineStakingReward);
+        return this;
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._contractCreate.autoRenewAccountId;
+    }
+
+    /**
+     * @param {string | AccountId} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._contractCreate.setAutoRenewAccountId(autoRenewAccountId);
+        return this;
+    }
+
+    /**
+     * Sign the transaction with the private key
+     * **NOTE**: This is a thin wrapper around `.signWith()`
+     *
+     * @param {PrivateKey} privateKey
+     * @returns {this}
+     */
+    sign(privateKey) {
+        return this.signWith(privateKey.publicKey, (message) =>
+            Promise.resolve(privateKey.sign(message))
+        );
+    }
+
+    /**
+     * Sign the transaction with the public key and signer function
+     *
+     * If sign on demand is enabled no signing will be done immediately, instead
+     * the private key signing function and public key are saved to be used when
+     * a user calls an exit condition method (not sure what a better name for this is)
+     * such as `toBytes[Async]()`, `getTransactionHash[PerNode]()` or `execute()`.
+     *
+     * @param {PublicKey} publicKey
+     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
+     */
+    signWith(publicKey, transactionSigner) {
+        const publicKeyData = publicKey.toBytesRaw();
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (this._signerPublicKeys.has(publicKeyHex)) {
+            // this public key has already signed this transaction
+            return this;
+        }
+
+        this._publicKeys.push(publicKey);
+        this._transactionSigners.push(transactionSigner);
+
+        return this;
+    }
+
+    /**
      * @template {Channel} ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
@@ -308,27 +408,43 @@ export default class ContractCreateFlow {
             );
         }
 
+        await addSignersToTransaction(
+            this._contractCreate,
+            this._publicKeys,
+            this._transactionSigners
+        );
+
         const key = signer.getAccountKey();
 
-        let response = await new FileCreateTransaction()
+        const fileCreateTransaction = new FileCreateTransaction()
             .setKeys(key != null ? [key] : [])
             .setContents(
                 this._bytecode.subarray(
                     0,
                     Math.min(this._bytecode.length, 2048)
                 )
-            )
-            .executeWithSigner(signer);
+            );
+        await addSignersToTransaction(
+            fileCreateTransaction,
+            this._publicKeys,
+            this._transactionSigners
+        );
 
+        let response = await fileCreateTransaction.executeWithSigner(signer);
         const receipt = await response.getReceiptWithSigner(signer);
 
         const fileId = /** @type {FileId} */ (receipt.fileId);
 
         if (this._bytecode.length > 2048) {
-            await new FileAppendTransaction()
+            const fileAppendTransaction = new FileAppendTransaction()
                 .setFileId(fileId)
-                .setContents(this._bytecode.subarray(2048))
-                .executeWithSigner(signer);
+                .setContents(this._bytecode.subarray(2048));
+            await addSignersToTransaction(
+                fileAppendTransaction,
+                this._publicKeys,
+                this._transactionSigners
+            );
+            await fileAppendTransaction.executeWithSigner(signer);
         }
 
         response = await this._contractCreate
@@ -338,13 +454,36 @@ export default class ContractCreateFlow {
         await response.getReceiptWithSigner(signer);
 
         if (key != null) {
+            const fileDeleteTransaction = new FileAppendTransaction().setFileId(
+                fileId
+            );
+            await addSignersToTransaction(
+                fileDeleteTransaction,
+                this._publicKeys,
+                this._transactionSigners
+            );
             await (
-                await new FileDeleteTransaction()
-                    .setFileId(fileId)
-                    .executeWithSigner(signer)
+                await fileDeleteTransaction.executeWithSigner(signer)
             ).getReceiptWithSigner(signer);
         }
 
         return response;
+    }
+}
+
+/**
+ * @template {Transaction} T
+ * @param {T} transaction
+ * @param {PublicKey[]} publicKeys
+ * @param {((message: Uint8Array) => Promise<Uint8Array>)[]} transactionSigners
+ * @returns {Promise<void>}
+ */
+async function addSignersToTransaction(
+    transaction,
+    publicKeys,
+    transactionSigners
+) {
+    for (let i = 0; i < publicKeys.length; i++) {
+        await transaction.signWith(publicKeys[i], transactionSigners[i]);
     }
 }

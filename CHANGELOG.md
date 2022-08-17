@@ -4,12 +4,84 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.18.0
+
+### Added
+
+ * `Mnemonic.to[Ed25519|Ecdsa]PrivateKey()`
+
+### Deprecated
+
+ * `Mnemonic.toPrivateKey()` - Use `Mnemonic.to[Ed25519|Ecdsa]PrivateKey()`
+
+### Fixed
+
+ * #1188 - Undeprecate `*ContractId.fromSolidityAddress()`
+
+## v2.17.3
+
+### Fixed
+
+ * `Query.queryPayment`, `Query.maxQueryPayment`, and `Client.maxQueryPayment` interactions
+ * Remove making empty requests to `grpc.myhbarwallet.com` to calculate time drift
+
+### Added
+
+ * Expose setters/getters for `Cache` to allow users to set their own calculated values
+
+## v2.17.2
+
+### Fixed
+
+ * `TokenUpdateTransaction.pauseKey` not being serialized into protobuf
+
+## v2.17.1
+
+### Added
+
+ * `TokenNftInfo.allowanceSpenderAccountId`
+ * `ContractCreateFlow.sign[With]()`
+
+### Fixed
+
+ * `FileAppendTransaction` chunk size should default to 4096
+ * `ContractFunctionResult.gas` can be `-1` when `null` in protobufs: #1208
+ * `FileAppendTransaction.setTransactionId()` not locking the transaction ID list
+ * `TopicMessageSubmitTransaction.setTransactionId()` not locking the transaction ID list
+
+### Deprecated
+
+ * `AccountBalance.tokens` - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
+ * `AccountBalance.tokenDecimals` - Use same API as above
+
+## v2.17.0
+
+### Added
+
+ * `PrngThansaction`
+ * `TransactionRecord.prngBytes`
+ * `TransactionRecord.prngNumber`
+
+### Deprecated
+
+ * `ContractFunctionResult.stateChanges` - Use mirror node for contract traceability instead
+ * `ContractStateChanges`
+ * `StorageChange`
+
 ## v2.16.6
 
 ### Added
 
  * `ContractCreateTransaction.autoRenewAccountId`
  * `ContractUpdateTransaction.autoRenewAccountId`
+
+## v2.17.0-beta.1
+
+### Added
+
+ * `PrngThansaction`
+ * `TransactionRecord.prngBytes`
+ * `TransactionRecord.prngNumber`
 
 ## v2.16.5
 

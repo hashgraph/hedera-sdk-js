@@ -80,7 +80,6 @@ export default class DelegateContractId extends ContractId {
     }
 
     /**
-     * @deprecated - Use `DelegateContractId.fromEvmAddress()` instead
      * @param {string} address
      * @returns {DelegateContractId}
      */
@@ -116,4 +115,4 @@ export default class DelegateContractId extends ContractId {
     }
 }
 
-CACHE.delegateContractId = (key) => DelegateContractId.__fromProtobufKey(key);
+CACHE.setDelegateContractId((key) => DelegateContractId.__fromProtobufKey(key));

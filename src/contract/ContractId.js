@@ -144,13 +144,10 @@ export default class ContractId extends Key {
     }
 
     /**
-     * @deprecated - Use `ContractId.fromEvmAddress()` instead
      * @param {string} address
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
-        console.warn("Deprecated: use `ContractId.fromEvmAdress()` instead");
-
         const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
         return new ContractId(shard, realm, contract);
     }
@@ -252,4 +249,4 @@ export default class ContractId extends Key {
     }
 }
 
-CACHE.contractId = (key) => ContractId.__fromProtobufKey(key);
+CACHE.setContractId((key) => ContractId.__fromProtobufKey(key));

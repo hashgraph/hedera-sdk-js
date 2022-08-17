@@ -304,96 +304,63 @@ export default class Query extends Executable {
             }
         }
 
-        // The cost of the query.
-        //
-        // FIXME: Not sure why we're setting it to `queryPayment` when this value gets
-        // overwritten immediately afterwards? Looking more closely at the rest of the
-        // code this definitely looks like a bug. We're treating `cost` as both
-        // `queryPayment` and `maxQueryPayment`. To start we should really change
-        // the name of this variable.
-        //
-        // Here is how it should work:
-        // Legend:
-        //  X = Set by user
-        //  O = Not set by user (null)
-        //   | queryPayment | maxQueryPayment | client.maxQueryPayment |
-        // a |      O       |        O        |           O            |
-        // b |      O       |        O        |           X            |
-        // c |      O       |        X        |           O            |
-        // d |      O       |        X        |           X            |
-        // e |      X       |        O        |           O            |
-        // f |      X       |        O        |           X            |
-        // g |      X       |        X        |           O            |
-        // h |      X       |        X        |           X            |
-        //
-        // e, f, g, h:
-        // - Do not query the cost, use the query payment explicity
-        //
-        // c, d:
-        // - Query the cost, and compare it to `maxQueryPayment`
-        //
-        // a, b:
-        // - Query the cost, and compare it to `client.maxQueryPayment`
-        //
-        // TODO: Create a test that matches this table
-        let cost = this._queryPayment;
+        let cost = new Hbar(0);
 
-        // Set cost to either the current max query payment, or the default on
-        // client.
-        if (cost == null && this._maxQueryPayment != null) {
-            cost = this._maxQueryPayment;
-        } else {
-            cost = client.maxQueryPayment;
-        }
+        const maxQueryPayment =
+            this._maxQueryPayment != null
+                ? this._maxQueryPayment
+                : client.maxQueryPayment;
 
-        // If payment transactions are already created or this is a free query
-        // set the cost to 0.
-        if (
-            this._paymentTransactions.length !== 0 ||
-            !this._isPaymentRequired()
+        if (this._queryPayment != null) {
+            cost = this._queryPayment;
+        } else if (
+            this._paymentTransactions.length === 0 &&
+            this._isPaymentRequired()
         ) {
-            cost = new Hbar(0);
-        } else {
             // If the query payment was not explictly set, fetch the actual cost.
-            if (this._queryPayment == null) {
-                const actualCost = await this.getCost(client);
+            const actualCost = await this.getCost(client);
 
-                // Confirm it's less than max query payment
-                if (
-                    cost.toTinybars().toInt() < actualCost.toTinybars().toInt()
-                ) {
-                    throw new MaxQueryPaymentExceeded(cost, actualCost);
-                }
-
-                cost = actualCost;
-                Logger.debug(
-                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
-                );
+            // Confirm it's less than max query payment
+            if (
+                maxQueryPayment.toTinybars().toInt() <
+                actualCost.toTinybars().toInt()
+            ) {
+                throw new MaxQueryPaymentExceeded(actualCost, maxQueryPayment);
             }
+
+            cost = actualCost;
+            Logger.debug(
+                `[${this._getLogId()}] received cost for query ${cost.toString()}`
+            );
         }
 
+        // Set the either queried cost, or the original value back into `queryPayment`
+        // in case a user executes same query multiple times. However, users should
+        // really not be executing the same query multiple times meaning this is
+        // typically not needed.
         this._queryPayment = cost;
-
-        // FIXME: Shouldn't this be `!this._nodeAccountIds.locked`?
-        if (this._nodeAccountIds.locked) {
-            // Generate the payment transactions
-            for (const node of this._nodeAccountIds.list) {
-                this._paymentTransactions.push(
-                    await _makePaymentTransaction(
-                        this._getLogId(),
-                        /** @type {import("../transaction/TransactionId.js").default} */ (
-                            this._paymentTransactionId
-                        ),
-                        node,
-                        this._isPaymentRequired() ? this._operator : null,
-                        /** @type {Hbar} */ (cost)
-                    )
-                );
-            }
-        }
 
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
+
+        if (!this._nodeAccountIds.locked) {
+            return;
+        }
+
+        // Generate the payment transactions
+        for (const node of this._nodeAccountIds.list) {
+            this._paymentTransactions.push(
+                await _makePaymentTransaction(
+                    this._getLogId(),
+                    /** @type {import("../transaction/TransactionId.js").default} */ (
+                        this._paymentTransactionId
+                    ),
+                    node,
+                    this._isPaymentRequired() ? this._operator : null,
+                    /** @type {Hbar} */ (cost)
+                )
+            );
+        }
     }
 
     /**
@@ -541,21 +508,6 @@ export default class Query extends Executable {
             status,
             transactionId: this._getTransactionId(),
         });
-    }
-
-    /**
-     * @returns {AccountId}
-     */
-    _getNodeAccountId() {
-        if (!this._nodeAccountIds.isEmpty) {
-            // if there are payment transactions,
-            // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.current;
-        } else {
-            throw new Error(
-                "(BUG) nodeAccountIds were not set for query before executing"
-            );
-        }
     }
 
     /**

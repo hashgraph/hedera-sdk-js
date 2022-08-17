@@ -35,27 +35,29 @@ async function main() {
     // create a multi-sig account
     const keyList = new KeyList([user1Key, user2Key]);
 
-    const createAccountTransaction = new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(2)) // 5 h
-        .setKey(keyList);
-
-    const response = await createAccountTransaction.executeWithSigner(wallet);
+        .setKey(keyList)
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const response = await transaction.executeWithSigner(wallet);
 
     let receipt = await response.getReceiptWithSigner(wallet);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
 
     // create a transfer from new account to 0.0.3
-    const transferTransaction = await new TransferTransaction()
+    transaction = await new TransferTransaction()
         .setNodeAccountIds([new AccountId(3)])
         .addHbarTransfer(receipt.accountId, -1)
         .addHbarTransfer("0.0.3", 1)
         .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
 
-    user1Key.signTransaction(transferTransaction);
-    user2Key.signTransaction(transferTransaction);
+    user1Key.signTransaction(transaction);
+    user2Key.signTransaction(transaction);
 
-    const result = await transferTransaction.executeWithSigner(wallet);
+    const result = await transaction.executeWithSigner(wallet);
     receipt = await result.getReceiptWithSigner(wallet);
 
     console.log(receipt.status.toString());

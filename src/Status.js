@@ -1178,6 +1178,14 @@ export default class Status {
                 return "SELF_STAKING_IS_NOT_ALLOWED";
             case Status.InvalidStakingId:
                 return "INVALID_STAKING_ID";
+            case Status.StakingNotEnabled:
+                return "STAKING_NOT_ENABLED";
+            case Status.InvalidPrngRange:
+                return "INVALID_PRNG_RANGE";
+            case Status.MaxEntitiesInPriceRegimeHaveBeenCreated:
+                return "MAX_ENTITIES_IN_PRICE_REGIME_HAVE_BEEN_CREATED";
+            case Status.InvalidFullPrefixSignatureForPrecompile:
+                return "INVALID_FULL_PREFIX_SIGNATURE_FOR_PRECOMPILE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1752,6 +1760,14 @@ export default class Status {
                 return Status.SelfStakingIsNotAllowed;
             case 322:
                 return Status.InvalidStakingId;
+            case 323:
+                return Status.StakingNotEnabled;
+            case 324:
+                return Status.InvalidPrngRange;
+            case 325:
+                return Status.MaxEntitiesInPriceRegimeHaveBeenCreated;
+            case 326:
+                return Status.InvalidFullPrefixSignatureForPrecompile;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -3209,3 +3225,23 @@ Status.SelfStakingIsNotAllowed = new Status(321);
  * The staking account id or staking node id given is invalid or does not exist.
  */
 Status.InvalidStakingId = new Status(322);
+
+/**
+ * Native staking, while implemented, has not yet enabled by the council.
+ */
+Status.StakingNotEnabled = new Status(323);
+
+/**
+ * The range provided in PRNG transaction is negative.
+ */
+Status.InvalidPrngRange = new Status(324);
+
+/**
+ * The maximum number of entities allowed in the current price regime have been created.
+ */
+Status.MaxEntitiesInPriceRegimeHaveBeenCreated = new Status(325);
+
+/**
+ * The full prefix signature for precompile is not valid
+ */
+Status.InvalidFullPrefixSignatureForPrecompile = new Status(326);

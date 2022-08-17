@@ -26,8 +26,11 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
-import ContractStateChange from "./ContractStateChange.js";
 import HashgraphProto from "@hashgraph/proto";
+
+/**
+ * @typedef {import("./ContractStateChange.js").default} ContractStateChange
+ */
 
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -48,12 +51,12 @@ export default class ContractFunctionResult {
      * @param {ContractLogInfo[]} result.logs
      * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array | null} result.evmAddress
-     * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
      * @param {Long} result.gas
      * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
+     * @param {ContractStateChange[]} result.stateChanges
      */
     constructor(result) {
         /**
@@ -97,6 +100,10 @@ export default class ContractFunctionResult {
 
         this.evmAddress = result.evmAddress;
 
+        /**
+         * @deprecated - Use mirror node for contract traceability instead
+         */
+        // eslint-disable-next-line deprecation/deprecation
         this.stateChanges = result.stateChanges;
 
         /**
@@ -143,8 +150,8 @@ export default class ContractFunctionResult {
                 result.contractID
             );
         const gasUsed = /** @type {Long} */ (result.gasUsed);
-        const gas = /** @type {Long} */ (result.gas);
-        const amount = /** @type {Long} */ (result.amount);
+        const gas = /** @type {Long} */ (result.gas ? result.gas : -1);
+        const amount = /** @type {Long} */ (result.amount ? result.amount : -1);
 
         return new ContractFunctionResult({
             _createResult: false,
@@ -169,10 +176,7 @@ export default class ContractFunctionResult {
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
-            stateChanges: (result.stateChanges != null
-                ? result.stateChanges
-                : []
-            ).map((change) => ContractStateChange._fromProtobuf(change)),
+            stateChanges: [],
             gas: gas instanceof Long ? gas : Long.fromValue(gas),
             amount: amount instanceof Long ? amount : Long.fromValue(amount),
             functionParameters: /** @type {Uint8Array} */ (
@@ -982,9 +986,6 @@ export default class ContractFunctionResult {
             // eslint-disable-next-line deprecation/deprecation
             createdContractIDs: this.createdContractIds.map((id) =>
                 id._toProtobuf()
-            ),
-            stateChanges: this.stateChanges.map((change) =>
-                change._toProtobuf()
             ),
             evmAddress:
                 this.evmAddress != null

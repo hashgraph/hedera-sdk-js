@@ -41,31 +41,19 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
+          version: 7.6.0
 
-      - run: pnpm install -g yarn
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
+      - run: npm install -g yarn
 
       - name: Build @hashgraph/sdk
         run: task build
 
-      - name: Install yalc
-        run: pnpm install -g yalc
-
       - name: Install detox
-        run: pnpm install -g detox-cli
-
-      - name: Locally Publish
-        run: yalc publish --no-scripts
+        run: npm install -g detox-cli
 
       - name: AVD
         run: |
@@ -76,17 +64,18 @@ jobs:
           adb start-server
 
       - name: Build
-        working-directory: examples/react-native
+        working-directory: examples/react-native-example
         run: |
-          yalc add "@hashgraph/sdk"
+          ../../node_modules/.bin/yalc add "@hashgraph/sdk"
           yarn
           detox build --configuration android
 
       - name: Test
-        working-directory: examples/react-native
+        working-directory: examples/react-native-example
         run: detox test --configuration android
 
   ios:
+    if: ${{ false }}  # disable for now
     runs-on: macos-latest
 
     steps:
@@ -114,45 +103,30 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
+          version: 7.6.0
 
-      - run: pnpm install -g yarn
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
+      - run: npm install -g yarn
 
       - name: Build @hashgraph/sdk
         run: task build
 
-      - name: Install yalc
-        run: pnpm install -g yalc
-
       - name: Install detox
-        run: pnpm install -g detox-cli
+        run: npm install -g detox-cli
 
-      - name: Locally Publish
-        run: yalc publish --no-scripts
-      
       - name: Build
+        working-directory: examples/react-native-example
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration ios
+
+      - name: Test
         working-directory: examples/react-native
         run: |
-          # Uncomment when detox and expo work well together
-          # brew tap wix/brew
-          # brew install applesimutils
-          # yalc add "@hashgraph/sdk"
-          # yarn
-          # detox build --configuration ios
-          cd android && ./gradlew build
-
-      # Uncomment when detox and expo work well together
-      # - name: Test
-      #   working-directory: examples/react-native
-      #   run: |
-      #     detox test --configuration ios
+          detox test --configuration ios

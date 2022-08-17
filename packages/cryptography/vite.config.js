@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('vite').UserConfig} */
+export default {
     server: {
         hmr: false,
         force: true,

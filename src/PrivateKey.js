@@ -170,8 +170,9 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Recover a private key from a mnemonic phrase (and optionally a password).
+     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
      *
+     * Recover a private key from a mnemonic phrase (and optionally a password).
      * @param {Mnemonic | cryptography.Mnemonic | string} mnemonic
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
@@ -179,6 +180,7 @@ export default class PrivateKey extends Key {
     static async fromMnemonic(mnemonic, passphrase = "") {
         if (mnemonic instanceof Mnemonic) {
             return new PrivateKey(
+                // eslint-disable-next-line deprecation/deprecation
                 await cryptography.PrivateKey.fromMnemonic(
                     mnemonic._mnemonic,
                     passphrase
@@ -187,6 +189,7 @@ export default class PrivateKey extends Key {
         }
 
         return new PrivateKey(
+            // eslint-disable-next-line deprecation/deprecation
             await cryptography.PrivateKey.fromMnemonic(mnemonic, passphrase)
         );
     }
@@ -373,4 +376,4 @@ export default class PrivateKey extends Key {
     }
 }
 
-CACHE.privateKeyConstructor = (key) => new PrivateKey(key);
+CACHE.setPrivateKeyConstructor((key) => new PrivateKey(key));

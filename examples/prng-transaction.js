@@ -1,10 +1,4 @@
-import {
-    Wallet,
-    LocalProvider,
-    PrivateKey,
-    AccountCreateTransaction,
-    Hbar,
-} from "@hashgraph/sdk";
+import { Wallet, LocalProvider, PrngTransaction } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
 
@@ -23,23 +17,14 @@ async function main() {
         new LocalProvider()
     );
 
-    const newKey = PrivateKey.generate();
-
-    console.log(`private key = ${newKey.toString()}`);
-    console.log(`public key = ${newKey.publicKey.toString()}`);
-
-    let transaction = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(newKey.publicKey)
+    let transaction = await new PrngTransaction()
+        .setRange(100)
         .freezeWithSigner(wallet);
-
     transaction = await transaction.signWithSigner(wallet);
-
     const response = await transaction.executeWithSigner(wallet);
 
-    const receipt = await response.getReceiptWithSigner(wallet);
-
-    console.log(`account id = ${receipt.accountId.toString()}`);
+    const record = await response.getRecordWithSigner(wallet);
+    console.log(`The random number generated is: ${record.prngNumber}`);
 }
 
 void main();

@@ -147,14 +147,12 @@ async function main() {
     let aB = await bCheckerFcn(aliceId);
     let bB = await bCheckerFcn(bobId);
     console.log(
-        `- Treasury balance: ${oB[0].toString()} NFTs of ID:${tokenId.toString()} and ${oB[1].toString()}`
+        `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
     );
     console.log(
-        `- Alice balance: ${aB[0].toString()} NFTs of ID:${tokenId.toString()} and ${aB[1].toString()}`
+        `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
     );
-    console.log(
-        `- Bob balance: ${bB[0].toString()} NFTs of ID:${tokenId.toString()} and ${bB[1].toString()}`
-    );
+    console.log(`- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`);
 
     // 1st TRANSFER NFT Treasury->Alice
     let tokenTransferTx = await new TransferTransaction()
@@ -172,14 +170,12 @@ async function main() {
     aB = await bCheckerFcn(aliceId);
     bB = await bCheckerFcn(bobId);
     console.log(
-        `- Treasury balance: ${oB[0].toString()} NFTs of ID:${tokenId.toString()} and ${oB[1].toString()}`
+        `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
     );
     console.log(
-        `- Alice balance: ${aB[0].toString()} NFTs of ID:${tokenId.toString()} and ${aB[1].toString()}`
+        `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
     );
-    console.log(
-        `- Bob balance: ${bB[0].toString()} NFTs of ID:${tokenId.toString()} and ${bB[1].toString()}`
-    );
+    console.log(`- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`);
 
     // 2nd NFT TRANSFER NFT Alice->Bob
     let tokenTransferTx2 = await new TransferTransaction()
@@ -200,14 +196,12 @@ async function main() {
     aB = await bCheckerFcn(aliceId);
     bB = await bCheckerFcn(bobId);
     console.log(
-        `- Treasury balance: ${oB[0].toString()} NFTs of ID:${tokenId.toString()} and ${oB[1].toString()}`
+        `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
     );
     console.log(
-        `- Alice balance: ${aB[0].toString()} NFTs of ID:${tokenId.toString()} and ${aB[1].toString()}`
+        `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
     );
-    console.log(
-        `- Bob balance: ${bB[0].toString()} NFTs of ID:${tokenId.toString()} and ${bB[1].toString()}`
-    );
+    console.log(`- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`);
 
     /**
      * TOKEN MINTER FUNCTION
@@ -230,16 +224,13 @@ async function main() {
      * BALANCE CHECKER FUNCTION
      *
      * @param {string | AccountId} id
-     * @returns {Promise<[Long, Hbar]>}
+     * @returns {Promise<Hbar>}
      */
     async function bCheckerFcn(id) {
         const balanceCheckTx = await new AccountBalanceQuery()
             .setAccountId(id)
             .execute(client);
-        return [
-            balanceCheckTx.tokens._map.get(tokenId.toString()),
-            balanceCheckTx.hbars,
-        ];
+        return balanceCheckTx.hbars;
     }
 }
 

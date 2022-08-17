@@ -6,11 +6,39 @@ import legacyWords from "./words/legacy.js";
 import bip39Words from "./words/bip39.js";
 import nacl from "tweetnacl";
 import * as sha256 from "./primitive/sha256.js";
-import * as pbkdf2 from "./primitive/pbkdf2.js";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
+import * as bip32 from "./primitive/bip32.js";
+import * as bip39 from "./primitive/bip39.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
+import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import * as ecdsa from "./primitive/ecdsa.js";
+
+const ED25519_SEED_TEXT = "ed25519 seed";
+const ECDSA_SEED_TEXT = "Bitcoin seed";
+
+export const HARDEDED = 0x80000000;
+
+/// m/44'/3030'/0'/0' - All paths in EdDSA derivation are implicitly hardened.
+export const HEDERA_PATH = [44, 3030, 0, 0];
+
+/// m/44'/3030'/0'/0
+export const SLIP44_ECDSA_HEDERA_PATH = [
+    44 | HARDEDED,
+    3030 | HARDEDED,
+    0 | HARDEDED,
+    0,
+];
+
+/// m/44'/60'/0'/0
+export const SLIP44_ECDSA_ETH_PATH = [
+    44 | HARDEDED,
+    60 | HARDEDED,
+    0 | HARDEDED,
+    0,
+    0,
+];
 
 /**
  * @typedef {import("./PrivateKey.js").default} PrivateKey
@@ -108,13 +136,25 @@ export default class Mnemonic {
     }
 
     /**
+     * @deprecated - Use `toEd25519PrivateKey()` or `toEcdsaPrivateKey()` instead
      * Recover a private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
     toPrivateKey(passphrase = "") {
+        return this.toEd25519PrivateKey(passphrase);
+    }
+
+    /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number[]} [path]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toEd25519PrivateKey(passphrase = "", path = HEDERA_PATH) {
         if (this._isLegacy) {
             if (passphrase.length > 0) {
                 throw new Error(
@@ -125,7 +165,78 @@ export default class Mnemonic {
             return this.toLegacyPrivateKey();
         }
 
-        return this._toPrivateKey(passphrase);
+        let { keyData, chainCode } = await this._toKeyData(
+            passphrase,
+            ED25519_SEED_TEXT
+        );
+
+        for (const index of path) {
+            ({ keyData, chainCode } = await slip10.derive(
+                keyData,
+                chainCode,
+                index
+            ));
+        }
+
+        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
+
+        if (CACHE.privateKeyConstructor == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyConstructor(
+            new Ed25519PrivateKey(keyPair, chainCode)
+        );
+    }
+
+    /**
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number[]} [path]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toEcdsaPrivateKey(passphrase = "", path = HEDERA_PATH) {
+        let { keyData, chainCode } = await this._toKeyData(
+            passphrase,
+            ECDSA_SEED_TEXT
+        );
+
+        for (const index of path) {
+            ({ keyData, chainCode } = await bip32.derive(
+                keyData,
+                chainCode,
+                index
+            ));
+        }
+
+        if (CACHE.privateKeyConstructor == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyConstructor(
+            new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+        );
+    }
+
+    /**
+     * @param {string} passphrase
+     * @param {string} seedText
+     * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>} seedText
+     */
+    async _toKeyData(passphrase, seedText) {
+        const seed = await bip39.toSeed(this.words, passphrase);
+        const digest = await hmac.hash(
+            hmac.HashAlgorithm.Sha512,
+            seedText,
+            seed
+        );
+
+        return {
+            keyData: digest.subarray(0, 32),
+            chainCode: digest.subarray(32),
+        };
     }
 
     /**
@@ -253,51 +364,6 @@ export default class Mnemonic {
         }
 
         return this;
-    }
-
-    /**
-     * @private
-     * @param {string} passphrase
-     * @returns {Promise<PrivateKey>}
-     */
-    async _toPrivateKey(passphrase = "") {
-        const input = this.words.join(" ");
-        const salt = `mnemonic${passphrase}`;
-
-        const seed = await pbkdf2.deriveKey(
-            hmac.HashAlgorithm.Sha512,
-            input,
-            salt,
-            2048,
-            64
-        );
-
-        const digest = await hmac.hash(
-            hmac.HashAlgorithm.Sha512,
-            "ed25519 seed",
-            seed
-        );
-
-        let keyData = digest.subarray(0, 32);
-        let chainCode = digest.subarray(32);
-
-        for (const index of [44, 3030, 0, 0]) {
-            ({ keyData, chainCode } = await slip10.derive(
-                keyData,
-                chainCode,
-                index
-            ));
-        }
-
-        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
-
-        if (CACHE.privateKeyConstructor == null) {
-            throw new Error("PrivateKey not found in cache");
-        }
-
-        return CACHE.privateKeyConstructor(
-            new Ed25519PrivateKey(keyPair, chainCode)
-        );
     }
 
     /**

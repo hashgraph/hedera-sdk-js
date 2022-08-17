@@ -75,6 +75,8 @@ export default class TransactionRecord {
      * @param {TokenNftAllowance[]} props.nftAllowanceAdjustments
      * @param {?Uint8Array} props.ethereumHash
      * @param {Transfer[]} props.paidStakingRewards
+     * @param {?Uint8Array} props.prngBytes;
+     * @param {?number} props.prngNumber;
      */
     constructor(props) {
         this._createResult = props._createResult;
@@ -250,6 +252,20 @@ export default class TransactionRecord {
          */
         this.paidStakingRewards = props.paidStakingRewards;
 
+        /**
+         * In the record of a PRNG transaction with no output range, a pseudorandom 384-bit string.
+         *
+         * @readonly
+         */
+        this.prngBytes = props.prngBytes;
+
+        /**
+         * In the record of a PRNG transaction with an output range, the output of a PRNG whose input was a 384-bit string.
+         *
+         * @readonly
+         */
+        this.prngNumber = props.prngNumber;
+
         Object.freeze(this);
     }
 
@@ -367,6 +383,9 @@ export default class TransactionRecord {
                 paidStakingRewards: this.paidStakingRewards.map((transfer) =>
                     transfer._toProtobuf()
                 ),
+
+                prngBytes: this.prngBytes,
+                prngNumber: this.prngNumber != null ? this.prngNumber : null,
             },
         };
     }
@@ -503,6 +522,8 @@ export default class TransactionRecord {
                 record.paidStakingRewards != null
                     ? Transfer._fromProtobuf(record.paidStakingRewards)
                     : [],
+            prngBytes: record.prngBytes != null ? record.prngBytes : null,
+            prngNumber: record.prngNumber != null ? record.prngNumber : null,
         });
     }
 

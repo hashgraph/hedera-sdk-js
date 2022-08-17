@@ -17,9 +17,17 @@ tasks:
                 --validation.invalidLink 
                 --entryPoints src/index.js src/browser.js src/native.js
 
-    install:
+    "install:submodules":
         cmds:
-            - pnpm i
+            - git submodule update --init
+        status:
+            - test -d packages/proto/src/proto
+
+    install:
+        deps:
+            - "install:submodules"
+        cmds:
+            - pnpm i > /dev/null
 
     build:
         deps:
@@ -31,7 +39,9 @@ tasks:
             - task: format
             - task: lint
             - ./node_modules/.bin/babel src -d lib
-            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
+            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/ > /dev/null
+            # This is necessary to correctly run browser tests with an unpublished proto package
+            - ../../node_modules/.bin/yalc publish > /dev/null
 
     clean:
         cmds:
@@ -65,12 +75,12 @@ tasks:
 
     update:
         cmds:
-            - cd src/proto && git pull origin main
+            - cd src/proto && git pull origin main && git checkout main
             - task: build
 
     publish:
         preconditions:
-            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+            - "! grep '\".*\": \"\\(link\\|file\\):.*\"' package.json > /dev/null"
         deps:
             - "test:release"
         cmds:

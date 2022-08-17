@@ -28,25 +28,61 @@ tasks:
         deps:
             - build
 
-    install:
+    docs:
         cmds:
-            - git submodule update --init
-            - pnpm i
+            - ./node_modules/.bin/typedoc
+              --excludeInternal
+              --excludePrivate
+              --excludeProtected
+              --out docs
+              --validation.invalidLink
+              --entryPoints src/index.js src/browser.js src/native.js
+
+    "install:deps":
+        run: once
+        cmds:
+            - pnpm i --dev > /dev/null
+
+    "install:cryptography:local":
+        cmds:
+            - task: "install:deps"
+            - task: "cryptography:build"
+            - ./node_modules/.bin/yalc add @hashgraph/cryptography > /dev/null
+        status:
+            - ./check_yalc_dep.sh @hashgraph/cryptography
+
+    "install:proto:local":
+        cmds:
+            - task: "install:deps"
+            - task: "proto:build"
+            - ./node_modules/.bin/yalc add @hashgraph/proto > /dev/null
+        status:
+            - ./check_yalc_dep.sh @hashgraph/proto
+
+    install:
+        deps:
+            - "install:cryptography:local"
+            - "install:proto:local"
+        cmds:
+            - pnpm i > /dev/null
 
     build:
         cmds:
             - task: install
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
+            - ./node_modules/.bin/yalc publish > /dev/null
 
     clean:
         deps:
             - "examples:clean"
+            - "cryptography:clean"
+            - "proto:clean"
             - "simple_rest_signature_provider:clean"
             - "common_js_test:clean"
         cmds:
-            - rm -rf node_modules
+            - rm -rf node_modules .yalc
 
     format:
         cmds:
@@ -65,7 +101,8 @@ tasks:
 
     "lint:dpdm":
         cmds:
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+            # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
 
     "lint:format":
         cmds:
@@ -95,7 +132,12 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 report
+
+    "test:unit:codecov":
+        cmds:
+           - ./node_modules/.bin/codecov
 
     "test:unit:browser":
         cmds:
@@ -107,15 +149,15 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js"
+            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
     "update:proto":
         deps:
             - "proto:update"
         cmds:
-            # Yes doing this twice does seem necessary :shrug:
-            - pnpm add link:packages/proto
-            - pnpm add link:packages/proto
+            - ./node_modules/.bin/yalc add @hashgraph/proto
+            # Remove proto so on `task build` we fix the link
+            - rm -rf ./node_modules/@hashgraph/proto
 
     update:
         cmds:
@@ -124,7 +166,7 @@ tasks:
 
     publish:
         preconditions:
-            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+            - "! grep '\".*\": \"\\(link\\|file\\):.*\"' package.json > /dev/null"
         deps:
             - "test:release"
         cmds:

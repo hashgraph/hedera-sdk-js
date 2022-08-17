@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ '12', '14', '16' ]
+        node: [ '14', '16' ]
 
     steps:
       - uses: actions/checkout@v2
@@ -45,13 +45,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
+          version: 7.6.0
 
       - name: Build @hashgraph/sdk
         run: task build
