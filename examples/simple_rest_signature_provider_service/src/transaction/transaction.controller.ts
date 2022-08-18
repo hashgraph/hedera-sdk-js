@@ -23,6 +23,7 @@ export class TransactionController {
         const transaction = Transaction.fromBytes(
             Buffer.from(body.bytes, "hex"),
         );
-        return this.walletService.wallet.call(transaction);
+
+        return await this.walletService.call(transaction);
     }
 }

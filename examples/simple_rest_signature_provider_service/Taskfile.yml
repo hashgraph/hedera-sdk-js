@@ -2,11 +2,6 @@ version: "3"
 
 silent: true
 
-# includes:
-#     tck-chai:
-#         taskfile: ../../packages/tck-chai/Taskfile.yml
-#         dir: ../../packages/tck-jest
-
 tasks:
     default:
         deps:
@@ -66,6 +61,4 @@ tasks:
       
     update:
         cmds:
-            - task: tck:build
-            - task: tck-chai:build
             - task: build

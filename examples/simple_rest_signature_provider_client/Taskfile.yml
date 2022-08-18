@@ -3,10 +3,6 @@ version: "3"
 silent: true
 
 includes:
-    tck:
-        taskfile: ../../packages/tck/Taskfile.yml
-        dir: ../../packages/tck
-
     tck-chai:
         taskfile: ../../packages/tck-chai/Taskfile.yml
         dir: ../../packages/tck-chai
@@ -18,14 +14,17 @@ tasks:
 
     install:
         cmds:
-            - pnpm i
+            - pnpm i > /dev/null
 
     build:
         cmds:
             - task: install
             - task: format
-            - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+            - ./node_modules/.bin/tsup src/**.ts > /dev/null
+
+    run:
+        cmds:
+            - node dist/index.cjs
 
     clean:
         cmds:
@@ -33,13 +32,12 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier "*.json" "src/*.js" --write > /dev/null
+            - ./node_modules/.bin/prettier "*.json" "src/*.ts" --write > /dev/null
 
     lint:
         deps:
             - "lint:types"
             - "lint:format"
-            - "lint:js"
 
     "lint:types":
         cmds:
@@ -47,11 +45,7 @@ tasks:
 
     "lint:format":
         cmds:
-            - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
-
-    "lint:js":
-        cmds:
-            - ./node_modules/.bin/eslint --fix "src/*.js"
+            - ./node_modules/.bin/prettier "*.json" "src/*.ts" --check > /dev/null
 
     test:
         deps:
@@ -67,6 +61,5 @@ tasks:
 
     update:
         cmds:
-            - task: tck:build
             - task: tck-chai:build
             - task: build

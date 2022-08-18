@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { AccountId, PrivateKey, Wallet, LocalProvider } from "@hashgraph/sdk";
+import { AccountId, PrivateKey, Wallet, LocalProvider, PrecheckStatusError, StatusErrorJSON } from "@hashgraph/sdk";
+import { Executable } from "../../../../lib/LocalProvider";
 
 @Injectable()
 export class WalletService {
@@ -16,5 +17,21 @@ export class WalletService {
             PrivateKey.fromString(process.env.OPERATOR_KEY),
             provider,
         );
+    }
+
+    async call<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>): Promise<{ response?: string, error?: StatusErrorJSON | string }> {
+        try {
+            const response = await this.wallet.call(request);
+            // TODO: We should not be calling private methods
+            const serialized = request._serializeResponse(response);
+            const hex = Buffer.from(serialized).toString("hex");
+            return { response: hex };
+        } catch (error) {
+            if (error instanceof PrecheckStatusError) {
+                return { error: error.toJSON() };
+            } else {
+                return { error: error.toString() };
+            }
+        }
     }
 }
