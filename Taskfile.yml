@@ -11,9 +11,9 @@ includes:
         taskfile: ./common_js_test/Taskfile.yml
         dir: ./common_js_test
 
-    simple_rest_signature_provider:
-        taskfile: ./examples/simple_rest_signature_provider/Taskfile.yml
-        dir: ./examples/simple_rest_signature_provider
+    # simple_rest_signature_provider:
+    #     taskfile: ./examples/simple_rest_signature_provider/Taskfile.yml
+    #     dir: ./examples/simple_rest_signature_provider
 
     proto:
         taskfile: ./packages/proto/Taskfile.yml
@@ -79,7 +79,6 @@ tasks:
             - "examples:clean"
             - "cryptography:clean"
             - "proto:clean"
-            - "simple_rest_signature_provider:clean"
             - "common_js_test:clean"
         cmds:
             - rm -rf node_modules .yalc
@@ -117,7 +116,6 @@ tasks:
             - task: build
             - task: test:unit
             - task: examples:build
-            - task: simple_rest_signature_provider:build
             - task: common_js_test:build
 
     test:
