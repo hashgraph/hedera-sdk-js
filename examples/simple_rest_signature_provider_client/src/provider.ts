@@ -79,25 +79,19 @@ export class SimpleRestProvider implements hashgraph.Provider {
     async call<RequestT, ResponseT, OutputT>(
         request: hashgraph.Executable<RequestT, ResponseT, OutputT>
     ): Promise<OutputT> {
-        const bytes = Buffer.from(request.toBytes()).toString("hex");
-        const url =
-            request instanceof hashgraph.Transaction
-                ? "/transaction/execute"
-                : "/query/execute";
+        let bytes = Buffer.from(request.toBytes());
+        const url = request instanceof hashgraph.Transaction 
+            ? "/transaction/execute"
+            : "/query/execute";
 
-        const response = await execute(url, { bytes });
+        const response = await execute(url, { bytes: bytes.toString("hex") });
+        bytes = Buffer.from(response.response, "hex");
 
         // TODO: We should not be calling private methods
-        return request._deserializeResponse(
-            Buffer.from(response.response, "hex")
-        );
+        return request._deserializeResponse(bytes);
     }
 }
 
-/**
- * @param url
- * @param body
- */
 export async function execute<T extends Record<string, any>>(
     url: string,
     body: any

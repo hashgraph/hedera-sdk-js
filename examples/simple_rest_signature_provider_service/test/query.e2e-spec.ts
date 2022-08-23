@@ -2,11 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { QueryModule } from "../src/query/query.module";
-import {
-    AccountInfoJson,
-    AccountInfoQuery,
-    Wallet,
-} from "@hashgraph/sdk";
+import { AccountInfoQuery, Wallet } from "@hashgraph/sdk";
 import { WalletService } from "../src/wallet/wallet.service";
 
 describe("QueryController (e2e)", () => {
@@ -24,6 +20,10 @@ describe("QueryController (e2e)", () => {
         wallet = app.get<WalletService>(WalletService).wallet;
     });
 
+    afterEach(async () => {
+        await app.close();
+    });
+
     it("should be able to execute query", async () => {
         const query = new AccountInfoQuery().setAccountId(
             wallet.getAccountId(),
@@ -36,11 +36,12 @@ describe("QueryController (e2e)", () => {
         return request(app.getHttpServer())
             .post("/query/execute")
             .send(body)
-            .expect(200)
-            .expect((response: AccountInfoJson) => {
-                expect(response.accountId).toBe(
-                    wallet.getAccountId().toString(),
-                );
+            .then((response) => {
+                expect(response.status).toBe(200);
+
+                const bytes = Buffer.from(response.body.response, "hex");
+                const info = query._deserializeResponse(bytes);
+                expect(info.accountId.toString()).toBe(wallet.getAccountId().toString());
                 // TODO: Validate everything else
             });
     });

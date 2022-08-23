@@ -49,6 +49,9 @@ export const Network = {
             case "previewnet":
                 return Network.PREVIEWNET;
 
+            case "local":
+                return Network.LOCAL;
+
             default:
                 throw new Error(`unknown network name: ${name}`);
         }
@@ -102,6 +105,10 @@ export const Network = {
         "5.previewnet.hedera.com:50211": new AccountId(8),
         "6.previewnet.hedera.com:50211": new AccountId(9),
     },
+
+    LOCAL: {
+        "127.0.0.1:50211": new AccountId(3),
+    },
 };
 
 export const MirrorNetwork = {
@@ -128,6 +135,7 @@ export const MirrorNetwork = {
     MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
     TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
     PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
+    LOCAL: ["127.0.0.1:5600"],
 };
 
 /**
@@ -159,6 +167,11 @@ export default class NodeClient extends Client {
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
                         this.setLedgerId(LedgerId.PREVIEWNET);
+                        break;
+
+                    case "local":
+                        this.setNetwork(Network.LOCAL);
+                        this.setMirrorNetwork(MirrorNetwork.LOCAL);
                         break;
 
                     default:

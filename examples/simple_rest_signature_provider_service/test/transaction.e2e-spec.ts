@@ -3,7 +3,6 @@ import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { TransactionModule } from "./../src/transaction/transaction.module";
 import {
-    TransactionResponseJSON,
     TransferTransaction,
     Wallet,
     Transaction,
@@ -31,19 +30,21 @@ describe("TransactionController (e2e)", () => {
         wallet = app.get<WalletService>(WalletService).wallet;
     });
 
-    it("should be able to sign transaction", () => {
+    afterEach(async () => {
+        await app.close();
+    });
+
+    it("should be able to sign transaction", async () => {
         return request(app.getHttpServer())
             .post("/transaction/sign")
             .send(body)
-            .expect(200)
-            .expect((response: string) => {
-                // The bytes should differ
-                expect(response).not.toBe(bytes);
+            .then((response) => {
+                expect(response.status).toBe(200);
+
                 const transaction = Transaction.fromBytes(
-                    Buffer.from(response, "hex"),
+                    Buffer.from(response.body.response, "hex"),
                 );
                 const sigantures = transaction.getSignatures();
-
                 const publicKey = wallet.getAccountKey() as PublicKey;
 
                 expect(sigantures.size).toBe(1);
@@ -64,13 +65,14 @@ describe("TransactionController (e2e)", () => {
         return request(app.getHttpServer())
             .post("/transaction/execute")
             .send(body)
-            .expect(200)
-            .expect((response: TransactionResponseJSON) => {
-                expect(
-                    Buffer.from(response.transactionHash, "hex").length,
-                ).toBe(48);
-                expect(response.nodeId).toBe("0.0.3");
-                expect(response.transactionId).toContain(
+            .then((response) => {
+                expect(response.status).toBe(200);
+                
+                const bytes = Buffer.from(response.body.response, "hex");
+                const body = transaction._deserializeResponse(bytes);
+                expect(body.transactionHash.length).toBe(48);
+                expect(body.nodeId.toString()).toBe("0.0.3");
+                expect(body.transactionId.accountId.toString()).toContain(
                     wallet.getAccountId().toString(),
                 );
             });

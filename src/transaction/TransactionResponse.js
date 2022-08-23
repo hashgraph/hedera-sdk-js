@@ -44,12 +44,11 @@ import ajv from "../Ajv.js";
 const validate = ajv.compile({
     type: "object",
     properties: {
-        name: { type: "string", format: "AccountId" },
-        status: { type: "string", format: "TransactionHash" },
+        nodeId: { type: "string", format: "AccountId" },
+        transactionHash: { type: "string", format: "TransactionHash" },
         transactionId: { type: "string", format: "TransactionId" },
-        message: { type: "string" },
     },
-    required: ["name", "status", "transactionId"],
+    required: ["nodeId", "transactionHash", "transactionId"],
     additionalProperties: false,
 });
 

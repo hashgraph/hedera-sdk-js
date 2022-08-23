@@ -260,7 +260,7 @@ export default class Wallet {
             transaction.nodeAccountIds != null &&
             transaction.nodeAccountIds.length != 0
         ) {
-            return Promise.resolve(transaction.freeze());
+            return Promise.resolve(transaction);
         }
 
         if (this.provider == null) {
@@ -275,7 +275,7 @@ export default class Wallet {
             nodeAccountIds.slice(0, (nodeAccountIds.length + 3 - 1) / 3)
         );
 
-        return Promise.resolve(transaction.freeze());
+        return Promise.resolve(transaction);
     }
 
     /**

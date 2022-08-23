@@ -57,7 +57,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/jest --config ./test/jest-e2e.json
+            - ./node_modules/.bin/jest --config ./test/jest-e2e.json {{.CLI_ARGS}}
       
     update:
         cmds:

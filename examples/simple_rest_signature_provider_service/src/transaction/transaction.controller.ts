@@ -1,29 +1,40 @@
-import { Controller, Post, Body, HttpCode } from "@nestjs/common";
+import { Controller, Post, Body, HttpStatus, Res } from "@nestjs/common";
 import { WalletService } from "../wallet/wallet.service";
 import { TransactionDto } from "./transaction.dto";
 import { Transaction } from "@hashgraph/sdk";
+import { Response } from "express";
 
 @Controller("transaction")
 export class TransactionController {
     constructor(public readonly walletService: WalletService) {}
 
     @Post("/sign")
-    @HttpCode(200)
-    async sign(@Body() body: TransactionDto) {
-        let transaction = Transaction.fromBytes(Buffer.from(body.bytes, "hex"));
-        transaction = await this.walletService.wallet.signTransaction(
-            transaction,
-        );
-        return Buffer.from(transaction.toBytes()).toString("hex");
+    async sign(@Res() res: Response, @Body() body: TransactionDto) {
+        try {
+            let transaction = Transaction.fromBytes(
+                Buffer.from(body.bytes, "hex"),
+            );
+            transaction = await this.walletService.wallet.signTransaction(
+                transaction,
+            );
+            res.status(HttpStatus.OK).send({
+                response: Buffer.from(transaction.toBytes()).toString("hex"),
+            });
+        } catch (error) {
+            res.status(HttpStatus.OK).send({ error: error.toString() });
+        }
     }
 
     @Post("/execute")
-    @HttpCode(200)
-    async execute(@Body() body: TransactionDto) {
-        const transaction = Transaction.fromBytes(
-            Buffer.from(body.bytes, "hex"),
-        );
+    async execute(@Res() res: Response, @Body() body: TransactionDto) {
+        try {
+            const transaction = Transaction.fromBytes(
+                Buffer.from(body.bytes, "hex"),
+            );
 
-        return await this.walletService.call(transaction);
+            await this.walletService.call(res, transaction);
+        } catch (error) {
+            res.status(HttpStatus.OK).send({ error: error.toString() });
+        }
     }
 }

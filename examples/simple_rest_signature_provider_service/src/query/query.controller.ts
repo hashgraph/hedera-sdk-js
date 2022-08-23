@@ -1,16 +1,20 @@
-import { Controller, Post, Body, HttpCode } from "@nestjs/common";
+import { Controller, Post, Body, HttpStatus, Res } from "@nestjs/common";
 import { WalletService } from "../wallet/wallet.service";
 import { QueryDto } from "./query.dto";
 import { Query } from "@hashgraph/sdk";
+import { Response } from "express";
 
 @Controller("query")
 export class QueryController {
     constructor(public readonly walletService: WalletService) {}
 
     @Post("/execute")
-    @HttpCode(200)
-    async execute(@Body() body: QueryDto) {
-        const query = Query.fromBytes(Buffer.from(body.bytes, "hex"));
-        return await this.walletService.call(query);
+    async execute(@Res() res: Response, @Body() body: QueryDto) {
+        try {
+            const query = Query.fromBytes(Buffer.from(body.bytes, "hex"));
+            await this.walletService.call(res, query);
+        } catch (error) {
+            res.status(HttpStatus.OK).send({ error: error.toString() });
+        }
     }
 }

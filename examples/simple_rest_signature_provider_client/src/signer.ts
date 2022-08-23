@@ -3,16 +3,16 @@ import { SimpleRestProvider, execute } from "./provider";
 
 export class SimpleRestSigner implements hashgraph.Signer {
     private accountId: hashgraph.AccountId;
-    private publicKey: hashgraph.PublicKey;
+    private accountKey: hashgraph.PublicKey;
     private provider: SimpleRestProvider | null;
 
     private constructor(
         accountId: hashgraph.AccountId,
-        publicKey: hashgraph.PublicKey,
+        accountKey: hashgraph.PublicKey,
         provider: SimpleRestProvider | null
     ) {
         this.accountId = accountId;
-        this.publicKey = publicKey;
+        this.accountKey = accountKey;
         this.provider = provider;
     }
 
@@ -24,14 +24,14 @@ export class SimpleRestSigner implements hashgraph.Signer {
         };
         const response: {
             accountId: string;
-            publicKey: string;
+            accountKey: string;
             ledgerId: string;
             network: Record<string, string>;
             mirrorNetwork: string[];
-        } = await execute("/login", body);
+        } = await execute("/wallet/connect", body);
 
         const id = hashgraph.AccountId.fromString(response.accountId);
-        const publicKey = hashgraph.PublicKey.fromString(response.publicKey);
+        const accountKey = hashgraph.PublicKey.fromString(response.accountKey);
         const ledgerId =
             response.ledgerId != null
                 ? hashgraph.LedgerId.fromString(response.ledgerId)
@@ -42,7 +42,7 @@ export class SimpleRestSigner implements hashgraph.Signer {
             response.mirrorNetwork
         );
 
-        return new SimpleRestSigner(id, publicKey, provider);
+        return new SimpleRestSigner(id, accountKey, provider);
     }
 
     getProvider(): SimpleRestProvider | null {
@@ -54,7 +54,7 @@ export class SimpleRestSigner implements hashgraph.Signer {
     }
 
     getAccountKey(): hashgraph.PublicKey {
-        return this.publicKey;
+        return this.accountKey;
     }
 
     getLedgerId(): hashgraph.LedgerId | null {
