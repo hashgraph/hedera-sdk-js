@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { INestApplication } from "@nestjs/common";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { TransactionModule } from "./../src/transaction/transaction.module";
 import {
@@ -28,6 +28,7 @@ describe("TransactionController (e2e)", () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
+        app.useGlobalPipes(new ValidationPipe({ transform: true }));
         await app.init();
 
         wallet = app.get<WalletService>(WalletService).wallet;
@@ -70,7 +71,7 @@ describe("TransactionController (e2e)", () => {
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(200);
-               
+              
                 const bytes = Buffer.from(response.body.response, "hex");
                 const body = transaction._deserializeResponse(bytes);
                 expect(body.transactionHash.length).toBe(48);
@@ -80,29 +81,40 @@ describe("TransactionController (e2e)", () => {
                 );
             });
     });
-
+    
     it("should return invalid signature error", async () => {
         // Overwrite the account ID to be invalid so this test should fail
         wallet.accountId = AccountId.fromString("0.0.200000");
-
+    
         const transaction = await new TransferTransaction()
             .addHbarTransfer("0.0.4", 1)
             .addHbarTransfer("0.0.3", -1)
             .freezeWithSigner(wallet);
-
+    
         const body = {
             bytes: Buffer.from(transaction.toBytes()).toString("hex"),
         };
+    
+        return request(app.getHttpServer())
+            .post("/transaction/execute")
+            .send(body)
+            .then((response) => {
+                expect(response.status).toBe(400);
+    
+                const error = StatusError.fromJSON(response.body.error);
+                expect(error.status).toBe(Status.PayerAccountNotFound);
+                expect(error.transactionId.accountId.toString()).toBe(wallet.getAccountId().toString());
+            });
+    });
+
+    it("should return error if invalid request body", async () => {
+        const body = { bytes: "00112233445566778899" };
 
         return request(app.getHttpServer())
             .post("/transaction/execute")
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(400);
-
-                const error = StatusError.fromJSON(response.body.error);
-                expect(error.status).toBe(Status.PayerAccountNotFound);
-                expect(error.transactionId.accountId.toString()).toBe(wallet.getAccountId().toString());
             });
     });
 });
