@@ -33,7 +33,7 @@ import ajv from "./Ajv.js";
 const validate = ajv.compile({
     type: "object",
     properties: {
-        name: { type: "string", format: "StatusErrorName" },
+        name: { enum: ["StatusError"] },
         status: { type: "string", format: "Status" },
         transactionId: { type: "string", format: "TransactionId" },
         message: { type: "string" },

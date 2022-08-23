@@ -34,7 +34,7 @@ export class TransactionController {
 
             await this.walletService.call(res, transaction);
         } catch (error) {
-            res.status(HttpStatus.OK).send({ error: error.toString() });
+            res.status(HttpStatus.BAD_REQUEST).send({ error: error.toString() });
         }
     }
 }

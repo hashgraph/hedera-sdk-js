@@ -71,6 +71,7 @@ export class SimpleRestSigner implements hashgraph.Signer {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     sign(messages: Uint8Array[]): Promise<hashgraph.SignerSignature[]> {
+        // TODO:
         return Promise.reject(new Error("not implemented"));
     }
 

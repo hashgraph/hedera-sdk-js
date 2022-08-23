@@ -41,7 +41,7 @@ export class WalletService {
             if (error instanceof PrecheckStatusError) {
                 res.status(HttpStatus.BAD_REQUEST).send({
                     error: error.toJSON(),
-                });
+                })
             } else {
                 res.status(HttpStatus.BAD_REQUEST).send({
                     error: error.toString(),

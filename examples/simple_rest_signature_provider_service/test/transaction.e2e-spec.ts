@@ -7,6 +7,9 @@ import {
     Wallet,
     Transaction,
     PublicKey,
+    StatusError,
+    Status,
+    AccountId,
 } from "@hashgraph/sdk";
 import { WalletService } from "../src/wallet/wallet.service";
 
@@ -40,22 +43,51 @@ describe("TransactionController (e2e)", () => {
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(200);
-
+    
                 const transaction = Transaction.fromBytes(
                     Buffer.from(response.body.response, "hex"),
                 );
                 const sigantures = transaction.getSignatures();
                 const publicKey = wallet.getAccountKey() as PublicKey;
-
+    
                 expect(sigantures.size).toBe(1);
                 expect(publicKey.verifyTransaction(transaction)).toBeTruthy();
             });
     });
-
+    
     it("should be able to execute transaction", async () => {
         const transaction = await new TransferTransaction()
             .addHbarTransfer(wallet.getAccountId(), -1)
             .addHbarTransfer("0.0.3", 1)
+            .freezeWithSigner(wallet);
+    
+        const body = {
+            bytes: Buffer.from(transaction.toBytes()).toString("hex"),
+        };
+    
+        return request(app.getHttpServer())
+            .post("/transaction/execute")
+            .send(body)
+            .then((response) => {
+                expect(response.status).toBe(200);
+               
+                const bytes = Buffer.from(response.body.response, "hex");
+                const body = transaction._deserializeResponse(bytes);
+                expect(body.transactionHash.length).toBe(48);
+                expect(body.nodeId.toString()).toBe("0.0.3");
+                expect(body.transactionId.accountId.toString()).toContain(
+                    wallet.getAccountId().toString(),
+                );
+            });
+    });
+
+    it("should return invalid signature error", async () => {
+        // Overwrite the account ID to be invalid so this test should fail
+        wallet.accountId = AccountId.fromString("0.0.200000");
+
+        const transaction = await new TransferTransaction()
+            .addHbarTransfer("0.0.4", 1)
+            .addHbarTransfer("0.0.3", -1)
             .freezeWithSigner(wallet);
 
         const body = {
@@ -66,15 +98,11 @@ describe("TransactionController (e2e)", () => {
             .post("/transaction/execute")
             .send(body)
             .then((response) => {
-                expect(response.status).toBe(200);
-                
-                const bytes = Buffer.from(response.body.response, "hex");
-                const body = transaction._deserializeResponse(bytes);
-                expect(body.transactionHash.length).toBe(48);
-                expect(body.nodeId.toString()).toBe("0.0.3");
-                expect(body.transactionId.accountId.toString()).toContain(
-                    wallet.getAccountId().toString(),
-                );
+                expect(response.status).toBe(400);
+
+                const error = StatusError.fromJSON(response.body.error);
+                expect(error.status).toBe(Status.PayerAccountNotFound);
+                expect(error.transactionId.accountId.toString()).toBe(wallet.getAccountId().toString());
             });
     });
 });
