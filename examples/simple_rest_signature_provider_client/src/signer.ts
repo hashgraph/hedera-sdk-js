@@ -102,13 +102,13 @@ export class SimpleRestSigner implements hashgraph.Signer {
             );
         }
 
-        const hex = Buffer.from(transaction.toBytes()).toString("hex");
-        const body = { transaction: hex };
-        const response = await execute("/transaction/sign", body);
+        let bytes = Buffer.from(transaction.toBytes());
+        const response = await execute("/transaction/sign", {
+            bytes: bytes.toString("hex"),
+        });
+        bytes = Buffer.from(response.response, "hex");
 
-        return hashgraph.Transaction.fromBytes(
-            Buffer.from(response.response, "hex")
-        ) as T;
+        return hashgraph.Transaction.fromBytes(bytes) as T;
     }
 
     checkTransaction<T extends hashgraph.Transaction>(

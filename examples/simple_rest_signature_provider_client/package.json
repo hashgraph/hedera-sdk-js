@@ -12,9 +12,13 @@
         "axios": "^0.26.1"
     },
     "devDependencies": {
+        "@hashgraph/tck-chai": "link:../../packages/tck-chai",
         "@types/node": "^17.0.27",
         "dotenv": "^14.3.2",
+        "mocha": "^10.0.0",
         "prettier": "^2.6.2",
+        "ts-mocha": "^10.0.0",
+        "ts-node": "^10.9.1",
         "tsup": "^6.2.2",
         "typescript": "^4.6.3"
     }

@@ -41,7 +41,9 @@ describe("QueryController (e2e)", () => {
 
                 const bytes = Buffer.from(response.body.response, "hex");
                 const info = query._deserializeResponse(bytes);
-                expect(info.accountId.toString()).toBe(wallet.getAccountId().toString());
+                expect(info.accountId.toString()).toBe(
+                    wallet.getAccountId().toString(),
+                );
                 // TODO: Validate everything else
             });
     });

@@ -24,7 +24,7 @@ tasks:
 
     run:
         cmds:
-            - node dist/index.cjs
+            - ./node_modules/.bin/ts-node src/index
 
     clean:
         cmds:
@@ -57,7 +57,7 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/ts-mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/tck.ts" {{.CLI_ARGS}}
 
     update:
         cmds:

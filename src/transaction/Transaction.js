@@ -988,8 +988,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWithSigner(signer) {
-        await signer.signTransaction(this);
-        return this;
+        return await signer.signTransaction(this);
     }
 
     /**
@@ -1001,9 +1000,9 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async freezeWithSigner(signer) {
-        await signer.populateTransaction(this);
-        this.freeze();
-        return this;
+        const self = await signer.populateTransaction(this);
+        self.freeze();
+        return self;
     }
 
     /**

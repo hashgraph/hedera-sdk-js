@@ -24,7 +24,7 @@ module.exports = {
         sourceType: "module",
         warnOnUnsupportedTypeScriptVersion: false,
     },
-    plugins: ["@typescript-eslint", "deprecation", "ie11"],
+    plugins: ["@typescript-eslint", "deprecation"],
     rules: {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -42,6 +42,7 @@ module.exports = {
 
         // sometimes we need this with jsdoc typing
         "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
 
         // some typescript type productions do not parse
         "jsdoc/valid-types": "off",
@@ -61,11 +62,5 @@ module.exports = {
         // reports usage of deprecated code
         // <https://github.com/gund/eslint-plugin-deprecation>
         "deprecation/deprecation": "warn",
-
-        // detecting unsupported ES6 features in IE11
-        "ie11/no-collection-args": "error",
-        "ie11/no-for-in-const": "error",
-        "ie11/no-loop-func": "warn",
-        "ie11/no-weak-collections": "error"
     },
 };

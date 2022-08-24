@@ -11,9 +11,7 @@ export class TransactionController {
     @Post("/sign")
     @HttpCode(200)
     async sign(@Body() body: TransactionDto) {
-        let transaction = Transaction.fromBytes(
-            Buffer.from(body.bytes, "hex"),
-        );
+        let transaction = Transaction.fromBytes(Buffer.from(body.bytes, "hex"));
         transaction = await this.walletService.wallet.signTransaction(
             transaction,
         );

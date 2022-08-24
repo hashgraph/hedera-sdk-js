@@ -80,9 +80,10 @@ export class SimpleRestProvider implements hashgraph.Provider {
         request: hashgraph.Executable<RequestT, ResponseT, OutputT>
     ): Promise<OutputT> {
         let bytes = Buffer.from(request.toBytes());
-        const url = request instanceof hashgraph.Transaction 
-            ? "/transaction/execute"
-            : "/query/execute";
+        const url =
+            request instanceof hashgraph.Transaction
+                ? "/transaction/execute"
+                : "/query/execute";
 
         const response = await execute(url, { bytes: bytes.toString("hex") });
         bytes = Buffer.from(response.response, "hex");

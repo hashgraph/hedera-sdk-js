@@ -10,7 +10,8 @@ export class WalletController {
     connect() {
         const accountId = this.walletService.wallet.getAccountId();
         const accountKey = this.walletService.wallet.getAccountKey();
-        const network: Record<string, AccountId | string> = this.walletService.wallet.getNetwork();
+        const network: Record<string, AccountId | string> =
+            this.walletService.wallet.getNetwork();
         const mirrorNetwork = this.walletService.wallet.getMirrorNetwork();
         const ledgerId = this.walletService.wallet.getLedgerId();
 

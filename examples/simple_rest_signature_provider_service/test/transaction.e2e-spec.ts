@@ -44,34 +44,33 @@ describe("TransactionController (e2e)", () => {
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(200);
-    
-                const transaction = Transaction.fromBytes(
-                    Buffer.from(response.body.response, "hex"),
-                );
+
+                const bytes = Buffer.from(response.body.response, "hex")
+                const transaction = Transaction.fromBytes(bytes);
                 const sigantures = transaction.getSignatures();
                 const publicKey = wallet.getAccountKey() as PublicKey;
-    
+
                 expect(sigantures.size).toBe(1);
                 expect(publicKey.verifyTransaction(transaction)).toBeTruthy();
             });
     });
-    
+
     it("should be able to execute transaction", async () => {
         const transaction = await new TransferTransaction()
             .addHbarTransfer(wallet.getAccountId(), -1)
             .addHbarTransfer("0.0.3", 1)
             .freezeWithSigner(wallet);
-    
+
         const body = {
             bytes: Buffer.from(transaction.toBytes()).toString("hex"),
         };
-    
+
         return request(app.getHttpServer())
             .post("/transaction/execute")
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(200);
-              
+
                 const bytes = Buffer.from(response.body.response, "hex");
                 const body = transaction._deserializeResponse(bytes);
                 expect(body.transactionHash.length).toBe(48);
@@ -81,29 +80,31 @@ describe("TransactionController (e2e)", () => {
                 );
             });
     });
-    
+
     it("should return invalid signature error", async () => {
         // Overwrite the account ID to be invalid so this test should fail
         wallet.accountId = AccountId.fromString("0.0.200000");
-    
+
         const transaction = await new TransferTransaction()
             .addHbarTransfer("0.0.4", 1)
             .addHbarTransfer("0.0.3", -1)
             .freezeWithSigner(wallet);
-    
+
         const body = {
             bytes: Buffer.from(transaction.toBytes()).toString("hex"),
         };
-    
+
         return request(app.getHttpServer())
             .post("/transaction/execute")
             .send(body)
             .then((response) => {
                 expect(response.status).toBe(400);
-    
+
                 const error = StatusError.fromJSON(response.body.error);
                 expect(error.status).toBe(Status.PayerAccountNotFound);
-                expect(error.transactionId.accountId.toString()).toBe(wallet.getAccountId().toString());
+                expect(error.transactionId.accountId.toString()).toBe(
+                    wallet.getAccountId().toString(),
+                );
             });
     });
 

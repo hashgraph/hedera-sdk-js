@@ -10,7 +10,7 @@
     "author": "Launchbadge <contact@launchbadge.com>",
     "license": "Apache-2.0",
     "dependencies": {
-        "@hashgraph/tck": "link:../tck",
+        "@hashgraph/sdk": "link:../..",
         "chai": "^4.3.6"
     },
     "devDependencies": {
@@ -20,7 +20,6 @@
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.17.9",
         "@babel/register": "^7.17.7",
-        "@hashgraph/sdk": "link:../..",
         "@types/chai": "^4.3.1",
         "@types/node": "^17.0.27",
         "@typescript-eslint/eslint-plugin": "^5.21.0",
