@@ -87,7 +87,7 @@ export default class LiveHashQuery extends Query {
                 hash.accountID != null
                     ? AccountId._fromProtobuf(hash.accountID)
                     : undefined,
-            hash: hash.hash != null ? hash.hash : undefined,
+            hash: hash.hash != null && hash.hash.length !== 0 ? hash.hash : undefined,
         });
     }
 

@@ -25,6 +25,7 @@ import Transaction, {
 import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -130,6 +131,8 @@ export default class ContractExecuteTransaction extends Transaction {
                 body.contractCall
             );
 
+        const amount = long.fromProtobuf(call.amount);
+
         return Transaction._fromProtobufTransactions(
             new ContractExecuteTransaction({
                 contractId:
@@ -140,13 +143,13 @@ export default class ContractExecuteTransaction extends Transaction {
                               )
                           )
                         : undefined,
-                gas: call.gas != null ? call.gas : undefined,
+                gas: long.fromProtobuf(call.gas),
                 amount:
-                    call.amount != null
-                        ? Hbar.fromTinybars(call.amount)
+                    amount != null
+                        ? Hbar.fromTinybars(amount)
                         : undefined,
                 functionParameters:
-                    call.functionParameters != null
+                    call.functionParameters != null && call.functionParameters.length !== 0
                         ? call.functionParameters
                         : undefined,
             }),

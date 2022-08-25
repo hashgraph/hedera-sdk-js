@@ -172,9 +172,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {?AccountId}
      */
     get accountId() {
-        console.warn(
-            "`TokenNftInfoQuery.accountId` is deprecated with no replacement"
-        );
         return this._accountId;
     }
 
@@ -185,9 +182,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {TokenNftInfoQuery}
      */
     setAccountId(accountId) {
-        console.warn(
-            "`TokenNftInfoQuery.setAccountId()` is deprecated with no replacement"
-        );
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
@@ -201,9 +195,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {?TokenId}
      */
     get tokenId() {
-        console.warn(
-            "`TokenNftInfoQuery.tokenId` is deprecated with no replacement"
-        );
         return this._tokenId;
     }
 
@@ -214,9 +205,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {TokenNftInfoQuery}
      */
     setTokenId(tokenId) {
-        console.warn(
-            "`TokenNftInfoQuery.setTokenId()` is deprecated with no replacement"
-        );
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -230,9 +218,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {?Long}
      */
     get start() {
-        console.warn(
-            "`TokenNftInfoQuery.start` is deprecated with no replacement"
-        );
         return this._start;
     }
 
@@ -243,9 +228,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {TokenNftInfoQuery}
      */
     setStart(start) {
-        console.warn(
-            "`TokenNftInfoQuery.setStart()` is deprecated with no replacement"
-        );
         this._start =
             typeof start === "number" ? Long.fromNumber(start) : start;
 
@@ -257,9 +239,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {?Long}
      */
     get end() {
-        console.warn(
-            "`TokenNftInfoQuery.end` is deprecated with no replacement"
-        );
         return this._end;
     }
 
@@ -270,9 +249,6 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {TokenNftInfoQuery}
      */
     setEnd(end) {
-        console.warn(
-            "`TokenNftInfoQuery.setEnd()` is deprecated with no replacement"
-        );
         this._end = typeof end === "number" ? Long.fromNumber(end) : end;
 
         return this;

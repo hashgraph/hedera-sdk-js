@@ -19,10 +19,10 @@
  */
 
 import BigNumber from "bignumber.js";
+import Long from "long";
 
 /**
  * @typedef {{low: number, high: number, unsigned: boolean}} LongObject
- * @typedef {import("long")} Long
  */
 
 /**
@@ -35,4 +35,27 @@ export function valueToLong(value) {
     } else {
         return new BigNumber(value.toString());
     }
+}
+
+/**
+ * @param {Long | number | undefined | null} value 
+ * @returns {Long | undefined}
+ */
+export function fromProtobuf(value) {
+    if (value == null) {
+        return undefined;
+    }
+
+    if (typeof value === "number" && value === 0) {
+        return undefined;
+    }
+
+    value = Long.fromValue(value);
+
+    if (value.compare(Long.ZERO) === 0) {
+        return undefined;
+    }
+
+    return value;
+
 }

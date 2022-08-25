@@ -162,7 +162,7 @@ export default class FreezeTransaction extends Transaction {
                           }
                         : undefined,
                 endTime:
-                    freeze.endHour != null && freeze.endMin != null
+                    freeze.endHour != null && freeze.endMin != null && freeze.endHour !== 0 && freeze.endMin !== 0
                         ? {
                               hour: freeze.endHour,
                               minute: freeze.endMin,
@@ -176,9 +176,9 @@ export default class FreezeTransaction extends Transaction {
                     freeze.updateFile != null
                         ? FileId._fromProtobuf(freeze.updateFile)
                         : undefined,
-                fileHash: freeze.fileHash != null ? freeze.fileHash : undefined,
+                fileHash: freeze.fileHash != null && freeze.fileHash.length !== 0 ? freeze.fileHash : undefined,
                 freezeType:
-                    freeze.freezeType != null
+                    freeze.freezeType != null && freeze.freezeType !== 0
                         ? FreezeType._fromCode(freeze.freezeType)
                         : undefined,
             }),
@@ -245,7 +245,6 @@ export default class FreezeTransaction extends Transaction {
      * @returns {?HourMinute}
      */
     get endTime() {
-        console.warn("`FreezeTransaction.endTime` is deprecated");
         return this._endTime;
     }
 
@@ -256,7 +255,6 @@ export default class FreezeTransaction extends Transaction {
      * @returns {FreezeTransaction}
      */
     setEndTime(endHourOrString, endMinute) {
-        console.warn("`FreezeTransaction.endTime` is deprecated");
         this._requireNotFrozen();
         if (typeof endHourOrString === "string") {
             const split = endHourOrString.split(":");

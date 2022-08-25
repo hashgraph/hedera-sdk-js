@@ -59,23 +59,23 @@ const TRANSACTIONS = [
  * @type {hashgraph.Query<*>[]}
  */
 const QUERIES = [
-    // new hashgraph.AccountBalanceQuery(),
-    // new hashgraph.AccountInfoQuery(),
-    // new hashgraph.AccountRecordsQuery(),
-    // new hashgraph.AccountStakersQuery(),
-    // new hashgraph.ContractByteCodeQuery(),
-    // new hashgraph.ContractCallQuery(),
-    // new hashgraph.ContractInfoQuery(),
-    // new hashgraph.FileContentsQuery(),
-    // new hashgraph.FileInfoQuery(),
-    // new hashgraph.LiveHashQuery(),
-    // new hashgraph.NetworkVersionInfoQuery(),
-    // new hashgraph.ScheduleInfoQuery(),
-    // new hashgraph.TokenInfoQuery(),
-    // new hashgraph.TokenNftInfoQuery(),
-    // new hashgraph.TopicInfoQuery(),
-    // new hashgraph.TransactionReceiptQuery(),
-    // new hashgraph.TransactionRecordQuery(),
+    new hashgraph.AccountBalanceQuery(),
+    new hashgraph.AccountInfoQuery(),
+    new hashgraph.AccountRecordsQuery(),
+    new hashgraph.AccountStakersQuery(),
+    new hashgraph.ContractByteCodeQuery(),
+    new hashgraph.ContractCallQuery(),
+    new hashgraph.ContractInfoQuery(),
+    new hashgraph.FileContentsQuery(),
+    new hashgraph.FileInfoQuery(),
+    new hashgraph.LiveHashQuery(),
+    new hashgraph.NetworkVersionInfoQuery(),
+    new hashgraph.ScheduleInfoQuery(),
+    new hashgraph.TokenInfoQuery(),
+    new hashgraph.TokenNftInfoQuery(),
+    new hashgraph.TopicInfoQuery(),
+    new hashgraph.TransactionReceiptQuery(),
+    new hashgraph.TransactionRecordQuery(),
 ];
 
 /**
@@ -202,7 +202,7 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                 try {
                     const promise = request.executeWithSigner(signer);
                     callback();
-                    const response = await promise;
+                    await promise;
                 } catch (error) {
                     if (error instanceof hashgraph.StatusError) {
                         // Do nothing;
@@ -236,9 +236,9 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                             // 200 OK means we found our transaction on the mirror node
                             await instance.get(
                                 `/transactions/${mirrorTransactionId}`
-                            )
+                            );
 
-                            break;
+                            return;
                         } catch (error) {
                             if (
                                 /** @type {Error} */ (error)
@@ -254,6 +254,10 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                             }
                         }
                     }
+
+                    throw new Error(
+                        "failed to find transaction in mirror node"
+                    );
                 }
             },
         });

@@ -24,6 +24,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -129,7 +130,7 @@ export default class TokenWipeTransaction extends Transaction {
                     wipeToken.account != null
                         ? AccountId._fromProtobuf(wipeToken.account)
                         : undefined,
-                amount: wipeToken.amount != null ? wipeToken.amount : undefined,
+                amount: long.fromProtobuf(wipeToken.amount),
             }),
             transactions,
             signedTransactions,

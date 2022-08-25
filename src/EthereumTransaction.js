@@ -23,6 +23,7 @@ import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "./transaction/Transaction.js";
+import * as long from "./long.js";
 
 /**
  * @namespace proto
@@ -119,17 +120,14 @@ export default class EthereumTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new EthereumTransaction({
                 ethereumData:
-                    transaction.ethereumData != null
+                    transaction.ethereumData != null && transaction.ethereumData.length !== 0
                         ? transaction.ethereumData
                         : undefined,
                 callData:
                     transaction.callData != null
                         ? FileId._fromProtobuf(transaction.callData)
                         : undefined,
-                maxGasAllowance:
-                    transaction.maxGasAllowance != null
-                        ? Hbar.fromTinybars(transaction.maxGasAllowance)
-                        : undefined,
+                maxGasAllowance: long.fromProtobuf(transaction.maxGasAllowance),
             }),
             transactions,
             signedTransactions,

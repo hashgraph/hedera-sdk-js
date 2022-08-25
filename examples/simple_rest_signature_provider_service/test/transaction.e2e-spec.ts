@@ -45,7 +45,7 @@ describe("TransactionController (e2e)", () => {
             .then((response) => {
                 expect(response.status).toBe(200);
 
-                const bytes = Buffer.from(response.body.response, "hex")
+                const bytes = Buffer.from(response.body.response, "hex");
                 const transaction = Transaction.fromBytes(bytes);
                 const sigantures = transaction.getSignatures();
                 const publicKey = wallet.getAccountKey() as PublicKey;

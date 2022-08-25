@@ -1,17 +1,152 @@
 import {
-    AccountCreateTransaction,
     AccountId,
-    FileCreateTransaction,
     Hbar,
     PrivateKey,
     Timestamp,
     Transaction,
     TransactionId,
+    Query,
+    AccountAllowanceApproveTransaction,
+    AccountAllowanceDeleteTransaction,
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    AccountUpdateTransaction,
+    ContractCreateTransaction,
+    ContractDeleteTransaction,
+    ContractExecuteTransaction,
+    ContractUpdateTransaction,
+    EthereumTransaction,
+    FileAppendTransaction,
+    FileCreateTransaction,
+    FileDeleteTransaction,
+    FileUpdateTransaction,
+    FreezeTransaction,
+    LiveHashAddTransaction,
+    LiveHashDeleteTransaction,
+    // ScheduleCreateTransaction,
+    ScheduleDeleteTransaction,
+    ScheduleSignTransaction,
+    SystemDeleteTransaction,
+    SystemUndeleteTransaction,
+    TokenAssociateTransaction,
+    TokenBurnTransaction,
+    TokenCreateTransaction,
+    TokenDeleteTransaction,
+    TokenDissociateTransaction,
+    TokenFeeScheduleUpdateTransaction,
+    TokenFreezeTransaction,
+    TokenGrantKycTransaction,
+    TokenMintTransaction,
+    TokenPauseTransaction,
+    TokenRevokeKycTransaction,
+    TokenUnfreezeTransaction,
+    TokenUnpauseTransaction,
+    TokenUpdateTransaction,
+    TokenWipeTransaction,
+    TopicCreateTransaction,
+    TopicDeleteTransaction,
+    TopicMessageSubmitTransaction,
+    TopicUpdateTransaction,
+    TransferTransaction,
+    AccountBalanceQuery,
+    AccountInfoQuery,
+    AccountRecordsQuery,
+    AccountStakersQuery,
+    ContractByteCodeQuery,
+    ContractCallQuery,
+    ContractInfoQuery,
+    FileContentsQuery,
+    FileInfoQuery,
+    LiveHashQuery,
+    NetworkVersionInfoQuery,
+    ScheduleInfoQuery,
+    TokenInfoQuery,
+    TokenNftInfoQuery,
+    TopicInfoQuery,
+    TransactionReceiptQuery,
+    TransactionRecordQuery,
 } from "../../src/index.js";
+import ObjectMap from "../../src/ObjectMap.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+
+/**
+ * @type {hashgraph.Transaction[]}
+ */
+const TRANSACTIONS = [
+    new AccountAllowanceApproveTransaction(),
+    new AccountAllowanceDeleteTransaction(),
+    new AccountCreateTransaction(),
+    new AccountDeleteTransaction(),
+    new AccountUpdateTransaction(),
+    new ContractCreateTransaction(),
+    new ContractDeleteTransaction(),
+    new ContractExecuteTransaction(),
+    new ContractUpdateTransaction(),
+    new EthereumTransaction(),
+    new FileAppendTransaction(),
+    new FileCreateTransaction(),
+    new FileDeleteTransaction(),
+    new FileUpdateTransaction(),
+    new FreezeTransaction(),
+    new LiveHashAddTransaction(),
+    new LiveHashDeleteTransaction(),
+    // new ScheduleCreateTransaction(),
+    new ScheduleDeleteTransaction(),
+    new ScheduleSignTransaction(),
+    new SystemDeleteTransaction(),
+    new SystemUndeleteTransaction(),
+    new TokenAssociateTransaction(),
+    new TokenBurnTransaction(),
+    new TokenCreateTransaction(),
+    new TokenDeleteTransaction(),
+    new TokenDissociateTransaction(),
+    new TokenFeeScheduleUpdateTransaction(),
+    new TokenFreezeTransaction(),
+    new TokenGrantKycTransaction(),
+    new TokenMintTransaction(),
+    new TokenPauseTransaction(),
+    new TokenRevokeKycTransaction(),
+    new TokenUnfreezeTransaction(),
+    new TokenUnpauseTransaction(),
+    new TokenUpdateTransaction(),
+    new TokenWipeTransaction(),
+    new TopicCreateTransaction(),
+    new TopicDeleteTransaction(),
+    new TopicMessageSubmitTransaction(),
+    new TopicUpdateTransaction(),
+    new TransferTransaction(),
+];
+
+/**
+ * @type {hashgraph.Query<*>[]}
+ */
+const QUERIES = [
+    new AccountBalanceQuery(),
+    new AccountInfoQuery(),
+    new AccountRecordsQuery(),
+    new AccountStakersQuery(),
+    new ContractByteCodeQuery(),
+    new ContractCallQuery(),
+    new ContractInfoQuery(),
+    new FileContentsQuery(),
+    new FileInfoQuery(),
+    new LiveHashQuery(),
+    new NetworkVersionInfoQuery(),
+    new ScheduleInfoQuery(),
+    new TokenInfoQuery(),
+    new TokenNftInfoQuery(),
+    new TopicInfoQuery(),
+    new TransactionReceiptQuery(),
+    new TransactionRecordQuery(),
+];
+
+/**
+ * @type {hashgraph.Executable<*, *, *>[]}
+ */
+const REQUESTS = [...TRANSACTIONS, ...QUERIES];
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -196,6 +331,51 @@ describe("Transaction", function () {
             throw new Error(
                 "transaction successfully built from invalid bytes"
             );
+        }
+    });
+
+    it("can serialize and deserialize all requests", function() {
+        const transactionId = TransactionId.generate(new AccountId(4));
+        for (const request of REQUESTS) {
+            /** @type {Executable<*, *, *>} */
+            let req;
+
+            if (request instanceof Transaction) {
+                const bytes = /** @type {Transaction} */ (request)
+                    .setTransactionId(transactionId)
+                    .setNodeAccountIds([new AccountId(3)])
+                    .freeze()
+                    .toBytes();
+                req = Transaction.fromBytes(bytes);
+            } else {
+                const bytes = request.toBytes();
+                req = Query.fromBytes(bytes);
+            }
+
+            expect(request.constructor.name).to.be.equal(req.constructor.name);
+
+            let proto = request;
+
+            while (proto != null) {
+                const properties = Object.getOwnPropertyNames(Object.getPrototypeOf(req));
+
+                for (const property of properties) {
+                    if (property.startsWith("_")) {
+                        continue;
+                    }
+
+                    const requestProperty = request[property];
+                    const reqProperty = req[property];
+
+                    if (requestProperty instanceof ObjectMap) {
+                        expect(/** @type {ObjectMap<*, *> */(requestProperty).compare(reqProperty)).to.be.true;
+                    } else {
+                        expect(request[property]).to.deep.equal(req[property], `${request.constructor.name} doesn't match property ${property}`);
+                    }
+                }
+
+                proto = proto.__proto__;
+            }
         }
     });
 });

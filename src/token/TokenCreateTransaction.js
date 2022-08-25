@@ -33,6 +33,7 @@ import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import Key from "../Key.js";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -321,13 +322,10 @@ export default class TokenCreateTransaction extends Transaction {
 
         return Transaction._fromProtobufTransactions(
             new TokenCreateTransaction({
-                tokenName: create.name != null ? create.name : undefined,
-                tokenSymbol: create.symbol != null ? create.symbol : undefined,
-                decimals: create.decimals != null ? create.decimals : undefined,
-                initialSupply:
-                    create.initialSupply != null
-                        ? create.initialSupply
-                        : undefined,
+                tokenName: create.name != null && create.name != "" ? create.name : undefined,
+                tokenSymbol: create.symbol != null && create.symbol != "" ? create.symbol : undefined,
+                decimals: create.decimals != null && create.decimals != 0 ? create.decimals : undefined,
+                initialSupply: long.fromProtobuf(create.initialSupply),
                 treasuryAccountId:
                     create.treasury != null
                         ? AccountId._fromProtobuf(create.treasury)
@@ -361,8 +359,7 @@ export default class TokenCreateTransaction extends Transaction {
                         ? Key._fromProtobufKey(create.feeScheduleKey)
                         : undefined,
                 freezeDefault:
-                    create.freezeDefault != null
-                        ? create.freezeDefault
+                    create.freezeDefault != null && create.freezeDefault ? true
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
@@ -376,7 +373,7 @@ export default class TokenCreateTransaction extends Transaction {
                     create.autoRenewPeriod != null
                         ? Duration._fromProtobuf(create.autoRenewPeriod)
                         : undefined,
-                tokenMemo: create.memo != null ? create.memo : undefined,
+                tokenMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
                 customFees:
                     create.customFees != null
                         ? create.customFees.map((fee) => {
@@ -390,15 +387,14 @@ export default class TokenCreateTransaction extends Transaction {
                           })
                         : undefined,
                 tokenType:
-                    create.tokenType != null
+                    create.tokenType != null && create.tokenType !== 0
                         ? TokenType._fromCode(create.tokenType)
                         : undefined,
                 supplyType:
-                    create.supplyType != null
+                    create.supplyType != null && create.supplyType !== 0
                         ? TokenSupplyType._fromCode(create.supplyType)
                         : undefined,
-                maxSupply:
-                    create.maxSupply != null ? create.maxSupply : undefined,
+                maxSupply: long.fromProtobuf(create.maxSupply),
             }),
             transactions,
             signedTransactions,

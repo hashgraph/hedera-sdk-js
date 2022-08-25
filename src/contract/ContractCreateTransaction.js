@@ -29,6 +29,7 @@ import Transaction, {
 import Long from "long";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -251,11 +252,8 @@ export default class ContractCreateTransaction extends Transaction {
                     create.adminKey != null
                         ? Key._fromProtobufKey(create.adminKey)
                         : undefined,
-                gas: create.gas != null ? create.gas : undefined,
-                initialBalance:
-                    create.initialBalance != null
-                        ? create.initialBalance
-                        : undefined,
+                gas: long.fromProtobuf(create.gas),
+                initialBalance: long.fromProtobuf(create.initialBalance),
                 proxyAccountId:
                     create.proxyAccountID != null
                         ? AccountId._fromProtobuf(
@@ -271,10 +269,10 @@ export default class ContractCreateTransaction extends Transaction {
                             : undefined
                         : undefined,
                 constructorParameters:
-                    create.constructorParameters != null
+                    create.constructorParameters != null && create.constructorParameters.length != 0
                         ? create.constructorParameters
                         : undefined,
-                contractMemo: create.memo != null ? create.memo : undefined,
+                contractMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
                 maxAutomaticTokenAssociations:
                     create.maxAutomaticTokenAssociations != null
                         ? create.maxAutomaticTokenAssociations
@@ -287,7 +285,7 @@ export default class ContractCreateTransaction extends Transaction {
                     create.stakedNodeId != null
                         ? create.stakedNodeId
                         : undefined,
-                declineStakingReward: create.declineReward == true,
+                declineStakingReward: create.declineReward != null && create.declineReward ? true : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccountId != null
                         ? AccountId._fromProtobuf(create.autoRenewAccountId)

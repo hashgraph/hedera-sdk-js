@@ -102,7 +102,7 @@ export default class TokenAssociateTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new TokenAssociateTransaction({
                 tokenIds:
-                    associateToken.tokens != null
+                    associateToken.tokens != null && associateToken.tokens.length !== 0
                         ? associateToken.tokens.map((token) =>
                               TokenId._fromProtobuf(token)
                           )

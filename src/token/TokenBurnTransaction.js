@@ -23,6 +23,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -114,7 +115,7 @@ export default class TokenBurnTransaction extends Transaction {
                     burnToken.token != null
                         ? TokenId._fromProtobuf(burnToken.token)
                         : undefined,
-                amount: burnToken.amount != null ? burnToken.amount : undefined,
+                amount: long.fromProtobuf(burnToken.amount),
                 serials:
                     burnToken.serialNumbers != null
                         ? burnToken.serialNumbers

@@ -24,6 +24,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import Long from "long";
 import * as hex from "../encoding/hex.js";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -115,7 +116,7 @@ export default class TokenMintTransaction extends Transaction {
                     mintToken.token != null
                         ? TokenId._fromProtobuf(mintToken.token)
                         : undefined,
-                amount: mintToken.amount != null ? mintToken.amount : undefined,
+                amount: long.fromProtobuf(mintToken.amount),
                 metadata:
                     mintToken.metadata != null ? mintToken.metadata : undefined,
             }),

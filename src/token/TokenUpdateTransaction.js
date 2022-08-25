@@ -249,8 +249,8 @@ export default class TokenUpdateTransaction extends Transaction {
                     update.token != null
                         ? TokenId._fromProtobuf(update.token)
                         : undefined,
-                tokenName: update.name != null ? update.name : undefined,
-                tokenSymbol: update.symbol != null ? update.symbol : undefined,
+                tokenName: update.name != null && update.name !== "" ? update.name : undefined,
+                tokenSymbol: update.symbol != null && update.symbol !== "" ? update.symbol : undefined,
                 treasuryAccountId:
                     update.treasury != null
                         ? AccountId._fromProtobuf(update.treasury)

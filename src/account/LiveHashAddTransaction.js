@@ -122,7 +122,7 @@ export default class LiveHashAddTransaction extends Transaction {
 
         return Transaction._fromProtobufTransactions(
             new LiveHashAddTransaction({
-                hash: liveHash_.hash != null ? liveHash_.hash : undefined,
+                hash: liveHash_.hash != null && liveHash_.hash.length !== 0 ? liveHash_.hash : undefined,
                 keys:
                     liveHash_.keys != null
                         ? liveHash_.keys.keys != null

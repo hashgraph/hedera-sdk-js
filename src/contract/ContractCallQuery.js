@@ -24,6 +24,7 @@ import AccountId from "../account/AccountId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -131,13 +132,12 @@ export default class ContractCallQuery extends Query {
                 call.contractID != null
                     ? ContractId._fromProtobuf(call.contractID)
                     : undefined,
-            gas: call.gas != null ? call.gas : undefined,
+            gas: long.fromProtobuf(call.gas),
             functionParameters:
-                call.functionParameters != null
+                call.functionParameters != null && call.functionParameters.length != 0
                     ? call.functionParameters
                     : undefined,
-            maxResultSize:
-                call.maxResultSize != null ? call.maxResultSize : undefined,
+            maxResultSize: long.fromProtobuf(call.maxResultSize),
         });
     }
 

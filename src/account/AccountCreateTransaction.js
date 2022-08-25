@@ -28,6 +28,7 @@ import Transaction, {
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
+import * as long from "../long.js";
 
 /**
  * @namespace proto
@@ -212,10 +213,7 @@ export default class AccountCreateTransaction extends Transaction {
                     create.key != null
                         ? Key._fromProtobufKey(create.key)
                         : undefined,
-                initialBalance:
-                    create.initialBalance != null
-                        ? create.initialBalance
-                        : undefined,
+                initialBalance: long.fromProtobuf(create.initialBalance),
                 receiverSignatureRequired:
                     create.receiverSigRequired != null
                         ? create.receiverSigRequired
@@ -234,11 +232,8 @@ export default class AccountCreateTransaction extends Transaction {
                             ? create.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
-                accountMemo: create.memo != null ? create.memo : undefined,
-                maxAutomaticTokenAssociations:
-                    create.maxAutomaticTokenAssociations != null
-                        ? create.maxAutomaticTokenAssociations
-                        : undefined,
+                accountMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
+                maxAutomaticTokenAssociations: long.fromProtobuf(create.maxAutomaticTokenAssociations),
                 stakedAccountId:
                     create.stakedAccountId != null
                         ? AccountId._fromProtobuf(create.stakedAccountId)

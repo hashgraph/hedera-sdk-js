@@ -126,6 +126,31 @@ export default class ObjectMap {
     }
 
     /**
+     * @param {ObjectMap<KeyT, ValueT>} o
+     * @returns {boolean}
+     */
+    compare(o) {
+        if (this._map.size !== o._map.size) {
+            return false;
+        }
+
+        for (const [key, value] of this._map) {
+            if (o._map.get(key) !== value) {
+                return false;
+            }
+        }
+
+        for (const [key, value] of o._map) {
+            if (this._map.get(key) !== value) {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+    /**
      * Stringify the map into _something_ readable.
      * **NOTE**: This implementation is not stable and can change.
      *

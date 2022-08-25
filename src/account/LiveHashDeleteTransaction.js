@@ -94,7 +94,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new LiveHashDeleteTransaction({
                 hash:
-                    hashes.liveHashToDelete != null
+                    hashes.liveHashToDelete != null && hashes.liveHashToDelete.length !== 0 
                         ? hashes.liveHashToDelete
                         : undefined,
                 accountId:

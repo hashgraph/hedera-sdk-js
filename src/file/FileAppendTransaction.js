@@ -171,7 +171,7 @@ export default class FileAppendTransaction extends Transaction {
                               )
                           )
                         : undefined,
-                contents: contents,
+                contents: contents != null && contents.length !== 0 ? contents : undefined,
             }),
             transactions,
             signedTransactions,

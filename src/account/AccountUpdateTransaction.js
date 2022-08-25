@@ -267,7 +267,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 declineStakingReward:
                     update.declineReward != null &&
-                    update.declineReward == true,
+                    update.declineReward == true ? true : undefined,
             }),
             transactions,
             signedTransactions,
