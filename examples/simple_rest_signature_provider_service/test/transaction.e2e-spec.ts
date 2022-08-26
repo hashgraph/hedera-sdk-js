@@ -13,11 +13,6 @@ import {
 } from "@hashgraph/sdk";
 import { WalletService } from "../src/wallet/wallet.service";
 
-// Transaction Bytes with no signatures
-const bytes =
-    "0a4d2a4b0a470a100a0408011002120608001000180318001206080010001803188084af5f2202087832005a2030ffffffffffffffff7f38ffffffffffffffff7f40004a050880ceda038801001200";
-const body = { bytes };
-
 describe("TransactionController (e2e)", () => {
     let app: INestApplication;
     let wallet: Wallet;
@@ -39,6 +34,11 @@ describe("TransactionController (e2e)", () => {
     });
 
     it("should be able to sign transaction", async () => {
+        // Transaction Bytes with no signatures
+        const bytes =
+            "0a4d2a4b0a470a100a0408011002120608001000180318001206080010001803188084af5f2202087832005a2030ffffffffffffffff7f38ffffffffffffffff7f40004a050880ceda038801001200";
+        const body = { bytes };
+
         return request(app.getHttpServer())
             .post("/transaction/sign")
             .send(body)
