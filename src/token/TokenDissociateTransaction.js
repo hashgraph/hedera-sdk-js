@@ -102,7 +102,8 @@ export default class TokenDissociateTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new TokenDissociateTransaction({
                 tokenIds:
-                    dissociateToken.tokens != null && dissociateToken.tokens.length !== 0 
+                    dissociateToken.tokens != null &&
+                    dissociateToken.tokens.length !== 0
                         ? dissociateToken.tokens.map((token) =>
                               TokenId._fromProtobuf(token)
                           )

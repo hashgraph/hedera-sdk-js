@@ -146,7 +146,6 @@ export default class ObjectMap {
             }
         }
 
-
         return true;
     }
 

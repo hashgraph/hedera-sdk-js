@@ -232,8 +232,13 @@ export default class AccountCreateTransaction extends Transaction {
                             ? create.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
-                accountMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
-                maxAutomaticTokenAssociations: long.fromProtobuf(create.maxAutomaticTokenAssociations),
+                accountMemo:
+                    create.memo != null && create.memo !== ""
+                        ? create.memo
+                        : undefined,
+                maxAutomaticTokenAssociations: long.fromProtobuf(
+                    create.maxAutomaticTokenAssociations
+                ),
                 stakedAccountId:
                     create.stakedAccountId != null
                         ? AccountId._fromProtobuf(create.stakedAccountId)

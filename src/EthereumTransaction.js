@@ -120,7 +120,8 @@ export default class EthereumTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new EthereumTransaction({
                 ethereumData:
-                    transaction.ethereumData != null && transaction.ethereumData.length !== 0
+                    transaction.ethereumData != null &&
+                    transaction.ethereumData.length !== 0
                         ? transaction.ethereumData
                         : undefined,
                 callData:

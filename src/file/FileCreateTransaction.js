@@ -142,8 +142,14 @@ export default class FileCreateTransaction extends Transaction {
                     create.expirationTime != null
                         ? Timestamp._fromProtobuf(create.expirationTime)
                         : undefined,
-                contents: create.contents != null && create.contents.length !== 0 ? create.contents : undefined,
-                fileMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
+                contents:
+                    create.contents != null && create.contents.length !== 0
+                        ? create.contents
+                        : undefined,
+                fileMemo:
+                    create.memo != null && create.memo !== ""
+                        ? create.memo
+                        : undefined,
             }),
             transactions,
             signedTransactions,

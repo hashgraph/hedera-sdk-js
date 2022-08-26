@@ -129,7 +129,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                     message.topicID != null
                         ? TopicId._fromProtobuf(message.topicID)
                         : undefined,
-                message: message.message != null && message.message.length !== 0 ? message.message : undefined,
+                message:
+                    message.message != null && message.message.length !== 0
+                        ? message.message
+                        : undefined,
             }),
             transactions,
             signedTransactions,

@@ -162,7 +162,10 @@ export default class FreezeTransaction extends Transaction {
                           }
                         : undefined,
                 endTime:
-                    freeze.endHour != null && freeze.endMin != null && freeze.endHour !== 0 && freeze.endMin !== 0
+                    freeze.endHour != null &&
+                    freeze.endMin != null &&
+                    freeze.endHour !== 0 &&
+                    freeze.endMin !== 0
                         ? {
                               hour: freeze.endHour,
                               minute: freeze.endMin,
@@ -176,7 +179,10 @@ export default class FreezeTransaction extends Transaction {
                     freeze.updateFile != null
                         ? FileId._fromProtobuf(freeze.updateFile)
                         : undefined,
-                fileHash: freeze.fileHash != null && freeze.fileHash.length !== 0 ? freeze.fileHash : undefined,
+                fileHash:
+                    freeze.fileHash != null && freeze.fileHash.length !== 0
+                        ? freeze.fileHash
+                        : undefined,
                 freezeType:
                     freeze.freezeType != null && freeze.freezeType !== 0
                         ? FreezeType._fromCode(freeze.freezeType)

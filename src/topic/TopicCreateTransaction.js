@@ -150,7 +150,10 @@ export default class TopicCreateTransaction extends Transaction {
                             ? create.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
-                topicMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
+                topicMemo:
+                    create.memo != null && create.memo !== ""
+                        ? create.memo
+                        : undefined,
             }),
             transactions,
             signedTransactions,

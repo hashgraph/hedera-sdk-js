@@ -38,7 +38,7 @@ export function valueToLong(value) {
 }
 
 /**
- * @param {Long | number | undefined | null} value 
+ * @param {Long | number | undefined | null} value
  * @returns {Long | undefined}
  */
 export function fromProtobuf(value) {
@@ -57,5 +57,4 @@ export function fromProtobuf(value) {
     }
 
     return value;
-
 }

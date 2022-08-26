@@ -269,10 +269,14 @@ export default class ContractCreateTransaction extends Transaction {
                             : undefined
                         : undefined,
                 constructorParameters:
-                    create.constructorParameters != null && create.constructorParameters.length != 0
+                    create.constructorParameters != null &&
+                    create.constructorParameters.length != 0
                         ? create.constructorParameters
                         : undefined,
-                contractMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
+                contractMemo:
+                    create.memo != null && create.memo !== ""
+                        ? create.memo
+                        : undefined,
                 maxAutomaticTokenAssociations:
                     create.maxAutomaticTokenAssociations != null
                         ? create.maxAutomaticTokenAssociations
@@ -285,7 +289,10 @@ export default class ContractCreateTransaction extends Transaction {
                     create.stakedNodeId != null
                         ? create.stakedNodeId
                         : undefined,
-                declineStakingReward: create.declineReward != null && create.declineReward ? true : undefined,
+                declineStakingReward:
+                    create.declineReward != null && create.declineReward
+                        ? true
+                        : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccountId != null
                         ? AccountId._fromProtobuf(create.autoRenewAccountId)

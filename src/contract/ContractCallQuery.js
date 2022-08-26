@@ -134,7 +134,8 @@ export default class ContractCallQuery extends Query {
                     : undefined,
             gas: long.fromProtobuf(call.gas),
             functionParameters:
-                call.functionParameters != null && call.functionParameters.length != 0
+                call.functionParameters != null &&
+                call.functionParameters.length != 0
                     ? call.functionParameters
                     : undefined,
             maxResultSize: long.fromProtobuf(call.maxResultSize),

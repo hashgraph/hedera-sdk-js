@@ -150,7 +150,10 @@ export default class FileUpdateTransaction extends Transaction {
                     update.expirationTime != null
                         ? Timestamp._fromProtobuf(update.expirationTime)
                         : undefined,
-                contents: update.contents != null && update.contents.length !== 0 ? update.contents : undefined,
+                contents:
+                    update.contents != null && update.contents.length !== 0
+                        ? update.contents
+                        : undefined,
                 fileMemo:
                     update.memo != null
                         ? update.memo.value != null

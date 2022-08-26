@@ -322,9 +322,18 @@ export default class TokenCreateTransaction extends Transaction {
 
         return Transaction._fromProtobufTransactions(
             new TokenCreateTransaction({
-                tokenName: create.name != null && create.name != "" ? create.name : undefined,
-                tokenSymbol: create.symbol != null && create.symbol != "" ? create.symbol : undefined,
-                decimals: create.decimals != null && create.decimals != 0 ? create.decimals : undefined,
+                tokenName:
+                    create.name != null && create.name != ""
+                        ? create.name
+                        : undefined,
+                tokenSymbol:
+                    create.symbol != null && create.symbol != ""
+                        ? create.symbol
+                        : undefined,
+                decimals:
+                    create.decimals != null && create.decimals != 0
+                        ? create.decimals
+                        : undefined,
                 initialSupply: long.fromProtobuf(create.initialSupply),
                 treasuryAccountId:
                     create.treasury != null
@@ -359,7 +368,8 @@ export default class TokenCreateTransaction extends Transaction {
                         ? Key._fromProtobufKey(create.feeScheduleKey)
                         : undefined,
                 freezeDefault:
-                    create.freezeDefault != null && create.freezeDefault ? true
+                    create.freezeDefault != null && create.freezeDefault
+                        ? true
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
@@ -373,7 +383,10 @@ export default class TokenCreateTransaction extends Transaction {
                     create.autoRenewPeriod != null
                         ? Duration._fromProtobuf(create.autoRenewPeriod)
                         : undefined,
-                tokenMemo: create.memo != null && create.memo !== "" ? create.memo : undefined,
+                tokenMemo:
+                    create.memo != null && create.memo !== ""
+                        ? create.memo
+                        : undefined,
                 customFees:
                     create.customFees != null
                         ? create.customFees.map((fee) => {

@@ -171,7 +171,10 @@ export default class FileAppendTransaction extends Transaction {
                               )
                           )
                         : undefined,
-                contents: contents != null && contents.length !== 0 ? contents : undefined,
+                contents:
+                    contents != null && contents.length !== 0
+                        ? contents
+                        : undefined,
             }),
             transactions,
             signedTransactions,

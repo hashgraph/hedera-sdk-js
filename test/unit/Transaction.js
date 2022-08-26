@@ -334,7 +334,7 @@ describe("Transaction", function () {
         }
     });
 
-    it("can serialize and deserialize all requests", function() {
+    it("can serialize and deserialize all requests", function () {
         const transactionId = TransactionId.generate(new AccountId(4));
         for (const request of REQUESTS) {
             /** @type {Executable<*, *, *>} */
@@ -357,7 +357,9 @@ describe("Transaction", function () {
             let proto = request;
 
             while (proto != null) {
-                const properties = Object.getOwnPropertyNames(Object.getPrototypeOf(req));
+                const properties = Object.getOwnPropertyNames(
+                    Object.getPrototypeOf(req)
+                );
 
                 for (const property of properties) {
                     if (property.startsWith("_")) {
@@ -368,9 +370,16 @@ describe("Transaction", function () {
                     const reqProperty = req[property];
 
                     if (requestProperty instanceof ObjectMap) {
-                        expect(/** @type {ObjectMap<*, *> */(requestProperty).compare(reqProperty)).to.be.true;
+                        expect(
+                            /** @type {ObjectMap<*, *> */ (
+                                requestProperty
+                            ).compare(reqProperty)
+                        ).to.be.true;
                     } else {
-                        expect(request[property]).to.deep.equal(req[property], `${request.constructor.name} doesn't match property ${property}`);
+                        expect(request[property]).to.deep.equal(
+                            req[property],
+                            `${request.constructor.name} doesn't match property ${property}`
+                        );
                     }
                 }
 
