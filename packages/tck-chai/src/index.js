@@ -11,47 +11,49 @@ const instance = axios.create({
  * @type {hashgraph.Transaction[]}
  */
 const TRANSACTIONS = [
-    // new hashgraph.AccountAllowanceApproveTransaction(),
-    // new hashgraph.AccountAllowanceDeleteTransaction(),
-    // new hashgraph.AccountCreateTransaction(),
-    // new hashgraph.AccountDeleteTransaction(),
-    // new hashgraph.AccountUpdateTransaction(),
-    // new hashgraph.ContractCreateTransaction(),
-    // new hashgraph.ContractDeleteTransaction(),
-    // new hashgraph.ContractExecuteTransaction(),
-    // new hashgraph.ContractUpdateTransaction(),
-    // new hashgraph.EthereumTransaction(),
-    // new hashgraph.FileAppendTransaction(),
-    // new hashgraph.FileCreateTransaction(),
-    // new hashgraph.FileDeleteTransaction(),
-    // new hashgraph.FileUpdateTransaction(),
+    new hashgraph.AccountAllowanceApproveTransaction(),
+    new hashgraph.AccountAllowanceDeleteTransaction(),
+    new hashgraph.AccountCreateTransaction(),
+    new hashgraph.AccountDeleteTransaction(),
+    new hashgraph.AccountUpdateTransaction(),
+    new hashgraph.ContractCreateTransaction(),
+    new hashgraph.ContractDeleteTransaction(),
+    new hashgraph.ContractExecuteTransaction(),
+    new hashgraph.ContractUpdateTransaction(),
+    new hashgraph.EthereumTransaction(),
+    new hashgraph.FileAppendTransaction(),
+    new hashgraph.FileCreateTransaction(),
+    new hashgraph.FileDeleteTransaction(),
+    new hashgraph.FileUpdateTransaction(),
+    // NOT IMPLEMENTED
     // new hashgraph.FreezeTransaction(),
-    // new hashgraph.LiveHashAddTransaction(),
-    // new hashgraph.LiveHashDeleteTransaction(),
+    new hashgraph.LiveHashAddTransaction(),
+    new hashgraph.LiveHashDeleteTransaction(),
+    // TODO:
     // new hashgraph.ScheduleCreateTransaction(),
-    // new hashgraph.ScheduleDeleteTransaction(),
-    // new hashgraph.ScheduleSignTransaction(),
-    // new hashgraph.SystemDeleteTransaction(),
-    // new hashgraph.SystemUndeleteTransaction(),
-    // new hashgraph.TokenAssociateTransaction(),
-    // new hashgraph.TokenBurnTransaction(),
-    // new hashgraph.TokenCreateTransaction(),
-    // new hashgraph.TokenDeleteTransaction(),
-    // new hashgraph.TokenDissociateTransaction(),
-    // new hashgraph.TokenFeeScheduleUpdateTransaction(),
-    // new hashgraph.TokenFreezeTransaction(),
-    // new hashgraph.TokenGrantKycTransaction(),
-    // new hashgraph.TokenMintTransaction(),
-    // new hashgraph.TokenPauseTransaction(),
-    // new hashgraph.TokenRevokeKycTransaction(),
-    // new hashgraph.TokenUnfreezeTransaction(),
-    // new hashgraph.TokenUnpauseTransaction(),
-    // new hashgraph.TokenUpdateTransaction(),
-    // new hashgraph.TokenWipeTransaction(),
-    // new hashgraph.TopicCreateTransaction(),
-    // new hashgraph.TopicDeleteTransaction(),
-    // new hashgraph.TopicMessageSubmitTransaction(),
-    // new hashgraph.TopicUpdateTransaction(),
+    new hashgraph.ScheduleDeleteTransaction(),
+    new hashgraph.ScheduleSignTransaction(),
+    new hashgraph.SystemDeleteTransaction(),
+    new hashgraph.SystemUndeleteTransaction(),
+    new hashgraph.TokenAssociateTransaction(),
+    new hashgraph.TokenBurnTransaction(),
+    new hashgraph.TokenCreateTransaction(),
+    new hashgraph.TokenDeleteTransaction(),
+    new hashgraph.TokenDissociateTransaction(),
+    new hashgraph.TokenFeeScheduleUpdateTransaction(),
+    new hashgraph.TokenFreezeTransaction(),
+    new hashgraph.TokenGrantKycTransaction(),
+    new hashgraph.TokenMintTransaction(),
+    new hashgraph.TokenPauseTransaction(),
+    new hashgraph.TokenRevokeKycTransaction(),
+    new hashgraph.TokenUnfreezeTransaction(),
+    new hashgraph.TokenUnpauseTransaction(),
+    new hashgraph.TokenUpdateTransaction(),
+    new hashgraph.TokenWipeTransaction(),
+    new hashgraph.TopicCreateTransaction(),
+    new hashgraph.TopicDeleteTransaction(),
+    new hashgraph.TopicMessageSubmitTransaction(),
+    new hashgraph.TopicUpdateTransaction(),
     new hashgraph.TransferTransaction(),
 ];
 
@@ -69,7 +71,8 @@ const QUERIES = [
     new hashgraph.FileContentsQuery(),
     new hashgraph.FileInfoQuery(),
     new hashgraph.LiveHashQuery(),
-    new hashgraph.NetworkVersionInfoQuery(),
+    // NOT IMPLEMENTED
+    // new hashgraph.NetworkVersionInfoQuery(),
     new hashgraph.ScheduleInfoQuery(),
     new hashgraph.TokenInfoQuery(),
     new hashgraph.TokenNftInfoQuery(),
@@ -184,6 +187,28 @@ function createTestSignWithSigner(signer, callback, transactions) {
 }
 
 /**
+ * @template T
+ * @param {hashgraph.Signer} signer
+ * @param {() => void} callback
+ * @param {(signer: hashgraph.Signer) => Promise<T>} closure
+ * @returns {Promise<T | hashgraph.StatusError>}
+ */
+async function execute(signer, callback, closure) {
+    try {
+        const promise = closure(signer);
+        callback();
+        return await promise;
+    } catch (error) {
+        if (error instanceof hashgraph.StatusError) {
+            return error;
+        } else {
+            // Might be a good idea to expect this to not be error?
+            throw error;
+        }
+    }
+}
+
+/**
  * @template RequestT
  * @template ResponseT
  * @template OutputT
@@ -199,20 +224,27 @@ function createTestExecuteWithSigner(signer, callback, requests) {
         tests.push({
             name: `${request.constructor.name}: executeWithSigner`,
             fn: async function () {
-                try {
-                    const promise = request.executeWithSigner(signer);
-                    callback();
-                    await promise;
-                } catch (error) {
-                    if (error instanceof hashgraph.StatusError) {
-                        // Do nothing;
-                    } else {
-                        // Might be a good idea to expect this to not be error?
-                        throw error;
-                    }
+                const response = await execute(signer, callback, (signer) =>
+                    request.executeWithSigner(signer)
+                );
+
+                if (response instanceof hashgraph.StatusError) {
+                    return;
                 }
 
-                if (request instanceof hashgraph.Transaction) {
+                // If the request was a transaction, we didn't get a precheck status error, we should query the transaction
+                // receipt, and then query the mirror node until it see the transaction ID. If we do get a transaction
+                // receipt, but we do not find the transaction ID within the mirror, then something has gone wrong.
+                if (
+                    response instanceof hashgraph.TransactionResponse &&
+                    request instanceof hashgraph.Transaction
+                ) {
+                    // We could use the transaction receipt returned by this query and compare the status with
+                    // the one in the mirror node response, but I feel that is unnecessary
+                    await execute(signer, callback, (signer) =>
+                        response.getReceiptWithSigner(signer)
+                    );
+
                     expect(request.transactionId).to.not.be.null;
                     const transactionId =
                         /** @type {hashgraph.TransactionId} */ (

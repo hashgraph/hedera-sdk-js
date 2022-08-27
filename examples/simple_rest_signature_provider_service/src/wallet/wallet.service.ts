@@ -5,7 +5,7 @@ import {
     PrivateKey,
     Wallet,
     LocalProvider,
-    PrecheckStatusError,
+    StatusError,
     Transaction,
 } from "@hashgraph/sdk";
 import { Executable } from "../../../../lib/LocalProvider";
@@ -38,8 +38,9 @@ export class WalletService {
             const hex = Buffer.from(serialized).toString("hex");
             res.status(HttpStatus.OK).send({ response: hex });
         } catch (error) {
-            if (error instanceof PrecheckStatusError) {
-                res.status(HttpStatus.BAD_REQUEST).send({
+            if (error instanceof StatusError) {
+                // This error is allowed to happen
+                res.status(HttpStatus.OK).send({
                     error: error.toJSON(),
                 });
             } else {

@@ -32,12 +32,12 @@ export class WalletController {
             net[key] = network[key].toString();
         }
 
-        return {
+        res.status(HttpStatus.OK).send({
             accountId: accountId.toString(),
             accountKey: accountKey.toString(),
             network: net,
             mirrorNetwork,
             ledgerId: ledgerId != null ? ledgerId.toString() : null,
-        };
+        });
     }
 }
