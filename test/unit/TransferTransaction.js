@@ -161,6 +161,7 @@ describe("TransferTransaction", function () {
 
     it("should order transfers", function () {
         const serialNum1 = Long.fromNumber(111);
+        const serialNum2 = Long.fromNumber(222);
 
         const transaction = new TransferTransaction()
             // Insert in reverse order to confirm they get reordered
@@ -170,7 +171,9 @@ describe("TransferTransaction", function () {
                 accountId4
             )
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
-            .addNftTransfer(tokenId3, serialNum1, accountId1, accountId2)
+            .addNftTransfer(tokenId4, serialNum2, accountId3, accountId1)
+            .addNftTransfer(new NftId(tokenId3, serialNum1), accountId1, accountId2)
+            .addNftTransfer(new NftId(tokenId3, serialNum2), accountId2, accountId1)
             .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
             .addTokenTransferWithDecimals(tokenId2, accountId3, 2, 10)
             .addTokenTransferWithDecimals(tokenId1, accountId2, -3, 11)
@@ -213,8 +216,8 @@ describe("TransferTransaction", function () {
             },
         ]);
 
-        expect(data.tokenTransfers).to.deep.equal([
-            {
+        expect(data.tokenTransfers.length).to.be.equal(4);
+        expect(data.tokenTransfers[0]).to.deep.equal({
                 token: {
                     shardNum: Long.fromNumber(1),
                     realmNum: Long.fromNumber(1),
@@ -244,8 +247,8 @@ describe("TransferTransaction", function () {
                     },
                 ],
                 nftTransfers: [],
-            },
-            {
+            });
+        expect(data.tokenTransfers[1]).to.deep.equal({
                 token: {
                     shardNum: Long.fromNumber(2),
                     realmNum: Long.fromNumber(2),
@@ -275,8 +278,8 @@ describe("TransferTransaction", function () {
                     },
                 ],
                 nftTransfers: [],
-            },
-            {
+            });
+        expect(data.tokenTransfers[2]).to.deep.equal({
                 token: {
                     shardNum: Long.fromNumber(3),
                     realmNum: Long.fromNumber(3),
@@ -301,9 +304,25 @@ describe("TransferTransaction", function () {
                         serialNumber: serialNum1,
                         isApproval: false,
                     },
+                    {
+                        senderAccountID: {
+                            shardNum: Long.fromNumber(2),
+                            realmNum: Long.fromNumber(2),
+                            accountNum: Long.fromNumber(2),
+                            alias: null,
+                        },
+                        receiverAccountID: {
+                            shardNum: Long.fromNumber(1),
+                            realmNum: Long.fromNumber(1),
+                            accountNum: Long.fromNumber(1),
+                            alias: null,
+                        },
+                        serialNumber: serialNum2,
+                        isApproval: false,
+                    },
                 ],
-            },
-            {
+            });
+        expect(data.tokenTransfers[3]).to.deep.equal({
                 token: {
                     shardNum: Long.fromNumber(4),
                     realmNum: Long.fromNumber(4),
@@ -328,8 +347,23 @@ describe("TransferTransaction", function () {
                         serialNumber: serialNum1,
                         isApproval: true,
                     },
+                    {
+                        senderAccountID: {
+                            shardNum: Long.fromNumber(3),
+                            realmNum: Long.fromNumber(3),
+                            accountNum: Long.fromNumber(3),
+                            alias: null,
+                        },
+                        receiverAccountID: {
+                            shardNum: Long.fromNumber(1),
+                            realmNum: Long.fromNumber(1),
+                            accountNum: Long.fromNumber(1),
+                            alias: null,
+                        },
+                        serialNumber: serialNum2,
+                        isApproval: false,
+                    },
                 ],
-            },
-        ]);
+            });
     });
 });
