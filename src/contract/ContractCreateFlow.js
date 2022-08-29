@@ -226,7 +226,7 @@ export default class ContractCreateFlow {
      * @param {number} maxAutomaticTokenAssociation
      * @returns {this}
      */
-    setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation) {
+    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociation) {
         this._contractCreate.setMaxAutomaticTokenAssociations(
             maxAutomaticTokenAssociation
         );
