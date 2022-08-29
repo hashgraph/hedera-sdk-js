@@ -229,14 +229,14 @@ export default class PublicKey extends Key {
     equals(other) {
         if (
             this._key instanceof Ed25519PublicKey &&
-            other instanceof Ed25519PublicKey
+            other._key instanceof Ed25519PublicKey
         ) {
-            return this._key.equals(other);
+            return this._key.equals(other._key);
         } else if (
             this._key instanceof EcdsaPublicKey &&
-            other instanceof EcdsaPublicKey
+            other._key instanceof EcdsaPublicKey
         ) {
-            return this._key.equals(other);
+            return this._key.equals(other._key);
         } else {
             return false;
         }

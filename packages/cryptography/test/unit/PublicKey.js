@@ -1,3 +1,4 @@
+import PrivateKey from "../../src/PrivateKey.js";
 import PublicKey from "../../src/PublicKey.js";
 import * as hex from "../../src/encoding/hex.js";
 
@@ -23,5 +24,16 @@ describe("PublicKey", function () {
         const key = PublicKey.fromBytesECDSA(TRUFFLE_KEY_BYTES);
 
         expect(key.toEthereumAddress()).to.be.equal(TRUFFLE_ADDRESS);
+    });
+
+    it("equals", async function () {
+        const ed25519 = PrivateKey.generate().publicKey;
+        const ed25519Copy = PublicKey.fromString(ed25519.toStringRaw());
+        const ecdsa = PrivateKey.generateECDSA().publicKey;
+
+        expect(ed25519.toStringRaw()).to.be.equal(ed25519Copy.toStringRaw());
+
+        expect(ed25519.equals(ed25519Copy)).to.be.true;
+        expect(ed25519.equals(ecdsa)).to.be.false;
     });
 });
