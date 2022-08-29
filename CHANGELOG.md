@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+ * `TransferTransaction` incorrectly merging FT and NFT tranfers
  * `ContractCreateFlow.execute()` not using keys provided in `.sign()`
  * `PublicKey.equals()`
 
