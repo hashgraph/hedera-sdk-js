@@ -1,5 +1,9 @@
 import { expect } from "chai";
-import { ContractCreateFlow, Transaction, PrivateKey } from "../../src/index.js";
+import {
+    ContractCreateFlow,
+    Transaction,
+    PrivateKey,
+} from "../../src/index.js";
 import Mocker, { TRANSACTION_RECEIPT_SUCCESS_RESPONSE } from "./Mocker.js";
 import { proto } from "@hashgraph/proto";
 import { bigContents } from "../integration/contents.js";
@@ -19,10 +23,12 @@ describe("ContractCreateFlowMocking", function () {
         const key = PrivateKey.generate();
 
         const verifyTransactionCall = (request) => {
-            const transaction = Transaction.fromBytes(proto.Transaction.encode({
-                signedTransactionBytes: request.signedTransactionBytes
-            }).finish());
-            
+            const transaction = Transaction.fromBytes(
+                proto.Transaction.encode({
+                    signedTransactionBytes: request.signedTransactionBytes,
+                }).finish()
+            );
+
             expect(key.publicKey.verifyTransaction(transaction)).to.be.true;
 
             return { nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK };

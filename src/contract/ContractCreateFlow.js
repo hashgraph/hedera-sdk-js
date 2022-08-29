@@ -400,9 +400,9 @@ export default class ContractCreateFlow {
         await response.getReceipt(client);
 
         if (key != null) {
-            const fileDeleteTransaction = new FileDeleteTransaction().setFileId(
-                fileId
-            ).freezeWith(client);
+            const fileDeleteTransaction = new FileDeleteTransaction()
+                .setFileId(fileId)
+                .freezeWith(client);
             await addSignersToTransaction(
                 fileDeleteTransaction,
                 this._publicKeys,

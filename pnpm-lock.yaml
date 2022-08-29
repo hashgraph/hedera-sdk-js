@@ -10,7 +10,7 @@ specifiers:
   '@ethersproject/rlp': ^5.6.1
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.13
-  '@hashgraph/cryptography': ^1.4.0
+  '@hashgraph/cryptography': ^1.4.1
   '@hashgraph/proto': 2.9.0
   '@playwright/test': ^1.23.4
   '@types/chai': ^4.3.1
@@ -61,7 +61,7 @@ specifiers:
 dependencies:
   '@ethersproject/rlp': 5.6.1
   '@grpc/grpc-js': 1.6.7
-  '@hashgraph/cryptography': 1.4.0_expo@45.0.6
+  '@hashgraph/cryptography': 1.4.1_expo@45.0.6
   '@hashgraph/proto': 2.9.0
   axios: 0.27.2
   bignumber.js: 9.0.2
@@ -1730,13 +1730,20 @@ packages:
       protobufjs: 6.11.3
       yargs: 16.2.0
 
-  /@hashgraph/cryptography/1.4.0_expo@45.0.6:
-    resolution: {integrity: sha512-NtDmeuwaWJKBDYZd+g/etAD56p/RPUuZGdT9jhXxiFW0YrKCaU1k4ramICbRaJg7E+RDSFJXJLarh0G72z5YDA==}
+  /@hashgraph/cryptography/1.4.1_expo@45.0.6:
+    resolution: {integrity: sha512-Qx7fl58Upyf1C4Xdqo2DdMaELYAni3RpAr6fVux3tpGUwp0Wo+zaWseW7k2Klg+FPlmjOjL8XBCXkOr1AbHYWQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^45.0.3
       expo-crypto: ^10.1.2
       expo-random: ^12.1.2
+    peerDependenciesMeta:
+      expo:
+        optional: true
+      expo-crypto:
+        optional: true
+      expo-random:
+        optional: true
     dependencies:
       bignumber.js: 9.0.2
       crypto-js: 4.1.1
