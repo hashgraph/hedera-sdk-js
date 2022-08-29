@@ -1,18 +1,13 @@
-import { PrivateKey, PublicKey } from "../../src/index.js";
+import { FileId, PrivateKey, PublicKey } from "../../src/index.js";
 import Client from "../../src/client/NodeClient.js";
 import * as grpc from "@grpc/grpc-js";
 import * as loader from "@grpc/proto-loader";
+import { proto } from "@hashgraph/proto";
 
 /**
  * @template {*} RequestType
  * @template {*} ResponseType
  * @typedef {import("grpc").handleUnaryCall<RequestType, ResponseType>} grpc.handleUnaryCall<RequestType, ResponseType>
- */
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").Response} proto.Response
- * @typedef {import("@hashgraph/proto").Query} proto.Query
  */
 
 /**
@@ -141,12 +136,40 @@ export const INTERNAL = {
     message: "Received RST_STREAM with code 0",
     code: 13,
 };
+
 /**
  * @namespace {proto}
  * @typedef {import("@hashgraph/proto").Response} proto.Response
  * @typedef {import("@hashgraph/proto").Query} proto.Query
  * @typedef {import("@hashgraph/proto").TransactionResponse} proto.TransactionResponse
  */
+
+const fileId = FileId.fromString("0.0.141");
+const contractId = FileId.fromString("0.0.142");
+
+export const TRANSACTION_RECEIPT_SUCCESS_RESPONSE = {
+    transactionGetReceipt: {
+        header: {
+            nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK,
+        },
+        receipt: {
+            status: proto.ResponseCodeEnum.SUCCESS,
+            fileID: fileId._toProtobuf(),
+            contractID: contractId._toProtobuf(),
+        },
+    },
+};
+
+export const TRANSACTION_RECEIPT_FAILED_RESPONSE = {
+    transactionGetReceipt: {
+        header: {
+            nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK,
+        },
+        receipt: {
+            status: proto.ResponseCodeEnum.INVALID_FILE_ID,
+        },
+    },
+};
 
 /**
  * @typedef {object} Response

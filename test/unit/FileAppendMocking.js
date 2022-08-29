@@ -1,29 +1,11 @@
 import { FileAppendTransaction } from "../../src/index.js";
-import Mocker, { UNAVAILABLE } from "./Mocker.js";
+import Mocker, {
+    UNAVAILABLE,
+    TRANSACTION_RECEIPT_SUCCESS_RESPONSE,
+    TRANSACTION_RECEIPT_FAILED_RESPONSE,
+} from "./Mocker.js";
 import { bigContents } from "../integration/contents.js";
 import { proto } from "@hashgraph/proto";
-
-const TRANSACTION_RECEIPT_SUCCESS_RESPONSE = {
-    transactionGetReceipt: {
-        header: {
-            nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK,
-        },
-        receipt: {
-            status: proto.ResponseCodeEnum.SUCCESS,
-        },
-    },
-};
-
-const TRANSACTION_RECEIPT_FAILED_RESPONSE = {
-    transactionGetReceipt: {
-        header: {
-            nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK,
-        },
-        receipt: {
-            status: proto.ResponseCodeEnum.INVALID_FILE_ID,
-        },
-    },
-};
 
 describe("FileAppendMocking", function () {
     it("works", async function () {
