@@ -101,7 +101,7 @@ export default class NftId {
      * @returns {string}
      */
     toString() {
-        return `${this.serial.toString()}@${this.tokenId.toString()}`;
+        return `${this.tokenId.toString()}/${this.serial.toString()}`;
     }
 
     /**

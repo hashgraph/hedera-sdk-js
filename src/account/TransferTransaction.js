@@ -798,7 +798,7 @@ export default class TransferTransaction extends Transaction {
                         transfers: [this._tokenTransfers[i++]],
                         nftTransfers: [this._nftTransfers[j++]],
                     });
-                } else if (result <= 0) {
+                } else if (result < 0) {
                     tokenTransferList.push({
                         tokenId: iTokenId,
                         expectedDecimals:
@@ -817,10 +817,12 @@ export default class TransferTransaction extends Transaction {
             } else if (i < this._tokenTransfers.length) {
                 const iTokenId = this._tokenTransfers[i].tokenId;
 
-                const last =
-                    tokenTransferList.length > 0
-                        ? tokenTransferList[tokenTransferList.length - 1]
-                        : null;
+                let last;
+                for (const transfer of tokenTransferList) {
+                    if (transfer.tokenId.compare(iTokenId) === 0) {
+                        last = transfer;
+                    }
+                }
                 const lastTokenId = last != null ? last.tokenId : null;
 
                 if (
@@ -841,10 +843,12 @@ export default class TransferTransaction extends Transaction {
             } else if (j < this._nftTransfers.length) {
                 const jTokenId = this._nftTransfers[j].tokenId;
 
-                const last =
-                    tokenTransferList.length > 0
-                        ? tokenTransferList[tokenTransferList.length - 1]
-                        : null;
+                let last;
+                for (const transfer of tokenTransferList) {
+                    if (transfer.tokenId.compare(jTokenId) === 0) {
+                        last = transfer;
+                    }
+                }
                 const lastTokenId = last != null ? last.tokenId : null;
 
                 if (
