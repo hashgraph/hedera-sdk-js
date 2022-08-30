@@ -18,10 +18,28 @@
  * ‍
  */
 
+import AccountId from "./account/AccountId.js";
+import PublicKey from "./PublicKey.js";
+import * as hex from "./encoding/hex.js";
+import ajv from "./Ajv.js";
+
 /**
- * @typedef {import("./PublicKey.js").default} PublicKey
- * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {object} SignerSignatureJSON
+ * @property {string} publicKey
+ * @property {string} signature
+ * @property {string} accountId
  */
+
+const validate = ajv.compile({
+    type: "object",
+    properties: {
+        publicKey: { type: "string", format: "PublicKey" },
+        signature: { type: "string", format: "Hex" },
+        accountId: { type: "string", format: "AccountId" },
+    },
+    required: ["publicKey", "signature", "accountId"],
+    additionalProperties: false,
+});
 
 export default class SignerSignature {
     /**
@@ -34,5 +52,36 @@ export default class SignerSignature {
         this.publicKey = props.publicKey;
         this.signature = props.signature;
         this.accountId = props.accountId;
+    }
+
+    /**
+     * @param {any} obj
+     * @returns {obj is SignerSignature}
+     */
+    static isSignerSignature(obj) {
+        return validate(obj);
+    }
+
+    /**
+     * @param {SignerSignatureJSON} json
+     * @returns {SignerSignature}
+     */
+    static fromJSON(json) {
+        return new SignerSignature({
+            publicKey: PublicKey.fromString(json.publicKey),
+            signature: hex.decode(json.signature),
+            accountId: AccountId.fromString(json.accountId),
+        });
+    }
+
+    /**
+     * @returns {SignerSignatureJSON}
+     */
+    toJSON() {
+        return {
+            publicKey: this.publicKey.toStringDer(),
+            signature: hex.encode(this.signature),
+            accountId: this.accountId.toString(),
+        };
     }
 }

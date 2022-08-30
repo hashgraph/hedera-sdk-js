@@ -1,7 +1,15 @@
-import { Controller, Post, Res, Body, HttpStatus } from "@nestjs/common";
+import {
+    Controller,
+    Post,
+    Res,
+    Body,
+    HttpStatus,
+    HttpCode,
+} from "@nestjs/common";
 import { WalletService } from "./wallet.service";
 import { AccountId } from "@hashgraph/sdk";
 import { WalletDto } from "./wallet.dto";
+import { SignDto } from "./sign.dto";
 import { Response } from "express";
 
 @Controller("wallet")
@@ -39,5 +47,16 @@ export class WalletController {
             mirrorNetwork,
             ledgerId: ledgerId != null ? ledgerId.toString() : null,
         });
+    }
+
+    @Post("/sign")
+    @HttpCode(200)
+    async sign(@Body() body: SignDto) {
+        const bytes = body.bytes.map((text) => Buffer.from(text, "hex"));
+        const response = await this.walletService.wallet.sign(bytes);
+
+        return {
+            response: response.map((signature) => signature.toJSON()),
+        };
     }
 }

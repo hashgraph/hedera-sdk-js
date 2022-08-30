@@ -9,7 +9,10 @@ export class QueryController {
     constructor(public readonly walletService: WalletService) {}
 
     @Post("/execute")
-    async execute(@Res({ passthrough: true }) res: Response, @Body() body: QueryDto) {
+    async execute(
+        @Res({ passthrough: true }) res: Response,
+        @Body() body: QueryDto,
+    ) {
         const query = Query.fromBytes(Buffer.from(body.bytes, "hex"));
         await this.walletService.call(res, query);
     }

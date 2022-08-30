@@ -70,9 +70,17 @@ export class SimpleRestSigner implements hashgraph.Signer {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sign(messages: Uint8Array[]): Promise<hashgraph.SignerSignature[]> {
-        // TODO:
-        return Promise.reject(new Error("not implemented"));
+    async sign(messages: Uint8Array[]): Promise<hashgraph.SignerSignature[]> {
+        const response = await execute("/wallet/sign", {
+            bytes: messages.map((message) =>
+                Buffer.from(message).toString("hex")
+            ),
+        });
+
+        return response.response.map(
+            (signature: hashgraph.SignerSignatureJSON) =>
+                hashgraph.SignerSignature.fromJSON(signature)
+        );
     }
 
     getAccountBalance(): Promise<hashgraph.AccountBalance> {

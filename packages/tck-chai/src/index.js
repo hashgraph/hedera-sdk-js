@@ -235,6 +235,9 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                 // If the request was a transaction, we didn't get a precheck status error, we should query the transaction
                 // receipt, and then query the mirror node until it see the transaction ID. If we do get a transaction
                 // receipt, but we do not find the transaction ID within the mirror, then something has gone wrong.
+                //
+                // So it seems some transactions that don't error with a precheck are never ending up in the mirror?
+                // Need to investigate further
                 if (
                     response instanceof hashgraph.TransactionResponse &&
                     request instanceof hashgraph.Transaction
@@ -262,34 +265,45 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                         .toString()
                         .replace(".", "-")}`;
 
-                    // eslint-disable-next-line no-constant-condition
-                    for (let i = 0; i < 5; i++) {
-                        try {
-                            // 200 OK means we found our transaction on the mirror node
-                            await instance.get(
-                                `/transactions/${mirrorTransactionId}`
-                            );
+                    const timeout = new Promise((_, reject) => {
+                        setTimeout(
+                            () =>
+                                reject(
+                                    new Error(
+                                        "failed to find transaction in mirror node"
+                                    )
+                                ),
+                            10000
+                        );
+                    });
 
-                            return;
-                        } catch (error) {
-                            if (
-                                /** @type {Error} */ (error)
-                                    .toString()
-                                    .includes("404")
-                            ) {
-                                await new Promise((resolve) =>
-                                    setTimeout(resolve, 2000)
+                    const query = (async () => {
+                        for (let i = 0; i < 10; i++) {
+                            try {
+                                // 200 OK means we found our transaction on the mirror node
+                                await instance.get(
+                                    `/transactions/${mirrorTransactionId}`
                                 );
-                                continue;
-                            } else {
-                                throw error;
+
+                                return;
+                            } catch (error) {
+                                if (
+                                    /** @type {Error} */ (error)
+                                        .toString()
+                                        .includes("404")
+                                ) {
+                                    await new Promise((resolve) =>
+                                        setTimeout(resolve, 1000)
+                                    );
+                                    continue;
+                                } else {
+                                    throw error;
+                                }
                             }
                         }
-                    }
+                    })();
 
-                    throw new Error(
-                        "failed to find transaction in mirror node"
-                    );
+                    await Promise.race([query, timeout]);
                 }
             },
         });

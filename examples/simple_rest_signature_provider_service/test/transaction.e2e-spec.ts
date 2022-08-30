@@ -98,7 +98,7 @@ describe("TransactionController (e2e)", () => {
             .post("/transaction/execute")
             .send(body)
             .then((response) => {
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(200);
 
                 const error = StatusError.fromJSON(response.body.error);
                 expect(error.status).toBe(Status.PayerAccountNotFound);

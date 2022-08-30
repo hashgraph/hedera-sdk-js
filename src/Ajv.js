@@ -4,6 +4,7 @@ import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import * as hex from "./encoding/hex.js";
 import AccountId from "./account/AccountId.js";
+import PublicKey from "./PublicKey.js";
 
 const ajv = new Ajv();
 
@@ -39,6 +40,17 @@ ajv.addFormat("TransactionId", {
     },
 });
 
+ajv.addFormat("PublicKey", {
+    validate: (/** @type {string} */ data) => {
+        if (typeof data !== "string") {
+            return false;
+        }
+
+        PublicKey.fromString(data);
+        return true;
+    },
+});
+
 ajv.addFormat("TransactionHash", {
     validate: (/** @type {string} */ data) => {
         if (typeof data !== "string") {
@@ -47,6 +59,17 @@ ajv.addFormat("TransactionHash", {
 
         const bytes = hex.decode(data);
         return bytes.length === 48;
+    },
+});
+
+ajv.addFormat("Hex", {
+    validate: (/** @type {string} */ data) => {
+        if (typeof data !== "string") {
+            return false;
+        }
+
+        hex.decode(data);
+        return true;
     },
 });
 

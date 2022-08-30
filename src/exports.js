@@ -184,6 +184,7 @@ export { default as Logger } from "js-logger";
  * @typedef {import("./account/AccountBalance.js").TokenBalanceJson} TokenBalanceJson
  * @typedef {import("./account/AccountInfo.js").AccountInfoJson} AccountInfoJson
  * @typedef {import("./transaction/TransactionResponse.js").TransactionResponseJSON} TransactionResponseJSON
+ * @typedef {import("./SignerSignature.js").SignerSignatureJSON} SignerSignatureJSON
  */
 
 /**
