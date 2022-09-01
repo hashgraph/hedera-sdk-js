@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import * as hashgraph from "@hashgraph/sdk";
 
 // See: createTestExecuteWithSigner
@@ -103,7 +102,7 @@ function createTestFreezeWithSigner(signer, transactions) {
                 );
 
                 const transaction = transactions[i];
-                expect(transaction.nodeAccountIds).to.not.be.null;
+                expect(transaction.nodeAccountIds).not.toBeNull();
 
                 const nodeAccountIds = (
                     transaction.nodeAccountIds != null
@@ -117,19 +116,21 @@ function createTestFreezeWithSigner(signer, transactions) {
                 // This may seem backwards, but the goal is to check if each member of `nodeAccountIds`
                 // exists within the entire network `expectedNodeAccountIds`. This could be a small subset
                 // or the entire network
-                expect(expectedNodeAccountIds).to.have.members(nodeAccountIds);
+                expect(expectedNodeAccountIds).toEqual(
+                    expect.arrayContaining(nodeAccountIds)
+                );
 
                 const transactionId = transaction.transactionId;
 
-                expect(transactionId).to.not.be.null;
+                expect(transactionId).not.toBeNull();
 
                 const accountId = /** @type {hashgraph.TransactionId} */ (
                     transactionId
                 ).accountId;
-                expect(accountId).to.not.be.null;
+                expect(accountId).not.toBeNull();
                 expect(
                     /** @type {hashgraph.AccountId} */ (accountId).toString()
-                ).to.be.equal(signer.getAccountId().toString());
+                ).toEqual(signer.getAccountId().toString());
             },
         });
     }
@@ -158,8 +159,9 @@ function createTestSignWithSigner(signer, callback, transactions) {
                 const signatures = await transaction.getSignaturesAsync();
                 for (const [, nodeSignatures] of signatures) {
                     for (const [publicKey] of nodeSignatures) {
-                        expect(publicKey.verifyTransaction(transaction)).to.be
-                            .true;
+                        expect(
+                            publicKey.verifyTransaction(transaction)
+                        ).toBeTruthy();
                     }
                 }
 
@@ -168,7 +170,7 @@ function createTestSignWithSigner(signer, callback, transactions) {
                         ? signer.getAccountKey()
                         : null;
                 if (key != null && key instanceof hashgraph.PublicKey) {
-                    expect(key.verifyTransaction(transaction)).to.be.true;
+                    expect(key.verifyTransaction(transaction)).toBeTruthy();
                 }
             },
         });
@@ -300,8 +302,8 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                 // them, but it seems this is not the case. The issue though is that despite these
                 // transactions not failing with precheck codes, they still do not appear in the mirror
                 // node. I don't know why this is, so I'm just disabling querying the mirror node entirely
-                // for now until I figure out why this is happening. Another way around this would be 
-                // to construct real and valid transactions for testing, but I think that is out 
+                // for now until I figure out why this is happening. Another way around this would be
+                // to construct real and valid transactions for testing, but I think that is out
                 // of the scope of this feature.
                 // Here is a list of transactions that don't error with prechecks:
                 // AccountUpdateTransaction
@@ -363,7 +365,7 @@ export function createTckTests(signer, callback) {
         {
             name: "signer is defined",
             fn: function () {
-                expect(signer).to.be.not.undefined;
+                expect(signer).toBeDefined();
             },
         },
         {
@@ -371,13 +373,11 @@ export function createTckTests(signer, callback) {
             fn: function () {
                 const network = signer.getNetwork();
 
-                expect(Object.keys(network).length).to.be.equal(1);
-                expect(network["127.0.0.1:50211"].toString()).to.be.equal(
-                    "0.0.3"
-                );
+                expect(Object.keys(network).length).toEqual(1);
+                expect(network["127.0.0.1:50211"].toString()).toEqual("0.0.3");
 
                 const mirrorNetwork = signer.getMirrorNetwork();
-                expect(mirrorNetwork).to.deep.equal(["127.0.0.1:5600"]);
+                expect(mirrorNetwork).toEqual(["127.0.0.1:5600"]);
             },
         },
         ...freezeWithSignerTests,

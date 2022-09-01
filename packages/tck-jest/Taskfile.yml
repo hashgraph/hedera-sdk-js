@@ -1,0 +1,65 @@
+version: "3"
+
+silent: true
+
+tasks:
+    default:
+        deps:
+            - build
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        cmds:
+            - task: install
+            - task: format
+            - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --write > /dev/null
+
+    lint:
+        deps:
+            - "lint:types"
+            - "lint:dpdm"
+            - "lint:format"
+            - "lint:js"
+
+    "lint:types":
+        cmds:
+            - ./node_modules/.bin/tsc
+
+    "lint:dpdm":
+        cmds:
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+
+    "lint:format":
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
+
+    "lint:js":
+        cmds:
+            - ./node_modules/.bin/eslint --fix "src/*.js"
+
+    "test:release":
+        deps:
+            - install
+            - build
+            - format
+            - lint
+
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+        deps:
+            - "test:release"
+        cmds:
+            - pnpm publish {{.CLI_ARGS}}
