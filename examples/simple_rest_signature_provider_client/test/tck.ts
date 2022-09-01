@@ -1,12 +1,12 @@
 import * as tck from "@hashgraph/tck-chai";
-import { SimpleRestSigner } from  "../src/signer";
+import { SimpleRestSigner } from "../src/signer";
 import mocha from "mocha";
 
-describe("TCK", async function() {
+describe("TCK", async function () {
     const self = this;
     self.timeout(60 * 1000);
 
-    this.beforeAll(async function() {
+    this.beforeAll(async function () {
         const signer = await SimpleRestSigner.connect();
         const tests = tck.createTckTests(signer, () => {});
 
@@ -15,7 +15,7 @@ describe("TCK", async function() {
         }
     });
 
-    it("can connect", async function() {
-    });
+    // A single test is requried, otherwise `beforeAll` is never run and tests
+    // are added
+    it("can connect", async function () {});
 });
-

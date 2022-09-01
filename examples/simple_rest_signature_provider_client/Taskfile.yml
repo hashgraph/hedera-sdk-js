@@ -32,7 +32,7 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier "*.json" "src/*.ts" --write > /dev/null
+            - ./node_modules/.bin/prettier "*.json" "src/*.ts" "test/*.ts" --write > /dev/null
 
     lint:
         deps:
