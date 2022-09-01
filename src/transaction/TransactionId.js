@@ -22,6 +22,14 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+import TransactionReceiptQuery from "./TransactionReceiptQuery.js";
+import TransactionRecordQuery from "./TransactionRecordQuery.js";
+
+/**
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("./TransactionReceipt.js").default} TransactionReceipt
+ * @typedef {import("./TransactionRecord.js").default} TransactionRecord
+ */
 
 /**
  * The client-generated ID for a transaction.
@@ -243,5 +251,27 @@ export default class TransactionId {
         return /** @type {Timestamp} */ (this.validStart).compare(
             /** @type {Timestamp} */ (other.validStart)
         );
+    }
+
+    /**
+     * @param {Client} client
+     * @returns {Promise<TransactionReceipt>}
+     */
+    getReceipt(client) {
+        return new TransactionReceiptQuery()
+            .setTransactionId(this)
+            .execute(client);
+    }
+
+    /**
+     * @param {Client} client
+     * @returns {Promise<TransactionRecord>}
+     */
+    async getRecord(client) {
+        await this.getReceipt(client);
+
+        return new TransactionRecordQuery()
+            .setTransactionId(this)
+            .execute(client);
     }
 }
