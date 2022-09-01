@@ -161,6 +161,7 @@ describe("TransferTransaction", function () {
 
     it("should order transfers", function () {
         const serialNum1 = Long.fromNumber(111);
+        const serialNum2 = Long.fromNumber(222);
 
         const transaction = new TransferTransaction()
             // Insert in reverse order to confirm they get reordered
@@ -170,7 +171,17 @@ describe("TransferTransaction", function () {
                 accountId4
             )
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
-            .addNftTransfer(tokenId3, serialNum1, accountId1, accountId2)
+            .addNftTransfer(tokenId4, serialNum2, accountId3, accountId1)
+            .addNftTransfer(
+                new NftId(tokenId3, serialNum1),
+                accountId1,
+                accountId2
+            )
+            .addNftTransfer(
+                new NftId(tokenId3, serialNum2),
+                accountId2,
+                accountId1
+            )
             .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
             .addTokenTransferWithDecimals(tokenId2, accountId3, 2, 10)
             .addTokenTransferWithDecimals(tokenId1, accountId2, -3, 11)
@@ -213,123 +224,154 @@ describe("TransferTransaction", function () {
             },
         ]);
 
-        expect(data.tokenTransfers).to.deep.equal([
-            {
-                token: {
-                    shardNum: Long.fromNumber(1),
-                    realmNum: Long.fromNumber(1),
-                    tokenNum: Long.fromNumber(1),
-                },
-                expectedDecimals: { value: 11 },
-                transfers: [
-                    {
-                        accountID: {
-                            shardNum: Long.fromNumber(1),
-                            realmNum: Long.fromNumber(1),
-                            accountNum: Long.fromNumber(1),
-                            alias: null,
-                        },
-                        amount: Long.fromNumber(-4),
-                        isApproval: true,
-                    },
-                    {
-                        accountID: {
-                            shardNum: Long.fromNumber(2),
-                            realmNum: Long.fromNumber(2),
-                            accountNum: Long.fromNumber(2),
-                            alias: null,
-                        },
-                        amount: Long.fromNumber(-3),
-                        isApproval: false,
-                    },
-                ],
-                nftTransfers: [],
+        expect(data.tokenTransfers.length).to.be.equal(4);
+        expect(data.tokenTransfers[0]).to.deep.equal({
+            token: {
+                shardNum: Long.fromNumber(1),
+                realmNum: Long.fromNumber(1),
+                tokenNum: Long.fromNumber(1),
             },
-            {
-                token: {
-                    shardNum: Long.fromNumber(2),
-                    realmNum: Long.fromNumber(2),
-                    tokenNum: Long.fromNumber(2),
+            expectedDecimals: { value: 11 },
+            transfers: [
+                {
+                    accountID: {
+                        shardNum: Long.fromNumber(1),
+                        realmNum: Long.fromNumber(1),
+                        accountNum: Long.fromNumber(1),
+                        alias: null,
+                    },
+                    amount: Long.fromNumber(-4),
+                    isApproval: true,
                 },
-                expectedDecimals: { value: 10 },
-                transfers: [
-                    {
-                        accountID: {
-                            shardNum: Long.fromNumber(3),
-                            realmNum: Long.fromNumber(3),
-                            accountNum: Long.fromNumber(3),
-                            alias: null,
-                        },
-                        amount: Long.fromNumber(2),
-                        isApproval: false,
+                {
+                    accountID: {
+                        shardNum: Long.fromNumber(2),
+                        realmNum: Long.fromNumber(2),
+                        accountNum: Long.fromNumber(2),
+                        alias: null,
                     },
-                    {
-                        accountID: {
-                            shardNum: Long.fromNumber(4),
-                            realmNum: Long.fromNumber(4),
-                            accountNum: Long.fromNumber(4),
-                            alias: null,
-                        },
-                        amount: Long.fromNumber(-1),
-                        isApproval: false,
-                    },
-                ],
-                nftTransfers: [],
-            },
-            {
-                token: {
-                    shardNum: Long.fromNumber(3),
-                    realmNum: Long.fromNumber(3),
-                    tokenNum: Long.fromNumber(3),
+                    amount: Long.fromNumber(-3),
+                    isApproval: false,
                 },
-                expectedDecimals: null,
-                transfers: [],
-                nftTransfers: [
-                    {
-                        senderAccountID: {
-                            shardNum: Long.fromNumber(1),
-                            realmNum: Long.fromNumber(1),
-                            accountNum: Long.fromNumber(1),
-                            alias: null,
-                        },
-                        receiverAccountID: {
-                            shardNum: Long.fromNumber(2),
-                            realmNum: Long.fromNumber(2),
-                            accountNum: Long.fromNumber(2),
-                            alias: null,
-                        },
-                        serialNumber: serialNum1,
-                        isApproval: false,
-                    },
-                ],
+            ],
+            nftTransfers: [],
+        });
+        expect(data.tokenTransfers[1]).to.deep.equal({
+            token: {
+                shardNum: Long.fromNumber(2),
+                realmNum: Long.fromNumber(2),
+                tokenNum: Long.fromNumber(2),
             },
-            {
-                token: {
-                    shardNum: Long.fromNumber(4),
-                    realmNum: Long.fromNumber(4),
-                    tokenNum: Long.fromNumber(4),
+            expectedDecimals: { value: 10 },
+            transfers: [
+                {
+                    accountID: {
+                        shardNum: Long.fromNumber(3),
+                        realmNum: Long.fromNumber(3),
+                        accountNum: Long.fromNumber(3),
+                        alias: null,
+                    },
+                    amount: Long.fromNumber(2),
+                    isApproval: false,
                 },
-                expectedDecimals: null,
-                transfers: [],
-                nftTransfers: [
-                    {
-                        senderAccountID: {
-                            shardNum: Long.fromNumber(1),
-                            realmNum: Long.fromNumber(1),
-                            accountNum: Long.fromNumber(1),
-                            alias: null,
-                        },
-                        receiverAccountID: {
-                            shardNum: Long.fromNumber(3),
-                            realmNum: Long.fromNumber(3),
-                            accountNum: Long.fromNumber(3),
-                            alias: null,
-                        },
-                        serialNumber: serialNum1,
-                        isApproval: true,
+                {
+                    accountID: {
+                        shardNum: Long.fromNumber(4),
+                        realmNum: Long.fromNumber(4),
+                        accountNum: Long.fromNumber(4),
+                        alias: null,
                     },
-                ],
+                    amount: Long.fromNumber(-1),
+                    isApproval: false,
+                },
+            ],
+            nftTransfers: [],
+        });
+        expect(data.tokenTransfers[2]).to.deep.equal({
+            token: {
+                shardNum: Long.fromNumber(3),
+                realmNum: Long.fromNumber(3),
+                tokenNum: Long.fromNumber(3),
             },
-        ]);
+            expectedDecimals: null,
+            transfers: [],
+            nftTransfers: [
+                {
+                    senderAccountID: {
+                        shardNum: Long.fromNumber(1),
+                        realmNum: Long.fromNumber(1),
+                        accountNum: Long.fromNumber(1),
+                        alias: null,
+                    },
+                    receiverAccountID: {
+                        shardNum: Long.fromNumber(2),
+                        realmNum: Long.fromNumber(2),
+                        accountNum: Long.fromNumber(2),
+                        alias: null,
+                    },
+                    serialNumber: serialNum1,
+                    isApproval: false,
+                },
+                {
+                    senderAccountID: {
+                        shardNum: Long.fromNumber(2),
+                        realmNum: Long.fromNumber(2),
+                        accountNum: Long.fromNumber(2),
+                        alias: null,
+                    },
+                    receiverAccountID: {
+                        shardNum: Long.fromNumber(1),
+                        realmNum: Long.fromNumber(1),
+                        accountNum: Long.fromNumber(1),
+                        alias: null,
+                    },
+                    serialNumber: serialNum2,
+                    isApproval: false,
+                },
+            ],
+        });
+        expect(data.tokenTransfers[3]).to.deep.equal({
+            token: {
+                shardNum: Long.fromNumber(4),
+                realmNum: Long.fromNumber(4),
+                tokenNum: Long.fromNumber(4),
+            },
+            expectedDecimals: null,
+            transfers: [],
+            nftTransfers: [
+                {
+                    senderAccountID: {
+                        shardNum: Long.fromNumber(1),
+                        realmNum: Long.fromNumber(1),
+                        accountNum: Long.fromNumber(1),
+                        alias: null,
+                    },
+                    receiverAccountID: {
+                        shardNum: Long.fromNumber(3),
+                        realmNum: Long.fromNumber(3),
+                        accountNum: Long.fromNumber(3),
+                        alias: null,
+                    },
+                    serialNumber: serialNum1,
+                    isApproval: true,
+                },
+                {
+                    senderAccountID: {
+                        shardNum: Long.fromNumber(3),
+                        realmNum: Long.fromNumber(3),
+                        accountNum: Long.fromNumber(3),
+                        alias: null,
+                    },
+                    receiverAccountID: {
+                        shardNum: Long.fromNumber(1),
+                        realmNum: Long.fromNumber(1),
+                        accountNum: Long.fromNumber(1),
+                        alias: null,
+                    },
+                    serialNumber: serialNum2,
+                    isApproval: false,
+                },
+            ],
+        });
     });
 });

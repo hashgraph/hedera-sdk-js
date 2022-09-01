@@ -226,7 +226,7 @@ export default class ContractCreateFlow {
      * @param {number} maxAutomaticTokenAssociation
      * @returns {this}
      */
-    setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation) {
+    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociation) {
         this._contractCreate.setMaxAutomaticTokenAssociations(
             maxAutomaticTokenAssociation
         );
@@ -352,41 +352,64 @@ export default class ContractCreateFlow {
 
         const key = client.operatorPublicKey;
 
-        const fileId = /** @type {FileId} */ (
-            (
-                await (
-                    await new FileCreateTransaction()
-                        .setKeys(key != null ? [key] : [])
-                        .setContents(
-                            this._bytecode.subarray(
-                                0,
-                                Math.min(this._bytecode.length, 2048)
-                            )
-                        )
-                        .execute(client, requestTimeout)
-                ).getReceipt(client)
-            ).fileId
+        const fileCreateTransaction = new FileCreateTransaction()
+            .setKeys(key != null ? [key] : [])
+            .setContents(
+                this._bytecode.subarray(
+                    0,
+                    Math.min(this._bytecode.length, 2048)
+                )
+            )
+            .freezeWith(client);
+        await addSignersToTransaction(
+            fileCreateTransaction,
+            this._publicKeys,
+            this._transactionSigners
         );
 
+        let response = await fileCreateTransaction.execute(
+            client,
+            requestTimeout
+        );
+        const receipt = await response.getReceipt(client);
+
+        const fileId = /** @type {FileId} */ (receipt.fileId);
+
         if (this._bytecode.length > 2048) {
-            await (
-                await new FileAppendTransaction()
-                    .setFileId(fileId)
-                    .setContents(this._bytecode.subarray(2048))
-                    .execute(client, requestTimeout)
-            ).getReceipt(client);
+            const fileAppendTransaction = new FileAppendTransaction()
+                .setFileId(fileId)
+                .setContents(this._bytecode.subarray(2048))
+                .freezeWith(client);
+            await addSignersToTransaction(
+                fileAppendTransaction,
+                this._publicKeys,
+                this._transactionSigners
+            );
+            await fileAppendTransaction.execute(client, requestTimeout);
         }
 
-        const response = await this._contractCreate
-            .setBytecodeFileId(fileId)
-            .execute(client);
+        this._contractCreate.setBytecodeFileId(fileId).freezeWith(client);
+
+        await addSignersToTransaction(
+            this._contractCreate,
+            this._publicKeys,
+            this._transactionSigners
+        );
+
+        response = await this._contractCreate.execute(client, requestTimeout);
         await response.getReceipt(client);
 
         if (key != null) {
+            const fileDeleteTransaction = new FileDeleteTransaction()
+                .setFileId(fileId)
+                .freezeWith(client);
+            await addSignersToTransaction(
+                fileDeleteTransaction,
+                this._publicKeys,
+                this._transactionSigners
+            );
             await (
-                await new FileDeleteTransaction()
-                    .setFileId(fileId)
-                    .execute(client, requestTimeout)
+                await fileDeleteTransaction.execute(client, requestTimeout)
             ).getReceipt(client);
         }
 
@@ -454,7 +477,7 @@ export default class ContractCreateFlow {
         await response.getReceiptWithSigner(signer);
 
         if (key != null) {
-            const fileDeleteTransaction = new FileAppendTransaction().setFileId(
+            const fileDeleteTransaction = new FileDeleteTransaction().setFileId(
                 fileId
             );
             await addSignersToTransaction(
