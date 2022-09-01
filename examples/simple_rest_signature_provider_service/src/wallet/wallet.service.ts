@@ -13,6 +13,7 @@ import { Executable } from "../../../../lib/LocalProvider";
 @Injectable()
 export class WalletService {
     public wallet: Wallet;
+    public allowedRequests = new Set<string>();
 
     constructor() {
         this.wallet = new Wallet(
@@ -23,9 +24,35 @@ export class WalletService {
     }
 
     async call<RequestT, ResponseT, OutputT>(
+        bytes: string,
         res: Response,
         request: Executable<RequestT, ResponseT, OutputT>,
     ): Promise<void> {
+        // Make sure `callback` is called with the same request before we continue
+        const timeout = new Promise((_, reject) => {
+            setTimeout(
+                () =>
+                    reject(
+                        new Error("failed to find transaction in mirror node"),
+                    ),
+                10000,
+            );
+        });
+
+        const promise = async () => {
+            while (!this.allowedRequests.has(bytes)) {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+            this.allowedRequests.delete(bytes);
+        };
+
+        try {
+            await Promise.race([promise, timeout]);
+        } catch {
+            res.status(HttpStatus.REQUEST_TIMEOUT).send();
+            return;
+        }
+
         try {
             // Sign the request if necessary
             if (request instanceof Transaction) {

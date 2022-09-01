@@ -14,6 +14,6 @@ export class QueryController {
         @Body() body: QueryDto,
     ) {
         const query = Query.fromBytes(Buffer.from(body.bytes, "hex"));
-        await this.walletService.call(res, query);
+        await this.walletService.call(body.bytes, res, query);
     }
 }

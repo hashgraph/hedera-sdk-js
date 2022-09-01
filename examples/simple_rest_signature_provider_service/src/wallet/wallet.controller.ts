@@ -5,15 +5,19 @@ import {
     Body,
     HttpStatus,
     HttpCode,
+    Logger,
 } from "@nestjs/common";
 import { WalletService } from "./wallet.service";
 import { AccountId } from "@hashgraph/sdk";
 import { WalletDto } from "./wallet.dto";
 import { SignDto } from "./sign.dto";
+import { CallbackDto } from "./callback.dto";
 import { Response } from "express";
 
 @Controller("wallet")
 export class WalletController {
+    private readonly logger = new Logger(WalletController.name);
+
     constructor(public readonly walletService: WalletService) {}
 
     @Post("/connect")
@@ -58,5 +62,19 @@ export class WalletController {
         return {
             response: response.map((signature) => signature.toJSON()),
         };
+    }
+
+    /**
+     * Not part of the standard API, this is strictly used for TCK testing.
+     * If a real implementation this method should sit behind a testing flag.
+     */
+    @Post("/callback")
+    @HttpCode(200)
+    async callback(@Body() body: CallbackDto) {
+        this.logger.debug(`/callback ${Buffer.from(body.request).toString("hex")}`);
+
+        this.walletService.allowedRequests.add(
+            Buffer.from(body.request).toString("hex"),
+        );
     }
 }

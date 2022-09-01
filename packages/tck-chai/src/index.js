@@ -11,9 +11,11 @@ import * as hashgraph from "@hashgraph/sdk";
 // });
 
 /**
+ * Note: these transactions are modified as they are frozen and signed
+ *
  * @type {hashgraph.Transaction[]}
  */
-const TRANSACTIONS = [
+var TRANSACTIONS = [
     new hashgraph.AccountAllowanceApproveTransaction(),
     new hashgraph.AccountAllowanceDeleteTransaction(),
     new hashgraph.AccountCreateTransaction(),
@@ -85,11 +87,6 @@ const QUERIES = [
 ];
 
 /**
- * @type {hashgraph.Executable<*, *, *>[]}
- */
-const REQUESTS = [...TRANSACTIONS, ...QUERIES];
-
-/**
  * @typedef {object} ExpectClause
  * @property {string} name
  * @property {boolean} condition
@@ -98,20 +95,19 @@ const REQUESTS = [...TRANSACTIONS, ...QUERIES];
 
 /**
  * @param {hashgraph.Signer} signer
- * @param {() => void} callback
  * @param {hashgraph.Transaction[]} transactions
  * @returns {TestDeclaration[]}
  */
-function createTestFreezeWithSigner(signer, callback, transactions) {
+function createTestFreezeWithSigner(signer, transactions) {
     const tests = [];
 
     for (let i = 0; i < transactions.length; i++) {
         tests.push({
             name: `${transactions[i].constructor.name}: freezeWithSigner`,
             fn: async function () {
-                const promise = transactions[i].freezeWithSigner(signer);
-                callback();
-                transactions[i] = await promise;
+                transactions[i] = await transactions[i].freezeWithSigner(
+                    signer
+                );
 
                 const transaction = transactions[i];
                 expect(transaction.nodeAccountIds).to.not.be.null;
@@ -150,7 +146,7 @@ function createTestFreezeWithSigner(signer, callback, transactions) {
 
 /**
  * @param {hashgraph.Signer} signer
- * @param {() => void} callback
+ * @param {(request: Uint8Array) => void} callback
  * @param {hashgraph.Transaction[]} transactions
  * @returns {TestDeclaration[]}
  */
@@ -161,9 +157,8 @@ function createTestSignWithSigner(signer, callback, transactions) {
         tests.push({
             name: `${transactions[i].constructor.name}: signWithSigner`,
             fn: async function () {
-                const promise = transactions[i].signWithSigner(signer);
-                callback();
-                transactions[i] = await promise;
+                callback(transactions[i].toBytes());
+                transactions[i] = await transactions[i].signWithSigner(signer);
 
                 const transaction = transactions[i];
 
@@ -190,16 +185,16 @@ function createTestSignWithSigner(signer, callback, transactions) {
 }
 
 /**
- * @template T
+ * @template RequestT, ResponseT, OutputT
  * @param {hashgraph.Signer} signer
- * @param {() => void} callback
- * @param {(signer: hashgraph.Signer) => Promise<T>} closure
- * @returns {Promise<T | hashgraph.StatusError>}
+ * @param {(request: Uint8Array) => void} callback
+ * @param {hashgraph.Executable<RequestT, ResponseT, OutputT>} request
+ * @returns {Promise<OutputT | hashgraph.StatusError>}
  */
-async function execute(signer, callback, closure) {
+async function execute(signer, callback, request) {
     try {
-        const promise = closure(signer);
-        callback();
+        const promise = request.executeWithSigner(signer);
+        callback(request.toBytes());
         return await promise;
     } catch (error) {
         if (error instanceof hashgraph.StatusError) {
@@ -288,20 +283,19 @@ async function execute(signer, callback, closure) {
  * @template ResponseT
  * @template OutputT
  * @param {hashgraph.Signer} signer
- * @param {() => void} callback
+ * @param {(request: Uint8Array) => void} callback
  * @param {hashgraph.Executable<RequestT, ResponseT, OutputT>[]} requests
  * @returns {TestDeclaration[]}
  */
 function createTestExecuteWithSigner(signer, callback, requests) {
     const tests = [];
 
-    for (const request of requests) {
+    for (let i = 0; i < requests.length; i++) {
         tests.push({
-            name: `${request.constructor.name}: executeWithSigner`,
+            name: `${requests[i].constructor.name}: executeWithSigner`,
             fn: async function () {
-                const response = await execute(signer, callback, (signer) =>
-                    request.executeWithSigner(signer)
-                );
+                const request = requests[i];
+                const response = await execute(signer, callback, request);
 
                 if (response instanceof hashgraph.StatusError) {
                     return;
@@ -310,11 +304,13 @@ function createTestExecuteWithSigner(signer, callback, requests) {
                 return;
 
                 // Ideally all transactions would fail precheck as they have literally no data within
-                // them, but it seems this is not the case. The issue though is that for some reason
-                // the local mirror node cannot find these transactions, and I don't know why, so I'm
-                // commenting out this code block for now. The way around this would be to construct
-                // real and valid transactions for testing, but I think that is out of the scope of
-                // this feature. Here is a list of transactions that don't error with prechecks:
+                // them, but it seems this is not the case. The issue though is that despite these
+                // transactions not failing with precheck codes, they still do not appear in the mirror
+                // node. I don't know why this is, so I'm just disabling querying the mirror node entirely
+                // for now until I figure out why this is happening. Another way around this would be 
+                // to construct real and valid transactions for testing, but I think that is out 
+                // of the scope of this feature.
+                // Here is a list of transactions that don't error with prechecks:
                 // AccountUpdateTransaction
                 // ContractCreateTransaction
                 // ContractExecuteTransaction
@@ -343,25 +339,31 @@ function createTestExecuteWithSigner(signer, callback, requests) {
 
 /**
  * @param {hashgraph.Signer} signer
- * @param {() => void} callback
+ * @param {(request: Uint8Array) => void} callback
  * @returns {TestDeclaration[]}
  */
 export function createTckTests(signer, callback) {
     const freezeWithSignerTests = createTestFreezeWithSigner(
         signer,
-        callback,
         TRANSACTIONS
     );
+
     const signWithSignerTests = createTestSignWithSigner(
         signer,
         callback,
         TRANSACTIONS
     );
 
-    const executeWithSignerTests = createTestExecuteWithSigner(
+    const executeWithSignerTransactionTests = createTestExecuteWithSigner(
         signer,
         callback,
-        REQUESTS
+        TRANSACTIONS
+    );
+
+    const executeWithSignerQueryTests = createTestExecuteWithSigner(
+        signer,
+        callback,
+        QUERIES
     );
 
     return [
@@ -387,6 +389,7 @@ export function createTckTests(signer, callback) {
         },
         ...freezeWithSignerTests,
         ...signWithSignerTests,
-        ...executeWithSignerTests,
+        ...executeWithSignerTransactionTests,
+        ...executeWithSignerQueryTests,
     ];
 }

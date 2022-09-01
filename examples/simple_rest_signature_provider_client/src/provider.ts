@@ -1,5 +1,5 @@
 import * as hashgraph from "@hashgraph/sdk";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 const instance = axios.create({
     baseURL: "http://127.0.0.1:3000/",
@@ -10,6 +10,8 @@ export class SimpleRestProvider implements hashgraph.Provider {
     private network: Record<string, string>;
     private mirrorNetwork: string[];
 
+    public instance: AxiosInstance;
+
     constructor(
         ledgerId: hashgraph.LedgerId | null,
         network: Record<string, string>,
@@ -18,6 +20,10 @@ export class SimpleRestProvider implements hashgraph.Provider {
         this.ledgerId = ledgerId;
         this.network = network;
         this.mirrorNetwork = mirrorNetwork;
+
+        this.instance = axios.create({
+            baseURL: "http://127.0.0.1:3000/",
+        });
     }
 
     getLedgerId(): hashgraph.LedgerId | null {

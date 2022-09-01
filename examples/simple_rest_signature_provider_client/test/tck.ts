@@ -8,7 +8,13 @@ describe("TCK", async function () {
 
     this.beforeAll(async function () {
         const signer = await SimpleRestSigner.connect();
-        const tests = tck.createTckTests(signer, () => {});
+        const tests = tck.createTckTests(signer, (request) => {
+            // This is the callback that will be called after each request is created
+            // It is up to the signer/provider implementor to decide what to do here.
+
+            const provider = signer.getProvider()!;
+            provider.instance.post("/wallet/callback", { request });
+        });
 
         for (const test of tests) {
             self.addTest(new mocha.Test(test.name, test.fn));
