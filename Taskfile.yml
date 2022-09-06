@@ -11,9 +11,13 @@ includes:
         taskfile: ./common_js_test/Taskfile.yml
         dir: ./common_js_test
 
-    # simple_rest_signature_provider:
-    #     taskfile: ./examples/simple_rest_signature_provider/Taskfile.yml
-    #     dir: ./examples/simple_rest_signature_provider
+    simple_rest_signature_provider_client:
+        taskfile: ./examples/simple_rest_signature_provider_client/Taskfile.yml
+        dir: ./examples/simple_rest_signature_provider_client
+
+    simple_rest_signature_provider_service:
+        taskfile: ./examples/simple_rest_signature_provider_service/Taskfile.yml
+        dir: ./examples/simple_rest_signature_provider_service
 
     proto:
         taskfile: ./packages/proto/Taskfile.yml
@@ -117,6 +121,8 @@ tasks:
             - task: test:unit
             - task: examples:build
             - task: common_js_test:build
+            - task: simple_rest_signature_provider_client:build
+            - task: simple_rest_signature_provider_service:build
 
     test:
         deps:
