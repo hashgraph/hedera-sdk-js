@@ -26,6 +26,8 @@
  * @typedef {import("./PrivateKey.js").default} PrivateKey
  * @typedef {import("./EvmAddress.js").default} EvmAddress
  * @typedef {import("./EthereumTransactionData.js").default} EthereumTransactionData
+ * @typedef {import("./transaction/TransactionReceiptQuery.js").default} TransactionReceiptQuery
+ * @typedef {import("./transaction/TransactionRecordQuery.js").default} TransactionRecordQuery
  */
 
 /**
@@ -87,6 +89,12 @@ class Cache {
 
         /** @type {((bytes: Uint8Array) => EthereumTransactionData) | null} */
         this._ethereumTransactionDataEip1559FromBytes = null;
+
+        /** @type {(() => TransactionReceiptQuery) | null} */
+        this._transactionReceiptQueryConstructor = null;
+
+        /** @type {(() => TransactionRecordQuery) | null} */
+        this._transactionRecordQueryConstructor = null;
     }
 
     /**
@@ -321,6 +329,52 @@ class Cache {
         }
 
         return this._ethereumTransactionDataEip1559FromBytes;
+    }
+
+    /**
+     * @param {(() => TransactionReceiptQuery)} transactionReceiptQueryConstructor
+     */
+    setTransactionReceiptQueryConstructor(
+        transactionReceiptQueryConstructor
+    ) {
+        this._transactionReceiptQueryConstructor =
+            transactionReceiptQueryConstructor;
+    }
+
+    /**
+     * @returns {(() => TransactionReceiptQuery)}
+     */
+    get transactionReceiptQueryConstructor() {
+        if (this._transactionReceiptQueryConstructor == null) {
+            throw new Error(
+                "Cache.transactionReceiptQueryConstructor was used before it was set"
+            );
+        }
+
+        return this._transactionReceiptQueryConstructor;
+    }
+
+    /**
+     * @param {(() => TransactionRecordQuery)} transactionRecordQueryConstructor
+     */
+    setTransactionRecordQueryConstructor(
+        transactionRecordQueryConstructor
+    ) {
+        this._transactionRecordQueryConstructor =
+            transactionRecordQueryConstructor;
+    }
+
+    /**
+     * @returns {(() => TransactionRecordQuery)}
+     */
+    get transactionRecordQueryConstructor() {
+        if (this._transactionRecordQueryConstructor == null) {
+            throw new Error(
+                "Cache.transactionRecordQueryConstructor was used before it was set"
+            );
+        }
+
+        return this._transactionRecordQueryConstructor;
     }
 }
 

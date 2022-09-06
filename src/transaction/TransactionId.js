@@ -22,8 +22,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
-import TransactionReceiptQuery from "./TransactionReceiptQuery.js";
-import TransactionRecordQuery from "./TransactionRecordQuery.js";
+import CACHE from "../Cache.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -258,7 +257,7 @@ export default class TransactionId {
      * @returns {Promise<TransactionReceipt>}
      */
     getReceipt(client) {
-        return new TransactionReceiptQuery()
+        return CACHE.transactionReceiptQueryConstructor()
             .setTransactionId(this)
             .execute(client);
     }
@@ -270,7 +269,7 @@ export default class TransactionId {
     async getRecord(client) {
         await this.getReceipt(client);
 
-        return new TransactionRecordQuery()
+        return CACHE.transactionRecordQueryConstructor()
             .setTransactionId(this)
             .execute(client);
     }
