@@ -1,46 +1,59 @@
+// Testing framework imports
+import mocha from "mocha";
 import { expect } from "chai";
+
+// TCK/Signatuer Provider imports
 import * as tck from "@hashgraph/tck";
 import { SimpleRestSigner } from "../src/signer";
-import mocha from "mocha";
+
+// Could be abstracted into packages and/or into a separate file as these
+// are always going to be the same
+const expects = {
+    toEqual: (a: any, b: any) => {
+        expect(a).to.deep.equal(b);
+    },
+    toHaveMembers: (a: any, b: any) => {
+        expect(a).to.have.members(b);
+    },
+    toNotBeNull: (a: any) => {
+        expect(a).to.not.be.null;
+    },
+    toBeTrue: (a: any) => {
+        expect(a).to.be.true;
+    },
+};
 
 describe("TCK", async function () {
-    const self = this;
-    self.timeout(60 * 1000);
+    // Set a timeout on all TCK tests
+    this.timeout(60 * 1000);
 
-    this.beforeAll(async function () {
-        const signer = await SimpleRestSigner.connect();
-        const expects = {
-            toEqual: (a: any, b: any) => {
-                expect(a).to.deep.equal(b);
-            },
-            toHaveMembers: (a: any, b: any) => {
-                expect(a).to.have.members(b);
-            },
-            toNotBeNull: (a: any) => {
-                expect(a).to.not.be.null;
-            },
-            toBeTrue: (a: any) => {
-                expect(a).to.be.true;
-            },
-        };
-        const tests = tck.createTckTests(
-            signer,
-            (request: string) => {
-                // This is the callback that will be called after each request is created
-                // It is up to the signer/provider implementor to decide what to do here.
+    // Dummy test to make sure dynamic tests are loaded
+    it("connects", () => {});
 
-                const provider = signer.getProvider()!;
-                provider.instance.post("/wallet/callback", { request });
-            },
-            expects
-        );
+    const signer = await SimpleRestSigner.connect();
 
-        for (const test of tests) {
-            self.addTest(new mocha.Test(test.name, test.fn));
-        }
-    });
+    // This is the callback that will be called after each request is created
+    // It is up to the signer/provider implementor to decide what to do here.
+    //
+    // Note: The callback will only be called when a transaction is signed or executed
+    // it will not be called when a request is being frozen as we are unable to
+    // serialize a transaction before it's frozen.
+    const callback = (request: string) => {
+        const provider = signer.getProvider()!;
 
-    // A single test is requried, otherwise `beforeAll` is never run and tests
-    // are added
-    it("can connect", async function () {});
+        // We're going to simply call `/wallet/callback` with the request bytes hex
+        // encoded to tell the service this request came from the TCK. The service
+        // waits until `/wallet/callback` is called with the request before
+        // proceeding, and will timeout quickly otherwise.
+        provider.instance.post("/wallet/callback", { request });
+    };
+
+    // Run the TCK test creator to create all the tests and then
+    // add them to the test suite using the testing framework.
+    // With mocha to add tests we can simply call `this.addTest()` assuming
+    // a test already exists in the list -- otherwise the added tests
+    // will never run :(
+    for (const test of tck.createTckTests(signer, callback, expects)) {
+        this.addTest(new mocha.Test(test.name, test.fn));
+    }
 });
