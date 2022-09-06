@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@hashgraph/sdk': link:../..
-  '@hashgraph/tck-chai': link:../../packages/tck-chai
+  '@hashgraph/tck': link:../../packages/tck
   '@types/node': ^17.0.27
   axios: ^0.26.1
   dotenv: ^14.3.2
@@ -18,7 +18,7 @@ dependencies:
   axios: 0.26.1
 
 devDependencies:
-  '@hashgraph/tck-chai': link:../../packages/tck-chai
+  '@hashgraph/tck': link:../../packages/tck
   '@types/node': 17.0.45
   dotenv: 14.3.2
   mocha: 10.0.0

@@ -12,7 +12,7 @@
         "axios": "^0.26.1"
     },
     "devDependencies": {
-        "@hashgraph/tck-chai": "link:../../packages/tck-chai",
+        "@hashgraph/tck": "link:../../packages/tck",
         "@types/node": "^17.0.27",
         "dotenv": "^14.3.2",
         "mocha": "^10.0.0",

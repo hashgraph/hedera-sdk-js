@@ -20,7 +20,9 @@ export class TransactionController {
             transaction,
         );
 
-        this.logger.debug(`/sign ${Buffer.from(transaction.toBytes()).toString("hex")}`);
+        this.logger.debug(
+            `/sign ${Buffer.from(transaction.toBytes()).toString("hex")}`,
+        );
 
         return {
             response: Buffer.from(transaction.toBytes()).toString("hex"),

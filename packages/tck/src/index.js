@@ -87,10 +87,11 @@ const QUERIES = [
 
 /**
  * @param {hashgraph.Signer} signer
+ * @param {Expect} expect
  * @param {hashgraph.Transaction[]} transactions
  * @returns {TestDeclaration[]}
  */
-function createTestFreezeWithSigner(signer, transactions) {
+function createTestFreezeWithSigner(signer, expect, transactions) {
     const tests = [];
 
     for (let i = 0; i < transactions.length; i++) {
@@ -102,7 +103,7 @@ function createTestFreezeWithSigner(signer, transactions) {
                 );
 
                 const transaction = transactions[i];
-                expect(transaction.nodeAccountIds).not.toBeNull();
+                expect.toNotBeNull(transaction.nodeAccountIds);
 
                 const nodeAccountIds = (
                     transaction.nodeAccountIds != null
@@ -116,21 +117,20 @@ function createTestFreezeWithSigner(signer, transactions) {
                 // This may seem backwards, but the goal is to check if each member of `nodeAccountIds`
                 // exists within the entire network `expectedNodeAccountIds`. This could be a small subset
                 // or the entire network
-                expect(expectedNodeAccountIds).toEqual(
-                    expect.arrayContaining(nodeAccountIds)
-                );
+                expect.toHaveMembers(expectedNodeAccountIds, nodeAccountIds);
 
                 const transactionId = transaction.transactionId;
 
-                expect(transactionId).not.toBeNull();
+                expect.toNotBeNull(transactionId);
 
                 const accountId = /** @type {hashgraph.TransactionId} */ (
                     transactionId
                 ).accountId;
-                expect(accountId).not.toBeNull();
-                expect(
-                    /** @type {hashgraph.AccountId} */ (accountId).toString()
-                ).toEqual(signer.getAccountId().toString());
+                expect.toNotBeNull(accountId);
+                expect.toEqual(
+                    /** @type {hashgraph.AccountId} */ (accountId).toString(),
+                    signer.getAccountId().toString()
+                );
             },
         });
     }
@@ -141,10 +141,11 @@ function createTestFreezeWithSigner(signer, transactions) {
 /**
  * @param {hashgraph.Signer} signer
  * @param {(request: Uint8Array) => void} callback
+ * @param {Expect} expect
  * @param {hashgraph.Transaction[]} transactions
  * @returns {TestDeclaration[]}
  */
-function createTestSignWithSigner(signer, callback, transactions) {
+function createTestSignWithSigner(signer, callback, expect, transactions) {
     const tests = [];
 
     for (let i = 0; i < transactions.length; i++) {
@@ -159,9 +160,10 @@ function createTestSignWithSigner(signer, callback, transactions) {
                 const signatures = await transaction.getSignaturesAsync();
                 for (const [, nodeSignatures] of signatures) {
                     for (const [publicKey] of nodeSignatures) {
-                        expect(
-                            publicKey.verifyTransaction(transaction)
-                        ).toBeTruthy();
+                        expect.toEqual(
+                            publicKey.verifyTransaction(transaction),
+                            true
+                        );
                     }
                 }
 
@@ -170,7 +172,7 @@ function createTestSignWithSigner(signer, callback, transactions) {
                         ? signer.getAccountKey()
                         : null;
                 if (key != null && key instanceof hashgraph.PublicKey) {
-                    expect(key.verifyTransaction(transaction)).toBeTruthy();
+                    expect.toEqual(key.verifyTransaction(transaction), true);
                 }
             },
         });
@@ -333,19 +335,31 @@ function createTestExecuteWithSigner(signer, callback, requests) {
  */
 
 /**
+ * @typedef {object} Expect
+ * @property {(a: any, b: any) => void} toEqual
+ * @property {(a: any, b: any) => void} toNotEqual
+ * @property {(a: any) => void} toBeNull
+ * @property {(a: any) => void} toNotBeNull
+ * @property {(a: any[], b: any[]) => void} toHaveMembers
+ */
+
+/**
  * @param {hashgraph.Signer} signer
  * @param {(request: Uint8Array) => void} callback
+ * @param {Expect} expect
  * @returns {TestDeclaration[]}
  */
-export function createTckTests(signer, callback) {
+export function createTckTests(signer, callback, expect) {
     const freezeWithSignerTests = createTestFreezeWithSigner(
         signer,
+        expect,
         TRANSACTIONS
     );
 
     const signWithSignerTests = createTestSignWithSigner(
         signer,
         callback,
+        expect,
         TRANSACTIONS
     );
 
@@ -365,7 +379,7 @@ export function createTckTests(signer, callback) {
         {
             name: "signer is defined",
             fn: function () {
-                expect(signer).toBeDefined();
+                expect.toNotBeNull(signer);
             },
         },
         {
@@ -373,11 +387,11 @@ export function createTckTests(signer, callback) {
             fn: function () {
                 const network = signer.getNetwork();
 
-                expect(Object.keys(network).length).toEqual(1);
-                expect(network["127.0.0.1:50211"].toString()).toEqual("0.0.3");
+                expect.toEqual(Object.keys(network).length, 1);
+                expect.toEqual(network["127.0.0.1:50211"].toString(), "0.0.3");
 
                 const mirrorNetwork = signer.getMirrorNetwork();
-                expect(mirrorNetwork).toEqual(["127.0.0.1:5600"]);
+                expect.toEqual(mirrorNetwork, ["127.0.0.1:5600"]);
             },
         },
         ...freezeWithSignerTests,

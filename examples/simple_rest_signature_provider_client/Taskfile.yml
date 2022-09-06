@@ -4,8 +4,8 @@ silent: true
 
 includes:
     tck-chai:
-        taskfile: ../../packages/tck-chai/Taskfile.yml
-        dir: ../../packages/tck-chai
+        taskfile: ../../packages/tck/Taskfile.yml
+        dir: ../../packages/tck
 
 tasks:
     default:

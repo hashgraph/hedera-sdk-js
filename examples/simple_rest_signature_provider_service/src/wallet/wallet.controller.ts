@@ -71,7 +71,9 @@ export class WalletController {
     @Post("/callback")
     @HttpCode(200)
     async callback(@Body() body: CallbackDto) {
-        this.logger.debug(`/callback ${Buffer.from(body.request).toString("hex")}`);
+        this.logger.debug(
+            `/callback ${Buffer.from(body.request).toString("hex")}`,
+        );
 
         this.walletService.allowedRequests.add(
             Buffer.from(body.request).toString("hex"),
