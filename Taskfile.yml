@@ -102,7 +102,7 @@ tasks:
     "lint:dpdm":
         cmds:
             # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false
 
     "lint:format":
         cmds:
