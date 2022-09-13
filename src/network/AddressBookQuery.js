@@ -72,7 +72,7 @@ export default class AddresesBookQuery {
                     return true;
                 } else {
                     // Retry on `NOT_FOUND`, `RESOURCE_EXHAUSTED`, `UNAVAILABLE`, and conditionally on `INTERNAL`
-                    // if the messasge matches the right regex.
+                    // if the message matches the right regex.
                     switch (error.code) {
                         // INTERNAL
                         // eslint-disable-next-line no-fallthrough

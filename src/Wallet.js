@@ -69,7 +69,7 @@ export default class Wallet {
 
         this.publicKey = key.publicKey;
         /**
-         * @type {(messasge: Uint8Array) => Promise<Uint8Array>}
+         * @type {(message: Uint8Array) => Promise<Uint8Array>}
          */
         this.signer = (message) => Promise.resolve(key.sign(message));
         this.provider = provider;
