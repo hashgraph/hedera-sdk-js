@@ -23,6 +23,7 @@ import NodeAddressBook from "../address_book/NodeAddressBook.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
+import CACHE from "../Cache.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -35,7 +36,7 @@ import { RST_STREAM } from "../Executable.js";
  * @typedef {import("../client/Client.js").default<ChannelT, MirrorChannel>} Client<ChannelT, MirrorChannel>
  */
 
-export default class AddresesBookQuery {
+export default class AddressBookQuery {
     /**
      * @param {object} props
      * @param {FileId | string} [props.fileId]
@@ -128,7 +129,7 @@ export default class AddresesBookQuery {
 
     /**
      * @param {FileId | string} fileId
-     * @returns {AddresesBookQuery}
+     * @returns {AddressBookQuery}
      */
     setFileId(fileId) {
         this._fileId =
@@ -148,7 +149,7 @@ export default class AddresesBookQuery {
 
     /**
      * @param {number} limit
-     * @returns {AddresesBookQuery}
+     * @returns {AddressBookQuery}
      */
     setLimit(limit) {
         this._limit = limit;
@@ -263,3 +264,5 @@ export default class AddresesBookQuery {
             );
     }
 }
+
+CACHE.setAddressBookQueryConstructor(() => new AddressBookQuery());

@@ -66,7 +66,7 @@ export default class NodeAddressBook {
      * @param {Uint8Array} bytes
      * @returns {NodeAddressBook}
      */
-    static frombytes(bytes) {
+    static fromBytes(bytes) {
         return NodeAddressBook._fromProtobuf(
             HashgraphProto.proto.NodeAddressBook.decode(bytes)
         );

@@ -9,7 +9,7 @@ dotenv.config();
 async function main() {
     if (process.env.HEDERA_NETWORK == null) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variable HEDERA_NETWORK is required."
         );
     }
 

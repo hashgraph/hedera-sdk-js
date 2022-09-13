@@ -102,36 +102,41 @@ export default class ManagedNetwork {
      * @returns {this}
      */
     setTransportSecurity(transportSecurity) {
-        if (this._transportSecurity != transportSecurity) {
-            this._network.clear();
-
-            for (let i = 0; i < this._nodes.length; i++) {
-                let node = this._nodes[i];
-                node.close();
-
-                node = /** @type {NetworkNodeT} */ (
-                    transportSecurity
-                        ? node
-                              .toSecure()
-                              .setCert(
-                                  this._ledgerId != null
-                                      ? this._ledgerId.toString()
-                                      : ""
-                              )
-                        : node.toInsecure()
-                );
-                this._nodes[i] = node;
-
-                const nodes =
-                    this._network.get(node.getKey()) != null
-                        ? /** @type {NetworkNodeT[]} */ (
-                              this._network.get(node.getKey())
-                          )
-                        : [];
-                nodes.push(node);
-                this._network.set(node.getKey(), nodes);
-            }
+        if (this._transportSecurity == transportSecurity) {
+            return this;
         }
+
+        this._network.clear();
+
+        for (let i = 0; i < this._nodes.length; i++) {
+            let node = this._nodes[i];
+            node.close();
+
+            node = /** @type {NetworkNodeT} */ (
+                transportSecurity
+                    ? node
+                          .toSecure()
+                          .setCert(
+                              this._ledgerId != null
+                                  ? this._ledgerId.toString()
+                                  : ""
+                          )
+                    : node.toInsecure()
+            );
+            this._nodes[i] = node;
+
+            const nodes =
+                this._network.get(node.getKey()) != null
+                    ? /** @type {NetworkNodeT[]} */ (
+                          this._network.get(node.getKey())
+                      )
+                    : [];
+            nodes.push(node);
+            this._network.set(node.getKey(), nodes);
+        }
+
+        // Overwrite healthy node list since new ports might make the node work again
+        this._healthyNodes = [...this._nodes];
 
         this._transportSecurity = transportSecurity;
         return this;

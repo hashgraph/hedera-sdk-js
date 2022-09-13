@@ -69,6 +69,28 @@ export default class Network extends ManagedNetwork {
     }
 
     /**
+     * @param {NodeAddressBook} addressBook
+     * @returns {this}
+     */
+    setNetworkFromAddressBook(addressBook) {
+        /** @type {Record<string, AccountId>} */
+        const network = {};
+        const port = this.isTransportSecurity() ? 50212 : 50211;
+
+        for (const nodeAddress of addressBook.nodeAddresses) {
+            for (const endpoint of nodeAddress.addresses) {
+                // TODO: We hard code ports too much, should fix
+                if (endpoint.port === port && nodeAddress.accountId != null) {
+                    network[endpoint.toString()] = nodeAddress.accountId;
+                }
+            }
+        }
+
+        this.setNetwork(network);
+        return this;
+    }
+
+    /**
      * @returns {{[key: string]: (string | AccountId)}}
      */
     get network() {

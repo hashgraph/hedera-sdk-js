@@ -26,10 +26,14 @@ import MirrorNetwork from "./MirrorNetwork.js";
 import PublicKey from "../PublicKey.js";
 import PrivateKey from "../PrivateKey.js";
 import LedgerId from "../LedgerId.js";
+import FileId from "../file/FileId.js";
+import CACHE from "../Cache.js";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
+ * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
 /**
@@ -114,22 +118,18 @@ export default class Client {
             }
         }
 
-        this._signOnDemand = false;
-
-        this._autoValidateChecksums = false;
-
         /** @type {number | null} */
         this._maxAttempts = null;
 
-        /** @type {number} */
+        this._signOnDemand = false;
+        this._autoValidateChecksums = false;
         this._minBackoff = 250;
-
-        /** @type {number} */
         this._maxBackoff = 8000;
-
         this._defaultRegenerateTransactionId = true;
-
         this._requestTimeout = null;
+        this._networkUpdatePeriod = 10000;
+
+        this._scheduleNetworkUpdate();
     }
 
     /**
@@ -180,7 +180,17 @@ export default class Client {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetwork(network) {
+        // TODO: This logic _can_ be de-duplicated and likely should
         throw new Error("not implemented");
+    }
+
+    /**
+     * @param {NodeAddressBook} addressBook
+     * @returns {this}
+     */
+    setNetworkFromAddressBook(addressBook) {
+        this._network.setNetworkFromAddressBook(addressBook);
+        return this;
     }
 
     /**
@@ -582,6 +592,22 @@ export default class Client {
     }
 
     /**
+     * @returns {number}
+     */
+    get networkUpdatePeriod() {
+        return this._networkUpdatePeriod;
+    }
+
+    /**
+     * @param {number} networkUpdatePeriod
+     * @returns {this}
+     */
+    setNetworkUpdatePeriod(networkUpdatePeriod) {
+        this._networkUpdatePeriod = networkUpdatePeriod;
+        return this;
+    }
+
+    /**
      * @param {AccountId | string} accountId
      */
     async ping(accountId) {
@@ -626,5 +652,31 @@ export default class Client {
      */
     _createMirrorNetworkChannel() {
         throw new Error("not implemented");
+    }
+
+    /**
+     * @private
+     */
+    _scheduleNetworkUpdate() {
+        // This is the automatic network update promise that _eventually_ completes
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
+        setTimeout(async () => {
+            try {
+                const addressBook = await CACHE.addressBookQueryConstructor()
+                    .setFileId(FileId.ADDRESS_BOOK)
+                    .execute(this);
+                this.setNetworkFromAddressBook(addressBook);
+
+                // Recall this method to continuously update the network
+                // every `networkUpdatePeriod` amount of itme
+                this._scheduleNetworkUpdate();
+            } catch (error) {
+                Logger.trace(
+                    `failed to update client address book: ${
+                        /** @type {Error} */ (error).toString()
+                    }`
+                );
+            }
+        }, this._networkUpdatePeriod);
     }
 }
