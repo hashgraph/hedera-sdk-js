@@ -23,3 +23,5 @@ coverage/
 
 .yalc
 yalc.lock
+
+examples/address-book.proto.bin

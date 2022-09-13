@@ -19,11 +19,7 @@
  */
 
 import NodeAddress from "./NodeAddress.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.INodeAddressBook} HashgraphProto.proto.INodeAddressBook
- */
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("./NodeAddress.js").NodeAddressJson} NodeAddressJson
@@ -64,6 +60,16 @@ export default class NodeAddressBook {
     setNodeAddresses(nodeAddresses) {
         this._nodeAddresses = nodeAddresses;
         return this;
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {NodeAddressBook}
+     */
+    static frombytes(bytes) {
+        return NodeAddressBook._fromProtobuf(
+            HashgraphProto.proto.NodeAddressBook.decode(bytes)
+        );
     }
 
     /**
@@ -109,5 +115,11 @@ export default class NodeAddressBook {
                 nodeAddress.toJSON()
             ),
         };
+    }
+
+    toBytes() {
+        return HashgraphProto.proto.NodeAddressBook.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }
