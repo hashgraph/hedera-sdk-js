@@ -121,13 +121,29 @@ export default class Client {
         /** @type {number | null} */
         this._maxAttempts = null;
 
+        /** @private */
         this._signOnDemand = false;
+
+        /** @private */
         this._autoValidateChecksums = false;
+
+        /** @private */
         this._minBackoff = 250;
+
+        /** @private */
         this._maxBackoff = 8000;
+
+        /** @private */
         this._defaultRegenerateTransactionId = true;
+
+        /** @private */
         this._requestTimeout = null;
+
+        /** @private */
         this._networkUpdatePeriod = 10000;
+
+        /** @private */
+        this._isShutdown = false;
 
         this._scheduleNetworkUpdate();
     }
@@ -636,6 +652,7 @@ export default class Client {
     close() {
         this._network.close();
         this._mirrorNetwork.close();
+        this._isShutdown = true;
     }
 
     /**
@@ -667,9 +684,11 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
 
-                // Recall this method to continuously update the network
-                // every `networkUpdatePeriod` amount of itme
-                this._scheduleNetworkUpdate();
+                if (!this._isShutdown) {
+                    // Recall this method to continuously update the network
+                    // every `networkUpdatePeriod` amount of itme
+                    this._scheduleNetworkUpdate();
+                }
             } catch (error) {
                 Logger.trace(
                     `failed to update client address book: ${

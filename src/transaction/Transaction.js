@@ -925,7 +925,7 @@ export default class Transaction extends Executable {
      */
     freezeWith(client) {
         // Set sign on demand based on client
-        this._signOnDemand = client != null ? client._signOnDemand : false;
+        this._signOnDemand = client != null ? client.signOnDemand : false;
 
         // Save the operator
         this._operator = client != null ? client._operator : null;
