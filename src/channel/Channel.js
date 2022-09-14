@@ -285,49 +285,49 @@ export function decodeUnaryResponse(
     let unaryResponse = null;
 
     // 0 = successful
-    let status = 0;
+    // let status = 0;
 
-    while (dataOffset < dataView.byteLength) {
-        const frameByte = dataView.getUint8(dataOffset + 0);
-        const frameType = frameByte >> 7;
-        const frameByteLength = dataView.getUint32(dataOffset + 1);
-        const frameOffset = dataOffset + 5; // offset from the start of the dataView
-        if (frameOffset + frameByteLength > dataView.byteLength) {
-            throw new Error("(BUG) unexpected frame length past the boundary");
-        }
-        const frameData = new Uint8Array(
-            data,
-            dataView.byteOffset + frameOffset,
-            frameByteLength
-        );
-
-        if (frameType === 0) {
-            if (unaryResponse != null) {
-                throw new Error(
-                    "(BUG) unexpectedly received more than one data frame"
-                );
-            }
-
-            unaryResponse = frameData;
-        } else if (frameType === 1) {
-            const trailer = utf8.decode(frameData);
-            const [trailerName, trailerValue] = trailer.split(":");
-
-            if (trailerName === "grpc-status") {
-                status = parseInt(trailerValue);
-            } else {
-                throw new Error(`(BUG) unhandled trailer, ${trailer}`);
-            }
-        } else {
-            throw new Error(`(BUG) unexpected frame type: ${frameType}`);
-        }
-
-        dataOffset += frameByteLength + 5;
-    }
-
-    if (status !== 0) {
-        throw new Error(`(BUG) unhandled grpc-status: ${status}`);
-    }
+    // while (dataOffset < dataView.byteLength) {
+    //     const frameByte = dataView.getUint8(dataOffset + 0);
+    //     const frameType = frameByte >> 7;
+    //     const frameByteLength = dataView.getUint32(dataOffset + 1);
+    //     const frameOffset = dataOffset + 5; // offset from the start of the dataView
+    //     if (frameOffset + frameByteLength > dataView.byteLength) {
+    //         throw new Error("(BUG) unexpected frame length past the boundary");
+    //     }
+    //     const frameData = new Uint8Array(
+    //         data,
+    //         dataView.byteOffset + frameOffset,
+    //         frameByteLength
+    //     );
+    //
+    //     if (frameType === 0) {
+    //         if (unaryResponse != null) {
+    //             throw new Error(
+    //                 "(BUG) unexpectedly received more than one data frame"
+    //             );
+    //         }
+    //
+    //         unaryResponse = frameData;
+    //     } else if (frameType === 1) {
+    //         const trailer = utf8.decode(frameData);
+    //         const [trailerName, trailerValue] = trailer.split(":");
+    //
+    //         if (trailerName === "grpc-status") {
+    //             status = parseInt(trailerValue);
+    //         } else {
+    //             throw new Error(`(BUG) unhandled trailer, ${trailer}`);
+    //         }
+    //     } else {
+    //         throw new Error(`(BUG) unexpected frame type: ${frameType}`);
+    //     }
+    //
+    //     dataOffset += frameByteLength + 5;
+    // }
+    //
+    // if (status !== 0) {
+    //     throw new Error(`(BUG) unhandled grpc-status: ${status}`);
+    // }
 
     if (unaryResponse == null) {
         throw new Error("(BUG) unexpectedly received no response");

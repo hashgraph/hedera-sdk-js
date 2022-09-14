@@ -70,7 +70,11 @@ export default class WebChannel extends Channel {
 
                 callback(null, unaryResponse);
             } catch (error) {
-                callback(/** @type {Error} */ (error), null);
+                if (error instanceof Error) {
+                    callback(error, null);
+                } else {
+                    callback(new Error(JSON.stringify(error)), null);
+                }
             }
         };
     }

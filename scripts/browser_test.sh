@@ -6,5 +6,5 @@ sleep 1
 npx playwright install
 npx playwright test test/browser.test.js
 PLAYWRIGHT_STATUS=$?
-kill -9 $VITE_PID
+# kill -9 $VITE_PID
 exit $PLAYWRIGHT_STATUS
