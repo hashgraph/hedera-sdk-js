@@ -54,6 +54,9 @@ export default class LedgerId {
             case NETNAMES[2]:
             case "2":
                 return LedgerId.PREVIEWNET;
+            case NETNAMES[3]:
+            case "3":
+                return LedgerId.LOCAL_NODE;
             default: {
                 let ledgerIdDecoded = hex.decode(ledgerId);
                 if (ledgerIdDecoded.length == 0 && ledgerId.length != 0) {
@@ -81,6 +84,8 @@ export default class LedgerId {
                     return NETNAMES[1];
                 case 2:
                     return NETNAMES[2];
+                case 3:
+                    return NETNAMES[3];
                 default:
                     return hex.encode(this._ledgerId);
             }
@@ -127,12 +132,21 @@ export default class LedgerId {
     isPreviewnet() {
         return this.toString() == NETNAMES[2];
     }
+
+    /**
+     * @returns {boolean}
+     */
+    isLocalNode() {
+        return this.toString() == NETNAMES[3];
+    }
 }
 
-const NETNAMES = ["mainnet", "testnet", "previewnet"];
+const NETNAMES = ["mainnet", "testnet", "previewnet", "local-node"];
 
 LedgerId.MAINNET = new LedgerId(new Uint8Array([0]));
 
 LedgerId.TESTNET = new LedgerId(new Uint8Array([1]));
 
 LedgerId.PREVIEWNET = new LedgerId(new Uint8Array([2]));
+
+LedgerId.LOCAL_NODE = new LedgerId(new Uint8Array([3]));
