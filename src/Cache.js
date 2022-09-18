@@ -334,9 +334,7 @@ class Cache {
     /**
      * @param {(() => TransactionReceiptQuery)} transactionReceiptQueryConstructor
      */
-    setTransactionReceiptQueryConstructor(
-        transactionReceiptQueryConstructor
-    ) {
+    setTransactionReceiptQueryConstructor(transactionReceiptQueryConstructor) {
         this._transactionReceiptQueryConstructor =
             transactionReceiptQueryConstructor;
     }
@@ -357,9 +355,7 @@ class Cache {
     /**
      * @param {(() => TransactionRecordQuery)} transactionRecordQueryConstructor
      */
-    setTransactionRecordQueryConstructor(
-        transactionRecordQueryConstructor
-    ) {
+    setTransactionRecordQueryConstructor(transactionRecordQueryConstructor) {
         this._transactionRecordQueryConstructor =
             transactionRecordQueryConstructor;
     }
