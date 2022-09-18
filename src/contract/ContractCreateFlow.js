@@ -431,12 +431,6 @@ export default class ContractCreateFlow {
             );
         }
 
-        await addSignersToTransaction(
-            this._contractCreate,
-            this._publicKeys,
-            this._transactionSigners
-        );
-
         const key = signer.getAccountKey();
 
         const fileCreateTransaction = await new FileCreateTransaction()
@@ -480,6 +474,12 @@ export default class ContractCreateFlow {
         this._contractCreate = await this._contractCreate.signWithSigner(
             signer
         );
+        await addSignersToTransaction(
+            this._contractCreate,
+            this._publicKeys,
+            this._transactionSigners
+        );
+
         response = await this._contractCreate.executeWithSigner(signer);
 
         await response.getReceiptWithSigner(signer);

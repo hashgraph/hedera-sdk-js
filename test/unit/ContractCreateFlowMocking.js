@@ -11,6 +11,7 @@ import { bigContents } from "../integration/contents.js";
 describe("ContractCreateFlowMocking", function () {
     let client;
     let servers;
+    let wallet;
 
     afterEach(function () {
         client.close();
@@ -63,5 +64,53 @@ describe("ContractCreateFlowMocking", function () {
             .setBytecode(bigContents)
             .sign(key)
             .execute(client);
+    });
+
+    it("signs all transactions with wallet", async function () {
+        this.timeout(10000);
+
+        const key = PrivateKey.generate();
+
+        const verifyTransactionCall = (request) => {
+            const transaction = Transaction.fromBytes(
+                proto.Transaction.encode({
+                    signedTransactionBytes: request.signedTransactionBytes,
+                }).finish()
+            );
+
+            expect(key.publicKey.verifyTransaction(transaction)).to.be.true;
+
+            return { nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK };
+        };
+
+        ({ wallet, servers } = await Mocker.withResponses([
+            [
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { call: verifyTransactionCall },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+            ],
+        ]));
+
+        await new ContractCreateFlow()
+            .setBytecode(bigContents)
+            .sign(key)
+            .executeWithSigner(wallet);
     });
 });
