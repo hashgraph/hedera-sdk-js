@@ -49,6 +49,9 @@ export const Network = {
             case "previewnet":
                 return Network.PREVIEWNET;
 
+            case "local-node":
+                return Network.LOCAL_NODE;
+
             default:
                 throw new Error(`unknown network name: ${name}`);
         }
@@ -102,6 +105,10 @@ export const Network = {
         "5.previewnet.hedera.com:50211": new AccountId(8),
         "6.previewnet.hedera.com:50211": new AccountId(9),
     },
+
+    LOCAL_NODE: {
+        "127.0.0.1:50211": new AccountId(3),
+    },
 };
 
 export const MirrorNetwork = {
@@ -120,6 +127,9 @@ export const MirrorNetwork = {
             case "previewnet":
                 return MirrorNetwork.PREVIEWNET;
 
+            case "local-node":
+                return MirrorNetwork.LOCAL_NODE;
+
             default:
                 throw new Error(`unknown network name: ${name}`);
         }
@@ -128,6 +138,7 @@ export const MirrorNetwork = {
     MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
     TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
     PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
+    LOCAL_NODE: ["127.0.0.1:5600"],
 };
 
 /**
@@ -159,6 +170,12 @@ export default class NodeClient extends Client {
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
                         this.setLedgerId(LedgerId.PREVIEWNET);
+                        break;
+
+                    case "local-node":
+                        this.setNetwork(Network.LOCAL_NODE);
+                        this.setMirrorNetwork(MirrorNetwork.LOCAL_NODE);
+                        this.setLedgerId(LedgerId.LOCAL_NODE);
                         break;
 
                     default:
@@ -270,12 +287,25 @@ export default class NodeClient extends Client {
     }
 
     /**
+     * Construct a Hedera client pre-configured for local-node access.
+     *
+     * @returns {NodeClient}
+     */
+    static forLocalNode() {
+        return new NodeClient({ network: "local-node" });
+    }
+
+    /**
      * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
     setNetwork(network) {
         if (typeof network === "string") {
             switch (network) {
+                case "local-node":
+                    this._network.setNetwork(Network.LOCAL_NODE);
+                    this._network._ledgerId = LedgerId.LOCAL_NODE;
+                    break;
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
                     this._network._ledgerId = LedgerId.PREVIEWNET;
@@ -300,6 +330,9 @@ export default class NodeClient extends Client {
     setMirrorNetwork(mirrorNetwork) {
         if (typeof mirrorNetwork === "string") {
             switch (mirrorNetwork) {
+                case "local-node":
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.LOCAL_NODE);
+                    break;
                 case "previewnet":
                     this._mirrorNetwork.setNetwork(MirrorNetwork.PREVIEWNET);
                     break;
