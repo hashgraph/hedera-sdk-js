@@ -24,6 +24,7 @@ import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import LedgerId from "../LedgerId.js";
+import AccountId from "../account/AccountId.js";
 import NodeAddressBook from "../address_book/NodeAddressBook.js";
 import * as mainnet from "./addressbooks/mainnet.js";
 import * as testnet from "./addressbooks/testnet.js";
@@ -34,8 +35,13 @@ const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
- * @typedef {import("../account/AccountId.js").default} AccountId
  */
+
+export const Network = {
+    LOCAL_NODE: {
+        "127.0.0.1:50211": new AccountId(3),
+    },
+};
 
 export const MirrorNetwork = {
     /**
@@ -53,6 +59,9 @@ export const MirrorNetwork = {
             case "previewnet":
                 return MirrorNetwork.PREVIEWNET;
 
+            case "local-node":
+                return MirrorNetwork.LOCAL_NODE;
+
             default:
                 throw new Error(`unknown network name: ${name}`);
         }
@@ -61,6 +70,7 @@ export const MirrorNetwork = {
     MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
     TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
     PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
+    LOCAL_NODE: ["127.0.0.1:5600"],
 };
 
 /**
@@ -179,6 +189,15 @@ export default class NodeClient extends Client {
     }
 
     /**
+     * Construct a Hedera client pre-configured for local-node access.
+     *
+     * @returns {NodeClient}
+     */
+    static forLocalNode() {
+        return new NodeClient({ network: "local-node" });
+    }
+
+    /**
      * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
@@ -223,6 +242,12 @@ export default class NodeClient extends Client {
                 this.setLedgerId(LedgerId.PREVIEWNET);
                 break;
 
+            case "local-node":
+                this.setNetwork(Network.LOCAL_NODE);
+                this.setMirrorNetwork(MirrorNetwork.LOCAL_NODE);
+                this.setLedgerId(LedgerId.LOCAL_NODE);
+                break;
+
             default:
                 throw new Error(
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -239,6 +264,9 @@ export default class NodeClient extends Client {
     setMirrorNetwork(mirrorNetwork) {
         if (typeof mirrorNetwork === "string") {
             switch (mirrorNetwork) {
+                case "local-node":
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.LOCAL_NODE);
+                    break;
                 case "previewnet":
                     this._mirrorNetwork.setNetwork(MirrorNetwork.PREVIEWNET);
                     break;

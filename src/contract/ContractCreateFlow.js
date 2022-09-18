@@ -431,22 +431,18 @@ export default class ContractCreateFlow {
             );
         }
 
-        await addSignersToTransaction(
-            this._contractCreate,
-            this._publicKeys,
-            this._transactionSigners
-        );
-
         const key = signer.getAccountKey();
 
-        const fileCreateTransaction = new FileCreateTransaction()
+        const fileCreateTransaction = await new FileCreateTransaction()
             .setKeys(key != null ? [key] : [])
             .setContents(
                 this._bytecode.subarray(
                     0,
                     Math.min(this._bytecode.length, 2048)
                 )
-            );
+            )
+            .freezeWithSigner(signer);
+        await fileCreateTransaction.signWithSigner(signer);
         await addSignersToTransaction(
             fileCreateTransaction,
             this._publicKeys,
@@ -459,9 +455,11 @@ export default class ContractCreateFlow {
         const fileId = /** @type {FileId} */ (receipt.fileId);
 
         if (this._bytecode.length > 2048) {
-            const fileAppendTransaction = new FileAppendTransaction()
+            const fileAppendTransaction = await new FileAppendTransaction()
                 .setFileId(fileId)
-                .setContents(this._bytecode.subarray(2048));
+                .setContents(this._bytecode.subarray(2048))
+                .freezeWithSigner(signer);
+            await fileAppendTransaction.signWithSigner(signer);
             await addSignersToTransaction(
                 fileAppendTransaction,
                 this._publicKeys,
@@ -470,16 +468,27 @@ export default class ContractCreateFlow {
             await fileAppendTransaction.executeWithSigner(signer);
         }
 
-        response = await this._contractCreate
+        this._contractCreate = await this._contractCreate
             .setBytecodeFileId(fileId)
-            .executeWithSigner(signer);
+            .freezeWithSigner(signer);
+        this._contractCreate = await this._contractCreate.signWithSigner(
+            signer
+        );
+        await addSignersToTransaction(
+            this._contractCreate,
+            this._publicKeys,
+            this._transactionSigners
+        );
+
+        response = await this._contractCreate.executeWithSigner(signer);
 
         await response.getReceiptWithSigner(signer);
 
         if (key != null) {
-            const fileDeleteTransaction = new FileDeleteTransaction().setFileId(
-                fileId
-            );
+            const fileDeleteTransaction = await new FileDeleteTransaction()
+                .setFileId(fileId)
+                .freezeWithSigner(signer);
+            await fileDeleteTransaction.signWithSigner(signer);
             await addSignersToTransaction(
                 fileDeleteTransaction,
                 this._publicKeys,

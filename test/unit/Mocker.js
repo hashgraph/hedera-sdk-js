@@ -1,5 +1,11 @@
-import { FileId, PrivateKey, PublicKey } from "../../src/index.js";
-import Client from "../../src/client/NodeClient.js";
+import {
+    FileId,
+    PrivateKey,
+    PublicKey,
+    Client,
+    Wallet,
+    LocalProvider,
+} from "../../src/index.js";
 import * as grpc from "@grpc/grpc-js";
 import * as loader from "@grpc/proto-loader";
 import { proto } from "@hashgraph/proto";
@@ -354,9 +360,16 @@ export default class Mocker {
         }
 
         const client = await servers.listen();
-        client.setOperator("0.0.1854", PRIVATE_KEY);
+        const operatorId = "0.0.1854";
+        client.setOperator(operatorId, PRIVATE_KEY);
 
-        return { client, servers };
+        process.env.HEDERA_NETWORK = "mainnet";
+        const provider = new LocalProvider();
+        provider._client = client;
+
+        const wallet = new Wallet(operatorId, PRIVATE_KEY, provider);
+
+        return { client, wallet, servers };
     }
 
     /**
