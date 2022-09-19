@@ -10,11 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `AccountCreateTransaction.[set|get]Alias[Key|EvmAddress]()`
  * `ContractCreateFlow.[set|get]MaxChunks()`
+ * Support for automatically updating networks
+ * `Client.[set|get]NetworkUpdatePeriod()`
+ * `Client` constructor supports `scheduleNetworkUpdate` to disable auto updates
+ * Support for `local-node` as one of the networks
 
 ### Fixed
 
  * `ContractCreateFlow.executeWithSigner()`
  * `PublicKey.fromString()` for ECDSA keys
+ * `WebChannel` not checking headers before decoding body
 
 ## v2.18.2
 
