@@ -132,11 +132,12 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-            - ./node_modules/.bin/c8 report
+            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
     "test:unit:codecov":
         cmds:
+           - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+           - ./node_modules/.bin/c8 report
            - ./node_modules/.bin/codecov
 
     "test:unit:browser":
