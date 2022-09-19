@@ -43,7 +43,7 @@ export default class EcdsaPublicKey extends Key {
         switch (data.length) {
             case 33:
                 return EcdsaPublicKey.fromBytesRaw(data);
-            case 49:
+            case 47:
                 return EcdsaPublicKey.fromBytesDer(data);
             default:
                 throw new BadKeyError(
@@ -57,13 +57,13 @@ export default class EcdsaPublicKey extends Key {
      * @returns {EcdsaPublicKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 44 || !arrayStartsWith(data, derPrefixBytes)) {
+        if (data.length != 47 || !arrayStartsWith(data, derPrefixBytes)) {
             throw new BadKeyError(
                 `invalid public key length: ${data.length} bytes`
             );
         }
 
-        return new EcdsaPublicKey(data.subarray(12));
+        return new EcdsaPublicKey(data.subarray(derPrefixBytes.length));
     }
 
     /**
