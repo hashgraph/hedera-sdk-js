@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Client, LedgerId } from "../../src/index.js";
 import AccountId from "../../src/account/AccountId.js";
-import NodeClient, { Network } from "../../src/client/NodeClient.js";
+import NodeClient from "../../src/client/NodeClient.js";
 
 const ledgerId = LedgerId.LOCAL_NODE;
 

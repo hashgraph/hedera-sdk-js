@@ -55,7 +55,7 @@ import TransactionReceiptQuery from "./transaction/TransactionReceiptQuery.js";
  */
 export default class LocalProvider {
     /**
-     * @param {object} props 
+     * @param {object} props
      * @param {Client} [props.client]
      */
     constructor(props = {}) {
@@ -74,7 +74,7 @@ export default class LocalProvider {
     }
 
     /**
-     * @param {Client} client 
+     * @param {Client} client
      * @returns {LocalProvider}
      */
     static fromClient(client) {
