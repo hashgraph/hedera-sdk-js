@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.18.3
 
+### Added 
+
+ * `ContractCreateFlow.[set|get]MaxChunks()`
+
 ### Fixed
 
+ * `ContractCreateFlow.executeWithSigner()`
  * `PublicKey.fromString()` for ECDSA keys
 
 ## v2.18.2

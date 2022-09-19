@@ -8,9 +8,7 @@ dotenv.config();
 
 async function main() {
     if (process.env.HEDERA_NETWORK == null) {
-        throw new Error(
-            "Environment variable HEDERA_NETWORK is required."
-        );
+        throw new Error("Environment variable HEDERA_NETWORK is required.");
     }
 
     const client = Client.forName(process.env.HEDERA_NETWORK);
