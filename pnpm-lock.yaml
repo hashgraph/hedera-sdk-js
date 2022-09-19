@@ -11,7 +11,7 @@ specifiers:
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
-  '@hashgraph/proto': link:packages/proto
+  '@hashgraph/proto': 2.10.0
   '@playwright/test': ^1.23.4
   '@types/chai': ^4.3.1
   '@types/crypto-js': ^4.1.1
@@ -62,7 +62,7 @@ dependencies:
   '@ethersproject/rlp': 5.6.1
   '@grpc/grpc-js': 1.6.7
   '@hashgraph/cryptography': 1.4.1_expo@45.0.6
-  '@hashgraph/proto': file:.yalc/@hashgraph/proto
+  '@hashgraph/proto': 2.10.0
   axios: 0.27.2
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
@@ -1752,6 +1752,14 @@ packages:
       js-base64: 3.7.2
       tweetnacl: 1.0.3
       utf8: 3.0.0
+    dev: false
+
+  /@hashgraph/proto/2.10.0:
+    resolution: {integrity: sha512-QladbhCa3SSjFeJV8mO0J/2oEJ7Vkj44jvG5pM4ltTcp8fSXneUHSKJ/cEYKLCyWr7pj0TyVLoJ1RF8uA5kIqg==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      long: 4.0.0
+      protobufjs: 6.11.3
     dev: false
 
   /@humanwhocodes/config-array/0.9.5:
@@ -7336,13 +7344,3 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  file:.yalc/@hashgraph/proto:
-    resolution: {directory: .yalc/@hashgraph/proto, type: directory}
-    name: '@hashgraph/proto'
-    version: 2.9.0
-    engines: {node: '>=10.0.0'}
-    dependencies:
-      long: 4.0.0
-      protobufjs: 6.11.3
-    dev: false
