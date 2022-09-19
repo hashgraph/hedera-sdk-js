@@ -159,7 +159,7 @@ tasks:
             # Remove proto so on `task build` we fix the link
             - rm -rf ./node_modules/@hashgraph/proto
 
-    "update:adddressbooks":
+    "update:addressbooks":
         cmds:
             - node ./scripts/update-address-books.js
 
