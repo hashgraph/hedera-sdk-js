@@ -611,6 +611,12 @@ export default class Status {
                 return "MAX_ENTITIES_IN_PRICE_REGIME_HAVE_BEEN_CREATED";
             case Status.InvalidFullPrefixSignatureForPrecompile:
                 return "INVALID_FULL_PREFIX_SIGNATURE_FOR_PRECOMPILE";
+            case Status.InsufficientBalancesForStorageRent:
+                return "INSUFFICIENT_BALANCES_FOR_STORAGE_RENT";
+            case Status.MaxChildRecordsExceeded:
+                return "MAX_CHILD_RECORDS_EXCEEDED";
+            case Status.InsufficientBalancesForRenewalFees:
+                return "INSUFFICIENT_BALANCES_FOR_RENEWAL_FEES";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1193,6 +1199,12 @@ export default class Status {
                 return Status.MaxEntitiesInPriceRegimeHaveBeenCreated;
             case 326:
                 return Status.InvalidFullPrefixSignatureForPrecompile;
+            case 327:
+                return Status.InsufficientBalancesForStorageRent;
+            case 328:
+                return Status.MaxChildRecordsExceeded;
+            case 329:
+                return Status.InsufficientBalancesForRenewalFees;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2670,3 +2682,21 @@ Status.MaxEntitiesInPriceRegimeHaveBeenCreated = new Status(325);
  * The full prefix signature for precompile is not valid
  */
 Status.InvalidFullPrefixSignatureForPrecompile = new Status(326);
+
+/**
+ * The combined balances of a contract and its auto-renew account (if any) did not cover
+ * the rent charged for net new storage used in a transaction.
+ */
+Status.InsufficientBalancesForStorageRent = new Status(327);
+
+/**
+ * A contract transaction tried to use more than the allowed number of child records, via
+ * either system contract records or internal contract creations.
+ */
+Status.MaxChildRecordsExceeded = new Status(328);
+
+/**
+ * The combined balances of a contract and its auto-renew account (if any) or balance of an account did not cover
+ * the auto-renewal fees in a transaction.
+ */
+Status.InsufficientBalancesForRenewalFees = new Status(329);
