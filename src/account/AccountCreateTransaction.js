@@ -28,17 +28,8 @@ import Transaction, {
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
- * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.ICryptoCreateTransactionBody} HashgraphProto.proto.ICryptoCreateTransactionBody
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
- */
+import EvmAddress from "../EvmAddress.js";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -46,6 +37,7 @@ import Key from "../Key.js";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
@@ -64,6 +56,8 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
+     * @param {PublicKey} [props.aliasKey]
+     * @param {EvmAddress} [props.aliasEvmAddress]
      */
     constructor(props = {}) {
         super();
@@ -140,6 +134,18 @@ export default class AccountCreateTransaction extends Transaction {
          */
         this._declineStakingReward = false;
 
+        /**
+         * @private
+         * @type {?PublicKey}
+         */
+        this._aliasKey = null;
+
+        /**
+         * @private
+         * @type {?EvmAddress}
+         */
+        this._aliasEvmAddress = null;
+
         if (props.key != null) {
             this.setKey(props.key);
         }
@@ -181,6 +187,14 @@ export default class AccountCreateTransaction extends Transaction {
 
         if (props.declineStakingReward != null) {
             this.setDeclineStakingReward(props.declineStakingReward);
+        }
+
+        if (props.aliasKey != null) {
+            this.setAliasKey(props.aliasKey);
+        }
+
+        if (props.aliasEvmAddress != null) {
+            this.setAliasEvmAddress(props.aliasEvmAddress);
         }
     }
 
@@ -468,6 +482,45 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?PublicKey}
+     */
+    get aliasKey() {
+        return this._aliasKey;
+    }
+
+    /**
+     * @param {PublicKey} aliasKey
+     * @returns {this}
+     */
+    setAliasKey(aliasKey) {
+        this._aliasKey = aliasKey;
+        return this;
+    }
+
+    /**
+     * @returns {?EvmAddress}
+     */
+    get aliasEvmAddress() {
+        return this._aliasEvmAddress;
+    }
+
+    /**
+     * @param {Uint8Array | string | EvmAddress} aliasEvmAddress
+     * @returns {this}
+     */
+    setAliasEvmAddress(aliasEvmAddress) {
+        if (typeof aliasEvmAddress === "string") {
+            this._aliasEvmAddress = EvmAddress.fromString(aliasEvmAddress);
+        } else if (aliasEvmAddress instanceof Uint8Array) {
+            this._aliasEvmAddress = EvmAddress.fromBytes(aliasEvmAddress);
+        } else {
+            this._aliasEvmAddress = aliasEvmAddress;
+        }
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -502,6 +555,15 @@ export default class AccountCreateTransaction extends Transaction {
      * @returns {HashgraphProto.proto.ICryptoCreateTransactionBody}
      */
     _makeTransactionData() {
+        let alias = null;
+        if (this._aliasKey != null) {
+            alias = HashgraphProto.proto.Key.encode(
+                this._aliasKey._toProtobufKey()
+            ).finish();
+        } else if (this._aliasEvmAddress != null) {
+            alias = this._aliasEvmAddress.toBytes();
+        }
+
         return {
             key: this._key != null ? this._key._toProtobufKey() : null,
             initialBalance:
@@ -527,6 +589,7 @@ export default class AccountCreateTransaction extends Transaction {
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,
+            alias,
         };
     }
 

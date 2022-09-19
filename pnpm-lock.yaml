@@ -11,7 +11,7 @@ specifiers:
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
-  '@hashgraph/proto': 2.9.0
+  '@hashgraph/proto': link:packages/proto
   '@playwright/test': ^1.23.4
   '@types/chai': ^4.3.1
   '@types/crypto-js': ^4.1.1
@@ -62,7 +62,7 @@ dependencies:
   '@ethersproject/rlp': 5.6.1
   '@grpc/grpc-js': 1.6.7
   '@hashgraph/cryptography': 1.4.1_expo@45.0.6
-  '@hashgraph/proto': 2.9.0
+  '@hashgraph/proto': file:.yalc/@hashgraph/proto
   axios: 0.27.2
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
@@ -1754,14 +1754,6 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.9.0:
-    resolution: {integrity: sha512-Ot0OVLCl9lNBpHZozN0BS4mvlpxgJ0Bkea4p+6MoQ/+sZtOCu+FMsidIVdvFZBvdNjgPXx8byYjkpmFaxiIOpQ==}
-    engines: {node: '>=10.0.0'}
-    dependencies:
-      long: 4.0.0
-      protobufjs: 6.11.3
-    dev: false
-
   /@humanwhocodes/config-array/0.9.5:
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
     engines: {node: '>=10.10.0'}
@@ -2480,7 +2472,7 @@ packages:
       '@babel/preset-env': 7.18.9_@babel+core@7.18.9
       babel-plugin-module-resolver: 4.1.0
       babel-plugin-react-native-web: 0.17.7
-      metro-react-native-babel-preset: 0.67.0
+      metro-react-native-babel-preset: 0.67.0_@babel+core@7.18.9
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -5254,8 +5246,10 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /metro-react-native-babel-preset/0.67.0:
+  /metro-react-native-babel-preset/0.67.0_@babel+core@7.18.9:
     resolution: {integrity: sha512-tgTG4j0SKwLHbLRELMmgkgkjV1biYkWlGGKOmM484/fJC6bpDikdaFhfjsyE+W+qt7I5szbCPCickMTNQ+zwig==}
+    peerDependencies:
+      '@babel/core': '*'
     dependencies:
       '@babel/core': 7.18.9
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.18.9
@@ -7342,3 +7336,13 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  file:.yalc/@hashgraph/proto:
+    resolution: {directory: .yalc/@hashgraph/proto, type: directory}
+    name: '@hashgraph/proto'
+    version: 2.9.0
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      long: 4.0.0
+      protobufjs: 6.11.3
+    dev: false
