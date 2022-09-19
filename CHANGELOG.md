@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.18.3
+## v2.18.2
 
-### Added 
+### Added
 
+ * `TransactionId.getReceipt()`
+ * `TransactionId.getRecord()`
  * `AccountCreateTransaction.[set|get]Alias[Key|EvmAddress]()`
  * `ContractCreateFlow.[set|get]MaxChunks()`
  * Support for automatically updating networks
@@ -20,13 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `ContractCreateFlow.executeWithSigner()`
  * `PublicKey.fromString()` for ECDSA keys
  * `WebChannel` not checking headers before decoding body
-
-## v2.18.2
-
-### Added
-
- * `TransactionId.getReceipt()`
- * `TransactionId.getRecord()`
 
 ## v2.18.1
 
