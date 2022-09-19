@@ -77,6 +77,24 @@ export default class ContractCreateFlow {
          * @type {((message: Uint8Array) => Promise<Uint8Array>)[]}
          */
         this._transactionSigners = [];
+
+        this._maxChunks = null;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get maxChunks() {
+        return this._maxChunks;
+    }
+
+    /**
+     * @param {number} maxChunks
+     * @returns {this}
+     */
+    setMaxChunks(maxChunks) {
+        this._maxChunks = maxChunks;
+        return this;
     }
 
     /**
@@ -455,10 +473,14 @@ export default class ContractCreateFlow {
         const fileId = /** @type {FileId} */ (receipt.fileId);
 
         if (this._bytecode.length > 2048) {
-            const fileAppendTransaction = await new FileAppendTransaction()
+            let fileAppendTransaction = new FileAppendTransaction()
                 .setFileId(fileId)
-                .setContents(this._bytecode.subarray(2048))
-                .freezeWithSigner(signer);
+                .setContents(this._bytecode.subarray(2048));
+            if (this._maxChunks != null) {
+                fileAppendTransaction.setMaxChunks(this._maxChunks);
+            }
+            fileAppendTransaction =
+                await fileAppendTransaction.freezeWithSigner(signer);
             await fileAppendTransaction.signWithSigner(signer);
             await addSignersToTransaction(
                 fileAppendTransaction,
