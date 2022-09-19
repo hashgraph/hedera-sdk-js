@@ -137,11 +137,6 @@ describe("Client", function () {
             });
             assertIsLocalNode(client);
         });
-
-        it("supports getting local node consensus nodes", function () {
-            const network = Network.fromName("local-node");
-            expect(network).to.deep.equal(consensusNodes);
-        });
     });
 
     it("should correctly construct and update mirror network", async function () {

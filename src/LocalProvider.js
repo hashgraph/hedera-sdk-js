@@ -54,7 +54,16 @@ import TransactionReceiptQuery from "./transaction/TransactionReceiptQuery.js";
  * @implements {Provider}
  */
 export default class LocalProvider {
-    constructor() {
+    /**
+     * @param {object} props 
+     * @param {Client} [props.client]
+     */
+    constructor(props = {}) {
+        if (props != null && props.client != null) {
+            this._client = props.client;
+            return;
+        }
+
         if (process.env.HEDERA_NETWORK == null) {
             throw new Error(
                 "LocalProvider requires the `HEDERA_NETWORK` environment variable to be set"
@@ -62,6 +71,14 @@ export default class LocalProvider {
         }
 
         this._client = Client.forName(process.env.HEDERA_NETWORK);
+    }
+
+    /**
+     * @param {Client} client 
+     * @returns {LocalProvider}
+     */
+    static fromClient(client) {
+        return new LocalProvider({ client });
     }
 
     /**

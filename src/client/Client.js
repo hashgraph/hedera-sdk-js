@@ -54,6 +54,7 @@ import Logger from "js-logger";
  * @property {{[key: string]: (string | AccountId)} | string} network
  * @property {string[] | string} [mirrorNetwork]
  * @property {Operator} [operator]
+ * @property {boolean} [scheduleNetworkUpdate]
  */
 
 /**
@@ -145,7 +146,9 @@ export default class Client {
         /** @private */
         this._isShutdown = false;
 
-        this._scheduleNetworkUpdate();
+        if (props != null && props.scheduleNetworkUpdate !== false) {
+            this._scheduleNetworkUpdate();
+        }
     }
 
     /**
