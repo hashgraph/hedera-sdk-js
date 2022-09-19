@@ -18,6 +18,8 @@
  * ‍
  */
 
+import GrpcServiceError from "../grpc/GrpcServiceError.js";
+import GrpcStatus from "../grpc/GrpcStatus.js";
 import Channel, { encodeRequest, decodeUnaryResponse } from "./Channel.js";
 
 export default class WebChannel extends Channel {
@@ -64,6 +66,18 @@ export default class WebChannel extends Channel {
                         body: encodeRequest(requestData),
                     }
                 );
+
+                // Check headers for gRPC errors
+                const grpcStatus = response.headers.get("grpc-status");
+                const grpcMessage = response.headers.get("grpc-message");
+
+                if (grpcStatus != null && grpcMessage != null) {
+                    const error = new GrpcServiceError(
+                        GrpcStatus._fromValue(parseInt(grpcStatus))
+                    );
+                    error.message = grpcMessage;
+                    callback(error, null);
+                }
 
                 const responseBuffer = await response.arrayBuffer();
                 const unaryResponse = decodeUnaryResponse(responseBuffer);
