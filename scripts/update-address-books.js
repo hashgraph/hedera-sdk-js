@@ -10,7 +10,9 @@ async function main() {
     ];
 
     for (const network of networks) {
-        const client = Client.forName(network.name, { scheduleNetworkUpdate: false });
+        const client = Client.forName(network.name, {
+            scheduleNetworkUpdate: false,
+        });
 
         if (network.url != null) {
             client.setMirrorNetwork([network.url]).setTransportSecurity(true);

@@ -161,7 +161,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forName(network, props = {}) {
-        return new NodeClient({ network, ...props});
+        return new NodeClient({ network, ...props });
     }
 
     /**
