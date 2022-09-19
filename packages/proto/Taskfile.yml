@@ -19,7 +19,10 @@ tasks:
 
     "install:submodules":
         cmds:
-            - git submodule update --init
+            # TODO: How do we support this build step when we update the
+            # protobufs? Currently, this step results in reseting any protobuf
+            # updates we may have.
+            # - git submodule update --init
         status:
             - test -d packages/proto/src/proto
 
