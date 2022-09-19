@@ -156,10 +156,12 @@ export default class NodeClient extends Client {
 
     /**
      * @param {string} network
+     * @param {object} [props]
+     * @param {boolean} [props.scheduleNetworkUpdate]
      * @returns {NodeClient}
      */
-    static forName(network) {
-        return new NodeClient({ network });
+    static forName(network, props = {}) {
+        return new NodeClient({ network, ...props});
     }
 
     /**

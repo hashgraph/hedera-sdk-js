@@ -3,10 +3,6 @@ import { Client, FileId, AddressBookQuery } from "../src/index.js";
 import fs from "node:fs/promises";
 
 async function main() {
-    if (process.env.HEDERA_NETWORK == null) {
-        throw new Error("Environment variable HEDERA_NETWORK is required.");
-    }
-
     const networks = [
         { name: "previewnet" },
         { name: "testnet" },
@@ -14,7 +10,7 @@ async function main() {
     ];
 
     for (const network of networks) {
-        const client = Client.forName(network.name);
+        const client = Client.forName(network.name, { scheduleNetworkUpdate: false });
 
         if (network.url != null) {
             client.setMirrorNetwork([network.url]).setTransportSecurity(true);
