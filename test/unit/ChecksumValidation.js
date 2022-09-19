@@ -12,9 +12,11 @@ describe("ChecksumValidation", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(Client.forMainnet())).to.be.eql(
-            "0.0.123-vfmkw"
-        );
+        expect(
+            accountId.toStringWithChecksum(
+                Client.forMainnet({ scheduleNetworkUpdate: false })
+            )
+        ).to.be.eql("0.0.123-vfmkw");
     });
 
     it("should parse testnet ID with checksum {0.0.123-esxsf}", function () {
@@ -24,9 +26,11 @@ describe("ChecksumValidation", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(Client.forTestnet())).to.be.eql(
-            "0.0.123-esxsf"
-        );
+        expect(
+            accountId.toStringWithChecksum(
+                Client.forTestnet({ scheduleNetworkUpdate: false })
+            )
+        ).to.be.eql("0.0.123-esxsf");
     });
 
     it("should parse previewnet ID with checksum {0.0.123-ogizo}", function () {
@@ -37,7 +41,9 @@ describe("ChecksumValidation", function () {
         expect(accountId.shard.toNumber()).to.eql(0);
 
         expect(
-            accountId.toStringWithChecksum(Client.forPreviewnet())
+            accountId.toStringWithChecksum(
+                Client.forPreviewnet({ scheduleNetworkUpdate: false })
+            )
         ).to.be.eql("0.0.123-ogizo");
     });
 });

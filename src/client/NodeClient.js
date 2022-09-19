@@ -147,10 +147,11 @@ export default class NodeClient extends Client {
      * tried.
      *
      * @param {{[key: string]: (string | AccountId)}} network
+     * @param {ClientConfiguration} [props]
      * @returns {NodeClient}
      */
-    static forNetwork(network) {
-        return new NodeClient({ network });
+    static forNetwork(network, props) {
+        return new NodeClient({ network, ...props });
     }
 
     /**
@@ -164,37 +165,45 @@ export default class NodeClient extends Client {
     /**
      * Construct a Hedera client pre-configured for Mainnet access.
      *
+     * @param {object} [props]
+     * @param {boolean} [props.scheduleNetworkUpdate]
      * @returns {NodeClient}
      */
-    static forMainnet() {
-        return new NodeClient({ network: "mainnet" });
+    static forMainnet(props = {}) {
+        return new NodeClient({ network: "mainnet", ...props });
     }
 
     /**
      * Construct a Hedera client pre-configured for Testnet access.
      *
+     * @param {object} [props]
+     * @param {boolean} [props.scheduleNetworkUpdate]
      * @returns {NodeClient}
      */
-    static forTestnet() {
-        return new NodeClient({ network: "testnet" });
+    static forTestnet(props = {}) {
+        return new NodeClient({ network: "testnet", ...props });
     }
 
     /**
      * Construct a Hedera client pre-configured for Previewnet access.
      *
+     * @param {object} [props]
+     * @param {boolean} [props.scheduleNetworkUpdate]
      * @returns {NodeClient}
      */
-    static forPreviewnet() {
-        return new NodeClient({ network: "previewnet" });
+    static forPreviewnet(props = {}) {
+        return new NodeClient({ network: "previewnet", ...props });
     }
 
     /**
      * Construct a Hedera client pre-configured for local-node access.
      *
+     * @param {object} [props]
+     * @param {boolean} [props.scheduleNetworkUpdate]
      * @returns {NodeClient}
      */
-    static forLocalNode() {
-        return new NodeClient({ network: "local-node" });
+    static forLocalNode(props = { scheduleNetworkUpdate: false }) {
+        return new NodeClient({ network: "local-node", ...props });
     }
 
     /**

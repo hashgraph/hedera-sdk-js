@@ -126,9 +126,7 @@ export default class ContractHelper {
             return this.stepResultValidators.get(stepIndex);
         }
 
-        return (
-            /** @type {hashgraph.ContractFunctionResult} */ result
-        ) => {
+        return (/** @type {hashgraph.ContractFunctionResult} */ result) => {
             const responseStatus = hashgraph.Status._fromCode(
                 result.getInt32(0)
             );
@@ -233,7 +231,9 @@ export default class ContractHelper {
                     `step ${stepIndex} completed, and returned valid result. (TransactionId "${record.transactionId.toString()}")`
                 );
             } else {
-                console.log(`Transaction record: ${JSON.stringify(record, null, 2)}`);
+                console.log(
+                    `Transaction record: ${JSON.stringify(record, null, 2)}`
+                );
                 throw new Error(`step ${stepIndex} returned invalid result`);
             }
         }

@@ -14,7 +14,9 @@ describe("Client", function () {
             "138.91.142.219:50211": "0.0.3",
         };
 
-        const client = Client.forNetwork(nodes);
+        const client = Client.forNetwork(nodes, {
+            scheduleNetworkUpdate: false,
+        });
 
         let network = client.network;
 
@@ -32,7 +34,9 @@ describe("Client", function () {
             "0.testnet.hedera.com:50211": "0.0.3",
         };
 
-        const client = Client.forNetwork(nodes);
+        const client = Client.forNetwork(nodes, {
+            scheduleNetworkUpdate: false,
+        });
 
         let network = client.network;
 
@@ -114,7 +118,9 @@ describe("Client", function () {
         }
 
         it("recognizes local node by name", function () {
-            const client = Client.forNetwork("local-node");
+            const client = Client.forNetwork("local-node", {
+                scheduleNetworkUpdate: false,
+            });
             assertIsLocalNode(client);
         });
 
@@ -124,7 +130,7 @@ describe("Client", function () {
         });
 
         it("allows setting local node network", function () {
-            const client = new NodeClient();
+            const client = new NodeClient({ scheduleNetworkUpdate: false });
             client.setNetwork("local-node");
             client.setMirrorNetwork("local-node");
             assertIsLocalNode(client);
@@ -134,6 +140,7 @@ describe("Client", function () {
             const client = new NodeClient({
                 network: "local-node",
                 mirrorNodes: "local-node",
+                scheduleNetworkUpdate: false,
             });
             assertIsLocalNode(client);
         });
@@ -142,7 +149,10 @@ describe("Client", function () {
     it("should correctly construct and update mirror network", async function () {
         let nodes = ["hcs.testnet.mirrornode.hedera.com:5600"];
 
-        const client = Client.forNetwork({}).setMirrorNetwork(nodes);
+        const client = Client.forNetwork(
+            {},
+            { scheduleNetworkUpdate: false }
+        ).setMirrorNetwork(nodes);
 
         let network = client.mirrorNetwork;
 
@@ -179,7 +189,7 @@ describe("Client", function () {
     });
 
     it("should maintain TLS after setting a mirror network with TLS", function () {
-        const client = Client.forNetwork({})
+        const client = Client.forNetwork({}, { scheduleNetworkUpdate: false })
             .setTransportSecurity(true)
             .setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
 
