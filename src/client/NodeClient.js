@@ -23,89 +23,21 @@ import util from "util";
 import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
-import AccountId from "../account/AccountId.js";
 import LedgerId from "../LedgerId.js";
+import AccountId from "../account/AccountId.js";
+import NodeAddressBook from "../address_book/NodeAddressBook.js";
+import * as mainnet from "./addressbooks/mainnet.js";
+import * as testnet from "./addressbooks/testnet.js";
+import * as previewnet from "./addressbooks/previewnet.js";
+import * as hex from "../encoding/hex.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
  */
-//@typedef {import("./Client.js").NetworkName} NetworkName
 
 export const Network = {
-    /**
-     * @param {string} name
-     * @returns {{[key: string]: (string | AccountId)}}
-     */
-    fromName(name) {
-        switch (name) {
-            case "mainnet":
-                return Network.MAINNET;
-
-            case "testnet":
-                return Network.TESTNET;
-
-            case "previewnet":
-                return Network.PREVIEWNET;
-
-            case "local-node":
-                return Network.LOCAL_NODE;
-
-            default:
-                throw new Error(`unknown network name: ${name}`);
-        }
-    },
-
-    MAINNET: {
-        "35.237.200.180:50211": new AccountId(3),
-        "35.186.191.247:50211": new AccountId(4),
-        "35.192.2.25:50211": new AccountId(5),
-        "35.199.161.108:50211": new AccountId(6),
-        "35.203.82.240:50211": new AccountId(7),
-        "35.236.5.219:50211": new AccountId(8),
-        "35.197.192.225:50211": new AccountId(9),
-        "35.242.233.154:50211": new AccountId(10),
-        "35.240.118.96:50211": new AccountId(11),
-        "35.204.86.32:50211": new AccountId(12),
-        "35.234.132.107:50211": new AccountId(13),
-        "35.236.2.27:50211": new AccountId(14),
-        "35.228.11.53:50211": new AccountId(15),
-        "34.91.181.183:50211": new AccountId(16),
-        "34.86.212.247:50211": new AccountId(17),
-        "172.105.247.67:50211": new AccountId(18),
-        "34.89.87.138:50211": new AccountId(19),
-        "34.82.78.255:50211": new AccountId(20),
-        "34.76.140.109:50211": new AccountId(21),
-        "34.64.141.166:50211": new AccountId(22),
-        "35.232.244.145:50211": new AccountId(23),
-        "34.89.103.38:50211": new AccountId(24),
-        "34.93.112.7:50211": new AccountId(25),
-        "34.87.150.174:50211": new AccountId(26),
-        "34.125.200.96:50211": new AccountId(27),
-        "35.198.220.75:50211": new AccountId(28),
-    },
-
-    TESTNET: {
-        "0.testnet.hedera.com:50211": new AccountId(3),
-        "1.testnet.hedera.com:50211": new AccountId(4),
-        "2.testnet.hedera.com:50211": new AccountId(5),
-        "3.testnet.hedera.com:50211": new AccountId(6),
-        "4.testnet.hedera.com:50211": new AccountId(7),
-        "5.testnet.hedera.com:50211": new AccountId(8),
-        "6.testnet.hedera.com:50211": new AccountId(9),
-    },
-
-    PREVIEWNET: {
-        "0.previewnet.hedera.com:50211": new AccountId(3),
-        "1.previewnet.hedera.com:50211": new AccountId(4),
-        "2.previewnet.hedera.com:50211": new AccountId(5),
-        "3.previewnet.hedera.com:50211": new AccountId(6),
-        "4.previewnet.hedera.com:50211": new AccountId(7),
-        "5.previewnet.hedera.com:50211": new AccountId(8),
-        "6.previewnet.hedera.com:50211": new AccountId(9),
-    },
-
     LOCAL_NODE: {
         "127.0.0.1:50211": new AccountId(3),
     },
@@ -153,37 +85,7 @@ export default class NodeClient extends Client {
 
         if (props != null) {
             if (typeof props.network === "string") {
-                switch (props.network) {
-                    case "mainnet":
-                        this.setNetwork(Network.MAINNET);
-                        this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this.setLedgerId(LedgerId.MAINNET);
-                        break;
-
-                    case "testnet":
-                        this.setNetwork(Network.TESTNET);
-                        this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this.setLedgerId(LedgerId.TESTNET);
-                        break;
-
-                    case "previewnet":
-                        this.setNetwork(Network.PREVIEWNET);
-                        this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this.setLedgerId(LedgerId.PREVIEWNET);
-                        break;
-
-                    case "local-node":
-                        this.setNetwork(Network.LOCAL_NODE);
-                        this.setMirrorNetwork(MirrorNetwork.LOCAL_NODE);
-                        this.setLedgerId(LedgerId.LOCAL_NODE);
-                        break;
-
-                    default:
-                        throw new Error(
-                            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                            `unknown network: ${props.network}`
-                        );
-                }
+                this._setNetworkFromName(props.network);
             } else if (props.network != null) {
                 this.setNetwork(props.network);
             }
@@ -301,26 +203,58 @@ export default class NodeClient extends Client {
      */
     setNetwork(network) {
         if (typeof network === "string") {
-            switch (network) {
-                case "local-node":
-                    this._network.setNetwork(Network.LOCAL_NODE);
-                    this._network._ledgerId = LedgerId.LOCAL_NODE;
-                    break;
-                case "previewnet":
-                    this._network.setNetwork(Network.PREVIEWNET);
-                    this._network._ledgerId = LedgerId.PREVIEWNET;
-                    break;
-                case "testnet":
-                    this._network.setNetwork(Network.TESTNET);
-                    this._network._ledgerId = LedgerId.TESTNET;
-                    break;
-                case "mainnet":
-                    this._network.setNetwork(Network.MAINNET);
-                    this._network._ledgerId = LedgerId.MAINNET;
-            }
+            this._setNetworkFromName(network);
         } else {
             this._network.setNetwork(network);
         }
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     * @returns {this}
+     */
+    _setNetworkFromName(name) {
+        switch (name) {
+            case "mainnet":
+                this.setNetworkFromAddressBook(
+                    NodeAddressBook.fromBytes(hex.decode(mainnet.addressBook))
+                );
+                this.setMirrorNetwork(MirrorNetwork.MAINNET);
+                this.setLedgerId(LedgerId.MAINNET);
+                break;
+
+            case "testnet":
+                this.setNetworkFromAddressBook(
+                    NodeAddressBook.fromBytes(hex.decode(testnet.addressBook))
+                );
+                this.setMirrorNetwork(MirrorNetwork.TESTNET);
+                this.setLedgerId(LedgerId.TESTNET);
+                break;
+
+            case "previewnet":
+                this.setNetworkFromAddressBook(
+                    NodeAddressBook.fromBytes(
+                        hex.decode(previewnet.addressBook)
+                    )
+                );
+                this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
+                this.setLedgerId(LedgerId.PREVIEWNET);
+                break;
+
+            case "local-node":
+                this.setNetwork(Network.LOCAL_NODE);
+                this.setMirrorNetwork(MirrorNetwork.LOCAL_NODE);
+                this.setLedgerId(LedgerId.LOCAL_NODE);
+                break;
+
+            default:
+                throw new Error(
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    `unknown network: ${name}`
+                );
+        }
+        return this;
     }
 
     /**

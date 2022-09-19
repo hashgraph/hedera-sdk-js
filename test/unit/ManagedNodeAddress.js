@@ -1,5 +1,4 @@
 import ManagedNodeAddress from "../../src/ManagedNodeAddress.js";
-import { Network } from "../../src/client/NodeClient.js";
 
 describe("ManagedNodeAddress", function () {
     it("fromString", function () {
@@ -95,25 +94,5 @@ describe("ManagedNodeAddress", function () {
         if (!err) {
             throw new Error("fromString did not error");
         }
-    });
-
-    it("Client parses it's own network", function () {
-        expect(() =>
-            Object.keys(Network.MAINNET).map((address) =>
-                ManagedNodeAddress.fromString(address)
-            )
-        ).to.not.throw();
-
-        expect(() =>
-            Object.keys(Network.TESTNET).map((address) =>
-                ManagedNodeAddress.fromString(address)
-            )
-        ).to.not.throw();
-
-        expect(() =>
-            Object.keys(Network.PREVIEWNET).map((address) =>
-                ManagedNodeAddress.fromString(address)
-            )
-        ).to.not.throw();
     });
 });

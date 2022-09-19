@@ -363,10 +363,7 @@ export default class Mocker {
         const operatorId = "0.0.1854";
         client.setOperator(operatorId, PRIVATE_KEY);
 
-        process.env.HEDERA_NETWORK = "mainnet";
-        const provider = new LocalProvider();
-        provider._client = client;
-
+        const provider = LocalProvider.fromClient(client);
         const wallet = new Wallet(operatorId, PRIVATE_KEY, provider);
 
         return { client, wallet, servers };
@@ -454,7 +451,7 @@ class GrpcServers {
             await server.listen(address);
         }
 
-        return Client.forNetwork(network)
+        return new Client({ network, scheduleNetworkUpdate: false })
             .setMirrorNetwork(Object.keys(network))
             .setNodeMinBackoff(0)
             .setNodeMaxBackoff(0)

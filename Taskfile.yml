@@ -86,7 +86,7 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --write > /dev/null
+            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" "scripts/*.js" --write > /dev/null
 
     lint:
         deps:
@@ -159,15 +159,20 @@ tasks:
             # Remove proto so on `task build` we fix the link
             - rm -rf ./node_modules/@hashgraph/proto
 
+    "update:adddressbooks":
+        cmds:
+            - node ./scripts/update-address-books.js
+
     update:
         cmds:
+            - task: update:addressbooks
             - task: update:proto
             - task: build
 
     publish:
         preconditions:
             - "! grep '\".*\": \"\\(link\\|file\\):.*\"' package.json > /dev/null"
-        deps:
-            - "test:release"
         cmds:
+            - task: "update:addressbooks"
+            - task: "test:release"
             - pnpm publish {{.CLI_ARGS}}

@@ -119,7 +119,9 @@ export default class EndPoint {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return `${this._address != null ? this._address.toString() : ""}:${
+            this._port != null ? this._port.toString() : ""
+        }`;
     }
 
     /**

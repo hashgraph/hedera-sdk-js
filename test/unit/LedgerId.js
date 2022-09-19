@@ -29,12 +29,12 @@ describe("LedgerId", function () {
         expect(ledgerId.isLocalNode()).to.eql(true);
     }
 
-    it('fromString() given human-readable name behaves as expected', () => {
+    it("fromString() given human-readable name behaves as expected", function () {
         const localNodeId = LedgerId.fromString(LOCAL_NODE);
         assertIsLocalNode(localNodeId);
     });
 
-    it('fromString() given hexed form behaves as expected', () => {
+    it("fromString() given hexed form behaves as expected", function () {
         const localNodeId = LedgerId.fromString(HEX_LOCAL_NODE);
         assertIsLocalNode(localNodeId);
     });

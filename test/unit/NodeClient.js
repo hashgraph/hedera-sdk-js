@@ -1,7 +1,9 @@
 import { expect } from "chai";
-import {Client, LedgerId} from "../../src/index.js";
+import { Client, LedgerId } from "../../src/index.js";
 import AccountId from "../../src/account/AccountId.js";
-import NodeClient, {Network} from "../../src/client/NodeClient.js";
+import NodeClient from "../../src/client/NodeClient.js";
+
+const ledgerId = LedgerId.LOCAL_NODE;
 
 describe("Client", function () {
     it("should support multiple IPs per node account ID", async function () {
@@ -101,10 +103,9 @@ describe("Client", function () {
         );
     });
 
-    describe("local-node factories work", () => {
-        const consensusNodes = {"127.0.0.1:50211": new AccountId(3)};
-        const mirrorNodes  = ["127.0.0.1:5600"];
-        const ledgerId = LedgerId.LOCAL_NODE;
+    describe("local-node factories work", function () {
+        const consensusNodes = { "127.0.0.1:50211": new AccountId(3) };
+        const mirrorNodes = ["127.0.0.1:5600"];
 
         function assertIsLocalNode(client) {
             expect(client.network).to.deep.equal(consensusNodes);
@@ -112,34 +113,31 @@ describe("Client", function () {
             expect(client.ledgerId).to.equal(ledgerId);
         }
 
-        it("recognizes local node by name", () => {
-            const client = Client.forNetwork('local-node');
+        it("recognizes local node by name", function () {
+            const client = Client.forNetwork("local-node");
             assertIsLocalNode(client);
-        })
+        });
 
-        it("builds explicit local node client", () => {
+        it("builds explicit local node client", function () {
             const client = Client.forLocalNode();
             assertIsLocalNode(client);
-        })
+        });
 
-        it("allows setting local node network", () => {
+        it("allows setting local node network", function () {
             const client = new NodeClient();
-            client.setNetwork('local-node')
-            client.setMirrorNetwork('local-node')
+            client.setNetwork("local-node");
+            client.setMirrorNetwork("local-node");
             assertIsLocalNode(client);
-        })
+        });
 
-        it("destructures props for local node", () => {
-            const client = new NodeClient({ network: 'local-node', mirrorNodes: 'local-node'});
+        it("destructures props for local node", function () {
+            const client = new NodeClient({
+                network: "local-node",
+                mirrorNodes: "local-node",
+            });
             assertIsLocalNode(client);
-        })
-
-        it("supports getting local node consensus nodes", () => {
-            const network = Network.fromName('local-node');
-            expect(network).to.deep.equal(consensusNodes);
-        })
-    })
-
+        });
+    });
 
     it("should correctly construct and update mirror network", async function () {
         let nodes = ["hcs.testnet.mirrornode.hedera.com:5600"];
