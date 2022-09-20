@@ -137,7 +137,7 @@ export default class WebClient extends Client {
      * @returns {WebClient}
      */
     static forName(network) {
-        return new WebClient({ network });
+        return new WebClient({ network, scheduleNetworkUpdate: false });
     }
 
     /**
