@@ -90,6 +90,18 @@ jobs:
       - name: Build @hashgraph/sdk
         run: task build
 
+      - name: Build @hashgraph/cryptography
+        working-directory: packages/cryptography
+        run: task build
+
+      - name: Uint Test @hashgraph/cryptography
+        working-directory: packages/cryptography
+        run: task test:unit
+
+      - name: Codecov @hashgraph/cryptography
+        working-directory: packages/cryptography
+        run: task test:unit:codecov
+
       - name: Unit Test @hashgraph/sdk
         run: task test:unit
 
