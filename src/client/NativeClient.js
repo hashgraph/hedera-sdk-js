@@ -129,7 +129,7 @@ export default class NativeClient extends Client {
      * @returns {NativeClient}
      */
     static forNetwork(network) {
-        return new NativeClient({ network });
+        return new NativeClient({ network, scheduleNetworkUpdate: false });
     }
 
     /**
@@ -137,7 +137,7 @@ export default class NativeClient extends Client {
      * @returns {NativeClient}
      */
     static forName(network) {
-        return new NativeClient({ network });
+        return new NativeClient({ network, scheduleNetworkUpdate: false });
     }
 
     /**
@@ -146,7 +146,10 @@ export default class NativeClient extends Client {
      * @returns {NativeClient}
      */
     static forMainnet() {
-        return new NativeClient({ network: "mainnet" });
+        return new NativeClient({
+            network: "mainnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
@@ -155,7 +158,10 @@ export default class NativeClient extends Client {
      * @returns {NativeClient}
      */
     static forTestnet() {
-        return new NativeClient({ network: "testnet" });
+        return new NativeClient({
+            network: "testnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
@@ -164,7 +170,10 @@ export default class NativeClient extends Client {
      * @returns {NativeClient}
      */
     static forPreviewnet() {
-        return new NativeClient({ network: "previewnet" });
+        return new NativeClient({
+            network: "previewnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
