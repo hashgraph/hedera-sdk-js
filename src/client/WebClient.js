@@ -129,7 +129,7 @@ export default class WebClient extends Client {
      * @returns {WebClient}
      */
     static forNetwork(network) {
-        return new WebClient({ network });
+        return new WebClient({ network, scheduleNetworkUpdate: false });
     }
 
     /**
@@ -146,7 +146,10 @@ export default class WebClient extends Client {
      * @returns {WebClient}
      */
     static forMainnet() {
-        return new WebClient({ network: "mainnet" });
+        return new WebClient({
+            network: "mainnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
@@ -155,7 +158,10 @@ export default class WebClient extends Client {
      * @returns {WebClient}
      */
     static forTestnet() {
-        return new WebClient({ network: "testnet" });
+        return new WebClient({
+            network: "testnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
@@ -164,7 +170,10 @@ export default class WebClient extends Client {
      * @returns {WebClient}
      */
     static forPreviewnet() {
-        return new WebClient({ network: "previewnet" });
+        return new WebClient({
+            network: "previewnet",
+            scheduleNetworkUpdate: false,
+        });
     }
 
     /**
