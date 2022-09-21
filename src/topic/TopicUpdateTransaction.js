@@ -215,7 +215,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @returns {TopicUpdateTransaction}
      */
     setExpirationTime(expirationTime) {
-        // this._requireFrozen();
+        this._requireNotFrozen();
 
         this._expirationTime =
             expirationTime instanceof Date
