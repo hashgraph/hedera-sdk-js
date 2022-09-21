@@ -30,6 +30,7 @@ import Long from "long";
 import Key from "../Key.js";
 import EvmAddress from "../EvmAddress.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -37,7 +38,6 @@ import * as HashgraphProto from "@hashgraph/proto";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
- * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
@@ -220,6 +220,22 @@ export default class AccountCreateTransaction extends Transaction {
                 body.cryptoCreateAccount
             );
 
+        let aliasKey = undefined;
+        let aliasEvmAddress = undefined;
+        if (create.alias != null) {
+            if (create.alias.length === 20) {
+                aliasEvmAddress = EvmAddress.fromBytes(create.alias);
+            } else {
+                aliasKey = Key._fromProtobufKey(
+                    HashgraphProto.proto.Key.decode(create.alias)
+                );
+            }
+        }
+
+        if (!(aliasKey instanceof PublicKey)) {
+            aliasKey = undefined;
+        }
+
         return Transaction._fromProtobufTransactions(
             new AccountCreateTransaction({
                 key:
@@ -262,6 +278,8 @@ export default class AccountCreateTransaction extends Transaction {
                         ? create.stakedNodeId
                         : undefined,
                 declineStakingReward: create.declineReward == true,
+                aliasKey,
+                aliasEvmAddress,
             }),
             transactions,
             signedTransactions,
