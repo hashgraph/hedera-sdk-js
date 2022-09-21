@@ -500,6 +500,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @beta - Please note this is a beta feature and it's implementation is subject to change
      * @returns {?PublicKey}
      */
     get aliasKey() {
@@ -507,6 +508,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @beta - Please note this is a beta feature and it's implementation is subject to change
      * @param {PublicKey} aliasKey
      * @returns {this}
      */
@@ -516,6 +518,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @beta - Please note this is a beta feature and it's implementation is subject to change
      * @returns {?EvmAddress}
      */
     get aliasEvmAddress() {
@@ -523,6 +526,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @beta - Please note this is a beta feature and it's implementation is subject to change
      * @param {Uint8Array | string | EvmAddress} aliasEvmAddress
      * @returns {this}
      */
