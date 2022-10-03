@@ -224,12 +224,7 @@ export default class TransactionReceiptQuery extends Query {
             case Status.Ok:
                 break;
             default:
-                return [
-                    status,
-                    this._validateStatus
-                        ? ExecutionState.Error
-                        : ExecutionState.Finished,
-                ];
+                return [status, ExecutionState.Error];
         }
 
         const transactionGetReceipt =

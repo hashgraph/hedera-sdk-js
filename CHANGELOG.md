@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.18.3
 
+### Added
+
+ * `PrecheckStatusError.contractFunctionResult`
+ * `TransactionReceiptQuery.[set|get]ValidateStatus()`
+ * `TransactionRecrodQuery.[set|get]ValidateReceiptStatus()`
+
 ### Fixed
 
  * `WebClient` and `NativeClient` do not schedule network updates
