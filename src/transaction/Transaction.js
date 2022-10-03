@@ -1416,6 +1416,7 @@ export default class Transaction extends Executable {
         return new PrecheckStatusError({
             status,
             transactionId: this._getTransactionId(),
+            contractFunctionResult: null,
         });
     }
 

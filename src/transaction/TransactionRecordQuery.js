@@ -299,6 +299,7 @@ export default class TransactionRecordQuery extends Query {
                 return new PrecheckStatusError({
                     status,
                     transactionId: this._getTransactionId(),
+                    contractFunctionResult: null,
                 });
         }
 

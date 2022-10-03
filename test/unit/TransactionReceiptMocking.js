@@ -103,21 +103,23 @@ describe("TransactionReceiptMocking", function () {
 
     it("should not error if validate status is disabled", async function () {
         this.timeout(10000);
-    
+
         ({ client, servers } = await Mocker.withResponses([
             [
                 {
                     response:
                         TRANSACTION_RECEIPT_QUERY_RECEIPT_INVALID_SIGNATURE_RESPONSE,
-                }
+                },
             ],
         ]));
-    
+
         const receipt = await new TransactionReceiptQuery()
             .setTransactionId("0.0.3@4.5")
             .setValidateStatus(false)
             .execute(client);
-    
-        expect(receipt.status.toString()).to.be.equal(Status.InvalidSignature.toString());
+
+        expect(receipt.status.toString()).to.be.equal(
+            Status.InvalidSignature.toString()
+        );
     });
 });
