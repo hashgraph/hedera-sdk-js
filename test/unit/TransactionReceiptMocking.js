@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { TransactionReceiptQuery } from "../../src/index.js";
+import { TransactionReceiptQuery, Status } from "../../src/index.js";
 import Mocker from "./Mocker.js";
 import Long from "long";
 
@@ -12,6 +12,15 @@ const ACCOUNT_ID = {
 const TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE = {
     transactionGetReceipt: {
         header: { nodeTransactionPrecheckCode: 18 },
+    },
+};
+
+const TRANSACTION_RECEIPT_QUERY_RECEIPT_INVALID_SIGNATURE_RESPONSE = {
+    transactionGetReceipt: {
+        header: { nodeTransactionPrecheckCode: 0 },
+        receipt: {
+            status: 7,
+        },
     },
 };
 
@@ -90,5 +99,25 @@ describe("TransactionReceiptMocking", function () {
         }
 
         expect(err).to.be.true;
+    });
+
+    it("should not error if validate status is disabled", async function () {
+        this.timeout(10000);
+    
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                {
+                    response:
+                        TRANSACTION_RECEIPT_QUERY_RECEIPT_INVALID_SIGNATURE_RESPONSE,
+                }
+            ],
+        ]));
+    
+        const receipt = await new TransactionReceiptQuery()
+            .setTransactionId("0.0.3@4.5")
+            .setValidateStatus(false)
+            .execute(client);
+    
+        expect(receipt.status.toString()).to.be.equal(Status.InvalidSignature.toString());
     });
 });

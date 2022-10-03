@@ -14,7 +14,9 @@ import * as HashgraphProto from "@hashgraph/proto";
 
 describe("AccountCreateTransaction", function () {
     it("should round trip from bytes and maintain order", function () {
-        const key1 = PrivateKey.fromString("302e020100300506032b657004220420ee417dd399722ef8920b2c8ec047cf0c51d6c7d3413e9a660ca28205a5f249cd");
+        const key1 = PrivateKey.fromString(
+            "302e020100300506032b657004220420ee417dd399722ef8920b2c8ec047cf0c51d6c7d3413e9a660ca28205a5f249cd"
+        );
         const spenderAccountId1 = new AccountId(7);
         const nodeAccountId = new AccountId(10, 11, 12);
         const timestamp1 = new Timestamp(14, 15);
@@ -27,14 +29,16 @@ describe("AccountCreateTransaction", function () {
             .setNodeAccountIds([nodeAccountId])
             .freeze();
 
-        // transaction = Transaction.fromBytes(transaction.toBytes());
+        transaction = Transaction.fromBytes(transaction.toBytes());
 
         const data = transaction._makeTransactionData();
 
         expect(data).to.deep.equal({
-            alias: HashgraphProto.proto.Key.encode(key1.publicKey._toProtobufKey()).finish(),
+            alias: HashgraphProto.proto.Key.encode(
+                key1.publicKey._toProtobufKey()
+            ).finish(),
             autoRenewPeriod: {
-              seconds: Long.fromValue(7776000),
+                seconds: Long.fromValue(7776000),
             },
             declineReward: false,
             initialBalance: Long.ZERO,

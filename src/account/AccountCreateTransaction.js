@@ -222,7 +222,7 @@ export default class AccountCreateTransaction extends Transaction {
 
         let aliasKey = undefined;
         let aliasEvmAddress = undefined;
-        if (create.alias != null) {
+        if (create.alias != null && create.alias.length > 0) {
             if (create.alias.length === 20) {
                 aliasEvmAddress = EvmAddress.fromBytes(create.alias);
             } else {

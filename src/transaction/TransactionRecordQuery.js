@@ -46,6 +46,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {TransactionId} [props.transactionId]
      * @param {boolean} [props.includeChildren]
      * @param {boolean} [props.includeDuplicates]
+     * @param {boolean} [props.validateReceiptStatus]
      */
     constructor(props = {}) {
         super();
@@ -68,6 +69,8 @@ export default class TransactionRecordQuery extends Query {
          */
         this._includeDuplicates = null;
 
+        this._validateReceiptStatus = true;
+
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
         }
@@ -78,6 +81,10 @@ export default class TransactionRecordQuery extends Query {
 
         if (props.includeDuplicates != null) {
             this.setIncludeDuplicates(props.includeDuplicates);
+        }
+
+        if (props.validateReceiptStatus != null) {
+            this.setValidateReceiptStatus(props.validateReceiptStatus);
         }
     }
 
@@ -162,6 +169,22 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
+     * @param {boolean} validateReceiptStatus
+     * @returns {this}
+     */
+    setValidateReceiptStatus(validateReceiptStatus) {
+        this._validateReceiptStatus = validateReceiptStatus;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get validateReceiptStatus() {
+        return this._validateReceiptStatus;
+    }
+
+    /**
      * @override
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
@@ -240,7 +263,12 @@ export default class TransactionRecordQuery extends Query {
                 return [status, ExecutionState.Finished];
 
             default:
-                return [status, ExecutionState.Error];
+                return [
+                    status,
+                    this._validateReceiptStatus
+                        ? ExecutionState.Error
+                        : ExecutionState.Finished,
+                ];
         }
     }
 

@@ -45,6 +45,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {TransactionId | string} [props.transactionId]
      * @param {boolean} [props.includeDuplicates]
      * @param {boolean} [props.includeChildren]
+     * @param {boolean} [props.validateStatus]
      */
     constructor(props = {}) {
         super();
@@ -67,6 +68,8 @@ export default class TransactionReceiptQuery extends Query {
          */
         this._includeDuplicates = null;
 
+        this._validateStatus = true;
+
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
         }
@@ -77,6 +80,10 @@ export default class TransactionReceiptQuery extends Query {
 
         if (props.includeDuplicates != null) {
             this.setIncludeDuplicates(props.includeDuplicates);
+        }
+
+        if (props.validateStatus != null) {
+            this.setValidateStatus(props.validateStatus);
         }
     }
 
@@ -163,6 +170,22 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
+     * @param {boolean} validateStatus
+     * @returns {this}
+     */
+    setValidateStatus(validateStatus) {
+        this._validateStatus = validateStatus;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get validateStatus() {
+        return this._validateStatus;
+    }
+
+    /**
      * @override
      * @protected
      * @returns {boolean}
@@ -201,7 +224,7 @@ export default class TransactionReceiptQuery extends Query {
             case Status.Ok:
                 break;
             default:
-                return [status, ExecutionState.Error];
+                return [status, this._validateStatus ? ExecutionState.Error : ExecutionState.Finished];
         }
 
         const transactionGetReceipt =
@@ -231,7 +254,12 @@ export default class TransactionReceiptQuery extends Query {
             case Status.Success:
                 return [status, ExecutionState.Finished];
             default:
-                return [status, ExecutionState.Error];
+                return [
+                    status,
+                    this._validateStatus
+                        ? ExecutionState.Error
+                        : ExecutionState.Finished,
+                ];
         }
     }
 
