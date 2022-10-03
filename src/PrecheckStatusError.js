@@ -23,6 +23,16 @@ import StatusError from "./StatusError.js";
 /**
  * @typedef {import("./Status.js").default} Status
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./contract/ContractFunctionResult.js").default} ContractFunctionResult
+ */
+
+/**
+ * @typedef {object} PrecheckStatusErrorJSON
+ * @property {string} name
+ * @property {string} status
+ * @property {string} transactionId
+ * @property {string} message
+ * @property {?ContractFunctionResult} contractFunctionResult
  */
 
 export default class PrecheckStatusError extends StatusError {
@@ -30,11 +40,31 @@ export default class PrecheckStatusError extends StatusError {
      * @param {object} props
      * @param {Status} props.status
      * @param {TransactionId} props.transactionId
+     * @param {?ContractFunctionResult} props.contractFunctionResult
      */
     constructor(props) {
         super(
             props,
             `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()}`
         );
+
+        /**
+         * @type {?ContractFunctionResult}
+         * @readonly
+         */
+        this.contractFunctionResult = props.contractFunctionResult;
+    }
+
+    /**
+     * @returns {PrecheckStatusErrorJSON}
+     */
+    toJSON() {
+        return {
+            name: this.name,
+            status: this.status.toString(),
+            transactionId: this.transactionId.toString(),
+            message: this.message,
+            contractFunctionResult: this.contractFunctionResult,
+        };
     }
 }
