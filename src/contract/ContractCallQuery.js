@@ -24,17 +24,9 @@ import AccountId from "../account/AccountId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
- * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
- * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").proto.IContractCallLocalQuery} HashgraphProto.proto.IContractCallLocalQuery
- * @typedef {import("@hashgraph/proto").proto.IContractCallLocalResponse} HashgraphProto.proto.IContractCallLocalResponse
- * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
- */
+import * as HashgraphProto from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
+import Status from "../Status.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -249,6 +241,32 @@ export default class ContractCallQuery extends Query {
     /**
      * @override
      * @internal
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {Error}
+     */
+    _mapStatusError(request, response) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : HashgraphProto.proto.ResponseCodeEnum.OK
+        );
+
+        const contractFunctionResult = this._mapResponseSync(response);
+
+        return new PrecheckStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+            contractFunctionResult,
+        });
+    }
+
+    /**
+     * @override
+     * @internal
      * @param {Channel} channel
      * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<HashgraphProto.proto.IResponse>}
@@ -294,6 +312,27 @@ export default class ContractCallQuery extends Query {
                 (call.functionResult),
                 false
             )
+        );
+    }
+
+    /**
+     * @private
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {ContractFunctionResult}
+     */
+    _mapResponseSync(response) {
+        const call =
+            /**
+             *@type {HashgraphProto.proto.IContractCallLocalResponse}
+             */
+            (response.contractCallLocal);
+
+        return ContractFunctionResult._fromProtobuf(
+            /**
+             * @type {HashgraphProto.proto.IContractFunctionResult}
+             */
+            (call.functionResult),
+            false
         );
     }
 

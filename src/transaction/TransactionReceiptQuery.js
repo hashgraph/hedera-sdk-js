@@ -273,6 +273,7 @@ export default class TransactionReceiptQuery extends Query {
                 return new PrecheckStatusError({
                     status,
                     transactionId: this._getTransactionId(),
+                    contractFunctionResult: null,
                 });
         }
 

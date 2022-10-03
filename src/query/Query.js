@@ -507,6 +507,7 @@ export default class Query extends Executable {
         return new PrecheckStatusError({
             status,
             transactionId: this._getTransactionId(),
+            contractFunctionResult: null,
         });
     }
 
