@@ -29,6 +29,7 @@ export default class CustomFee {
     /**
      * @param {object} props
      * @param {AccountId | string} [props.feeCollectorAccountId]
+     * @param {boolean} [props.allCollectorsAreExempt]
      */
     constructor(props = {}) {
         /**
@@ -36,8 +37,14 @@ export default class CustomFee {
          */
         this._feeCollectorAccountId = null;
 
+        this._allCollectorsAreExempt = false;
+
         if (props.feeCollectorAccountId != null) {
             this.setFeeCollectorAccountId(props.feeCollectorAccountId);
+        }
+
+        if (props.allCollectorsAreExempt != null) {
+            this.setAllCollectorsAreExempt(props.allCollectorsAreExempt);
         }
     }
 
@@ -57,6 +64,22 @@ export default class CustomFee {
             typeof feeCollectorAccountId === "string"
                 ? AccountId.fromString(feeCollectorAccountId)
                 : feeCollectorAccountId;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get allCollectorsAreExempt() {
+        return this._allCollectorsAreExempt;
+    }
+
+    /**
+     * @param {boolean} allCollectorsAreExempt
+     * @returns {this}
+     */
+    setAllCollectorsAreExempt(allCollectorsAreExempt) {
+        this._allFeeCollectorsAreExempt = allCollectorsAreExempt;
         return this;
     }
 

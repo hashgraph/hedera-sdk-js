@@ -34,6 +34,7 @@ export default class CustomFixedFee extends CustomFee {
     /**
      * @param {object} props
      * @param {AccountId | string} [props.feeCollectorAccountId]
+     * @param {boolean} [props.allCollectorsAreExempt]
      * @param {TokenId | string} [props.denominatingTokenId]
      * @param {Long | number} [props.amount]
      */
@@ -139,6 +140,10 @@ export default class CustomFixedFee extends CustomFee {
                 info.feeCollectorAccountId != null
                     ? AccountId._fromProtobuf(info.feeCollectorAccountId)
                     : undefined,
+            allCollectorsAreExempt:
+                info.allCollectorsAreExempt != null
+                    ? info.allCollectorsAreExempt
+                    : undefined,
             denominatingTokenId:
                 fee.denominatingTokenId != null
                     ? TokenId._fromProtobuf(fee.denominatingTokenId)
@@ -158,6 +163,7 @@ export default class CustomFixedFee extends CustomFee {
                 this.feeCollectorAccountId != null
                     ? this.feeCollectorAccountId._toProtobuf()
                     : null,
+            allCollectorsAreExempt: this.allCollectorsAreExempt,
             fixedFee: {
                 denominatingTokenId:
                     this._denominatingTokenId != null
