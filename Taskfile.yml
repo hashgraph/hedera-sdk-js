@@ -75,7 +75,7 @@ tasks:
         cmds:
             - task: install
             - task: format
-            #- task: lint
+            - task: lint
             - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
             - ./node_modules/.bin/yalc publish > /dev/null
 
