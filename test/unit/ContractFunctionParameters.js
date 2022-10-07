@@ -59,6 +59,8 @@ describe("ContractFunctionParameters", function () {
 
         const finished = params._build("f");
         const funcHash = hex.encode(finished.slice(0, 4));
+        console.log(`test fin: ${finished}`);
+        console.log(`test: ${funcHash}`);
         const firstParam = hex.encode(finished.slice(32 * 0 + 4, 32 * 1 + 4));
         const secondParam = hex.encode(finished.slice(32 * 1 + 4, 32 * 2 + 4));
         const thirdParam = hex.encode(finished.slice(32 * 2 + 4, 32 * 3 + 4));
@@ -117,6 +119,58 @@ describe("ContractFunctionParameters", function () {
             "746869732069732061206772696e3a20f09f9881000000000000000000000000"
         );
         expect(finished.length).to.be.equal(356);
+    });
+
+    it.only("encodes correctly using function selector with negative numbers", function () {
+        const MIN_INT16 = -32768; //MIN int16 value
+        const MIN_INT32 = -2147483648; //MIN int32 value
+
+        const params = new ContractFunctionParameters().addInt16(MIN_INT16);
+        //.addInt32(MIN_INT32)
+
+        const finished = params._build("f");
+        const funcHash = hex.encode(finished.slice(0, 4));
+        const firstParam = hex.encode(finished.slice(28, 32 * 1 + 4));
+        const decoded = hex.decode(
+            "0000000000000000000000000000000000000000000000000000000000008000"
+        );
+
+        console.log(`finished: ${finished}`);
+        console.log(`funcHash: ${funcHash}`);
+        console.log(`firstParam: ${firstParam}`);
+        console.log(`decoded: ${decoded}`);
+
+        /* const secondParam = hex.encode(finished.slice(32 * 1 + 4, 32 * 2 + 4));
+        const thirdParam = hex.encode(finished.slice(32 * 2 + 4, 32 * 3 + 4));
+        const forthParam = hex.encode(finished.slice(32 * 3 + 4, 32 * 4 + 4));
+        const fifthParam = hex.encode(finished.slice(32 * 4 + 4, 32 * 5 + 4));
+        const secondParamDataLength = hex.encode(
+            finished.slice(32 * 5 + 4, 32 * 6 + 4)
+        );
+        const secondParamData = hex.encode(
+            finished.slice(32 * 6 + 4, 32 * 7 + 4)
+        );
+        const fourthParamDataLength = hex.encode(
+            finished.slice(32 * 7 + 4, 32 * 8 + 4)
+        );
+        const fourthParamData = hex.encode(
+            finished.slice(32 * 8 + 4, 32 * 9 + 4)
+        );
+        const fifthParamDataLength = hex.encode(
+            finished.slice(32 * 9 + 4, 32 * 10 + 4)
+        );
+        const fifthParamData = hex.encode(
+            finished.slice(32 * 10 + 4, 32 * 11 + 4)
+        ); */
+
+        expect(funcHash).to.be.equal("3b44704d");
+
+        // the issue could be that we are not setting '0x' before the 8000 bytes value
+        expect(firstParam).to.be.equal(
+            "0000000000000000000000000000000000000000000000000000000000008000"
+        );
+
+        expect(finished.length).to.be.equal(36);
     });
 
     it("encodes correctly using generic addParam", function () {

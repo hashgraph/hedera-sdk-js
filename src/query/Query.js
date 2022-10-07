@@ -109,7 +109,9 @@ export default class Query extends Executable {
      * @returns {Query<T>}
      */
     static fromBytes(bytes) {
+        console.log(`bytes: ${bytes}`);
         const query = HashgraphProto.proto.Query.decode(bytes);
+        console.log(`query: ${query.query}`);
 
         if (query.query == null) {
             throw new Error("(BUG) query.query was not set in the protobuf");
@@ -151,7 +153,7 @@ export default class Query extends Executable {
      */
     setQueryPayment(queryPayment) {
         this._queryPayment = queryPayment;
-
+        console.log(`setting query payment...`);
         return this;
     }
 
@@ -174,6 +176,7 @@ export default class Query extends Executable {
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
+        console.log(`getCost`);
         // The node account IDs must be set to execute a cost query
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(

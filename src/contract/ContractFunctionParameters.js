@@ -1635,23 +1635,35 @@ function argumentToBytes(param, ty) {
             );
             return value;
         case ArgumentType.int16:
+            console.log(`param before: ${param}`);
+            console.log(`value before: ${value}`);
+            console.log(`dataView before: `);
+            console.log(valueView.buffer);
+
             numberToBytes(
                 /** @type {number | BigNumber } */ (param),
                 30,
                 valueView.setInt16.bind(valueView)
             );
+
+            console.log(`param after: ${param}`);
+            console.log(`value after: ${value}`);
+            console.log(`dataView after: `);
+            console.log(valueView.buffer);
+            console.log(`dataView get value after: ${valueView.getInt16(30)}`);
+
             return value;
         case ArgumentType.uint24:
             numberToBytes(
                 /** @type {number | BigNumber } */ (param),
-                29,
+                28,
                 valueView.setUint32.bind(valueView)
             );
             return value;
         case ArgumentType.int24:
             numberToBytes(
                 /** @type {number | BigNumber } */ (param),
-                29,
+                28,
                 valueView.setInt32.bind(valueView)
             );
             return value;

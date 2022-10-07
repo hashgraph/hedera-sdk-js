@@ -43,6 +43,7 @@ export default class PrecheckStatusError extends StatusError {
      * @param {?ContractFunctionResult} props.contractFunctionResult
      */
     constructor(props) {
+        console.log(`props: ${JSON.stringify(props)}`);
         super(
             props,
             `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()}`

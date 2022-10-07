@@ -215,7 +215,7 @@ export default class ContractCallQuery extends Query {
         this._functionParameters = (
             params != null ? params : new ContractFunctionParameters()
         )._build(name);
-
+        console.log(`_functionParameters: ${this._functionParameters}`);
         return this;
     }
 
@@ -286,6 +286,10 @@ export default class ContractCallQuery extends Query {
             /** @type {HashgraphProto.proto.IContractCallLocalResponse} */ (
                 response.contractCallLocal
             );
+
+        console.log("_mapResponseHeader");
+        console.log(response);
+        console.log(response.contractCallLocal);
         return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             contractCallLocal.header
         );

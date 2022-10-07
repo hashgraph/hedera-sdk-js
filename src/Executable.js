@@ -431,6 +431,7 @@ export default class Executable {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
+        console.log("wtf");
         throw new Error("not implemented");
     }
 
@@ -493,6 +494,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
+        console.log("Executing");
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
@@ -531,7 +533,6 @@ export default class Executable {
         // Saves each error we get so when we err due to max attempts exceeded we'll have
         // the last error that was returned by the consensus node
         let persistentError = null;
-
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             // Determine if we've exceeded request timeout
@@ -580,7 +581,7 @@ export default class Executable {
             this._advanceRequest();
 
             let response;
-
+            console.log("before unhealthy");
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
@@ -599,6 +600,7 @@ export default class Executable {
                 // If a grpc deadline is est, we should race it, otherwise the only thing in the
                 // list of promises will be the execution promise.
                 if (this._grpcDeadline != null) {
+                    console.log("grpc deadline");
                     promises.push(
                         // eslint-disable-next-line ie11/no-loop-func
                         new Promise((_, reject) =>
@@ -616,18 +618,22 @@ export default class Executable {
                         this._requestToBytes(request)
                     )}`
                 );
+                console.log(channel);
+                console.log("grpc deadline2");
                 promises.push(this._execute(channel, request));
+                console.log(promises);
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                response = /** @type {ResponseT} */ (
-                    await Promise.race(promises)
+                response = /** @type {ResponseT} */ await await Promise.race(
+                    promises
                 );
+                console.log(response);
+                console.log("after response: ");
             } catch (err) {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
-
                 // Save the error in case we retry
                 persistentError = error;
                 Logger.debug(
@@ -653,20 +659,25 @@ export default class Executable {
                     this._responseToBytes(response)
                 )}`
             );
-
+            console.log("chupenka");
             // If we didn't receive an error we should decrease the current nodes backoff
             // in case it is a recovering node
             client._network.decreaseBackoff(node);
+            console.log("after decreased");
+            console.log(request);
+            console.log("after ssasasaa");
+            console.log(response);
 
             // Determine what execution state we're in by the response
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
             const [err, shouldRetry] = this._shouldRetry(request, response);
+            console.log("sled shouldRetry");
             if (err != null) {
                 persistentError = err;
             }
-
+            console.log(shouldRetry);
             // Determine by the executing state what we should do
             switch (shouldRetry) {
                 case ExecutionState.Retry:
@@ -679,6 +690,7 @@ export default class Executable {
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
                 case ExecutionState.Error:
+                    console.log("here");
                     throw this._mapStatusError(request, response);
                 default:
                     throw new Error(

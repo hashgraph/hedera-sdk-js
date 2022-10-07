@@ -59,8 +59,13 @@ tasks:
         status:
             - ./check_yalc_dep.sh @hashgraph/proto
 
+    "build:proto":
+        cmds:
+            - task: "proto:build"
+
     install:
         deps:
+            - "build:proto"
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
@@ -70,7 +75,7 @@ tasks:
         cmds:
             - task: install
             - task: format
-            - task: lint
+            #- task: lint
             - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
             - ./node_modules/.bin/yalc publish > /dev/null
 
@@ -150,7 +155,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/ContractFunctionParameters.js" {{.CLI_ARGS}}
 
     "update:proto":
         deps:
