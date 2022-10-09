@@ -27,14 +27,6 @@ export function encode(data) {
 }
 
 /**
- * @param {Uint8Array} data
- * @returns {string}
- */
-export function encode2(data) {
-    return Buffer.from(data).toString("hex", 16 * 0 + 4, 32 * 1 + 4);
-}
-
-/**
  * @param {string} text
  * @returns {Uint8Array}
  */
