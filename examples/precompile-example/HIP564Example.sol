@@ -115,15 +115,4 @@ contract HIP564Example is ExpiryHelper {
             0 // amount to transfer
         );
     }
-
-    // function step6() external returns (int responseCode) {
-    //     require(msg.sender == owner);
-
-    //     responseCode = transferToken(
-    //         fungibleToken,
-    //         address(this), // sender
-    //         aliceAccount, // receiver
-    //         0 // amount to transfer
-    //     );
-    // }
 }
