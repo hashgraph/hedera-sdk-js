@@ -4,12 +4,10 @@ import {
     Client,
     TokenCreateTransaction,
     TokenType,
-    Hbar,
     TokenSupplyType,
     TokenMintTransaction,
     TransferTransaction,
     AccountBalanceQuery,
-    AccountCreateTransaction,
     TokenNftInfoQuery,
     NftId
 } from "@hashgraph/sdk";
@@ -224,7 +222,7 @@ async function main() {
      * Create a fungible HTS token using the Hedera Token Service
      */
 
-    const tokenCreateTx = await TokenCreateTransaction()
+    const tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("HIP-542 Token")
         .setTokenSymbol("H542")
         .setTokenType(TokenType.FungibleCommon)
@@ -297,7 +295,6 @@ async function main() {
      
      expect(accountBalances.tokens.get(tokenId).toInt()).to.be.equal(10);
 
-    
     
     
     /**
