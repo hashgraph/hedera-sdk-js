@@ -8,7 +8,7 @@ import "./ExpiryHelper.sol";
 // (you will also need the other files in this directory)
 // and copy the outputted json file to ./PrecompileExample.json
 
-contract HIP564Example is ExpiryHelper {
+contract ZeroTokenOperations is ExpiryHelper {
     address payable owner;
     address payable aliceAccount;
     address fungibleToken;
