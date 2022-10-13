@@ -49,26 +49,35 @@ Example for HIP-542.
 async function main() {
     
     // Configure accounts and client, and generate needed keys
-    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PRIVATE_KEY);
-    /* const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-    const treasuryKey = PrivateKey.fromString(process.env.TREASURY_PRIVATE_KEY);
-    const aliceId = AccountId.fromString(process.env.ALICE_ID);
-    const aliceKey = PrivateKey.fromString(process.env.ALICE_PRIVATE_KEY);
-    const bobId = AccountId.fromString(process.env.BOB_ID);
-    const bobKey = PrivateKey.fromString(process.env.BOB_PRIVATE_KEY); */
+    //const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    //const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PRIVATE_KEY);
     
+
     const supplyKey = PrivateKey.generateED25519();
     const freezeKey = PrivateKey.generateED25519();
     const wipeKey = PrivateKey.generateED25519();
 
+    
+    // local node - testing purposes only
+    const operatorId = AccountId.fromString("0.0.2");
+    const operatorKey = PrivateKey.fromString("302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137");
 
     // If we weren't able to get them, we should throw a new error
     if (operatorId == null ||
         operatorKey == null ) {
         throw new Error("Could not fetch 'operatorId' and 'operatorKey' properly");
     }
-    const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+
+    const node = {"127.0.0.1:50211": new AccountId(3)};
+    const client = Client.forNetwork(node)
+        .setMirrorNetwork("127.0.0.1:5600")
+        .setOperator(
+            operatorId, 
+            operatorKey
+        );
+    
+    
+    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
     
     
     /**     Example 1
@@ -98,7 +107,6 @@ async function main() {
         .setTreasuryAccountId(operatorId)
         .setSupplyType(TokenSupplyType.Finite)
         .setAdminKey(operatorKey)
-        .setKycKey(operatorKey)
         .setFreezeKey(freezeKey)
         .setWipeKey(wipeKey)
         .setSupplyKey(supplyKey)
@@ -143,7 +151,6 @@ async function main() {
 
     let newKey = PrivateKey.generateECDSA();
     let aliasAccountId = newKey.publicKey.toAccountId(0, 0);
-    //let aliasAccountId = publicKeyAlias.toAccountId(0, 0);
     
     console.log(`newKey: ${newKey}`);
     console.log(`publicKey: ${newKey.publicKey}`);
@@ -186,7 +193,8 @@ async function main() {
     // Get transaction receipt information here
     let nftTransferRx = await nftTransferSubmit.getReceipt(client);
 
-    console.log(`NFT transfer receipt\n${nftTransferRx}`);
+    console.log(`NFT transfer receipt`);
+    console.log(nftTransferRx);
 
     
     /**
@@ -200,7 +208,7 @@ async function main() {
         .setNftId(new NftId(nftTokenId, exampleNftId))
         .execute(client);
 
-    let nftOwnerAccountId = nftInfo.accountId.toString()
+    let nftOwnerAccountId = nftInfo[0].accountId.toString();
     console.log(`Current owner account id: ${nftOwnerAccountId}`);
 
 
@@ -210,7 +218,7 @@ async function main() {
      * Show the new account ID owns the NFT
      */
 
-    expect(nftOwnerAccountId).to.be.equal(aliasAccountId);
+    expect(nftOwnerAccountId).to.be.equal(aliasAccountId.toString());
 
 
 
@@ -273,7 +281,8 @@ async function main() {
     // Get transaction receipt information
     let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
     
-    console.log(`Token transfer receipt\n${tokenTransferRx}`);
+    console.log(`Token transfer receipt`);
+    console.log(tokenTransferRx);
     
     
     /**
