@@ -2,6 +2,8 @@ import {
     AccountId,
     PrivateKey,
     Client,
+    LocalProvider,
+    Wallet,
     TokenCreateTransaction,
     TokenType,
     TokenSupplyType,
@@ -9,6 +11,7 @@ import {
     TransferTransaction,
     AccountBalanceQuery,
     TokenNftInfoQuery,
+    AccountInfoQuery,
     NftId
 } from "@hashgraph/sdk";
 import { expect } from "chai";
@@ -75,7 +78,12 @@ async function main() {
             operatorId, 
             operatorKey
         );
-    
+
+    const wallet = new Wallet(
+        operatorId,
+        operatorKey,
+        new LocalProvider()
+    );
     
     //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
     
@@ -141,6 +149,7 @@ async function main() {
             );
         }
     
+    // take the first nft of the collection
     let exampleNftId = nftCollection[0].serials[0];
 
     /**
@@ -152,22 +161,11 @@ async function main() {
     let newKey = PrivateKey.generateECDSA();
     let aliasAccountId = newKey.publicKey.toAccountId(0, 0);
     
-    console.log(`newKey: ${newKey}`);
-    console.log(`publicKey: ${newKey.publicKey}`);
-    console.log(`aliasAccountId: ${aliasAccountId}`);
+    console.log(`newKey: ${newKey.toString()}`);
+    console.log(`publicKey: ${newKey.publicKey.toString()}`);
+    console.log(`aliasAccountId: ${aliasAccountId.toString()}`);
+    console.log(`aliasKey: ${aliasAccountId.aliasKey.toString()}`);
 
-    // maybe not needed-------------------
-    /* let accountCreateTx = await new AccountCreateTransaction()
-        .setKey(newKey.publicKey)
-		.setInitialBalance(new Hbar(0))
-		.execute(client);
-
-	const receipt = await accountCreateTx.getReceipt(client);
-    const receiverId = receipt.accountId
-    
-    console.log(`publicKeyAlias: ${publicKeyAlias}`);
-    console.log(`receiverId: ${receiverId}`); */
-    // -----------------------------------
 
     /**
      * Step 4
@@ -177,14 +175,22 @@ async function main() {
 
     let nftTransferTx = await new TransferTransaction()
         .addNftTransfer(
-            nftTokenId,
-            exampleNftId,
+            new NftId(nftTokenId, exampleNftId),
             operatorId,
             aliasAccountId
         )
-        .freezeWith(client);
-
-    // Sign the transaction with the operator key
+        //.freezeWith(client)
+        .freezeWithSigner(wallet);
+    
+    nftTransferTx = await nftTransferTx.signWithSigner(wallet);
+    const response = await nftTransferTx.executeWithSigner(wallet);
+    await response.getReceiptWithSigner(wallet);
+    console.log("nftTransferTx\n");
+    console.log(nftTransferTx);
+    console.log("response\n");
+    console.log(response);
+    
+    /* // Sign the transaction with the operator key
     let nftTransferTxSign = await nftTransferTx.sign(operatorKey);
 
     // Submit the transaction to the Hedera network
@@ -195,6 +201,14 @@ async function main() {
 
     console.log(`NFT transfer receipt`);
     console.log(nftTransferRx);
+    console.log(nftTransferSubmit); */
+
+    const info = await new AccountInfoQuery()
+        .setNodeAccountIds([response.nodeId])
+        .setAccountId(aliasAccountId)
+        .executeWithSigner(wallet);
+
+    console.log(`Info about the new account: ${info.toString()}`);
 
     
     /**
@@ -218,7 +232,7 @@ async function main() {
      * Show the new account ID owns the NFT
      */
 
-    expect(nftOwnerAccountId).to.be.equal(aliasAccountId.toString());
+    //expect(nftOwnerAccountId).to.be.equal(aliasAccountId.toString());
 
 
 
@@ -260,6 +274,13 @@ async function main() {
      * (we are going to use the same ECDSA key from the first example)
      */
     
+     let newKey2 = PrivateKey.generateECDSA();
+     let aliasAccountId2 = newKey2.publicKey.toAccountId(0, 0);
+     
+     console.log(`newKey2: ${newKey2}`);
+     console.log(`publicKey: ${newKey2.publicKey}`);
+     console.log(`aliasAccountId2: ${aliasAccountId2}`);
+
     /**
      * Step 3
      * 
@@ -269,7 +290,7 @@ async function main() {
     
     let tokenTransferTx = await new TransferTransaction()
         .addTokenTransfer(tokenId, operatorId, -10)
-        .addTokenTransfer(tokenId, aliasAccountId, 10)
+        .addTokenTransfer(tokenId, aliasAccountId2, 10)
         .freezeWith(client)
     
     // Sign the transaction with the operator key
@@ -292,7 +313,7 @@ async function main() {
      */
     
      const accountBalances = await new AccountBalanceQuery()
-        .setAccountId(aliasAccountId)
+        .setAccountId(aliasAccountId2)
         .execute(client);
 
      
