@@ -16,10 +16,6 @@ import {
 } from "@hashgraph/sdk";
 import { expect } from "chai";
 
-/**
- * @typedef {import("@hashgraph/sdk").TokenInfo} TokenInfo
- * @typedef {import("@hashgraph/sdk").TransactionReceipt} TransactionReceipt
- */
 
 import dotenv from "dotenv";
 
@@ -52,8 +48,8 @@ Example for HIP-542.
 async function main() {
     
     // Configure accounts and client, and generate needed keys
-    //const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    //const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PRIVATE_KEY);
+    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
     
 
     const supplyKey = PrivateKey.generateED25519();
@@ -61,10 +57,6 @@ async function main() {
     const wipeKey = PrivateKey.generateED25519();
 
     
-    // local node - testing purposes only
-    const operatorId = AccountId.fromString("0.0.2");
-    const operatorKey = PrivateKey.fromString("302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137");
-
     // If we weren't able to get them, we should throw a new error
     if (operatorId == null ||
         operatorKey == null ) {
