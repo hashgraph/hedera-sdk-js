@@ -1,7 +1,6 @@
 import {
     AccountId,
     PrivateKey,
-    Client,
     TokenCreateTransaction,
     TokenType,
     TransferTransaction,
@@ -10,7 +9,7 @@ import {
     AccountCreateTransaction,
     LocalProvider,
     Wallet,
-    TokenAssociateTransaction
+    AccountBalanceQuery
 } from "@hashgraph/sdk";
 
 
@@ -46,11 +45,6 @@ async function main() {
         throw new Error("Could not fetch 'operatorId' and 'operatorKey' properly");
     }
 
-    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    /* const node = {"127.0.0.1:50211": new AccountId(3)};
-    const client = Client.forNetwork(node)
-        .setMirrorNetwork("127.0.0.1:5600")
-        .setOperator(operatorId, operatorKey); */
 
     const wallet = new Wallet(
         operatorId,
@@ -122,6 +116,32 @@ async function main() {
     );
 
 
+    let firstAccountBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(firstAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
+
+    let secondAccountBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(secondAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
+
+    let thirdAccountBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(thirdAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
+     
+    console.log(`First account balance before TransferTransaction: ${firstAccountBalanceBefore}`);
+    console.log(`Second account balance before TransferTransaction: ${secondAccountBalanceBefore}`);
+    console.log(`Third account balance before TransferTransaction: ${thirdAccountBalanceBefore}`);
+
+
     /**
      * Step 2
      * 
@@ -151,7 +171,7 @@ async function main() {
         .setTokenName("HIP-573 Token")
         .setTokenSymbol("H573")
         .setTokenType(TokenType.FungibleCommon)
-        .setTreasuryAccountId(wallet.getAccountId())
+        .setTreasuryAccountId(secondAccountWallet.getAccountId())
         .setAutoRenewAccountId(wallet.getAccountId())
         .setAdminKey(wallet.getAccountKey())
         .setFreezeKey(wallet.getAccountKey())
@@ -162,8 +182,12 @@ async function main() {
         .freezeWithSigner(wallet);
 
     
-    // Sign the transaction with the operator key
+    // TokenCreateTransaction should be also signed with all of the fee collector wallets 
+    // in the custom fee list of the token before executing the transaction
     tokenCreateTx = await tokenCreateTx.signWithSigner(wallet);
+    tokenCreateTx = await tokenCreateTx.signWithSigner(firstAccountWallet);
+    tokenCreateTx = await tokenCreateTx.signWithSigner(secondAccountWallet);
+    tokenCreateTx = await tokenCreateTx.signWithSigner(thirdAccountWallet);
 
     // Submit the transaction to the Hedera network
     let tokenCreateSubmit = await tokenCreateTx.executeWithSigner(wallet);
@@ -184,55 +208,72 @@ async function main() {
      * Collector 0.0.B sends 10_000 units of the token to 0.0.A.
      */
     
-    const tokenAssociateTransaction =
-        await new TokenAssociateTransaction()
-        .setAccountId(firstAccountId)
-        .setTokenIds([tokenId])
-        .freezeWithSigner(firstAccountWallet);
-
-    const signedTxForAssociateToken =
-        await tokenAssociateTransaction.signWithSigner(firstAccountWallet);
-    const txResponseAssociatedToken =
-        await signedTxForAssociateToken.executeWithSigner(wallet);
-    const status = (
-        await txResponseAssociatedToken.getReceiptWithSigner(wallet)
-    ).status;
-
-
-
     let tokenTransferTx = await new TransferTransaction()
         .addTokenTransfer(tokenId, secondAccountId, -10000)
         .addTokenTransfer(tokenId, firstAccountId, 10000)
-        .freezeWithSigner(wallet)
+        .freezeWithSigner(wallet);
         
         
-    // Sign the transaction with the operator key
-    let tokenTransferTxSign = await tokenTransferTx.signWithSigner(wallet);
+    // Sign the transaction also with the wallet of the sender
+    tokenTransferTx = await tokenTransferTx.signWithSigner(wallet);
+    tokenTransferTx = await tokenTransferTx.signWithSigner(secondAccountWallet);
         
     // Submit the transaction to the Hedera network
-    let tokenTransferSubmit = await tokenTransferTxSign.executeWithSigner(wallet);
+    let tokenTransferSubmit = await tokenTransferTx.executeWithSigner(wallet);
     
     
     /**
      * Step 4
      * 
-     * Return the new account ID in the child record
+     * Get the transaction fee for that transfer transaction
      */
 
-    // Get transaction receipt information
-    let tokenTransferRx = await tokenTransferSubmit.getReceiptWithSigner(wallet);
+    // Get transaction record information
+    let transactionFee = (await tokenTransferSubmit.getRecordWithSigner(wallet)).transactionFee;
         
-    console.log(`Token transfer receipt`);
-    console.log(tokenTransferRx);
+    console.log(`Transaction fee: ${transactionFee}`);
+    
+    
+    /**
+     * Step 5
+     * 
+     * Show that the fee collector accounts in the custom fee list
+     * of the token that was created was not charged a custom fee in the transfer
+     */
+     
 
-     /**
-      * Step 5
-      * 
-      * Show that the fee collector accounts in the custom fee list
-      * of the token that was created was not charged a custom fee in the transfer
-      */
+    let firstAccountBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(firstAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
 
-     // TODO: Check 
+    let secondAccountBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(secondAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
+
+    let thirdAccountBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(thirdAccountId)
+            .executeWithSigner(wallet)
+        )
+        .hbars.toString();
+     
+    console.log(`First account balance after TransferTransaction: ${firstAccountBalanceAfter}`);
+    console.log(`Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`);
+    console.log(`Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`);
+
+    
+    if (firstAccountBalanceBefore === firstAccountBalanceAfter 
+        && secondAccountBalanceBefore === secondAccountBalanceAfter
+        && thirdAccountBalanceBefore === thirdAccountBalanceAfter) {
+
+            console.log(`Fee collector accounts were not charged after transfer transaction`);
+        }
      
 }
 
