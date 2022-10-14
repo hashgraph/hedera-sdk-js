@@ -39,8 +39,6 @@ async function main() {
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-    //const operatorId = AccountId.fromString("0.0.2");
-    //const operatorKey = PrivateKey.fromString("302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137");
     
 
     // If we weren't able to get them, we should throw a new error
@@ -48,10 +46,9 @@ async function main() {
         throw new Error("Could not fetch 'operatorId' and 'operatorKey' properly");
     }
 
-
-    const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    /* const client = Client.forNetwork(node)
-    const node = {"127.0.0.1:50211": new AccountId(3)};
+    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    /* const node = {"127.0.0.1:50211": new AccountId(3)};
+    const client = Client.forNetwork(node)
         .setMirrorNetwork("127.0.0.1:5600")
         .setOperator(operatorId, operatorKey); */
 
@@ -151,8 +148,8 @@ async function main() {
 
 
     let tokenCreateTx = await new TokenCreateTransaction()
-        .setTokenName("HIP-542 Token")
-        .setTokenSymbol("H542")
+        .setTokenName("HIP-573 Token")
+        .setTokenSymbol("H573")
         .setTokenType(TokenType.FungibleCommon)
         .setTreasuryAccountId(wallet.getAccountId())
         .setAutoRenewAccountId(wallet.getAccountId())
