@@ -4,19 +4,15 @@ import {
     Client,
     TokenCreateTransaction,
     TokenType,
-    TokenSupplyType,
-    TokenMintTransaction,
     TransferTransaction,
-    AccountBalanceQuery,
     CustomFractionalFee,
-    NftId
+    Hbar,
+    AccountCreateTransaction,
+    LocalProvider,
+    Wallet,
+    TokenAssociateTransaction
 } from "@hashgraph/sdk";
-import { expect } from "chai";
 
-/**
- * @typedef {import("@hashgraph/sdk").TokenInfo} TokenInfo
- * @typedef {import("@hashgraph/sdk").TransactionReceipt} TransactionReceipt
- */
 
 import dotenv from "dotenv";
 
@@ -42,26 +38,28 @@ async function main() {
     
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PRIVATE_KEY);
-    /* const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-    const treasuryKey = PrivateKey.fromString(process.env.TREASURY_PRIVATE_KEY);
-    const aliceId = AccountId.fromString(process.env.ALICE_ID);
-    const aliceKey = PrivateKey.fromString(process.env.ALICE_PRIVATE_KEY);
-    const bobId = AccountId.fromString(process.env.BOB_ID);
-    const bobKey = PrivateKey.fromString(process.env.BOB_PRIVATE_KEY); */
+    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+    //const operatorId = AccountId.fromString("0.0.2");
+    //const operatorKey = PrivateKey.fromString("302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137");
     
-    const supplyKey = PrivateKey.generateED25519();
-    const freezeKey = PrivateKey.generateED25519();
-    const wipeKey = PrivateKey.generateED25519();
-
 
     // If we weren't able to get them, we should throw a new error
-    if (operatorId == null ||
-        operatorKey == null ) {
+    if (operatorId == null || operatorKey == null ) {
         throw new Error("Could not fetch 'operatorId' and 'operatorKey' properly");
     }
+
+
     const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    
+    /* const client = Client.forNetwork(node)
+    const node = {"127.0.0.1:50211": new AccountId(3)};
+        .setMirrorNetwork("127.0.0.1:5600")
+        .setOperator(operatorId, operatorKey); */
+
+    const wallet = new Wallet(
+        operatorId,
+        operatorKey,
+        new LocalProvider()
+    );
     
     /**     Example 1
      * 
@@ -71,29 +69,60 @@ async function main() {
      */
     
 
-    let accountAkey = PrivateKey.generateED25519();
-    let aliasAccountAid = accountAkey.publicKey.toAccountId(0, 0);
-    
-    console.log(`accountAkey: ${accountAkey}`);
-    console.log(`publicKey: ${accountAkey.publicKey}`);
-    console.log(`aliasAccountAid: ${aliasAccountAid}`);
+    let firstAccountPrivateKey = PrivateKey.generateED25519();
+    let firstAccountPublicKey = firstAccountPrivateKey.publicKey;
 
-    let accountBkey = PrivateKey.generateED25519();
-    let aliasAccountBid = accountBkey.publicKey.toAccountId(0, 0);
+    let createAccountAtx = await new AccountCreateTransaction()
+         .setKey(firstAccountPublicKey)
+         .setInitialBalance(Hbar.fromString("1000"))
+         .freezeWithSigner(wallet);
+    createAccountAtx = await createAccountAtx.signWithSigner(wallet);
     
-    console.log(`accountBkey: ${accountBkey}`);
-    console.log(`publicKey: ${accountBkey.publicKey}`);
-    console.log(`aliasAccountBid: ${aliasAccountBid}`);
+    let firstResponse = await createAccountAtx.executeWithSigner(wallet);
+    const firstAccountId = (await firstResponse.getReceiptWithSigner(wallet)).accountId;
+ 
+    const firstAccountWallet = new Wallet(
+        firstAccountId,
+        firstAccountPrivateKey,
+        new LocalProvider()
+    );
 
-    let accountCkey = PrivateKey.generateED25519();
-    let aliasAccountCid = accountCkey.publicKey.toAccountId(0, 0);
+    let secondAccountPrivateKey = PrivateKey.generateED25519();
+    let secondAccountPublicKey = secondAccountPrivateKey.publicKey;
+ 
+    let createAccountBtx = await new AccountCreateTransaction()
+        .setKey(secondAccountPublicKey)
+        .setInitialBalance(Hbar.fromString("1000"))
+        .freezeWithSigner(wallet);
+    createAccountBtx = await createAccountBtx.signWithSigner(wallet);
+     
+    let secondResponse = await createAccountBtx.executeWithSigner(wallet);
+    const secondAccountId = (await secondResponse.getReceiptWithSigner(wallet)).accountId;
+  
+    const secondAccountWallet = new Wallet(
+        secondAccountId,
+        secondAccountPrivateKey,
+        new LocalProvider()
+    );
+
     
-    console.log(`accountCkey: ${accountCkey}`);
-    console.log(`publicKey: ${accountCkey.publicKey}`);
-    console.log(`aliasAccountCid: ${aliasAccountCid}`);
-
-    const clientB = Client.forTestnet()
-        .setOperator(aliasAccountBid, accountBkey);
+    let thirdAccountPrivateKey = PrivateKey.generateED25519();
+    let thirdAccountPublicKey = thirdAccountPrivateKey.publicKey;
+ 
+    let createAccountCtx = await new AccountCreateTransaction()
+        .setKey(thirdAccountPublicKey)
+        .setInitialBalance(Hbar.fromString("1000"))
+        .freezeWithSigner(wallet);
+    createAccountCtx = await createAccountCtx.signWithSigner(wallet);
+     
+    let thirdResponse = await createAccountCtx.executeWithSigner(wallet);
+    const thirdAccountId = (await thirdResponse.getReceiptWithSigner(wallet)).accountId;
+  
+    const thirdAccountWallet = new Wallet(
+        thirdAccountId,
+        thirdAccountPrivateKey,
+        new LocalProvider()
+    );
 
 
     /**
@@ -106,41 +135,48 @@ async function main() {
      */
 
      const fee = new CustomFractionalFee()
-            .setFeeCollectorAccountId(aliasAccountAid)
+            .setFeeCollectorAccountId(firstAccountId)
             .setNumerator(1)
-            .setDenominator(1)
+            .setDenominator(100);
      
     const fee2 = new CustomFractionalFee()
-            .setFeeCollectorAccountId(aliasAccountBid)
-            .setNumerator(1)
-            .setDenominator(2)
+            .setFeeCollectorAccountId(secondAccountId)
+            .setNumerator(2)
+            .setDenominator(100);
     
     const fee3 = new CustomFractionalFee()
-            .setFeeCollectorAccountId(aliasAccountCid)
-            .setNumerator(1)
-            .setDenominator(3)
+            .setFeeCollectorAccountId(thirdAccountId)
+            .setNumerator(3)
+            .setDenominator(100);
 
 
-    const tokenCreateTx = await new TokenCreateTransaction()
+    let tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("HIP-542 Token")
         .setTokenSymbol("H542")
         .setTokenType(TokenType.FungibleCommon)
-        .setTreasuryAccountId(operatorId)
+        .setTreasuryAccountId(wallet.getAccountId())
+        .setAutoRenewAccountId(wallet.getAccountId())
+        .setAdminKey(wallet.getAccountKey())
+        .setFreezeKey(wallet.getAccountKey())
+        .setWipeKey(wallet.getAccountKey())
         .setInitialSupply(100000000) // Total supply = 100000000 / 10 ^ 2
         .setDecimals(2)
         .setCustomFees([fee, fee2, fee3])
-        .setAutoRenewAccountId(operatorId)
-        .freezeWith(client);
+        .freezeWithSigner(wallet);
 
     
     // Sign the transaction with the operator key
-    let tokenCreateTxSign = await tokenCreateTx.sign(operatorKey);
+    tokenCreateTx = await tokenCreateTx.signWithSigner(wallet);
 
     // Submit the transaction to the Hedera network
-    let tokenCreateSubmit = await tokenCreateTxSign.execute(client);
+    let tokenCreateSubmit = await tokenCreateTx.executeWithSigner(wallet);
+    console.log(`response`);
+    console.log(tokenCreateSubmit);
+    console.log(tokenCreateTx);
+
 
     // Get transaction receipt information
-    let tokenCreateRx = await tokenCreateSubmit.getReceipt(client);
+    let tokenCreateRx = await tokenCreateSubmit.getReceiptWithSigner(wallet);
     let tokenId = tokenCreateRx.tokenId;
     console.log(`Created token with token id: ${tokenId.toString()} \n`);
 
@@ -151,17 +187,33 @@ async function main() {
      * Collector 0.0.B sends 10_000 units of the token to 0.0.A.
      */
     
+    const tokenAssociateTransaction =
+        await new TokenAssociateTransaction()
+        .setAccountId(firstAccountId)
+        .setTokenIds([tokenId])
+        .freezeWithSigner(firstAccountWallet);
+
+    const signedTxForAssociateToken =
+        await tokenAssociateTransaction.signWithSigner(firstAccountWallet);
+    const txResponseAssociatedToken =
+        await signedTxForAssociateToken.executeWithSigner(wallet);
+    const status = (
+        await txResponseAssociatedToken.getReceiptWithSigner(wallet)
+    ).status;
+
+
+
     let tokenTransferTx = await new TransferTransaction()
-        .addTokenTransfer(tokenId, aliasAccountBid, -10000)
-        .addTokenTransfer(tokenId, aliasAccountAid, 10000)
-        .freezeWith(client)
+        .addTokenTransfer(tokenId, secondAccountId, -10000)
+        .addTokenTransfer(tokenId, firstAccountId, 10000)
+        .freezeWithSigner(wallet)
         
         
     // Sign the transaction with the operator key
-    let tokenTransferTxSign = await tokenTransferTx.sign(operatorKey);
+    let tokenTransferTxSign = await tokenTransferTx.signWithSigner(wallet);
         
     // Submit the transaction to the Hedera network
-    let tokenTransferSubmit = await tokenTransferTxSign.execute(client);
+    let tokenTransferSubmit = await tokenTransferTxSign.executeWithSigner(wallet);
     
     
     /**
@@ -171,9 +223,10 @@ async function main() {
      */
 
     // Get transaction receipt information
-    let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
+    let tokenTransferRx = await tokenTransferSubmit.getReceiptWithSigner(wallet);
         
-    console.log(`Token transfer receipt\n${tokenTransferRx}`);
+    console.log(`Token transfer receipt`);
+    console.log(tokenTransferRx);
 
      /**
       * Step 5
