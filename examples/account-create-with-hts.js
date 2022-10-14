@@ -2,8 +2,6 @@ import {
     AccountId,
     PrivateKey,
     Client,
-    LocalProvider,
-    Wallet,
     TokenCreateTransaction,
     TokenType,
     TokenSupplyType,
@@ -13,8 +11,8 @@ import {
     TokenNftInfoQuery,
     NftId,
     AccountInfoQuery,
+    TransactionReceipt,
 } from "@hashgraph/sdk";
-import { expect } from "chai";
 
 
 import dotenv from "dotenv";
@@ -45,15 +43,13 @@ Example for HIP-542.
 */
 
 async function main() {
+
     // Configure accounts and client, and generate needed keys
-    //const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    //const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PRIVATE_KEY);
+    const supplyKey = PrivateKey.generateECDSA();
+    const freezeKey = PrivateKey.generateECDSA();
+    const wipeKey = PrivateKey.generateECDSA();
 
-    const supplyKey = PrivateKey.generateED25519();
-    const freezeKey = PrivateKey.generateED25519();
-    const wipeKey = PrivateKey.generateED25519();
-
-    // local node - testing purposes only
+    // operatorId and operatorKey used on local node
     const operatorId = AccountId.fromString("0.0.2");
     const operatorKey = PrivateKey.fromString(
         "302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137"
@@ -71,7 +67,6 @@ async function main() {
         .setMirrorNetwork("127.0.0.1:5600")
         .setOperator(operatorId, operatorKey);
 
-    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
     /**
      *     Example 1
@@ -80,6 +75,7 @@ async function main() {
      *
      * Create an NFT using the Hedera Token Service
      */
+    console.log(`Example 1`);
 
     // IPFS content identifiers for the NFT metadata
     const CID = [
@@ -114,14 +110,13 @@ async function main() {
     // Get transaction receipt information
     let nftCreateRx = await nftCreateSubmit.getReceipt(client);
     let nftTokenId = nftCreateRx.tokenId;
-    console.log(`Created NFT with token id: ${nftTokenId.toString()} \n`);
+    console.log(`Created NFT with token id: ${nftTokenId.toString()}`);
 
     /**
      * Step 2
      *
      * Mint the NFT
      */
-
     const nftCollection = [];
     for (var i = 0; i < CID.length; i++) {
         nftCollection[i] = await tokenMinterFcn(CID[i]);
@@ -139,10 +134,9 @@ async function main() {
      *
      * Create an ECDSA public key alias
      */
+    console.log('Creating a new account...');
 
-    console.log('"Creating" a new account');
-
-    const privateKey = PrivateKey.generateED25519();
+    const privateKey = PrivateKey.generateECDSA();
     const publicKey = privateKey.publicKey;
 
     // Assuming that the target shard and realm are known.
@@ -151,19 +145,12 @@ async function main() {
 
     console.log(`New account ID: ${aliasAccountId.toString()}`);
     console.log(`Just the aliasKey: ${aliasAccountId.aliasKey.toString()}`);
-    // maybe not needed-------------------
-    /* let accountCreateTx = await new AccountCreateTransaction()
-        .setKey(newKey.publicKey)
-		.setInitialBalance(new Hbar(0))
-		.execute(client);
-
 
     /**
      * Step 4
      *
      * Tranfer the NFT to the public key alias using the transfer transaction
      */
-
     let nftTransferTx = await new TransferTransaction()
         .addNftTransfer(nftTokenId, exampleNftId, operatorId, aliasAccountId)
         .freezeWith(client);
@@ -175,10 +162,7 @@ async function main() {
     let nftTransferSubmit = await nftTransferTxSign.execute(client);
 
     // Get transaction receipt information here
-    let nftTransferRx = await nftTransferSubmit.getReceipt(client);
-
-    // console.log(`NFT transfer receipt`);
-    // console.log(nftTransferRx);
+    await nftTransferSubmit.getReceipt(client);
 
     /**
      * Step 5
@@ -193,21 +177,27 @@ async function main() {
 
     let nftOwnerAccountId = nftInfo[0].accountId.toString();
     console.log(`Current owner account id: ${nftOwnerAccountId}`);
-
-    const info = await new AccountInfoQuery()
-        .setAccountId(aliasAccountId)
-        .execute(client);
-
-    console.log(`Info about the new account: ${info.toString()}`);
-    console.log(`The normal account ID: ${info.accountId.toString()}`);
-
+    
     /**
      * Step 6
      *
      * Show the new account ID owns the NFT
      */
+    const accountId = (
+        await new AccountInfoQuery()
+            .setAccountId(aliasAccountId)
+            .execute(client)
+        )
+        .accountId.toString();
+    
+    console.log(`The normal account ID of the given alias: ${accountId}`);
 
-    expect(nftOwnerAccountId).to.be.equal(info.accountId.toString());
+    (nftOwnerAccountId === accountId) ?
+        console.log(`The NFT owner accountId matches the accountId created with the HTS\n`)
+    :
+        console.log(`The two account IDs does not match\n`);
+    
+
 
     /**
      *     Example 2
@@ -216,6 +206,7 @@ async function main() {
      *
      * Create a fungible HTS token using the Hedera Token Service
      */
+    console.log(`Example 2`);
 
     const tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("HIP-542 Token")
@@ -236,17 +227,16 @@ async function main() {
     // Get transaction receipt information
     let tokenCreateRx = await tokenCreateSubmit.getReceipt(client);
     let tokenId = tokenCreateRx.tokenId;
-    console.log(`Created token with token id: ${tokenId.toString()} \n`);
+    console.log(`Created token with token id: ${tokenId.toString()}`);
 
     /**
      * Step 2
      *
      * Create an ECDSA public key alias
      */
+    console.log('Creating a new account...');
 
-    console.log('"Creating" a new account');
-
-    const privateKey2 = PrivateKey.generateED25519();
+    const privateKey2 = PrivateKey.generateECDSA();
     const publicKey2 = privateKey2.publicKey;
 
     // Assuming that the target shard and realm are known.
@@ -261,7 +251,6 @@ async function main() {
      *
      * Transfer the fungible token to the public key alias
      */
-
     let tokenTransferTx = await new TransferTransaction()
         .addTokenTransfer(tokenId, operatorId, -10)
         .addTokenTransfer(tokenId, aliasAccountId2, 10)
@@ -274,34 +263,39 @@ async function main() {
     let tokenTransferSubmit = await tokenTransferTxSign.execute(client);
 
     // Get transaction receipt information
-    let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
-
-    // console.log(`Token transfer receipt`);
-    // console.log(tokenTransferRx);
+    await tokenTransferSubmit.getReceipt(client);
 
     /**
      * Step 4
      *
      * Return the new account ID in the child record
      */
+    const accountId2 = (
+       await new AccountInfoQuery()
+           .setAccountId(aliasAccountId2)
+           .execute(client)
+       )
+       .accountId.toString();
+   
+    console.log(`The normal account ID of the given alias: ${accountId2}`);
 
+    
+    /**
+     * Step 5
+     * 
+     * Show the new account ID owns the fungible token
+     */
     const accountBalances = await new AccountBalanceQuery()
         .setAccountId(aliasAccountId2)
         .execute(client);
 
-    /**
-     * Step 5
-      * 
-      * Show the new account ID owns the fungible token
-      */
-     
-     expect(accountBalances.tokens.get(tokenId).toInt()).to.be.equal(10);
+    let tokenBalanceAccountId2 = accountBalances.tokens._map.get(tokenId.toString()).toInt();
+    
+    (tokenBalanceAccountId2 === 10) ?
+        console.log(`Account is created succesfully using HTS 'TransferTransaction'`)
+    :
+        console.log("Creating account with HTS using public key alias failed");
 
-    expect(
-        accountBalances.tokens._map.get(tokenId.toString()).toInt()
-    ).to.be.equal(10);
-
-    console.log("FINISHED");
 
     /**
      * TOKEN MINTER FUNCTION
