@@ -113,6 +113,8 @@ async function main() {
         await txResponseAssociatedToken.getReceiptWithSigner(wallet)
     ).status;
 
+    console.log("Associate Status", status.toString());
+
     //Transfer token
     const transferToken = await new hashgraph.TransferTransaction()
         .addTokenTransfer(tokenId, myAccountId, 0) // deduct 0 tokens
