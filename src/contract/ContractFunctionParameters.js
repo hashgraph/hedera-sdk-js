@@ -1644,14 +1644,14 @@ function argumentToBytes(param, ty) {
         case ArgumentType.uint24:
             numberToBytes(
                 /** @type {number | BigNumber } */ (param),
-                29,
+                28,
                 valueView.setUint32.bind(valueView)
             );
             return value;
         case ArgumentType.int24:
             numberToBytes(
                 /** @type {number | BigNumber } */ (param),
-                29,
+                28,
                 valueView.setInt32.bind(valueView)
             );
             return value;
