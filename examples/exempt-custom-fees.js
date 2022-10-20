@@ -11,7 +11,6 @@ import {
     Wallet,
     AccountBalanceQuery,
 } from "@hashgraph/sdk";
-import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -151,7 +150,7 @@ async function main() {
         .setInitialSupply(100000000) // Total supply = 100000000 / 10 ^ 2
         .setDecimals(2)
         .setCustomFees([fee, fee2, fee3])
-        .setMaxTransactionFee(new Hbar(30))
+        .setMaxTransactionFee(new Hbar(40))
         .freezeWithSigner(wallet);
 
     // TokenCreateTransaction should be also signed with all of the fee collector wallets
@@ -246,25 +245,10 @@ async function main() {
     .get(tokenId.toString())
     .toInt();
 
-    const mirrorFirst = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId}`
-    const mirrorSecond = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId}`
-    const mirrorThird = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId}`
-    console.log(mirrorFirst)
-    console.log(mirrorSecond)
-    console.log(mirrorThird)
-    const response = await axios.get(mirrorFirst)
-    console.log(response.data.accounts)
 
-
-    console.log(
-        `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
-    );
-    console.log(
-        `Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`
-    );
-    console.log(
-        `Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`
-    );
+    console.log(`First account balance after TransferTransaction: ${firstAccountBalanceAfter}`);
+    console.log(`Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`);
+    console.log(`Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`);
 
     if (
         firstAccountBalanceAfter === 10000 &&
