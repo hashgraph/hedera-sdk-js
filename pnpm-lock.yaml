@@ -11,7 +11,7 @@ specifiers:
   '@grpc/grpc-js': ^1.7.0
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
-  '@hashgraph/proto': 2.10.0
+  '@hashgraph/proto': 2.11.0
   '@playwright/test': ^1.26.0
   '@types/chai': ^4.3.3
   '@types/crypto-js': ^4.1.1
@@ -62,7 +62,7 @@ dependencies:
   '@ethersproject/rlp': 5.7.0
   '@grpc/grpc-js': 1.7.0
   '@hashgraph/cryptography': 1.4.1_expo@45.0.8
-  '@hashgraph/proto': 2.10.0
+  '@hashgraph/proto': 2.11.0
   axios: 0.27.2
   bignumber.js: 9.1.0
   crypto-js: 4.1.1
@@ -1791,8 +1791,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.10.0:
-    resolution: {integrity: sha512-QladbhCa3SSjFeJV8mO0J/2oEJ7Vkj44jvG5pM4ltTcp8fSXneUHSKJ/cEYKLCyWr7pj0TyVLoJ1RF8uA5kIqg==}
+  /@hashgraph/proto/2.11.0:
+    resolution: {integrity: sha512-JOom5ZIfmgPWfPMaCYg5pYBuNyMGb38F9lNFBxjA7cVbo2dnIOUQx4Zi98yyq0O4CrUSlKBhFaspDKXk+FfAhQ==}
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0
@@ -2528,7 +2528,7 @@ packages:
       '@babel/preset-env': 7.19.1_@babel+core@7.19.1
       babel-plugin-module-resolver: 4.1.0
       babel-plugin-react-native-web: 0.17.7
-      metro-react-native-babel-preset: 0.67.0_@babel+core@7.19.1
+      metro-react-native-babel-preset: 0.67.0
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -5304,10 +5304,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /metro-react-native-babel-preset/0.67.0_@babel+core@7.19.1:
+  /metro-react-native-babel-preset/0.67.0:
     resolution: {integrity: sha512-tgTG4j0SKwLHbLRELMmgkgkjV1biYkWlGGKOmM484/fJC6bpDikdaFhfjsyE+W+qt7I5szbCPCickMTNQ+zwig==}
-    peerDependencies:
-      '@babel/core': '*'
     dependencies:
       '@babel/core': 7.19.1
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.19.1
