@@ -11,6 +11,7 @@ import {
     Wallet,
     AccountBalanceQuery,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -110,33 +111,6 @@ async function main() {
         new LocalProvider()
     );
 
-    let firstAccountBalanceBefore = (
-        await new AccountBalanceQuery()
-            .setAccountId(firstAccountId)
-            .executeWithSigner(wallet)
-    ).hbars.toString();
-
-    let secondAccountBalanceBefore = (
-        await new AccountBalanceQuery()
-            .setAccountId(secondAccountId)
-            .executeWithSigner(wallet)
-    ).hbars.toString();
-
-    let thirdAccountBalanceBefore = (
-        await new AccountBalanceQuery()
-            .setAccountId(thirdAccountId)
-            .executeWithSigner(wallet)
-    ).hbars.toString();
-
-    console.log(
-        `First account balance before TransferTransaction: ${firstAccountBalanceBefore}`
-    );
-    console.log(
-        `Second account balance before TransferTransaction: ${secondAccountBalanceBefore}`
-    );
-    console.log(
-        `Third account balance before TransferTransaction: ${thirdAccountBalanceBefore}`
-    );
 
     /**
      * Step 2
@@ -150,23 +124,27 @@ async function main() {
     const fee = new CustomFractionalFee()
         .setFeeCollectorAccountId(firstAccountId)
         .setNumerator(1)
-        .setDenominator(100);
+        .setDenominator(100)
+        .setAllCollectorsAreExempt(true);
 
     const fee2 = new CustomFractionalFee()
         .setFeeCollectorAccountId(secondAccountId)
         .setNumerator(2)
-        .setDenominator(100);
+        .setDenominator(100)
+        .setAllCollectorsAreExempt(true);
 
     const fee3 = new CustomFractionalFee()
         .setFeeCollectorAccountId(thirdAccountId)
         .setNumerator(3)
-        .setDenominator(100);
+        .setDenominator(100)
+        .setAllCollectorsAreExempt(true);
 
     let tokenCreateTx = await new TokenCreateTransaction()
         .setTokenName("HIP-573 Token")
         .setTokenSymbol("H573")
         .setTokenType(TokenType.FungibleCommon)
-        .setTreasuryAccountId(secondAccountWallet.getAccountId())
+        //.setTreasuryAccountId(secondAccountWallet.getAccountId())
+        .setTreasuryAccountId(wallet.getAccountId())
         .setAutoRenewAccountId(wallet.getAccountId())
         .setAdminKey(wallet.getAccountKey())
         .setFreezeKey(wallet.getAccountKey())
@@ -174,6 +152,7 @@ async function main() {
         .setInitialSupply(100000000) // Total supply = 100000000 / 10 ^ 2
         .setDecimals(2)
         .setCustomFees([fee, fee2, fee3])
+        .setMaxTransactionFee(new Hbar(30))
         .freezeWithSigner(wallet);
 
     // TokenCreateTransaction should be also signed with all of the fee collector wallets
@@ -182,7 +161,7 @@ async function main() {
     tokenCreateTx = await tokenCreateTx.signWithSigner(firstAccountWallet);
     tokenCreateTx = await tokenCreateTx.signWithSigner(secondAccountWallet);
     tokenCreateTx = await tokenCreateTx.signWithSigner(thirdAccountWallet);
-
+    
     // Submit the transaction to the Hedera network
     let tokenCreateSubmit = await tokenCreateTx.executeWithSigner(wallet);
     console.log(`response`);
@@ -194,11 +173,25 @@ async function main() {
     let tokenId = tokenCreateRx.tokenId;
     console.log(`Created token with token id: ${tokenId.toString()} \n`);
 
+
     /**
      * Step 3
      *
      * Collector 0.0.B sends 10_000 units of the token to 0.0.A.
      */
+
+    // First we transfer the amount from treasury account to second account
+    let treasuryTokenTransferTx = await new TransferTransaction()
+        .addTokenTransfer(tokenId, wallet.getAccountId(), -10000)
+        .addTokenTransfer(tokenId, secondAccountWallet.getAccountId(), 10000)
+        .freezeWithSigner(wallet);
+    
+    treasuryTokenTransferTx = await treasuryTokenTransferTx.signWithSigner(wallet);
+
+    let treasuryTokenTransferSubmit = await treasuryTokenTransferTx.executeWithSigner(wallet);
+    let status = (await treasuryTokenTransferSubmit.getReceiptWithSigner(wallet)).status.toString();
+    console.log(`Sending from treasury account to the second account - 'TransferTransaction' status: ${status}`);
+
 
     let tokenTransferTx = await new TransferTransaction()
         .addTokenTransfer(tokenId, secondAccountId, -10000)
@@ -235,19 +228,35 @@ async function main() {
         await new AccountBalanceQuery()
             .setAccountId(firstAccountId)
             .executeWithSigner(wallet)
-    ).hbars.toString();
+    ).tokens._map
+    .get(tokenId.toString())
+    .toInt();
 
     let secondAccountBalanceAfter = (
         await new AccountBalanceQuery()
             .setAccountId(secondAccountId)
             .executeWithSigner(wallet)
-    ).hbars.toString();
+    ).tokens._map
+    .get(tokenId.toString())
+    .toInt();
 
     let thirdAccountBalanceAfter = (
         await new AccountBalanceQuery()
             .setAccountId(thirdAccountId)
             .executeWithSigner(wallet)
-    ).hbars.toString();
+    ).tokens._map
+    .get(tokenId.toString())
+    .toInt();
+
+    const mirrorFirst = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId}`
+    const mirrorSecond = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId}`
+    const mirrorThird = `https://local-node.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId}`
+    console.log(mirrorFirst)
+    console.log(mirrorSecond)
+    console.log(mirrorThird)
+    const response = await axios.get(mirrorFirst)
+    console.log(response.data.accounts)
+
 
     console.log(
         `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
@@ -260,9 +269,9 @@ async function main() {
     );
 
     if (
-        firstAccountBalanceBefore === firstAccountBalanceAfter &&
-        secondAccountBalanceBefore === secondAccountBalanceAfter &&
-        thirdAccountBalanceBefore === thirdAccountBalanceAfter
+        firstAccountBalanceAfter === 10000 &&
+        secondAccountBalanceAfter === 0 &&
+        thirdAccountBalanceAfter === 0
     ) {
         console.log(
             `Fee collector accounts were not charged after transfer transaction`
