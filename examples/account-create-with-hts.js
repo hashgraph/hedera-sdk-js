@@ -47,23 +47,16 @@ async function main() {
     const freezeKey = PrivateKey.generateECDSA();
     const wipeKey = PrivateKey.generateECDSA();
 
-    // operatorId and operatorKey used on local node
-    const operatorId = AccountId.fromString("0.0.2");
-    const operatorKey = PrivateKey.fromString(
-        "302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137"
-    );
-
-    // If we weren't able to get them, we should throw a new error
-    if (operatorId == null || operatorKey == null) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Could not fetch 'operatorId' and 'operatorKey' properly"
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const node = { "127.0.0.1:50211": new AccountId(3) };
-    const client = Client.forNetwork(node)
-        .setMirrorNetwork("127.0.0.1:5600")
-        .setOperator(operatorId, operatorKey);
+    const client = Client.forTestnet();
+    client.setOperator(operatorId, operatorKey);
 
     /**
      *     Example 1
