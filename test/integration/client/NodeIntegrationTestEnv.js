@@ -1,5 +1,8 @@
 import Client from "../../../src/client/NodeClient.js";
 import BaseIntegrationTestEnv from "./BaseIntegrationTestEnv.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export { Client };
 
