@@ -35,6 +35,7 @@ export default class CustomRoyalyFee extends CustomFee {
     /**
      * @param {object} props
      * @param {AccountId | string} [props.feeCollectorAccountId]
+     * @param {boolean} [props.allCollectorsAreExempt]
      * @param {Long | number} [props.numerator]
      * @param {Long | number} [props.denominator]
      * @param {CustomFixedFee} [props.fallbackFee]
@@ -144,6 +145,10 @@ export default class CustomRoyalyFee extends CustomFee {
                 info.feeCollectorAccountId != null
                     ? AccountId._fromProtobuf(info.feeCollectorAccountId)
                     : undefined,
+            allCollectorsAreExempt:
+                info.allCollectorsAreExempt != null
+                    ? info.allCollectorsAreExempt
+                    : undefined,
             fallbackFee:
                 fee.fallbackFee != null
                     ? /** @type {CustomFixedFee} */ (
@@ -170,6 +175,7 @@ export default class CustomRoyalyFee extends CustomFee {
                 this.feeCollectorAccountId != null
                     ? this.feeCollectorAccountId._toProtobuf()
                     : null,
+            allCollectorsAreExempt: this.allCollectorsAreExempt,
             royaltyFee: {
                 exchangeValueFraction: {
                     numerator: this._numerator,

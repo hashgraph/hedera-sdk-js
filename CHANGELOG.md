@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix the task test:release command by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1296
 * Fix the offset for uint24 & int24 datatypes in contract functions params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1295
 
+## v2.19.0-beta.1
+
+### Added
+
+ * `CustomFee.allCollectorsAreExempt`
 
 ## v2.18.3
 
