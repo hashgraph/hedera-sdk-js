@@ -79,7 +79,7 @@ export default class CustomFee {
      * @returns {this}
      */
     setAllCollectorsAreExempt(allCollectorsAreExempt) {
-        this._allFeeCollectorsAreExempt = allCollectorsAreExempt;
+        this._allCollectorsAreExempt = allCollectorsAreExempt;
         return this;
     }
 
