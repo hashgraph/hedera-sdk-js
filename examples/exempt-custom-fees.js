@@ -121,19 +121,19 @@ async function main() {
      */
 
     const fee = new CustomFractionalFee()
-        .setFeeCollectorAccountId(firstAccountId)
+        .setFeeCollectorAccountId(firstAccountWallet.getAccountId())
         .setNumerator(1)
         .setDenominator(100)
         .setAllCollectorsAreExempt(true);
 
     const fee2 = new CustomFractionalFee()
-        .setFeeCollectorAccountId(secondAccountId)
+        .setFeeCollectorAccountId(secondAccountWallet.getAccountId())
         .setNumerator(2)
         .setDenominator(100)
         .setAllCollectorsAreExempt(true);
 
     const fee3 = new CustomFractionalFee()
-        .setFeeCollectorAccountId(thirdAccountId)
+        .setFeeCollectorAccountId(thirdAccountWallet.getAccountId())
         .setNumerator(3)
         .setDenominator(100)
         .setAllCollectorsAreExempt(true);
@@ -191,8 +191,8 @@ async function main() {
 
 
     let tokenTransferTx = await new TransferTransaction()
-        .addTokenTransfer(tokenId, secondAccountId, -10000)
-        .addTokenTransfer(tokenId, firstAccountId, 10000)
+        .addTokenTransfer(tokenId, secondAccountWallet.getAccountId(), -10000)
+        .addTokenTransfer(tokenId, firstAccountWallet.getAccountId(), 10000)
         .freezeWithSigner(wallet);
 
     // Sign the transaction also with the wallet of the sender
@@ -223,7 +223,7 @@ async function main() {
 
     let firstAccountBalanceAfter = (
         await new AccountBalanceQuery()
-            .setAccountId(firstAccountId)
+            .setAccountId(firstAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
     .get(tokenId.toString())
@@ -231,7 +231,7 @@ async function main() {
 
     let secondAccountBalanceAfter = (
         await new AccountBalanceQuery()
-            .setAccountId(secondAccountId)
+            .setAccountId(secondAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
     .get(tokenId.toString())
@@ -239,7 +239,7 @@ async function main() {
 
     let thirdAccountBalanceAfter = (
         await new AccountBalanceQuery()
-            .setAccountId(thirdAccountId)
+            .setAccountId(thirdAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
     .get(tokenId.toString())
