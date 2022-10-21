@@ -110,7 +110,6 @@ async function main() {
         new LocalProvider()
     );
 
-
     /**
      * Step 2
      *
@@ -182,13 +181,19 @@ async function main() {
         .addTokenTransfer(tokenId, wallet.getAccountId(), -10000)
         .addTokenTransfer(tokenId, secondAccountWallet.getAccountId(), 10000)
         .freezeWithSigner(wallet);
-    
-    treasuryTokenTransferTx = await treasuryTokenTransferTx.signWithSigner(wallet);
 
-    let treasuryTokenTransferSubmit = await treasuryTokenTransferTx.executeWithSigner(wallet);
-    let status = (await treasuryTokenTransferSubmit.getReceiptWithSigner(wallet)).status.toString();
-    console.log(`Sending from treasury account to the second account - 'TransferTransaction' status: ${status}`);
+    treasuryTokenTransferTx = await treasuryTokenTransferTx.signWithSigner(
+        wallet
+    );
 
+    let treasuryTokenTransferSubmit =
+        await treasuryTokenTransferTx.executeWithSigner(wallet);
+    let status = (
+        await treasuryTokenTransferSubmit.getReceiptWithSigner(wallet)
+    ).status.toString();
+    console.log(
+        `Sending from treasury account to the second account - 'TransferTransaction' status: ${status}`
+    );
 
     let tokenTransferTx = await new TransferTransaction()
         .addTokenTransfer(tokenId, secondAccountWallet.getAccountId(), -10000)
@@ -226,29 +231,34 @@ async function main() {
             .setAccountId(firstAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
-    .get(tokenId.toString())
-    .toInt();
+        .get(tokenId.toString())
+        .toInt();
 
     let secondAccountBalanceAfter = (
         await new AccountBalanceQuery()
             .setAccountId(secondAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
-    .get(tokenId.toString())
-    .toInt();
+        .get(tokenId.toString())
+        .toInt();
 
     let thirdAccountBalanceAfter = (
         await new AccountBalanceQuery()
             .setAccountId(thirdAccountWallet.getAccountId())
             .executeWithSigner(wallet)
     ).tokens._map
-    .get(tokenId.toString())
-    .toInt();
+        .get(tokenId.toString())
+        .toInt();
 
-
-    console.log(`First account balance after TransferTransaction: ${firstAccountBalanceAfter}`);
-    console.log(`Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`);
-    console.log(`Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`);
+    console.log(
+        `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
+    );
+    console.log(
+        `Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`
+    );
+    console.log(
+        `Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`
+    );
 
     if (
         firstAccountBalanceAfter === 10000 &&
