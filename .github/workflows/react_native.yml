@@ -66,7 +66,7 @@ jobs:
       - name: Build
         working-directory: examples/react-native-example
         run: |
-          ../../node_modules/.bin/yalc add "@hashgraph/sdk"
+          yalc add "@hashgraph/sdk"
           yarn
           detox build --configuration android
 
