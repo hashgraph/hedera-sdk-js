@@ -58,6 +58,9 @@ jobs:
       - name: Install detox
         run: npm install -g detox-cli
 
+      - name: Print detox
+        run: ls -al /usr/local/bin | grep detox
+
       - name: AVD
         run: |
           brew install android-platform-tools
