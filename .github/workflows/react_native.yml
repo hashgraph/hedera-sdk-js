@@ -47,19 +47,19 @@ jobs:
         with:
           version: 7.6.0
 
-      - run: npm install -g yarn
+      - run: pnpm install -g yarn
 
       - name: Build @hashgraph/sdk
         run: task build
 
       - name: Install yalc
-        run: npm install -g yalc
+        run: pnpm install -g yalc
 
       - name: Install detox
-        run: npm install -g detox-cli
+        run: pnpm install -g detox-cli
 
-      - name: Print detox
-        run: ls -al /usr/local/bin | grep detox
+      - name: Locally Publish
+        run: yalc publish --no-scripts
 
       - name: AVD
         run: |
