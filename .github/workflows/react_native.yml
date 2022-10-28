@@ -11,7 +11,8 @@ on:
       - main
       - develop
       - release/*
-
+env:
+    PNPM_HOME: /home/runner/work/hedera-sdk-js
 jobs:
   android:
     runs-on: macos-latest
