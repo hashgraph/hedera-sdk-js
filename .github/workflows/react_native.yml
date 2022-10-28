@@ -52,6 +52,9 @@ jobs:
       - name: Build @hashgraph/sdk
         run: task build
 
+      - name: Install yalc
+        run: npm install -g yalc
+
       - name: Install detox
         run: npm install -g detox-cli
 
