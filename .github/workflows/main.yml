@@ -6,10 +6,6 @@ on:
             - integration-test-workflow
 
 env:
-    RELAY_IMAGE_TAG: main
-    NETWORK_NODE_IMAGE_TAG: 0.31.0
-    HAVEGED_IMAGE_TAG: 0.31.0
-    MIRROR_IMAGE_TAG: 0.67.0-rc1
     PNPM_HOME: /home/runner/work/hedera-sdk-js
 
 jobs:
