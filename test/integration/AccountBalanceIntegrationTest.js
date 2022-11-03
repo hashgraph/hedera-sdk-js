@@ -22,11 +22,12 @@ describe("AccountBalanceQuery", function () {
             expect(address.endsWith(":50212")).to.be.true;
 
             await new AccountBalanceQuery()
-                .setNodeAccountIds([nodeAccountId])
                 .setAccountId(nodeAccountId)
-                .setMaxAttempts(1)
+                .setMaxAttempts(10)
                 .execute(client);
         }
+
+        client.close();
     });
 
     it("can connect to testnet with TLS", async function () {
@@ -42,11 +43,12 @@ describe("AccountBalanceQuery", function () {
             expect(address.endsWith(":50212")).to.be.true;
 
             await new AccountBalanceQuery()
-                .setNodeAccountIds([nodeAccountId])
                 .setAccountId(nodeAccountId)
-                .setMaxAttempts(1)
+                .setMaxAttempts(10)
                 .execute(client);
         }
+
+        client.close();
     });
 
     it("an account that does not exist should return an error", async function () {

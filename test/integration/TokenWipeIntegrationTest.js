@@ -250,11 +250,11 @@ describe("TokenWipe", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidWipingAmount);
+            err = error;
         }
 
-        if (!err) {
-            throw new Error("token wipe did not error");
+        if (err) {
+            throw new Error("token wipe did error");
         }
 
         await env.close({ token });

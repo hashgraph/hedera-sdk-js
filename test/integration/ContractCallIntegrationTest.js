@@ -172,6 +172,7 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+        await env.close();
     });
 
     it("should error when gas is not set", async function () {
@@ -241,6 +242,7 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+        await env.close();
     });
 
     it("should error when contract ID is not set", async function () {

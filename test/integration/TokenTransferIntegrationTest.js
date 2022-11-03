@@ -91,7 +91,7 @@ describe("TokenTransfer", function () {
         await env.close({ token });
     });
 
-    it("should error when no amount is transferred", async function () {
+    it("should not error when no amount is transferred", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
@@ -157,11 +157,11 @@ describe("TokenTransfer", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidAccountAmounts);
+            err = error;
         }
 
-        if (!err) {
-            throw new Error("Token transfer did not error.");
+        if (err) {
+            throw new Error("Token transfer did error.");
         }
 
         await env.close({ token });

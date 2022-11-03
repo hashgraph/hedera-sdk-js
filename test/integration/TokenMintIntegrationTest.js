@@ -103,7 +103,7 @@ describe("TokenMint", function () {
         await env.close();
     });
 
-    it("should error when amount is not set", async function () {
+    it("should not error when amount is not set", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
@@ -135,11 +135,11 @@ describe("TokenMint", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidTokenMintAmount);
+            err = error;
         }
 
-        if (!err) {
-            throw new Error("token mint did not error");
+        if (err) {
+            throw new Error("token mint did error");
         }
 
         await env.close({ token });

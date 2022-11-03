@@ -1,9 +1,11 @@
+import { expect } from "chai";
 import {
     Status,
     TokenBurnTransaction,
     TokenCreateTransaction,
     TokenSupplyType,
     TokenType,
+    AccountBalanceQuery,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -63,7 +65,7 @@ describe("TokenBurn", function () {
         }
     });
 
-    it("should error when amount is not set", async function () {
+    it("should not error when amount is not set", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
@@ -95,11 +97,19 @@ describe("TokenBurn", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidTokenBurnAmount);
+            err = error;
         }
 
-        if (!err) {
-            throw new Error("token burn did not error");
+        const accountBalance = await new AccountBalanceQuery()
+            .setAccountId(operatorId)
+            .execute(env.client);
+
+        expect(
+            accountBalance.tokens._map.get(token.toString()).toNumber()
+        ).to.be.equal(1000000);
+
+        if (err) {
+            throw new Error("token burn did error");
         }
 
         await env.close({ token });
