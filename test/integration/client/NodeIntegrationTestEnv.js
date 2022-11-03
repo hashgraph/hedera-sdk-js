@@ -29,6 +29,7 @@ export default class IntegrationTestEnv extends BaseIntegrationTestEnv {
      * @property {boolean} [options.throwaway]
      */
     static async new(options = {}) {
+        console.log(process.env.OPERATOR_ID);
         return BaseIntegrationTestEnv.new({
             client: Client,
             env: process.env,
