@@ -10,6 +10,7 @@ env:
     NETWORK_NODE_IMAGE_TAG: 0.31.0
     HAVEGED_IMAGE_TAG: 0.31.0
     MIRROR_IMAGE_TAG: 0.67.0-rc1
+    PNPM_HOME: /home/runner/work/hedera-sdk-js
 
 jobs:
     test:
@@ -19,12 +20,10 @@ jobs:
             fail-fast: false
             matrix:
                 node: ["16"]
-
         permissions:
             contents: write
 
         steps:
-            - name: Checkout repository
             - uses: actions/checkout@v2
               with:
                   submodules: recursive
