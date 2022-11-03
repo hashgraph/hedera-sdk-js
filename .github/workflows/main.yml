@@ -25,7 +25,9 @@ jobs:
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v3
+            - uses: actions/checkout@v2
+              with:
+                  submodules: recursive
 
             - name: Install Task
               uses: arduino/setup-task@v1
@@ -42,7 +44,7 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
 
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v2
               with:
                   node-version: ${{ matrix.node }}
 
