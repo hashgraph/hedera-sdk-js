@@ -22,6 +22,15 @@ jobs:
             contents: write
 
         steps:
+            - uses: actions/checkout@v2
+              with:
+                  submodules: recursive
+
+            - name: Install Task
+              uses: arduino/setup-task@v1
+              with:
+                  version: 3.7.0
+
             - name: Cache pnpm modules
               uses: actions/cache@v2
               env:
@@ -32,36 +41,24 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
 
-            - name: Use Node.js [16.x]
-              uses: actions/setup-node@v3
+            - uses: actions/setup-node@v2
               with:
-                  node-version: 16
-
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+                  node-version: ${{ matrix.node }}
 
             - uses: pnpm/action-setup@v2.0.1
               with:
                   version: 7.6.0
+
+            - name: Build @hashgraph/sdk
+              run: task build
 
             - name: Install Docker Compose
               run: |
                   sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
                   sudo chmod +x /usr/local/bin/docker-compose
 
-            - name: Build the SDK
-              run: task build
-
             - name: Start the local node
               run: npx hedera start -d --network local
-
-            - name: Fetch Hedera SDK
-              uses: actions/checkout@v2
-              with:
-                  submodules: recursive
-                  path: hedera-sdk-js
 
             - name: Run Hedera SDK Tests
               env:
