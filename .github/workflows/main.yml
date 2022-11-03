@@ -51,6 +51,9 @@ jobs:
                   sudo curl -SL -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
                   sudo chmod +x /usr/local/bin/docker-compose
 
+            - name: Build the SDK
+              run: task build
+
             - name: Start the local node
               run: npx hedera start -d --network local
 
@@ -65,9 +68,7 @@ jobs:
                   OPERATOR_KEY: "302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137"
                   OPERATOR_ID: "0.0.2"
                   HEDERA_NETWORK: "localhost"
-              run: |
-                  task build
-                  task test:integration:node
+              run: task test:integration:node
 
             - name: Stop the local node
               run: npx hedera stop
