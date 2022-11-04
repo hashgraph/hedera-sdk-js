@@ -358,7 +358,7 @@ describe("ContractCallIntegration", function () {
         try {
             const contractQuery = await new ContractCallQuery()
                 //Set the gas for the query
-                .setGas(15_000_000)
+                .setGas(5_000_000)
                 //Set the contract ID to return the request for
                 .setContractId(contractId)
                 //Set the contract function to call
