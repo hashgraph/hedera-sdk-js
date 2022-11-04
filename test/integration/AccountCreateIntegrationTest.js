@@ -11,7 +11,7 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountCreate", function () {
-    it.only("should be executable", async function () {
+    it("should be executable", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();

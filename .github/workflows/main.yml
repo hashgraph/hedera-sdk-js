@@ -70,4 +70,4 @@ jobs:
               run: task test:integration:node
 
             - name: Stop the local node
-              run: npx hedera stop
+              run: npx @hashgraph/hedera-local stop
