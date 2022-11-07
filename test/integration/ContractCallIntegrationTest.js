@@ -402,8 +402,8 @@ describe("ContractCallIntegration", function () {
         await env.close();
     });
 
-    it("2 should timeout when network node takes longer than 10s to execute the transaction", async function () {
-        this.timeout(120000);
+    it.only("2 should timeout when network node takes longer than 10s to execute the transaction", async function () {
+        this.timeout(50000);
 
         const myAccountId = AccountId.fromString(process.env.OPERATOR_ID);
         const myPrivateKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
@@ -465,7 +465,7 @@ describe("ContractCallIntegration", function () {
                 //Set the contract function to call
                 .setFunction(
                     "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(10000)
+                    new ContractFunctionParameters().addUint24(19000)
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
@@ -477,6 +477,7 @@ describe("ContractCallIntegration", function () {
             const txResponse = await contractQuery.execute(client);
             console.log("Res:", txResponse.getUint32(1));
         } catch (error) {
+            console.log(error);
             err = error;
         }
         expect(err.toString()).to.includes("TIMEOUT");
