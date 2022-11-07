@@ -465,7 +465,7 @@ describe("ContractCallIntegration", function () {
                 //Set the contract function to call
                 .setFunction(
                     "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(19000)
+                    new ContractFunctionParameters().addUint24(18999)
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
@@ -477,23 +477,10 @@ describe("ContractCallIntegration", function () {
             const txResponse = await contractQuery.execute(client);
             console.log("Res:", txResponse.getUint32(1));
         } catch (error) {
-            console.log(error);
+            console.log("Printing error:", error);
             err = error;
         }
         expect(err.toString()).to.includes("TIMEOUT");
-
-        // await (
-        //     await new ContractDeleteTransaction()
-        //         .setContractId(contractId)
-        //         .setTransferAccountId(myAccountId)
-        //         .execute(client)
-        // ).getReceipt(client);
-
-        // await (
-        //     await new FileDeleteTransaction()
-        //         .setFileId(bytecodeFileId)
-        //         .execute(client)
-        // ).getReceipt(client);
 
         if (!err) {
             throw new Error("query did not error");
