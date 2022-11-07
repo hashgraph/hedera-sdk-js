@@ -63,6 +63,8 @@ describe("TokenBurn", function () {
         if (!err) {
             throw new Error("token Burn did not error");
         }
+
+        await env.close();
     });
 
     it("should not error when amount is not set", async function () {

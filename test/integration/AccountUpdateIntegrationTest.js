@@ -84,6 +84,8 @@ describe("AccountUpdate", function () {
                     .sign(key2)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error with invalid auto renew period", async function () {
@@ -139,6 +141,8 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
@@ -208,6 +212,8 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
+
+        await env.close();
     });
 
     it("should execute with only account ID", async function () {

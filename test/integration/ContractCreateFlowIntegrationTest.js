@@ -23,5 +23,7 @@ describe("ContractCreateFlow", function () {
             )
             .setContractMemo("[e2e::ContractCreateTransaction]")
             .execute(env.client);
+
+        await env.close();
     });
 });

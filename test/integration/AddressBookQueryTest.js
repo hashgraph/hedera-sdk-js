@@ -12,5 +12,7 @@ describe("AddressBookQuery", function () {
             .execute(client);
 
         expect(addressBook.nodeAddresses.length).to.be.above(0);
+
+        await client.close();
     });
 });

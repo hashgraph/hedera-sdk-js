@@ -67,6 +67,8 @@ describe("AccountInfo", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests

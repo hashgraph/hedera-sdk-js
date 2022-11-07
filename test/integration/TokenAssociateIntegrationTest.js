@@ -86,6 +86,8 @@ describe("TokenAssociate", function () {
                 .setAccountId(operatorId)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {

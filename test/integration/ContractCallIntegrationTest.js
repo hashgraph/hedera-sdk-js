@@ -106,6 +106,8 @@ describe("ContractCallIntegration", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when function to call is not set", async function () {
@@ -321,89 +323,7 @@ describe("ContractCallIntegration", function () {
         await env.close();
     });
 
-    it.skip("should timeout when network node takes longer than 10s to execute the transaction", async function () {
-        this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
-        const operatorKey = env.operatorKey.publicKey;
-
-        const response = await new FileCreateTransaction()
-            .setKeys([operatorKey])
-            .setContents(readDataBytecode)
-            .execute(env.client);
-
-        let receipt = await response.getReceipt(env.client);
-
-        expect(receipt.fileId).to.not.be.null;
-        expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
-            .true;
-
-        const file = receipt.fileId;
-
-        receipt = await (
-            await new ContractCreateTransaction()
-                .setAdminKey(operatorKey)
-                //Set the file ID of the Hedera file storing the bytecode
-                .setBytecodeFileId(file)
-                //Set the gas to instantiate the contract
-                .setGas(100000)
-                //Provide the constructor parameters for the contract
-                .setConstructorParameters()
-                .execute(env.client)
-        ).getReceipt(env.client);
-
-        expect(receipt.contractId).to.not.be.null;
-        expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
-            .to.be.true;
-
-        const contractId = receipt.contractId;
-
-        let err = false;
-        try {
-            const contractQuery = await new ContractCallQuery()
-                //Set the gas for the query
-                .setGas(15_000_000)
-                //Set the contract ID to return the request for
-                .setContractId(contractId)
-                //Set the contract function to call
-                .setFunction(
-                    "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(10000)
-                )
-                //Set the query payment for the node returning the request
-                //This value must cover the cost of the request otherwise will fail
-                .setQueryPayment(new Hbar(2));
-
-            //Submit to a Hedera network
-            //   const txResponse = await contractQuery.execute(client);
-            //   const txResponse2 = await contractQuery2.execute(client);
-            await contractQuery.execute(env.client);
-        } catch (error) {
-            err = error;
-        }
-        expect(err.toString()).to.includes("TIMEOUT");
-
-        await (
-            await new ContractDeleteTransaction()
-                .setContractId(contractId)
-                .setTransferAccountId(env.client.operatorAccountId)
-                .execute(env.client)
-        ).getReceipt(env.client);
-
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .execute(env.client)
-        ).getReceipt(env.client);
-
-        if (!err) {
-            throw new Error("query did not error");
-        }
-
-        await env.close();
-    });
-
-    it.only("2 should timeout when network node takes longer than 10s to execute the transaction", async function () {
+    it("should timeout when network node takes longer than 10s to execute the transaction", async function () {
         this.timeout(50000);
 
         const myAccountId = AccountId.fromString("0.0.47439");
@@ -481,7 +401,6 @@ describe("ContractCallIntegration", function () {
             const txResponse = await contractQuery.execute(client);
             console.log("Res:", txResponse.getUint32(1));
         } catch (error) {
-            console.log("Printing error:", error);
             err = error;
         }
         expect(err.toString()).to.includes("TIMEOUT");
