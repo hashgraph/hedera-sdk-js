@@ -459,13 +459,13 @@ describe("ContractCallIntegration", function () {
         try {
             const contractQuery = await new ContractCallQuery()
                 //Set the gas for the query
-                .setGas(15_000_000)
+                .setGas(15000000)
                 //Set the contract ID to return the request for
                 .setContractId(contractId)
                 //Set the contract function to call
                 .setFunction(
                     "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(18999)
+                    new ContractFunctionParameters().addUint24(17000)
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
