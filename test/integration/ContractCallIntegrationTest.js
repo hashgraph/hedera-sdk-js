@@ -465,7 +465,7 @@ describe("ContractCallIntegration", function () {
                 //Set the contract function to call
                 .setFunction(
                     "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(20000)
+                    new ContractFunctionParameters().addUint24(19000)
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
