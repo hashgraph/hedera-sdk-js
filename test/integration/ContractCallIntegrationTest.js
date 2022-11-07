@@ -405,15 +405,11 @@ describe("ContractCallIntegration", function () {
     it.only("2 should timeout when network node takes longer than 10s to execute the transaction", async function () {
         this.timeout(120000);
 
-        const myAccountId = AccountId.fromString("0.0.1022");
-        const myPrivateKey = PrivateKey.fromString(
-            "0xa608e2130a0a3cb34f86e757303c862bee353d9ab77ba4387ec084f881d420d4"
-        );
-
+        const myAccountId = AccountId.fromString(process.env.OPERATOR_ID);
+        const myPrivateKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
         const env = await IntegrationTestEnv.new();
         const client = env.client;
         client.setOperator(myAccountId, myPrivateKey);
-
         // Create a file on Hedera and store the bytecode
         const fileCreateTx = new FileCreateTransaction()
             .setKeys([myPrivateKey])
@@ -422,7 +418,7 @@ describe("ContractCallIntegration", function () {
         const fileCreateSubmit = await fileCreateSign.execute(client);
         const fileCreateRx = await fileCreateSubmit.getReceipt(client);
         const bytecodeFileId = fileCreateRx.fileId;
-        console.log(`- The bytecode file ID is: ${bytecodeFileId} \n`);
+        console.log(`The bytecode file ID is: ${bytecodeFileId} \n`);
 
         //Append contents to the file
         const fileAppendTx = new FileAppendTransaction()
@@ -478,24 +474,25 @@ describe("ContractCallIntegration", function () {
             //Submit to a Hedera network
             //   const txResponse = await contractQuery.execute(client);
             //   const txResponse2 = await contractQuery2.execute(client);
-            await contractQuery.execute(client);
+            const txResponse = await contractQuery.execute(client);
+            console.log("Res:", txResponse.getUint32(1));
         } catch (error) {
             err = error;
         }
         expect(err.toString()).to.includes("TIMEOUT");
 
-        await (
-            await new ContractDeleteTransaction()
-                .setContractId(contractId)
-                .setTransferAccountId(myAccountId)
-                .execute(client)
-        ).getReceipt(client);
+        // await (
+        //     await new ContractDeleteTransaction()
+        //         .setContractId(contractId)
+        //         .setTransferAccountId(myAccountId)
+        //         .execute(client)
+        // ).getReceipt(client);
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(bytecodeFileId)
-                .execute(client)
-        ).getReceipt(client);
+        // await (
+        //     await new FileDeleteTransaction()
+        //         .setFileId(bytecodeFileId)
+        //         .execute(client)
+        // ).getReceipt(client);
 
         if (!err) {
             throw new Error("query did not error");
