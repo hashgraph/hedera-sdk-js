@@ -705,4 +705,11 @@ export default class Client {
             }
         }, this._networkUpdatePeriod);
     }
+
+    /**
+     * @returns {boolean}
+     */
+    get isClientShutDown() {
+        return this._isShutdown;
+    }
 }
