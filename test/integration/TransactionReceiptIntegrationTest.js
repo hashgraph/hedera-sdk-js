@@ -11,9 +11,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionReceipt", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new({ throwaway: true });
+    });
+
     it("should exist in the `ReceiptStatusError`", async function () {
         this.timeout(120000);
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
@@ -82,7 +87,9 @@ describe("TransactionReceipt", function () {
             );
             expect(expected.toString()).to.be.equal(actual.toString());
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

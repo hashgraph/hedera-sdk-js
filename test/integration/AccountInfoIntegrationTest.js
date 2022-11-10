@@ -11,10 +11,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountInfo", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be able to query cost", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const cost = await new AccountInfoQuery()
@@ -22,14 +27,11 @@ describe("AccountInfo", function () {
             .getCost(env.client);
 
         expect(cost.toTinybars().toInt()).to.be.at.least(25);
-
-        await env.close();
     });
 
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -67,15 +69,12 @@ describe("AccountInfo", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be able to get 300 accounts", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
         let response = [];
@@ -113,14 +112,11 @@ describe("AccountInfo", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         }
-
-        await env.close();
     });
 
     it("should reflect token with no keys", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const token = (
@@ -144,14 +140,11 @@ describe("AccountInfo", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.null;
         expect(relationship.isFrozen).to.be.null;
-
-        await env.close();
     });
 
     it("should be error with no account ID", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {
@@ -163,7 +156,9 @@ describe("AccountInfo", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

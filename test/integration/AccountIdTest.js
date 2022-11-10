@@ -2,8 +2,13 @@ import { AccountId, TokenId } from "../../src/exports.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountId", function () {
+    let client;
+
+    before(async function () {
+        client = Client.forMainnet();
+    });
+
     it("should generate checksum for account ID", function () {
-        const client = Client.forMainnet();
         const accountId = new AccountId(123);
 
         expect(accountId.num.toNumber()).to.eql(123);
@@ -16,7 +21,6 @@ describe("AccountId", function () {
     });
 
     it("should generate checksum for token ID", function () {
-        const client = Client.forMainnet();
         const tokenId = new TokenId(123);
 
         expect(tokenId.num.toNumber()).to.eql(123);
@@ -40,5 +44,9 @@ describe("AccountId", function () {
         if (!err) {
             throw new Error("entity parsing did not err");
         }
+    });
+
+    after(async function () {
+        client.close();
     });
 });

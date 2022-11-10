@@ -10,10 +10,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenBurn", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -39,14 +44,10 @@ describe("TokenBurn", function () {
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("should error when token ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -63,14 +64,11 @@ describe("TokenBurn", function () {
         if (!err) {
             throw new Error("token Burn did not error");
         }
-
-        await env.close();
     });
 
     it("should not error when amount is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -113,14 +111,11 @@ describe("TokenBurn", function () {
         if (err) {
             throw new Error("token burn did error");
         }
-
-        await env.close({ token });
     });
 
     it("cannot burn token with invalid metadata", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -157,7 +152,9 @@ describe("TokenBurn", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });

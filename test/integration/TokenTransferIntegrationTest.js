@@ -17,10 +17,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenTransfer", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -87,14 +92,11 @@ describe("TokenTransfer", function () {
                 .setAmount(10)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("should not error when no amount is transferred", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -163,14 +165,11 @@ describe("TokenTransfer", function () {
         if (err) {
             throw new Error("Token transfer did error.");
         }
-
-        await env.close({ token });
     });
 
     it("should error when no  is transferred", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -239,14 +238,10 @@ describe("TokenTransfer", function () {
         if (!err) {
             throw new Error("Token transfer did not error.");
         }
-
-        await env.close({ token });
     });
 
     it("cannot transfer NFT as if it were FT", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new({ throwaway: true });
 
         const key = PrivateKey.generateED25519();
 
@@ -324,14 +319,11 @@ describe("TokenTransfer", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
-
-        await env.close({ token });
     });
 
     it("automatically associates to account", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -408,7 +400,9 @@ describe("TokenTransfer", function () {
                 .setAmount(10)
                 .execute(env.client)
         ).getReceipt(env.client);
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });

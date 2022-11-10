@@ -2,10 +2,15 @@ import { TopicMessageQuery } from "../../src/exports.js";
 import { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessageQuery", function () {
+    let client;
+
+    before(async function () {
+        client = Client.forNetwork({});
+    });
+
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = Client.forNetwork({});
         client.setTransportSecurity(true);
         client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
 
@@ -29,5 +34,9 @@ describe("TopicMessageQuery", function () {
         if (!finished) {
             throw new Error("Did not receive message from query");
         }
+    });
+
+    after(async function () {
+        await client.close();
     });
 });

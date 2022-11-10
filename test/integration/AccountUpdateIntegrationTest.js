@@ -13,10 +13,15 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import Long from "long";
 
 describe("AccountUpdate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const key1 = PrivateKey.generateED25519();
@@ -84,14 +89,10 @@ describe("AccountUpdate", function () {
                     .sign(key2)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error with invalid auto renew period", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
@@ -141,15 +142,11 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
-
-        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
@@ -193,8 +190,6 @@ describe("AccountUpdate", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
-
         let err = false;
 
         try {
@@ -212,14 +207,10 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
-
-        await env.close();
     });
 
     it("should execute with only account ID", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generateED25519();
 
@@ -252,14 +243,10 @@ describe("AccountUpdate", function () {
                     .sign(key1)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error with invalid signature", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
@@ -304,7 +291,9 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

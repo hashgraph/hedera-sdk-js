@@ -21,10 +21,14 @@ const readDataBytecode =
     "0x608060405234801561001057600080fd5b5061026c806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806304806dd61461003b5780634278774714610064575b600080fd5b61004e610049366004610178565b610084565b60405161005b91906101a2565b60405180910390f35b610077610072366004610178565b610101565b60405161005b91906101f1565b606060008262ffffff1667ffffffffffffffff8111156100b457634e487b7160e01b600052604160045260246000fd5b6040519080825280602002602001820160405280156100f957816020015b60408051808201909152600080825260208201528152602001906001900390816100d25790505b509392505050565b606060008262ffffff1667ffffffffffffffff81111561013157634e487b7160e01b600052604160045260246000fd5b6040519080825280602002602001820160405280156100f957816020015b60408051602081019091526000815281526020019060019003908161014f579050509392505050565b600060208284031215610189578081fd5b813562ffffff8116811461019b578182fd5b9392505050565b602080825282518282018190526000919060409081850190868401855b828110156101e4578151805185528601518685015292840192908501906001016101bf565b5091979650505050505050565b6020808252825182820181905260009190848201906040850190845b8181101561022a578351518352928401929184019160010161020d565b5090969550505050505056fea26469706673582212201dc78aeb6e1955ac889c23cf72d0595af987863764ccb6270c7825992093969264736f6c63430008040033";
 
 describe("ContractCallIntegration", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -106,14 +110,11 @@ describe("ContractCallIntegration", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when function to call is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -178,13 +179,11 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
-        await env.close();
     });
 
     it("should error when gas is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -248,13 +247,11 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
-        await env.close();
     });
 
     it("should error when contract ID is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -319,8 +316,6 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
-
-        await env.close();
     });
 
     it("should timeout when network node takes longer than 10s to execute the transaction", async function () {
@@ -332,7 +327,6 @@ describe("ContractCallIntegration", function () {
         );
         const env = await TestnetIntegrationTestEnv.new();
         const client = env.client;
-
         client.setOperator(myAccountId, myPrivateKey);
         // Create a file on Hedera and store the bytecode
         const fileCreateTx = new FileCreateTransaction()
@@ -408,7 +402,10 @@ describe("ContractCallIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
-
         await client.close();
+    });
+
+    after(async function () {
+        await env.close();
     });
 });

@@ -9,10 +9,15 @@ import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessage", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new({ throwaway: true });
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -69,14 +74,11 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 30s");
         }
-
-        await env.close();
     });
 
     it("should be executable with large message", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -133,14 +135,11 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 45s");
         }
-
-        await env.close();
     });
 
     it("should error when topic ID is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -185,14 +184,11 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
-
-        await env.close();
     });
 
     it("should error when message is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -230,7 +226,9 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

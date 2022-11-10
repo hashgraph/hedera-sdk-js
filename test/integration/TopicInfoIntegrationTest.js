@@ -6,10 +6,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicInfo", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -42,14 +47,10 @@ describe("TopicInfo", function () {
                 .setTopicId(topic)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable when no fields are set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const response = await new TopicCreateTransaction().execute(env.client);
 
@@ -68,7 +69,9 @@ describe("TopicInfo", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+    });
 
+    after(async function () {
         await env.close();
     });
 });

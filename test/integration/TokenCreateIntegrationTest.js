@@ -8,10 +8,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenCreate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -62,14 +66,11 @@ describe("TokenCreate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-
-        await env.close({ token: tokenId });
     });
 
     it("should be executable with minimal properties set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -123,8 +124,6 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token deletion did not error");
         }
-
-        await env.close();
     });
 
     it("should error when token name is not set", async function () {
@@ -149,14 +148,11 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
-
-        await env.close();
     });
 
     it("should error when token symbol is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         let err = false;
@@ -175,14 +171,10 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
-
-        await env.close();
     });
 
     it("should error when treasury account ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -202,14 +194,11 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
-
-        await env.close();
     });
 
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         let err = false;
@@ -230,7 +219,9 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

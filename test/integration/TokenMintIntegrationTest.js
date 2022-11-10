@@ -9,10 +9,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenMint", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -38,14 +43,11 @@ describe("TokenMint", function () {
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("toBytes/fromBytes", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -75,14 +77,10 @@ describe("TokenMint", function () {
         let mintFromBytes = Transaction.fromBytes(mintBytes);
 
         await (await mintFromBytes.execute(env.client)).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("should error when token ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -99,14 +97,11 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token Mint did not error");
         }
-
-        await env.close();
     });
 
     it("should not error when amount is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -141,14 +136,11 @@ describe("TokenMint", function () {
         if (err) {
             throw new Error("token mint did error");
         }
-
-        await env.close({ token });
     });
 
     it("User cannot mint more than the tokens defined max supply value", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -186,14 +178,11 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
-
-        await env.close({ token });
     });
 
     it("cannot mint token with invalid metadata", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -230,7 +219,9 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });
