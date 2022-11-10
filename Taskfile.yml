@@ -155,7 +155,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" --maxWorkers 1 {{.CLI_ARGS}}
+            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" 1 {{.CLI_ARGS}}
 
     "update:proto":
         deps:
