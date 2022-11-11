@@ -155,7 +155,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
     "update:proto":
         deps:
