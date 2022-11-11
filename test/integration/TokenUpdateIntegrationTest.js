@@ -366,96 +366,96 @@ describe("TokenUpdate", function () {
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
-    it.skip("cannot change current treasury until no NFTs are owned", async function () {
-        this.timeout(120000);
+    // it.skip("cannot change current treasury until no NFTs are owned", async function () {
+    //     this.timeout(120000);
 
-        const key = PrivateKey.generateED25519();
+    //     const key = PrivateKey.generateED25519();
 
-        const account = (
-            await (
-                await new AccountCreateTransaction()
-                    .setKey(key.publicKey)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).accountId;
+    //     const account = (
+    //         await (
+    //             await new AccountCreateTransaction()
+    //                 .setKey(key.publicKey)
+    //                 .execute(env.client)
+    //         ).getReceipt(env.client)
+    //     ).accountId;
 
-        const token = (
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenName("ffff")
-                    .setTokenSymbol("F")
-                    .setTreasuryAccountId(env.operatorId)
-                    .setAdminKey(env.operatorKey)
-                    .setKycKey(env.operatorKey)
-                    .setFreezeKey(env.operatorKey)
-                    .setWipeKey(env.operatorKey)
-                    .setSupplyKey(env.operatorKey)
-                    .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.NonFungibleUnique)
-                    .setSupplyType(TokenSupplyType.Infinite)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).tokenId;
+    //     const token = (
+    //         await (
+    //             await new TokenCreateTransaction()
+    //                 .setTokenName("ffff")
+    //                 .setTokenSymbol("F")
+    //                 .setTreasuryAccountId(env.operatorId)
+    //                 .setAdminKey(env.operatorKey)
+    //                 .setKycKey(env.operatorKey)
+    //                 .setFreezeKey(env.operatorKey)
+    //                 .setWipeKey(env.operatorKey)
+    //                 .setSupplyKey(env.operatorKey)
+    //                 .setFeeScheduleKey(env.operatorKey)
+    //                 .setTokenType(TokenType.NonFungibleUnique)
+    //                 .setSupplyType(TokenSupplyType.Infinite)
+    //                 .execute(env.client)
+    //         ).getReceipt(env.client)
+    //     ).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+    //     await (
+    //         await (
+    //             await new TokenAssociateTransaction()
+    //                 .setTokenIds([token])
+    //                 .setAccountId(account)
+    //                 .freezeWith(env.client)
+    //                 .sign(key)
+    //         ).execute(env.client)
+    //     ).getReceipt(env.client);
 
-        await (
-            await (
-                await new TokenGrantKycTransaction()
-                    .setTokenId(token)
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+    //     await (
+    //         await (
+    //             await new TokenGrantKycTransaction()
+    //                 .setTokenId(token)
+    //                 .setAccountId(account)
+    //                 .freezeWith(env.client)
+    //                 .sign(key)
+    //         ).execute(env.client)
+    //     ).getReceipt(env.client);
 
-        await (
-            await new TokenMintTransaction()
-                .setMetadata([
-                    Uint8Array.of([0, 1, 2]),
-                    Uint8Array.of([3, 4, 5]),
-                ])
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+    //     await (
+    //         await new TokenMintTransaction()
+    //             .setMetadata([
+    //                 Uint8Array.of([0, 1, 2]),
+    //                 Uint8Array.of([3, 4, 5]),
+    //             ])
+    //             .setTokenId(token)
+    //             .execute(env.client)
+    //     ).getReceipt(env.client);
 
-        await (
-            await new TransferTransaction()
-                .addNftTransfer(token, 1, env.operatorId, account)
-                .execute(env.client)
-        ).getReceipt(env.client);
+    //     await (
+    //         await new TransferTransaction()
+    //             .addNftTransfer(token, 1, env.operatorId, account)
+    //             .execute(env.client)
+    //     ).getReceipt(env.client);
 
-        let err = false;
+    //     let err = false;
 
-        try {
-            await (
-                await (
-                    await new TokenUpdateTransaction()
-                        .setTokenId(token)
-                        .setTreasuryAccountId(account)
-                        .freezeWith(env.client)
-                        .sign(key)
-                ).execute(env.client)
-            ).getReceipt(env.client);
-        } catch (error) {
-            console.log(error);
-            err = error
-                .toString()
-                .includes(Status.CurrentTreasuryStillOwnsNfts);
-        }
+    //     try {
+    //         await (
+    //             await (
+    //                 await new TokenUpdateTransaction()
+    //                     .setTokenId(token)
+    //                     .setTreasuryAccountId(account)
+    //                     .freezeWith(env.client)
+    //                     .sign(key)
+    //             ).execute(env.client)
+    //         ).getReceipt(env.client);
+    //     } catch (error) {
+    //         console.log(error);
+    //         err = error
+    //             .toString()
+    //             .includes(Status.CurrentTreasuryStillOwnsNfts);
+    //     }
 
-        if (!err) {
-            throw new Error("token update did not error");
-        }
-    });
+    //     if (!err) {
+    //         throw new Error("token update did not error");
+    //     }
+    // });
 
     after(async function () {
         await env.close();
