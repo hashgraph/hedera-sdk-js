@@ -6,11 +6,9 @@ import {
     Hbar,
     PrivateKey,
     Status,
-    Timestamp,
     TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import Long from "long";
 
 describe("AccountUpdate", function () {
     let env;
