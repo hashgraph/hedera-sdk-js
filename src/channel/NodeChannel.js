@@ -93,7 +93,7 @@ export default class NodeChannel extends Channel {
 
             setTimeout(() => {
                 if (!received) {
-                    this._client.close();
+                    //Removed close of the client because taking more than 10s does not mean that the node is unavailable.
                     callback(new GrpcServicesError(GrpcStatus.Timeout));
                 }
             }, 10_000);
