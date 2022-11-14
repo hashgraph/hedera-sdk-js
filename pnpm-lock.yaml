@@ -12,7 +12,7 @@ specifiers:
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
   '@hashgraph/proto': 2.11.0
-  '@playwright/test': ^1.26.0
+  '@playwright/test': ^1.27.1
   '@types/chai': ^4.3.3
   '@types/crypto-js': ^4.1.1
   '@types/long': ^4.0.2
@@ -80,7 +80,7 @@ devDependencies:
   '@babel/plugin-transform-modules-commonjs': 7.18.6_@babel+core@7.19.1
   '@babel/register': 7.18.9_@babel+core@7.19.1
   '@grpc/proto-loader': 0.6.13
-  '@playwright/test': 1.26.0
+  '@playwright/test': 1.27.1
   '@types/chai': 4.3.3
   '@types/crypto-js': 4.1.1
   '@types/long': 4.0.2
@@ -1932,13 +1932,13 @@ packages:
       mkdirp: 1.0.4
       rimraf: 3.0.2
 
-  /@playwright/test/1.26.0:
-    resolution: {integrity: sha512-D24pu1k/gQw3Lhbpc38G5bXlBjGDrH5A52MsrH12wz6ohGDeQ+aZg/JFSEsT/B3G8zlJe/EU4EkJK74hpqsjEg==}
+  /@playwright/test/1.27.1:
+    resolution: {integrity: sha512-mrL2q0an/7tVqniQQF6RBL2saskjljXzqNcCOVMUjRIgE6Y38nCNaP+Dc2FBW06bcpD3tqIws/HT9qiMHbNU0A==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 17.0.45
-      playwright-core: 1.26.0
+      playwright-core: 1.27.1
     dev: true
 
   /@protobufjs/aspromise/1.1.2:
@@ -2528,7 +2528,7 @@ packages:
       '@babel/preset-env': 7.19.1_@babel+core@7.19.1
       babel-plugin-module-resolver: 4.1.0
       babel-plugin-react-native-web: 0.17.7
-      metro-react-native-babel-preset: 0.67.0
+      metro-react-native-babel-preset: 0.67.0_@babel+core@7.19.1
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -5304,8 +5304,10 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /metro-react-native-babel-preset/0.67.0:
+  /metro-react-native-babel-preset/0.67.0_@babel+core@7.19.1:
     resolution: {integrity: sha512-tgTG4j0SKwLHbLRELMmgkgkjV1biYkWlGGKOmM484/fJC6bpDikdaFhfjsyE+W+qt7I5szbCPCickMTNQ+zwig==}
+    peerDependencies:
+      '@babel/core': '*'
     dependencies:
       '@babel/core': 7.19.1
       '@babel/plugin-proposal-class-properties': 7.18.6_@babel+core@7.19.1
@@ -6004,8 +6006,8 @@ packages:
     dependencies:
       find-up: 3.0.0
 
-  /playwright-core/1.26.0:
-    resolution: {integrity: sha512-p8huU8eU4gD3VkJd3DA1nA7R3XA6rFvFL+1RYS96cSljCF2yJE9CWEHTPF4LqX8KN9MoWCrAfVKP5381X3CZqg==}
+  /playwright-core/1.27.1:
+    resolution: {integrity: sha512-9EmeXDncC2Pmp/z+teoVYlvmPWUC6ejSSYZUln7YaP89Z6lpAaiaAnqroUt/BoLo8tn7WYShcfaCh+xofZa44Q==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
