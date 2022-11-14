@@ -155,7 +155,9 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 report
+            - ./node_modules/.bin/codecov
 
     "update:proto":
         deps:

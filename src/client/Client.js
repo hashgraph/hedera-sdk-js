@@ -149,9 +149,6 @@ export default class Client {
         if (props != null && props.scheduleNetworkUpdate !== false) {
             this._scheduleNetworkUpdate();
         }
-
-        /** @internal */
-        this._timer = undefined;
     }
 
     /**
@@ -659,7 +656,6 @@ export default class Client {
         this._network.close();
         this._mirrorNetwork.close();
         this._isShutdown = true;
-        clearTimeout(this._timer);
     }
 
     /**
@@ -684,7 +680,7 @@ export default class Client {
     _scheduleNetworkUpdate() {
         // This is the automatic network update promise that _eventually_ completes
         // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
-        this._timer = setTimeout(async () => {
+        setTimeout(async () => {
             try {
                 const addressBook = await CACHE.addressBookQueryConstructor()
                     .setFileId(FileId.ADDRESS_BOOK)
