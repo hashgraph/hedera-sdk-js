@@ -6,6 +6,7 @@ on:
       - main
       - develop
       - release/*
+      - integration-test-workflow
   pull_request:
     branches:
       - main
@@ -69,6 +70,14 @@ jobs:
         with:
             version: 3.7.0
 
+      - name: "Create env file"
+        run: |
+            touch .env
+            echo OPERATOR_KEY="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" >> .env
+            echo OPERATOR_ID="0.0.2" >> .env
+            echo HEDERA_NETWORK="local-node" >> .env
+            cat .env
+
       - name: Cache pnpm modules
         uses: actions/cache@v2
         env:
@@ -89,6 +98,15 @@ jobs:
 
       - name: Build @hashgraph/sdk
         run: task build
+
+      - name: Start the local node
+        run: npx @hashgraph/hedera-local start -d --network local
+
+      - name: Run Hedera SDK Tests
+        run: task test:integration:codecov
+      
+      - name: Stop the local node
+        run: npx @hashgraph/hedera-local stop
 
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography

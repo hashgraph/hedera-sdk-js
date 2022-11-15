@@ -1,10 +1,5 @@
 name: Hedera Services Main
 
-on:
-    push:
-        branches:
-            - integration-test-workflow
-
 env:
     PNPM_HOME: /home/runner/work/hedera-sdk-js
 
