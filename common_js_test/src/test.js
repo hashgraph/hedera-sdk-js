@@ -1,11 +1,8 @@
-const {
-    Client,
-    AccountBalanceQuery,
-} = require("@hashgraph/sdk");
+const { Client, AccountBalanceQuery } = require("@hashgraph/sdk");
 
 describe("CommonJS", function () {
     it("it should query each node's balance", async function () {
-        this.timeout(30000);
+        this.timeout(15000);
 
         const client = Client.forTestnet();
 
@@ -16,5 +13,6 @@ describe("CommonJS", function () {
                 .setMaxAttempts(1)
                 .execute(client);
         }
+        client.close();
     });
 });

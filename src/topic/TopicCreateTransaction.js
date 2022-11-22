@@ -161,9 +161,17 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getTopicMemo()` instead
      * @returns {?string}
      */
     get topicMemo() {
+        return this._topicMemo;
+    }
+
+    /**
+     * @returns {?string}
+     */
+    getTopicMemo() {
         return this._topicMemo;
     }
 
@@ -179,9 +187,17 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getAdminKey()` instead
      * @returns {?Key}
      */
     get adminKey() {
+        return this._adminKey;
+    }
+
+    /**
+     * @returns {?Key}
+     */
+    getAdminKey() {
         return this._adminKey;
     }
 
@@ -197,9 +213,17 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getSubmitKey()` instead
      * @returns {?Key}
      */
     get submitKey() {
+        return this._submitKey;
+    }
+
+    /**
+     * @returns {?Key}
+     */
+    getSubmitKey() {
         return this._submitKey;
     }
 
@@ -215,9 +239,17 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getAutoRenewAccountId()` instead
      * @returns {?AccountId}
      */
     get autoRenewAccountId() {
+        return this._autoRenewAccountId;
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    getAutoRenewAccountId() {
         return this._autoRenewAccountId;
     }
 
@@ -236,9 +268,17 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getAutoRenewPeriod()` instead
      * @returns {Duration}
      */
     get autoRenewPeriod() {
+        return this._autoRenewPeriod;
+    }
+
+    /**
+     * @returns {Duration}
+     */
+    getAutoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 

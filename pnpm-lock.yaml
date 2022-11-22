@@ -12,7 +12,7 @@ specifiers:
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
   '@hashgraph/proto': 2.11.0
-  '@playwright/test': ^1.26.0
+  '@playwright/test': 1.28.0
   '@types/chai': ^4.3.3
   '@types/crypto-js': ^4.1.1
   '@types/long': ^4.0.2
@@ -80,7 +80,7 @@ devDependencies:
   '@babel/plugin-transform-modules-commonjs': 7.18.6_@babel+core@7.19.1
   '@babel/register': 7.18.9_@babel+core@7.19.1
   '@grpc/proto-loader': 0.6.13
-  '@playwright/test': 1.26.0
+  '@playwright/test': 1.28.0
   '@types/chai': 4.3.3
   '@types/crypto-js': 4.1.1
   '@types/long': 4.0.2
@@ -1932,13 +1932,13 @@ packages:
       mkdirp: 1.0.4
       rimraf: 3.0.2
 
-  /@playwright/test/1.26.0:
-    resolution: {integrity: sha512-D24pu1k/gQw3Lhbpc38G5bXlBjGDrH5A52MsrH12wz6ohGDeQ+aZg/JFSEsT/B3G8zlJe/EU4EkJK74hpqsjEg==}
+  /@playwright/test/1.28.0:
+    resolution: {integrity: sha512-vrHs5DFTPwYox5SGKq/7TDn/S4q6RA1zArd7uhO6EyP9hj3XgZBBM12ktMbnDQNxh/fL1IUKsTNLxihmsU38lQ==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 17.0.45
-      playwright-core: 1.26.0
+      playwright-core: 1.28.0
     dev: true
 
   /@protobufjs/aspromise/1.1.2:
@@ -6006,8 +6006,8 @@ packages:
     dependencies:
       find-up: 3.0.0
 
-  /playwright-core/1.26.0:
-    resolution: {integrity: sha512-p8huU8eU4gD3VkJd3DA1nA7R3XA6rFvFL+1RYS96cSljCF2yJE9CWEHTPF4LqX8KN9MoWCrAfVKP5381X3CZqg==}
+  /playwright-core/1.28.0:
+    resolution: {integrity: sha512-nJLknd28kPBiCNTbqpu6Wmkrh63OEqJSFw9xOfL9qxfNwody7h6/L3O2dZoWQ6Oxcm0VOHjWmGiCUGkc0X3VZA==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true

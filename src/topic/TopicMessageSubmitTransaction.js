@@ -162,9 +162,17 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getMessage()` instead
      * @returns {?Uint8Array}
      */
     get message() {
+        return this._message;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    getMessage() {
         return this._message;
     }
 
@@ -181,9 +189,17 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getMaxChunks()` instead
      * @returns {?number}
      */
     get maxChunks() {
+        return this._maxChunks;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    getMaxChunks() {
         return this._maxChunks;
     }
 
@@ -198,9 +214,17 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @deprecated  - Use `getChunkSize()` instead
      * @returns {?number}
      */
     get chunkSize() {
+        return this._chunkSize;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    getChunkSize() {
         return this._chunkSize;
     }
 
