@@ -1,4 +1,4 @@
-name: Build
+name: Build & Test
 
 on:
     push:
@@ -54,11 +54,11 @@ jobs:
             - name: Build @hashgraph/sdk
               run: task build
 
-    test-unit-node:
+    test:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: ["14", "16"]
+                node: ["16"]
 
         steps:
             - uses: actions/checkout@v2
@@ -102,7 +102,7 @@ jobs:
             - name: Start the local node
               run: npx @hashgraph/hedera-local start -d --network local
 
-            - name: Run Hedera SDK Tests
+            - name: Run Hedera SDK Integration Tests Codecov
               run: task test:integration:codecov
 
             - name: Stop the local node
