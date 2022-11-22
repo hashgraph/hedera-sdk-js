@@ -41,32 +41,32 @@ describe("ManagedNodeAddress", function () {
         );
 
         const mirrorNodeAddress = ManagedNodeAddress.fromString(
-            "hcs.mainnet.mirrornode.hedera.com:5600"
+            "hcs.testnet.mirrornode.hedera.com:5600"
         );
         expect(mirrorNodeAddress.address).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com"
+            "hcs.testnet.mirrornode.hedera.com"
         );
         expect(mirrorNodeAddress.port).to.be.equal(5600);
         expect(mirrorNodeAddress.toString()).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com:5600"
+            "hcs.testnet.mirrornode.hedera.com:5600"
         );
 
         const mirrorNodeAddressSecure = mirrorNodeAddress.toSecure();
         expect(mirrorNodeAddressSecure.address).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com"
+            "hcs.testnet.mirrornode.hedera.com"
         );
         expect(mirrorNodeAddressSecure.port).to.be.equal(443);
         expect(mirrorNodeAddressSecure.toString()).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com:443"
+            "hcs.testnet.mirrornode.hedera.com:443"
         );
 
         const mirrorNodeAddressInsecure = mirrorNodeAddressSecure.toInsecure();
         expect(mirrorNodeAddressInsecure.address).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com"
+            "hcs.testnet.mirrornode.hedera.com"
         );
         expect(mirrorNodeAddressInsecure.port).to.be.equal(5600);
         expect(mirrorNodeAddressInsecure.toString()).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com:5600"
+            "hcs.testnet.mirrornode.hedera.com:5600"
         );
 
         let err = false;
@@ -85,7 +85,7 @@ describe("ManagedNodeAddress", function () {
         err = false;
         try {
             ManagedNodeAddress.fromString(
-                "hcs.mainnet.mirrornode.hedera.com:notarealport"
+                "mainnet-public.mirrornode.hedera.com:notarealport"
             );
         } catch {
             err = true;
