@@ -59,6 +59,32 @@ export default class NodeChannel extends Channel {
             };
         } else {
             security = credentials.createInsecure();
+            options = {
+                //After a duration of this time the client/server pings its peer to see if the transport is still alive.
+                //"grpc.keepalive_time_ms": 60000,
+                //After waiting for a duration of this time, if the keepalive ping sender does not receive the ping back, it will close the transport.
+                //"grpc.keepalive_timeout_ms": 10000000,
+                //Is it permissible to send keepalive pings from the client without any outstanding streams.
+                "grpc.keepalive_permit_without_calls": 1,
+                //Maximum time that a channel may have no outstanding rpcs, after which the server will close the connection.
+                "grpc.max_connection_idle_ms": 10000000,
+                //The time between the first and second connection attempts, in ms.
+                "grpc.initial_reconnect_backoff_ms": 10,
+                //The minimum time between subsequent connection attempts, in ms.
+                "grpc.min_reconnect_backoff_ms": 10,
+                //The maximum time between subsequent connection attempts, in ms.
+                "grpc.max_reconnect_backoff_ms": 10000000,
+                //Maximum time that a channel may exist.
+                "grpc.max_connection_age_ms": 10000000 ,
+                //Minimum allowed time between a server receiving successive ping frames without sending any data/header frame.
+                //"grpc.http2.min_ping_interval_without_data_ms": 100
+                "grpc.experimental.enable_hedging": 1,
+                //Maximum message length that the channel can send.
+                "grpc.max_send_message_length": -1,
+                //Maximum message length that the channel can receive.
+                "grpc.max_receive_message_length": -1,
+                "grpc-node.max_session_memory": Number.MAX_SAFE_INTEGER
+            };
         }
 
         /**
@@ -83,6 +109,7 @@ export default class NodeChannel extends Channel {
      * @returns {import("protobufjs").RPCImpl}
      */
     _createUnaryClient(serviceName) {
+        console.log(`serviceName ${serviceName}`);
         return (method, requestData, callback) => {
             if (this._client.getChannel().getConnectivityState(false) == 4) {
                 callback(new GrpcServicesError(GrpcStatus.Unavailable));
@@ -98,6 +125,7 @@ export default class NodeChannel extends Channel {
                 }
             }, 10_000);
 
+            //let s = 
             this._client.makeUnaryRequest(
                 `/proto.${serviceName}/${method.name}`,
                 (value) => value,
@@ -109,7 +137,8 @@ export default class NodeChannel extends Channel {
                 (e, r) => {
                     callback(e, r);
                 }
-            );
+            )
+            //console.log(s.call);
         };
     }
 }

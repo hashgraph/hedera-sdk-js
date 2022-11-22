@@ -233,6 +233,7 @@ export default class TokenMintTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
+        console.log(`response\n ${JSON.stringify(channel.token.mintToken(request))}\n`);
         return channel.token.mintToken(request);
     }
 

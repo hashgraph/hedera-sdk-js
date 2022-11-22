@@ -1163,7 +1163,7 @@ export default class Transaction extends Executable {
         if (!this._isFrozen()) {
             this.freezeWith(client);
         }
-
+        console.log("_beforeExecute in Transaction.js")
         // Valid checksums if the option is enabled
         if (client.isAutoValidateChecksumsEnabled()) {
             this._validateChecksums(client);
@@ -1197,7 +1197,7 @@ export default class Transaction extends Executable {
         const index =
             this._transactionIds.index * this._nodeAccountIds.length +
             this._nodeAccountIds.index;
-
+        console.log("_makeRequestAsync")
         // If sign on demand is disabled we need to simply build that transaction
         // and return the result, without signing
         if (!this._signOnDemand) {

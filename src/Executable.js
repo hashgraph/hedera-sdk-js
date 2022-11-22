@@ -565,6 +565,7 @@ export default class Executable {
 
             // Get the log ID for the request.
             const logId = this._getLogId();
+            console.log(`[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`);
             Logger.debug(
                 `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
             );
@@ -627,6 +628,9 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
+
+                console.log(`error: [${logId}] received gRPC error ${JSON.stringify(err)}`);
+                //console.log(`error: [${logId}] received gRPC error ${JSON.stringify(error)}`);
 
                 // Save the error in case we retry
                 persistentError = error;

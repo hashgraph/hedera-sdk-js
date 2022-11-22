@@ -210,6 +210,8 @@ export default class AddressBookQuery {
                 "getNodes",
                 request,
                 (data) => {
+                    //never ending cycle
+                    console.log(`_makeServerStreamRequest\n${JSON.stringify(HashgraphProto.proto.NodeAddress.decode(data))}\n`);
                     this._addresses.push(
                         NodeAddress._fromProtobuf(
                             HashgraphProto.proto.NodeAddress.decode(data)
@@ -221,6 +223,7 @@ export default class AddressBookQuery {
                     }
                 },
                 (error) => {
+                    console.log(`AddressBookQuery:\n${error}\n`);
                     const message =
                         error instanceof Error ? error.message : error.details;
 

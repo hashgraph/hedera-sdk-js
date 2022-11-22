@@ -212,7 +212,7 @@ export default class ManagedNode {
         if (this._channel != null) {
             return this._channel;
         }
-
+        console.log(`address: ${this._address}\n`)
         this._channel = this._channelInitFunction(
             this.address.toString(),
             this._cert

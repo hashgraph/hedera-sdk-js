@@ -52,6 +52,7 @@ export default class GrpcServiceError extends Error {
      * @returns {Error}
      */
     static _fromResponse(obj) {
+        console.log(`_fromResponse ${JSON.stringify(obj)}`)
         if (obj.code != null && obj.details != null) {
             const status = GrpcStatus._fromValue(obj.code);
             const err = new GrpcServiceError(status);
