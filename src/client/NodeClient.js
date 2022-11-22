@@ -67,7 +67,7 @@ export const MirrorNetwork = {
         }
     },
 
-    MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
+    MAINNET: ["mainnet-public.mirrornode.hedera.com:443"],
     TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
     PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
     LOCAL_NODE: ["127.0.0.1:5600"],
