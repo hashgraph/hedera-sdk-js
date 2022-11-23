@@ -9,10 +9,14 @@ import * as utf8 from "../../src/encoding/utf8.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileContents", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -42,14 +46,11 @@ describe("FileContents", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -76,14 +77,10 @@ describe("FileContents", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when file ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -98,7 +95,9 @@ describe("FileContents", function () {
         if (!err) {
             throw new Error("file contents query did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

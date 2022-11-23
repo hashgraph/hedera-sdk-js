@@ -11,9 +11,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("ScheduleCreate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
@@ -95,7 +100,9 @@ describe("ScheduleCreate", function () {
         await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .execute(env.client);
+    });
 
+    after(async function () {
         await env.close();
     });
 });

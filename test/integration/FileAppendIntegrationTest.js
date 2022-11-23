@@ -10,10 +10,14 @@ import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileAppend", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -71,14 +75,11 @@ describe("FileAppend", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be chunk contents", async function () {
         this.timeout(120000 * 2);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -136,14 +137,11 @@ describe("FileAppend", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error with no file ID set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -180,14 +178,11 @@ describe("FileAppend", function () {
         if (!err) {
             throw new Error("file append transaction did not error");
         }
-
-        await env.close();
     });
 
     it("should not error with no contents appended", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -214,7 +209,9 @@ describe("FileAppend", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
+    });
 
+    after(async function () {
         await env.close();
     });
 });

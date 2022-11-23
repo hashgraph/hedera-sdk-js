@@ -6,10 +6,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenDelete", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -34,13 +39,10 @@ describe("TokenDelete", function () {
                 .setTokenId(tokenId)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error with no token ID set", async function () {
         this.timeout(120000);
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -55,7 +57,9 @@ describe("TokenDelete", function () {
         if (!err) {
             throw new Error("token deletion did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

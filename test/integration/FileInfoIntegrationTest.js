@@ -7,10 +7,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileInfo", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -45,14 +49,11 @@ describe("FileInfo", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -86,14 +87,10 @@ describe("FileInfo", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable with no keys", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const response = await new FileCreateTransaction().execute(env.client);
 
@@ -114,7 +111,9 @@ describe("FileInfo", function () {
         expect(info.size.toInt()).to.be.equal(0);
         expect(info.isDeleted).to.be.false;
         expect(info.keys.toArray().length).to.be.equal(0);
+    });
 
+    after(async function () {
         await env.close();
     });
 });

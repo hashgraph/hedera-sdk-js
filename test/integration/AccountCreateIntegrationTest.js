@@ -11,10 +11,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountCreate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -52,14 +57,10 @@ describe("AccountCreate", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be able to create an account with an ECDSA private key", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         const key = PrivateKey.generateECDSA();
 
@@ -97,14 +98,11 @@ describe("AccountCreate", function () {
 
         await transaction.sign(key);
         await transaction.execute(env.client);
-
-        await env.close();
     });
 
     it("should be executable with only key set", async function () {
         this.timeout(15000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -138,14 +136,11 @@ describe("AccountCreate", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when key is not set", async function () {
         this.timeout(15000);
 
-        const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {
@@ -161,8 +156,6 @@ describe("AccountCreate", function () {
         if (!err) {
             throw new Error("account creation did not error");
         }
-
-        await env.close();
     });
 
     it("should be able to sign transaction and verify transaction signtatures", async function () {
@@ -207,7 +200,9 @@ describe("AccountCreate", function () {
         expect(operatorKey.verifyTransaction(transaction)).to.be.false;
 
         await (await transaction.execute(env.client)).getReceipt(env.client);
+    });
 
+    after(async function () {
         await env.close();
     });
 });

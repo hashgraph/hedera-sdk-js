@@ -6,10 +6,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicDelete", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -26,14 +31,11 @@ describe("TopicDelete", function () {
                 .setTopicId(topic)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when deleting immutable topic", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const response = await new TopicCreateTransaction().execute(env.client);
         const topic = (await response.getReceipt(env.client)).topicId;
 
@@ -52,7 +54,9 @@ describe("TopicDelete", function () {
         if (!err) {
             throw new Error("topic deletion did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

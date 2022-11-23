@@ -12,6 +12,7 @@ describe("AddressBookQuery", function () {
             .execute(client);
 
         expect(addressBook.nodeAddresses.length).to.be.above(0);
+        client.close();
     });
 
     it("should be query the addressbook on mainnet", async function () {
@@ -24,5 +25,6 @@ describe("AddressBookQuery", function () {
             .execute(client);
 
         expect(addressBook.nodeAddresses.length).to.be.above(0);
+        client.close();
     });
 });

@@ -17,10 +17,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenDissociate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -99,14 +104,11 @@ describe("TokenDissociate", function () {
             .execute(env.client);
 
         expect(info.tokenRelationships.get(token)).to.be.null;
-
-        await env.close({ token });
     });
 
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         await (
@@ -114,8 +116,6 @@ describe("TokenDissociate", function () {
                 .setAccountId(operatorId)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -156,14 +156,10 @@ describe("TokenDissociate", function () {
         if (!err) {
             throw new Error("token association did not error");
         }
-
-        await env.close({ token });
     });
 
     it("cannot dissociate account which owns NFTs", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new({ throwaway: true });
 
         const key = PrivateKey.generateED25519();
 
@@ -246,7 +242,9 @@ describe("TokenDissociate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });

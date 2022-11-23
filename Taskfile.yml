@@ -141,9 +141,9 @@ tasks:
 
     "test:unit:codecov":
         cmds:
-           - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-           - ./node_modules/.bin/c8 report
-           - ./node_modules/.bin/codecov
+            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 report
+            - ./node_modules/.bin/codecov
 
     "test:unit:browser":
         cmds:
@@ -155,7 +155,13 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+
+    "test:integration:codecov":
+        cmds:
+            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - ./node_modules/.bin/c8 report
+            - ./node_modules/.bin/codecov
 
     "update:proto":
         deps:

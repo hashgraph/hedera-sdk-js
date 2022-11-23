@@ -7,10 +7,15 @@ import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionResponse", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new({ throwaway: true });
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -38,14 +43,11 @@ describe("TransactionResponse", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should make a transaction receipt query available", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -72,14 +74,11 @@ describe("TransactionResponse", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should make a transaction record query available", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -106,7 +105,9 @@ describe("TransactionResponse", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+    });
 
+    after(async function () {
         await env.close();
     });
 });
