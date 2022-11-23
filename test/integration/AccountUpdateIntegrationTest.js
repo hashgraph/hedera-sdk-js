@@ -6,9 +6,11 @@ import {
     Hbar,
     PrivateKey,
     Status,
+    Timestamp,
     TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import Long from "long";
 
 describe("AccountUpdate", function () {
     let env;
@@ -143,47 +145,47 @@ describe("AccountUpdate", function () {
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
-    // it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
-    //     this.timeout(120000);
+    it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
+        this.timeout(120000);
 
-    //     const key1 = PrivateKey.generateED25519();
-    //     const key2 = PrivateKey.generateED25519();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
 
-    //     let response = await new AccountCreateTransaction()
-    //         .setKey(key1.publicKey)
-    //         .setInitialBalance(new Hbar(2))
-    //         .execute(env.client);
+        let response = await new AccountCreateTransaction()
+            .setKey(key1.publicKey)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
 
-    //     const receipt = await response.getReceipt(env.client);
+        const receipt = await response.getReceipt(env.client);
 
-    //     expect(receipt.accountId).to.not.be.null;
-    //     const account = receipt.accountId;
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
 
-    //     let err = false;
+        let err = false;
 
-    //     try {
-    //         await (
-    //             await (
-    //                 await (
-    //                     await new AccountUpdateTransaction()
-    //                         .setAccountId(account)
-    //                         .setKey(key2.publicKey)
-    //                         .setExpirationTime(new Timestamp(Long.MAX, 0))
-    //                         .freezeWith(env.client)
-    //                         .sign(key1)
-    //                 ).sign(key2)
-    //             ).execute(env.client)
-    //         ).getReceipt(env.client);
-    //     } catch (error) {
-    //         err = error
-    //             .toString()
-    //             .includes(Status.InsufficientTxFee.toString());
-    //     }
+        try {
+            await (
+                await (
+                    await (
+                        await new AccountUpdateTransaction()
+                            .setAccountId(account)
+                            .setKey(key2.publicKey)
+                            .setExpirationTime(new Timestamp(Long.MAX, 0))
+                            .freezeWith(env.client)
+                            .sign(key1)
+                    ).sign(key2)
+                ).execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(Status.InsufficientTxFee.toString());
+        }
 
-    //     if (!err) {
-    //         throw new Error("account update did not error");
-    //     }
-    // });
+        if (!err) {
+            throw new Error("account update did not error");
+        }
+    });
 
     it("should error when account ID is not set", async function () {
         this.timeout(120000);
