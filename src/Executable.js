@@ -449,7 +449,7 @@ export default class Executable {
             error.status._code === GrpcStatus.ResourceExhausted._code ||
             (error.status._code === GrpcStatus.Internal._code &&
                 RST_STREAM.test(error.message))
-        );
+        );//comment out
     }
 
     /**
@@ -500,7 +500,7 @@ export default class Executable {
             this._requestTimeout =
                 requestTimeout != null ? requestTimeout : client.requestTimeout;
         }
-
+        console.log(`Executable -> execute()`);
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
@@ -622,6 +622,7 @@ export default class Executable {
                 response = /** @type {ResponseT} */ (
                     await Promise.race(promises)
                 );
+                console.log(`Executable -> execute() response: ${JSON.stringify(response)}`)
             } catch (err) {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
@@ -645,6 +646,7 @@ export default class Executable {
                 ) {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
+                    console.log(`client._network.increaseBackoff(node)`)
                     client._network.increaseBackoff(node);
                     continue;
                 }
@@ -670,10 +672,12 @@ export default class Executable {
             if (err != null) {
                 persistentError = err;
             }
-
+            console.log(`Executable -> err: ${err}`)
+            console.log(`Executable -> shouldRetry: ${shouldRetry}`)
             // Determine by the executing state what we should do
             switch (shouldRetry) {
                 case ExecutionState.Retry:
+                    //client._network.increaseBackoff(node);
                     await delayForAttempt(
                         attempt,
                         this._minBackoff,
@@ -727,5 +731,6 @@ function delayForAttempt(attempt, minBackoff, maxBackoff) {
         Math.floor(minBackoff * Math.pow(2, attempt)),
         maxBackoff
     );
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise((resolve) => process.nextTick(resolve));
+    //return new Promise((resolve) => setTimeout(resolve, ms));
 }

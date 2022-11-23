@@ -196,7 +196,7 @@ export default class Channel {
         this._token = proto.TokenService.create(
             this._createUnaryClient("TokenService")
         );
-        console.log(`this._token:\n${JSON.stringify(this._token)}`)
+        console.log(`this._token: ${JSON.stringify(this._token)}`)
         return this._token;
     }
 

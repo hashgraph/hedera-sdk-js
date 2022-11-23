@@ -31,16 +31,16 @@ const main = async () => {
     }
 
     const client = Client.forTestnet();
-    client.setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
+    client.setOperator(operatorId, operatorKey).setMaxAttempts(30);
     const privateKey = PrivateKey.generate();
 
-    let client1 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client2 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client3 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client4 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client5 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client6 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
-    let client7 = Client.forTestnet().setOperator(operatorId, operatorKey).setMinBackoff(1).setMaxAttempts(30);
+    let client1 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client2 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client3 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client4 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client5 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client6 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
+    let client7 = Client.forTestnet().setOperator(operatorId, operatorKey).setMaxAttempts(30);
 
     var nodeClients = [client1, client2, client3, client4, client5, client6, client7];
 
@@ -119,7 +119,7 @@ const main = async () => {
                     .setTransactionValidDuration(180)
                     .setMetadata(data)
                     .freezeWith(clientN);
-                const signTx1 = (await transaction1.sign(privateKey)).setMinBackoff(1).setMaxAttempts(30);
+                const signTx1 = (await transaction1.sign(privateKey)).setMaxAttempts(30);
                 
                 //setInterval(() => {
                 setTimeout(() => {
@@ -168,6 +168,10 @@ const main = async () => {
     
 
     console.timeEnd('done');
+    
+    //close the client in order to not get stuck inside infinite loop
+    client.close();
+    nodeClients.forEach(client => client.close());
 
     await wait(6000);
     console.log(`Token ID1: ${tokenId}`);
@@ -178,52 +182,6 @@ const main = async () => {
     await wait(24000);
     console.log(`Token ID4: ${tokenId}`);
 };
-
-async function innerFor(transactionCount, nanosOffset, currentBucketMaxTransactionIndex, totalTransactions) {
-    for (let transactionIndex = transactionCount; transactionIndex <= currentBucketMaxTransactionIndex; transactionIndex++) {
-                
-        //prevent the cycle from running after getting the last transaction
-        if (transactionIndex > totalTransactions) continue;
-        
-        
-        if (transactionCount == transactionIndex) console.log(`transactionCount: ${transactionCount}`);
-        console.log(`transactionIndex: ${transactionIndex}`);
-        console.log(`currentBucketMaxTransactionIndex: ${currentBucketMaxTransactionIndex}`);
-        
-
-        const clientN =
-            nodeClients[Math.floor(Math.random() * nodeClients.length)];
-
-        const seconds = Math.round(Date.now() / 1000);
-        const validStart = new Timestamp(seconds, nanosOffset);
-        nanosOffset += 1000;
-    
-        const transactionId = TransactionId.withValidStart(
-            operatorId,
-            validStart
-        );
-
-        const transaction1 = new TokenMintTransaction()
-            .setTransactionId(transactionId)
-            .setTokenId(tokenId)
-            .setTransactionValidDuration(180)
-            .setMetadata(data)
-            .freezeWith(clientN);
-        const signTx1 = (await transaction1.sign(privateKey)).setMinBackoff(1).setMaxAttempts(30);
-        
-        //setTimeout(() => {
-            bottleneck.schedule({
-                id: transactionIndex,
-                weight: 1000
-            }, async () => {
-                console.log("Pushed:", transactionIndex);
-                promises.push(signTx1.execute(clientN));
-                promises.push(wait(12000));
-                return Promise.allSettled(promises);
-            });
-        //}, bucketCount * 5000);
-}
-}
 
 
 /**

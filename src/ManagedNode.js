@@ -212,11 +212,13 @@ export default class ManagedNode {
         if (this._channel != null) {
             return this._channel;
         }
-        console.log(`address: ${this._address}\n`)
+        
         this._channel = this._channelInitFunction(
             this.address.toString(),
             this._cert
         );
+        console.log(`ManagedNode -> getChannel() address: ${this._address}\n`)
+        console.log(`ManagedNode -> getChannel() channel: ${JSON.stringify(this._channel)}\n`)
         return this._channel;
     }
 
@@ -233,18 +235,24 @@ export default class ManagedNode {
     }
 
     increaseBackoff() {
+        console.log(`current backoff before increase: ${this._currentBackoff}\n`)
+        
         this._currentBackoff = Math.min(
             this._currentBackoff * 2,
             this._maxBackoff
         );
+        console.log(`current backoff after increase: ${this._currentBackoff}\n`)
         this._readmitTime = Date.now() + this._currentBackoff;
     }
 
     decreaseBackoff() {
+        console.log(`current backoff before decrease: ${this._currentBackoff}\n`)
+        
         this._currentBackoff = Math.max(
             this._currentBackoff / 2,
             this._minBackoff
         );
+        console.log(`current backoff after decrease: ${this._currentBackoff}\n`)
     }
 
     /**

@@ -210,8 +210,8 @@ export default class AddressBookQuery {
                 "getNodes",
                 request,
                 (data) => {
-                    //never ending cycle
-                    console.log(`_makeServerStreamRequest\n${JSON.stringify(HashgraphProto.proto.NodeAddress.decode(data))}\n`);
+                    //never ending cycle if we dont close all of the clients
+                    //console.log(`_makeServerStreamRequest\n${JSON.stringify(HashgraphProto.proto.NodeAddress.decode(data))}\n`);
                     this._addresses.push(
                         NodeAddress._fromProtobuf(
                             HashgraphProto.proto.NodeAddress.decode(data)

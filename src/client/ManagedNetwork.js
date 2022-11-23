@@ -506,7 +506,7 @@ export default class ManagedNetwork {
      */
     increaseBackoff(node) {
         node.increaseBackoff();
-
+        console.log(`_healthyNodes: ${JSON.stringify(this._healthyNodes)}\n`)
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
                 this._healthyNodes.splice(i, 1);

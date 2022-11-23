@@ -678,6 +678,7 @@ export default class Client {
      * @private
      */
     _scheduleNetworkUpdate() {
+        console.log(`in _scheduleNetworkUpdate: ${this._isShutdown}`)
         // This is the automatic network update promise that _eventually_ completes
         // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
         setTimeout(async () => {
