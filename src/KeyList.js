@@ -33,7 +33,7 @@ import CACHE from "./Cache.js";
  */
 export default class KeyList extends Key {
     /**
-     * @param {?Key[]} [keys]
+     * @param {?Key[] | ?Key} [keys]
      * @param {?number} [threshold]
      */
     constructor(keys, threshold) {
@@ -41,9 +41,14 @@ export default class KeyList extends Key {
 
         /**
          * @private
-         * @type {Key[]}
+         * @type {Key[] | Key}
          */
-        this._keys = keys == null ? [] : keys;
+        // @ts-ignore
+        if (keys == null) this._keys = []; 
+        //checks if the value for `keys` is passed as a single key
+        //rather than a list that contains just one key
+        else if (keys instanceof Key) this._keys = [keys]; 
+        else this._keys = keys;
 
         /**
          * @type {?number}
@@ -117,7 +122,10 @@ export default class KeyList extends Key {
      * @returns {KeyList}
      */
     slice(start, end) {
-        return new KeyList(this._keys.slice(start, end), this.threshold);
+        return new KeyList(
+            this._keys.slice(start, end),
+            this.threshold
+        );
     }
 
     /**
