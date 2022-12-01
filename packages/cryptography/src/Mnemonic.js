@@ -129,6 +129,7 @@ export default class Mnemonic {
      * @returns {Promise<Mnemonic>}
      */
     static fromWords(words) {
+        console.log(`legacy? ${words.length === 22}`);
         return new Mnemonic({
             words,
             legacy: words.length === 22,
@@ -271,8 +272,9 @@ export default class Mnemonic {
 
         //  3) The calculated checksum for the mnemonic equals the
         //     checksum encoded in the mnemonic
-
+        console.log(`is legacy or not: ${this._isLegacy}`);
         if (this._isLegacy) {
+            console.log(`if`);
             if (this.words.length !== 22) {
                 throw new BadMnemonicError(
                     this,
@@ -308,6 +310,7 @@ export default class Mnemonic {
                 );
             }
         } else {
+            console.log(`else`);
             if (!(this.words.length === 12 || this.words.length === 24)) {
                 throw new BadMnemonicError(
                     this,
