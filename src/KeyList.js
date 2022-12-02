@@ -33,7 +33,7 @@ import CACHE from "./Cache.js";
  */
 export default class KeyList extends Key {
     /**
-     * @param {?Key[] | ?Key} [keys]
+     * @param {?Key[] | ?Key | any[]} [keys]
      * @param {?number} [threshold]
      */
     constructor(keys, threshold) {
@@ -41,13 +41,13 @@ export default class KeyList extends Key {
 
         /**
          * @private
-         * @type {Key[] | Key}
+         * @type {Key[] | Key | any[]}
          */
-        // @ts-ignore
-        if (keys == null) this._keys = []; 
+        //this._keys = keys == null ? [] : keys;
+        if (keys == null) this._keys = [];
         //checks if the value for `keys` is passed as a single key
         //rather than a list that contains just one key
-        else if (keys instanceof Key) this._keys = [keys]; 
+        else if (keys instanceof Key) this._keys = [keys];
         else this._keys = keys;
 
         /**
@@ -100,6 +100,9 @@ export default class KeyList extends Key {
      * @returns {number}
      */
     push(...keys) {
+        /* return this.isArray()
+            ? this._keys.push(...keys)
+            : [this._keys].push(...keys); */
         return this._keys.push(...keys);
     }
 
@@ -122,10 +125,7 @@ export default class KeyList extends Key {
      * @returns {KeyList}
      */
     slice(start, end) {
-        return new KeyList(
-            this._keys.slice(start, end),
-            this.threshold
-        );
+        return new KeyList(this._keys.slice(start, end), this.threshold);
     }
 
     /**
@@ -136,7 +136,7 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @returns {Key[]}
+     * @returns {Key[] | any[]}
      */
     toArray() {
         return this._keys.slice();
@@ -153,10 +153,24 @@ export default class KeyList extends Key {
     }
 
     /**
+     * @returns {boolean}
+     */
+    isArray() {
+        return !(this._keys instanceof Key);
+    }
+
+    /**
      * @returns {HashgraphProto.proto.IKey}
      */
     _toProtobufKey() {
+        console.log(`isArray(): ${this.isArray()}`);
+        
         const keys = this._keys.map((key) => key._toProtobufKey());
+
+        /* const keys = this.isArray()
+            ? this._keys.map((key) => key._toProtobufKey())
+            : //@ts-ignore
+              [this._keys].map((key) => key._toProtobufKey()); */
 
         if (this.threshold == null) {
             return { keyList: { keys } };
