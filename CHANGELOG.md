@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.19.0
+
+## What's Changed
+* Update the Mainnet mirror node and add integration test by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1327
+* Bug/1326 mirror network update by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1328
+* Added getters and deprecated old ones by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1329
+* Integration test workflow by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1330
+* Added proxies for different networks by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1331
+* Аdded NFKD normalization for mnemonic passphrase by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1335
+* Change param of getNftInfo from allowanceSpenderAccountId to spenderId by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1337
+* Fix for optional param of transaction range by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1339
+
 ## v2.18.6
 
 ## What's Changed
