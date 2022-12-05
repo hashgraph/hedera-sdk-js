@@ -7,6 +7,7 @@ import {
     PrivateKey,
     Status,
     TransactionId,
+    KeyList,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -200,6 +201,35 @@ describe("AccountCreate", function () {
         expect(operatorKey.verifyTransaction(transaction)).to.be.false;
 
         await (await transaction.execute(env.client)).getReceipt(env.client);
+    });
+
+    it("should create account with a single key passed to `KeyList`", async function() {
+        const env = await IntegrationTestEnv.new();
+        const publicKey = PrivateKey.generateED25519().publicKey;
+        const thresholdKey = new KeyList(publicKey, 1);
+
+        let transaction = new AccountCreateTransaction()
+            .setKey(thresholdKey)
+            .setInitialBalance(Hbar.fromTinybars(1))
+            .freezeWith(env.client);
+
+        const txAccountCreate = await transaction.execute(env.client);
+        const txAccountCreateReceipt = await txAccountCreate.getReceipt(
+            env.client
+        );
+        const accountId = txAccountCreateReceipt.accountId;
+
+        expect(accountId).to.not.be.null;
+
+        const info = await new AccountInfoQuery()
+            .setNodeAccountIds([txAccountCreate.nodeId])
+            .setAccountId(accountId)
+            .execute(env.client);
+
+        expect(info.accountId.toString()).to.be.equal(accountId.toString());
+        expect(info.key.toArray()[0].toString()).to.be.equal(
+            publicKey.toString()
+        );
     });
 
     after(async function () {

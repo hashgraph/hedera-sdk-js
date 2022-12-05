@@ -26,7 +26,7 @@ describe("bip39", function () {
         );
     });
 
-    it("mnemonic passphrase NFKD normalization compliant test", async function (){
+    it("mnemonic passphrase NFKD normalization compliant test", async function () {
         const words = [
             "inmate",
             "flip",
@@ -51,13 +51,15 @@ describe("bip39", function () {
             "replace",
             "reduce",
             "plate",
-            "home"
+            "home",
         ];
-        
-        const unicodePassphrase = "\u0070\u0061\u0073\u0073\u0070\u0068\u0072\u0061\u0073\u0065";
-        const expectedPrivateKey = "1ed95521b3406aa1e34db78be696db32f09d9f8ec3115fc12314082a44a3e8d6d4551a1905758b45bc315430f7d9c095da93645f1b0004c393370e0a878dfd4c";
 
-        const seed = await bip39.toSeed(words, unicodePassphrase)
+        const unicodePassphrase =
+            "\u0070\u0061\u0073\u0073\u0070\u0068\u0072\u0061\u0073\u0065";
+        const expectedPrivateKey =
+            "1ed95521b3406aa1e34db78be696db32f09d9f8ec3115fc12314082a44a3e8d6d4551a1905758b45bc315430f7d9c095da93645f1b0004c393370e0a878dfd4c";
+
+        const seed = await bip39.toSeed(words, unicodePassphrase);
 
         expect(hex.encode(seed)).to.be.equal(expectedPrivateKey);
     });
