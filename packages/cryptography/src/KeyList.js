@@ -15,7 +15,12 @@ export default class KeyList extends Key {
          * @private
          * @type {Key[]}
          */
-        this._keys = keys == null ? [] : keys;
+        // @ts-ignore
+        if (keys == null) this._keys = [];
+        //checks if the value for `keys` is passed as a single key
+        //rather than a list that contains just one key
+        else if (keys instanceof Key) this._keys = [keys];
+        else this._keys = keys;
 
         /**
          * @type {?number}
@@ -103,6 +108,7 @@ export default class KeyList extends Key {
      * @returns {Key[]}
      */
     toArray() {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this._keys.slice();
     }
 
