@@ -33,7 +33,7 @@ import CACHE from "./Cache.js";
  */
 export default class KeyList extends Key {
     /**
-     * @param {?Key[] | ?Key | any[]} [keys]
+     * @param {?Key[]} [keys]
      * @param {?number} [threshold]
      */
     constructor(keys, threshold) {
@@ -41,7 +41,7 @@ export default class KeyList extends Key {
 
         /**
          * @private
-         * @type {Key[] | Key | any[]}
+         * @type {Key[]}
          */
         // @ts-ignore
         if (keys == null) this._keys = [];
@@ -100,9 +100,6 @@ export default class KeyList extends Key {
      * @returns {number}
      */
     push(...keys) {
-        /* return this.isArray()
-            ? this._keys.push(...keys)
-            : [this._keys].push(...keys); */
         return this._keys.push(...keys);
     }
 
@@ -136,7 +133,7 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @returns {Key[] | any[]}
+     * @returns {Key[]}
      */
     toArray() {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -154,23 +151,11 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @returns {boolean}
-     */
-    isArray() {
-        return !(this._keys instanceof Key);
-    }
-
-    /**
      * @returns {HashgraphProto.proto.IKey}
      */
     _toProtobufKey() {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
         const keys = this._keys.map((key) => key._toProtobufKey());
-
-        /* const keys = this.isArray()
-            ? this._keys.map((key) => key._toProtobufKey())
-            : //@ts-ignore
-              [this._keys].map((key) => key._toProtobufKey()); */
 
         if (this.threshold == null) {
             return { keyList: { keys } };

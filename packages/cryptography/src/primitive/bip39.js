@@ -8,7 +8,7 @@ import * as pbkdf2 from "./pbkdf2.js";
  */
 export async function toSeed(words, passphrase) {
     const input = words.join(" ");
-    const salt = (`mnemonic${passphrase}`).normalize("NFKD");
+    const salt = `mnemonic${passphrase}`.normalize("NFKD");
 
     return pbkdf2.deriveKey(hmac.HashAlgorithm.Sha512, input, salt, 2048, 64);
 }
