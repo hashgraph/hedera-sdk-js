@@ -43,7 +43,7 @@ export default class KeyList extends Key {
          * @private
          * @type {Key[] | Key | any[]}
          */
-        //this._keys = keys == null ? [] : keys;
+        // @ts-ignore
         if (keys == null) this._keys = [];
         //checks if the value for `keys` is passed as a single key
         //rather than a list that contains just one key
@@ -139,6 +139,7 @@ export default class KeyList extends Key {
      * @returns {Key[] | any[]}
      */
     toArray() {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this._keys.slice();
     }
 
@@ -163,8 +164,7 @@ export default class KeyList extends Key {
      * @returns {HashgraphProto.proto.IKey}
      */
     _toProtobufKey() {
-        console.log(`isArray(): ${this.isArray()}`);
-        
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
         const keys = this._keys.map((key) => key._toProtobufKey());
 
         /* const keys = this.isArray()
