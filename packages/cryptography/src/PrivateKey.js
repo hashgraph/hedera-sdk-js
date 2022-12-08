@@ -87,7 +87,7 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Depredated - Use `generateEd25519()` instead
+     * Depredated - Use `generateED25519()` instead
      * Generate a random Ed25519 private key.
      *
      * @returns {PrivateKey}
@@ -97,7 +97,7 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Depredated - Use `generateEd25519Async()` instead
+     * Depredated - Use `generateED25519Async()` instead
      * Generate a random Ed25519 private key.
      *
      * @returns {Promise<PrivateKey>}
