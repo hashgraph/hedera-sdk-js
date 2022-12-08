@@ -181,4 +181,27 @@ describe("Mnemonic", function () {
             "302e020100300506032b657004220420caffc03fdb9853e6a91a5b3c57a5c0031d164ce1c464dea88f3114786b5199e5"
         );
     });
+
+    it("default derivation path should match correct derivation path", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+        );
+
+        const defaultPath = [
+            44 | 0x80000000,
+            3030 | 0x80000000,
+            0 | 0x80000000,
+            0,
+        ];
+
+        const keyFromDefault = await mnemonic.toEcdsaPrivateKey("");
+        const keyFromCorrectPath = await mnemonic.toEcdsaPrivateKey(
+            "",
+            defaultPath
+        );
+
+        expect(keyFromDefault.toStringRaw()).to.eql(
+            keyFromCorrectPath.toStringRaw()
+        );
+    });
 });
