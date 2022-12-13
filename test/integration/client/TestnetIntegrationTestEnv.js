@@ -1,27 +1,13 @@
 import Client from "../../../src/client/NodeClient.js";
 import BaseIntegrationTestEnv from "./BaseIntegrationTestEnv.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export { Client };
 
-/**
- * @typedef {number} minVersion
- */
-export function skipTestDueToNodeJsVersion(minVersion) {
-    if (
-        process == null ||
-        process.versions == null ||
-        process.versions.node == null ||
-        parseInt(process.versions.node.split(".")[0]) < minVersion
-    ) {
-        console.log("skipping test due to unsupported nodejs version");
-        return true;
-    }
+export function skipTestDueToNodeJsVersion() {
+    return true;
 }
 
-export default class IntegrationTestEnv extends BaseIntegrationTestEnv {
+export default class TestnetIntegrationTestEnv extends BaseIntegrationTestEnv {
     /**
      * @param {object} [options]
      * @property {number} [options.nodeAccountIds]
@@ -31,7 +17,12 @@ export default class IntegrationTestEnv extends BaseIntegrationTestEnv {
     static async new(options = {}) {
         return BaseIntegrationTestEnv.new({
             client: Client,
-            env: process.env,
+            env: {
+                OPERATOR_ID: "0.0.47439",
+                OPERATOR_KEY:
+                    "302e020100300506032b6570042204208f4014a3f7f7a6c7147070da98d88f9cea074c13ed0554783471825d801888cf",
+                HEDERA_NETWORK: "testnet",
+            },
             nodeAccountIds: options.nodeAccountIds,
             balance: options.balance,
             throwaway: options.throwaway,

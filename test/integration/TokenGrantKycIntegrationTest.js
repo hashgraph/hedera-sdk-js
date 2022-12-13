@@ -11,10 +11,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenGrantKyc", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -75,14 +80,11 @@ describe("TokenGrantKyc", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.true;
         expect(relationship.isFrozen).to.be.false;
-
-        await env.close({ token });
     });
 
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
@@ -110,14 +112,11 @@ describe("TokenGrantKyc", function () {
         if (!err) {
             throw new Error("token grant kyc did not error");
         }
-
-        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -152,7 +151,9 @@ describe("TokenGrantKyc", function () {
         if (!err) {
             throw new Error("token association did not error");
         }
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });

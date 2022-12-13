@@ -255,6 +255,19 @@ export default class ContractCallQuery extends Query {
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
+        const call =
+            /**
+             *@type {HashgraphProto.proto.IContractCallLocalResponse}
+             */
+            (response.contractCallLocal);
+        if (!call.functionResult) {
+            return new PrecheckStatusError({
+                status,
+                transactionId: this._getTransactionId(),
+                contractFunctionResult: null,
+            });
+        }
+
         const contractFunctionResult = this._mapResponseSync(response);
 
         return new PrecheckStatusError({

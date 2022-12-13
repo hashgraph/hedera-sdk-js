@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.19.0
+
+## What's Changed
+* Update the Mainnet mirror node and add integration test by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1327
+* Bug/1326 mirror network update by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1328
+* Added getters and deprecated old ones by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1329
+* Integration test workflow by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1330
+* Added proxies for different networks by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1331
+* Аdded NFKD normalization for mnemonic passphrase by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1335
+* Change param of getNftInfo from allowanceSpenderAccountId to spenderId by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1337
+* Fix for optional param of transaction range by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1339
+
+## v2.18.6
+
+## What's Changed
+* Fix some of the Github workflows by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1311
+* Bug/unhealthy node by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1321
+
+## v2.18.5
+
+## What's Changed
+* Throw timeout error and do not make the node unhealthy by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1298
+* Refactor the HIP to point to testnet by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1303
+* Fix for fromBytes to return the range in PrngTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1302
+* Fix HIP-573 example by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1300
+
+## v2.18.4
+
+## What's Changed
+* Example/hip 573 by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1292
+* Example/hip 564 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1285
+* Example/hip 542 by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1293
+* bug: fix and improve taskfiles workflow by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1283
+* Fix the task test:release command by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1296
+* Fix the offset for uint24 & int24 datatypes in contract functions params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1295
+
+## v2.19.0-beta.1
+
+### Added
+
+ * `CustomFee.allCollectorsAreExempt`
+
 ## v2.18.3
 
 ### Added

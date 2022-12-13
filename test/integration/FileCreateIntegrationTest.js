@@ -9,10 +9,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileCreate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -47,14 +51,11 @@ describe("FileCreate", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -74,14 +75,10 @@ describe("FileCreate", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should be executable with no keys", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let response = await new FileCreateTransaction().execute(env.client);
 
@@ -90,14 +87,11 @@ describe("FileCreate", function () {
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
             .true;
-
-        await env.close();
     });
 
     it("should error with too large expiration time", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let err = false;
@@ -117,7 +111,9 @@ describe("FileCreate", function () {
         if (!err) {
             throw new Error("file creation did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

@@ -15,10 +15,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenUpdate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -103,14 +108,11 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-
-        await env.close({ token });
     });
 
     it("should be able to update treasury", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -221,14 +223,11 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-
-        await env.close({ token });
     });
 
     it("should be executable when no properties except token ID are set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -257,14 +256,11 @@ describe("TokenUpdate", function () {
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("should error updating immutable token", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -292,14 +288,10 @@ describe("TokenUpdate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
-
-        await env.close();
     });
 
     it("should error when token ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -314,14 +306,11 @@ describe("TokenUpdate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
-
-        await env.close();
     });
 
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -337,14 +326,11 @@ describe("TokenUpdate", function () {
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -377,15 +363,11 @@ describe("TokenUpdate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
-
-        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot change current treasury until no NFTs are owned", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new({ throwaway: true });
 
         const key = PrivateKey.generateED25519();
 
@@ -473,7 +455,9 @@ describe("TokenUpdate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

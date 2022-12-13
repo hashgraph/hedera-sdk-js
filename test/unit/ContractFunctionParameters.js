@@ -31,6 +31,30 @@ describe("ContractFunctionParameters", function () {
         expect(cfp._arguments[0].value).to.eql(cfp._arguments[1].value);
     });
 
+    it("should convert number to BigNumber in addUint24()", function () {
+        const contractFunctionParameters = new ContractFunctionParameters();
+
+        const num = 111;
+        const cfp = contractFunctionParameters.addUint24(num);
+
+        const bigNum = BigNumber(111);
+        contractFunctionParameters.addUint24(bigNum);
+
+        expect(cfp._arguments[0].value).to.eql(cfp._arguments[1].value);
+    });
+
+    it("should convert number to BigNumber in addInt24()", function () {
+        const contractFunctionParameters = new ContractFunctionParameters();
+
+        const num = 111;
+        const cfp = contractFunctionParameters.addInt24(num);
+
+        const bigNum = BigNumber(111);
+        contractFunctionParameters.addInt24(bigNum);
+
+        expect(cfp._arguments[0].value).to.eql(cfp._arguments[1].value);
+    });
+
     it("should convert number to BigNumber in addUint256Array()", function () {
         const contractFunctionParameters = new ContractFunctionParameters();
 

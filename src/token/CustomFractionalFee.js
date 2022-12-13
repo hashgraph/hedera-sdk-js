@@ -37,6 +37,7 @@ export default class CustomFractionalFee extends CustomFee {
     /**
      * @param {object} props
      * @param {AccountId | string} [props.feeCollectorAccountId]
+     * @param {boolean} [props.allCollectorsAreExempt]
      * @param {Long | number} [props.numerator]
      * @param {Long | number} [props.denominator]
      * @param {Long | number} [props.min]
@@ -198,6 +199,10 @@ export default class CustomFractionalFee extends CustomFee {
                 info.feeCollectorAccountId != null
                     ? AccountId._fromProtobuf(info.feeCollectorAccountId)
                     : undefined,
+            allCollectorsAreExempt:
+                info.allCollectorsAreExempt != null
+                    ? info.allCollectorsAreExempt
+                    : undefined,
             numerator:
                 fractional.numerator != null ? fractional.numerator : undefined,
             denominator:
@@ -220,6 +225,7 @@ export default class CustomFractionalFee extends CustomFee {
                 this.feeCollectorAccountId != null
                     ? this.feeCollectorAccountId._toProtobuf()
                     : null,
+            allCollectorsAreExempt: this.allCollectorsAreExempt,
             fractionalFee: {
                 fractionalAmount: {
                     numerator: this._numerator,

@@ -265,6 +265,8 @@ describe("CustomFees", function () {
         ).tokenId;
 
         expect(token).to.not.be.null;
+
+        await env.close();
     });
 
     it("User has an invalid custom fee collector account ID(s)", async function () {
@@ -450,6 +452,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests

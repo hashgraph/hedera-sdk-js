@@ -1,109 +1,127 @@
-name: Build
+name: Build & Test
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - release/*
-  pull_request:
-    branches:
-      - main
-      - develop
-      - release/*
+    push:
+        branches:
+            - main
+            - develop
+            - release/*
+            - integration-test-workflow
+    pull_request:
+        branches:
+            - main
+            - develop
+            - release/*
 
 env:
-  PNPM_HOME: /home/runner/work/hedera-sdk-js
+    PNPM_HOME: /home/runner/work/hedera-sdk-js
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ '14', '16' ]
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: ["14", "16"]
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  submodules: recursive
 
-      - name: Install Task
-        uses: arduino/setup-task@v1
-        with:
-            version: 3.7.0
+            - name: Install Task
+              uses: arduino/setup-task@v1
+              with:
+                  version: 3.7.0
 
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+            - name: Cache pnpm modules
+              uses: actions/cache@v2
+              env:
+                  cache-name: cache-pnpm-modules
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
 
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 7.6.0
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 7.6.0
 
-      - name: Build @hashgraph/sdk
-        run: task build
+            - name: Build @hashgraph/sdk
+              run: task build
 
-  test-unit-node:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [ '14', '16' ]
+    test:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: ["16"]
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  submodules: recursive
 
-      - name: Install Task
-        uses: arduino/setup-task@v1
-        with:
-            version: 3.7.0
+            - name: Install Task
+              uses: arduino/setup-task@v1
+              with:
+                  version: 3.7.0
 
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+            - name: "Create env file"
+              run: |
+                  touch .env
+                  echo OPERATOR_KEY="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" >> .env
+                  echo OPERATOR_ID="0.0.2" >> .env
+                  echo HEDERA_NETWORK="local-node" >> .env
+                  cat .env
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
+            - name: Cache pnpm modules
+              uses: actions/cache@v2
+              env:
+                  cache-name: cache-pnpm-modules
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
 
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 7.6.0
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
 
-      - name: Build @hashgraph/sdk
-        run: task build
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 7.6.0
 
-      - name: Build @hashgraph/cryptography
-        working-directory: packages/cryptography
-        run: task build
+            - name: Build @hashgraph/sdk
+              run: task build
 
-      - name: Uint Test @hashgraph/cryptography
-        working-directory: packages/cryptography
-        run: task test:unit
+            - name: Start the local node
+              run: npx @hashgraph/hedera-local start -d --network local
 
-      - name: Codecov @hashgraph/cryptography
-        working-directory: packages/cryptography
-        run: task test:unit:codecov
+            - name: Run Hedera SDK Integration Tests Codecov
+              run: task test:integration:codecov
 
-      - name: Unit Test @hashgraph/sdk
-        run: task test:unit
+            - name: Stop the local node
+              run: npx @hashgraph/hedera-local stop
 
-      - name: Codecov @hashgraph/sdk
-        run: task test:unit:codecov
+            - name: Build @hashgraph/cryptography
+              working-directory: packages/cryptography
+              run: task build
+
+            - name: Uint Test @hashgraph/cryptography
+              working-directory: packages/cryptography
+              run: task test:unit
+
+            - name: Codecov @hashgraph/cryptography
+              working-directory: packages/cryptography
+              run: task test:unit:codecov
+
+            - name: Unit Test @hashgraph/sdk
+              run: task test:unit
+
+            - name: Codecov @hashgraph/sdk
+              run: task test:unit:codecov

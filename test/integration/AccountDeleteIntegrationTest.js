@@ -10,10 +10,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountDelete", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -51,14 +56,11 @@ describe("AccountDelete", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error with invalid signature", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -89,14 +91,11 @@ describe("AccountDelete", function () {
         if (!err) {
             throw new Error("account deletion did not error");
         }
-
-        await env.close();
     });
 
     it("should error with no account ID set", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {
@@ -115,7 +114,9 @@ describe("AccountDelete", function () {
         if (!err) {
             throw new Error("account deletion did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

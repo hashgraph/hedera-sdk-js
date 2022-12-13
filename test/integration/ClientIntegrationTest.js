@@ -11,10 +11,18 @@ import {
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("ClientIntegration", function () {
+    let env;
+    let clientTestnet;
+    let clientPreviewNet;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+        clientTestnet = Client.forTestnet();
+        clientPreviewNet = Client.forPreviewnet();
+    });
+
     it("should error when invalid network on entity ID", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         if (env.client.ledgerId == null) {
             return;
@@ -52,14 +60,11 @@ describe("ClientIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
-
-        await env.close();
     });
 
     it("can execute with sign on demand", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         env.client.setSignOnDemand(true);
 
         const operatorId = env.operatorId;
@@ -99,14 +104,11 @@ describe("ClientIntegration", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("can get bytes without sign on demand", async function () {
+        env.client.setSignOnDemand(false);
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const bytes = (
@@ -116,38 +118,31 @@ describe("ClientIntegration", function () {
                 .freezeWith(env.client)
                 .sign(key)
         ).toBytes();
-
         expect(bytes.length).to.be.gt(0);
-
-        await env.close();
     });
 
     it("can pingAll", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
-
         await env.client.pingAll();
-
-        await env.close();
     });
 
     it("can set network name on custom network", async function () {
-        const testnetClient = Client.forTestnet();
-        const previewnetClient = Client.forPreviewnet();
+        expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
+        expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
-        expect(testnetClient.ledgerId).to.be.equal(LedgerId.TESTNET);
-        expect(previewnetClient.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
+        clientTestnet.setNetwork(clientPreviewNet.network);
 
-        testnetClient.setNetwork(previewnetClient.network);
+        expect(clientTestnet.ledgerId).to.be.null;
 
-        expect(testnetClient.ledgerId).to.be.null;
+        clientTestnet.setLedgerId("previewnet");
 
-        testnetClient.setLedgerId("previewnet");
+        expect(clientTestnet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
+    });
 
-        expect(testnetClient.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
-
-        testnetClient.close();
-        previewnetClient.close();
+    after(async function () {
+        await env.close();
+        clientTestnet.close();
+        clientPreviewNet.close();
     });
 });

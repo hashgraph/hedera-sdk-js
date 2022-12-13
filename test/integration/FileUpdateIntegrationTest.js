@@ -9,10 +9,14 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileUpdate", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -68,14 +72,10 @@ describe("FileUpdate", function () {
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close();
     });
 
     it("should error when file ID is not set", async function () {
         this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -92,7 +92,9 @@ describe("FileUpdate", function () {
         if (!err) {
             throw new Error("file update did not error");
         }
+    });
 
+    after(async function () {
         await env.close();
     });
 });

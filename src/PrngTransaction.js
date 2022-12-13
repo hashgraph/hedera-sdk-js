@@ -113,16 +113,16 @@ export default class PrngTransaction extends Transaction {
         nodeIds,
         bodies
     ) {
-        const body =
-            /** @type {HashgraphProto.proto.UtilPrngTransactionBody} */ (
-                bodies[0]
+        const body = /** @type {HashgraphProto.proto.ITransactionBody} */ (
+            bodies[0]
+        );
+        const transactionRange =
+            /** @type {HashgraphProto.proto.IUtilPrngTransactionBody} */ (
+                body.utilPrng
             );
-
-        const transactionRange = body.range;
-
         return Transaction._fromProtobufTransactions(
             new PrngTransaction({
-                range: transactionRange,
+                range: transactionRange.range,
             }),
             transactions,
             signedTransactions,

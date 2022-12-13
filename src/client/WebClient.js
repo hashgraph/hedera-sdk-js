@@ -50,14 +50,27 @@ export const Network = {
 
     MAINNET: {
         "https://grpc-web.myhbarwallet.com:443": new AccountId(3),
+        "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
     },
 
     TESTNET: {
-        "https://grpc-web.testnet.myhbarwallet.com:443": new AccountId(3),
+        "https://testnet-node00-00-grpc.hedera.com:443": new AccountId(3),
+        "https://testnet-node01-00-grpc.hedera.com:443": new AccountId(4),
+        "https://testnet-node02-00-grpc.hedera.com:443": new AccountId(5),
+        "https://testnet-node03-00-grpc.hedera.com:443": new AccountId(6),
+        "https://testnet-node04-00-grpc.hedera.com:443": new AccountId(7),
+        "https://testnet-node05-00-grpc.hedera.com:443": new AccountId(8),
+        "https://testnet-node06-00-grpc.hedera.com:443": new AccountId(9),
     },
 
     PREVIEWNET: {
-        "https://grpc-web.previewnet.myhbarwallet.com:443": new AccountId(3),
+        "https://previewnet-node00-00-grpc.hedera.com:443": new AccountId(3),
+        "https://previewnet-node01-00-grpc.hedera.com:443": new AccountId(4),
+        "https://previewnet-node02-00-grpc.hedera.com:443": new AccountId(5),
+        "https://previewnet-node03-00-grpc.hedera.com:443": new AccountId(6),
+        "https://previewnet-node04-00-grpc.hedera.com:443": new AccountId(7),
+        "https://previewnet-node05-00-grpc.hedera.com:443": new AccountId(8),
+        "https://previewnet-node06-00-grpc.hedera.com:443": new AccountId(9),
     },
 };
 

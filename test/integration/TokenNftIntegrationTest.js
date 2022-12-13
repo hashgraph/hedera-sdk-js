@@ -17,10 +17,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenNft", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be able to transfer NFT", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -115,14 +120,11 @@ describe("TokenNft", function () {
                 .setSerials([serials[1]])
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("Cannot burn NFTs when NFT is not owned by treasury", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -216,14 +218,11 @@ describe("TokenNft", function () {
         }
 
         expect(err).to.be.true;
-
-        await env.close({ token });
     });
 
     it("Cannot mint NFTs if metadata too big", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -393,14 +392,11 @@ describe("TokenNft", function () {
         }
 
         expect(err).to.be.true;
-
-        await env.close({ token });
     });
 
     it("Cannot query NFT info by invalid NftId", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -468,14 +464,11 @@ describe("TokenNft", function () {
         }
 
         expect(err).to.be.true;
-
-        await env.close({ token });
     });
 
     it("Cannot query NFT info by invalid NftId Serial Number", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -535,14 +528,11 @@ describe("TokenNft", function () {
         }
 
         expect(err).to.be.true;
-
-        await env.close({ token });
     });
 
     it("Cannot transfer NFTs you don't own", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -651,14 +641,11 @@ describe("TokenNft", function () {
                 .setSerials([serial])
                 .execute(env.client)
         ).getReceipt(env.client);
-
-        await env.close({ token });
     });
 
     it("Cannot wipe accounts NFTs if the account doesn't own them", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -756,7 +743,9 @@ describe("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+    });
 
-        await env.close({ token });
+    after(async function () {
+        await env.close();
     });
 });

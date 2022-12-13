@@ -54,8 +54,6 @@ export default class GrpcStatus {
                 return GrpcStatus.AlreadyExists;
             case 7:
                 return GrpcStatus.PermissionDenied;
-            case 16:
-                return GrpcStatus.Unauthenticated;
             case 8:
                 return GrpcStatus.ResourceExhausted;
             case 9:
@@ -72,6 +70,10 @@ export default class GrpcStatus {
                 return GrpcStatus.Unavailable;
             case 15:
                 return GrpcStatus.DataLoss;
+            case 16:
+                return GrpcStatus.Unauthenticated;
+            case 17:
+                return GrpcStatus.Timeout;
             default:
                 throw new Error(
                     "(BUG) non-exhaustive GrpcStatus switch statement"
@@ -118,7 +120,8 @@ export default class GrpcStatus {
                 return "UNAVAILABLE";
             case GrpcStatus.DataLoss:
                 return "DATA_LOSS";
-
+            case GrpcStatus.Timeout:
+                return "TIMEOUT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -140,7 +143,6 @@ GrpcStatus.DeadlineExceeded = new GrpcStatus(4);
 GrpcStatus.NotFound = new GrpcStatus(5);
 GrpcStatus.AlreadyExists = new GrpcStatus(6);
 GrpcStatus.PermissionDenied = new GrpcStatus(7);
-GrpcStatus.Unauthenticated = new GrpcStatus(16);
 GrpcStatus.ResourceExhausted = new GrpcStatus(8);
 GrpcStatus.FailedPrecondition = new GrpcStatus(9);
 GrpcStatus.Aborted = new GrpcStatus(10);
@@ -149,3 +151,5 @@ GrpcStatus.Unimplemented = new GrpcStatus(12);
 GrpcStatus.Internal = new GrpcStatus(13);
 GrpcStatus.Unavailable = new GrpcStatus(14);
 GrpcStatus.DataLoss = new GrpcStatus(15);
+GrpcStatus.Unauthenticated = new GrpcStatus(16);
+GrpcStatus.Timeout = new GrpcStatus(17);

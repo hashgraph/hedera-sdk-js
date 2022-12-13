@@ -7,10 +7,15 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("SystemIntegration", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
-        const env = await IntegrationTestEnv.new();
         let errorThrown = false;
 
         try {
@@ -57,7 +62,9 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
+    });
 
+    after(async function () {
         await env.close();
     });
 });

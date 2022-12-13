@@ -64,21 +64,27 @@ export default class BaseIntegrationTestEnv {
         ) {
             client = options.client.forTestnet();
         } else if (
-            options.env.HEDERA_NETWORK != null &&
-            options.env.HEDERA_NETWORK == "localhost"
+            (options.env.HEDERA_NETWORK != null &&
+                options.env.HEDERA_NETWORK == "localhost") ||
+            options.env.HEDERA_NETWORK == "local-node"
         ) {
             client = options.client.forNetwork({
-                "127.0.0.1:50213": "0.0.3",
-                "127.0.0.1:50214": "0.0.4",
-                "127.0.0.1:50215": "0.0.5",
+                "127.0.0.1:50211": new AccountId(3),
             });
         } else if (options.env.CONFIG_FILE != null) {
-            client = await options.client.fromConfigFile(options.env.CONFIG_FILE);
+            client = await options.client.fromConfigFile(
+                options.env.CONFIG_FILE
+            );
         } else {
-            throw new Error("Failed to construct client for IntegrationTestEnv");
+            throw new Error(
+                "Failed to construct client for IntegrationTestEnv"
+            );
         }
 
-        if (options.env.OPERATOR_ID != null && options.env.OPERATOR_KEY != null) {
+        if (
+            options.env.OPERATOR_ID != null &&
+            options.env.OPERATOR_KEY != null
+        ) {
             const operatorId = AccountId.fromString(options.env.OPERATOR_ID);
             const operatorKey = PrivateKey.fromString(options.env.OPERATOR_KEY);
 
@@ -91,7 +97,8 @@ export default class BaseIntegrationTestEnv {
         const originalOperatorKey = client.operatorAccountKey;
         const originalOperatorId = client.operatorAccountId;
 
-        client.setMaxNodeAttempts(1)
+        client
+            .setMaxNodeAttempts(1)
             .setNodeMinBackoff(0)
             .setNodeMaxBackoff(0)
             .setNodeMinReadmitPeriod(0)
@@ -100,8 +107,9 @@ export default class BaseIntegrationTestEnv {
         await client.pingAll();
 
         const network = {};
-        const nodeAccountIds = options.nodeAccountIds != null ? options.nodeAccountIds : 1;
-        for (const [ key, value ] of Object.entries(client.network)) {
+        const nodeAccountIds =
+            options.nodeAccountIds != null ? options.nodeAccountIds : 1;
+        for (const [key, value] of Object.entries(client.network)) {
             network[key] = value;
 
             if (Object.keys(network).length >= nodeAccountIds) {
@@ -114,7 +122,9 @@ export default class BaseIntegrationTestEnv {
 
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)
-            .setInitialBalance(new Hbar(options.balance != null ? options.balance : 100))
+            .setInitialBalance(
+                new Hbar(options.balance != null ? options.balance : 100)
+            )
             .execute(client);
 
         const newOperatorId = (await response.getReceipt(client)).accountId;
@@ -142,9 +152,10 @@ export default class BaseIntegrationTestEnv {
             }
 
             for (const token of options.token) {
-                await (await new TokenDeleteTransaction()
-                    .setTokenId(token)
-                    .execute(this.client)
+                await (
+                    await new TokenDeleteTransaction()
+                        .setTokenId(token)
+                        .execute(this.client)
                 ).getReceipt(this.client);
             }
         }

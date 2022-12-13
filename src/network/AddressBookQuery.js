@@ -223,9 +223,14 @@ export default class AddressBookQuery {
                 (error) => {
                     const message =
                         error instanceof Error ? error.message : error.details;
-
+                    console.log("ERROR:", error);
+                    console.log(
+                        "ERRORED, but CLIENT CLOSE IS",
+                        client.isClientShutDown
+                    );
                     if (
                         this._attempt < this._maxAttempts &&
+                        !client.isClientShutDown &&
                         this._retryHandler(error)
                     ) {
                         const delay = Math.min(

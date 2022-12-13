@@ -14,6 +14,12 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import Long from "long";
 
 describe("LiveHash", function () {
+    let env;
+
+    before(async function () {
+        env = await IntegrationTestEnv.new();
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
@@ -21,7 +27,6 @@ describe("LiveHash", function () {
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
         );
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         let errorThrown = false;
 
@@ -89,7 +94,8 @@ describe("LiveHash", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
-
+    });
+    after(async function () {
         await env.close();
     });
 });
