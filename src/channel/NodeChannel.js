@@ -36,11 +36,13 @@ export default class NodeChannel extends Channel {
      * @internal
      * @param {string} address
      * @param {string=} cert
+     * @param {number=} maxExecutionTime
      */
-    constructor(address, cert) {
+    constructor(address, cert, maxExecutionTime) {
         super();
 
         this.cert = cert;
+        this.maxExecutionTime = maxExecutionTime;
 
         let security;
         let options;
@@ -96,7 +98,7 @@ export default class NodeChannel extends Channel {
                     //Removed close of the client because taking more than 10s does not mean that the node is unavailable.
                     callback(new GrpcServicesError(GrpcStatus.Timeout));
                 }
-            }, 10_000);
+            }, this.maxExecutionTime);
 
             this._client.makeUnaryRequest(
                 `/proto.${serviceName}/${method.name}`,

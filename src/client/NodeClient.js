@@ -83,6 +83,9 @@ export default class NodeClient extends Client {
     constructor(props) {
         super(props);
 
+        /** @private */
+        this._maxExecutionTime = 10000;
+
         if (props != null) {
             if (typeof props.network === "string") {
                 this._setNetworkFromName(props.network);
@@ -221,6 +224,17 @@ export default class NodeClient extends Client {
     }
 
     /**
+     * Available only for NodeClient
+     *
+     * @param {number} maxExecutionTime
+     * @returns {this}
+     */
+    setMaxExecutionTime(maxExecutionTime) {
+        this._maxExecutionTime = maxExecutionTime;
+        return this;
+    }
+
+    /**
      * @private
      * @param {string} name
      * @returns {this}
@@ -302,7 +316,8 @@ export default class NodeClient extends Client {
      * @returns {(address: string, cert?: string) => NodeChannel}
      */
     _createNetworkChannel() {
-        return (address, cert) => new NodeChannel(address, cert);
+        return (address, cert) =>
+            new NodeChannel(address, cert, this._maxExecutionTime);
     }
 
     /**
