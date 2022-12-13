@@ -203,7 +203,7 @@ describe("AccountCreate", function () {
         await (await transaction.execute(env.client)).getReceipt(env.client);
     });
 
-    it("should create account with a single key passed to `KeyList`", async function() {
+    it("should create account with a single key passed to `KeyList`", async function () {
         const env = await IntegrationTestEnv.new();
         const publicKey = PrivateKey.generateED25519().publicKey;
         const thresholdKey = new KeyList(publicKey, 1);
