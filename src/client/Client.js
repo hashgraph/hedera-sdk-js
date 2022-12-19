@@ -141,7 +141,7 @@ export default class Client {
         this._requestTimeout = null;
 
         /** @private */
-        this._networkUpdatePeriod = 10000;
+        this._networkUpdatePeriod = 24 * 60 * 60 * 1000;
 
         /** @private */
         this._isShutdown = false;
