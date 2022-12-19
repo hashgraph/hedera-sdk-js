@@ -170,6 +170,26 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * Construct a Ed25519 private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<PrivateKey>}
+     */
+    static async fromSeedED25519(seed) {
+        return new PrivateKey(await cryptography.PrivateKey.fromSeedED25519(seed));
+    }
+    
+    /**
+     * Construct a Ed25519 private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<PrivateKey>}
+     */
+    static async fromSeedECDSA(seed) {
+        return new PrivateKey(await cryptography.PrivateKey.fromSeedECDSA(seed));
+    }
+
+    /**
      * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
      *
      * Recover a private key from a mnemonic phrase (and optionally a password).

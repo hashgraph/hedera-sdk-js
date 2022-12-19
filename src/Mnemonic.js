@@ -138,6 +138,14 @@ export default class Mnemonic {
             await this._mnemonic.toLegacyPrivateKey()
         );
     }
+    
+    /**
+     * @param {string} passphrase
+     * @returns {Promise<Uint8Array>}
+     */
+    async toSeed(passphrase) {
+        return await cryptography.Mnemonic.toSeed(this._mnemonic.words, passphrase);
+    }
 
     /**
      * @returns {string}

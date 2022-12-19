@@ -71,3 +71,56 @@ export async function derive(parentKey, chainCode, index) {
         return derive(parentKey, chainCode, index + 1);
     }
 }
+
+//TODO might need to delete it, wait for now
+/**
+ * @param {Uint8Array} seed
+ * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
+ */
+// @ts-ignore
+export async function fromSeed(seed) {
+    if (seed.length < 16)
+        throw new TypeError('Seed should be at least 128 bits');
+    if (seed.length > 64)
+        throw new TypeError('Seed should be at most 512 bits');
+
+
+    const I = await hmac.hash(hmac.HashAlgorithm.Sha512, "Bitcoin seed", seed);
+
+    
+    const IL = I.subarray(0, 32);
+    const IR = I.subarray(32);
+
+    /* 
+
+    secp256k1
+            .keyFromPrivate(parentKey)
+            .getPrivate()
+            .add(secp256k1.keyFromPrivate(IL).getPrivate());
+
+    keyData: hex.decode(
+                secp256k1.keyFromPrivate(ki.toArray()).getPrivate("hex")
+            ),
+    
+    */
+
+    const keypair = secp256k1.keyPair({
+        priv: Buffer.from(IL), privEnc: "hex"
+    });
+    const priv = hex.decode(keypair.getPrivate("hex"));
+    const pub = hex.decode(keypair.getPublic("hex"));
+    console.log(`public key: ${JSON.stringify(IL)}`);
+    console.log(`public key: ${JSON.stringify(IR)}`);
+
+    /* let result = hex.decode(secp256k1
+        .keyFromPrivate(IL)
+        .getPrivate("hex")); 
+        
+        privateKey: hex.decode(keypair.getPrivate("hex")),
+        publicKey: hex.decode(keypair.getPublic(true, "hex")),
+    */
+        const pair = {
+            privateKey: priv, publicKey: pub
+        }
+    return { keyData: IL, chainCode: IR };
+}

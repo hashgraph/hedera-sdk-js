@@ -221,6 +221,15 @@ export default class Mnemonic {
     }
 
     /**
+     * @param {string[]} words
+     * @param {string} passphrase
+     * @returns {Promise<Uint8Array>}
+     */
+    static async toSeed(words, passphrase) {
+        return await bip39.toSeed(words, passphrase);
+    }
+    
+    /**
      * @param {string} passphrase
      * @param {string} seedText
      * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>} seedText

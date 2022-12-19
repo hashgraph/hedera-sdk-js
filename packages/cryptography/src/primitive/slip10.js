@@ -25,3 +25,17 @@ export async function derive(parentKey, chainCode, index) {
 
     return { keyData: digest.subarray(0, 32), chainCode: digest.subarray(32) };
 }
+
+/**
+ * @param {Uint8Array} seed
+ * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
+ */
+export async function fromSeed(seed) {
+    const digest = await hmac.hash(
+        hmac.HashAlgorithm.Sha512,
+        "ed25519 seed",
+        seed
+    );
+
+    return { keyData: digest.subarray(0, 32), chainCode: digest.subarray(32) };
+}
