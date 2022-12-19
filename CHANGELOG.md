@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## v2.19.1
+
+## What's Changed
+* KeyList now handles single key properly as first parameter by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1348
+* Fix typo in deprecation suggestion by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1352
+* Update contribution guide by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1353
+* Add max execution time setter for NodeChannel GRPC by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1354
+* Update the addressbook update to be 24 hours by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1359
+
+
 ## v2.19.0
 
 ## What's Changed
