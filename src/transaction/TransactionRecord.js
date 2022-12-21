@@ -33,6 +33,7 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
+import EvmAddress from "../EvmAddress.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -76,6 +77,7 @@ export default class TransactionRecord {
      * @param {Transfer[]} props.paidStakingRewards
      * @param {?Uint8Array} props.prngBytes;
      * @param {?number} props.prngNumber;
+     * @param {?EvmAddress} props.evmAddress;
      */
     constructor(props) {
         /**
@@ -263,6 +265,14 @@ export default class TransactionRecord {
          */
         this.prngNumber = props.prngNumber;
 
+        /**
+         * The new default EVM address of the account created by this transaction.
+         * This field is populated only when the EVM address is not specified in the related transaction body.
+         *
+         * @readonly
+         */
+        this.evmAddress = props.evmAddress;
+
         Object.freeze(this);
     }
 
@@ -385,6 +395,7 @@ export default class TransactionRecord {
 
                 prngBytes: this.prngBytes,
                 prngNumber: this.prngNumber != null ? this.prngNumber : null,
+                evmAddress: this.evmAddress != null ? this.evmAddress : null,
             },
         };
     }
@@ -522,6 +533,7 @@ export default class TransactionRecord {
                     : [],
             prngBytes: record.prngBytes != null ? record.prngBytes : null,
             prngNumber: record.prngNumber != null ? record.prngNumber : null,
+            evmAddress: record.evmAddress != null ? record.evmAddress : null,
         });
     }
 

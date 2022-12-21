@@ -58,6 +58,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {boolean} [props.declineStakingReward]
      * @param {PublicKey} [props.aliasKey]
      * @param {EvmAddress} [props.aliasEvmAddress]
+     * @param {EvmAddress} [props.evmAddress]
      */
     constructor(props = {}) {
         super();
@@ -146,6 +147,12 @@ export default class AccountCreateTransaction extends Transaction {
          */
         this._aliasEvmAddress = null;
 
+        /**
+         * @private
+         * @type {?EvmAddress}
+         */
+        this._evmAddress = null;
+
         if (props.key != null) {
             this.setKey(props.key);
         }
@@ -196,6 +203,10 @@ export default class AccountCreateTransaction extends Transaction {
         if (props.aliasEvmAddress != null) {
             this.setAliasEvmAddress(props.aliasEvmAddress);
         }
+
+        if (props.evmAddress != null) {
+            this.setEvmAddress(props.evmAddress);
+        }
     }
 
     /**
@@ -222,6 +233,8 @@ export default class AccountCreateTransaction extends Transaction {
 
         let aliasKey = undefined;
         let aliasEvmAddress = undefined;
+        let evmAddress = undefined;
+
         if (create.alias != null && create.alias.length > 0) {
             if (create.alias.length === 20) {
                 aliasEvmAddress = EvmAddress.fromBytes(create.alias);
@@ -234,6 +247,10 @@ export default class AccountCreateTransaction extends Transaction {
 
         if (!(aliasKey instanceof PublicKey)) {
             aliasKey = undefined;
+        }
+
+        if (create.evmAddress != null) {
+            evmAddress = EvmAddress.fromBytes(create.evmAddress);
         }
 
         return Transaction._fromProtobufTransactions(
@@ -280,6 +297,7 @@ export default class AccountCreateTransaction extends Transaction {
                 declineStakingReward: create.declineReward == true,
                 aliasKey,
                 aliasEvmAddress,
+                evmAddress,
             }),
             transactions,
             signedTransactions,
@@ -543,6 +561,22 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @param {Uint8Array | string | EvmAddress} evmAddress
+     * @returns {this}
+     */
+    setEvmAddress(evmAddress) {
+        if (typeof evmAddress === "string") {
+            this._evmAddress = EvmAddress.fromString(evmAddress);
+        } else if (evmAddress instanceof Uint8Array) {
+            this._evmAddress = EvmAddress.fromBytes(evmAddress);
+        } else {
+            this._evmAddress = evmAddress;
+        }
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -578,12 +612,18 @@ export default class AccountCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         let alias = null;
+        let evmAddress = null;
+
         if (this._aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
                 this._aliasKey._toProtobufKey()
             ).finish();
         } else if (this._aliasEvmAddress != null) {
             alias = this._aliasEvmAddress.toBytes();
+        }
+
+        if (this._evmAddress != null) {
+            evmAddress = this._evmAddress.toBytes();
         }
 
         return {
@@ -612,6 +652,7 @@ export default class AccountCreateTransaction extends Transaction {
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,
             alias,
+            evmAddress,
         };
     }
 
