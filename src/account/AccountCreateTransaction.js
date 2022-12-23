@@ -544,7 +544,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @beta - Please note this is a beta feature and it's implementation is subject to change
+     * @deprecated  - Use `setEvmAddress()` instead. The new `setEvmAddress()` accepts only string hex format evm address
      * @param {Uint8Array | string | EvmAddress} aliasEvmAddress
      * @returns {this}
      */
@@ -561,16 +561,14 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @param {Uint8Array | string | EvmAddress} evmAddress
+     * @param {string} evmAddress
      * @returns {this}
      */
     setEvmAddress(evmAddress) {
         if (typeof evmAddress === "string") {
             this._evmAddress = EvmAddress.fromString(evmAddress);
-        } else if (evmAddress instanceof Uint8Array) {
-            this._evmAddress = EvmAddress.fromBytes(evmAddress);
         } else {
-            this._evmAddress = evmAddress;
+            return this.setAliasEvmAddress(evmAddress);
         }
 
         return this;

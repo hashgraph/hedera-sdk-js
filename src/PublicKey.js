@@ -172,9 +172,17 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @deprecated Use `toEvmAddress()` instead.
      * @returns {string}
      */
     toEthereumAddress() {
+        return this._key.toEthereumAddress();
+    }
+    
+    /**
+     * @returns {string}
+     */
+    toEvmAddress() {
         return this._key.toEthereumAddress();
     }
 

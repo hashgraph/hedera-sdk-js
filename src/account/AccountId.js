@@ -119,6 +119,24 @@ export default class AccountId {
                 : evmAddress
         );
     }
+    
+    //TODO might need to be removed
+    /**
+     * @param {EvmAddress} evmAddress
+     * @returns {AccountId}
+     */
+    static fromEvmAddress2(evmAddress) {
+        return new AccountId(
+            0,
+            0,
+            0,
+            undefined,
+            undefined,
+            typeof evmAddress === "string"
+                ? EvmAddress.fromString(evmAddress)
+                : evmAddress
+        );
+    }
 
     /**
      * @internal
