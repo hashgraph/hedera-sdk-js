@@ -544,7 +544,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @deprecated  - Use `setEvmAddress()` instead. The new `setEvmAddress()` accepts only string hex format evm address
+     * @deprecated  - Use `setEvmAddress()` instead. The new `setEvmAddress()` method accepts only evm address as a hex format string
      * @param {Uint8Array | string | EvmAddress} aliasEvmAddress
      * @returns {this}
      */
