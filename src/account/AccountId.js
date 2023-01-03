@@ -97,7 +97,6 @@ export default class AccountId {
         );
     }
 
-    //TODO should we edit this one or we should deprecate and create a new implementation
     /**
      * @summary Accepts an evm address only as `EvmAddress` type
      * @param {EvmAddress} evmAddress
