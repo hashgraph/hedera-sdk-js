@@ -1,5 +1,6 @@
 import {
     AccountId,
+    PrivateKey,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -8,25 +9,45 @@ dotenv.config();
 
 async function main() {
 
-    /*  ADD EXAMPLES FOR
+    /* Source and context: https://hips.hedera.com/hip/hip-583
 
-        An account can have an account ID in shard.realm.accountNumber format (0.0.10)
-        An account can have a public key alias in 0.0.CIQNOWUYAGBLCCVX2VF75U6JMQDTUDXBOLZ5VJRDEWXQEGTI64DVCGQ format
-        An account can have an AccountId that is represented in 0x000000000000000000000000000000000000000a (for account ID 0.0.10) long zero format
-        An account have be represented by an Ethereum public address 0xb794f5ea0ba39494ce839613fffba74279579268
+        In hedera Hedera, we have the concept of 4 different account representations
+            -   An account can have an account ID in shard.realm.accountNumber format (0.0.10)
+            -   An account can have a public key alias in 0.0.CIQNOWUYAGBLCCVX2VF75U6JMQDTUDXBOLZ5VJRDEWXQEGTI64DVCGQ format
+            -   An account can have an AccountId that is represented in 0x000000000000000000000000000000000000000a (for account ID 0.0.10) long zero format
+            -   An account have be represented by an Ethereum public address 0xb794f5ea0ba39494ce839613fffba74279579268
     */
 
-    const test1 = AccountId.fromString("0.0.2");
-    const test2 = AccountId.fromString("0.0.302a300506032b6570032100114e6abc371b82dab5c15ea149f02d34a012087b163516dd70f44acafabf7777");
-    const test3 = AccountId.fromString("0.0.b794f5ea0ba39494ce839613fffba74279579268");
-    const test4 = AccountId.fromString("0xb794f5ea0ba39494ce839613fffba74279579268");
 
-    console.log(`test1 ${JSON.stringify(test1)}`);
-    console.log(`test2 ${JSON.stringify(test2)}`);
-    console.log(`test3 ${JSON.stringify(test3)}`);
-    console.log(`test4 ${JSON.stringify(test4)}`);
+    /*
+        Account ID    -   shard.realm.number format, i.e. `0.0.10` with the corresponding `0x000000000000000000000000000000000000000a` ethereum address
+    */
+    const hederaFormat = AccountId.fromString("0.0.10");
+    console.log(`Account ID: ${hederaFormat}`);
+    console.log(`Account 0.0.10 corresponding Long-Zero address: ${hederaFormat.toSolidityAddress()}`);
+   
+    /*
+        Hedera Long-Form Account ID    -   0.0.aliasPublicKey, i.e. `0.0.CIQNOWUYAGBLCCVX2VF75U6JMQDTUDXBOLZ5VJRDEWXQEGTI64DVCGQ`
+   */
+    const privateKey = PrivateKey.generateECDSA();
+    const publicKey = privateKey.publicKey;
 
+    // Assuming that the target shard and realm are known.
+    // For now they are virtually always 0 and 0.
+    const aliasAccountId = publicKey.toAccountId(0, 0);
+    console.log(`Hedera Long-Form Account ID: ${aliasAccountId.toString()}`);
 
+    /*
+        Hedera Account Long-Zero address    -   0x000000000000000000000000000000000000000a (for accountId 0.0.10)
+    */
+    const longZeroAddress = AccountId.fromString("0x000000000000000000000000000000000000000a");
+    console.log(`Hedera Account Long-Zero address: ${longZeroAddress}`);
+    
+    /*
+        Ethereum Account Address / public-address   -   0xb794f5ea0ba39494ce839613fffba74279579268
+    */
+    const evmAddress = AccountId.fromString("0xb794f5ea0ba39494ce839613fffba74279579268");
+    console.log(`Ethereum Account Address / public-address: ${evmAddress}`);
 }
 
 void main();

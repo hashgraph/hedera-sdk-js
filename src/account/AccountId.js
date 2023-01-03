@@ -57,6 +57,11 @@ export default class AccountId {
     }
 
     /**
+     * @description Accepts the following formats as string:
+     *      - as stand alone nubmers
+     *      - as shard.realm.num
+     *      - as shard.realm.hex (wo 0x prefix)
+     *      - hex (w/wo 0x prefix)
      * @param {string} text
      * @returns {AccountId}
      */
