@@ -57,7 +57,6 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
      * @param {PublicKey} [props.aliasKey]
-     * @param {EvmAddress} [props.aliasEvmAddress]
      * @param {EvmAddress} [props.evmAddress]
      */
     constructor(props = {}) {
@@ -145,12 +144,6 @@ export default class AccountCreateTransaction extends Transaction {
          * @private
          * @type {?EvmAddress}
          */
-        this._aliasEvmAddress = null;
-
-        /**
-         * @private
-         * @type {?EvmAddress}
-         */
         this._evmAddress = null;
 
         if (props.key != null) {
@@ -200,12 +193,8 @@ export default class AccountCreateTransaction extends Transaction {
             this.setAliasKey(props.aliasKey);
         }
 
-        if (props.aliasEvmAddress != null) {
-            this.setAliasEvmAddress(props.aliasEvmAddress);
-        }
-
         if (props.evmAddress != null) {
-            this.setEvmAddress(props.evmAddress);
+            this.setEvmAddress(props.evmAddress.toString());
         }
     }
 
@@ -232,17 +221,11 @@ export default class AccountCreateTransaction extends Transaction {
             );
 
         let aliasKey = undefined;
-        let aliasEvmAddress = undefined;
         let evmAddress = undefined;
-
         if (create.alias != null && create.alias.length > 0) {
-            if (create.alias.length === 20) {
-                aliasEvmAddress = EvmAddress.fromBytes(create.alias);
-            } else {
-                aliasKey = Key._fromProtobufKey(
-                    HashgraphProto.proto.Key.decode(create.alias)
-                );
-            }
+            aliasKey = Key._fromProtobufKey(
+                HashgraphProto.proto.Key.decode(create.alias)
+            );
         }
 
         if (!(aliasKey instanceof PublicKey)) {
@@ -296,7 +279,6 @@ export default class AccountCreateTransaction extends Transaction {
                         : undefined,
                 declineStakingReward: create.declineReward == true,
                 aliasKey,
-                aliasEvmAddress,
                 evmAddress,
             }),
             transactions,
@@ -540,7 +522,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @returns {?EvmAddress}
      */
     get aliasEvmAddress() {
-        return this._aliasEvmAddress;
+        return this._evmAddress;
     }
 
     /**
@@ -550,11 +532,11 @@ export default class AccountCreateTransaction extends Transaction {
      */
     setAliasEvmAddress(aliasEvmAddress) {
         if (typeof aliasEvmAddress === "string") {
-            this._aliasEvmAddress = EvmAddress.fromString(aliasEvmAddress);
+            this._evmAddress = EvmAddress.fromString(aliasEvmAddress);
         } else if (aliasEvmAddress instanceof Uint8Array) {
-            this._aliasEvmAddress = EvmAddress.fromBytes(aliasEvmAddress);
+            this._evmAddress = EvmAddress.fromBytes(aliasEvmAddress);
         } else {
-            this._aliasEvmAddress = aliasEvmAddress;
+            this._evmAddress = aliasEvmAddress;
         }
 
         return this;
@@ -611,15 +593,12 @@ export default class AccountCreateTransaction extends Transaction {
     _makeTransactionData() {
         let alias = null;
         let evmAddress = null;
-
         if (this._aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
                 this._aliasKey._toProtobufKey()
             ).finish();
-        } else if (this._aliasEvmAddress != null) {
-            alias = this._aliasEvmAddress.toBytes();
         }
-
+        
         if (this._evmAddress != null) {
             evmAddress = this._evmAddress.toBytes();
         }
