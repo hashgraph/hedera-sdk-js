@@ -318,8 +318,8 @@ describe("ContractCallIntegration", function () {
         }
     });
 
-    it("should timeout when network node takes longer than 10s to execute the transaction", async function () {
-        this.timeout(50000);
+    it("should mark as busy when network node takes longer than 10s to execute the transaction", async function () {
+        this.timeout(120000);
 
         const myAccountId = AccountId.fromString("0.0.47439");
         const myPrivateKey = PrivateKey.fromString(
@@ -377,7 +377,7 @@ describe("ContractCallIntegration", function () {
         try {
             const contractQuery = await new ContractCallQuery()
                 //Set the gas for the query
-                .setGas(15000000)
+                .setGas(16000000)
                 //Set the contract ID to return the request for
                 .setContractId(contractId)
                 //Set the contract function to call
@@ -387,7 +387,7 @@ describe("ContractCallIntegration", function () {
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
-                .setQueryPayment(new Hbar(8));
+                .setQueryPayment(new Hbar(35));
 
             //Submit to a Hedera network
             //   const txResponse = await contractQuery.execute(client);
@@ -397,7 +397,7 @@ describe("ContractCallIntegration", function () {
         } catch (error) {
             err = error;
         }
-        expect(err.toString()).to.includes("TIMEOUT");
+        expect(err.toString()).to.includes("BUSY");
 
         if (!err) {
             throw new Error("query did not error");
