@@ -93,13 +93,7 @@ export default class AccountId {
             }
         }
 
-        return new AccountId(
-            shard,
-            realm,
-            num,
-            aliasKey,
-            evmAddress
-        );
+        return new AccountId(shard, realm, num, aliasKey, evmAddress);
     }
 
     /**
@@ -108,13 +102,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromEvmAddress(evmAddress) {
-        return new AccountId(
-            0,
-            0,
-            0,
-            undefined,
-            evmAddress
-        );
+        return new AccountId(0, 0, 0, undefined, evmAddress);
     }
 
     /**

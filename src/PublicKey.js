@@ -178,7 +178,7 @@ export default class PublicKey extends Key {
     toEthereumAddress() {
         return this._key.toEthereumAddress();
     }
-    
+
     /**
      * @returns {string}
      */

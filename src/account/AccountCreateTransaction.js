@@ -598,7 +598,7 @@ export default class AccountCreateTransaction extends Transaction {
                 this._aliasKey._toProtobufKey()
             ).finish();
         }
-        
+
         if (this._evmAddress != null) {
             evmAddress = this._evmAddress.toBytes();
         }
