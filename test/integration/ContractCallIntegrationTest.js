@@ -387,7 +387,7 @@ describe("ContractCallIntegration", function () {
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail
-                .setQueryPayment(new Hbar(4));
+                .setQueryPayment(new Hbar(8));
 
             //Submit to a Hedera network
             //   const txResponse = await contractQuery.execute(client);
