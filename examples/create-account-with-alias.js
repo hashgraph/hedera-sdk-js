@@ -155,6 +155,9 @@ async function main() {
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
+    //wait 3 seconds until the data is present in the mirror
+    await wait(3000);
+    
     const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     const mirrorNodeAccountInfo = await axios.get(link);
     console.log(mirrorNodeAccountInfo.data.accounts[0]);
@@ -255,6 +258,9 @@ async function main() {
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
+    //wait 3 seconds until the data is present in the mirror
+    await wait(3000);
+
     const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
     const mirrorNodeAccountInfo2 = await axios.get(link2);
     console.log(mirrorNodeAccountInfo2.data.accounts[0]);
@@ -264,6 +270,15 @@ async function main() {
     mirrorNodeEvmAddress2 !== null
         ? console.log(`The account has a corresponding EVM address in the mirror node`)
         : console.log(`The EVM address of the account is missing in the mirror node`)
+}
+
+/**
+ * @param {number} timeout
+ */
+function wait(timeout) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+    });
 }
 
 void main();

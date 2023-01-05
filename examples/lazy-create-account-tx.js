@@ -14,6 +14,8 @@ import {
     TransactionReceipt,
     AccountCreateTransaction,
     Hbar,
+    Timestamp,
+    TransactionId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -109,24 +111,75 @@ async function main() {
   /**
    *
    * Step 6
-   *
-   * Get the `AccountInfo` of the account and show that it is a hollow account i.e. does not have a public key 
-   * 
-   * The Hedera account that was created has a public address the user specified in the `AccountCreateTransaction`
-       - Will not have a Hedera account public key at this stage
-       - The account can only receive tokens or hbars 
-       - This is referred to as a hollow account
-       - The alias property of the account will not have the public address
-   */
-  const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
-       
+  *
+  * Get the `AccountInfo` of the account and show that it is a hollow account i.e. does not have a public key 
+  * 
+  * The Hedera account that was created has a public address the user specified in the `AccountCreateTransaction`
+  *     - Will not have a Hedera account public key at this stage
+  *     - The account can only receive tokens or hbars 
+  *     - This is referred to as a hollow account
+  *     - The alias property of the account will not have the public address
+  */
+  const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
+ 
   const accountInfo = (
-      await new AccountInfoQuery()
-        .setAccountId(newAccountId)
-        .execute(client)
+    await new AccountInfoQuery()
+    .setAccountId(newAccountId)
+    .execute(client)
   );
   console.log(`Account info: ${accountInfo}`);
+   
+   /**
+    *
+    * Step 7
+    *
+    * Use a HAPI transaction and set the hollow account as the transaction fee payer
+    *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
+    *     - Any HAPI transaction can be used to apply the public key to the hollow account and create a complete Hedera account
+    */
+  const seconds = Math.round(Date.now() / 1000);
+  const validStart = new Timestamp(seconds, 0);
+    
+  const transactionId = TransactionId.withValidStart(
+    newAccountId,
+    validStart
+  );
+  
+  const newPublicKey = PrivateKey.generate().publicKey;
+  let transaction = new AccountCreateTransaction()
+    .setTransactionId(transactionId)
+    .setInitialBalance(new Hbar(10)) // 10 h
+    .setKey(newPublicKey);
+   
+   /**
+    *
+    * Step 8
+    *
+    * Sign with the ECDSA private key that corresponds to the public address on the hollow account
+    */
+  const transactionSign = await transaction.sign(privateKey);//might need to sign with operatorKey as well
+   
+   /**
+    *
+    * Step 9
+    *
+    * Execute the transaction
+    */
+  const transactionSubmit = await transactionSign.execute(client);
+   
+   /**
+    *
+    * Step 10
+    *
+    * Get the `AccountInfo` and show that the account is now a complete account i.e. returns a public key of the account
+    */
+  const accountInfo2 = (
+  await new AccountInfoQuery()
+    .setAccountId(newAccountId)
+    .execute(client)
+  );
 
+  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
 }
 
 void main();

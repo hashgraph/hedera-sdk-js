@@ -14,7 +14,10 @@ import {
     TransactionReceipt,
     AccountCreateTransaction,
     Hbar,
+    TransactionId,
+    Timestamp,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -132,6 +135,8 @@ async function main() {
   * To get the new account ID ask for the child receipts or child records for the parent transaction ID of the `TransferTransaction`
   *     - The `AccountCreateTransaction` is executed as a child transaction triggered by the `TransferTransaction`
   */
+
+ //need to get from the child transaction
  const record = await transferTxSubmit.getRecord(client);
  console.log(record);
 
@@ -156,6 +161,17 @@ async function main() {
   
   console.log(`accountInfo: ${accountInfo}`);
 
+  //wait 3 seconds until the data is present in the mirror
+  await wait(3000);
+
+  //check the mirror node if the account is indeed a hollow account
+  const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+  const mirrorNodeAccountInfo = await axios.get(link);
+  console.log(mirrorNodeAccountInfo.data.accounts[0]);
+
+  const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0];
+
+
   /**
   *
   * Step 8
@@ -163,23 +179,51 @@ async function main() {
   * Create a HAPI transaction and assign the new hollow account as the transaction fee payer
   *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
   */
+
+  const seconds = Math.round(Date.now() / 1000);
+  const validStart = new Timestamp(seconds, 0);
+    
+  const transactionId = TransactionId.withValidStart(
+    newAccountId,
+    validStart
+  );
   
-  
+  const returnTransferTx = new TransferTransaction()
+    .setTransactionId(transactionId)
+    .addHbarTransfer(newAccountId, -10)
+    .addHbarTransfer(senderAccountId, 10)
+
   /**
   *
   * Step 9
   *
   * Sign with the private key that corresponds to the public key on the hollow account
   */
-  
+  const returnTransferTxSign = await returnTransferTx.sign(privateKey);//might need to sign with operatorKey as well
+  const returnTransferTxSubmit = await returnTransferTxSign.execute(client);
+
   /**
   *
   * Step 10
   *
   * Get the `AccountInfo` for the account and return the public key on the account to show it is a complete account
   */
+  const accountInfo2 = (
+      await new AccountInfoQuery()
+        .setAccountId(newAccountId)
+        .execute(client)
+  );
+  
+  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
+}
 
- 
+/**
+ * @param {number} timeout
+ */
+function wait(timeout) {
+  return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+  });
 }
 
 void main();

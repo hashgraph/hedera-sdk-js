@@ -14,6 +14,8 @@ import {
     TransactionReceipt,
     AccountCreateTransaction,
     Hbar,
+    Timestamp,
+    TransactionId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -114,7 +116,7 @@ async function main() {
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
   console.log(transferTxSubmit.getRecord(client));
-  const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId.toString();
+  const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId;
 
   /**
    * Step 6
@@ -133,19 +135,39 @@ async function main() {
    *
    * Use the hollow account as a transaction fee payer in a HAPI transaction
    */
-      
+  const seconds = Math.round(Date.now() / 1000);
+  const validStart = new Timestamp(seconds, 0);
+    
+  const transactionId = TransactionId.withValidStart(
+    newAccountId,
+    validStart
+  );
+
+  const newPublicKey = PrivateKey.generate().publicKey;
+  let transaction = new AccountCreateTransaction()
+    .setTransactionId(transactionId)
+    .setInitialBalance(new Hbar(10)) // 10 h
+    .setKey(newPublicKey);
+  
   /**
    * Step 8
    *
    * Sign the transaction with ECDSA private key
    */
-  
+  const transactionSign = await transaction.sign(privateKey);//might need to sign with operatorKey as well
+  const transactionSubmit = await transactionSign.execute(client);
   /**
    * Step 9
    *
    * Get the `AccountInfo` of the account and show the account is now a complete account by returning the public key on the account
    */
-
+  const accountInfo2 = (
+    await new AccountInfoQuery()
+      .setAccountId(newAccountId)
+      .execute(client)
+  );
+  
+  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
 
 }
 
