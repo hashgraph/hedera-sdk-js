@@ -11,7 +11,7 @@ specifiers:
   '@grpc/grpc-js': ^1.7.0
   '@grpc/proto-loader': ^0.6.13
   '@hashgraph/cryptography': ^1.4.1
-  '@hashgraph/proto': 2.11.0
+  '@hashgraph/proto': 2.11.1
   '@playwright/test': 1.28.0
   '@types/chai': ^4.3.3
   '@types/crypto-js': ^4.1.1
@@ -62,7 +62,7 @@ dependencies:
   '@ethersproject/rlp': 5.7.0
   '@grpc/grpc-js': 1.7.0
   '@hashgraph/cryptography': 1.4.1_expo@45.0.8
-  '@hashgraph/proto': 2.11.0
+  '@hashgraph/proto': 2.11.1
   axios: 0.27.2
   bignumber.js: 9.1.0
   crypto-js: 4.1.1
@@ -1791,8 +1791,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.11.0:
-    resolution: {integrity: sha512-JOom5ZIfmgPWfPMaCYg5pYBuNyMGb38F9lNFBxjA7cVbo2dnIOUQx4Zi98yyq0O4CrUSlKBhFaspDKXk+FfAhQ==}
+  /@hashgraph/proto/2.11.1:
+    resolution: {integrity: sha512-1X/Z5nNIpQS8pJjpdl+FWrhYhGemirkL0pTHhBbxEDkFHqvWm32TZ+IdTRtRtSk2t5FTS0T2/nG6sG1l1DJZkA==}
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0
