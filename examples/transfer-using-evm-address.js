@@ -53,7 +53,8 @@ async function main() {
   const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-  const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+  //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -85,6 +86,7 @@ async function main() {
    *    - The From field should be a complete account that has a public address
    *    - The To field should be to a public address (to create a new account)
    */
+
   //Create the sender account
   const senderPrivateKey = PrivateKey.generateECDSA();
   const senderPublicKey = senderPrivateKey.publicKey;
@@ -105,29 +107,32 @@ async function main() {
       .addHbarTransfer(evmAddress, 10)
       .sign(operatorKey)
   
+  const transferTxSubmit = await transferTx.execute(client);
   /**
    * Step 5
    *
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
+  console.log(transferTxSubmit.getRecord(client));
+  const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId.toString();
 
   /**
    * Step 6
    *
    * Get the `AccountInfo` on the new account and show it is a hollow account by not having a public key
    */
+  const accountInfo = (
+      await new AccountInfoQuery()
+          .setAccountId(newAccountId)
+          .execute(client)
+  );
+  console.log(`accountInfo: ${accountInfo}`);
 
   /**
    * Step 7
    *
    * Use the hollow account as a transaction fee payer in a HAPI transaction
    */
-  const accountInfo = (
-      await new AccountInfoQuery()
-          .setAccountId(senderAccountId)
-          .execute(client)
-  );
-  console.log(`accountInfo: ${accountInfo}`);
       
   /**
    * Step 8
@@ -142,8 +147,6 @@ async function main() {
    */
 
 
-  console.log(`exit`)
-  process.exit(0);
 }
 
 void main();

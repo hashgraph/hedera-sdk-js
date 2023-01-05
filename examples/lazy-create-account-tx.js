@@ -28,7 +28,7 @@ Lazy-create a new account using a public-address via the `AccountCreateTransacti
 Reference: [HIP-583 Expand alias support in CryptoCreate & CryptoTransfer Transactions](https://hips.hedera.com/hip/hip-583)
 
 ## Example 1:
-- Create a ECSDA private key 
+- Create an ECSDA private key 
 - Extract the ECDSA public key
 - Extract the Ethereum public address
   - Add function in the SDK to calculate the Ethereum Address 
@@ -51,7 +51,81 @@ Reference: [HIP-583 Expand alias support in CryptoCreate & CryptoTransfer Transa
 
 
 async function main() {
+  if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+      throw new Error(
+          "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+      );
+  }
+  const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+  const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
+  //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+
+  /**
+   * Step 1
+   *
+   * Create an ECSDA private key
+   */
+  const privateKey = PrivateKey.generateECDSA();
+  
+  /**
+   * Step 2
+   *
+   * Extract the ECDSA public key
+   */
+  const publicKey = privateKey.publicKey;
+  
+  /**
+   *
+   * Step 3
+   *
+   * Extract the Ethereum public address
+   */
+  const evmAddress = publicKey.toEvmAddress();
+  console.log(`New account ID: ${evmAddress}`);
+  
+  /**
+   *
+   * Step 4
+   *
+   * Use the `AccountCreateTransaction` and populate `setEvmAddress(publicAddress)` field with the Ethereum public address
+   */
+  const accountCreateTx = new AccountCreateTransaction()
+    .setEvmAddress(evmAddress)
+    .setInitialBalance(new Hbar(10)) // 10 h
+    .setKey(publicKey)
+    .freezeWith(client);
+  
+  /**
+   *
+   * Step 5
+   *
+   * Sign the `AccountCreateTransaction` transaction using an existing Hedera account and key to pay for the transaction fee
+   */
+  const accountCreateTxSign = await accountCreateTx.sign(operatorKey);
+  const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
+  
+  /**
+   *
+   * Step 6
+   *
+   * Get the `AccountInfo` of the account and show that it is a hollow account i.e. does not have a public key 
+   * 
+   * The Hedera account that was created has a public address the user specified in the `AccountCreateTransaction`
+       - Will not have a Hedera account public key at this stage
+       - The account can only receive tokens or hbars 
+       - This is referred to as a hollow account
+       - The alias property of the account will not have the public address
+   */
+  const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
+       
+  const accountInfo = (
+      await new AccountInfoQuery()
+        .setAccountId(newAccountId)
+        .execute(client)
+  );
+  console.log(`Account info: ${accountInfo}`);
 
 }
 

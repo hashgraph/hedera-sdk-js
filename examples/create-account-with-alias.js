@@ -15,6 +15,7 @@ import {
     AccountCreateTransaction,
     Hbar,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -63,7 +64,8 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
 
     /** Example 1
      * 
@@ -130,22 +132,40 @@ async function main() {
      *
      * Get the `AccountInfo` using the account public key in `0.0.aliasPublicKey` format
      */
-
+    const aliasPublicKey = publicKey.toAccountId(0, 0);
+    const accountInfoAlias = (
+        await new AccountInfoQuery()
+            .setAccountId(aliasPublicKey)
+            .execute(client)
+    );
+    console.log(`accountInfo: ${accountInfoAlias}`);
 
     /**
      * Step 9
      *
      * Show the public key and the public key alias are the same on the account
      */
-
+    console.log(`accountInfo.key: ${accountInfo.key}`)
+    console.log(`accountInfo.aliasKey: ${accountInfo.aliasKey}`)
+    console.log(`accountInfoAlias.key: ${accountInfoAlias.key}`)
+    console.log(`accountInfoAlias.aliasKey: ${accountInfoAlias.aliasKey}`)
 
     /**
      * Step 10
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
+    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    const mirrorNodeAccountInfo = await axios.get(link);
+    console.log(mirrorNodeAccountInfo.data.accounts[0]);
+
+    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address;
     
-    
+    mirrorNodeEvmAddress !== null
+        ? console.log(`The account has a corresponding EVM address in the mirror node`)
+        : console.log(`The EVM address of the account is missing in the mirror node`)
+
+
     
     /** Example 2
      * 
@@ -212,22 +232,38 @@ async function main() {
      *
      * Get the `AccountInfo` using the account public key in `0.0.aliasPublicKey` format
      */
-
+    const aliasPublicKey2 = publicKey2.toAccountId(0, 0);
+    const accountInfoAlias2 = (
+        await new AccountInfoQuery()
+            .setAccountId(aliasPublicKey2)
+            .execute(client)
+    );
+    console.log(`accountInfo: ${accountInfoAlias2}`);
 
     /**
      * Step 9
      *
      * Show the public key and the public key alias are the same on the account
      */
-    
+    console.log(`accountInfo2.key: ${accountInfo2.key}`)
+    console.log(`accountInfo2.aliasKey: ${accountInfo2.aliasKey}`)
+    console.log(`accountInfoAlias2.key: ${accountInfoAlias2.key}`)
+    console.log(`accountInfoAlias2.aliasKey: ${accountInfoAlias2.aliasKey}`)
     
     /**
      * Step 10
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
+    const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
+    const mirrorNodeAccountInfo2 = await axios.get(link2);
+    console.log(mirrorNodeAccountInfo2.data.accounts[0]);
 
-
+    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo2.data.accounts[0].evm_address;
+    
+    mirrorNodeEvmAddress2 !== null
+        ? console.log(`The account has a corresponding EVM address in the mirror node`)
+        : console.log(`The EVM address of the account is missing in the mirror node`)
 }
 
 void main();

@@ -15,6 +15,7 @@ import {
     AccountCreateTransaction,
     Hbar,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -48,6 +49,7 @@ async function main() {
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
     const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    //const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
 
     /**
      * Step 1
@@ -70,14 +72,14 @@ async function main() {
      * Extract the Ethereum public address
      */
     const evmAddress = publicKey.toEvmAddress();
-    console.log(`New account ID: ${evmAddress}`);
+    console.log(`Account evm address: ${evmAddress}`);
     
     /**
      * Step 4
      *
      * Use the `AccountCreateTransaction` and set the EVM address field to the Ethereum public address
      */
-    let accountCreateTx = await new AccountCreateTransaction()
+    let accountCreateTx = new AccountCreateTransaction()
         .setEvmAddress(evmAddress)
         .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(publicKey)
@@ -108,18 +110,33 @@ async function main() {
             .setAccountId(newAccountId)
             .execute(client)
     );
-    console.log(`accountInfo: ${accountInfo}`);
-        
+    console.log(`Account info: ${accountInfo}`);
+    
+    //wait 3 seconds until the data is present in the mirror
+    await wait(3000);
     /**
      * Step 8
      *
      * Verify the evm address provided for the account matches what is in the mirror node
      */
-    //TODO
+    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    const mirrorNodeAccountInfo = await axios.get(link);
+    console.log(mirrorNodeAccountInfo.data.accounts[0]);
 
+    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address;
+    
+    evmAddress === mirrorNodeEvmAddress
+        ? console.log(`The evm address provided for the account matches the one in the mirror node`)
+        : console.log(`The two evm addresses does not match`)
+}
 
-    console.log(`exit`)
-    process.exit(0);
+/**
+ * @param {number} timeout
+ */
+function wait(timeout) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+    });
 }
 
 void main();
