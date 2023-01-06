@@ -24,7 +24,7 @@ tasks:
             # updates we may have.
             #- git submodule update --init
             # using tag --remote in order to always apply the newest proto changes
-            - git submodule update --init
+            - git submodule update --init --remote
         status:
             - test -d packages/proto/src/proto
 
