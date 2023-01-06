@@ -75,9 +75,9 @@ export default class TransactionRecord {
      * @param {TokenNftAllowance[]} props.nftAllowanceAdjustments
      * @param {?Uint8Array} props.ethereumHash
      * @param {Transfer[]} props.paidStakingRewards
-     * @param {?Uint8Array} props.prngBytes;
-     * @param {?number} props.prngNumber;
-     * @param {?EvmAddress} props.evmAddress;
+     * @param {?Uint8Array} props.prngBytes
+     * @param {?number} props.prngNumber
+     * @param {?EvmAddress} props.evmAddress
      */
     constructor(props) {
         /**
@@ -395,7 +395,8 @@ export default class TransactionRecord {
 
                 prngBytes: this.prngBytes,
                 prngNumber: this.prngNumber != null ? this.prngNumber : null,
-                evmAddress: this.evmAddress != null ? this.evmAddress : null,
+                evmAddress:
+                    this.evmAddress != null ? this.evmAddress.toBytes() : null,
             },
         };
     }
@@ -533,7 +534,10 @@ export default class TransactionRecord {
                     : [],
             prngBytes: record.prngBytes != null ? record.prngBytes : null,
             prngNumber: record.prngNumber != null ? record.prngNumber : null,
-            evmAddress: record.evmAddress != null ? record.evmAddress : null,
+            evmAddress:
+                record.evmAddress != null
+                    ? EvmAddress.fromBytes(record.evmAddress)
+                    : null,
         });
     }
 

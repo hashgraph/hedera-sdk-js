@@ -550,6 +550,7 @@ export default class AccountCreateTransaction extends Transaction {
         if (typeof evmAddress === "string") {
             this._evmAddress = EvmAddress.fromString(evmAddress);
         } else {
+            // eslint-disable-next-line deprecation/deprecation
             return this.setAliasEvmAddress(evmAddress);
         }
 
