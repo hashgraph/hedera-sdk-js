@@ -115,9 +115,9 @@ async function main() {
   const senderAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
  
   const transferTx = new TransferTransaction()
-    .addHbarTransfer(senderAccountId, -10)
+    .addHbarTransfer(operatorId, -10)
     .addHbarTransfer(evmAddress, 10)
- 
+    .freezeWith(client);
  
  /**
   *
@@ -161,7 +161,7 @@ async function main() {
   
   console.log(`accountInfo: ${accountInfo}`);
 
-  //wait 3 seconds until the data is present in the mirror
+  //wait some seconds until the data is present in the mirror (might need to adjust the time)
   await wait(3000);
 
   //check the mirror node if the account is indeed a hollow account
@@ -179,14 +179,7 @@ async function main() {
   * Create a HAPI transaction and assign the new hollow account as the transaction fee payer
   *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
   */
-
-  const seconds = Math.round(Date.now() / 1000);
-  const validStart = new Timestamp(seconds, 0);
-    
-  const transactionId = TransactionId.withValidStart(
-    newAccountId,
-    validStart
-  );
+  const transactionId = TransactionId.generate(newAccountId);
   
   const returnTransferTx = new TransferTransaction()
     .setTransactionId(transactionId)

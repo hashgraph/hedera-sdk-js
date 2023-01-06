@@ -85,7 +85,7 @@ async function main() {
    * Extract the Ethereum public address
    */
   const evmAddress = publicKey.toEvmAddress();
-  console.log(`New account ID: ${evmAddress}`);
+  console.log(`Account evm address: ${evmAddress}`);
   
   /**
    *
@@ -137,13 +137,7 @@ async function main() {
     *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
     *     - Any HAPI transaction can be used to apply the public key to the hollow account and create a complete Hedera account
     */
-  const seconds = Math.round(Date.now() / 1000);
-  const validStart = new Timestamp(seconds, 0);
-    
-  const transactionId = TransactionId.withValidStart(
-    newAccountId,
-    validStart
-  );
+  const transactionId = TransactionId.generate(newAccountId);
   
   const newPublicKey = PrivateKey.generate().publicKey;
   let transaction = new AccountCreateTransaction()

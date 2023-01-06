@@ -48,8 +48,8 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    //const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
 
     /**
      * Step 1
@@ -110,24 +110,30 @@ async function main() {
             .setAccountId(newAccountId)
             .execute(client)
     );
-    console.log(`Account info: ${accountInfo}`);
-    
-    //wait 3 seconds until the data is present in the mirror
-    await wait(3000);
+    const accountInfoEvmAddress = accountInfo.contractAccountId;
+
+    //wait some seconds until the data is present in the mirror (might need to adjust the time)
+    await wait(10000);
     /**
      * Step 8
      *
      * Verify the evm address provided for the account matches what is in the mirror node
      */
-    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
     const mirrorNodeAccountInfo = await axios.get(link);
     console.log(mirrorNodeAccountInfo.data.accounts[0]);
-
-    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address;
     
-    evmAddress === mirrorNodeEvmAddress
-        ? console.log(`The evm address provided for the account matches the one in the mirror node`)
-        : console.log(`The two evm addresses does not match`)
+
+    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address.substring(2);
+    console.log(evmAddress);
+    console.log(mirrorNodeEvmAddress);
+    console.log(accountInfoEvmAddress);
+
+    // Check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
+    evmAddress === mirrorNodeEvmAddress && evmAddress === accountInfoEvmAddress
+        ? console.log(`The evm address provided for the account matches the one in the mirror node and the one from 'AccountInfoQuery'`)
+        : console.log(`The evm addresses does not match`)
 }
 
 /**

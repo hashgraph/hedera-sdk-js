@@ -79,7 +79,7 @@ async function main() {
    * Extract the Ethereum public address
    */
   const evmAddress = publicKey.toEvmAddress();
-  console.log(`New account ID: ${evmAddress}`);
+  console.log(`Corresponding evm address: ${evmAddress}`);
   
   /**
    * Step 4
@@ -99,24 +99,33 @@ async function main() {
       .setKey(senderPublicKey)
       .freezeWith(client);
 
-  const accountCreateTxSign = await accountCreateTx.sign(operatorKey)
+  const accountCreateTxSign = await accountCreateTx.sign(operatorKey);
   const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
   const senderAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
+  console.log(`senderAccountId: ${senderAccountId}`);
+  console.log(`evm: ${evmAddress}`);
 
-
-  const transferTx = await new TransferTransaction()
+  const txId = TransactionId.generate(operatorId)
+  
+  const transferTx = new TransferTransaction()
       .addHbarTransfer(senderAccountId, -10)
       .addHbarTransfer(evmAddress, 10)
-      .sign(operatorKey)
-  
-  const transferTxSubmit = await transferTx.execute(client);
+      .freezeWith(client);
+      
+  const transferTxSign = await transferTx.sign(operatorKey);
+  const transferTxSubmit = await transferTxSign.execute(client);
+
   /**
    * Step 5
    *
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
-  console.log(transferTxSubmit.getRecord(client));
+  console.log(await transferTxSubmit.getReceipt(client));
+  
   const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId;
+  console.log(`record`);
+  console.log(await transferTxSubmit.getRecord(client));
+
 
   /**
    * Step 6
@@ -135,13 +144,7 @@ async function main() {
    *
    * Use the hollow account as a transaction fee payer in a HAPI transaction
    */
-  const seconds = Math.round(Date.now() / 1000);
-  const validStart = new Timestamp(seconds, 0);
-    
-  const transactionId = TransactionId.withValidStart(
-    newAccountId,
-    validStart
-  );
+  const transactionId = TransactionId.generate(newAccountId);
 
   const newPublicKey = PrivateKey.generate().publicKey;
   let transaction = new AccountCreateTransaction()

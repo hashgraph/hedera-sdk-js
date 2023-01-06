@@ -155,10 +155,12 @@ async function main() {
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
-    //wait 3 seconds until the data is present in the mirror
-    await wait(3000);
     
-    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    //wait some seconds until the data is present in the mirror (might need to adjust the time)
+    await wait(5000);
+    
+    //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
+    const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
     const mirrorNodeAccountInfo = await axios.get(link);
     console.log(mirrorNodeAccountInfo.data.accounts[0]);
 
@@ -248,6 +250,11 @@ async function main() {
      *
      * Show the public key and the public key alias are the same on the account
      */
+    accountInfo2.key === accountInfo2.aliasKey && accountInfo2.aliasKey === accountInfoAlias2.key && accountInfoAlias2.key === accountInfoAlias2.aliasKey
+        ? console.log(`The public key and the public key alias are the same`)
+        : console.log(`The public key and the public key alias differ`)
+    
+
     console.log(`accountInfo2.key: ${accountInfo2.key}`)
     console.log(`accountInfo2.aliasKey: ${accountInfo2.aliasKey}`)
     console.log(`accountInfoAlias2.key: ${accountInfoAlias2.key}`)
@@ -258,10 +265,12 @@ async function main() {
      *
      * Show this account has a corresponding EVM address in the mirror node
      */
-    //wait 3 seconds until the data is present in the mirror
-    await wait(3000);
+    
+    //wait some seconds until the data is present in the mirror (might need to adjust the time)
+    await wait(5000);
 
-    const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
+    //const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
+    const link2 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
     const mirrorNodeAccountInfo2 = await axios.get(link2);
     console.log(mirrorNodeAccountInfo2.data.accounts[0]);
 
