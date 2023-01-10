@@ -66,7 +66,7 @@ async function main() {
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
   //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+  const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -99,21 +99,6 @@ async function main() {
   *   - Populate the `FromAddress` with the sender Hedera AccountID
   *   - Populate the `ToAddress` with Ethereum public address
   */
- 
-  //Create the sender account
-  const senderPrivateKey = PrivateKey.generateECDSA();
-  const senderPublicKey = senderPrivateKey.publicKey;
- 
-  const accountCreateTx = new AccountCreateTransaction()
-    .setAliasKey(senderPublicKey)
-    .setInitialBalance(new Hbar(10)) // 10 h
-    .setKey(senderPublicKey)
-    .freezeWith(client);
- 
-  const accountCreateTxSign = await accountCreateTx.sign(operatorKey)
-  const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
-  const senderAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
- 
   const transferTx = new TransferTransaction()
     .addHbarTransfer(operatorId, -10)
     .addHbarTransfer(evmAddress, 10)
@@ -159,19 +144,17 @@ async function main() {
         .execute(client)
   );
   
-  console.log(`accountInfo: ${accountInfo}`);
-
-  //wait some seconds until the data is present in the mirror (might need to adjust the time)
-  await wait(3000);
-
   //check the mirror node if the account is indeed a hollow account
   const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-  const mirrorNodeAccountInfo = await axios.get(link);
-  console.log(mirrorNodeAccountInfo.data.accounts[0]);
+  let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    
+    //if the request does not succeed, wait for a bit and try again
+    while (mirrorNodeAccountInfo == undefined) {
+        await wait(5000);
+        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    }
 
-  const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0];
-
-
+    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo.evm_address;
   /**
   *
   * Step 8
@@ -184,7 +167,7 @@ async function main() {
   const returnTransferTx = new TransferTransaction()
     .setTransactionId(transactionId)
     .addHbarTransfer(newAccountId, -10)
-    .addHbarTransfer(senderAccountId, 10)
+    .addHbarTransfer(operatorId, 10)
 
   /**
   *

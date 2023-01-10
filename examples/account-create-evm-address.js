@@ -2,18 +2,8 @@ import {
     AccountId,
     PrivateKey,
     Client,
-    TokenCreateTransaction,
-    TokenType,
-    TokenSupplyType,
-    TokenMintTransaction,
-    TransferTransaction,
-    AccountBalanceQuery,
-    TokenNftInfoQuery,
-    NftId,
     AccountInfoQuery,
-    TransactionReceipt,
     AccountCreateTransaction,
-    Hbar,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -57,14 +47,15 @@ async function main() {
      * Create an ECSDA private key
      */
     const privateKey = PrivateKey.generateECDSA();
-    
+    console.log(`Private key: ${privateKey}`);
+
     /**
      * Step 2
      *
      * Extract the ECDSA public key
      */
     const publicKey = privateKey.publicKey;
-    
+    console.log(`Public key: ${publicKey}`);
     /**
      *
      * Step 3
@@ -81,8 +72,6 @@ async function main() {
      */
     let accountCreateTx = new AccountCreateTransaction()
         .setEvmAddress(evmAddress)
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(publicKey)
         .freezeWith(client);
 
     /**
@@ -98,7 +87,7 @@ async function main() {
      *
      * Get the account ID from the receipt
      */
-    let newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
+    const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
 
     /**
      * Step 7
@@ -112,8 +101,6 @@ async function main() {
     );
     const accountInfoEvmAddress = accountInfo.contractAccountId;
 
-    //wait some seconds until the data is present in the mirror (might need to adjust the time)
-    await wait(10000);
     /**
      * Step 8
      *
@@ -121,14 +108,16 @@ async function main() {
      */
     //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    const mirrorNodeAccountInfo = await axios.get(link);
-    console.log(mirrorNodeAccountInfo.data.accounts[0]);
+    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
+    //if the request does not succeed, wait for a bit and try again
+    while (mirrorNodeAccountInfo == undefined) {
+        await wait(5000);
+        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    }
 
-    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address.substring(2);
-    console.log(evmAddress);
-    console.log(mirrorNodeEvmAddress);
-    console.log(accountInfoEvmAddress);
+    //here we use .substring(2) because the mirror node returns the evm address with `0x` prefix
+    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address.substring(2);
 
     // Check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
     evmAddress === mirrorNodeEvmAddress && evmAddress === accountInfoEvmAddress

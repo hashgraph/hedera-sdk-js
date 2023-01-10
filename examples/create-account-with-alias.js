@@ -2,16 +2,7 @@ import {
     AccountId,
     PrivateKey,
     Client,
-    TokenCreateTransaction,
-    TokenType,
-    TokenSupplyType,
-    TokenMintTransaction,
-    TransferTransaction,
-    AccountBalanceQuery,
-    TokenNftInfoQuery,
-    NftId,
     AccountInfoQuery,
-    TransactionReceipt,
     AccountCreateTransaction,
     Hbar,
 } from "@hashgraph/sdk";
@@ -73,15 +64,18 @@ async function main() {
      *
      * Create an ECSDA private key
      */
+    console.log(`\nExample 1: \n`);
     const privateKey = PrivateKey.generateECDSA();
-    
+    console.log(`Private key: ${privateKey}`);
+
     /**
      * Step 2
      *
      * Get the ECDSA public key 
      */
     const publicKey = privateKey.publicKey;
-  
+    console.log(`Public key: ${publicKey}`);
+
     /**
      * Step 3
      *
@@ -125,7 +119,6 @@ async function main() {
             .setAccountId(newAccountId)
             .execute(client)
     );
-    console.log(`accountInfo: ${accountInfo}`);
 
     /**
      * Step 8
@@ -138,17 +131,17 @@ async function main() {
             .setAccountId(aliasPublicKey)
             .execute(client)
     );
-    console.log(`accountInfo: ${accountInfoAlias}`);
 
     /**
      * Step 9
      *
      * Show the public key and the public key alias are the same on the account
      */
-    console.log(`accountInfo.key: ${accountInfo.key}`)
-    console.log(`accountInfo.aliasKey: ${accountInfo.aliasKey}`)
-    console.log(`accountInfoAlias.key: ${accountInfoAlias.key}`)
-    console.log(`accountInfoAlias.aliasKey: ${accountInfoAlias.aliasKey}`)
+    accountInfo.key.toString() === accountInfo.aliasKey.toString()
+        && accountInfo.aliasKey.toString() === accountInfoAlias.key.toString()
+        && accountInfoAlias.key.toString() === accountInfoAlias.aliasKey.toString()
+            ? console.log(`The public key and the public key alias are the same`)
+            : console.log(`The public key and the public key alias differ`)
 
     /**
      * Step 10
@@ -156,19 +149,20 @@ async function main() {
      * Show this account has a corresponding EVM address in the mirror node
      */
     
-    //wait some seconds until the data is present in the mirror (might need to adjust the time)
-    await wait(5000);
-    
     //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    const mirrorNodeAccountInfo = await axios.get(link);
-    console.log(mirrorNodeAccountInfo.data.accounts[0]);
-
-    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.data.accounts[0].evm_address;
+    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    
+    //if the request does not succeed, wait for a bit and try again
+    while (mirrorNodeAccountInfo == undefined) {
+        await wait(5000);
+        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    }
+    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address;
     
     mirrorNodeEvmAddress !== null
         ? console.log(`The account has a corresponding EVM address in the mirror node`)
-        : console.log(`The EVM address of the account is missing in the mirror node`)
+        : console.log(`The EVM address of the account is missing in the mirror node`);
 
 
     
@@ -178,15 +172,18 @@ async function main() {
      *
      * Create an ED25519 private key
      */
+    console.log(`\nExample 2: \n`);
     const privateKey2 = PrivateKey.generateED25519();
-    
+    console.log(`Private key: ${privateKey2}`);
+
     /**
      * Step 2
      *
      * Get the ED25519 public key
      */
     const publicKey2 = privateKey2.publicKey;
-  
+    console.log(`Public key: ${publicKey2}`);
+
     /**
      * Step 3
      *
@@ -230,7 +227,6 @@ async function main() {
             .setAccountId(newAccountId2)
             .execute(client)
     );
-    console.log(`accountInfo: ${accountInfo2}`);
 
     /**
      * Step 8
@@ -243,22 +239,17 @@ async function main() {
             .setAccountId(aliasPublicKey2)
             .execute(client)
     );
-    console.log(`accountInfo: ${accountInfoAlias2}`);
 
     /**
      * Step 9
      *
      * Show the public key and the public key alias are the same on the account
      */
-    accountInfo2.key === accountInfo2.aliasKey && accountInfo2.aliasKey === accountInfoAlias2.key && accountInfoAlias2.key === accountInfoAlias2.aliasKey
-        ? console.log(`The public key and the public key alias are the same`)
-        : console.log(`The public key and the public key alias differ`)
-    
-
-    console.log(`accountInfo2.key: ${accountInfo2.key}`)
-    console.log(`accountInfo2.aliasKey: ${accountInfo2.aliasKey}`)
-    console.log(`accountInfoAlias2.key: ${accountInfoAlias2.key}`)
-    console.log(`accountInfoAlias2.aliasKey: ${accountInfoAlias2.aliasKey}`)
+    accountInfo2.key.toString() === accountInfo2.aliasKey.toString()
+        && accountInfo2.aliasKey.toString() === accountInfoAlias2.key.toString()
+        && accountInfoAlias2.key.toString() === accountInfoAlias2.aliasKey.toString()
+            ? console.log(`The public key and the public key alias are the same`)
+            : console.log(`The public key and the public key alias differ`);
     
     /**
      * Step 10
@@ -266,15 +257,17 @@ async function main() {
      * Show this account has a corresponding EVM address in the mirror node
      */
     
-    //wait some seconds until the data is present in the mirror (might need to adjust the time)
-    await wait(5000);
-
     //const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
     const link2 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    const mirrorNodeAccountInfo2 = await axios.get(link2);
-    console.log(mirrorNodeAccountInfo2.data.accounts[0]);
+    let mirrorNodeAccountInfo2 = (await axios.get(link2)).data.accounts[0];
+    
+    //if the request does not succeed, wait for a bit and try again
+    while (mirrorNodeAccountInfo2 == undefined) {
+        await wait(5000);
+        mirrorNodeAccountInfo2 = (await axios.get(link2)).data.accounts[0];
+    }
 
-    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo2.data.accounts[0].evm_address;
+    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo2.evm_address;
     
     mirrorNodeEvmAddress2 !== null
         ? console.log(`The account has a corresponding EVM address in the mirror node`)

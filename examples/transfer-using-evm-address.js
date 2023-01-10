@@ -88,27 +88,8 @@ async function main() {
    *    - The From field should be a complete account that has a public address
    *    - The To field should be to a public address (to create a new account)
    */
-
-  //Create the sender account
-  const senderPrivateKey = PrivateKey.generateECDSA();
-  const senderPublicKey = senderPrivateKey.publicKey;
-  
-  const accountCreateTx = new AccountCreateTransaction()
-      .setAliasKey(senderPublicKey)
-      .setInitialBalance(new Hbar(10)) // 10 h
-      .setKey(senderPublicKey)
-      .freezeWith(client);
-
-  const accountCreateTxSign = await accountCreateTx.sign(operatorKey);
-  const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
-  const senderAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
-  console.log(`senderAccountId: ${senderAccountId}`);
-  console.log(`evm: ${evmAddress}`);
-
-  const txId = TransactionId.generate(operatorId)
-  
   const transferTx = new TransferTransaction()
-      .addHbarTransfer(senderAccountId, -10)
+      .addHbarTransfer(operatorId, -10)
       .addHbarTransfer(evmAddress, 10)
       .freezeWith(client);
       
@@ -120,8 +101,6 @@ async function main() {
    *
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
-  console.log(await transferTxSubmit.getReceipt(client));
-  
   const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId;
   console.log(`record`);
   console.log(await transferTxSubmit.getRecord(client));
@@ -149,7 +128,7 @@ async function main() {
   const newPublicKey = PrivateKey.generate().publicKey;
   let transaction = new AccountCreateTransaction()
     .setTransactionId(transactionId)
-    .setInitialBalance(new Hbar(10)) // 10 h
+    .setInitialBalance(new Hbar(10))
     .setKey(newPublicKey);
   
   /**
@@ -159,6 +138,8 @@ async function main() {
    */
   const transactionSign = await transaction.sign(privateKey);//might need to sign with operatorKey as well
   const transactionSubmit = await transactionSign.execute(client);
+  const status = await transactionSubmit.getReceipt(client);
+  console.log(status.toString());
   /**
    * Step 9
    *
