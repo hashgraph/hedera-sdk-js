@@ -484,11 +484,11 @@ export default class ManagedNetwork {
      * @returns {NetworkNodeT}
      */
     getNode(key) {
-        console.log("GET NODE and Key", key);
-        console.log("BEFORE healthy nodes", this._healthyNodes);
+        console.log("ManagedNetwork: key", key);
+        console.log("ManagedNetwork healthy node 1:", this._healthyNodes[0]);
+        console.log("ManagedNetwork healthy node 2:", this._healthyNodes[1]);
         this._readmitNodes();
-
-        if (key != null) {
+        if (key != null && key != undefined) {
             return /** @type {NetworkNodeT[]} */ (
                 this._network.get(key.toString())
             )[0];

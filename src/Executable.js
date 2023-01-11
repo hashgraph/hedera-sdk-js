@@ -133,6 +133,8 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
+        console.log(`in nodeAccountIds: ${this._nodeAccountIds.locked}`)
+        console.log(`in nodeAccountIds: ${this._nodeAccountIds.list}`)
         if (this._nodeAccountIds.isEmpty) {
             return null;
         } else {
@@ -505,7 +507,7 @@ export default class Executable {
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
-        await this._beforeExecute(client);
+        //await this._beforeExecute(client);
 
         // If the max backoff on the request is not set, use the default value in client
         if (this._maxBackoff == null) {
@@ -536,6 +538,7 @@ export default class Executable {
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             console.log("ATTEMPT: ", attempt);
+            await this._beforeExecute(client);
             // Determine if we've exceeded request timeout
             if (
                 this._requestTimeout != null &&
@@ -547,6 +550,9 @@ export default class Executable {
             let nodeAccountId;
             let node;
 
+            console.log(`Executable LOCKED: ${this._nodeAccountIds.locked}`)
+            console.log(`Executable CURRENT: ${this._nodeAccountIds.current}`)
+            console.log(`Executable CURRENT: ${JSON.stringify(this._nodeAccountIds)}`)
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
@@ -558,6 +564,9 @@ export default class Executable {
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
             }
+            console.log(`TOOK NODE`);
+            console.log(`Executable NODE: ${JSON.stringify(node)}`)
+
 
             if (node == null) {
                 throw new Error(
@@ -645,6 +654,8 @@ export default class Executable {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
                     client._network.increaseBackoff(node);
+                    this._nodeAccountIds.setUnlocked();
+                    this._nodeAccountIds.clear();
                     continue;
                 }
 

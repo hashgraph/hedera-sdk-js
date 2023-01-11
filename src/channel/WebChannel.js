@@ -74,6 +74,7 @@ export default class WebChannel extends Channel {
                 // console.log(grpcStatus);
                 // console.log(grpcMessage);
                 if (!response.ok) {
+                    console.log(`HTTP error: ${response.status}`);
                     const error = new GrpcServiceError(
                         GrpcStatus._fromValue(14)
                     );
