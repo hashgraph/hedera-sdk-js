@@ -108,21 +108,25 @@ async function main() {
      */
     //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    try {
+        let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-    //if the request does not succeed, wait for a bit and try again
-    while (mirrorNodeAccountInfo == undefined) {
-        await wait(5000);
-        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+        //if the request does not succeed, wait for a bit and try again
+        while (mirrorNodeAccountInfo == undefined) {
+            await wait(5000);
+            mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+        }
+
+        //here we use .substring(2) because the mirror node returns the evm address with `0x` prefix
+        const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address.substring(2);
+
+        // Check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
+        evmAddress === mirrorNodeEvmAddress && evmAddress === accountInfoEvmAddress
+            ? console.log(`The evm address provided for the account matches the one in the mirror node and the one from 'AccountInfoQuery'`)
+            : console.log(`The evm addresses does not match`)
+    } catch (e) {
+        console.log(e);
     }
-
-    //here we use .substring(2) because the mirror node returns the evm address with `0x` prefix
-    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address.substring(2);
-
-    // Check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
-    evmAddress === mirrorNodeEvmAddress && evmAddress === accountInfoEvmAddress
-        ? console.log(`The evm address provided for the account matches the one in the mirror node and the one from 'AccountInfoQuery'`)
-        : console.log(`The evm addresses does not match`)
 }
 
 /**

@@ -66,7 +66,7 @@ async function main() {
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
   //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-  const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
+  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -143,10 +143,15 @@ async function main() {
         .setAccountId(newAccountId)
         .execute(client)
   );
+
+  console.log(`Check if it is a hollow account with 'AccountInfoQuery'`);
+  accountInfo.aliasKey === null && accountInfo.key === null
+    ? console.log(`The newly created account is a hollow account`) : console.log(`Not a hollow account`);
   
   //check the mirror node if the account is indeed a hollow account
   const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-  let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+  try {
+    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
     //if the request does not succeed, wait for a bit and try again
     while (mirrorNodeAccountInfo == undefined) {
@@ -154,7 +159,15 @@ async function main() {
         mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     }
 
-    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo.evm_address;
+    console.log(`Check in the mirror node if it is a hollow account`);
+    mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null
+      ? console.log(`The newly created account is a hollow account`)
+      : console.log(`Not a hollow account`);
+
+  } catch (e) {
+    console.log(e);
+  }
+
   /**
   *
   * Step 8

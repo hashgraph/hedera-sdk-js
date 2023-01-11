@@ -42,7 +42,6 @@ Reference: [HIP-583 Expand alias support in CryptoCreate & CryptoTransfer Transa
 - Get the `AccountInfo` using the new account ID
 - Get the `AccountInfo` using the account public key in `0.0.aliasPublicKey` format
 - Show the public key and the public key alias are the same on the account
-- Show this account has a corresponding EVM address in the mirror node
 */
 
 
@@ -83,8 +82,6 @@ async function main() {
      */
     const accountCreateTx = new AccountCreateTransaction()
         .setAliasKey(publicKey)
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(publicKey)
         .freezeWith(client);
 
     /**
@@ -151,19 +148,22 @@ async function main() {
     
     //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+    try {
+        let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-    //if the request does not succeed, wait for a bit and try again
-    while (mirrorNodeAccountInfo == undefined) {
-        await wait(5000);
-        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+        //if the request does not succeed, wait for a bit and try again
+        while (mirrorNodeAccountInfo == undefined) {
+            await wait(5000);
+            mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+        }
+        const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address;
+    
+        mirrorNodeEvmAddress !== null
+            ? console.log(`The account has a corresponding EVM address in the mirror node`)
+            : console.log(`The EVM address of the account is missing in the mirror node`);
+    } catch (e) {
+        console.log(e);
     }
-    const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address;
-    
-    mirrorNodeEvmAddress !== null
-        ? console.log(`The account has a corresponding EVM address in the mirror node`)
-        : console.log(`The EVM address of the account is missing in the mirror node`);
-
 
     
     /** Example 2
@@ -191,8 +191,6 @@ async function main() {
      */
     const accountCreateTx2 = new AccountCreateTransaction()
         .setAliasKey(publicKey2)
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(publicKey2)
         .freezeWith(client);
 
     /**
@@ -250,28 +248,6 @@ async function main() {
         && accountInfoAlias2.key.toString() === accountInfoAlias2.aliasKey.toString()
             ? console.log(`The public key and the public key alias are the same`)
             : console.log(`The public key and the public key alias differ`);
-    
-    /**
-     * Step 10
-     *
-     * Show this account has a corresponding EVM address in the mirror node
-     */
-    
-    //const link2 = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId2}`;
-    const link2 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-    let mirrorNodeAccountInfo2 = (await axios.get(link2)).data.accounts[0];
-    
-    //if the request does not succeed, wait for a bit and try again
-    while (mirrorNodeAccountInfo2 == undefined) {
-        await wait(5000);
-        mirrorNodeAccountInfo2 = (await axios.get(link2)).data.accounts[0];
-    }
-
-    const mirrorNodeEvmAddress2 = mirrorNodeAccountInfo2.evm_address;
-    
-    mirrorNodeEvmAddress2 !== null
-        ? console.log(`The account has a corresponding EVM address in the mirror node`)
-        : console.log(`The EVM address of the account is missing in the mirror node`)
 }
 
 /**

@@ -130,19 +130,22 @@ async function main() {
   //check the mirror node if the account is indeed a hollow account
   //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
   const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
-  let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+  try {
+    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-    
-  //if the request does not succeed, wait for a bit and try again
-  while (mirrorNodeAccountInfo == undefined) {
+    //if the request does not succeed, wait for a bit and try again
+    while (mirrorNodeAccountInfo == undefined) {
       await wait(5000);
       mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
-  }
+    }
   
-  console.log(`Check in the mirror node if it is a hollow account`);
-  mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null
-    ? console.log(`The newly created account is a hollow account`) : console.log(`Not a hollow account`);
-
+    console.log(`Check in the mirror node if it is a hollow account`);
+    mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null
+      ? console.log(`The newly created account is a hollow account`)
+      : console.log(`Not a hollow account`);
+  } catch (e) {
+    console.log(e);
+  }
    /**
     *
     * Step 7
