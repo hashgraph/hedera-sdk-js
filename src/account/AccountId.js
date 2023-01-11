@@ -97,11 +97,29 @@ export default class AccountId {
     }
 
     /**
+     * @param {Long | number} shard
+     * @param {Long | number} realm
+     * @param {EvmAddress | string} evmAddress
+     * @returns {AccountId}
+     */
+    static fromEvmAddress(shard, realm, evmAddress) {
+        return new AccountId(
+            shard,
+            realm,
+            0,
+            undefined,
+            typeof evmAddress === "string"
+                ? EvmAddress.fromString(evmAddress)
+                : evmAddress
+        );
+    }
+
+    /**
      * @summary Accepts an evm address only as `EvmAddress` type
      * @param {EvmAddress} evmAddress
      * @returns {AccountId}
      */
-    static fromEvmAddress(evmAddress) {
+    static fromEvmPublicAddress(evmAddress) {
         return new AccountId(0, 0, 0, undefined, evmAddress);
     }
 
