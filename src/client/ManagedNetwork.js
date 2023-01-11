@@ -484,6 +484,8 @@ export default class ManagedNetwork {
      * @returns {NetworkNodeT}
      */
     getNode(key) {
+        console.log("GET NODE and Key", key);
+        console.log("BEFORE healthy nodes", this._healthyNodes);
         this._readmitNodes();
 
         if (key != null) {
@@ -492,9 +494,10 @@ export default class ManagedNetwork {
             )[0];
         } else {
             if (this._healthyNodes.length == 0) {
+                console.log("failed to find a healthy working node");
                 throw new Error("failed to find a healthy working node");
             }
-
+            console.log("AFTER healthy nodes", this._healthyNodes);
             return this._healthyNodes[
                 Math.floor(Math.random() * this._healthyNodes.length)
             ];
@@ -506,9 +509,11 @@ export default class ManagedNetwork {
      */
     increaseBackoff(node) {
         node.increaseBackoff();
-
+        console.log(this._healthyNodes);
+        console.log(this._healthyNodes.length);
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
+                console.log("SPLICE IT", node);
                 this._healthyNodes.splice(i, 1);
             }
         }

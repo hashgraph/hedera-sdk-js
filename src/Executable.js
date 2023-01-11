@@ -444,6 +444,7 @@ export default class Executable {
      * @returns {boolean}
      */
     _shouldRetryExceptionally(error) {
+        console.log(error.status._code);
         return (
             error.status._code === GrpcStatus.Unavailable._code ||
             error.status._code === GrpcStatus.ResourceExhausted._code ||
@@ -534,6 +535,7 @@ export default class Executable {
 
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+            console.log("ATTEMPT: ", attempt);
             // Determine if we've exceeded request timeout
             if (
                 this._requestTimeout != null &&
@@ -562,7 +564,7 @@ export default class Executable {
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`
                 );
             }
-
+            console.log("The node used is:", node);
             // Get the log ID for the request.
             const logId = this._getLogId();
             Logger.debug(
@@ -639,6 +641,7 @@ export default class Executable {
                     this._shouldRetryExceptionally(error) &&
                     attempt <= maxAttempts
                 ) {
+                    console.log("INCREASE BACKOFF and remove the node");
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
                     client._network.increaseBackoff(node);
@@ -666,7 +669,7 @@ export default class Executable {
             if (err != null) {
                 persistentError = err;
             }
-
+            console.log("shouldRetry", shouldRetry);
             // Determine by the executing state what we should do
             switch (shouldRetry) {
                 case ExecutionState.Retry:

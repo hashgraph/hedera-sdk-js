@@ -50,6 +50,7 @@ export const Network = {
 
     MAINNET: {
         "https://grpc-web.myhbarwallet.com:443": new AccountId(3),
+        "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
     },
 
     TESTNET: {

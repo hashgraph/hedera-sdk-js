@@ -70,8 +70,18 @@ export default class WebChannel extends Channel {
                 // Check headers for gRPC errors
                 const grpcStatus = response.headers.get("grpc-status");
                 const grpcMessage = response.headers.get("grpc-message");
-
+                // console.log("RESPONCE1");
+                // console.log(grpcStatus);
+                // console.log(grpcMessage);
+                if (!response.ok) {
+                    const error = new GrpcServiceError(
+                        GrpcStatus._fromValue(14)
+                    );
+                    error.message = `Error ${response.status}`;
+                    callback(error, null);
+                }
                 if (grpcStatus != null && grpcMessage != null) {
+                    console.log("grpcStatus", grpcStatus);
                     const error = new GrpcServiceError(
                         GrpcStatus._fromValue(parseInt(grpcStatus))
                     );
