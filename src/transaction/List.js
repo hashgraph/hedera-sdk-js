@@ -75,16 +75,6 @@ export default class List {
         this.locked = true;
         return this;
     }
-    
-    /**
-     * Unlocks the list.
-     *
-     * @returns {this}
-     */
-    setUnlocked() {
-        this.locked = false;
-        return this;
-    }
 
     /**
      * Clear the list

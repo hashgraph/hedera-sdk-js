@@ -1369,7 +1369,7 @@ export default class Transaction extends Executable {
         Logger.debug(
             `[${this._getLogId()}] received status ${status.toString()}`
         );
-        console.log(`received status ${status.toString()}`);
+
         // Based on the status what execution state are we in
         switch (status) {
             case Status.Busy:

@@ -18,32 +18,27 @@
  * ‍
  */
 
-import GrpcStatus from "./GrpcStatus.js";
+import HttpStatus from "./HttpStatus.js";
 
 /**
- * Describes how the gRPC request failed.
- *
- * Exists in order for the Hedera JavaScript SDK to produce the same error type for gRPC errors regardless of
- * operating in node or the browser.
- *
- * Definition taken from <https://grpc.github.io/grpc/node/grpc.html#~ServiceError>.
+ * Describes how the http request failed.
  */
-export default class GrpcServiceError extends Error {
+export default class HttpError extends Error {
     /**
-     * @param {GrpcStatus} status
+     * @param {HttpStatus} status
      */
     constructor(status) {
-        super(`gRPC service failed with status: ${status.toString()}`);
+        super(`failed with error code: ${status.toString()}`);
 
         /**
          * @readonly
          */
         this.status = status;
 
-        this.name = "GrpcServiceError";
+        this.name = "HttpError";
 
         if (typeof Error.captureStackTrace !== "undefined") {
-            Error.captureStackTrace(this, GrpcServiceError);
+            Error.captureStackTrace(this, HttpError);
         }
     }
 }

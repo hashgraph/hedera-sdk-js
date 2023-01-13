@@ -23,6 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
+import HttpError from "./http/HttpError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -133,8 +134,6 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
-        console.log(`in nodeAccountIds: ${this._nodeAccountIds.locked}`)
-        console.log(`in nodeAccountIds: ${this._nodeAccountIds.list}`)
         if (this._nodeAccountIds.isEmpty) {
             return null;
         } else {
@@ -442,17 +441,22 @@ export default class Executable {
      * Unlike `shouldRetry` this method does in fact still return a boolean
      *
      * @protected
-     * @param {GrpcServiceError} error
+     * @param {Error} error
      * @returns {boolean}
      */
     _shouldRetryExceptionally(error) {
-        console.log(error.status._code);
-        return (
-            error.status._code === GrpcStatus.Unavailable._code ||
-            error.status._code === GrpcStatus.ResourceExhausted._code ||
-            (error.status._code === GrpcStatus.Internal._code &&
-                RST_STREAM.test(error.message))
-        );
+        if (error instanceof GrpcServiceError) {
+            return (
+                error.status._code === GrpcStatus.Unavailable._code ||
+                error.status._code === GrpcStatus.ResourceExhausted._code ||
+                (error.status._code === GrpcStatus.Internal._code &&
+                    RST_STREAM.test(error.message))
+            );
+        } else {
+            // if we get to the 'else' statement, the 'error' is instanceof 'HttpError'
+            // and in this case, we have to retry always
+            return true;
+        }
     }
 
     /**
@@ -507,7 +511,7 @@ export default class Executable {
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
-        //await this._beforeExecute(client);
+        await this._beforeExecute(client);
 
         // If the max backoff on the request is not set, use the default value in client
         if (this._maxBackoff == null) {
@@ -537,8 +541,6 @@ export default class Executable {
 
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-            console.log("ATTEMPT: ", attempt);
-            await this._beforeExecute(client);
             // Determine if we've exceeded request timeout
             if (
                 this._requestTimeout != null &&
@@ -550,9 +552,6 @@ export default class Executable {
             let nodeAccountId;
             let node;
 
-            console.log(`Executable LOCKED: ${this._nodeAccountIds.locked}`)
-            console.log(`Executable CURRENT: ${this._nodeAccountIds.current}`)
-            console.log(`Executable CURRENT: ${JSON.stringify(this._nodeAccountIds)}`)
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
@@ -564,16 +563,13 @@ export default class Executable {
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
             }
-            console.log(`TOOK NODE`);
-            console.log(`Executable NODE: ${JSON.stringify(node)}`)
-
 
             if (node == null) {
                 throw new Error(
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`
                 );
             }
-            console.log("The node used is:", node);
+
             // Get the log ID for the request.
             const logId = this._getLogId();
             Logger.debug(
@@ -635,27 +631,22 @@ export default class Executable {
             } catch (err) {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
-                const error = GrpcServiceError._fromResponse(
-                    /** @type {Error} */ (err)
-                );
+                const error = (/** @type {Error} */ (err));
 
                 // Save the error in case we retry
                 persistentError = error;
                 Logger.debug(
-                    `[${logId}] received gRPC error ${JSON.stringify(error)}`
+                    `[${logId}] received error ${JSON.stringify(error)}`
                 );
 
                 if (
-                    error instanceof GrpcServiceError &&
+                    (error instanceof GrpcServiceError || error instanceof HttpError) &&
                     this._shouldRetryExceptionally(error) &&
                     attempt <= maxAttempts
                 ) {
-                    console.log("INCREASE BACKOFF and remove the node");
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
                     client._network.increaseBackoff(node);
-                    this._nodeAccountIds.setUnlocked();
-                    this._nodeAccountIds.clear();
                     continue;
                 }
 
@@ -680,7 +671,7 @@ export default class Executable {
             if (err != null) {
                 persistentError = err;
             }
-            console.log("shouldRetry", shouldRetry);
+
             // Determine by the executing state what we should do
             switch (shouldRetry) {
                 case ExecutionState.Retry:

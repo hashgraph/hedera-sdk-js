@@ -20,6 +20,8 @@
 
 import Channel, { encodeRequest, decodeUnaryResponse } from "./Channel.js";
 import * as base64 from "../encoding/base64.native.js";
+import HttpError from "../http/HttpError.js";
+import HttpStatus from "../http/HttpStatus.js";
 
 export default class NativeChannel extends Channel {
     /**
@@ -70,6 +72,11 @@ export default class NativeChannel extends Channel {
                         body: data,
                     }
                 );
+
+                if (!response.ok) {
+                    const error = new HttpError(HttpStatus._fromValue(response.status));
+                    callback(error, null);
+                }
 
                 const blob = await response.blob();
 
