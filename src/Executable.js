@@ -631,7 +631,7 @@ export default class Executable {
             } catch (err) {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
-                const error = (/** @type {Error} */ (err));
+                const error = /** @type {Error} */ (err);
 
                 // Save the error in case we retry
                 persistentError = error;
@@ -640,7 +640,8 @@ export default class Executable {
                 );
 
                 if (
-                    (error instanceof GrpcServiceError || error instanceof HttpError) &&
+                    (error instanceof GrpcServiceError ||
+                        error instanceof HttpError) &&
                     this._shouldRetryExceptionally(error) &&
                     attempt <= maxAttempts
                 ) {

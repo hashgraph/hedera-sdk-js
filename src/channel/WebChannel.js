@@ -68,9 +68,11 @@ export default class WebChannel extends Channel {
                         body: encodeRequest(requestData),
                     }
                 );
-                
+
                 if (!response.ok) {
-                    const error = new HttpError(HttpStatus._fromValue(response.status));
+                    const error = new HttpError(
+                        HttpStatus._fromValue(response.status)
+                    );
                     callback(error, null);
                 }
 
