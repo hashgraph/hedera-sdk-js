@@ -20,8 +20,14 @@
 
 import Client from "./Client.js";
 import WebChannel from "../channel/WebChannel.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AccountId from "../account/AccountId.js";
 import LedgerId from "../LedgerId.js";
+import {
+    MAINNET,
+    WEB_TESTNET,
+    WEB_PREVIEWNET,
+} from "../constants/ClientConstants.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
@@ -48,54 +54,9 @@ export const Network = {
         }
     },
 
-    MAINNET: {
-        "https://grpc-web.myhbarwallet.com:443": new AccountId(3),
-        "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
-        "https://node02.swirldslabs.com:443": new AccountId(5),
-        "https://node03.swirldslabs.com:443": new AccountId(6),
-        "https://node04.swirldslabs.com:443": new AccountId(7),
-        "https://node05.swirldslabs.com:443": new AccountId(8),
-        "https://node06.swirldslabs.com:443": new AccountId(9),
-        "https://node07.swirldslabs.com:443": new AccountId(10),
-        "https://node08.swirldslabs.com:443": new AccountId(11),
-        "https://node09.swirldslabs.com:443": new AccountId(12),
-        "https://node10.swirldslabs.com:443": new AccountId(13),
-        "https://node11.swirldslabs.com:443": new AccountId(14),
-        "https://node12.swirldslabs.com:443": new AccountId(15),
-        "https://node13.swirldslabs.com:443": new AccountId(16),
-        "https://node14.swirldslabs.com:443": new AccountId(17),
-        "https://node16.swirldslabs.com:443": new AccountId(19),
-        "https://node17.swirldslabs.com:443": new AccountId(20),
-        "https://node18.swirldslabs.com:443": new AccountId(21),
-        "https://node19.swirldslabs.com:443": new AccountId(22),
-        "https://node20.swirldslabs.com:443": new AccountId(23),
-        "https://node21.swirldslabs.com:443": new AccountId(24),
-        "https://node22.swirldslabs.com:443": new AccountId(25),
-        "https://node23.swirldslabs.com:443": new AccountId(26),
-        "https://node24.swirldslabs.com:443": new AccountId(27),
-        "https://node25.swirldslabs.com:443": new AccountId(28),
-        "https://node26.swirldslabs.com:443": new AccountId(29),
-    },
-
-    TESTNET: {
-        "https://testnet-node00-00-grpc.hedera.com:443": new AccountId(3),
-        "https://testnet-node01-00-grpc.hedera.com:443": new AccountId(4),
-        "https://testnet-node02-00-grpc.hedera.com:443": new AccountId(5),
-        "https://testnet-node03-00-grpc.hedera.com:443": new AccountId(6),
-        "https://testnet-node04-00-grpc.hedera.com:443": new AccountId(7),
-        "https://testnet-node05-00-grpc.hedera.com:443": new AccountId(8),
-        "https://testnet-node06-00-grpc.hedera.com:443": new AccountId(9),
-    },
-
-    PREVIEWNET: {
-        "https://previewnet-node00-00-grpc.hedera.com:443": new AccountId(3),
-        "https://previewnet-node01-00-grpc.hedera.com:443": new AccountId(4),
-        "https://previewnet-node02-00-grpc.hedera.com:443": new AccountId(5),
-        "https://previewnet-node03-00-grpc.hedera.com:443": new AccountId(6),
-        "https://previewnet-node04-00-grpc.hedera.com:443": new AccountId(7),
-        "https://previewnet-node05-00-grpc.hedera.com:443": new AccountId(8),
-        "https://previewnet-node06-00-grpc.hedera.com:443": new AccountId(9),
-    },
+    MAINNET: MAINNET,
+    TESTNET: WEB_TESTNET,
+    PREVIEWNET: WEB_PREVIEWNET,
 };
 
 /**
@@ -107,7 +68,6 @@ export default class WebClient extends Client {
      */
     constructor(props) {
         super(props);
-
         if (props != null) {
             if (typeof props.network === "string") {
                 switch (props.network) {
