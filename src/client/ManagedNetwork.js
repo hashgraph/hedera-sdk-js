@@ -69,6 +69,14 @@ export default class ManagedNetwork {
          * @type {NetworkNodeT[]}
          */
         this._healthyNodes = [];
+        
+        /**
+         * Count of unhealthy nodes.
+         *
+         * @protected
+         * @type {number}
+         */
+        this._unhealthyNodesCount = 0;
 
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
@@ -276,7 +284,7 @@ export default class ManagedNetwork {
         // `this._healthyNodes.length` times. This can result in a shorter
         // list than `count`, but that is much better than running forever
         for (let i = 0; i < this._healthyNodes.length; i++) {
-            if (nodes.length == count) {
+            if (nodes.length == count - this._unhealthyNodesCount) {
                 break;
             }
 
@@ -510,6 +518,7 @@ export default class ManagedNetwork {
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
                 this._healthyNodes.splice(i, 1);
+                this._unhealthyNodesCount++;
             }
         }
     }
