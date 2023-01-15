@@ -282,12 +282,12 @@ export default class ManagedNetwork {
 
             // Get a random node
             let node = this.getNode();
-
-            while (keys.has(node.getKey())) {
-                node = this.getNode();
+            if (!keys.has(node.getKey())) {
+                keys.add(node.getKey());
+                nodes.push(node);
+            } else {
+                i--;
             }
-            keys.add(node.getKey());
-            nodes.push(node);
         }
 
         return nodes;

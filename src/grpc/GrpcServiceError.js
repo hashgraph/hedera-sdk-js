@@ -17,7 +17,7 @@
  * limitations under the License.
  * ‍
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import GrpcStatus from "./GrpcStatus.js";
 
 /**
@@ -44,6 +44,21 @@ export default class GrpcServiceError extends Error {
 
         if (typeof Error.captureStackTrace !== "undefined") {
             Error.captureStackTrace(this, GrpcServiceError);
+        }
+    }
+
+    /**
+     * @param {Error & { code?: number; details?: string }} obj
+     * @returns {Error}
+     */
+    static _fromResponse(obj) {
+        if (obj.code != null && obj.details != null) {
+            const status = GrpcStatus._fromValue(obj.code);
+            const err = new GrpcServiceError(status);
+            err.message = obj.details;
+            return err;
+        } else {
+            return /** @type {Error} */ (obj);
         }
     }
 }

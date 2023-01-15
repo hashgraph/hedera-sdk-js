@@ -631,7 +631,9 @@ export default class Executable {
             } catch (err) {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
-                const error = /** @type {Error} */ (err);
+                const error = GrpcServiceError._fromResponse(
+                    /** @type {Error} */ (err)
+                );
 
                 // Save the error in case we retry
                 persistentError = error;

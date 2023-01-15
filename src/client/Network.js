@@ -252,7 +252,7 @@ export default class Network extends ManagedNetwork {
         // ultimately it does not matter if we round up or down
         // if we round up, we will eventually take one more healthy node for execution
         // and we would hit the 'nodes.length == count' check in _getNumberOfMostHealthyNodes() less often
-        return Math.ceil((this._nodes.length + 3 - 1) / 3);
+        return Math.floor((this._nodes.length + 3 - 1) / 3);
     }
 
     /**
