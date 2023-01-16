@@ -23,6 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
+import HttpError from "./http/HttpError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -440,16 +441,22 @@ export default class Executable {
      * Unlike `shouldRetry` this method does in fact still return a boolean
      *
      * @protected
-     * @param {GrpcServiceError} error
+     * @param {Error} error
      * @returns {boolean}
      */
     _shouldRetryExceptionally(error) {
-        return (
-            error.status._code === GrpcStatus.Unavailable._code ||
-            error.status._code === GrpcStatus.ResourceExhausted._code ||
-            (error.status._code === GrpcStatus.Internal._code &&
-                RST_STREAM.test(error.message))
-        );
+        if (error instanceof GrpcServiceError) {
+            return (
+                error.status._code === GrpcStatus.Unavailable._code ||
+                error.status._code === GrpcStatus.ResourceExhausted._code ||
+                (error.status._code === GrpcStatus.Internal._code &&
+                    RST_STREAM.test(error.message))
+            );
+        } else {
+            // if we get to the 'else' statement, the 'error' is instanceof 'HttpError'
+            // and in this case, we have to retry always
+            return true;
+        }
     }
 
     /**
@@ -631,11 +638,12 @@ export default class Executable {
                 // Save the error in case we retry
                 persistentError = error;
                 Logger.debug(
-                    `[${logId}] received gRPC error ${JSON.stringify(error)}`
+                    `[${logId}] received error ${JSON.stringify(error)}`
                 );
 
                 if (
-                    error instanceof GrpcServiceError &&
+                    (error instanceof GrpcServiceError ||
+                        error instanceof HttpError) &&
                     this._shouldRetryExceptionally(error) &&
                     attempt <= maxAttempts
                 ) {
