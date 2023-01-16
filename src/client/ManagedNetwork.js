@@ -69,7 +69,7 @@ export default class ManagedNetwork {
          * @type {NetworkNodeT[]}
          */
         this._healthyNodes = [];
-        
+
         /**
          * Count of unhealthy nodes.
          *
