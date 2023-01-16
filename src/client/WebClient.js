@@ -20,8 +20,14 @@
 
 import Client from "./Client.js";
 import WebChannel from "../channel/WebChannel.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AccountId from "../account/AccountId.js";
 import LedgerId from "../LedgerId.js";
+import {
+    MAINNET,
+    WEB_TESTNET,
+    WEB_PREVIEWNET,
+} from "../constants/ClientConstants.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
@@ -48,30 +54,9 @@ export const Network = {
         }
     },
 
-    MAINNET: {
-        "https://grpc-web.myhbarwallet.com:443": new AccountId(3),
-        "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
-    },
-
-    TESTNET: {
-        "https://testnet-node00-00-grpc.hedera.com:443": new AccountId(3),
-        "https://testnet-node01-00-grpc.hedera.com:443": new AccountId(4),
-        "https://testnet-node02-00-grpc.hedera.com:443": new AccountId(5),
-        "https://testnet-node03-00-grpc.hedera.com:443": new AccountId(6),
-        "https://testnet-node04-00-grpc.hedera.com:443": new AccountId(7),
-        "https://testnet-node05-00-grpc.hedera.com:443": new AccountId(8),
-        "https://testnet-node06-00-grpc.hedera.com:443": new AccountId(9),
-    },
-
-    PREVIEWNET: {
-        "https://previewnet-node00-00-grpc.hedera.com:443": new AccountId(3),
-        "https://previewnet-node01-00-grpc.hedera.com:443": new AccountId(4),
-        "https://previewnet-node02-00-grpc.hedera.com:443": new AccountId(5),
-        "https://previewnet-node03-00-grpc.hedera.com:443": new AccountId(6),
-        "https://previewnet-node04-00-grpc.hedera.com:443": new AccountId(7),
-        "https://previewnet-node05-00-grpc.hedera.com:443": new AccountId(8),
-        "https://previewnet-node06-00-grpc.hedera.com:443": new AccountId(9),
-    },
+    MAINNET: MAINNET,
+    TESTNET: WEB_TESTNET,
+    PREVIEWNET: WEB_PREVIEWNET,
 };
 
 /**
@@ -83,7 +68,6 @@ export default class WebClient extends Client {
      */
     constructor(props) {
         super(props);
-
         if (props != null) {
             if (typeof props.network === "string") {
                 switch (props.network) {
