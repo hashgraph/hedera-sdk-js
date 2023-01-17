@@ -2,20 +2,11 @@ import {
     AccountId,
     PrivateKey,
     Client,
-    TokenCreateTransaction,
-    TokenType,
-    TokenSupplyType,
-    TokenMintTransaction,
     TransferTransaction,
-    AccountBalanceQuery,
-    TokenNftInfoQuery,
-    NftId,
     AccountInfoQuery,
-    TransactionReceipt,
     AccountCreateTransaction,
     Hbar,
-    Timestamp,
-    TransactionId,
+    TransactionReceiptQuery,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -56,7 +47,7 @@ async function main() {
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
   //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+  const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -101,10 +92,14 @@ async function main() {
    *
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
-  const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId;
-  console.log(`record`);
-  console.log(await transferTxSubmit.getRecord(client));
+  console.log(`child accountId: ${transferTxSubmit.transactionId}`);
+  const receipt = await new TransactionReceiptQuery()
+            .setTransactionId(transferTxSubmit.transactionId)
+            .setIncludeChildren(true)
+            .execute(client);
 
+  const newAccountId = receipt.children[0].accountId;
+  console.log(`child accountId: ${receipt.children[0].accountId}`);
 
   /**
    * Step 6
@@ -123,11 +118,10 @@ async function main() {
    *
    * Use the hollow account as a transaction fee payer in a HAPI transaction
    */
-  const transactionId = TransactionId.generate(newAccountId);
+  //const transactionId = TransactionId.generate(newAccountId);
 
   const newPublicKey = PrivateKey.generate().publicKey;
   let transaction = new AccountCreateTransaction()
-    .setTransactionId(transactionId)
     .setInitialBalance(new Hbar(10))
     .setKey(newPublicKey);
   
