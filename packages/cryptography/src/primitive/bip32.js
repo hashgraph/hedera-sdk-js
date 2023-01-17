@@ -38,7 +38,7 @@ export async function derive(parentKey, chainCode, index) {
     }
 
     new DataView(data.buffer, data.byteOffset, data.byteLength).setUint32(
-        33,
+        32,
         index,
         false
     );
