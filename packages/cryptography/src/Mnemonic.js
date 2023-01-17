@@ -197,7 +197,7 @@ export default class Mnemonic {
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
-    async toEcdsaPrivateKey(passphrase = "", path = HEDERA_PATH) {
+    async toEcdsaPrivateKey(passphrase = "", path = SLIP44_ECDSA_HEDERA_PATH) {
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
             ECDSA_SEED_TEXT
