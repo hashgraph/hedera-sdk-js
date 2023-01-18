@@ -222,30 +222,33 @@ export default class AccountId {
         return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
     }
 
+    //TODO remove the comments after we get to HIP-631
     /**
      * @internal
      * @returns {HashgraphProto.proto.IAccountID}
      */
     _toProtobuf() {
         let alias = null;
-        let evmAddress = null;
+        //let evmAddress = null;
 
         if (this.aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
                 this.aliasKey._toProtobufKey()
             ).finish();
+        } else if (this.evmAddress != null) {
+            alias = this.evmAddress._bytes;
         }
 
-        if (this.evmAddress != null) {
+        /* if (this.evmAddress != null) {
             evmAddress = this.evmAddress._bytes;
-        }
+        } */
 
         return {
             alias,
             accountNum: this.aliasKey != null ? null : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
-            evmAddress,
+            //evmAddress,
         };
     }
 

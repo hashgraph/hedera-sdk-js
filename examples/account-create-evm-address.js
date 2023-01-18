@@ -87,7 +87,8 @@ async function main() {
      * Get the account ID from the receipt
      */
     const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
-
+    console.log(`Account ID of the newly created account: ${newAccountId}`);
+    
     /**
      * Step 7
      *

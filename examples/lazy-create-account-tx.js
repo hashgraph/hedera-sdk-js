@@ -135,7 +135,6 @@ async function main() {
     }
   
     console.log(`Check in the mirror node if it is a hollow account`);
-    console.log(mirrorNodeAccountInfo);
     mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null && mirrorNodeAccountInfo.evm_address !== null
       ? console.log(`The newly created account is a hollow account`)
       : console.log(`Not a hollow account`);

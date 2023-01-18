@@ -7,7 +7,6 @@ import {
     TransactionReceiptQuery,
     TopicCreateTransaction,
 } from "@hashgraph/sdk";
-import axios from "axios";
 
 import dotenv from "dotenv";
 
