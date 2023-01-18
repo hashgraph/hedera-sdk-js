@@ -4,9 +4,8 @@ import {
     Client,
     TransferTransaction,
     AccountInfoQuery,
-    AccountCreateTransaction,
-    Hbar,
     TransactionReceiptQuery,
+    TopicCreateTransaction,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -46,7 +45,6 @@ async function main() {
   const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-  //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
   const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
   /**
@@ -55,6 +53,7 @@ async function main() {
    * Create an ECSDA private key
    */
   const privateKey = PrivateKey.generateECDSA();
+  console.log(`Private key: ${privateKey}`);
   
   /**
    * Step 2
@@ -62,6 +61,7 @@ async function main() {
    * Extract the ECDSA public key
    */
   const publicKey = privateKey.publicKey;
+  console.log(`Public key: ${publicKey}`);
   
   /**
    *
@@ -75,7 +75,7 @@ async function main() {
   /**
    * Step 4
    *
-   * Transfer tokens using the `TransferTransaction` to the Etherum Account Address
+   * Transfer tokens using the `TransferTransaction` to the Etherеum Account Address
    *    - The From field should be a complete account that has a public address
    *    - The To field should be to a public address (to create a new account)
    */
@@ -92,61 +92,66 @@ async function main() {
    *
    * Get the child receipt or child record to return the Hedera Account ID for the new account that was created
    */
-  console.log(`child accountId: ${transferTxSubmit.transactionId}`);
   const receipt = await new TransactionReceiptQuery()
             .setTransactionId(transferTxSubmit.transactionId)
             .setIncludeChildren(true)
             .execute(client);
 
   const newAccountId = receipt.children[0].accountId;
-  console.log(`child accountId: ${receipt.children[0].accountId}`);
+  console.log(`Account ID of the newly created account: ${newAccountId}`);
 
   /**
    * Step 6
    *
    * Get the `AccountInfo` on the new account and show it is a hollow account by not having a public key
    */
-  const accountInfo = (
+  const hollowAccountInfo = (
       await new AccountInfoQuery()
           .setAccountId(newAccountId)
           .execute(client)
   );
-  console.log(`accountInfo: ${accountInfo}`);
+
+  hollowAccountInfo.key._toProtobufKey().keyList.keys.length == 0
+    ? console.log(`Account ${newAccountId} does not have public key, therefore it is a hollow account`)
+    : console.log(`Account ${newAccountId} has a public key, therefore it is not a hollow account`);
 
   /**
    * Step 7
    *
    * Use the hollow account as a transaction fee payer in a HAPI transaction
    */
-  //const transactionId = TransactionId.generate(newAccountId);
+  
+  // set the accound id of the hollow account and its private key as an operator
+  // in order to be a transaction fee payer in a HAPI transaction
+  client.setOperator(newAccountId, privateKey);
 
-  const newPublicKey = PrivateKey.generate().publicKey;
-  let transaction = new AccountCreateTransaction()
-    .setInitialBalance(new Hbar(10))
-    .setKey(newPublicKey);
+  let transaction = new TopicCreateTransaction()
+    .setTopicMemo("HIP-583")
+    .freezeWith(client);
   
   /**
    * Step 8
    *
    * Sign the transaction with ECDSA private key
    */
-  const transactionSign = await transaction.sign(privateKey);//might need to sign with operatorKey as well
+  const transactionSign = await transaction.sign(privateKey);
   const transactionSubmit = await transactionSign.execute(client);
-  const status = await transactionSubmit.getReceipt(client);
-  console.log(status.toString());
+  const status = (await transactionSubmit.getReceipt(client)).status.toString();
+  console.log(`HAPI transaction status: ${status}`);
+
   /**
    * Step 9
    *
    * Get the `AccountInfo` of the account and show the account is now a complete account by returning the public key on the account
    */
-  const accountInfo2 = (
+  const completeAccountInfo = (
     await new AccountInfoQuery()
       .setAccountId(newAccountId)
       .execute(client)
   );
-  
-  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
-
+  completeAccountInfo.key !== null
+    ? console.log(`The public key of the newly created and now complete account: ${completeAccountInfo.key}`)
+    : console.log(`Account ${newAccountId} is still a hollow account`);
 }
 
 void main();

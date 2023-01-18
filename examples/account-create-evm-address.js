@@ -38,8 +38,7 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+    const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
     /**
      * Step 1
@@ -70,7 +69,7 @@ async function main() {
      *
      * Use the `AccountCreateTransaction` and set the EVM address field to the Ethereum public address
      */
-    let accountCreateTx = new AccountCreateTransaction()
+    const accountCreateTx = new AccountCreateTransaction()
         .setEvmAddress(evmAddress)
         .freezeWith(client);
 
@@ -79,8 +78,8 @@ async function main() {
      *
      * Sign the transaction with the key that us paying for the transaction
      */
-    let accountCreateTxSign = await accountCreateTx.sign(operatorKey)
-    let accountCreateTxSubmit = await accountCreateTxSign.execute(client);
+    const accountCreateTxSign = await accountCreateTx.sign(operatorKey);
+    const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
     
     /**
      * Step 6
@@ -106,21 +105,21 @@ async function main() {
      *
      * Verify the evm address provided for the account matches what is in the mirror node
      */
-    //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-    const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
+    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     try {
         let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-        //if the request does not succeed, wait for a bit and try again
+        // if the request does not succeed, wait for a bit and try again
+        // the mirror node needs some time to be up to date
         while (mirrorNodeAccountInfo == undefined) {
             await wait(5000);
             mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
         }
 
-        //here we use .substring(2) because the mirror node returns the evm address with `0x` prefix
+        // here we use .substring(2) because the mirror node returns the evm address with `0x` prefix
         const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address.substring(2);
 
-        // Check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
+        // check if the generated evm address matches the evm addresses taken from `AccountInfoQuery` and the mirror node
         evmAddress === mirrorNodeEvmAddress && evmAddress === accountInfoEvmAddress
             ? console.log(`The evm address provided for the account matches the one in the mirror node and the one from 'AccountInfoQuery'`)
             : console.log(`The evm addresses does not match`)

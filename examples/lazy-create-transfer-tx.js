@@ -2,20 +2,10 @@ import {
     AccountId,
     PrivateKey,
     Client,
-    TokenCreateTransaction,
-    TokenType,
-    TokenSupplyType,
-    TokenMintTransaction,
     TransferTransaction,
-    AccountBalanceQuery,
-    TokenNftInfoQuery,
-    NftId,
     AccountInfoQuery,
-    TransactionReceipt,
-    AccountCreateTransaction,
-    Hbar,
-    TransactionId,
-    Timestamp,
+    TransactionReceiptQuery,
+    TopicCreateTransaction,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -65,8 +55,7 @@ async function main() {
   const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-  //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-  const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+  const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -74,14 +63,16 @@ async function main() {
    * Create an ECSDA private key
    */
   const privateKey = PrivateKey.generateECDSA();
-  
+  console.log(`Private key: ${privateKey}`);
+
   /**
    * Step 2
    *
    * Extract the ECDSA public key
    */
   const publicKey = privateKey.publicKey;
-  
+  console.log(`Public key: ${publicKey}`);
+
   /**
    *
    * Step 3
@@ -120,16 +111,19 @@ async function main() {
   * To get the new account ID ask for the child receipts or child records for the parent transaction ID of the `TransferTransaction`
   *     - The `AccountCreateTransaction` is executed as a child transaction triggered by the `TransferTransaction`
   */
-
- //need to get from the child transaction
- const record = await transferTxSubmit.getRecord(client);
- console.log(record);
+ const receipt = await new TransactionReceiptQuery()
+    .setTransactionId(transferTxSubmit.transactionId)
+    .setIncludeChildren(true)
+    .execute(client);
+ 
+  const newAccountId = receipt.children[0].accountId;
+  console.log(`Account ID of the newly created account: ${newAccountId}`);
 
  /**
   *
   * Step 7
   *
-  * Get the `AccountInfo` and verify the account is a hollow account with the supplied public address (may need to verify with mirror node API)
+  * Get the `AccountInfo` and verify the account is a hollow account with the supplied public address
   * 
   * The Hedera Account that was created has a public address the user specified in the TransferTransaction ToAddress
        - Will not have a public key at this stage
@@ -137,36 +131,16 @@ async function main() {
        - The alias property of the account does not have the public address
        - Referred to as a hollow account
   */
-  const newAccountId = (await transferTxSubmit.getReceipt(client)).accountId;
-  const accountInfo = (
+  const hollowAccountInfo = (
       await new AccountInfoQuery()
         .setAccountId(newAccountId)
         .execute(client)
   );
 
   console.log(`Check if it is a hollow account with 'AccountInfoQuery'`);
-  accountInfo.aliasKey === null && accountInfo.key === null
-    ? console.log(`The newly created account is a hollow account`) : console.log(`Not a hollow account`);
-  
-  //check the mirror node if the account is indeed a hollow account
-  const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-  try {
-    let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
-    
-    //if the request does not succeed, wait for a bit and try again
-    while (mirrorNodeAccountInfo == undefined) {
-        await wait(5000);
-        mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
-    }
-
-    console.log(`Check in the mirror node if it is a hollow account`);
-    mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null
-      ? console.log(`The newly created account is a hollow account`)
-      : console.log(`Not a hollow account`);
-
-  } catch (e) {
-    console.log(e);
-  }
+  hollowAccountInfo.aliasKey === null && hollowAccountInfo.key._toProtobufKey().keyList.keys.length == 0 && hollowAccountInfo.contractAccountId !== null
+    ? console.log(`The newly created account is a hollow account`)
+    : console.log(`Not a hollow account`);
 
   /**
   *
@@ -175,12 +149,14 @@ async function main() {
   * Create a HAPI transaction and assign the new hollow account as the transaction fee payer
   *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
   */
-  const transactionId = TransactionId.generate(newAccountId);
+
+  // set the accound id of the hollow account and its private key as an operator
+  // in order to be a transaction fee payer in a HAPI transaction
+  client.setOperator(newAccountId, privateKey);
   
-  const returnTransferTx = new TransferTransaction()
-    .setTransactionId(transactionId)
-    .addHbarTransfer(newAccountId, -10)
-    .addHbarTransfer(operatorId, 10)
+  let transaction = new TopicCreateTransaction()
+    .setTopicMemo("HIP-583")
+    .freezeWith(client)
 
   /**
   *
@@ -188,8 +164,10 @@ async function main() {
   *
   * Sign with the private key that corresponds to the public key on the hollow account
   */
-  const returnTransferTxSign = await returnTransferTx.sign(privateKey);//might need to sign with operatorKey as well
-  const returnTransferTxSubmit = await returnTransferTxSign.execute(client);
+  const transactionSign = await transaction.sign(privateKey);
+  const transactionSubmit = await transactionSign.execute(client);
+  const status = (await transactionSubmit.getReceipt(client)).status.toString();
+  console.log(`HAPI transaction status: ${status}`);
 
   /**
   *
@@ -197,22 +175,14 @@ async function main() {
   *
   * Get the `AccountInfo` for the account and return the public key on the account to show it is a complete account
   */
-  const accountInfo2 = (
+  const completeAccountInfo = (
       await new AccountInfoQuery()
         .setAccountId(newAccountId)
         .execute(client)
   );
-  
-  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
-}
-
-/**
- * @param {number} timeout
- */
-function wait(timeout) {
-  return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-  });
+  completeAccountInfo.key !== null
+    ? console.log(`The public key of the newly created and now complete account: ${completeAccountInfo.key}`)
+    : console.log(`Account ${newAccountId} is still a hollow account`);
 }
 
 void main();

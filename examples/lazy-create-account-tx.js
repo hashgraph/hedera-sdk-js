@@ -4,10 +4,8 @@ import {
     Client,
     AccountInfoQuery,
     AccountCreateTransaction,
-    TransactionId,
     TopicCreateTransaction,
-    Wallet,
-    LocalProvider,
+    Hbar,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -54,8 +52,7 @@ async function main() {
   const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
   const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-  //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-  let client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+  const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
   /**
    * Step 1
@@ -90,6 +87,8 @@ async function main() {
    */
   const accountCreateTx = new AccountCreateTransaction()
     .setEvmAddress(evmAddress)
+    .setInitialBalance(new Hbar(10))
+    .freezeWith(client);
   
   /**
    *
@@ -97,11 +96,13 @@ async function main() {
    *
    * Sign the `AccountCreateTransaction` transaction using an existing Hedera account and key to pay for the transaction fee
    */
-  const accountCreateTxSubmit = await accountCreateTx.execute(client);
-  
+  const accountCreateTxSign = await accountCreateTx.sign(operatorKey);
+  const accountCreateTxSubmit = await accountCreateTxSign.execute(client);
+  const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
+
   /**
-   *
-   * Step 6
+  *
+  * Step 6
   *
   * Get the `AccountInfo` of the account and show that it is a hollow account i.e. does not have a public key 
   * 
@@ -111,110 +112,84 @@ async function main() {
   *     - This is referred to as a hollow account
   *     - The alias property of the account will not have the public address
   */
-  const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId;
-
-  const accountInfo = await new AccountInfoQuery()
+  const hollowAccountInfo = await new AccountInfoQuery()
     .setAccountId(newAccountId)
     .execute(client);
 
-  console.log(`newAccountId: ${newAccountId}`);
-  console.log(`privateKey: ${privateKey}`);
-  console.log(`newAccoun INFO: ${accountInfo}`);
-
-
   console.log(`Check if it is a hollow account with 'AccountInfoQuery'`);
-  accountInfo.aliasKey === null && accountInfo.key === null
-    ? console.log(`The newly created account is a hollow account`) : console.log(`Not a hollow account`);
+  hollowAccountInfo.aliasKey === null && hollowAccountInfo.key._toProtobufKey().keyList.keys.length == 0 && hollowAccountInfo.contractAccountId !== null
+    ? console.log(`The newly created account is a hollow account`)
+    : console.log(`Not a hollow account`);
   
 
-  //check the mirror node if the account is indeed a hollow account
-  //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-  const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
+  // check the mirror node if the account is indeed a hollow account
+  const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
   try {
     let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-    //if the request does not succeed, wait for a bit and try again
+    // if the request does not succeed, wait for a bit and try again
+    // the mirror node needs some time to be up to date
     while (mirrorNodeAccountInfo == undefined) {
       await wait(5000);
       mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     }
   
     console.log(`Check in the mirror node if it is a hollow account`);
-    mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null
+    console.log(mirrorNodeAccountInfo);
+    mirrorNodeAccountInfo.alias === null && mirrorNodeAccountInfo.key === null && mirrorNodeAccountInfo.evm_address !== null
       ? console.log(`The newly created account is a hollow account`)
       : console.log(`Not a hollow account`);
   } catch (e) {
     console.log(e);
   }
-   /**
-    *
-    * Step 7
-    *
-    * Use a HAPI transaction and set the hollow account as the transaction fee payer
-    *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
-    *     - Any HAPI transaction can be used to apply the public key to the hollow account and create a complete Hedera account
-    */
-  
-  //client = Client.forLocalNode().setOperator(newAccountId, privateKey);
-  const operatorWallet = new Wallet(
-    process.env.OPERATOR_ID,
-    process.env.OPERATOR_KEY,
-    new LocalProvider()
-  );
-  const wallet = new Wallet(
-    newAccountId,
-    privateKey,
-    new LocalProvider()
-  );
-
-  let evmClient = Client.forLocalNode().setOperator(newAccountId, privateKey);
-
-  const transactionId = TransactionId.generate(newAccountId);
-  /* let transaction = new AccountCreateTransaction()
-    .setTransactionId(transactionId)
-    .setKey(newPublicKey)
-    .setInitialBalance(new Hbar(10))
-    .freezeWith(client); */
-  
-    
-  let transaction = await new TopicCreateTransaction()
-    //.setTransactionId(transactionId)
-    .freezeWith(evmClient)
-    .sign(privateKey);
-
-  const createResponse = await transaction.execute(evmClient);
-  const createReceipt = await createResponse.getReceipt(evmClient);
-
-  console.log(`topic id = ${createReceipt.topicId.toString()}`);
-
-   /**
-    *
-    * Step 8
-    *
-    * Sign with the ECDSA private key that corresponds to the public address on the hollow account
-    */
-  //const transactionSign = await transaction.sign(privateKey);
-   
-   /**
-    *
-    * Step 9
-    *
-    * Execute the transaction
-    */
-  //await transactionSign.execute(client);
-  
   /**
-    *
-    * Step 10
-    *
-    * Get the `AccountInfo` and show that the account is now a complete account i.e. returns a public key of the account
-    */
-  const accountInfo2 = await new AccountInfoQuery()
+  *
+  * Step 7
+  *
+  * Use a HAPI transaction and set the hollow account as the transaction fee payer
+  *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
+  *     - Any HAPI transaction can be used to apply the public key to the hollow account and create a complete Hedera account
+  */
+  
+  // set the accound id of the hollow account and its private key as an operator
+  // in order to be a transaction fee payer in a HAPI transaction
+  client.setOperator(newAccountId, privateKey);
+
+  let transaction = new TopicCreateTransaction()
+    .setTopicMemo("HIP-583")
+    .freezeWith(client)
+    
+  /**
+  *
+  * Step 8
+  *
+  * Sign with the ECDSA private key that corresponds to the public address on the hollow account
+  */
+  const transactionSign = await transaction.sign(privateKey);
+   
+  /**
+  *
+  * Step 9
+  *
+  * Execute the transaction
+  */
+  const transactionSubmit = await transactionSign.execute(client);
+  const status = (await transactionSubmit.getReceipt(client)).status.toString();
+  console.log(`HAPI transaction status: ${status}`);
+
+  /**
+  *
+  * Step 10
+  *
+  * Get the `AccountInfo` and show that the account is now a complete account i.e. returns a public key of the account
+  */
+  const completeAccountInfo = await new AccountInfoQuery()
     .setAccountId(newAccountId)
     .execute(client);
 
-  console.log(`${JSON.stringify(accountInfo2)}`);
-  console.log(`The public key of the newly created and now complete account: ${accountInfo2.key}`);
+  completeAccountInfo.key !== null
+    ? console.log(`The public key of the newly created and now complete account: ${completeAccountInfo.key}`)
+    : console.log(`Account ${newAccountId} is still a hollow account`);
 }
 
 /**

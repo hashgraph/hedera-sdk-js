@@ -4,7 +4,6 @@ import {
     Client,
     AccountInfoQuery,
     AccountCreateTransaction,
-    Hbar,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -54,8 +53,7 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    //const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-    const client = Client.forLocalNode().setOperator(operatorId, operatorKey);
+    const client = Client.forPreviewnet().setOperator(operatorId, operatorKey);
 
     /** Example 1
      * 
@@ -104,7 +102,7 @@ async function main() {
      * Return the Hedera account ID from the receipt of the transaction
      */
     const newAccountId = (await accountCreateTxSubmit.getReceipt(client)).accountId.toString();
-    console.log(newAccountId);
+    console.log(`Account id of the new account: ${newAccountId}`);
     
     /**
      * Step 7
@@ -146,20 +144,21 @@ async function main() {
      * Show this account has a corresponding EVM address in the mirror node
      */
     
-    //const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
-    const link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${newAccountId}`;
+    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${newAccountId}`;
     try {
         let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
     
-        //if the request does not succeed, wait for a bit and try again
+        // if the request does not succeed, wait for a bit and try again
+        // the mirror node needs some time to be up to date
         while (mirrorNodeAccountInfo == undefined) {
             await wait(5000);
             mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
         }
+
         const mirrorNodeEvmAddress = mirrorNodeAccountInfo.evm_address;
-    
+
         mirrorNodeEvmAddress !== null
-            ? console.log(`The account has a corresponding EVM address in the mirror node`)
+            ? console.log(`The account has a corresponding EVM address in the mirror node: ${mirrorNodeEvmAddress}`)
             : console.log(`The EVM address of the account is missing in the mirror node`);
     } catch (e) {
         console.log(e);
@@ -213,7 +212,7 @@ async function main() {
      * Return the Hedera account ID from the receipt of the transaction
      */
     const newAccountId2 = (await accountCreateTxSubmit2.getReceipt(client)).accountId.toString();
-    console.log(newAccountId2);
+    console.log(`Account id of the new account: ${newAccountId2}`);
     
     /**
      * Step 7
