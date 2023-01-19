@@ -1,6 +1,4 @@
 import EcdsaPrivateKey from "../../src/EcdsaPrivateKey.js";
-import Mnemonic from "../../src/Mnemonic.js";
-import PrivateKey from "../../src/PrivateKey.js";
 import * as hex from "../../src/encoding/hex.js";
 import * as utf8 from "../../src/encoding/utf8.js";
 
@@ -52,24 +50,5 @@ describe("EcdsaPrivateKey", function () {
         );
         expect(key.publicKey.verify(message, signature)).to.be.true;
         expect(key.publicKey.toBytesRaw().length).to.be.equal(33);
-    });
-
-    it("generate EcdsaPrivateKey from Mnemonic, parse it to string, then return it fromString and check if it is the same", async function () {
-        const mnemonic = await Mnemonic.fromString(
-            "hamster produce dry base sunny bubble disease throw cricket garden beyond script"
-        );
-        const privateKey = await mnemonic.toEcdsaPrivateKey();
-
-        const privateKeyString = privateKey.toStringRaw();
-        const publicKeyString = privateKey.publicKey.toStringRaw();
-
-        // Restore from string
-        const restoredPrivateKey = PrivateKey.fromStringECDSA(privateKeyString);
-        const restoredPrivateKeyString = privateKey.toStringRaw();
-        const restoredPublicKeyString =
-            restoredPrivateKey.publicKey.toStringRaw();
-
-        expect(privateKeyString).to.be.equal(restoredPrivateKeyString);
-        expect(publicKeyString).to.be.equal(restoredPublicKeyString);
     });
 });

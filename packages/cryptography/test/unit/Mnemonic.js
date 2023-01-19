@@ -1,4 +1,5 @@
 import Mnemonic from "../../src/Mnemonic.js";
+import PrivateKey from "../../src/PrivateKey.js";
 import BadMnemonicError from "../../src/BadMnemonicError.js";
 import BadMnemonicReason from "../../src/BadMnemonicReason.js";
 
@@ -203,5 +204,24 @@ describe("Mnemonic", function () {
         expect(keyFromDefault.toStringRaw()).to.eql(
             keyFromCorrectPath.toStringRaw()
         );
+    });
+
+    it("generate EcdsaPrivateKey from Mnemonic, parse it to string, then return it fromString and check if it is the same", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "hamster produce dry base sunny bubble disease throw cricket garden beyond script"
+        );
+        const privateKey = await mnemonic.toEcdsaPrivateKey();
+
+        const privateKeyString = privateKey.toStringRaw();
+        const publicKeyString = privateKey.publicKey.toStringRaw();
+
+        // Restore from string
+        const restoredPrivateKey = PrivateKey.fromStringECDSA(privateKeyString);
+        const restoredPrivateKeyString = privateKey.toStringRaw();
+        const restoredPublicKeyString =
+            restoredPrivateKey.publicKey.toStringRaw();
+
+        expect(privateKeyString).to.be.equal(restoredPrivateKeyString);
+        expect(publicKeyString).to.be.equal(restoredPublicKeyString);
     });
 });
