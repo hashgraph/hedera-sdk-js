@@ -1,14 +1,10 @@
-import {
-    AccountId,
-    PrivateKey,
-} from "@hashgraph/sdk";
+import { AccountId, PrivateKey } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
 
 dotenv.config();
 
-async function main() {
-
+function main() {
     /* Source and context: https://hips.hedera.com/hip/hip-583
 
         In hedera Hedera, we have the concept of 4 different account representations
@@ -18,14 +14,15 @@ async function main() {
             -   An account have be represented by an Ethereum public address 0xb794f5ea0ba39494ce839613fffba74279579268
     */
 
-
     /*
         Account ID    -   shard.realm.number format, i.e. `0.0.10` with the corresponding `0x000000000000000000000000000000000000000a` ethereum address
     */
     const hederaFormat = AccountId.fromString("0.0.10");
-    console.log(`Account ID: ${hederaFormat}`);
-    console.log(`Account 0.0.10 corresponding Long-Zero address: ${hederaFormat.toSolidityAddress()}`);
-   
+    console.log(`Account ID: ${hederaFormat.toString()}`);
+    console.log(
+        `Account 0.0.10 corresponding Long-Zero address: ${hederaFormat.toSolidityAddress()}`
+    );
+
     /*
         Hedera Long-Form Account ID    -   0.0.aliasPublicKey, i.e. `0.0.CIQNOWUYAGBLCCVX2VF75U6JMQDTUDXBOLZ5VJRDEWXQEGTI64DVCGQ`
    */
@@ -40,14 +37,22 @@ async function main() {
     /*
         Hedera Account Long-Zero address    -   0x000000000000000000000000000000000000000a (for accountId 0.0.10)
     */
-    const longZeroAddress = AccountId.fromString("0x000000000000000000000000000000000000000a");
-    console.log(`Hedera Account Long-Zero address: ${longZeroAddress}`);
-    
+    const longZeroAddress = AccountId.fromString(
+        "0x000000000000000000000000000000000000000a"
+    );
+    console.log(
+        `Hedera Account Long-Zero address: ${longZeroAddress.toString()}`
+    );
+
     /*
         Ethereum Account Address / public-address   -   0xb794f5ea0ba39494ce839613fffba74279579268
     */
-    const evmAddress = AccountId.fromString("0xb794f5ea0ba39494ce839613fffba74279579268");
-    console.log(`Ethereum Account Address / public-address: ${evmAddress}`);
+    const evmAddress = AccountId.fromString(
+        "0xb794f5ea0ba39494ce839613fffba74279579268"
+    );
+    console.log(
+        `Ethereum Account Address / public-address: ${evmAddress.toString()}`
+    );
 }
 
 void main();
