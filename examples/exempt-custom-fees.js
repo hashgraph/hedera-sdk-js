@@ -9,8 +9,8 @@ import {
     AccountCreateTransaction,
     LocalProvider,
     Wallet,
-    AccountBalanceQuery,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -161,9 +161,6 @@ async function main() {
 
     // Submit the transaction to the Hedera network
     let tokenCreateSubmit = await tokenCreateTx.executeWithSigner(wallet);
-    console.log(`response`);
-    console.log(tokenCreateSubmit);
-    console.log(tokenCreateTx);
 
     // Get transaction receipt information
     let tokenCreateRx = await tokenCreateSubmit.getReceiptWithSigner(wallet);
@@ -226,7 +223,7 @@ async function main() {
      * of the token that was created was not charged a custom fee in the transfer
      */
 
-    let firstAccountBalanceAfter = (
+    /* let firstAccountBalanceAfter = (
         await new AccountBalanceQuery()
             .setAccountId(firstAccountWallet.getAccountId())
             .executeWithSigner(wallet)
@@ -248,7 +245,96 @@ async function main() {
             .executeWithSigner(wallet)
     ).tokens._map
         .get(tokenId.toString())
-        .toInt();
+        .toInt(); */
+
+    /**@type {number} */
+    let firstAccountBalanceAfter;
+    const link = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    console.log(link);
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
+
+        // if the request does not succeed, wait for a bit and try again
+        // the mirror node needs some time to be up to date
+        while (mirrorNodeAccountInfo == undefined) {
+            await wait(5000);
+            mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        }
+        
+        let balances = mirrorNodeAccountInfo.balance.tokens;
+        while (balances == undefined) {
+            await wait(5000);
+            balances = mirrorNodeAccountInfo.balance.tokens;
+        }
+
+
+
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+        firstAccountBalanceAfter = balances.find(
+            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        ).balance;
+
+
+
+    } catch (e) {
+        console.log(e);
+    }
+
+    /**@type {number} */
+    let secondAccountBalanceAfter;
+    const link2 = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    console.log(link2);
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        let mirrorNodeAccountInfo = (await axios.get(link2)).data.accounts[0];
+
+        // if the request does not succeed, wait for a bit and try again
+        // the mirror node needs some time to be up to date
+        while (mirrorNodeAccountInfo == undefined) {
+            await wait(5000);
+            mirrorNodeAccountInfo = (await axios.get(link2)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        }
+        await wait(2000);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+        secondAccountBalanceAfter = mirrorNodeAccountInfo.balance.tokens.find(
+            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        ).balance;
+    } catch (e) {
+        console.log(e);
+    }
+
+    /**@type {number} */
+    let thirdAccountBalanceAfter;
+    const link3 = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    console.log(link3);
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        let mirrorNodeAccountInfo = (await axios.get(link3)).data.accounts[0];
+
+        // if the request does not succeed, wait for a bit and try again
+        // the mirror node needs some time to be up to date
+        while (mirrorNodeAccountInfo == undefined) {
+            await wait(5000);
+            mirrorNodeAccountInfo = (await axios.get(link3)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+        }
+        await wait(2000);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+        thirdAccountBalanceAfter = mirrorNodeAccountInfo.balance.tokens.find(
+            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        ).balance;
+    } catch (e) {
+        console.log(e);
+    }
 
     console.log(
         `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
@@ -269,6 +355,16 @@ async function main() {
             `Fee collector accounts were not charged after transfer transaction`
         );
     }
+}
+
+/**
+ * @param {number} timeout
+ * @returns {Promise<any>}
+ */
+function wait(timeout) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+    });
 }
 
 void main();
