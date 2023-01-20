@@ -132,7 +132,7 @@ export default class ObjectMap {
      * @returns {string}
      */
     toString() {
-        /** @type {Object.<string, any>} */
+        /** @type {Object<string, any>} */
         const map = {};
 
         for (const [key, value] of this._map) {
