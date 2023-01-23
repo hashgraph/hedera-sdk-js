@@ -55,7 +55,7 @@
         "@grpc/grpc-js": "^1.7.0",
         "@hashgraph/cryptography": "^1.4.2",
         "@hashgraph/proto": "2.11.0",
-        "axios": "^0.27.2",
+        "axios": "^1.2.3",
         "bignumber.js": "^9.1.0",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",
