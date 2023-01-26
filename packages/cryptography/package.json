@@ -58,6 +58,7 @@
     ],
     "dependencies": {
         "bignumber.js": "^9.1.0",
+        "bn.js": "^5.2.1",
         "crypto-js": "^4.1.1",
         "elliptic": "^6.5.4",
         "js-base64": "^3.7.2",

@@ -224,4 +224,20 @@ describe("Mnemonic", function () {
         expect(privateKeyString).to.be.equal(restoredPrivateKeyString);
         expect(publicKeyString).to.be.equal(restoredPublicKeyString);
     });
+
+    it("generate ethereum ECDSA private key from Mnemonic phrase", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "radar blur cabbage chef fix engine embark joy scheme fiction master release"
+        );
+
+        // default ethereum accounts derivation path
+        const path = [44 | 0x80000000, 60 | 0x80000000, 0 | 0x80000000, 0, 0];
+
+        const rootKey = await mnemonic.toEcdsaPrivateKey("", path);
+
+        // https://github.com/ethers-io/ethers.js/blob/master/packages/tests/src.ts/test-hdnode.ts
+        expect(rootKey.toStringRaw()).to.eql(
+            "b96e9ccb774cc33213cbcb2c69d3cdae17b0fe4888a1ccd343cbd1a17fd98b18"
+        );
+    });
 });

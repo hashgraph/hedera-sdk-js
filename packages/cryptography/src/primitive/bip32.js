@@ -1,9 +1,15 @@
 import * as hmac from "./hmac.js";
 import * as hex from "../encoding/hex.js";
 import elliptic from "elliptic";
+import BN from "bn.js";
 
 const secp256k1 = new elliptic.ec("secp256k1");
 
+// https://github.com/ethers-io/ethers.js/blob/master/packages/hdnode/src.ts/index.ts#L23
+const N = new BN(
+    "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
+    "hex"
+);
 const HIGHEST_BIT = 0x80000000;
 
 /**
@@ -53,7 +59,9 @@ export async function derive(parentKey, chainCode, index) {
         const ki = secp256k1
             .keyFromPrivate(parentKey)
             .getPrivate()
-            .add(secp256k1.keyFromPrivate(IL).getPrivate());
+            .add(secp256k1.keyFromPrivate(IL).getPrivate())
+            .mod(N);
+        const hexZeroPadded = hex.hexZeroPadded(ki.toBuffer(), 32);
         // const ki = Buffer.from(ecc.privateAdd(this.privateKey!, IL)!);
 
         // In case ki == 0, proceed with the next value for i
@@ -62,9 +70,7 @@ export async function derive(parentKey, chainCode, index) {
         }
 
         return {
-            keyData: hex.decode(
-                secp256k1.keyFromPrivate(ki.toArray()).getPrivate("hex")
-            ),
+            keyData: hex.decode(hexZeroPadded),
             chainCode: IR,
         };
     } catch {
