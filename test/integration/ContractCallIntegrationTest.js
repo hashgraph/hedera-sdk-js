@@ -321,13 +321,9 @@ describe("ContractCallIntegration", function () {
     it("should mark as busy when network node takes longer than 10s to execute the transaction", async function () {
         this.timeout(120000);
 
-        const myAccountId = AccountId.fromString("0.0.47439");
-        const myPrivateKey = PrivateKey.fromString(
-            "302e020100300506032b6570042204208f4014a3f7f7a6c7147070da98d88f9cea074c13ed0554783471825d801888cf"
-        );
-        const env = await TestnetIntegrationTestEnv.new();
+        const myPrivateKey = PrivateKey.generateED25519();
+        const env = await IntegrationTestEnv.new();
         const client = env.client;
-        client.setOperator(myAccountId, myPrivateKey);
         // Create a file on Hedera and store the bytecode
         const fileCreateTx = new FileCreateTransaction()
             .setKeys([myPrivateKey])

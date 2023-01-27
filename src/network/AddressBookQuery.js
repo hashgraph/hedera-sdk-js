@@ -24,6 +24,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
 import CACHE from "../Cache.js";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -224,7 +225,6 @@ export default class AddressBookQuery {
                 (error) => {
                     const message =
                         error instanceof Error ? error.message : error.details;
-                    console.log("ERROR:", error);
                     if (
                         this._attempt < this._maxAttempts &&
                         !client.isClientShutDown &&
@@ -234,7 +234,18 @@ export default class AddressBookQuery {
                             250 * 2 ** this._attempt,
                             this._maxBackoff
                         );
-                        console.warn(
+                        if (this._attempt >= this._maxAttempts) {
+                            console.warn(
+                                `Error getting nodes from mirror for file ${
+                                    this._fileId != null
+                                        ? this._fileId.toString()
+                                        : "UNKNOWN"
+                                } during attempt ${
+                                    this._attempt
+                                }. Waiting ${delay} ms before next attempt: ${message}`
+                            );
+                        }
+                        Logger.debug(
                             `Error getting nodes from mirror for file ${
                                 this._fileId != null
                                     ? this._fileId.toString()
@@ -243,7 +254,6 @@ export default class AddressBookQuery {
                                 this._attempt
                             }. Waiting ${delay} ms before next attempt: ${message}`
                         );
-
                         this._attempt += 1;
 
                         setTimeout(() => {
