@@ -88,6 +88,7 @@ export default class AddressBookQuery {
                         // UNAVAILABLE
                         // eslint-disable-next-line no-fallthrough
                         case 14:
+                        case 17:
                             return true;
                         default:
                             return false;
