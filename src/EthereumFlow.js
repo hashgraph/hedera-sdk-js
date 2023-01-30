@@ -84,6 +84,24 @@ export default class EthereumFlow {
         if (props.maxGasAllowance != null) {
             this.setMaxGasAllowanceHbar(props.maxGasAllowance);
         }
+
+        this._maxChunks = null;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get maxChunks() {
+        return this._maxChunks;
+    }
+
+    /**
+     * @param {number} maxChunks
+     * @returns {this}
+     */
+    setMaxChunks(maxChunks) {
+        this._maxChunks = maxChunks;
+        return this;
     }
 
     /**
@@ -177,7 +195,7 @@ export default class EthereumFlow {
             }
 
             ethereumTransaction
-                .setEthereumData(this._ethereumData.toBytes())
+                .setEthereumData(ethereumTransactionDataBytes)
                 .setCallDataFileId(this._callDataFileId);
         } else if (ethereumTransactionDataBytes.length <= 5120) {
             ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
