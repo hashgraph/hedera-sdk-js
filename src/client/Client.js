@@ -637,17 +637,13 @@ export default class Client {
      * @param {AccountId | string} accountId
      */
     async ping(accountId) {
-        try {
-            await new AccountBalanceQuery({ accountId })
-                .setNodeAccountIds([
-                    accountId instanceof AccountId
-                        ? accountId
-                        : AccountId.fromString(accountId),
-                ])
-                .execute(this);
-        } catch (_) {
-            // Do nothing
-        }
+        await new AccountBalanceQuery({ accountId })
+            .setNodeAccountIds([
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId),
+            ])
+            .execute(this);
     }
 
     async pingAll() {
