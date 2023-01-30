@@ -51,6 +51,7 @@ describe("AccountCreateTransaction", function () {
             sendRecordThreshold: Long.fromString("9223372036854775807"),
             stakedAccountId: null,
             stakedNodeId: null,
+            evmAddress: new Uint8Array(),
         });
     });
 });
