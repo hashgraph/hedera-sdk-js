@@ -53,8 +53,8 @@
     "dependencies": {
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "^1.8.4",
-        "@hashgraph/cryptography": "^1.4.2",
-        "@hashgraph/proto": "2.11.2",
+        "@hashgraph/cryptography": "^1.4.2-beta.1",
+        "@hashgraph/proto": "2.11.2-beta.1",
         "axios": "^1.2.3",
         "bignumber.js": "^9.1.1",
         "crypto-js": "^4.1.1",
