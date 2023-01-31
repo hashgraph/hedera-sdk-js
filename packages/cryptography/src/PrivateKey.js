@@ -337,8 +337,6 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array}
      */
     signTransaction(transaction) {
-        transaction._requireFrozen();
-
         if (!transaction.isFrozen()) {
             transaction.freeze();
         }
