@@ -1,7 +1,7 @@
 import { TopicMessageQuery } from "../../src/exports.js";
 import { Client } from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TopicMessageQuery", function () {
+describe("TopicMessageQuery", function () {
     let client;
 
     before(async function () {
