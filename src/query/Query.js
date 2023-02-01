@@ -188,8 +188,9 @@ export default class Query extends Executable {
         // Change the timestamp. Should we be doing this?
         this._timestamp = Date.now();
         const cost = await COST_QUERY[0](this).execute(client);
-
-        return Hbar.fromString(cost.toBigNumber().plus(0.001).toString());
+        return Hbar.fromTinybars(
+            cost._valueInTinybar.multipliedBy(1.1).toFixed(0)
+        );
     }
 
     /**
