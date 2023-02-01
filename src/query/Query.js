@@ -173,7 +173,7 @@ export default class Query extends Executable {
      * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<Hbar>}
      */
-    getCost(client) {
+    async getCost(client) {
         // The node account IDs must be set to execute a cost query
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(
@@ -187,8 +187,9 @@ export default class Query extends Executable {
 
         // Change the timestamp. Should we be doing this?
         this._timestamp = Date.now();
+        const cost = await COST_QUERY[0](this).execute(client);
 
-        return COST_QUERY[0](this).execute(client);
+        return Hbar.fromString(cost.toBigNumber().plus(0.001).toString());
     }
 
     /**
@@ -343,9 +344,7 @@ export default class Query extends Executable {
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
 
-        if (!this._nodeAccountIds.locked) {
-            return;
-        }
+        this._nodeAccountIds.setLocked();
 
         // Generate the payment transactions
         for (const node of this._nodeAccountIds.list) {
@@ -357,7 +356,7 @@ export default class Query extends Executable {
                     ),
                     node,
                     this._isPaymentRequired() ? this._operator : null,
-                    /** @type {Hbar} */ (cost)
+                    /** @type {Hbar} */ (this._queryPayment)
                 )
             );
         }
