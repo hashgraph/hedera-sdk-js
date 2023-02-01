@@ -258,7 +258,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveTokenNftAllowance()` instead
      * @param {NftId | string} nftId
      * @param {AccountId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
@@ -377,7 +377,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveTokenNftAllowanceAllSerials()` instead
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
