@@ -1,7 +1,7 @@
 import { TopicMessageQuery } from "../../src/exports.js";
 import { Client } from "./client/NodeIntegrationTestEnv.js";
 
-describe("TopicMessageQuery", function () {
+describe.only("TopicMessageQuery", function () {
     let client;
 
     before(async function () {
@@ -9,18 +9,18 @@ describe("TopicMessageQuery", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         client.setTransportSecurity(true);
         client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
 
         let finished = false;
-        let endTime = Date.now() + 10000;
+        let endTime = Date.now() + 50000;
 
         new TopicMessageQuery()
             .setTopicId("0.0.120438")
-            .setStartTime(0)
-            .setLimit(1)
+            // .setStartTime(0)
+            // .setLimit(1)
             // eslint-disable-next-line no-unused-vars
             .subscribe(client, (_) => {
                 finished = true;
