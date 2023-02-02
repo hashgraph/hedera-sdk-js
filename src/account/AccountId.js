@@ -39,16 +39,16 @@ export default class AccountId {
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      * @param {(PublicKey)=} aliasKey
-     * @param {(EvmAddress)=} aliasEvmAddress
+     * @param {(EvmAddress)=} evmAddress
      */
-    constructor(props, realm, num, aliasKey, aliasEvmAddress) {
+    constructor(props, realm, num, aliasKey, evmAddress) {
         const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
         this.aliasKey = aliasKey != null ? aliasKey : null;
-        this.aliasEvmAddress = aliasEvmAddress != null ? aliasEvmAddress : null;
+        this.evmAddress = evmAddress != null ? evmAddress : null;
 
         /**
          * @type {string | null}
@@ -57,34 +57,43 @@ export default class AccountId {
     }
 
     /**
+     * @description Accepts the following formats as string:
+     *      - as stand alone nubmers
+     *      - as shard.realm.num
+     *      - as shard.realm.hex (wo 0x prefix)
+     *      - hex (w/wo 0x prefix)
      * @param {string} text
      * @returns {AccountId}
      */
     static fromString(text) {
-        const result = entity_id.fromStringSplitter(text);
-
-        if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
-            throw new Error("invalid format for entity ID");
-        }
-
-        const shard =
-            result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
-        const realm =
-            result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
-
+        let shard = Long.ZERO;
+        let realm = Long.ZERO;
         let num = Long.ZERO;
         let aliasKey = undefined;
-        let aliasEvmAddress = undefined;
+        let evmAddress = undefined;
 
-        if (result.numOrHex.length < 20) {
-            num = Long.fromString(result.numOrHex);
-        } else if (result.numOrHex.length == 40) {
-            aliasEvmAddress = EvmAddress.fromString(result.numOrHex);
+        if ((text.startsWith("0x") && text.length == 42) || text.length == 40) {
+            evmAddress = EvmAddress.fromString(text);
         } else {
-            aliasKey = PublicKey.fromString(result.numOrHex);
+            const result = entity_id.fromStringSplitter(text);
+
+            if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
+                throw new Error("invalid format for entity ID");
+            }
+
+            if (result.shard != null) shard = Long.fromString(result.shard);
+            if (result.realm != null) realm = Long.fromString(result.realm);
+
+            if (result.numOrHex.length < 20) {
+                num = Long.fromString(result.numOrHex);
+            } else if (result.numOrHex.length == 40) {
+                evmAddress = EvmAddress.fromString(result.numOrHex);
+            } else {
+                aliasKey = PublicKey.fromString(result.numOrHex);
+            }
         }
 
-        return new AccountId(shard, realm, num, aliasKey, aliasEvmAddress);
+        return new AccountId(shard, realm, num, aliasKey, evmAddress);
     }
 
     /**
@@ -106,25 +115,35 @@ export default class AccountId {
     }
 
     /**
+     * @summary Accepts an evm address only as `EvmAddress` type
+     * @param {EvmAddress} evmAddress
+     * @returns {AccountId}
+     */
+    static fromEvmPublicAddress(evmAddress) {
+        return new AccountId(0, 0, 0, undefined, evmAddress);
+    }
+
+    /**
      * @internal
      * @param {HashgraphProto.proto.IAccountID} id
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
         let aliasKey = undefined;
-        let aliasEvmAddress = undefined;
+        let evmAddress = undefined;
+
         if (id.alias != null) {
-            if (id.alias.length === 20) {
-                aliasEvmAddress = EvmAddress.fromBytes(id.alias);
-            } else {
-                aliasKey = Key._fromProtobufKey(
-                    HashgraphProto.proto.Key.decode(id.alias)
-                );
-            }
+            aliasKey = Key._fromProtobufKey(
+                HashgraphProto.proto.Key.decode(id.alias)
+            );
         }
 
         if (!(aliasKey instanceof PublicKey)) {
             aliasKey = undefined;
+        }
+
+        if (id.evmAddress != null) {
+            evmAddress = EvmAddress.fromBytes(id.evmAddress);
         }
 
         return new AccountId(
@@ -132,7 +151,7 @@ export default class AccountId {
             id.realmNum != null ? id.realmNum : 0,
             id.accountNum != null ? id.accountNum : 0,
             aliasKey,
-            aliasEvmAddress
+            evmAddress
         );
     }
 
@@ -141,6 +160,13 @@ export default class AccountId {
      */
     get checksum() {
         return this._checksum;
+    }
+
+    /**
+     * @returns {?EvmAddress}
+     */
+    getEvmAddress() {
+        return this.evmAddress;
     }
 
     /**
@@ -196,28 +222,33 @@ export default class AccountId {
         return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
     }
 
+    //TODO remove the comments after we get to HIP-631
     /**
      * @internal
      * @returns {HashgraphProto.proto.IAccountID}
      */
     _toProtobuf() {
         let alias = null;
+        //let evmAddress = null;
+
         if (this.aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
                 this.aliasKey._toProtobufKey()
             ).finish();
-        } else if (this.aliasEvmAddress != null) {
-            alias = this.aliasEvmAddress._bytes;
+        } else if (this.evmAddress != null) {
+            alias = this.evmAddress._bytes;
         }
+
+        /* if (this.evmAddress != null) {
+            evmAddress = this.evmAddress._bytes;
+        } */
 
         return {
             alias,
-            accountNum:
-                this.aliasKey != null || this.aliasEvmAddress != null
-                    ? null
-                    : this.num,
+            accountNum: this.aliasKey != null ? null : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
+            //evmAddress,
         };
     }
 
@@ -238,8 +269,8 @@ export default class AccountId {
 
         if (this.aliasKey != null) {
             account = this.aliasKey.toString();
-        } else if (this.aliasEvmAddress != null) {
-            account = this.aliasEvmAddress.toString();
+        } else if (this.evmAddress != null) {
+            account = this.evmAddress.toString();
         }
 
         return `${this.shard.toString()}.${this.realm.toString()}.${account}`;
@@ -268,7 +299,14 @@ export default class AccountId {
 
         if (this.aliasKey != null && other.aliasKey != null) {
             account = this.aliasKey.equals(other.aliasKey);
-        } else if (this.aliasKey == null && other.aliasKey == null) {
+        } else if (this.evmAddress != null && other.evmAddress != null) {
+            account = this.evmAddress.equals(other.evmAddress);
+        } else if (
+            this.aliasKey == null &&
+            other.aliasKey == null &&
+            this.evmAddress == null &&
+            other.evmAddress == null
+        ) {
             account = this.num.eq(other.num);
         }
 
@@ -284,7 +322,7 @@ export default class AccountId {
         const id = new AccountId(this);
         id._checksum = this._checksum;
         id.aliasKey = this.aliasKey;
-        id.aliasEvmAddress = this.aliasEvmAddress;
+        id.evmAddress = this.evmAddress;
         return id;
     }
 
@@ -314,7 +352,23 @@ export default class AccountId {
             } else {
                 return 0;
             }
-        } else if (this.aliasKey == null && other.aliasKey == null) {
+        } else if (this.evmAddress != null && other.evmAddress != null) {
+            const t = this.evmAddress.toString();
+            const o = other.evmAddress.toString();
+
+            if (t > o) {
+                return 1;
+            } else if (t < o) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else if (
+            this.aliasKey == null &&
+            other.aliasKey == null &&
+            this.evmAddress == null &&
+            other.evmAddress == null
+        ) {
             return this.num.compare(other.num);
         } else {
             return 1;
