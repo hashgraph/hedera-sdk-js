@@ -34,7 +34,7 @@
         "last 1 Firefox versions"
     ],
     "dependencies": {
-        "long": "^4.0.0",
+        "long": "^5.2.1",
         "protobufjs": "^7.1.2",
         "protobufjs-cli": "^1.0.2"
     },
