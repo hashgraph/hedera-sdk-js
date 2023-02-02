@@ -495,9 +495,19 @@ export default class ManagedNetwork {
     getNode(key) {
         this._readmitNodes();
         if (key != null && key != undefined) {
-            return /** @type {NetworkNodeT[]} */ (
-                this._network.get(key.toString())
-            )[0];
+            // return /** @type {NetworkNodeT[]} */ (
+            //     this._network.get(key.toString())
+            // )[0];
+            const lockedNodes = this._network.get(key.toString());
+            if (lockedNodes) {
+                return /** @type {NetworkNodeT[]} */ lockedNodes[
+                    Math.floor(Math.random() * lockedNodes.length)
+                ];
+            } else {
+                return /** @type {NetworkNodeT[]} */ (
+                    this._network.get(key.toString())
+                )[0];
+            }
         } else {
             if (this._healthyNodes.length == 0) {
                 throw new Error("failed to find a healthy working node");

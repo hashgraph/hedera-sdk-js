@@ -447,6 +447,7 @@ export default class Executable {
     _shouldRetryExceptionally(error) {
         if (error instanceof GrpcServiceError) {
             return (
+                error.status._code === GrpcStatus.Timeout._code ||
                 error.status._code === GrpcStatus.Unavailable._code ||
                 error.status._code === GrpcStatus.ResourceExhausted._code ||
                 (error.status._code === GrpcStatus.Internal._code &&
@@ -595,7 +596,8 @@ export default class Executable {
                 Logger.debug(
                     `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
                 );
-                await node.backoff();
+                // We don't need to wait, we can proceed to the next attempt.
+                continue;
             }
 
             try {
