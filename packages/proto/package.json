@@ -43,7 +43,7 @@
         "@babel/core": "^7.20.12",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.20.11",
-        "@types/long": "^4.0.2",
+        "@types/long": "^5.0.0",
         "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@typescript-eslint/parser": "^5.48.2",
         "babel-plugin-dynamic-import-node": "^2.3.3",
