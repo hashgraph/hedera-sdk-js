@@ -113,7 +113,7 @@ export default class ContractUpdateTransaction extends Transaction {
          * @private
          * @type {?number}
          */
-        this._maxAutomaticTokenAssociations;
+        this._maxAutomaticTokenAssociations = null;
 
         /**
          * @private
