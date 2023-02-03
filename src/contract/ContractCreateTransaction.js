@@ -128,7 +128,7 @@ export default class ContractCreateTransaction extends Transaction {
          * @private
          * @type {number}
          */
-        this._maxAutomaticTokenAssociations = 0;
+        this._maxAutomaticTokenAssociations;
 
         this._defaultMaxTransactionFee = new Hbar(20);
 
