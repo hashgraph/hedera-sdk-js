@@ -200,4 +200,306 @@ describe("EthereumFlowMocking", function () {
             await new EthereumFlow().setEthereumData(encoded).execute(client)
         ).getReceipt(client);
     });
+
+    it("extracts the calldata if it's too large and try to deploy it by chunks, but thrown", async function () {
+        this.timeout(10000);
+
+        const decoded = rlp.decode(bytes);
+        const longCallData = "0x" + "00".repeat(7000);
+        decoded[5] = longCallData;
+        const encoded = hex.decode(rlp.encode(decoded));
+        decoded[5] = "0x";
+        const encodedWithoutCallData = hex.decode(rlp.encode(decoded));
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileCreate = transactionBody.fileCreate;
+                        expect(
+                            `0x${fileCreate.contents.toString()}`
+                        ).to.deep.equal(
+                            // includes 0x prefix
+                            longCallData.substring(0, 4098)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileAppend = transactionBody.fileAppend;
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(4098, 8194)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileAppend = transactionBody.fileAppend;
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(8194, 12290)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                // Yes, you need 4 receipt responses here. One happens in
+                // `FileAppendTransaction.executeAll()` in a loop, and the next
+                // is for `TransactionResponse.getReceipt()`
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const ethereumTransaction =
+                            transactionBody.ethereumTransaction;
+                        expect(ethereumTransaction.ethereumData).to.deep.equal(
+                            encodedWithoutCallData
+                        );
+                        expect(
+                            FileId._fromProtobuf(
+                                ethereumTransaction.callData
+                            ).toString()
+                        ).to.equal(callDataFileId.toString());
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+            ],
+        ]));
+
+        let error = null;
+        try {
+            await new EthereumFlow()
+                .setEthereumData(encoded)
+                .setMaxChunks(2)
+                .execute(client);
+        } catch (err) {
+            error = err;
+        }
+        expect(error).to.be.an("Error");
+    });
+
+    it("extracts the calldata if it's too large and deploy it by the right amount of chunks", async function () {
+        this.timeout(10000);
+
+        const decoded = rlp.decode(bytes);
+        const longCallData = "0x" + "00".repeat(7000);
+        decoded[5] = longCallData;
+        const encoded = hex.decode(rlp.encode(decoded));
+        decoded[5] = "0x";
+        const encodedWithoutCallData = hex.decode(rlp.encode(decoded));
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileCreate = transactionBody.fileCreate;
+                        expect(
+                            `0x${fileCreate.contents.toString()}`
+                        ).to.deep.equal(
+                            // includes 0x prefix
+                            longCallData.substring(0, 4098)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileAppend = transactionBody.fileAppend;
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(4098, 8194)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const fileAppend = transactionBody.fileAppend;
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(8194, 12290)
+                        );
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                {
+                    response: {
+                        transactionGetReceipt: {
+                            header: {
+                                nodeTransactionPrecheckCode:
+                                    proto.ResponseCodeEnum.OK,
+                            },
+                            receipt: {
+                                status: proto.ResponseCodeEnum.SUCCESS,
+                                fileID: callDataFileId._toProtobuf(),
+                            },
+                        },
+                    },
+                },
+                // Yes, you need 4 receipt responses here. One happens in
+                // `FileAppendTransaction.executeAll()` in a loop, and the next
+                // is for `TransactionResponse.getReceipt()`
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                {
+                    call: (request) => {
+                        const transactionBody = proto.TransactionBody.decode(
+                            proto.SignedTransaction.decode(
+                                request.signedTransactionBytes
+                            ).bodyBytes
+                        );
+
+                        const ethereumTransaction =
+                            transactionBody.ethereumTransaction;
+                        expect(ethereumTransaction.ethereumData).to.deep.equal(
+                            encodedWithoutCallData
+                        );
+                        expect(
+                            FileId._fromProtobuf(
+                                ethereumTransaction.callData
+                            ).toString()
+                        ).to.equal(callDataFileId.toString());
+
+                        return { response: TRANSACTION_RESPONSE_SUCCESS };
+                    },
+                },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+            ],
+        ]));
+
+        await (
+            await new EthereumFlow()
+                .setEthereumData(encoded)
+                .setMaxChunks(3)
+                .execute(client)
+        ).getReceipt(client);
+    });
 });
