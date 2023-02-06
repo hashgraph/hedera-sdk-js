@@ -115,7 +115,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
 
     /**
      * @description If you want to remove allowance for all serials of a NFT
-     *      - AccountAllowanceApproveTransaction().deleteTokenNftAllowanceAllSerials()
+     *      - use AccountAllowanceApproveTransaction().deleteTokenNftAllowanceAllSerials()
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId
      * @returns {AccountAllowanceDeleteTransaction}
