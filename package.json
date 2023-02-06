@@ -75,7 +75,7 @@
         "@playwright/test": "^1.30.0",
         "@types/chai": "^4.3.4",
         "@types/crypto-js": "^4.1.1",
-        "@types/long": "^4.0.2",
+        "@types/long": "^5.0.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "^18.11.18",
         "@types/utf8": "^3.0.1",
