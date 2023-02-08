@@ -44,6 +44,7 @@ export default class TokenNftAllowance {
      * @param {AccountId | null} props.ownerAccountId
      * @param {Long[] | null} props.serialNumbers
      * @param {boolean | null} props.allSerials
+     * @param {AccountId | null} props.delegatingSpender
      */
     constructor(props) {
         /**
@@ -80,6 +81,14 @@ export default class TokenNftAllowance {
          * @readonly
          */
         this.allSerials = props.allSerials;
+
+        /**
+         * The account ID of the spender who is granted approvedForAll allowance and granting
+         * approval on an NFT serial to another spender.
+         *
+         * @readonly
+         */
+        this.delegatingSpender = props.delegatingSpender;
 
         Object.freeze(this);
     }
@@ -121,6 +130,14 @@ export default class TokenNftAllowance {
                   )
                 : [],
             allSerials,
+            delegatingSpender:
+                allowance.delegatingSpender != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.delegatingSpender
+                          )
+                      )
+                    : null,
         });
     }
 
@@ -143,6 +160,7 @@ export default class TokenNftAllowance {
             ownerAccountId,
             serialNumbers: [],
             allSerials: null,
+            delegatingSpender: null,
         });
     }
 
@@ -172,6 +190,7 @@ export default class TokenNftAllowance {
                       )
                     : [],
             allSerials: null,
+            delegatingSpender: null,
         });
     }
 
@@ -193,6 +212,10 @@ export default class TokenNftAllowance {
             approvedForAll:
                 this.serialNumbers == null ? { value: this.allSerials } : null,
             serialNumbers: this.serialNumbers,
+            delegatingSpender:
+                this.delegatingSpender != null
+                    ? this.delegatingSpender._toProtobuf()
+                    : null,
         };
     }
 
