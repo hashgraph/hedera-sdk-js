@@ -546,6 +546,20 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * Set the transaction logger enabler
+     *
+     * @param {boolean} transactionLogger
+     * @returns {this}
+     */
+    setTransactionLogger(transactionLogger) {
+        Logger.useDefaults();
+        transactionLogger
+            ? Logger.setLevel(Logger.INFO)
+            : Logger.setLevel(Logger.OFF);
+        return this;
+    }
+
+    /**
      * Get the transaction memo
      *
      * @returns {string}
@@ -1159,6 +1173,8 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        Logger.info("Network used:", client._network.networkName);
+
         // Makes ure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
@@ -1370,6 +1386,7 @@ export default class Transaction extends Executable {
             `[${this._getLogId()}] received status ${status.toString()}`
         );
 
+        Logger.info(`SDK Transaction Status Responce: ${status.toString()}`);
         // Based on the status what execution state are we in
         switch (status) {
             case Status.Busy:
@@ -1413,6 +1430,12 @@ export default class Transaction extends Executable {
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
+        Logger.info(
+            `Transaction Error Info:`,
+            status.toString(),
+            this.transactionId?.toString()
+        );
+
         return new PrecheckStatusError({
             status,
             transactionId: this._getTransactionId(),
@@ -1438,6 +1461,15 @@ export default class Transaction extends Executable {
 
         this._transactionIds.advance();
 
+        Logger.info(
+            `Transaction Info:`,
+            new TransactionResponse({
+                nodeId,
+                transactionHash,
+                transactionId,
+            }).toJSON()
+        );
+
         return new TransactionResponse({
             nodeId,
             transactionHash,
@@ -1454,6 +1486,7 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
+        Logger.info(`Transaction Body:`, JSON.stringify(body));
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
