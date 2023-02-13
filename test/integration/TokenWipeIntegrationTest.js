@@ -184,7 +184,7 @@ describe("TokenWipe", function () {
         }
     });
 
-    it("should error when amount is not set", async function () {
+    it("should not error when amount is not set", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
