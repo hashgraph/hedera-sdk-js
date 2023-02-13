@@ -621,6 +621,8 @@ export default class Status {
                 return "TRANSACTION_HAS_UNKNOWN_FIELDS";
             case Status.AccountIsImmutable:
                 return "ACCOUNT_IS_IMMUTABLE";
+            case Status.AliasAlreadyAssigned:
+                return "ALIAS_ALREADY_ASSIGNED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1213,6 +1215,8 @@ export default class Status {
                 return Status.TransactionHasUnknownFields;
             case 331:
                 return Status.AccountIsImmutable;
+            case 332:
+                return Status.AliasAlreadyAssigned;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2719,3 +2723,8 @@ Status.TransactionHasUnknownFields = new Status(330);
  * The account cannot be modified. Account's key is not set
  */
 Status.AccountIsImmutable = new Status(331);
+
+/**
+ * An alias that is assigned to an account or contract cannot be assigned to another account or contract.
+ */
+Status.AliasAlreadyAssigned = new Status(332);
