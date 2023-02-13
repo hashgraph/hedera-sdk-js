@@ -532,8 +532,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Set the maximum transaction fee the operator (paying account)
-     * is willing to pay.
+     * Set if transactionId regenaration is enabled
      *
      * @param {boolean} regenerateTransactionId
      * @returns {this}
@@ -845,10 +844,9 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Not sure why this is called `setTransactionId()` when it doesn't set anything...
-     * FIXME: Remove this?
+     * Check if the transactionId is set or the client is provided
      */
-    _setTransactionId() {
+    _validateTransactionId() {
         if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
@@ -924,14 +922,16 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
+        console.log(`freezing`);
         // Set sign on demand based on client
         this._signOnDemand = client != null ? client.signOnDemand : false;
 
         // Save the operator
         this._operator = client != null ? client._operator : null;
-        this._freezeWithAccountId(
+        /* this._freezeWithAccountId(
             client != null ? client.operatorAccountId : null
-        );
+        ); */
+        this._operatorAccountId = client != null ? client.operatorAccountId : null;
 
         // Set max transaction fee to either `this._maxTransactionFee`,
         // `client._defaultMaxTransactionFee`, or `this._defaultMaxTransactionFee`
@@ -953,8 +953,9 @@ export default class Transaction extends Executable {
         // Set the node account IDs via client
         this._setNodeAccountIds(client);
 
+        
         // Make sure a transaction ID or operator is set.
-        this._setTransactionId();
+        this._validateTransactionId();
 
         // If a client was not provided, we need to make sure the transaction ID already set
         // validates aginst the client.
@@ -969,7 +970,7 @@ export default class Transaction extends Executable {
         // Build a list of transaction IDs so that if a user calls `.transactionId` they'll
         // get a value, but if they dont' we'll just regenerate transaction IDs during execution
         this._buildNewTransactionIdList();
-
+        console.log(this._transactionIds.current.toString());
         // If sign on demand is disabled we need to build out all the signed transactions
         if (!this._signOnDemand) {
             this._buildSignedTransactions();
@@ -1010,13 +1011,17 @@ export default class Transaction extends Executable {
      * into a `proto.TransactionList` and return the encoded protobuf.
      *
      * **NOTE**: Does not support sign on demand
-     *
+     * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {Uint8Array}
      */
-    toBytes() {
+    // @ts-ignore
+    toBytes(client) {
+        this.freezeWith(client);
         // If a user is attempting to serialize a transaction into bytes, then the
         // transaction must be frozen.
-        this._requireFrozen();
+        /* if (!this._isFrozen()) {
+            this.freeze();
+        } */
 
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
@@ -1159,7 +1164,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        // Makes ure we're frozen
+        // Makes sure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
         }
@@ -1176,7 +1181,7 @@ export default class Transaction extends Executable {
                 ? client._operator.accountId
                 : null;
 
-        // If the client has an operaator, sign this request with the operator
+        // If the client has an operator, sign this request with the operator
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,
