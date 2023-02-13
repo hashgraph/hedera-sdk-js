@@ -268,7 +268,10 @@ export default class AccountId {
 
         if (this.aliasKey != null && other.aliasKey != null) {
             account = this.aliasKey.equals(other.aliasKey);
-        } else if (this.aliasEvmAddress != null && other.aliasEvmAddress != null) {
+        } else if (
+            this.aliasEvmAddress != null &&
+            other.aliasEvmAddress != null
+        ) {
             account = this.aliasEvmAddress.equals(other.aliasEvmAddress);
         } else if (
             this.aliasKey == null &&
@@ -321,7 +324,10 @@ export default class AccountId {
             } else {
                 return 0;
             }
-        } else if (this.aliasEvmAddress != null && other.aliasEvmAddress != null) {
+        } else if (
+            this.aliasEvmAddress != null &&
+            other.aliasEvmAddress != null
+        ) {
             const t = this.aliasEvmAddress.toString();
             const o = other.aliasEvmAddress.toString();
 
