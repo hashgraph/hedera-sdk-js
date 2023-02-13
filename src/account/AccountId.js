@@ -133,17 +133,17 @@ export default class AccountId {
         let evmAddress = undefined;
 
         if (id.alias != null) {
-            aliasKey = Key._fromProtobufKey(
-                HashgraphProto.proto.Key.decode(id.alias)
-            );
+            if (id.alias.length === 20) {
+                evmAddress = EvmAddress.fromBytes(id.alias);
+            } else {
+                aliasKey = Key._fromProtobufKey(
+                    HashgraphProto.proto.Key.decode(id.alias)
+                );
+            }
         }
 
         if (!(aliasKey instanceof PublicKey)) {
             aliasKey = undefined;
-        }
-
-        if (id.evmAddress != null) {
-            evmAddress = EvmAddress.fromBytes(id.evmAddress);
         }
 
         return new AccountId(
