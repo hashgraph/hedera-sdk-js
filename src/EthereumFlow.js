@@ -84,6 +84,24 @@ export default class EthereumFlow {
         if (props.maxGasAllowance != null) {
             this.setMaxGasAllowanceHbar(props.maxGasAllowance);
         }
+
+        this._maxChunks = null;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get maxChunks() {
+        return this._maxChunks;
+    }
+
+    /**
+     * @param {number} maxChunks
+     * @returns {this}
+     */
+    setMaxChunks(maxChunks) {
+        this._maxChunks = maxChunks;
+        return this;
     }
 
     /**
@@ -177,14 +195,15 @@ export default class EthereumFlow {
             }
 
             ethereumTransaction
-                .setEthereumData(this._ethereumData.toBytes())
+                .setEthereumData(ethereumTransactionDataBytes)
                 .setCallDataFileId(this._callDataFileId);
         } else if (ethereumTransactionDataBytes.length <= 5120) {
             ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
         } else {
             const fileId = await createFile(
                 this._ethereumData.callData,
-                client
+                client,
+                this._maxChunks
             );
 
             this._ethereumData.callData = new Uint8Array();
@@ -203,9 +222,10 @@ export default class EthereumFlow {
  * @template MirrorChannelT
  * @param {Uint8Array} callData
  * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
+ * @param {?number} maxChunks
  * @returns {Promise<FileId>}
  */
-async function createFile(callData, client) {
+async function createFile(callData, client, maxChunks) {
     const hexedCallData = hex.encode(callData);
 
     const fileId = /** @type {FileId} */ (
@@ -224,15 +244,14 @@ async function createFile(callData, client) {
     );
 
     if (callData.length > 4096) {
-        await (
-            await new FileAppendTransaction()
-                .setFileId(fileId)
-                .setContents(
-                    hexedCallData.substring(4096, hexedCallData.length)
-                )
-                .setChunkSize(4096)
-                .execute(client)
-        ).getReceipt(client);
+        let fileAppendTransaction = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setContents(hexedCallData.substring(4096, hexedCallData.length));
+        if (maxChunks != null) {
+            fileAppendTransaction.setMaxChunks(maxChunks);
+        }
+
+        await (await fileAppendTransaction.execute(client)).getReceipt(client);
     }
 
     return fileId;

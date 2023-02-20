@@ -163,7 +163,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveHbarAllowance()` instead
      * @param {AccountId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
      * @returns {AccountAllowanceApproveTransaction}
@@ -227,7 +227,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveTokenAllowance()` instead
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} spenderAccountId
      * @param {Long | number} amount
@@ -258,13 +258,18 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveTokenNftAllowance()` instead
      * @param {NftId | string} nftId
      * @param {AccountId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
     addTokenNftAllowance(nftId, spenderAccountId) {
-        return this._approveTokenNftAllowance(nftId, null, spenderAccountId);
+        return this._approveTokenNftAllowance(
+            nftId,
+            null,
+            spenderAccountId,
+            null
+        );
     }
 
     /**
@@ -278,9 +283,15 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @param {NftId | string} nftId
      * @param {AccountId | string | null} ownerAccountId
      * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | string | null} delegatingSpender
      * @returns {AccountAllowanceApproveTransaction}
      */
-    _approveTokenNftAllowance(nftId, ownerAccountId, spenderAccountId) {
+    _approveTokenNftAllowance(
+        nftId,
+        ownerAccountId,
+        spenderAccountId,
+        delegatingSpender
+    ) {
         this._requireNotFrozen();
 
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
@@ -308,16 +319,17 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
             this._nftApprovals.push(
                 new TokenNftAllowance({
                     tokenId: id.tokenId,
-                    spenderAccountId:
-                        typeof spenderAccountId === "string"
-                            ? AccountId.fromString(spenderAccountId)
-                            : spenderAccountId,
+                    spenderAccountId: spender,
                     ownerAccountId:
                         typeof ownerAccountId === "string"
                             ? AccountId.fromString(ownerAccountId)
                             : ownerAccountId,
                     serialNumbers: [id.serial],
                     allSerials: false,
+                    delegatingSpender:
+                        typeof delegatingSpender === "string"
+                            ? AccountId.fromString(delegatingSpender)
+                            : delegatingSpender,
                 })
             );
         }
@@ -335,7 +347,29 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
         return this._approveTokenNftAllowance(
             nftId,
             ownerAccountId,
-            spenderAccountId
+            spenderAccountId,
+            null
+        );
+    }
+
+    /**
+     * @param {NftId | string} nftId
+     * @param {AccountId | string} ownerAccountId
+     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | string} delegatingSpender
+     * @returns {AccountAllowanceApproveTransaction}
+     */
+    approveTokenNftAllowanceWithDelegatingSpender(
+        nftId,
+        ownerAccountId,
+        spenderAccountId,
+        delegatingSpender
+    ) {
+        return this._approveTokenNftAllowance(
+            nftId,
+            ownerAccountId,
+            spenderAccountId,
+            delegatingSpender
         );
     }
 
@@ -370,6 +404,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                         : ownerAccountId,
                 serialNumbers: null,
                 allSerials,
+                delegatingSpender: null,
             })
         );
 
@@ -377,7 +412,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
+     * @deprecated - Use `approveTokenNftAllowanceAllSerials()` instead
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -408,6 +443,25 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
             ownerAccountId,
             spenderAccountId,
             true
+        );
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} ownerAccountId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceApproveTransaction}
+     */
+    deleteTokenNftAllowanceAllSerials(
+        tokenId,
+        ownerAccountId,
+        spenderAccountId
+    ) {
+        return this._approveAllTokenNftAllowance(
+            tokenId,
+            ownerAccountId,
+            spenderAccountId,
+            false
         );
     }
 
