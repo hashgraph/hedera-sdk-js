@@ -17,7 +17,7 @@ import {
 import Client from "../../src/client/NodeClient.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("TokenNft", function () {
+describe("TokenNftAllowances", function () {
     let env;
 
     before(async function () {
