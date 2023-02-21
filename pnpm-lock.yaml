@@ -10,8 +10,8 @@ specifiers:
   '@ethersproject/rlp': ^5.7.0
   '@grpc/grpc-js': ^1.7.3
   '@grpc/proto-loader': ^0.7.4
-  '@hashgraph/cryptography': ^1.4.2-beta.2
-  '@hashgraph/proto': 2.11.2-beta.1
+  '@hashgraph/cryptography': ^1.4.3
+  '@hashgraph/proto': 2.12.0
   '@playwright/test': ^1.30.0
   '@types/chai': ^4.3.4
   '@types/crypto-js': ^4.1.1
@@ -61,8 +61,8 @@ specifiers:
 dependencies:
   '@ethersproject/rlp': 5.7.0
   '@grpc/grpc-js': 1.7.3
-  '@hashgraph/cryptography': 1.4.2_expo@47.0.13
-  '@hashgraph/proto': 2.11.2-beta.1
+  '@hashgraph/cryptography': 1.4.3_expo@47.0.13
+  '@hashgraph/proto': 2.12.0
   axios: 1.3.1
   bignumber.js: 9.1.1
   crypto-js: 4.1.1
@@ -1936,8 +1936,8 @@ packages:
       protobufjs: 7.1.2
       yargs: 16.2.0
 
-  /@hashgraph/cryptography/1.4.2_expo@47.0.13:
-    resolution: {integrity: sha512-9p9wZvB7JQ7sgcllVHOQb8qxVvkYVfH4TjDsNiy/V38WOXNdf9L8CMd/A3zFP+eXm9jtrybqxmtLZHVO2XZ2lA==}
+  /@hashgraph/cryptography/1.4.3_expo@47.0.13:
+    resolution: {integrity: sha512-txU2SVz8mBJ5aHqkrIpmaerJSu0F/S9T/0eXpYAIC2USy/8oTisp54gKVDTETFdnCrq0tNgCJmWt2N8QHMMbcw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^45.0.3
@@ -1960,8 +1960,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.11.2-beta.1:
-    resolution: {integrity: sha512-6HSCsNlnDEuLXGmBGNoLXUJE8/PaEknsZlUPGNvVjbKPMXU/ZgscZQ9UNdPLoMTxZcbgLwztxLxjhBbmpdG/eQ==}
+  /@hashgraph/proto/2.12.0:
+    resolution: {integrity: sha512-IIN6K3b2X8ih7V14IDH8rsVJ1DE9ud25FfKUpr+lDNnQdBfdZdG2AGlHRhc9iDAz4vCHoHc6F3Ao6yYKMceeTg==}
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0
