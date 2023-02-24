@@ -128,6 +128,7 @@ async function main() {
         client
     );
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Spender associate TX status: ${spenderAssociateReceipt.status}`
     );
 
@@ -145,6 +146,7 @@ async function main() {
     const receiverAssociateReceipt =
         await receiverExecuteAssociateTx.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Receiver associate TX status: ${receiverAssociateReceipt.status}`
     );
 
@@ -159,6 +161,7 @@ async function main() {
     const approveRx = await receiverApproveTx.execute(client);
     const approveReceipt = await approveRx.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Approve spender allowance for serials 1 and 2 - status: ${approveReceipt.status}`
     );
 
@@ -177,6 +180,7 @@ async function main() {
     const approvedSendSubmit = await approvedSendSigned.execute(client);
     const approvedSendRx = await approvedSendSubmit.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Transfer serial 1 on behalf of the spender status: ${approvedSendRx.status}`
     );
 
@@ -189,6 +193,7 @@ async function main() {
     const deleteTx = await accountDeleteAllowanceTx.execute(client);
     const deleteAllowanceReceipt = await deleteTx.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Remove spender's allowance for serial 2 - status: ${deleteAllowanceReceipt.status}`
     );
 
@@ -209,6 +214,7 @@ async function main() {
     } catch (error) {
         console.log(
             // @ts-ignore
+            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `Transfer serial 2 on behalf of the spender - status: ${error.status}`
         );
     }
@@ -247,7 +253,7 @@ async function main() {
     console.log(`Created NFT with token id: ${nftTokenId2.toString()}`);
 
     const nftCollection2 = [];
-    for (var i = 0; i < CID2.length; i++) {
+    for (let i = 0; i < CID2.length; i++) {
         nftCollection2[i] = await (
             await tokenMinterFcn(CID2[i], nftTokenId2)
         ).getReceipt(client);
@@ -293,6 +299,7 @@ async function main() {
     const spenderAssociateReceipt2 =
         await spenderExecuteAssociateTx2.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Spender associate TX status: ${spenderAssociateReceipt2.status}`
     );
 
@@ -312,6 +319,7 @@ async function main() {
     const receiverAssociateReceipt2 =
         await receiverExecuteAssociateTx2.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Receiver associate TX status: ${receiverAssociateReceipt2.status}`
     );
 
@@ -330,6 +338,7 @@ async function main() {
     const approveRx2 = await receiverApproveTx2.execute(client);
     const approveReceipt2 = await approveRx2.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Approve spender allowance for all serials - status: ${approveReceipt2.status}`
     );
 
@@ -367,6 +376,7 @@ async function main() {
     const approveDelegateAllowanceReceipt =
         await approveDelegateSpender.getReceipt(spenderClient);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Approve delegated spender allowance for serial 3 - status: ${approveDelegateAllowanceReceipt.status}`
     );
 
@@ -387,6 +397,7 @@ async function main() {
     const delegatedSendSubmit = await delegatedSendSigned.execute(client);
     const delegatedSendRx = await delegatedSendSubmit.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Transfer serial 3 on behalf of the delegated spender status: ${delegatedSendRx.status}`
     );
 
@@ -405,6 +416,7 @@ async function main() {
     const approvedSendSubmit3 = await approvedSendSigned3.execute(client);
     const approvedSendRx3 = await approvedSendSubmit3.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Transfer serial 1 on behalf of the spender status: ${approvedSendRx3.status}`
     );
 
@@ -419,6 +431,7 @@ async function main() {
     const deleteTx2 = await accountDeleteAllowanceTx2.execute(client);
     const deleteAllowanceReceipt2 = await deleteTx2.getReceipt(client);
     console.log(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Remove spender's allowance for ALL serials - status: ${deleteAllowanceReceipt2.status}`
     );
 
@@ -440,6 +453,7 @@ async function main() {
     } catch (error) {
         console.log(
             // @ts-ignore
+            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
             `Transfer serial 2 on behalf of the spender status: ${error.status}`
         );
     }
@@ -461,4 +475,4 @@ async function main() {
     }
 }
 
-main();
+void main();
