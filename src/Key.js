@@ -66,10 +66,14 @@ export default class Key {
             return CACHE.keyList(key.keyList);
         }
 
-        throw new Error(
+        //TODO think of a better solution
+        // @ts-ignore
+        return null;
+
+        /* throw new Error(
             `(BUG) keyFromProtobuf: not implemented key case: ${JSON.stringify(
                 key
             )}`
-        );
+        ); */
     }
 }

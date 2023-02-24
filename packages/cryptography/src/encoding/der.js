@@ -1,20 +1,20 @@
 /**
- * @typedef {Object} AsnSeq
+ * @typedef {object} AsnSeq
  * @property {AsnType[]} seq
  */
 
 /**
- * @typedef {Object} AsnInt
+ * @typedef {object} AsnInt
  * @property {number} int
  */
 
 /**
- * @typedef {Object} AsnBytes
+ * @typedef {object} AsnBytes
  * @property {Uint8Array} bytes
  */
 
 /**
- * @typedef {Object} AsnIdent
+ * @typedef {object} AsnIdent
  * @property {string} ident
  */
 

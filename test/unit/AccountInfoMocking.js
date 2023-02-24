@@ -238,7 +238,7 @@ describe("AccountInfoMocking", function () {
         try {
             await new AccountInfoQuery()
                 .setAccountId("0.0.3")
-                .setMaxQueryPayment(Hbar.fromTinybars(26))
+                .setMaxQueryPayment(Hbar.fromTinybars(28))
                 .execute(client, 1);
         } catch (error) {
             err = error instanceof MaxQueryPaymentExceeded;

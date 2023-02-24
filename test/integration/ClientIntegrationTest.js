@@ -127,6 +127,18 @@ describe("ClientIntegration", function () {
         await env.client.pingAll();
     });
 
+    it("should fail on ping", async function () {
+        this.timeout(120000);
+
+        let error = null;
+        try {
+            await env.client.ping("0.0.100"); // Non exist Node ID
+        } catch (err) {
+            error = err;
+        }
+        expect(error).to.be.an("Error");
+    });
+
     it("can set network name on custom network", async function () {
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
         expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);

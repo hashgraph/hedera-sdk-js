@@ -20,6 +20,7 @@
 
 import Key from "./Key.js";
 import * as hex from "./encoding/hex.js";
+import { arrayEqual } from "./util.js";
 
 /**
  * @namespace proto
@@ -68,5 +69,13 @@ export default class EvmAddress extends Key {
      */
     toString() {
         return hex.encode(this._bytes);
+    }
+
+    /**
+     * @param {EvmAddress} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        return arrayEqual(this._bytes, other._bytes);
     }
 }

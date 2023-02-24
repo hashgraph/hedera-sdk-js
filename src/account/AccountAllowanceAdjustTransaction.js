@@ -306,6 +306,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     serialNumbers: [nftId.serial],
                     ownerAccountId: owner,
                     allSerials: false,
+                    delegatingSpender: null,
                 })
             );
         }
@@ -438,6 +439,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                         : spenderAccountId,
                 serialNumbers: null,
                 allSerials,
+                delegatingSpender: null,
             })
         );
 

@@ -70,6 +70,7 @@ describe("AccountAllowanceApproveTransaction", function () {
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
+                    delegatingSpender: null,
                 },
                 {
                     owner: ownerAccountId._toProtobuf(),
@@ -77,6 +78,7 @@ describe("AccountAllowanceApproveTransaction", function () {
                     spender: spenderAccountId2._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
+                    delegatingSpender: null,
                 },
                 {
                     owner: ownerAccountId._toProtobuf(),
@@ -84,6 +86,7 @@ describe("AccountAllowanceApproveTransaction", function () {
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId1._toProtobuf(),
                     approvedForAll: { value: true },
+                    delegatingSpender: null,
                 },
             ],
             tokenAllowances: [

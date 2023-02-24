@@ -52,7 +52,7 @@ export const SLIP44_ECDSA_ETH_PATH = [
  */
 export default class Mnemonic {
     /**
-     * @param {Object} props
+     * @param {object} props
      * @param {string[]} props.words
      * @param {boolean} props.legacy
      * @throws {BadMnemonicError}

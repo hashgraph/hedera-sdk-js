@@ -76,6 +76,7 @@ export { default as EthereumFlow } from "./EthereumFlow.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
 export { default as ExchangeRates } from "./ExchangeRates.js";
 export { default as Executable } from "./Executable.js";
+export { default as FeeAssessmentMethod } from "./token/FeeAssessmentMethod.js";
 export { default as FeeComponents } from "./FeeComponents.js";
 export { default as FeeData } from "./FeeData.js";
 export { default as FeeDataType } from "./FeeDataType.js";
