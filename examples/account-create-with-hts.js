@@ -282,10 +282,11 @@ async function main() {
             mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+        /* eslint-disable */
         const balance = mirrorNodeAccountInfo.balance.tokens.find(
-            (token) => token.token_id === tokenId // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+            (token) => token.token_id === tokenId
         ).balance;
+        /* eslint-enable */
 
         balance === 10
             ? console.log(

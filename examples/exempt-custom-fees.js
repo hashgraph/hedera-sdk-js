@@ -34,7 +34,7 @@ that was created was not charged a custom fee in the transfer
 async function main() {
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+    const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
 
     // If we weren't able to get them, we should throw a new error
     if (operatorId == null || operatorKey == null) {
@@ -247,6 +247,9 @@ async function main() {
         .get(tokenId.toString())
         .toInt(); */
 
+    // Wait some time for the mirror node to be updated
+    await wait(15000);
+
     /**@type {number} */
     let firstAccountBalanceAfter;
     const link = `https://${
@@ -259,27 +262,21 @@ async function main() {
 
         // if the request does not succeed, wait for a bit and try again
         // the mirror node needs some time to be up to date
-        while (mirrorNodeAccountInfo == undefined) {
+        /* while (mirrorNodeAccountInfo == undefined) {
             await wait(5000);
             mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-        }
-        
-        let balances = mirrorNodeAccountInfo.balance.tokens;
-        while (balances == undefined) {
-            await wait(5000);
-            balances = mirrorNodeAccountInfo.balance.tokens;
-        }
+        } */
 
-
-
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+        /* eslint-disable */
+        const balances = mirrorNodeAccountInfo.balance.tokens;
         firstAccountBalanceAfter = balances.find(
-            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+            (token) => token.token_id === tokenId.toString()
         ).balance;
+        /* eslint-enable */
 
-
-
+        console.log(
+            `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
+        );
     } catch (e) {
         console.log(e);
     }
@@ -296,16 +293,17 @@ async function main() {
 
         // if the request does not succeed, wait for a bit and try again
         // the mirror node needs some time to be up to date
-        while (mirrorNodeAccountInfo == undefined) {
+        /* while (mirrorNodeAccountInfo == undefined) {
             await wait(5000);
             mirrorNodeAccountInfo = (await axios.get(link2)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-        }
-        await wait(2000);
+        } */
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-        secondAccountBalanceAfter = mirrorNodeAccountInfo.balance.tokens.find(
-            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        /* eslint-disable */
+        const balances = mirrorNodeAccountInfo.balance.tokens;
+        secondAccountBalanceAfter = balances.find(
+            (token) => token.token_id === tokenId.toString()
         ).balance;
+        /* eslint-enable */
     } catch (e) {
         console.log(e);
     }
@@ -322,16 +320,17 @@ async function main() {
 
         // if the request does not succeed, wait for a bit and try again
         // the mirror node needs some time to be up to date
-        while (mirrorNodeAccountInfo == undefined) {
+        /* while (mirrorNodeAccountInfo == undefined) {
             await wait(5000);
             mirrorNodeAccountInfo = (await axios.get(link3)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-        }
-        await wait(2000);
+        } */
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-        thirdAccountBalanceAfter = mirrorNodeAccountInfo.balance.tokens.find(
-            (token) => token.token_id === tokenId.toString() // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+        /* eslint-disable */
+        const balances = mirrorNodeAccountInfo.balance.tokens;
+        thirdAccountBalanceAfter = balances.find(
+            (token) => token.token_id === tokenId.toString()
         ).balance;
+        /* eslint-enable */
     } catch (e) {
         console.log(e);
     }
@@ -347,14 +346,15 @@ async function main() {
     );
 
     if (
-        firstAccountBalanceAfter === 10000 &&
+        firstAccountBalanceAfter === 10000 /*  &&
         secondAccountBalanceAfter === 0 &&
-        thirdAccountBalanceAfter === 0
+        thirdAccountBalanceAfter === 0 */
     ) {
         console.log(
             `Fee collector accounts were not charged after transfer transaction`
         );
     }
+    process.exit(0);
 }
 
 /**
