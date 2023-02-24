@@ -28,7 +28,7 @@ async function main() {
     );
 
     /*
-     * Hedera supports a form of lazy account creation.
+     * Hedera supports a form of auto account creation.
      *
      * You can "create" an account by generating a private key, and then deriving the public key,
      * without any need to interact with the Hedera network.  The public key more or less acts as the user's
