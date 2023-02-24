@@ -270,20 +270,16 @@ async function main() {
      *
      * Show the new account ID owns the fungible token
      */
+
+    // Wait some time for the mirror node to be updated
+    await wait(10000);
+
     const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
     try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-        let mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0];
-
-        // if the request does not succeed, wait for a bit and try again
-        // the mirror node needs some time to be up to date
-        while (mirrorNodeAccountInfo == undefined) {
-            await wait(5000);
-            mirrorNodeAccountInfo = (await axios.get(link)).data.accounts[0]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-        }
-
         /* eslint-disable */
-        const balance = mirrorNodeAccountInfo.balance.tokens.find(
+        const balance = (
+            await axios.get(link)
+        ).data.accounts[0].balance.tokens.find(
             (token) => token.token_id === tokenId
         ).balance;
         /* eslint-enable */
