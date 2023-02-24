@@ -3,13 +3,11 @@ import {
     PrivateKey,
     AccountId,
     NftId,
-    TokenId,
     Hbar,
     TransactionId,
     TokenType,
     TokenSupplyType,
     TransferTransaction,
-    TransactionResponse,
     TokenCreateTransaction,
     TokenMintTransaction,
     TokenAssociateTransaction,
@@ -83,7 +81,7 @@ async function main() {
     const nftCollection = [];
     for (var i = 0; i < CID.length; i++) {
         nftCollection[i] = await (
-            await tokenMinterFcn(CID[i], nftTokenId)
+            await tokenMinterFcn(CID[i], nftTokenId.toString())
         ).getReceipt(client);
         console.log(
             `Created NFT ${nftTokenId.toString()} with serial: ${nftCollection[
@@ -255,7 +253,7 @@ async function main() {
     const nftCollection2 = [];
     for (let i = 0; i < CID2.length; i++) {
         nftCollection2[i] = await (
-            await tokenMinterFcn(CID2[i], nftTokenId2)
+            await tokenMinterFcn(CID2[i], nftTokenId2.toString())
         ).getReceipt(client);
         console.log(
             `Created NFT ${nftTokenId2.toString()} with serial: ${nftCollection2[
@@ -462,8 +460,7 @@ async function main() {
      * TOKEN MINTER FUNCTION
      *
      * @param {string} CID
-     * @param {TokenId} nftTokenId
-     * @returns {Promise<TransactionResponse>}
+     * @param {string} nftTokenId
      */
     async function tokenMinterFcn(CID, nftTokenId) {
         const mintTx = new TokenMintTransaction()

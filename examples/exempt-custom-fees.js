@@ -34,7 +34,7 @@ that was created was not charged a custom fee in the transfer
 async function main() {
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
+    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
     // If we weren't able to get them, we should throw a new error
     if (operatorId == null || operatorKey == null) {
