@@ -3626,10 +3626,10 @@ expo-modules-core@1.1.1:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
-expo-random@~13.0.0:
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/expo-random/-/expo-random-13.0.0.tgz#fc9c1496ac9f7555563d86de0db25966739c028f"
-  integrity sha512-aGb0vtUmFFuW0TF1rdOgsz89zEVD/RXUPUnnZy5+i3jJeQ2PerJ4uo72/EuWqHpCBNto8/qT+aCzFinmQDeTAA==
+expo-random@~13.1.1:
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/expo-random/-/expo-random-13.1.1.tgz#15e781911d5db4fbcee75e26ac109bc2523fe00c"
+  integrity sha512-+KkhGp7xW45GvMRzlcSOzvDwzTgyXo6C84GaG4GI43rOdECBQ2lGUJ12st39OtfZm1lORNskpi66DjnuJ73g9w==
   dependencies:
     base64-js "^1.3.0"
 

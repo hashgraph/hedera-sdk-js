@@ -13,7 +13,7 @@
     "@hashgraph/sdk": "file:.yalc/@hashgraph/sdk",
     "expo": "~47.0.13",
     "expo-crypto": "~12.0.0",
-    "expo-random": "~13.0.0",
+    "expo-random": "~13.1.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
