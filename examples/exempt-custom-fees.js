@@ -9,8 +9,8 @@ import {
     AccountCreateTransaction,
     LocalProvider,
     Wallet,
-    AccountBalanceQuery,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -161,14 +161,11 @@ async function main() {
 
     // Submit the transaction to the Hedera network
     let tokenCreateSubmit = await tokenCreateTx.executeWithSigner(wallet);
-    console.log(`response`);
-    console.log(tokenCreateSubmit);
-    console.log(tokenCreateTx);
 
     // Get transaction receipt information
     let tokenCreateRx = await tokenCreateSubmit.getReceiptWithSigner(wallet);
     let tokenId = tokenCreateRx.tokenId;
-    console.log(`Created token with token id: ${tokenId.toString()} \n`);
+    console.log(`Created token with token id: ${tokenId.toString()}`);
 
     /**
      * Step 3
@@ -226,29 +223,59 @@ async function main() {
      * of the token that was created was not charged a custom fee in the transfer
      */
 
-    let firstAccountBalanceAfter = (
-        await new AccountBalanceQuery()
-            .setAccountId(firstAccountWallet.getAccountId())
-            .executeWithSigner(wallet)
-    ).tokens._map
-        .get(tokenId.toString())
-        .toInt();
+    // Wait some time for the mirror node to be updated
+    await wait(10000);
 
-    let secondAccountBalanceAfter = (
-        await new AccountBalanceQuery()
-            .setAccountId(secondAccountWallet.getAccountId())
-            .executeWithSigner(wallet)
-    ).tokens._map
-        .get(tokenId.toString())
-        .toInt();
+    /**@type {number} */
+    let firstAccountBalanceAfter;
+    const link = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    try {
+        /* eslint-disable */
+        firstAccountBalanceAfter = (
+            await axios.get(link)
+        ).data.accounts[0].balance.tokens.find(
+            (token) => token.token_id === tokenId.toString()
+        ).balance;
+        /* eslint-enable */
+    } catch (e) {
+        console.log(e);
+    }
 
-    let thirdAccountBalanceAfter = (
-        await new AccountBalanceQuery()
-            .setAccountId(thirdAccountWallet.getAccountId())
-            .executeWithSigner(wallet)
-    ).tokens._map
-        .get(tokenId.toString())
-        .toInt();
+    /**@type {number} */
+    let secondAccountBalanceAfter;
+    const link2 = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    try {
+        /* eslint-disable */
+        secondAccountBalanceAfter = (
+            await axios.get(link2)
+        ).data.accounts[0].balance.tokens.find(
+            (token) => token.token_id === tokenId.toString()
+        ).balance;
+        /* eslint-enable */
+    } catch (e) {
+        console.log(e);
+    }
+
+    /**@type {number} */
+    let thirdAccountBalanceAfter;
+    const link3 = `https://${
+        process.env.HEDERA_NETWORK
+    }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    try {
+        /* eslint-disable */
+        thirdAccountBalanceAfter = (
+            await axios.get(link3)
+        ).data.accounts[0].balance.tokens.find(
+            (token) => token.token_id === tokenId.toString()
+        ).balance;
+        /* eslint-enable */
+    } catch (e) {
+        console.log(e);
+    }
 
     console.log(
         `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
@@ -269,6 +296,16 @@ async function main() {
             `Fee collector accounts were not charged after transfer transaction`
         );
     }
+}
+
+/**
+ * @param {number} timeout
+ * @returns {Promise<any>}
+ */
+function wait(timeout) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, timeout);
+    });
 }
 
 void main();
