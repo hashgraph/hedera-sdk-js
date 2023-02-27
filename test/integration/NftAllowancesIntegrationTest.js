@@ -379,21 +379,21 @@ describe("TokenNftAllowances", function () {
     it("Account, which given the allowance for all serials at once, should be able to give allowances for single serial numbers to other accounts", async function () {
         this.timeout(120000);
 
-        const spenderKey = PrivateKey.generateED25519();
-        const spenderAccountId = (
+        const delegatingSpenderKey = PrivateKey.generateED25519();
+        const delegatingSpenderAccountId = (
             await (
                 await new AccountCreateTransaction()
-                    .setKey(spenderKey)
+                    .setKey(delegatingSpenderKey)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
         ).accountId;
 
-        const delegateSpenderKey = PrivateKey.generateED25519();
-        const delegateSpenderAccountId = (
+        const spenderKey = PrivateKey.generateED25519();
+        const spenderAccountId = (
             await (
                 await new AccountCreateTransaction()
-                    .setKey(delegateSpenderKey)
+                    .setKey(spenderKey)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -429,9 +429,9 @@ describe("TokenNftAllowances", function () {
             await (
                 await new TokenAssociateTransaction()
                     .setTokenIds([nftTokenId])
-                    .setAccountId(spenderAccountId)
+                    .setAccountId(delegatingSpenderAccountId)
                     .freezeWith(env.client)
-                    .sign(spenderKey)
+                    .sign(delegatingSpenderKey)
             ).execute(env.client)
         ).getReceipt(env.client);
 
@@ -463,14 +463,14 @@ describe("TokenNftAllowances", function () {
                 .approveTokenNftAllowanceAllSerials(
                     nftTokenId,
                     env.operatorId,
-                    spenderAccountId
+                    delegatingSpenderAccountId
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
 
         const spenderClient = Client.forLocalNode().setOperator(
-            spenderAccountId,
-            spenderKey
+            delegatingSpenderAccountId,
+            delegatingSpenderKey
         );
 
         await (
@@ -478,15 +478,15 @@ describe("TokenNftAllowances", function () {
                 .approveTokenNftAllowanceWithDelegatingSpender(
                     nft1,
                     env.operatorId,
-                    delegateSpenderAccountId,
-                    spenderAccountId
+                    spenderAccountId,
+                    delegatingSpenderAccountId
                 )
                 .freezeWith(spenderClient)
                 .execute(spenderClient)
         ).getReceipt(spenderClient);
 
         const onBehalfOfTransactionId = TransactionId.generate(
-            delegateSpenderAccountId
+            spenderAccountId
         );
         await (
             await (
@@ -498,13 +498,13 @@ describe("TokenNftAllowances", function () {
                     )
                     .setTransactionId(onBehalfOfTransactionId)
                     .freezeWith(env.client)
-                    .sign(delegateSpenderKey)
+                    .sign(spenderKey)
             ).execute(env.client)
         ).getReceipt(env.client);
 
         let err = false;
         const onBehalfOfTransactionId2 = TransactionId.generate(
-            delegateSpenderAccountId
+            spenderAccountId
         );
         try {
             await (
@@ -517,7 +517,7 @@ describe("TokenNftAllowances", function () {
                         )
                         .setTransactionId(onBehalfOfTransactionId2)
                         .freezeWith(env.client)
-                        .sign(delegateSpenderKey)
+                        .sign(spenderKey)
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
