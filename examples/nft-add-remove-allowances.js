@@ -151,7 +151,7 @@ async function main() {
     const nft1 = new NftId(nftTokenId, 1);
     const nft2 = new NftId(nftTokenId, 2);
 
-    // Give `spender` allowance only for NFT with serial 1
+    // Give `spender` allowance for NFT with serial numbers 1 and 2
     const receiverApproveTx = new AccountAllowanceApproveTransaction()
         .approveTokenNftAllowance(nft1, operatorId, spenderAccountId)
         .approveTokenNftAllowance(nft2, operatorId, spenderAccountId);
@@ -210,10 +210,11 @@ async function main() {
         const approvedSendSubmit2 = await approvedSendSigned2.execute(client);
         await approvedSendSubmit2.getReceipt(client);
     } catch (error) {
+        console.log("The transfer failed as expected.");
         console.log(
-            // @ts-ignore
-            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Transfer serial 2 on behalf of the spender - status: ${error.status}`
+            `Transfer serial 2 on behalf of the spender - status: ${
+                /** @type {Error} */ (error).message
+            }`
         );
     }
 
@@ -262,16 +263,19 @@ async function main() {
         );
     }
 
-    // Create `spender` account
-    const spenderKey2 = PrivateKey.generateECDSA();
-    const createSpenderTx2 = await new AccountCreateTransaction()
-        .setKey(spenderKey2)
+    // Create `delegating spender` account
+    const delegatingSpenderKey = PrivateKey.generateECDSA();
+    const createDelegateSpenderTx = await new AccountCreateTransaction()
+        .setKey(delegatingSpenderKey)
         .setInitialBalance(new Hbar(2))
         .execute(client);
 
-    const spenderAccountId2 = (await createSpenderTx2.getReceipt(client))
-        .accountId;
-    console.log(`spenderAccountId2: ${spenderAccountId2.toString()}`);
+    const delegatingSpenderAccountId = (
+        await createDelegateSpenderTx.getReceipt(client)
+    ).accountId;
+    console.log(
+        `delegatingSpenderAccountId: ${delegatingSpenderAccountId.toString()}`
+    );
 
     // Create `receiver` account
     const receiverKey2 = PrivateKey.generateECDSA();
@@ -283,22 +287,22 @@ async function main() {
         .accountId;
     console.log(`receiverAccountId2: ${receiverAccountId2.toString()}`);
 
-    // Associate the `spender` with the NFT
-    const spenderAssociateTx2 = new TokenAssociateTransaction()
-        .setAccountId(spenderAccountId2)
+    // Associate the `delegating spender` with the NFT
+    const delegateSpenderAssociateTx = new TokenAssociateTransaction()
+        .setAccountId(delegatingSpenderAccountId)
         .setTokenIds([nftTokenId2])
         .freezeWith(client);
 
-    const spenderSignAssociateTx2 = await spenderAssociateTx2.sign(spenderKey2);
-    const spenderExecuteAssociateTx2 = await spenderSignAssociateTx2.execute(
-        client
-    );
+    const delegatingSpenderSignAssociateTx =
+        await delegateSpenderAssociateTx.sign(delegatingSpenderKey);
+    const delegatingSpenderExecuteAssociateTx =
+        await delegatingSpenderSignAssociateTx.execute(client);
 
-    const spenderAssociateReceipt2 =
-        await spenderExecuteAssociateTx2.getReceipt(client);
+    const delegatingSpenderAssociateReceipt =
+        await delegatingSpenderExecuteAssociateTx.getReceipt(client);
     console.log(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `Spender associate TX status: ${spenderAssociateReceipt2.status}`
+        `Spender associate TX status: ${delegatingSpenderAssociateReceipt.status}`
     );
 
     // Associate the `receiver` with the NFT
@@ -325,64 +329,61 @@ async function main() {
     const example2Nft2 = new NftId(nftTokenId2, 2);
     const example2Nft3 = new NftId(nftTokenId2, 3);
 
-    // Give `spender` allowance only for NFT with serial 1
-    const receiverApproveTx2 =
+    // Give `delegating spender` allowance for all serial numbers of the NFT
+    const delegatingSpenderApproveTx =
         new AccountAllowanceApproveTransaction().approveTokenNftAllowanceAllSerials(
             nftTokenId2,
             operatorId,
-            spenderAccountId2
+            delegatingSpenderAccountId
         );
 
-    const approveRx2 = await receiverApproveTx2.execute(client);
+    const approveRx2 = await delegatingSpenderApproveTx.execute(client);
     const approveReceipt2 = await approveRx2.getReceipt(client);
     console.log(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Approve spender allowance for all serials - status: ${approveReceipt2.status}`
     );
 
-    // Create `delegate spender` account
-    const delegateSpenderKey = PrivateKey.generateECDSA();
-    const createDelegateSpenderTx = await new AccountCreateTransaction()
-        .setKey(delegateSpenderKey)
+    // Create `spender` account
+    const spenderKey2 = PrivateKey.generateECDSA();
+    const createSpenderTx2 = await new AccountCreateTransaction()
+        .setKey(spenderKey2)
         .setInitialBalance(new Hbar(2))
         .execute(client);
 
-    const delegateSpenderAccountId = (
-        await createDelegateSpenderTx.getReceipt(client)
-    ).accountId;
-    console.log(
-        `delegateSpenderAccountId: ${delegateSpenderAccountId.toString()}`
-    );
+    const spenderAccountId2 = (await createSpenderTx2.getReceipt(client))
+        .accountId;
+    console.log(`spenderAccountId2: ${spenderAccountId2.toString()}`);
 
-    // Give `delegateSpender` allowance for NFT with serial number 3 on behalf of `spender` account which has `approveForAll` rights
-    const spenderClient = Client.forTestnet().setOperator(
-        spenderAccountId2,
-        spenderKey2
-    );
+    // Set the operatorId and operatorKey to the delegating spender data so he can execute on behalf of transfer
+    client.setOperator(delegatingSpenderAccountId, delegatingSpenderKey);
+
+    // Give `spenderAccount2` allowance for NFT with serial number 3 on behalf of `delegatingSpender` account which has `approveForAll` rights
     const delegateSpenderAllowance = new AccountAllowanceApproveTransaction()
         .approveTokenNftAllowanceWithDelegatingSpender(
             example2Nft3,
             operatorId,
-            delegateSpenderAccountId,
-            spenderAccountId2
+            spenderAccountId2,
+            delegatingSpenderAccountId
         )
-        .freezeWith(spenderClient);
+        .freezeWith(client);
 
     const approveDelegateSpender = await delegateSpenderAllowance.execute(
-        spenderClient
+        client
     );
     const approveDelegateAllowanceReceipt =
-        await approveDelegateSpender.getReceipt(spenderClient);
+        await approveDelegateSpender.getReceipt(client);
     console.log(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Approve delegated spender allowance for serial 3 - status: ${approveDelegateAllowanceReceipt.status}`
     );
 
+    // Set the operatorId and operatorKey of the client back to the original ones
+    client.setOperator(operatorId, operatorKey);
+
     // Generate TransactionId from spender's account id in order
     // for the transaction to be to be executed on behalf of the spender
-    const delegatedOnBehalfOfTxId = TransactionId.generate(
-        delegateSpenderAccountId
-    );
+    const delegatedOnBehalfOfTxId = TransactionId.generate(spenderAccountId2);
 
     // Sending NFT with serial number 1
     // `Delegated spender` has an allowance to send serial 3, should end up with `SUCCESS`
@@ -391,7 +392,7 @@ async function main() {
         .setTransactionId(delegatedOnBehalfOfTxId)
         .freezeWith(client);
 
-    const delegatedSendSigned = await delegatedSendTx.sign(delegateSpenderKey);
+    const delegatedSendSigned = await delegatedSendTx.sign(spenderKey2);
     const delegatedSendSubmit = await delegatedSendSigned.execute(client);
     const delegatedSendRx = await delegatedSendSubmit.getReceipt(client);
     console.log(
@@ -401,7 +402,9 @@ async function main() {
 
     // Generate TransactionId from spender's account id in order
     // for the transaction to be to be executed on behalf of the spender
-    const onBehalfOfTransactionId3 = TransactionId.generate(spenderAccountId2);
+    const onBehalfOfTransactionId3 = TransactionId.generate(
+        delegatingSpenderAccountId
+    );
 
     // Sending NFT with serial number 1
     // `Spender` has an allowance to send serial 1, should end up with `SUCCESS`
@@ -410,7 +413,9 @@ async function main() {
         .setTransactionId(onBehalfOfTransactionId3)
         .freezeWith(client);
 
-    const approvedSendSigned3 = await approvedSendTx3.sign(spenderKey2);
+    const approvedSendSigned3 = await approvedSendTx3.sign(
+        delegatingSpenderKey
+    );
     const approvedSendSubmit3 = await approvedSendSigned3.execute(client);
     const approvedSendRx3 = await approvedSendSubmit3.getReceipt(client);
     console.log(
@@ -418,12 +423,12 @@ async function main() {
         `Transfer serial 1 on behalf of the spender status: ${approvedSendRx3.status}`
     );
 
-    // Remove `spender's` allowance for ALL serials
+    // Remove `delegating spender's` allowance for ALL serials
     const accountDeleteAllowanceTx2 =
         new AccountAllowanceApproveTransaction().deleteTokenNftAllowanceAllSerials(
             nftTokenId2,
             operatorId,
-            spenderAccountId2
+            delegatingSpenderAccountId
         );
 
     const deleteTx2 = await accountDeleteAllowanceTx2.execute(client);
@@ -433,9 +438,11 @@ async function main() {
         `Remove spender's allowance for ALL serials - status: ${deleteAllowanceReceipt2.status}`
     );
 
-    // Generate TransactionId from spender's account id in order
+    // Generate TransactionId from delegating spender's account id in order
     // for the transaction to be to be executed on behalf of the spender
-    const onBehalfOfTransactionId4 = TransactionId.generate(spenderAccountId2);
+    const onBehalfOfTransactionId4 = TransactionId.generate(
+        delegatingSpenderAccountId
+    );
 
     // Sending NFT with serial number 2
     // `Spender` does not have an allowance to send serial 2, should end up with `SPENDER_DOES_NOT_HAVE_ALLOWANCE`
@@ -444,15 +451,18 @@ async function main() {
         .setTransactionId(onBehalfOfTransactionId4)
         .freezeWith(client);
 
-    const approvedSendSigned4 = await approvedSendTx4.sign(spenderKey2);
+    const approvedSendSigned4 = await approvedSendTx4.sign(
+        delegatingSpenderKey
+    );
     try {
         const approvedSendSubmit4 = await approvedSendSigned4.execute(client);
         await approvedSendSubmit4.getReceipt(client);
     } catch (error) {
+        console.log("The transfer failed as expected.");
         console.log(
-            // @ts-ignore
-            //eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-            `Transfer serial 2 on behalf of the spender status: ${error.status}`
+            `Transfer serial 2 on behalf of the spender status: ${
+                /** @type {Error} */ (error).message
+            }`
         );
     }
 
