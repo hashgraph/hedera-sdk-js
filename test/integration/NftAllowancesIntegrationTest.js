@@ -14,7 +14,6 @@ import {
     TokenType,
     TransferTransaction,
 } from "../../src/exports.js";
-import Client from "../../src/client/NodeClient.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenNftAllowances", function () {
@@ -468,7 +467,7 @@ describe("TokenNftAllowances", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        const spenderClient = Client.forLocalNode().setOperator(
+        env.client.setOperator(
             delegatingSpenderAccountId,
             delegatingSpenderKey
         );
@@ -481,13 +480,14 @@ describe("TokenNftAllowances", function () {
                     spenderAccountId,
                     delegatingSpenderAccountId
                 )
-                .freezeWith(spenderClient)
-                .execute(spenderClient)
-        ).getReceipt(spenderClient);
+                .freezeWith(env.client)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
-        const onBehalfOfTransactionId = TransactionId.generate(
-            spenderAccountId
-        );
+        env.client.setOperator(env.operatorId, env.operatorKey);
+
+        const onBehalfOfTransactionId =
+            TransactionId.generate(spenderAccountId);
         await (
             await (
                 await new TransferTransaction()
@@ -503,9 +503,8 @@ describe("TokenNftAllowances", function () {
         ).getReceipt(env.client);
 
         let err = false;
-        const onBehalfOfTransactionId2 = TransactionId.generate(
-            spenderAccountId
-        );
+        const onBehalfOfTransactionId2 =
+            TransactionId.generate(spenderAccountId);
         try {
             await (
                 await (
