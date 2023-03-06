@@ -10,15 +10,15 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
-describe("ClientIntegration", function () {
+describe.only("ClientIntegration", function () {
     let env;
     let clientTestnet;
     let clientPreviewNet;
 
     before(async function () {
         env = await IntegrationTestEnv.new();
-        clientTestnet = Client.forTestnet();
-        clientPreviewNet = Client.forPreviewnet();
+        clientTestnet = await Client.forTestnet();
+        clientPreviewNet = await Client.forPreviewnet();
     });
 
     it("should error when invalid network on entity ID", async function () {
@@ -143,7 +143,7 @@ describe("ClientIntegration", function () {
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
         expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
-        clientTestnet.setNetwork(clientPreviewNet.network);
+        await clientTestnet.setNetwork(clientPreviewNet.network);
 
         expect(clientTestnet.ledgerId).to.be.null;
 
@@ -156,5 +156,17 @@ describe("ClientIntegration", function () {
         await env.close();
         clientTestnet.close();
         clientPreviewNet.close();
+    });
+
+    it("can use same proxies of one node", async function () {
+        let nodes = {
+            "0.testnet.hedera.com:50211": new AccountId(3),
+            "34.94.106.61:50211": new AccountId(3),
+            "50.18.132.211:50211": new AccountId(3),
+            "138.91.142.219:50211": new AccountId(3),
+        };
+
+        const clientForNetwork = Client.forNetwork(nodes);
+        await clientForNetwork.pingAll();
     });
 });
