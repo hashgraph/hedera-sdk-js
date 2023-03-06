@@ -10,7 +10,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("ClientIntegration", function () {
+describe("ClientIntegration", function () {
     let env;
     let clientTestnet;
     let clientPreviewNet;
