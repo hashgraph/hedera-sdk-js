@@ -345,7 +345,7 @@ export default class Query extends Executable {
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
 
-        this._nodeAccountIds.setLocked();
+        //this._nodeAccountIds.setLocked();
 
         // Generate the payment transactions
         for (const node of this._nodeAccountIds.list) {

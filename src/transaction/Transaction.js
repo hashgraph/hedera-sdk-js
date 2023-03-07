@@ -217,7 +217,8 @@ export default class Transaction extends Executable {
         const list =
             HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
 
-        // If the list is of length 0, then teh bytes provided were not a
+        console.log(`in fromBytes txs length: ${list.length}`);
+        // If the list is of length 0, then the bytes provided were not a
         // `proto.TransactionList`
         //
         // FIXME: We should also check to make sure the bytes length is greater than
@@ -260,12 +261,12 @@ export default class Transaction extends Executable {
             const body = HashgraphProto.proto.TransactionBody.decode(
                 signedTransaction.bodyBytes
             );
-
             // Make sure the body is set
             if (body.data == null) {
                 throw new Error("(BUG) body.data was not set in the protobuf");
             }
-
+            console.log(`body tx: ${JSON.stringify(body.transactionID)}`)
+            console.log(`body node: ${JSON.stringify(body.nodeAccountID)}`)
             bodies.push(body);
 
             // Make sure the transaction ID within the body is set
@@ -319,7 +320,6 @@ export default class Transaction extends Executable {
                 `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`
             );
         }
-
         // That the specific transaction type from protobuf implementation and pass in all the
         // information we've gathered.
         return fromProtobuf(
@@ -404,16 +404,18 @@ export default class Transaction extends Executable {
         // Set the signed transactions accordingly, and lock the list since signed transaction
         // will not be regenerated. Although, they can be manipulated if for instance more
         // signatures are added
-        transaction._signedTransactions.setList(signedTransactions).setLocked();
+        transaction._signedTransactions.setList(signedTransactions)//.setLocked();
 
         // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
         // be regenerated if we're deserializing a request from bytes
-        transaction._transactionIds.setList(transactionIds).setLocked();
+        
+        transaction._transactionIds.setList(transactionIds)//.setLocked();
 
         // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
-        transaction._nodeAccountIds.setList(nodeIds).setLocked();
-
+        
+        transaction._nodeAccountIds.setList(nodeIds)//.setLocked();
+        console.log(`body ${body.transactionFee}`)
         // Make sure to update the rest of the fields
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
@@ -583,7 +585,7 @@ export default class Transaction extends Executable {
         // This may be a little conffusing since a user can enable transaction ID regenration
         // explicity, but if they call `.transactionId` then we will not regenerate transaction
         // IDs.
-        this._transactionIds.setLocked();
+        //this._transactionIds.setLocked();
 
         return this._transactionIds.current;
     }
@@ -602,8 +604,8 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     setTransactionId(transactionId) {
-        this._requireNotFrozen();
-        this._transactionIds.setList([transactionId]).setLocked();
+        //this._requireNotFrozen();
+        this._transactionIds.setList([transactionId]);
 
         return this;
     }
@@ -640,6 +642,8 @@ export default class Transaction extends Executable {
             this._requireFrozen();
         }
 
+        //this._buildNewTransactionIdList();
+
         const publicKeyData = publicKey.toBytesRaw();
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
@@ -672,8 +676,8 @@ export default class Transaction extends Executable {
         // signing all the transactions immediately, we need to lock the node account IDs
         // and transaction IDs.
         // Now that I think of it, this code should likely exist in `freezeWith()`?
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        //this._transactionIds.setLocked();
+        //this._nodeAccountIds.setLocked();
 
         // Sign each signed transatcion
         for (const signedTransaction of this._signedTransactions.list) {
@@ -884,12 +888,13 @@ export default class Transaction extends Executable {
         if (this._signedTransactions.locked) {
             return;
         }
+    
+        console.log(`in _buildSignedTransactions: ${this._nodeAccountIds.list.length == 0}`)
+        let list = this._nodeAccountIds.list.length != 0 ? this._nodeAccountIds.list.map((nodeId) =>
+            this._makeSignedTransaction(nodeId)
+        ) : [this._makeSignedTransaction(null)];
 
-        this._signedTransactions.setList(
-            this._nodeAccountIds.list.map((nodeId) =>
-                this._makeSignedTransaction(nodeId)
-            )
-        );
+        this._signedTransactions.setList(list);
     }
 
     /**
@@ -928,21 +933,24 @@ export default class Transaction extends Executable {
 
         // Save the operator
         this._operator = client != null ? client._operator : null;
-        /* this._freezeWithAccountId(
+        this._freezeWithAccountId(
             client != null ? client.operatorAccountId : null
-        ); */
-        this._operatorAccountId = client != null ? client.operatorAccountId : null;
+        );
 
         // Set max transaction fee to either `this._maxTransactionFee`,
         // `client._defaultMaxTransactionFee`, or `this._defaultMaxTransactionFee`
         // in that priority order depending on if `this._maxTransactionFee` has
         // been set or if `client._defaultMaxTransactionFee` has been set.
-        this._maxTransactionFee =
+        /* this._maxTransactionFee =
             this._maxTransactionFee == null
                 ? client != null && client.defaultMaxTransactionFee != null
                     ? client.defaultMaxTransactionFee
                     : this._defaultMaxTransactionFee
-                : this._maxTransactionFee;
+                : this._maxTransactionFee; */
+        this._maxTransactionFee = this._defaultMaxTransactionFee;
+        console.log(`freeze: ${this._maxTransactionFee}`);
+        console.log(`clients default: ${client?.defaultMaxTransactionFee}`);
+        console.log(`_defaultMaxTransactionFee: ${this._defaultMaxTransactionFee}`);
 
         // Determine if transaction ID generation should be enabled.
         this._regenerateTransactionId =
@@ -951,11 +959,12 @@ export default class Transaction extends Executable {
                 : this._regenerateTransactionId;
 
         // Set the node account IDs via client
-        this._setNodeAccountIds(client);
+        if (client != null)
+            this._setNodeAccountIds(client);
 
         
         // Make sure a transaction ID or operator is set.
-        this._validateTransactionId();
+        //this._validateTransactionId();
 
         // If a client was not provided, we need to make sure the transaction ID already set
         // validates aginst the client.
@@ -970,9 +979,9 @@ export default class Transaction extends Executable {
         // Build a list of transaction IDs so that if a user calls `.transactionId` they'll
         // get a value, but if they dont' we'll just regenerate transaction IDs during execution
         this._buildNewTransactionIdList();
-        console.log(this._transactionIds.current.toString());
         // If sign on demand is disabled we need to build out all the signed transactions
         if (!this._signOnDemand) {
+            console.log(`buildSigned`)
             this._buildSignedTransactions();
         }
 
@@ -1011,28 +1020,33 @@ export default class Transaction extends Executable {
      * into a `proto.TransactionList` and return the encoded protobuf.
      *
      * **NOTE**: Does not support sign on demand
-     * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {Uint8Array}
      */
-    // @ts-ignore
-    toBytes(client) {
-        this.freezeWith(client);
+    toBytes() {
         // If a user is attempting to serialize a transaction into bytes, then the
         // transaction must be frozen.
         /* if (!this._isFrozen()) {
             this.freeze();
         } */
+        
+        console.log(`in toBytes nodes: ${JSON.stringify(this._nodeAccountIds)}`);
+        console.log(`in toBytes txs: ${JSON.stringify(this._transactionIds)}`);
+        //this._buildNewTransactionIdList();
 
+        if (!this._signOnDemand) {
+            this._buildSignedTransactions();
+        }
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
         this._requireNotSignOnDemand();
-
+        console.log(`in toBytes nodes: ${JSON.stringify(this._nodeAccountIds)}`);
+        console.log(`in toBytes txs: ${JSON.stringify(this._transactionIds)}`);
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        //this._transactionIds.setLocked();
+        //this._nodeAccountIds.setLocked();
 
-        // Build all the transactions withot signing
+        // Build all the transactions without signing
         this._buildAllTransactions();
 
         // Construct and encode the transaction list
@@ -1083,8 +1097,8 @@ export default class Transaction extends Executable {
      * @returns {Promise<Uint8Array>}
      */
     async getTransactionHash() {
-        this._requireFrozen();
-
+        //this._requireFrozen();
+        this.freeze();
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         this._transactionIds.setLocked();
@@ -1165,15 +1179,15 @@ export default class Transaction extends Executable {
      */
     async _beforeExecute(client) {
         // Makes sure we're frozen
-        if (!this._isFrozen()) {
+        //if (!this._isFrozen()) {
             this.freezeWith(client);
-        }
+        //}
 
         // Valid checksums if the option is enabled
         if (client.isAutoValidateChecksumsEnabled()) {
             this._validateChecksums(client);
         }
-
+        
         // Set the operator if the client has one
         this._operator = client != null ? client._operator : null;
         this._operatorAccountId =
@@ -1263,10 +1277,10 @@ export default class Transaction extends Executable {
      * @private
      */
     _buildNewTransactionIdList() {
+        console.log(`_buildNewTransactionIdList: ${this._transactionIds.locked} && ${this._operatorAccountId == null}`)
         if (this._transactionIds.locked || this._operatorAccountId == null) {
             return;
         }
-
         const transactionId = TransactionId.withValidStart(
             this._operatorAccountId,
             Timestamp.generate()
@@ -1280,7 +1294,9 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    _buildAllTransactions() {
+     _buildAllTransactions() {
+        console.log(`signed: ${this._signedTransactions.length}`);
+        console.log(`normal: ${this._transactions.length}`);
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
@@ -1295,12 +1311,13 @@ export default class Transaction extends Executable {
      * @private
      */
     async _buildAllTransactionsAsync() {
+        console.log(!this._signOnDemand)
         if (!this._signOnDemand) {
             this._buildAllTransactions();
             return;
         }
 
-        this._buildSignedTransactions();
+        //this._buildSignedTransactions();
 
         if (this._transactions.locked) {
             return;
@@ -1459,6 +1476,7 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
+        console.log(`tx fee: ${body.transactionFee}`);
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
@@ -1478,6 +1496,12 @@ export default class Transaction extends Executable {
      * @returns {HashgraphProto.proto.ITransactionBody}
      */
     _makeTransactionBody(nodeId) {
+        const transactionId = this._transactionIds.current === undefined ?
+            null : this._transactionIds.current;
+        
+        console.log(`_makeTransactionBody: ${transactionId}`);
+        console.log(`_makeTransactionBody: ${nodeId}`);
+        console.log(`_maxTransactionFee: ${this._maxTransactionFee}`);
         return {
             [this._getTransactionDataCase()]: this._makeTransactionData(),
             transactionFee:
@@ -1485,7 +1509,7 @@ export default class Transaction extends Executable {
                     ? this._maxTransactionFee.toTinybars()
                     : null,
             memo: this._transactionMemo,
-            transactionID: this._transactionIds.current._toProtobuf(),
+            transactionID: transactionId != null ? transactionId._toProtobuf() : null,
             nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),
