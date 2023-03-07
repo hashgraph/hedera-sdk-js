@@ -23,7 +23,7 @@ describe("TokenNft", function () {
         env = await IntegrationTestEnv.new();
     });
 
-    it("should be able to transfer NFT", async function () {
+    it("Should be able to transfer NFT", async function () {
         this.timeout(120000);
 
         const key = PrivateKey.generateED25519();

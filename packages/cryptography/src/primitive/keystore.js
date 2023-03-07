@@ -9,7 +9,7 @@ import * as random from "./random.js";
 const HMAC_SHA256 = "hmac-sha256";
 
 /**
- * @typedef {Object} KeystoreKdfParams
+ * @typedef {object} KeystoreKdfParams
  * @property {number} dkLen
  * @property {string} salt
  * @property {number} c
@@ -17,12 +17,12 @@ const HMAC_SHA256 = "hmac-sha256";
  */
 
 /**
- * @typedef {Object} KeystoreCipherParams
+ * @typedef {object} KeystoreCipherParams
  * @property {string} iv
  */
 
 /**
- * @typedef {Object} KeystoreCrypto
+ * @typedef {object} KeystoreCrypto
  * @property {string} ciphertext
  * @property {KeystoreCipherParams} cipherparams
  * @property {string} cipher
@@ -32,7 +32,7 @@ const HMAC_SHA256 = "hmac-sha256";
  */
 
 /**
- * @typedef {Object} Keystore
+ * @typedef {object} Keystore
  * @property {number} version
  * @property {KeystoreCrypto} crypto
  */

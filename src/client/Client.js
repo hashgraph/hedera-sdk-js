@@ -147,11 +147,13 @@ export default class Client {
         this._isShutdown = false;
 
         if (props != null && props.scheduleNetworkUpdate !== false) {
+            this._initialNetworkUpdate();
             this._scheduleNetworkUpdate();
         }
 
         /** @internal */
-        this._timer = undefined;
+        /** @type {NodeJS.Timeout} */
+        this._timer;
     }
 
     /**
@@ -625,7 +627,9 @@ export default class Client {
      * @returns {this}
      */
     setNetworkUpdatePeriod(networkUpdatePeriod) {
+        clearTimeout(this._timer);
         this._networkUpdatePeriod = networkUpdatePeriod;
+        this._scheduleNetworkUpdate();
         return this;
     }
 
@@ -633,17 +637,13 @@ export default class Client {
      * @param {AccountId | string} accountId
      */
     async ping(accountId) {
-        try {
-            await new AccountBalanceQuery({ accountId })
-                .setNodeAccountIds([
-                    accountId instanceof AccountId
-                        ? accountId
-                        : AccountId.fromString(accountId),
-                ])
-                .execute(this);
-        } catch (_) {
-            // Do nothing
-        }
+        await new AccountBalanceQuery({ accountId })
+            .setNodeAccountIds([
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId),
+            ])
+            .execute(this);
     }
 
     async pingAll() {
@@ -704,6 +704,28 @@ export default class Client {
                 );
             }
         }, this._networkUpdatePeriod);
+    }
+
+    /**
+     * @private
+     */
+    _initialNetworkUpdate() {
+        // This is the automatic network update promise that _eventually_ completes
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
+        setTimeout(async () => {
+            try {
+                const addressBook = await CACHE.addressBookQueryConstructor()
+                    .setFileId(FileId.ADDRESS_BOOK)
+                    .execute(this);
+                this.setNetworkFromAddressBook(addressBook);
+            } catch (error) {
+                Logger.trace(
+                    `failed to update client address book: ${
+                        /** @type {Error} */ (error).toString()
+                    }`
+                );
+            }
+        }, 1000);
     }
 
     /**

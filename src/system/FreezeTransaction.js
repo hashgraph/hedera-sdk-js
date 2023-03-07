@@ -50,7 +50,7 @@ import FreezeType from "../FreezeType.js";
 
 export default class FreezeTransaction extends Transaction {
     /**
-     * @param {Object} [props]
+     * @param {object} [props]
      * @param {HourMinute} [props.startTime]
      * @param {HourMinute} [props.endTime]
      * @param {Timestamp} [props.startTimestamp]
