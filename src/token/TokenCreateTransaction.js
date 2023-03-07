@@ -438,7 +438,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {this}
      */
     setTokenSymbol(symbol) {
-        this._requireNotFrozen();
+        //this._requireNotFrozen();
         this._tokenSymbol = symbol;
 
         return this;

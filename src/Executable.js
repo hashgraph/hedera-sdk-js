@@ -563,10 +563,10 @@ export default class Executable {
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
             } */
-            node = client._network.getNode();
-            nodeAccountId = node.accountId;
-            this._nodeAccountIds.setList([nodeAccountId]);
-            
+
+            nodeAccountId = this._nodeAccountIds.current;
+            node = client._network.getNode(nodeAccountId);
+
             if (node == null) {
                 throw new Error(
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`

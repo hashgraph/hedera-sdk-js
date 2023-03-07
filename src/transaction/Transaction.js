@@ -636,6 +636,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
+        console.log(`in signWith`)
         // If signing on demand is disabled, we need to make sure
         // the request is frozen
         if (!this._signOnDemand) {
@@ -657,9 +658,10 @@ export default class Transaction extends Executable {
             return this;
         }
 
+        console.log(`in signWith ${JSON.stringify(this._transactions)}`)
         // If we add a new signer, then we need to re-create all transactions
         this._transactions.clear();
-
+        console.log(`in signWith ${JSON.stringify(this._transactions)}`)
         // Save the current public key so we don't attempt to sign twice
         this._signerPublicKeys.add(publicKeyHex);
 
@@ -685,7 +687,7 @@ export default class Transaction extends Executable {
                 signedTransaction.bodyBytes
             );
             const signature = await transactionSigner(bodyBytes);
-
+            console.log(`signedTransaction ${JSON.stringify(signedTransaction)}\n`)
             if (signedTransaction.sigMap == null) {
                 signedTransaction.sigMap = {};
             }
@@ -927,7 +929,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        console.log(`freezing`);
+        console.log(`in freezeWith`);
         // Set sign on demand based on client
         this._signOnDemand = client != null ? client.signOnDemand : false;
 
@@ -957,11 +959,13 @@ export default class Transaction extends Executable {
             client != null && this._regenerateTransactionId == null
                 ? client.defaultRegenerateTransactionId
                 : this._regenerateTransactionId;
-
+        
+        console.log(`nodeIds: ${JSON.stringify(this._nodeAccountIds)}`)
         // Set the node account IDs via client
         if (client != null)
             this._setNodeAccountIds(client);
-
+        
+        console.log(`nodeIds: ${JSON.stringify(this._nodeAccountIds)}`)
         
         // Make sure a transaction ID or operator is set.
         //this._validateTransactionId();
@@ -976,9 +980,11 @@ export default class Transaction extends Executable {
             }
         }
 
+        console.log(`txIds: ${JSON.stringify(this._transactionIds)}`)
         // Build a list of transaction IDs so that if a user calls `.transactionId` they'll
         // get a value, but if they dont' we'll just regenerate transaction IDs during execution
         this._buildNewTransactionIdList();
+        console.log(`txIds: ${JSON.stringify(this._transactionIds)}`)
         // If sign on demand is disabled we need to build out all the signed transactions
         if (!this._signOnDemand) {
             console.log(`buildSigned`)
@@ -1300,6 +1306,7 @@ export default class Transaction extends Executable {
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
+        console.log(`normal after: ${this._transactions.length}`);
     }
 
     /**
@@ -1352,7 +1359,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Build a trransaction using the current index, where the current
+     * Build a transaction using the current index, where the current
      * index is determined by `this._nodeAccountIds.index` and
      * `this._transactionIds.index`
      *
@@ -1501,7 +1508,6 @@ export default class Transaction extends Executable {
         
         console.log(`_makeTransactionBody: ${transactionId}`);
         console.log(`_makeTransactionBody: ${nodeId}`);
-        console.log(`_maxTransactionFee: ${this._maxTransactionFee}`);
         return {
             [this._getTransactionDataCase()]: this._makeTransactionData(),
             transactionFee:
@@ -1566,6 +1572,10 @@ export default class Transaction extends Executable {
      * @returns {boolean}
      */
     _isFrozen() {
+        console.log(`signOnDemand: ${this._signOnDemand}`)
+        console.log(`signedTransactions: ${this._signedTransactions.length > 0}`)
+        console.log(`transactions: ${this._transactions.length > 0}`)
+        
         return (
             this._signOnDemand ||
             this._signedTransactions.length > 0 ||
