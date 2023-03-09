@@ -122,6 +122,76 @@ describe("TokenNft", function () {
         ).getReceipt(env.client);
     });
 
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+
+        const key = PrivateKey.generateED25519();
+
+        const account = (
+            await (
+                await new AccountCreateTransaction()
+                    .setKey(key)
+                    .setInitialBalance(new Hbar(2))
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).accountId;
+
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTokenType(TokenType.NonFungibleUnique)
+                    .setTreasuryAccountId(env.operatorId)
+                    .setAdminKey(env.operatorKey)
+                    .setKycKey(env.operatorKey)
+                    .setFreezeKey(env.operatorKey)
+                    .setWipeKey(env.operatorKey)
+                    .setSupplyKey(env.operatorKey)
+                    .setFreezeDefault(false)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
+
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        await (
+            await (
+                await new TokenGrantKycTransaction()
+                    .setTokenId(token)
+                    .setAccountId(account)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        const serials = (
+            await (
+                await new TokenMintTransaction()
+                    .setTokenId(token)
+                    .addMetadata(Uint8Array.of(0x01))
+                    .addMetadata(Uint8Array.of(0x02))
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).serials;
+
+        const serial = serials[0];
+
+        let cost = await new TokenNftInfoQuery()
+            .setNftId(new NftId(token, serial))
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
     it("Cannot burn NFTs when NFT is not owned by treasury", async function () {
         this.timeout(120000);
 

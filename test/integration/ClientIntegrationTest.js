@@ -17,8 +17,8 @@ describe("ClientIntegration", function () {
 
     before(async function () {
         env = await IntegrationTestEnv.new();
-        clientTestnet = Client.forTestnet();
-        clientPreviewNet = Client.forPreviewnet();
+        clientTestnet = await Client.forTestnet();
+        clientPreviewNet = await Client.forPreviewnet();
     });
 
     it("should error when invalid network on entity ID", async function () {

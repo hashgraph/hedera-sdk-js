@@ -298,13 +298,7 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {Promise<Hbar>}
      */
     async getCost(client) {
-        let cost = await super.getCost(client);
-
-        if (cost.toTinybars().greaterThan(25)) {
-            return cost;
-        } else {
-            return Hbar.fromTinybars(25);
-        }
+        return super.getCost(client);
     }
 
     /**

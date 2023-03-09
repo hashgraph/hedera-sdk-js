@@ -110,6 +110,38 @@ describe("TokenInfo", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
+        const key3 = PrivateKey.generateED25519();
+        const key4 = PrivateKey.generateED25519();
+
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(key1)
+            .setFreezeKey(key2)
+            .setWipeKey(key3)
+            .setSupplyKey(key4)
+            .setFreezeDefault(false)
+            .execute(env.client);
+
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
+
+        const cost = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
     it("should error when token ID is not set", async function () {
         this.timeout(120000);
 

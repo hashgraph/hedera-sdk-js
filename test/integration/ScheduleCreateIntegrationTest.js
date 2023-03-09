@@ -7,6 +7,7 @@ import {
     ScheduleSignTransaction,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
+    AccountBalanceQuery,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -100,6 +101,70 @@ describe("ScheduleCreate", function () {
         await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .execute(env.client);
+    });
+
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+        const operatorKey = env.operatorKey.publicKey;
+        const operatorId = env.operatorId;
+
+        const key1 = PrivateKey.generateED25519();
+
+        // Submit Key
+        const key2 = PrivateKey.generateED25519();
+
+        const key3 = PrivateKey.generateED25519();
+
+        const keyList = KeyList.of(
+            key1.publicKey,
+            key2.publicKey,
+            key3.publicKey
+        );
+
+        const balance = await new AccountBalanceQuery()
+            .setAccountId(operatorId)
+            .execute(env.client);
+
+        console.log(`Balances of the new account: ${balance.toString()}`);
+
+        const response = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10))
+            .setKey(keyList)
+            .execute(env.client);
+
+        expect((await response.getReceipt(env.client)).accountId).to.be.not
+            .null;
+
+        const topicId = (
+            await (
+                await new TopicCreateTransaction()
+                    .setAdminKey(operatorKey)
+                    .setAutoRenewAccountId(operatorId)
+                    .setTopicMemo("HCS Topic_")
+                    .setSubmitKey(key2)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).topicId;
+
+        const transaction = new TopicMessageSubmitTransaction()
+            .setTopicId(topicId)
+            .setMessage("scheduled hcs message");
+
+        const scheduled = transaction
+            .schedule()
+            .setPayerAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .freezeWith(env.client);
+
+        const scheduleId = (
+            await (await scheduled.execute(env.client)).getReceipt(env.client)
+        ).scheduleId;
+
+        const cost = await new ScheduleInfoQuery()
+            .setScheduleId(scheduleId)
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
     });
 
     after(async function () {

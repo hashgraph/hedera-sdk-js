@@ -2,6 +2,7 @@ import {
     TopicCreateTransaction,
     TopicDeleteTransaction,
     TopicInfoQuery,
+    Status,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -69,6 +70,57 @@ describe("TopicInfo", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+    });
+
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new TopicCreateTransaction()
+            .setAdminKey(operatorKey)
+            .setSubmitKey(operatorKey)
+            .setAutoRenewAccountId(operatorId)
+            .execute(env.client);
+
+        const topic = (await response.getReceipt(env.client)).topicId;
+
+        const cost = await new TopicInfoQuery()
+            .setTopicId(topic)
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
+    it("should error on query cost on deleted topic with INVALID_TOPIC_ID", async function () {
+        this.timeout(120000);
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new TopicCreateTransaction()
+            .setAdminKey(operatorKey)
+            .setSubmitKey(operatorKey)
+            .setAutoRenewAccountId(operatorId)
+            .execute(env.client);
+
+        const topic = (await response.getReceipt(env.client)).topicId;
+
+        await (
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        let err;
+        try {
+            await new TopicInfoQuery().setTopicId(topic).getCost(env.client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidTopicId.toString());
+        }
+
+        if (!err) {
+            throw new Error("query cost did not error");
+        }
     });
 
     after(async function () {
