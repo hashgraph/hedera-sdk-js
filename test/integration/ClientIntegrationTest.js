@@ -17,7 +17,7 @@ describe("ClientIntegration", function () {
 
     before(async function () {
         env = await IntegrationTestEnv.new();
-        clientTestnet = await Client.forTestnet();
+        clientTestnet = Client.forTestnet();
         clientPreviewNet = Client.forPreviewnet();
     });
 
