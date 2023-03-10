@@ -270,6 +270,7 @@ export default class ManagedNetwork {
         /** @type {NetworkNodeT[]} */
         const nodes = [];
         const keys = new Set();
+        const nodeAddresses = new Set();
 
         // `this.getNode()` uses `Math.random()` internally to fetch
         // nodes, this means _techically_ `this.getNode()` can return
@@ -290,8 +291,12 @@ export default class ManagedNetwork {
 
             // Get a random node
             let node = this.getNode();
-            if (!keys.has(node.getKey())) {
+            if (
+                !keys.has(node.getKey()) ||
+                !nodeAddresses.has(node.address._address)
+            ) {
                 keys.add(node.getKey());
+                nodeAddresses.add(node.address._address);
                 nodes.push(node);
             } else {
                 i--;
