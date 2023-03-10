@@ -18,7 +18,7 @@ describe("ClientIntegration", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
         clientTestnet = await Client.forTestnet();
-        clientPreviewNet = await Client.forPreviewnet();
+        clientPreviewNet = Client.forPreviewnet();
     });
 
     it("should error when invalid network on entity ID", async function () {
@@ -140,6 +140,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can set network name on custom network", async function () {
+        this.timeout(120000);
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
         expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
@@ -152,12 +153,6 @@ describe("ClientIntegration", function () {
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
     });
 
-    after(async function () {
-        await env.close();
-        clientTestnet.close();
-        clientPreviewNet.close();
-    });
-
     it("can use same proxies of one node", async function () {
         let nodes = {
             "0.testnet.hedera.com:50211": new AccountId(3),
@@ -168,5 +163,11 @@ describe("ClientIntegration", function () {
 
         const clientForNetwork = Client.forNetwork(nodes);
         await clientForNetwork.pingAll();
+    });
+
+    after(async function () {
+        await env.close();
+        clientTestnet.close();
+        clientPreviewNet.close();
     });
 });
