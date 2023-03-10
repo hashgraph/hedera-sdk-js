@@ -21,6 +21,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
 
 /**

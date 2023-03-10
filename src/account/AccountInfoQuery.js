@@ -21,6 +21,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import AccountInfo from "./AccountInfo.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
 
 /**
