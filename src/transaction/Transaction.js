@@ -409,13 +409,12 @@ export default class Transaction extends Executable {
         // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
         // be regenerated if we're deserializing a request from bytes
         
-        transaction._transactionIds.setList(transactionIds)//.setLocked();
+        transaction._transactionIds.setList(transactionIds).setLocked();
 
         // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
         
         transaction._nodeAccountIds.setList(nodeIds)//.setLocked();
-        console.log(`body ${body.transactionFee}`)
         // Make sure to update the rest of the fields
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
@@ -469,7 +468,7 @@ export default class Transaction extends Executable {
         // Now that I think of it, we could just add an abstract method `setterPrerequiest()` which
         // by default does nothing, and `Executable` can call. Then we'd only need to overwrite that
         // method once.
-        this._requireNotFrozen();
+        //this._requireNotFrozen();
         super.setNodeAccountIds(nodeIds);
         return this;
     }
@@ -605,7 +604,7 @@ export default class Transaction extends Executable {
      */
     setTransactionId(transactionId) {
         //this._requireNotFrozen();
-        this._transactionIds.setList([transactionId]);
+        this._transactionIds.setList([transactionId]).setLocked();
 
         return this;
     }
@@ -639,9 +638,9 @@ export default class Transaction extends Executable {
         console.log(`in signWith`)
         // If signing on demand is disabled, we need to make sure
         // the request is frozen
-        if (!this._signOnDemand) {
+        /* if (!this._signOnDemand) {
             this._requireFrozen();
-        }
+        } */
 
         //this._buildNewTransactionIdList();
 
@@ -658,20 +657,20 @@ export default class Transaction extends Executable {
             return this;
         }
 
-        console.log(`in signWith ${JSON.stringify(this._transactions)}`)
+        console.log(`in signWith ${JSON.stringify(this._transactions)}`);
         // If we add a new signer, then we need to re-create all transactions
         this._transactions.clear();
-        console.log(`in signWith ${JSON.stringify(this._transactions)}`)
+        console.log(`in signWith ${JSON.stringify(this._transactions)}`);
         // Save the current public key so we don't attempt to sign twice
         this._signerPublicKeys.add(publicKeyHex);
 
         // If signing on demand is enabled we will save the public key and signer and return
-        if (this._signOnDemand) {
+        //if (this._signOnDemand) {
             this._publicKeys.push(publicKey);
             this._transactionSigners.push(transactionSigner);
 
             return this;
-        }
+        //}
 
         // If we get here, signing on demand is disabled, this means the transaction
         // is frozen and we need to sign all the transactions immediately. If we're
@@ -680,7 +679,7 @@ export default class Transaction extends Executable {
         // Now that I think of it, this code should likely exist in `freezeWith()`?
         //this._transactionIds.setLocked();
         //this._nodeAccountIds.setLocked();
-
+        console.log(`in signWith ${JSON.stringify(this._signedTransactions)}`);
         // Sign each signed transatcion
         for (const signedTransaction of this._signedTransactions.list) {
             const bodyBytes = /** @type {Uint8Array} */ (
@@ -943,16 +942,17 @@ export default class Transaction extends Executable {
         // `client._defaultMaxTransactionFee`, or `this._defaultMaxTransactionFee`
         // in that priority order depending on if `this._maxTransactionFee` has
         // been set or if `client._defaultMaxTransactionFee` has been set.
-        /* this._maxTransactionFee =
+        this._maxTransactionFee =
             this._maxTransactionFee == null
                 ? client != null && client.defaultMaxTransactionFee != null
                     ? client.defaultMaxTransactionFee
                     : this._defaultMaxTransactionFee
-                : this._maxTransactionFee; */
-        this._maxTransactionFee = this._defaultMaxTransactionFee;
-        console.log(`freeze: ${this._maxTransactionFee}`);
-        console.log(`clients default: ${client?.defaultMaxTransactionFee}`);
-        console.log(`_defaultMaxTransactionFee: ${this._defaultMaxTransactionFee}`);
+                : this._maxTransactionFee;
+        //this._maxTransactionFee = this._defaultMaxTransactionFee; //now works without this
+        console.log(`_maxTransactionFee: ${this._maxTransactionFee}`);
+        
+        /* console.log(`clients default: ${client?.defaultMaxTransactionFee}`);
+        console.log(`_defaultMaxTransactionFee: ${this._defaultMaxTransactionFee}`); */
 
         // Determine if transaction ID generation should be enabled.
         this._regenerateTransactionId =
@@ -1052,7 +1052,7 @@ export default class Transaction extends Executable {
         //this._transactionIds.setLocked();
         //this._nodeAccountIds.setLocked();
 
-        // Build all the transactions without signing
+        // Build all the transaction`s` without signing
         this._buildAllTransactions();
 
         // Construct and encode the transaction list
@@ -1078,15 +1078,15 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        //this._transactionIds.setLocked();
+        //this._nodeAccountIds.setLocked();
 
         // Build all transactions, and sign them
         await this._buildAllTransactionsAsync();
 
         // Lock transaction IDs, and node account IDs
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
+        //this._transactions.setLocked();
+        //this._signedTransactions.setLocked();
 
         // Construct and encode the transaction list
         return HashgraphProto.proto.TransactionList.encode({
@@ -1107,13 +1107,13 @@ export default class Transaction extends Executable {
         this.freeze();
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        //this._transactionIds.setLocked();
+        //this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
+        //this._transactions.setLocked();
+        //this._signedTransactions.setLocked();
 
         return sha384.digest(
             /** @type {Uint8Array} */ (
@@ -1207,6 +1207,31 @@ export default class Transaction extends Executable {
                 this._operator.publicKey,
                 this._operator.transactionSigner
             );
+
+            console.log(`_publicKeys: ${this._publicKeys.length}`);
+            console.log(`_transactionSigners: ${this._transactionSigners.length}`);
+            
+            for (const signedTransaction of this._signedTransactions.list) {
+                for (let i = 0; i < this._publicKeys.length; i++) {
+                    const bodyBytes = /** @type {Uint8Array} */ (
+                        signedTransaction.bodyBytes
+                    );
+                    // @ts-ignore
+                    const signature = await this._transactionSigners[i](bodyBytes);
+                    console.log(`signedTransaction ${JSON.stringify(signedTransaction)}\n`)
+                    if (signedTransaction.sigMap == null) {
+                        signedTransaction.sigMap = {};
+                    }
+        
+                    if (signedTransaction.sigMap.sigPair == null) {
+                        signedTransaction.sigMap.sigPair = [];
+                    }
+        
+                    signedTransaction.sigMap.sigPair.push(
+                        this._publicKeys[i]._toProtobufSignature(signature)
+                    );
+                }
+            }
         }
     }
 

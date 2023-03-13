@@ -40,9 +40,9 @@ export default class List {
      * @returns {this}
      */
     setList(list) {
-        if (this.locked) {
+        /* if (this.locked) {
             throw new Error("list is locked");
-        }
+        } */
 
         this.list = list;
         this.index = 0;

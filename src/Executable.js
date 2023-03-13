@@ -151,7 +151,7 @@ export default class Executable {
     setNodeAccountIds(nodeIds) {
         // Set the node account IDs, and lock the list. This will require `execute`
         // to use these nodes instead of random nodes from the network.
-        this._nodeAccountIds.setList(nodeIds)//.setLocked();
+        this._nodeAccountIds.setList(nodeIds).setLocked();
         return this;
     }
 
@@ -563,6 +563,10 @@ export default class Executable {
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
             } */
+
+            /* node = client._network.getNode();
+            nodeAccountId = node.accountId;
+            this._nodeAccountIds.setList([nodeAccountId]); */
 
             nodeAccountId = this._nodeAccountIds.current;
             node = client._network.getNode(nodeAccountId);
