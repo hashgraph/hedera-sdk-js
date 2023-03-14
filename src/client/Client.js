@@ -29,6 +29,7 @@ import LedgerId from "../LedgerId.js";
 import FileId from "../file/FileId.js";
 import CACHE from "../Cache.js";
 import Logger from "js-logger";
+import MyLogger from "../logger/MyLogger.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -154,6 +155,14 @@ export default class Client {
         /** @internal */
         /** @type {NodeJS.Timeout} */
         this._timer;
+
+        /**
+         * Logger
+         *
+         * @external
+         * @type {MyLogger}
+         */
+        this._logger = new MyLogger();
     }
 
     /**
@@ -307,7 +316,7 @@ export default class Client {
         if (this._network._ledgerId != null) {
             accountId_.validateChecksum(this);
         }
-
+        this._logger.debug("setting operator...");
         this._operator = {
             transactionSigner,
 
@@ -630,6 +639,48 @@ export default class Client {
         clearTimeout(this._timer);
         this._networkUpdatePeriod = networkUpdatePeriod;
         this._scheduleNetworkUpdate();
+        return this;
+    }
+
+    /**
+     * Get the current logging level
+     *
+     * @returns {string}
+     */
+    get logLevel() {
+        return this._logger.level;
+    }
+
+    /**
+     * Set the log level
+     *
+     * @param {string} level
+     * @returns {this}
+     */
+    setLogLevel(level) {
+        switch (level.toUpperCase()) {
+            case "ERROR":
+                this._logger.setLevel("error");
+                break;
+            case "WARN":
+                this._logger.setLevel("warn");
+                break;
+            case "INFO":
+                this._logger.setLevel("info");
+                break;
+            case "HTTP":
+                this._logger.setLevel("http");
+                break;
+            case "DEBUG":
+                this._logger.setLevel("debug");
+                break;
+            case "VERBOSE":
+                this._logger.setLevel("verbose");
+                break;
+            case "SILLY":
+                this._logger.setLevel("silly");
+                break;
+        }
         return this;
     }
 

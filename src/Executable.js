@@ -126,7 +126,7 @@ export default class Executable {
          * @type {number | null}
          */
         this._grpcDeadline = null;
-        
+
         /**
          * Logger
          *
@@ -510,6 +510,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
+        this._logger.debug("executing...");
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
@@ -518,6 +519,11 @@ export default class Executable {
                 requestTimeout != null ? requestTimeout : client.requestTimeout;
         }
 
+        this._logger =
+            client._logger != null
+                ? client._logger
+                : this._logger;
+        
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
@@ -728,31 +734,42 @@ export default class Executable {
     }
 
     /**
-     * A helper method for matching log levels
+     * Get the current logging level
      *
-     * @internal
+     * @returns {string}
+     */
+    get logLevel() {
+        return this._logger.level;
+    }
+
+    /**
+     * Set the log level
+     *
      * @param {string} level
      * @returns {this}
      */
     setLogLevel(level) {
-        switch (level) {
-            case "TRACE":
-                Logger.setLevel(Logger.TRACE);
-                break;
-            case "DEBUG":
-                Logger.setLevel(Logger.DEBUG);
-                break;
-            case "INFO":
-                Logger.setLevel(Logger.INFO);
+        switch (level.toUpperCase()) {
+            case "ERROR":
+                this._logger.setLevel("error");
                 break;
             case "WARN":
-                Logger.setLevel(Logger.WARN);
+                this._logger.setLevel("warn");
                 break;
-            case "ERROR":
-                Logger.setLevel(Logger.ERROR);
+            case "INFO":
+                this._logger.setLevel("info");
                 break;
-            case "OFF":
-                Logger.setLevel(Logger.OFF);
+            case "HTTP":
+                this._logger.setLevel("http");
+                break;
+            case "DEBUG":
+                this._logger.setLevel("debug");
+                break;
+            case "VERBOSE":
+                this._logger.setLevel("verbose");
+                break;
+            case "SILLY":
+                this._logger.setLevel("silly");
                 break;
         }
         return this;

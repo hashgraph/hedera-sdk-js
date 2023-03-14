@@ -36,7 +36,6 @@ import List from "./List.js";
 import Timestamp from "../Timestamp.js";
 import Logger from "js-logger";
 import * as util from "../util.js";
-import MyLogger from "../logger/MyLogger.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -193,8 +192,6 @@ export default class Transaction extends Executable {
          * @type {?boolean}
          */
         this._regenerateTransactionId = null;
-
-        //this._logger = new MyLogger();
     }
 
     /**
@@ -567,7 +564,6 @@ export default class Transaction extends Executable {
     setTransactionMemo(transactionMemo) {
         this._requireNotFrozen();
         this._transactionMemo = transactionMemo;
-        console.log("MEMOOOOOOO");
         return this;
     }
 
@@ -609,49 +605,6 @@ export default class Transaction extends Executable {
         this._requireNotFrozen();
         this._transactionIds.setList([transactionId]).setLocked();
 
-        return this;
-    }
-
-    /**
-     * Get the curent transaction ID
-     *
-     * @returns {string}
-     */
-    get logLevel() {
-        return this._logger.level;
-    }
-
-    /**
-     * A helper method for matching log levels
-     *
-     * @internal
-     * @param {string} level
-     * @returns {this}
-     */
-    setLogLevel(level) {
-        switch (level) {
-            case "ERROR":
-                this._logger.setLevel("error");
-                break;
-            case "WARN":
-                this._logger.setLevel("warn");
-                break;
-            case "INFO":
-                this._logger.setLevel("info");
-                break;
-            case "HTTP":
-                this._logger.setLevel("http");
-                break;
-            case "DEBUG":
-                this._logger.setLevel("debug");
-                break;
-            case "VERBOSE":
-                this._logger.setLevel("verbose");
-                break;
-            case "SILLY":
-                this._logger.setLevel("silly");
-                break;
-        }
         return this;
     }
 

@@ -15,7 +15,6 @@ export const defaultLogger = () => {
             myFormat
         ),
 
-        // defaultMeta: { service: 'user-service' },
         transports: [
             new transports.Console(),
             /* new transports.File({
@@ -32,6 +31,7 @@ export default class MyLogger {
 
     /**
      * Log debug
+     *
      * @public
      * @param {import("winston").Logger} logger
      * @returns {void}
@@ -42,6 +42,7 @@ export default class MyLogger {
 
     /**
      * Log debug
+     *
      * @public
      * @param {string} level
      * @returns {void}
@@ -52,6 +53,7 @@ export default class MyLogger {
 
     /**
      * Log debug
+     *
      * @public
      * @returns {string}
      */
@@ -61,6 +63,7 @@ export default class MyLogger {
 
     /**
      * Log info
+     *
      * @public
      * @param {string} message
      * @returns {void}
@@ -71,6 +74,7 @@ export default class MyLogger {
 
     /**
      * Log debug
+     *
      * @public
      * @param {string} message
      * @returns {void}
@@ -81,6 +85,7 @@ export default class MyLogger {
 
     /**
      * Log warn
+     *
      * @public
      * @param {string} message
      * @returns {void}
@@ -91,6 +96,7 @@ export default class MyLogger {
 
     /**
      * Log error
+     *
      * @public
      * @param {string} message
      * @returns {void}
