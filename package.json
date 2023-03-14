@@ -62,7 +62,8 @@
         "js-logger": "^1.6.1",
         "long": "^4.0.0",
         "protobufjs": "^7.1.2",
-        "utf8": "^3.0.0"
+        "utf8": "^3.0.0",
+        "winston": "^3.8.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.20.7",

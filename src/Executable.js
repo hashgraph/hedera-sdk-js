@@ -24,6 +24,7 @@ import List from "./transaction/List.js";
 import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
+import MyLogger from "./logger/MyLogger.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -125,6 +126,14 @@ export default class Executable {
          * @type {number | null}
          */
         this._grpcDeadline = null;
+        
+        /**
+         * Logger
+         *
+         * @protected
+         * @type {MyLogger}
+         */
+        this._logger = new MyLogger();
     }
 
     /**
@@ -716,6 +725,37 @@ export default class Executable {
      */
     toBytes() {
         throw new Error("not implemented");
+    }
+
+    /**
+     * A helper method for matching log levels
+     *
+     * @internal
+     * @param {string} level
+     * @returns {this}
+     */
+    setLogLevel(level) {
+        switch (level) {
+            case "TRACE":
+                Logger.setLevel(Logger.TRACE);
+                break;
+            case "DEBUG":
+                Logger.setLevel(Logger.DEBUG);
+                break;
+            case "INFO":
+                Logger.setLevel(Logger.INFO);
+                break;
+            case "WARN":
+                Logger.setLevel(Logger.WARN);
+                break;
+            case "ERROR":
+                Logger.setLevel(Logger.ERROR);
+                break;
+            case "OFF":
+                Logger.setLevel(Logger.OFF);
+                break;
+        }
+        return this;
     }
 }
 
