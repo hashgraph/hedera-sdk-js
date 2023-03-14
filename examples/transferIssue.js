@@ -23,6 +23,19 @@ async function main() {
     client.setOperator(myAccountId, myPrivateKey);
     client.setNetworkUpdatePeriod(10000);
 
+    let myHandler = function (messages, context) {
+        console.log("LOGS", { message: messages[0], level: context.level }); // can be used for posting/sending/writing logs
+    };
+
+    const level = {
+        value: 3,
+        name: "INFO",
+    };
+
+    client.setLogger(myHandler, level);
+
+    // client.setLoggerType("Transaction");
+
     // Put the transaction logger on the client
     // setLogger and pass the logger implementation
     // setLogger has to use the interface from the logger implementation
@@ -43,7 +56,6 @@ async function main() {
                 .setNodeAccountIds([new AccountId(10)])
                 .addHbarTransfer(myAccountId, Hbar.fromTinybars(-1))
                 .addHbarTransfer(newAccountId, Hbar.fromTinybars(1))
-                .setTransactionLogger(true)
                 .execute(client);
 
             //Verify the transaction reached consensus

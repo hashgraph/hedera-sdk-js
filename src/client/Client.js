@@ -146,6 +146,11 @@ export default class Client {
         /** @private */
         this._isShutdown = false;
 
+        /**
+         * @type {import("js-logger").ILogger | null}
+         */
+        this.logger = null;
+
         if (props != null && props.scheduleNetworkUpdate !== false) {
             this._initialNetworkUpdate();
             this._scheduleNetworkUpdate();
@@ -154,6 +159,42 @@ export default class Client {
         /** @internal */
         /** @type {NodeJS.Timeout} */
         this._timer;
+    }
+
+    /**
+     * Set the transaction logger enabler
+     *
+     * @param {?import("js-logger").ILogHandler} handler
+     * @param {?import("js-logger").ILogLevel} level
+     * @returns {this}
+     */
+    setLogger(handler, level) {
+        Logger.useDefaults();
+
+        if (level) {
+            Logger.setLevel(level);
+        }
+
+        if (handler) {
+            Logger.useDefaults({
+                defaultLevel: level ? level : undefined,
+                formatter: handler,
+            });
+        }
+        return this;
+    }
+
+    /**
+     * Set the transaction logger enabler for a specific action |Transaction|Query|etc|
+     *
+     * @param {string} loggerType
+     * @returns {this}
+     */
+    setLoggerType(loggerType) {
+        const logger = Logger.get(loggerType);
+        logger.setLevel(Logger.INFO);
+        this.logger = logger;
+        return this;
     }
 
     /**

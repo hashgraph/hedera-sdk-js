@@ -545,19 +545,19 @@ export default class Transaction extends Executable {
         return this;
     }
 
-    /**
-     * Set the transaction logger enabler
-     *
-     * @param {boolean} transactionLogger
-     * @returns {this}
-     */
-    setTransactionLogger(transactionLogger) {
-        Logger.useDefaults();
-        transactionLogger
-            ? Logger.setLevel(Logger.INFO)
-            : Logger.setLevel(Logger.OFF);
-        return this;
-    }
+    // /**
+    //  * Set the transaction logger enabler
+    //  *
+    //  * @param {boolean} transactionLogger
+    //  * @returns {this}
+    //  */
+    // setTransactionLogger(transactionLogger) {
+    //     Logger.useDefaults();
+    //     transactionLogger
+    //         ? Logger.setLevel(Logger.INFO)
+    //         : Logger.setLevel(Logger.OFF);
+    //     return this;
+    // }
 
     /**
      * Get the transaction memo
@@ -1174,6 +1174,7 @@ export default class Transaction extends Executable {
      */
     async _beforeExecute(client) {
         Logger.info("Network used:", client._network.networkName);
+        // Logger.get("Transaction").info("TEST");
 
         // Makes ure we're frozen
         if (!this._isFrozen()) {
