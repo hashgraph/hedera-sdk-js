@@ -1170,8 +1170,9 @@ export default class Transaction extends Executable {
         }
 
         // Set the operator if the client has one
-        this._operator = client != null ? client._operator : null;
-        this._operatorAccountId =
+        // Only if there is not one already set on the transaction
+        this._operator ??= client != null ? client._operator : null;
+        this._operatorAccountId ??=
             client != null && client._operator != null
                 ? client._operator.accountId
                 : null;
