@@ -28,8 +28,10 @@ import PrivateKey from "../PrivateKey.js";
 import LedgerId from "../LedgerId.js";
 import FileId from "../file/FileId.js";
 import CACHE from "../Cache.js";
-import Logger from "js-logger";
-import MyLogger from "../logger/MyLogger.js";
+/* eslint-disable */
+import Logger from "../logger/Logger.js";
+import LogLevel from "../logger/LogLevel.js";
+/* eslint-enable */
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -160,9 +162,9 @@ export default class Client {
          * Logger
          *
          * @external
-         * @type {MyLogger}
+         * @type {Logger | null}
          */
-        this._logger = new MyLogger();
+        this._logger = null;
     }
 
     /**
@@ -316,7 +318,8 @@ export default class Client {
         if (this._network._ledgerId != null) {
             accountId_.validateChecksum(this);
         }
-        this._logger.debug("setting operator...");
+
+        this._logger?.debug("setting operator...");
         this._operator = {
             transactionSigner,
 
@@ -641,47 +644,77 @@ export default class Client {
         this._scheduleNetworkUpdate();
         return this;
     }
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     * @returns {this}
+     */
+    setLogger(logger) {
+        this._logger = logger;
+        return this;
+    }
 
     /**
-     * Get the current logging level
+     * Get logger if set
      *
-     * @returns {string}
+     * @returns {?Logger}
+     */
+    get logger() {
+        return this._logger;
+    }
+
+    /**
+     * Set log level
+     *
+     * @param {LogLevel} level
+     * @returns {this}
+     */
+    setLogLevel(level) {
+        if (this._logger == null) {
+            throw new Error("Logger is not set");
+        }
+        this._logger.setLevel(level);
+        return this;
+    }
+
+    /**
+     * Get logging level
+     *
+     * @returns {LogLevel}
      */
     get logLevel() {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
+        }
         return this._logger.level;
     }
 
     /**
-     * Set the log level
+     * Set silent mode on/off
      *
-     * @param {string} level
+     * @description If set to true, the logger will not display any log messages
+     * @param {boolean} silent
      * @returns {this}
      */
-    setLogLevel(level) {
-        switch (level.toUpperCase()) {
-            case "ERROR":
-                this._logger.setLevel("error");
-                break;
-            case "WARN":
-                this._logger.setLevel("warn");
-                break;
-            case "INFO":
-                this._logger.setLevel("info");
-                break;
-            case "HTTP":
-                this._logger.setLevel("http");
-                break;
-            case "DEBUG":
-                this._logger.setLevel("debug");
-                break;
-            case "VERBOSE":
-                this._logger.setLevel("verbose");
-                break;
-            case "SILLY":
-                this._logger.setLevel("silly");
-                break;
+    setSilent(silent) {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
         }
+        this._logger.setSilent(silent);
         return this;
+    }
+
+    /**
+     * Get silent mode
+     *
+     * @returns {boolean}
+     */
+    get silent() {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
+        }
+        return this._logger.silent;
     }
 
     /**
@@ -748,7 +781,7 @@ export default class Client {
                     this._scheduleNetworkUpdate();
                 }
             } catch (error) {
-                Logger.trace(
+                this._logger?.debug(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`
@@ -770,7 +803,7 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
             } catch (error) {
-                Logger.trace(
+                this._logger?.debug(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`

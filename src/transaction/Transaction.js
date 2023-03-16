@@ -563,6 +563,7 @@ export default class Transaction extends Executable {
      */
     setTransactionMemo(transactionMemo) {
         this._requireNotFrozen();
+        this._logger?.debug(`setting transfer transaction memo...`);
         this._transactionMemo = transactionMemo;
         return this;
     }

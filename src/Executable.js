@@ -21,10 +21,12 @@
 import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
-import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
-import MyLogger from "./logger/MyLogger.js";
+/* eslint-disable */
+import Logger from "./logger/Logger.js";
+import LogLevel from "./logger/LogLevel.js";
+/* eslint-enable */
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -131,9 +133,9 @@ export default class Executable {
          * Logger
          *
          * @protected
-         * @type {MyLogger}
+         * @type {Logger | null}
          */
-        this._logger = new MyLogger();
+        this._logger = null;
     }
 
     /**
@@ -510,7 +512,17 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        this._logger.debug("executing...");
+        // If the logger on the request is not set, use the logger in client (if set, otherwise do not use logger)
+        this._logger =
+            this._logger == null
+                ? client._logger != null
+                    ? client._logger
+                    : null
+                : this._logger;
+        console.log(this._logger?.level.toString());
+        this._logger?.debug("executing...");
+        this._logger?.error("Error message in `execute`");
+
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
@@ -519,11 +531,6 @@ export default class Executable {
                 requestTimeout != null ? requestTimeout : client.requestTimeout;
         }
 
-        this._logger =
-            client._logger != null
-                ? client._logger
-                : this._logger;
-        
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
@@ -588,7 +595,7 @@ export default class Executable {
 
             // Get the log ID for the request.
             const logId = this._getLogId();
-            Logger.debug(
+            this._logger?.debug(
                 `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
             );
 
@@ -608,7 +615,7 @@ export default class Executable {
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
             if (!node.isHealthy()) {
-                Logger.debug(
+                this._logger?.debug(
                     `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
                 );
                 // We don't need to wait, we can proceed to the next attempt.
@@ -635,7 +642,7 @@ export default class Executable {
                         )
                     );
                 }
-                Logger.trace(
+                this._logger?.debug(
                     `[${this._getLogId()}] sending protobuf ${hex.encode(
                         this._requestToBytes(request)
                     )}`
@@ -654,7 +661,7 @@ export default class Executable {
 
                 // Save the error in case we retry
                 persistentError = error;
-                Logger.debug(
+                this._logger?.debug(
                     `[${logId}] received error ${JSON.stringify(error)}`
                 );
 
@@ -673,7 +680,7 @@ export default class Executable {
                 throw err;
             }
 
-            Logger.trace(
+            this._logger?.debug(
                 `[${this._getLogId()}] sending protobuf ${hex.encode(
                     this._responseToBytes(response)
                 )}`
@@ -734,45 +741,76 @@ export default class Executable {
     }
 
     /**
-     * Get the current logging level
+     * Set logger
      *
-     * @returns {string}
+     * @param {Logger} logger
+     * @returns {this}
+     */
+    setLogger(logger) {
+        this._logger = logger;
+        return this;
+    }
+
+    /**
+     * Get logger if set
+     *
+     * @returns {?Logger}
+     */
+    get logger() {
+        return this._logger;
+    }
+
+    /**
+     * Set log level
+     *
+     * @param {LogLevel} level
+     * @returns {this}
+     */
+    setLogLevel(level) {
+        if (this._logger == null) {
+            throw new Error("Logger is not set");
+        }
+        this._logger.setLevel(level);
+        return this;
+    }
+
+    /**
+     * Get logging level
+     *
+     * @returns {LogLevel}
      */
     get logLevel() {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
+        }
         return this._logger.level;
     }
 
     /**
-     * Set the log level
+     * Set silent mode on/off
      *
-     * @param {string} level
+     * @description If set to true, the logger will not display any log messages
+     * @param {boolean} silent
      * @returns {this}
      */
-    setLogLevel(level) {
-        switch (level.toUpperCase()) {
-            case "ERROR":
-                this._logger.setLevel("error");
-                break;
-            case "WARN":
-                this._logger.setLevel("warn");
-                break;
-            case "INFO":
-                this._logger.setLevel("info");
-                break;
-            case "HTTP":
-                this._logger.setLevel("http");
-                break;
-            case "DEBUG":
-                this._logger.setLevel("debug");
-                break;
-            case "VERBOSE":
-                this._logger.setLevel("verbose");
-                break;
-            case "SILLY":
-                this._logger.setLevel("silly");
-                break;
+    setSilent(silent) {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
         }
+        this._logger.setSilent(silent);
         return this;
+    }
+
+    /**
+     * Get silent mode
+     *
+     * @returns {boolean}
+     */
+    get silent() {
+        if (this._logger == null) {
+            throw new Error("Logger not set");
+        }
+        return this._logger.silent;
     }
 }
 
