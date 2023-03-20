@@ -23,6 +23,7 @@ import NftId from "./NftId.js";
 import AccountId from "../account/AccountId.js";
 import TokenId from "../token/TokenId.js";
 import TokenNftInfo from "./TokenNftInfo.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
 import Long from "long";
 
@@ -298,13 +299,7 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {Promise<Hbar>}
      */
     async getCost(client) {
-        let cost = await super.getCost(client);
-
-        if (cost.toTinybars().greaterThan(25)) {
-            return cost;
-        } else {
-            return Hbar.fromTinybars(25);
-        }
+        return super.getCost(client);
     }
 
     /**

@@ -140,16 +140,29 @@ describe("ClientIntegration", function () {
     });
 
     it("can set network name on custom network", async function () {
+        this.timeout(120000);
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
         expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
-        clientTestnet.setNetwork(clientPreviewNet.network);
+        await clientTestnet.setNetwork(clientPreviewNet.network);
 
         expect(clientTestnet.ledgerId).to.be.null;
 
         clientTestnet.setLedgerId("previewnet");
 
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
+    });
+
+    it("can use same proxies of one node", async function () {
+        let nodes = {
+            "0.testnet.hedera.com:50211": new AccountId(3),
+            "34.94.106.61:50211": new AccountId(3),
+            "50.18.132.211:50211": new AccountId(3),
+            "138.91.142.219:50211": new AccountId(3),
+        };
+
+        const clientForNetwork = Client.forNetwork(nodes);
+        await clientForNetwork.pingAll();
     });
 
     after(async function () {
