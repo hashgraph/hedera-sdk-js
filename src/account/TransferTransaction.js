@@ -411,7 +411,6 @@ export default class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     addHbarTransfer(accountId, amount) {
-        this._logger?.debug("adding hbar transfer...");
         return this._addHbarTransfer(accountId, amount, false);
     }
 
@@ -703,7 +702,6 @@ export default class TransferTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        this._logger?.debug("executing transfer transaction...");
         return channel.crypto.cryptoTransfer(request);
     }
 

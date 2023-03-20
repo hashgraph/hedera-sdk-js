@@ -519,8 +519,6 @@ export default class Executable {
                     ? client._logger
                     : null
                 : this._logger;
-        this._logger?.debug("executing...");
-        this._logger?.error("Error message in `execute`");
 
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll

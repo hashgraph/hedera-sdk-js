@@ -182,7 +182,6 @@ export default class TopicCreateTransaction extends Transaction {
     setTopicMemo(topicMemo) {
         this._requireNotFrozen();
         this._topicMemo = topicMemo;
-        this._logger?.debug("setting topic memo...");
         return this;
     }
 
@@ -315,7 +314,6 @@ export default class TopicCreateTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        this._logger?.debug("executing topic create transaction...");
         return channel.consensus.createTopic(request);
     }
 

@@ -21,7 +21,7 @@
 import { createLogger, format, transports } from "winston";
 import LogLevel from "./LogLevel.js";
 import LogFormat from "./LogFormat.js";
-const { combine, timestamp, json, cli, errors, printf } = format;
+const { combine, timestamp, json, errors, printf } = format;
 
 const myFormat = printf(({ level, message, timestamp }) => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -36,7 +36,7 @@ const defaultOptions = {
         json(),
         errors({ stack: true }),
         //colorize(),
-        timestamp({ format: "HH:mm:ss" }),
+        timestamp({ format: "HH:mm:ss" })
         //myFormat
     ),
     transports: [
@@ -128,6 +128,7 @@ export default class Logger {
      *
      * If `level` is provided, only the logs for this specific level will be saved in the file
      * If `format` is provided, it will be applied in the file logs, otherwise json format is the default
+     *
      * @public
      * @param {string} fileLocation
      * @param {?LogLevel} level
@@ -135,10 +136,6 @@ export default class Logger {
      * @returns {this}
      */
     saveToFile(fileLocation, level = null, format) {
-        console.log(level)
-        console.log(format)
-        console.log(level == null)
-
         const winstonFormat =
             format != null && format != undefined
                 ? format == LogFormat.Json
@@ -147,7 +144,6 @@ export default class Logger {
                     ? myFormat
                     : json()
                 : null;
-                //console.log(winstonFormat)
 
         level == null
             ? winstonFormat == null

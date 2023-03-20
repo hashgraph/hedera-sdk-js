@@ -175,7 +175,6 @@ export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
 
-
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
  * @typedef {import("./Provider.js").Provider} Provider
