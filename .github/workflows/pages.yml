@@ -1,0 +1,60 @@
+name: Build & Test
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    PNPM_HOME: /home/runner/work/hedera-sdk-js
+
+jobs:
+    build-and-deploy-docs:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: ["14", "16"]
+
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  submodules: recursive
+
+            - name: Install Task
+              uses: arduino/setup-task@v1
+              with:
+                  version: 3.7.0
+
+            - name: Cache pnpm modules
+              uses: actions/cache@v2
+              env:
+                  cache-name: cache-pnpm-modules
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
+
+            - uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 7.6.0
+
+            - name: Build @hashgraph/sdk
+              run: task build
+
+            - name: Generate pages
+              run: task docs
+
+            - name: Pages
+              uses: actions/upload-pages-artifact@v1
+              with:
+                  path: "./docs"
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v1
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
