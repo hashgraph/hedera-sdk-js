@@ -20,39 +20,36 @@
 
 import { createLogger, format, transports } from "winston";
 import LogLevel from "./LogLevel.js";
-const { combine, timestamp, json } = format;
+import LogFormat from "./LogFormat.js";
+const { combine, timestamp, json, cli, errors, printf } = format;
 
-const levels = {
-    off: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    debug: 4,
-    trace: 5,
-};
-
-/* const myFormat = printf(({ level, message, timestamp }) => {
+const myFormat = printf(({ level, message, timestamp }) => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `[${timestamp}] ${level}: ${message}`;
-}); */
+});
 
 const defaultOptions = {
     level: "debug",
-    levels: levels,
-    //silent: false,
     //format: format.json(),
     format: combine(
+        //cli(),
         json(),
+        errors({ stack: true }),
         //colorize(),
-        timestamp({ format: "HH:mm:ss" })
-        //myFormat,
+        timestamp({ format: "HH:mm:ss" }),
+        //myFormat
     ),
-
     transports: [
         new transports.Console(),
         /* new transports.File({
             filename: 'logger.log',
           }) */
+    ],
+    exceptionHandlers: [
+        new transports.Console({ consoleWarnLevels: ["error"] }),
+    ],
+    rejectionHandlers: [
+        new transports.Console({ consoleWarnLevels: ["error"] }),
     ],
 };
 
@@ -84,7 +81,6 @@ export default class Logger {
      * @returns {this}
      */
     setLevel(level) {
-        console.log(level == LogLevel.Off);
         if (level == LogLevel.Off) {
             this._logger.silent = true;
         } else {
@@ -125,6 +121,63 @@ export default class Logger {
      */
     get silent() {
         return this._logger.silent;
+    }
+
+    /**
+     * Save logs in a file location
+     *
+     * If `level` is provided, only the logs for this specific level will be saved in the file
+     * If `format` is provided, it will be applied in the file logs, otherwise json format is the default
+     * @public
+     * @param {string} fileLocation
+     * @param {?LogLevel} level
+     * @param {?LogFormat} format
+     * @returns {this}
+     */
+    saveToFile(fileLocation, level = null, format) {
+        console.log(level)
+        console.log(format)
+        console.log(level == null)
+
+        const winstonFormat =
+            format != null && format != undefined
+                ? format == LogFormat.Json
+                    ? json()
+                    : format == LogFormat.String
+                    ? myFormat
+                    : json()
+                : null;
+                //console.log(winstonFormat)
+
+        level == null
+            ? winstonFormat == null
+                ? this._logger.add(
+                      new transports.File({
+                          filename: fileLocation,
+                      })
+                  )
+                : this._logger.add(
+                      new transports.File({
+                          filename: fileLocation,
+                          format: winstonFormat,
+                      })
+                  )
+            : winstonFormat == null
+            ? this._logger.add(
+                  new transports.File({
+                      filename: fileLocation,
+                      level: level.toString(),
+                  })
+              )
+            : this._logger.add(
+                  new transports.File({
+                      filename: fileLocation,
+                      level: level.toString(),
+                      format: winstonFormat,
+                  })
+              );
+
+        return this;
     }
 
     /**

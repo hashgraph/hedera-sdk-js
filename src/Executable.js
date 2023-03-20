@@ -519,7 +519,6 @@ export default class Executable {
                     ? client._logger
                     : null
                 : this._logger;
-        console.log(this._logger?.level.toString());
         this._logger?.debug("executing...");
         this._logger?.error("Error message in `execute`");
 

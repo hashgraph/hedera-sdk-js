@@ -22,11 +22,11 @@ export default class LogLevel {
     /**
      * @hideconstructor
      * @internal
-     * @param {number} code
+     * @param {string} name
      */
-    constructor(code) {
+    constructor(name) {
         /** @readonly */
-        this._code = code;
+        this._name = name;
 
         Object.freeze(this);
     }
@@ -53,7 +53,7 @@ export default class LogLevel {
             case LogLevel.Silly:
                 return "silly";
             default:
-                return `UNKNOWN (${this._code})`;
+                return `UNKNOWN (${this._name})`;
         }
     }
 
@@ -83,43 +83,13 @@ export default class LogLevel {
                 throw new Error(`Unknown level: ${level}`);
         }
     }
-
-    /**
-     * @internal
-     * @param {number} code
-     * @returns {LogLevel}
-     */
-    static _fromCode(code) {
-        switch (code) {
-            case 0:
-                return LogLevel.Off;
-            case 1:
-                return LogLevel.Error;
-            case 2:
-                return LogLevel.Warn;
-            case 3:
-                return LogLevel.Info;
-            case 4:
-                return LogLevel.Http;
-            case 5:
-                return LogLevel.Debug;
-            case 6:
-                return LogLevel.Verbose;
-            case 7:
-                return LogLevel.Silly;
-            default:
-                throw new Error(
-                    `(BUG) LogLevel.fromCode() does not handle code: ${code}`
-                );
-        }
-    }
 }
 
-LogLevel.Off = new LogLevel(0);
-LogLevel.Error = new LogLevel(1);
-LogLevel.Warn = new LogLevel(2);
-LogLevel.Info = new LogLevel(3);
-LogLevel.Http = new LogLevel(4);
-LogLevel.Debug = new LogLevel(5);
-LogLevel.Verbose = new LogLevel(6);
-LogLevel.Silly = new LogLevel(7);
+LogLevel.Off = new LogLevel("off");
+LogLevel.Error = new LogLevel("error");
+LogLevel.Warn = new LogLevel("warn");
+LogLevel.Info = new LogLevel("info");
+LogLevel.Http = new LogLevel("http");
+LogLevel.Debug = new LogLevel("debug");
+LogLevel.Verbose = new LogLevel("verbose");
+LogLevel.Silly = new LogLevel("silly");
