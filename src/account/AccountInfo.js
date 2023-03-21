@@ -45,7 +45,7 @@ import LedgerId from "../LedgerId.js";
  * @property {boolean} isDeleted
  * @property {?string} proxyAccountId
  * @property {string} proxyReceived
- * @property {string} key
+ * @property {?string} key
  * @property {string} balance
  * @property {string} sendRecordThreshold
  * @property {string} receiveRecordThreshold
@@ -426,7 +426,7 @@ export default class AccountInfo {
                       this.proxyAccountId.toString()
                     : null,
             proxyReceived: this.proxyReceived.toString(),
-            key: this.key.toString(),
+            key: this.key != null ? this.key.toString() : null,
             sendRecordThreshold: this.sendRecordThreshold.toString(),
             receiveRecordThreshold: this.receiveRecordThreshold.toString(),
             isReceiverSignatureRequired: this.isReceiverSignatureRequired,

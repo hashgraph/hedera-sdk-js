@@ -94,6 +94,12 @@ export default class CostQuery extends Executable {
             );
         }
 
+        // operator.accountId
+        const transactionId = TransactionId.generate(operator.accountId);
+        if (this._query.paymentTransactionId == null) {
+            this._query.setPaymentTransactionId(transactionId);
+        }
+
         this._header = {
             payment: await _makePaymentTransaction(
                 this._getLogId(),

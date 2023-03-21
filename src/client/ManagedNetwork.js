@@ -270,6 +270,7 @@ export default class ManagedNetwork {
         /** @type {NetworkNodeT[]} */
         const nodes = [];
         const keys = new Set();
+        const nodeAddresses = new Set();
 
         // `this.getNode()` uses `Math.random()` internally to fetch
         // nodes, this means _techically_ `this.getNode()` can return
@@ -290,8 +291,12 @@ export default class ManagedNetwork {
 
             // Get a random node
             let node = this.getNode();
-            if (!keys.has(node.getKey())) {
+            if (
+                !keys.has(node.getKey()) ||
+                !nodeAddresses.has(node.address._address)
+            ) {
                 keys.add(node.getKey());
+                nodeAddresses.add(node.address._address);
                 nodes.push(node);
             } else {
                 i--;
@@ -495,9 +500,19 @@ export default class ManagedNetwork {
     getNode(key) {
         this._readmitNodes();
         if (key != null && key != undefined) {
-            return /** @type {NetworkNodeT[]} */ (
-                this._network.get(key.toString())
-            )[0];
+            // return /** @type {NetworkNodeT[]} */ (
+            //     this._network.get(key.toString())
+            // )[0];
+            const lockedNodes = this._network.get(key.toString());
+            if (lockedNodes) {
+                return /** @type {NetworkNodeT[]} */ lockedNodes[
+                    Math.floor(Math.random() * lockedNodes.length)
+                ];
+            } else {
+                return /** @type {NetworkNodeT[]} */ (
+                    this._network.get(key.toString())
+                )[0];
+            }
         } else {
             if (this._healthyNodes.length == 0) {
                 throw new Error("failed to find a healthy working node");

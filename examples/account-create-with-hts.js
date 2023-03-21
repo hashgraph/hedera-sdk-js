@@ -7,12 +7,11 @@ import {
     TokenSupplyType,
     TokenMintTransaction,
     TransferTransaction,
-    AccountBalanceQuery,
     TokenNftInfoQuery,
     NftId,
     AccountInfoQuery,
-    TransactionReceipt,
 } from "@hashgraph/sdk";
+import axios from "axios";
 
 import dotenv from "dotenv";
 
@@ -214,8 +213,8 @@ async function main() {
 
     // Get transaction receipt information
     let tokenCreateRx = await tokenCreateSubmit.getReceipt(client);
-    let tokenId = tokenCreateRx.tokenId;
-    console.log(`Created token with token id: ${tokenId.toString()}`);
+    let tokenId = tokenCreateRx.tokenId.toString();
+    console.log(`Created token with token id: ${tokenId}`);
 
     /**
      * Step 2
@@ -271,27 +270,35 @@ async function main() {
      *
      * Show the new account ID owns the fungible token
      */
-    const accountBalances = await new AccountBalanceQuery()
-        .setAccountId(aliasAccountId2)
-        .execute(client);
 
-    let tokenBalanceAccountId2 = accountBalances.tokens._map
-        .get(tokenId.toString())
-        .toInt();
+    // Wait some time for the mirror node to be updated
+    await wait(10000);
 
-    tokenBalanceAccountId2 === 10
-        ? console.log(
-              `Account is created succesfully using HTS 'TransferTransaction'`
-          )
-        : console.log(
-              "Creating account with HTS using public key alias failed"
-          );
+    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
+    try {
+        /* eslint-disable */
+        const balance = (
+            await axios.get(link)
+        ).data.accounts[0].balance.tokens.find(
+            (token) => token.token_id === tokenId
+        ).balance;
+        /* eslint-enable */
+
+        balance === 10
+            ? console.log(
+                  `Account is created succesfully using HTS 'TransferTransaction'`
+              )
+            : console.log(
+                  "Creating account with HTS using public key alias failed"
+              );
+    } catch (e) {
+        console.log(e);
+    }
 
     /**
      * TOKEN MINTER FUNCTION
      *
      * @param {string} CID
-     * @returns {Promise<TransactionReceipt>}
      */
     async function tokenMinterFcn(CID) {
         const mintTx = new TokenMintTransaction()
@@ -301,6 +308,16 @@ async function main() {
         let mintTxSign = await mintTx.sign(supplyKey);
         let mintTxSubmit = await mintTxSign.execute(client);
         return mintTxSubmit.getReceipt(client);
+    }
+
+    /**
+     * @param {number} timeout
+     * @returns {Promise<any>}
+     */
+    function wait(timeout) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, timeout);
+        });
     }
 }
 
