@@ -58,6 +58,7 @@
     ],
     "dependencies": {
         "bignumber.js": "^9.1.1",
+        "bn.js": "^5.1.1",
         "crypto-js": "^4.1.1",
         "elliptic": "^6.5.4",
         "js-base64": "^3.7.4",
@@ -86,6 +87,7 @@
         "@babel/eslint-parser": "^7.19.1",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.20.11",
+        "@types/bn.js": "^5.1.1",
         "@types/crypto-js": "^4.1.1",
         "@types/elliptic": "^6.4.14",
         "@types/utf8": "^3.0.1",
