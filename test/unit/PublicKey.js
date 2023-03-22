@@ -1,6 +1,7 @@
 import {
     AccountId,
     PrivateKey,
+    PublicKey,
     TransactionId,
     TransferTransaction,
     Transaction,
@@ -54,5 +55,23 @@ describe("PublicKey", function () {
                 expect(publicKey.verifyTransaction(transaction)).to.be.true;
             }
         }
+    });
+
+    it("verify `fromStringECDSA()` works", async function () {
+        const ecdsaStringKey =
+            "302d300706052b8104000a0322000245f219afdfc8e61b9f6879fa7c8a16a94b35471662afa302993d7d9a29564f81";
+        const publicKeyECDSA = PublicKey.fromStringECDSA(ecdsaStringKey);
+
+        expect(publicKeyECDSA.toString()).to.be.equal(ecdsaStringKey);
+    });
+
+    it("verify `fromStringED25519()` works", async function () {
+        const ed25519StringKey =
+            "302a300506032b6570032100bc46c36d8aeb94270064edb8d3d4d5d29446e1bb2f36cc47b2c9b755ef0aac25";
+        const publicKeyED25519 = PublicKey.fromStringED25519(
+            "302a300506032b6570032100bc46c36d8aeb94270064edb8d3d4d5d29446e1bb2f36cc47b2c9b755ef0aac25"
+        );
+
+        expect(publicKeyED25519.toString()).to.be.equal(ed25519StringKey);
     });
 });

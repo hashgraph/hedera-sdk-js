@@ -20,8 +20,14 @@
 
 import Client from "./Client.js";
 import NativeChannel from "../channel/NativeChannel.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AccountId from "../account/AccountId.js";
 import LedgerId from "../LedgerId.js";
+import {
+    MAINNET,
+    NATIVE_TESTNET,
+    NATIVE_PREVIEWNET,
+} from "../constants/ClientConstants.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
@@ -48,17 +54,9 @@ export const Network = {
         }
     },
 
-    MAINNET: {
-        "https://grpc-web.myhbarwallet.com:443": new AccountId(3),
-    },
-
-    TESTNET: {
-        "https://grpc-web.testnet.myhbarwallet.com:443": new AccountId(3),
-    },
-
-    PREVIEWNET: {
-        "https://grpc-web.previewnet.myhbarwallet.com:443": new AccountId(3),
-    },
+    MAINNET: MAINNET,
+    TESTNET: NATIVE_TESTNET,
+    PREVIEWNET: NATIVE_PREVIEWNET,
 };
 
 /**

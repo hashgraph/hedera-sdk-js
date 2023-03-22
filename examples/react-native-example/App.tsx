@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
 
 const App = () => {
 
-    const operatorId = AccountId.fromString('0.0.47439');
-    const operatorKey = PrivateKey.fromString('302e020100300506032b6570042204208f4014a3f7f7a6c7147070da98d88f9cea074c13ed0554783471825d801888cf');
+    const operatorId = AccountId.fromString('0.0.8920');
+    const operatorKey = PrivateKey.fromString('07f9f9c355d32c5c93a50024b596ed3ccc39954ba1963c68ac21cb7802fd5f83');
     const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
     const [transaction, setTransaction] = useState<TransactionResponse | null>(null);

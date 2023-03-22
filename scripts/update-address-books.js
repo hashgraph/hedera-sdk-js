@@ -6,7 +6,7 @@ async function main() {
     const networks = [
         { name: "previewnet" },
         { name: "testnet" },
-        { name: "mainnet", url: "mainnet-public.mirrornode.hedera.com:5600" },
+        { name: "mainnet", url: "mainnet-public.mirrornode.hedera.com:443" },
     ];
 
     for (const network of networks) {

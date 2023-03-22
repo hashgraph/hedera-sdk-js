@@ -15,7 +15,7 @@ async function main() {
 
     if (process.env.HEDERA_NETWORK.toLowerCase() === "mainnet") {
         client
-            .setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:5600"])
+            .setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"])
             .setTransportSecurity(true);
     }
 

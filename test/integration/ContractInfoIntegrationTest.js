@@ -204,6 +204,40 @@ describe("ContractInfo", function () {
         }
     });
 
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+
+        const operatorKey = env.operatorKey.publicKey;
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(smartContractBytecode)
+            .execute(env.client);
+
+        let receipt = await response.getReceipt(env.client);
+
+        const file = receipt.fileId;
+
+        response = await new ContractCreateTransaction()
+            .setAdminKey(operatorKey)
+            .setGas(100000)
+            .setConstructorParameters(
+                new ContractFunctionParameters().addString("Hello from Hedera.")
+            )
+            .setBytecodeFileId(file)
+            .setContractMemo("[e2e::ContractCreateTransaction]")
+            .execute(env.client);
+
+        receipt = await response.getReceipt(env.client);
+
+        let contract = receipt.contractId;
+
+        const cost = await new ContractInfoQuery()
+            .setContractId(contract)
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
     after(async function () {
         await env.close();
     });

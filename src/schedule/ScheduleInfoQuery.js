@@ -21,6 +21,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ScheduleId from "./ScheduleId.js";
 import ScheduleInfo from "./ScheduleInfo.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
 
 /**
@@ -107,13 +108,7 @@ export default class ScheduleInfoQuery extends Query {
      * @returns {Promise<Hbar>}
      */
     async getCost(client) {
-        let cost = await super.getCost(client);
-
-        if (cost.toTinybars().greaterThan(25)) {
-            return cost;
-        } else {
-            return Hbar.fromTinybars(25);
-        }
+        return super.getCost(client);
     }
 
     /**

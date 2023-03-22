@@ -155,8 +155,7 @@ async function main() {
         .setGas(75000)
         // Set the function to call on the contract
         .setFunction("get_message")
-        // Set the query payment explicitly since sometimes automatic payment calculated
-        // is too low
+        // Set query payment explicitly
         .setQueryPayment(new Hbar(3))
         .executeWithSigner(wallet);
 

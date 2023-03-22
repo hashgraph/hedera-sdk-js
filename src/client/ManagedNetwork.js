@@ -70,6 +70,14 @@ export default class ManagedNetwork {
          */
         this._healthyNodes = [];
 
+        /**
+         * Count of unhealthy nodes.
+         *
+         * @protected
+         * @type {number}
+         */
+        this._unhealthyNodesCount = 0;
+
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
 
@@ -262,6 +270,7 @@ export default class ManagedNetwork {
         /** @type {NetworkNodeT[]} */
         const nodes = [];
         const keys = new Set();
+        const nodeAddresses = new Set();
 
         // `this.getNode()` uses `Math.random()` internally to fetch
         // nodes, this means _techically_ `this.getNode()` can return
@@ -276,16 +285,21 @@ export default class ManagedNetwork {
         // `this._healthyNodes.length` times. This can result in a shorter
         // list than `count`, but that is much better than running forever
         for (let i = 0; i < this._healthyNodes.length; i++) {
-            if (nodes.length == count) {
+            if (nodes.length == count - this._unhealthyNodesCount) {
                 break;
             }
 
             // Get a random node
-            const node = this.getNode();
-
-            if (!keys.has(node.getKey())) {
+            let node = this.getNode();
+            if (
+                !keys.has(node.getKey()) ||
+                !nodeAddresses.has(node.address._address)
+            ) {
                 keys.add(node.getKey());
+                nodeAddresses.add(node.address._address);
                 nodes.push(node);
+            } else {
+                i--;
             }
         }
 
@@ -485,11 +499,20 @@ export default class ManagedNetwork {
      */
     getNode(key) {
         this._readmitNodes();
-
-        if (key != null) {
-            return /** @type {NetworkNodeT[]} */ (
-                this._network.get(key.toString())
-            )[0];
+        if (key != null && key != undefined) {
+            // return /** @type {NetworkNodeT[]} */ (
+            //     this._network.get(key.toString())
+            // )[0];
+            const lockedNodes = this._network.get(key.toString());
+            if (lockedNodes) {
+                return /** @type {NetworkNodeT[]} */ lockedNodes[
+                    Math.floor(Math.random() * lockedNodes.length)
+                ];
+            } else {
+                return /** @type {NetworkNodeT[]} */ (
+                    this._network.get(key.toString())
+                )[0];
+            }
         } else {
             if (this._healthyNodes.length == 0) {
                 throw new Error("failed to find a healthy working node");
@@ -510,6 +533,7 @@ export default class ManagedNetwork {
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
                 this._healthyNodes.splice(i, 1);
+                this._unhealthyNodesCount++;
             }
         }
     }

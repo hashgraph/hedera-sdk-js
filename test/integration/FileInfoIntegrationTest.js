@@ -113,6 +113,24 @@ describe("FileInfo", function () {
         expect(info.keys.toArray().length).to.be.equal(0);
     });
 
+    it("should be able to query cost", async function () {
+        this.timeout(120000);
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .execute(env.client);
+
+        let receipt = await response.getReceipt(env.client);
+        let file = receipt.fileId;
+
+        const cost = await new FileInfoQuery()
+            .setFileId(file)
+            .getCost(env.client);
+
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
     after(async function () {
         await env.close();
     });
