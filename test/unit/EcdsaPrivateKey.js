@@ -6,7 +6,7 @@ import * as hex from "../../src/encoding/hex.js";
 const RAW_KEY =
     "8776c6b831a1b61ac10dac0304a2843de4716f54b1919bb91a2685d0fe3f3048";
 
-describe("PrivateKey", function () {
+describe("EcdsaPrivateKey", function () {
     it("generate should return  object", function () {
         PrivateKey.generateECDSA();
     });
