@@ -184,5 +184,6 @@ describe("TransactionIntegration", function () {
         const transferRecord = await tx.getRecord(env.client)
         expect(transferRecord.transactionId.accountId).to.eql(signerId)
 
+        await env.close();
     })
 });
