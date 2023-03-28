@@ -1159,7 +1159,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        // Makes ure we're frozen
+        // Make sure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
         }
@@ -1170,13 +1170,13 @@ export default class Transaction extends Executable {
         }
 
         // Set the operator if the client has one
-        this._operator = client != null ? client._operator : null;
-        this._operatorAccountId =
+        this._operator ??= client != null ? client._operator : null;
+        this._operatorAccountId ??=
             client != null && client._operator != null
                 ? client._operator.accountId
                 : null;
 
-        // If the client has an operaator, sign this request with the operator
+        // If the client has an operator, sign this request with the operator
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,
