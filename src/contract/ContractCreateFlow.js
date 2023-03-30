@@ -24,6 +24,7 @@ import FileDeleteTransaction from "../file/FileDeleteTransaction.js";
 import ContractCreateTransaction from "./ContractCreateTransaction.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -39,7 +40,6 @@ import * as hex from "../encoding/hex.js";
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("../Signer.js").Signer} Signer
  * @typedef {import("../PrivateKey.js").default} PrivateKey
- * @typedef {import("../PublicKey.js").default} PublicKey
  * @typedef {import("../transaction/Transaction.js").default} Transaction
  */
 
@@ -448,11 +448,25 @@ export default class ContractCreateFlow {
                 "`Signer.getAccountKey()` is not implemented, but is required for `ContractCreateFlow`"
             );
         }
+        // eslint-disable-next-line @typescript-eslint/await-thenable
+        const key = await signer.getAccountKey();
+        let formattedPublicKey;
 
-        const key = signer.getAccountKey();
+        if (key instanceof PublicKey) {
+            formattedPublicKey = key;
+        } else {
+            const propertyValues = Object.values(
+                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                key._key._key._keyData
+            );
+            const keyArray = new Uint8Array(propertyValues);
+
+            formattedPublicKey = PublicKey.fromBytes(keyArray);
+        }
 
         const fileCreateTransaction = await new FileCreateTransaction()
-            .setKeys(key != null ? [key] : [])
+            .setKeys(formattedPublicKey != null ? [formattedPublicKey] : [])
             .setContents(
                 this._bytecode.subarray(
                     0,
