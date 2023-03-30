@@ -10,7 +10,7 @@ const N = new BN(
     "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
     "hex"
 );
-const HIGHEST_BIT = 0x80000000;
+const HARDENED_BIT = 0x80000000;
 
 /**
  * Mostly copied from https://github.com/bitcoinjs/bip32/blob/master/ts-src/bip32.ts
@@ -23,7 +23,7 @@ const HIGHEST_BIT = 0x80000000;
  * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
  */
 export async function derive(parentKey, chainCode, index) {
-    const isHardened = (index & HIGHEST_BIT) !== 0;
+    const isHardened = isHardenedIndex(index);
     const data = new Uint8Array(37);
 
     const publicKey = hex.decode(
@@ -78,55 +78,40 @@ export async function derive(parentKey, chainCode, index) {
     }
 }
 
-//TODO might need to delete it, wait for now
 /**
  * @param {Uint8Array} seed
  * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
  */
-// @ts-ignore
 export async function fromSeed(seed) {
     if (seed.length < 16)
-        throw new TypeError('Seed should be at least 128 bits');
+        throw new TypeError("Seed should be at least 128 bits");
     if (seed.length > 64)
-        throw new TypeError('Seed should be at most 512 bits');
-
+        throw new TypeError("Seed should be at most 512 bits");
 
     const I = await hmac.hash(hmac.HashAlgorithm.Sha512, "Bitcoin seed", seed);
 
-    
     const IL = I.subarray(0, 32);
     const IR = I.subarray(32);
 
-    /* 
-
-    secp256k1
-            .keyFromPrivate(parentKey)
-            .getPrivate()
-            .add(secp256k1.keyFromPrivate(IL).getPrivate());
-
-    keyData: hex.decode(
-                secp256k1.keyFromPrivate(ki.toArray()).getPrivate("hex")
-            ),
-    
-    */
-
-    const keypair = secp256k1.keyPair({
-        priv: Buffer.from(IL), privEnc: "hex"
-    });
-    const priv = hex.decode(keypair.getPrivate("hex"));
-    const pub = hex.decode(keypair.getPublic("hex"));
-    console.log(`public key: ${JSON.stringify(IL)}`);
-    console.log(`public key: ${JSON.stringify(IR)}`);
-
-    /* let result = hex.decode(secp256k1
-        .keyFromPrivate(IL)
-        .getPrivate("hex")); 
-        
-        privateKey: hex.decode(keypair.getPrivate("hex")),
-        publicKey: hex.decode(keypair.getPublic(true, "hex")),
-    */
-        const pair = {
-            privateKey: priv, publicKey: pub
-        }
     return { keyData: IL, chainCode: IR };
+}
+
+/**
+ * Harden the index
+ *
+ * @param {number} index         the derivation index
+ * @returns {number}              the hardened index
+ */
+export function toHardenedIndex(index) {
+    return index | HARDENED_BIT;
+}
+
+/**
+ * Check if the index is hardened
+ *
+ * @param {number} index         the derivation index
+ * @returns {boolean}            true if the index is hardened
+ */
+export function isHardenedIndex(index) {
+    return (index & HARDENED_BIT) !== 0;
 }

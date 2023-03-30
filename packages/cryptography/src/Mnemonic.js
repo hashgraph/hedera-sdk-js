@@ -1,3 +1,4 @@
+// @ts-nocheck
 import CACHE from "./Cache.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import BadMnemonicError from "./BadMnemonicError.js";
@@ -13,6 +14,7 @@ import * as bip39 from "./primitive/bip39.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import PrivateKey from "./PrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
 const ED25519_SEED_TEXT = "ed25519 seed";
@@ -190,6 +192,29 @@ export default class Mnemonic {
     }
 
     /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardEd25519PrivateKey(passphrase = "", index) {
+        const seed = await Mnemonic.toSeed(this.words, passphrase);
+        let derivedKey = await PrivateKey.fromSeedED25519(seed);
+
+        for (const currentIndex of [44, 3030, 0, 0, index]) {
+            derivedKey = await derivedKey.derive(currentIndex);
+        }
+
+        if (CACHE.privateKeyConstructor == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyConstructor(derivedKey);
+    }
+
+    /**
      * Recover an ECDSA private key from this mnemonic phrase, with an
      * optional passphrase.
      *
@@ -221,6 +246,35 @@ export default class Mnemonic {
     }
 
     /**
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardECDSAsecp256k1PrivateKey(passphrase = "", index) {
+        const seed = await Mnemonic.toSeed(this.words, passphrase);
+        let derivedKey = await PrivateKey.fromSeedECDSA(seed);
+
+        for (const currentIndex of [
+            bip32.toHardenedIndex(44),
+            bip32.toHardenedIndex(3030),
+            bip32.toHardenedIndex(0),
+            0,
+            index,
+        ]) {
+            derivedKey = await derivedKey.derive(currentIndex);
+        }
+
+        if (CACHE.privateKeyConstructor == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyConstructor(derivedKey);
+    }
+
+    /**
      * @param {string[]} words
      * @param {string} passphrase
      * @returns {Promise<Uint8Array>}
@@ -228,7 +282,7 @@ export default class Mnemonic {
     static async toSeed(words, passphrase) {
         return await bip39.toSeed(words, passphrase);
     }
-    
+
     /**
      * @param {string} passphrase
      * @param {string} seedText

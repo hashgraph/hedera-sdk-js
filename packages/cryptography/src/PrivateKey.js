@@ -12,6 +12,9 @@ import * as bip32 from "./primitive/bip32.js";
 import * as derive from "./util/derive.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import CACHE from "./Cache.js";
+import elliptic from "elliptic";
+
+const secp256k1 = new elliptic.ec("secp256k1");
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -55,7 +58,6 @@ export default class PrivateKey extends Key {
 
         /**
          * @type {Ed25519PrivateKey | EcdsaPrivateKey}
-         * @readonly
          * @private
          */
         this._key = key;
@@ -66,6 +68,13 @@ export default class PrivateKey extends Key {
      */
     get _type() {
         return this._key._type;
+    }
+
+    /**
+     * @returns {Uint8Array | null}
+     */
+    get _chainCode() {
+        return this._key._chainCode;
     }
 
     /**
@@ -208,8 +217,7 @@ export default class PrivateKey extends Key {
         const { keyData, chainCode } = await slip10.fromSeed(seed);
         return new PrivateKey(new Ed25519PrivateKey(keyData, chainCode));
     }
-    
-    //TODO might need to be deleted, wait for now
+
     /**
      * Construct a Ed25519 private key from a Uint8Array seed.
      *
@@ -218,7 +226,17 @@ export default class PrivateKey extends Key {
      */
     static async fromSeedECDSA(seed) {
         const { keyData, chainCode } = await bip32.fromSeed(seed);
-        return new PrivateKey(new EcdsaPrivateKey(keyData, chainCode));
+        const keypair = secp256k1.keyPair({
+            priv: Buffer.from(keyData),
+            privEnc: "hex",
+        });
+
+        const key = {
+            privateKey: hex.decode(keypair.getPrivate("hex")),
+            publicKey: hex.decode(keypair.getPublic(true, "hex")),
+        };
+
+        return new PrivateKey(new EcdsaPrivateKey(key, chainCode));
     }
 
     /**

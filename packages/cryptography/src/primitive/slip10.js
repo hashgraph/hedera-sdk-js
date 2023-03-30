@@ -1,4 +1,5 @@
 import * as hmac from "../primitive/hmac.js";
+import * as bip32 from "../primitive/bip32.js";
 
 /**
  * @param {Uint8Array} parentKey
@@ -7,6 +8,10 @@ import * as hmac from "../primitive/hmac.js";
  * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
  */
 export async function derive(parentKey, chainCode, index) {
+    if (bip32.isHardenedIndex(index)) {
+        throw new Error("the index should not be pre-hardened");
+    }
+
     const input = new Uint8Array(37);
 
     // 0x00 + parentKey + index(BE)

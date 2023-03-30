@@ -20,10 +20,7 @@
 
 import * as cryptography from "@hashgraph/cryptography";
 import CACHE from "./Cache.js";
-
-/**
- * @typedef {import("./PrivateKey.js").default} PrivateKey
- */
+import PrivateKey from "./PrivateKey.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -107,6 +104,20 @@ export default class Mnemonic {
     }
 
     /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardEd25519PrivateKey(passphrase = "", index) {
+        return CACHE.privateKeyConstructor(
+            await this._mnemonic.toStandardEd25519PrivateKey(passphrase, index)
+        );
+    }
+
+    /**
      * Recover an ECDSA private key from this mnemonic phrase, with an
      * optional passphrase.
      *
@@ -117,6 +128,20 @@ export default class Mnemonic {
     async toEcdsaPrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
+        );
+    }
+
+    /**
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardECDSAsecp256k1PrivateKey(passphrase = "", index) {
+        return CACHE.privateKeyConstructor(
+            await this._mnemonic.toStandardECDSAsecp256k1PrivateKey(passphrase, index)
         );
     }
 

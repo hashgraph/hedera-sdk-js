@@ -86,26 +86,6 @@ export default class PublicKey extends Key {
     }
 
     /**
-     * Parse an ECDSA public key from a string of hexadecimal digits.
-     *
-     * @param {string} text
-     * @returns {PublicKey}
-     */
-    static fromStringECDSA(text) {
-        return new PublicKey(cryptography.PublicKey.fromStringECDSA(text));
-    }
-
-    /**
-     * Parse an ED25519 public key from a string of hexadecimal digits.
-     *
-     * @param {string} text
-     * @returns {PublicKey}
-     */
-    static fromStringED25519(text) {
-        return new PublicKey(cryptography.PublicKey.fromStringED25519(text));
-    }
-
-    /**
      * Verify a signature on a message with this public key.
      *
      * @param {Uint8Array} message
