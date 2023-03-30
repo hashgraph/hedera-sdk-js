@@ -1174,7 +1174,10 @@ export default class Transaction extends Executable {
             this._operator = client != null ? client._operator : null;
         }
 
-        if (this._operatorAccountId == null || this._operatorAccountId == undefined) {
+        if (
+            this._operatorAccountId == null ||
+            this._operatorAccountId == undefined
+        ) {
             this._operatorAccountId =
                 client != null && client._operator != null
                     ? client._operator.accountId
