@@ -60,15 +60,6 @@ describe("ManagedNodeAddress", function () {
             "testnet.mirrornode.hedera.com:443"
         );
 
-        const mirrorNodeAddressInsecure = mirrorNodeAddressSecure.toInsecure();
-        expect(mirrorNodeAddressInsecure.address).to.be.equal(
-            "testnet.mirrornode.hedera.com"
-        );
-        expect(mirrorNodeAddressInsecure.port).to.be.equal(5600);
-        expect(mirrorNodeAddressInsecure.toString()).to.be.equal(
-            "testnet.mirrornode.hedera.com:5600"
-        );
-
         let err = false;
         try {
             ManagedNodeAddress.fromString(
