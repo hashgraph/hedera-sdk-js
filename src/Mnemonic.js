@@ -20,7 +20,10 @@
 
 import * as cryptography from "@hashgraph/cryptography";
 import CACHE from "./Cache.js";
-import PrivateKey from "./PrivateKey.js";
+
+/**
+ * @typedef {import("./PrivateKey.js").default} PrivateKey
+ */
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -99,6 +102,7 @@ export default class Mnemonic {
      */
     async toEd25519PrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
+            // eslint-disable-next-line deprecation/deprecation
             await this._mnemonic.toEd25519PrivateKey(passphrase, path)
         );
     }
@@ -127,6 +131,7 @@ export default class Mnemonic {
      */
     async toEcdsaPrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
+            // eslint-disable-next-line deprecation/deprecation
             await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
         );
     }
@@ -141,7 +146,10 @@ export default class Mnemonic {
      */
     async toStandardECDSAsecp256k1PrivateKey(passphrase = "", index) {
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toStandardECDSAsecp256k1PrivateKey(passphrase, index)
+            await this._mnemonic.toStandardECDSAsecp256k1PrivateKey(
+                passphrase,
+                index
+            )
         );
     }
 
@@ -163,13 +171,16 @@ export default class Mnemonic {
             await this._mnemonic.toLegacyPrivateKey()
         );
     }
-    
+
     /**
      * @param {string} passphrase
      * @returns {Promise<Uint8Array>}
      */
     async toSeed(passphrase) {
-        return await cryptography.Mnemonic.toSeed(this._mnemonic.words, passphrase);
+        return await cryptography.Mnemonic.toSeed(
+            this._mnemonic.words,
+            passphrase
+        );
     }
 
     /**

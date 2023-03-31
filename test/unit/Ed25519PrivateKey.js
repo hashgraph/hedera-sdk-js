@@ -76,7 +76,6 @@ describe("Ed25519PrivateKey", function () {
         const PUBLIC_KEY6 =
             "003c24da049451555d51a7014a37337aa4e12d41e485abccfa46b47dfb2af54b7a";
 
-
         const seed = hex.decode("000102030405060708090a0b0c0d0e0f");
 
         // Chain m
@@ -120,7 +119,7 @@ describe("Ed25519PrivateKey", function () {
         // generate master PrivateKey with 'fromSeedED25519' and child key derivation
         // and test them against the provided constants which are always the source of truth
         // source - https://github.com/satoshilabs/slips/blob/master/slip-0010.md#test-vector-2-for-ed25519
-        
+
         const CHAIN_CODE1 =
             "ef70a74db9c3a5af931b5fe73ed8e1a53464133654fd55e7a66f8570b8e33c3b";
         const PRIVATE_KEY1 =
@@ -163,11 +162,9 @@ describe("Ed25519PrivateKey", function () {
         const PUBLIC_KEY6 =
             "0047150c75db263559a70d5778bf36abbab30fb061ad69f69ece61a72b0cfa4fc0";
 
-
         const seed = hex.decode(
             "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"
         );
-
 
         // Chain m
         const key1 = await PrivateKey.fromSeedED25519(seed);

@@ -1,4 +1,3 @@
-import Mnemonic from "./Mnemonic.js";
 import BadKeyError from "./BadKeyError.js";
 import Key from "./Key.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
@@ -42,6 +41,10 @@ const secp256k1 = new elliptic.ec("secp256k1");
  * @property {(publicKey: PublicKey, signature: Uint8Array) => Transaction} addSignature
  * @property {() => void} _requireFrozen
  * @property {() => Transaction} freeze
+ */
+
+/**
+ * @typedef {import("./Mnemonic.js").default} Mnemonic
  */
 
 /**
@@ -224,7 +227,7 @@ export default class PrivateKey extends Key {
      * @param {Uint8Array} seed
      * @returns {Promise<PrivateKey>}
      */
-    static async fromSeedECDSA(seed) {
+    static async fromSeedECDSAsecp256k1(seed) {
         const { keyData, chainCode } = await bip32.fromSeed(seed);
         const keypair = secp256k1.keyPair({
             priv: Buffer.from(keyData),
@@ -240,7 +243,7 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
+     * @deprecated - Use `Mnemonic.from[Words|String]().toStandard[Ed25519|ECDSAsecp256k1]PrivateKey()` instead
      *
      * Recover a private key from a mnemonic phrase (and optionally a password).
      * @param {Mnemonic | string} mnemonic
@@ -248,11 +251,19 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromMnemonic(mnemonic, passphrase = "") {
+        if (CACHE.mnemonicFromString == null) {
+            throw new Error("Mnemonic not found in cache");
+        }
+
         return (
-            typeof mnemonic === "string"
-                ? await Mnemonic.fromString(mnemonic)
-                : mnemonic
-        ).toEd25519PrivateKey(passphrase);
+            (
+                typeof mnemonic === "string"
+                    ? CACHE.mnemonicFromString(mnemonic)
+                    : mnemonic
+            )
+                // eslint-disable-next-line deprecation/deprecation
+                .toEd25519PrivateKey(passphrase)
+        );
     }
 
     /**
@@ -298,7 +309,7 @@ export default class PrivateKey extends Key {
     /**
      * Derive a new private key at the given wallet index.
      *
-     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * Only currently supported for keys created with from mnemonics; other keys will throw
      * an error.
      *
      * You can check if a key supports derivation with `.supportsDerivation()`

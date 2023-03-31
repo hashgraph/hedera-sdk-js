@@ -176,17 +176,21 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromSeedED25519(seed) {
-        return new PrivateKey(await cryptography.PrivateKey.fromSeedED25519(seed));
+        return new PrivateKey(
+            await cryptography.PrivateKey.fromSeedED25519(seed)
+        );
     }
-    
+
     /**
      * Construct a Ed25519 private key from a Uint8Array seed.
      *
      * @param {Uint8Array} seed
      * @returns {Promise<PrivateKey>}
      */
-    static async fromSeedECDSA(seed) {
-        return new PrivateKey(await cryptography.PrivateKey.fromSeedECDSA(seed));
+    static async fromSeedECDSAsecp256k1(seed) {
+        return new PrivateKey(
+            await cryptography.PrivateKey.fromSeedECDSAsecp256k1(seed)
+        );
     }
 
     /**

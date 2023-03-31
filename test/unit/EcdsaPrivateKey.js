@@ -31,10 +31,10 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("SLIP10 test vector 1", async function () {
-        // generate master PrivateKey with 'fromSeedECDSA' and child key derivation
+        // generate master PrivateKey with 'fromSeedECDSAsecp256k1()' and child key derivation
         // and test them against the provided constants which are always the source of truth
         // source - https://github.com/satoshilabs/slips/blob/master/slip-0010.md#test-vector-1-for-secp256k1
-        
+
         const CHAIN_CODE1 =
             "873dff81c02f525623fd1fe5167eac3a55a049de3d314bb42ee227ffed37d508";
         const PRIVATE_KEY1 =
@@ -77,14 +77,10 @@ describe("EcdsaPrivateKey", function () {
         const PUBLIC_KEY6 =
             "022a471424da5e657499d1ff51cb43c47481a03b1e77f951fe64cec9f5a48f7011";
 
-
-        const seed = hex.decode(
-            "000102030405060708090a0b0c0d0e0f"
-        );
-
+        const seed = hex.decode("000102030405060708090a0b0c0d0e0f");
 
         // Chain m
-        const key1 = await PrivateKey.fromSeedECDSA(seed);
+        const key1 = await PrivateKey.fromSeedECDSAsecp256k1(seed);
         expect(hex.encode(key1.chainCode)).to.be.equal(CHAIN_CODE1);
         expect(key1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(PUBLIC_KEY1).to.contain(key1.publicKey.toStringRaw());
@@ -121,10 +117,10 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("SLIP10 test vector 2", async function () {
-        // generate master PrivateKey with 'fromSeedECDSA' and child key derivation
+        // generate master PrivateKey with 'fromSeedECDSAsecp256k1()' and child key derivation
         // and test them against the provided constants which are always the source of truth
         // source - https://github.com/satoshilabs/slips/blob/master/slip-0010.md#test-vector-2-for-secp256k1
-        
+
         const CHAIN_CODE1 =
             "60499f801b896d83179a4374aeb7822aaeaceaa0db1f85ee3e904c4defbd9689";
         const PRIVATE_KEY1 =
@@ -171,9 +167,8 @@ describe("EcdsaPrivateKey", function () {
             "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"
         );
 
-
         // Chain m
-        const key1 = await PrivateKey.fromSeedECDSA(seed);
+        const key1 = await PrivateKey.fromSeedECDSAsecp256k1(seed);
         expect(hex.encode(key1.chainCode)).to.be.equal(CHAIN_CODE1);
         expect(key1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(PUBLIC_KEY1).to.contain(key1.publicKey.toStringRaw());
