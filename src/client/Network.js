@@ -47,7 +47,6 @@ export default class Network extends ManagedNetwork {
         /** @type {NodeAddressBook | null} */
         this._addressBook = null;
 
-
         /** @type {boolean} */
         this._transportSecurity = false;
     }
@@ -282,9 +281,7 @@ export default class Network extends ManagedNetwork {
 
             const nodes =
                 this._network.get(node.getKey()) != null
-                    ? /** @type {Node[]} */ (
-                          this._network.get(node.getKey())
-                      )
+                    ? /** @type {Node[]} */ (this._network.get(node.getKey()))
                     : [];
             nodes.push(node);
             this._network.set(node.getKey(), nodes);
