@@ -11,10 +11,6 @@ import * as bip32 from "./primitive/bip32.js";
 import * as derive from "./util/derive.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import CACHE from "./Cache.js";
-import elliptic from "elliptic";
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-const secp256k1 = new elliptic.ec("secp256k1");
 
 /**
  * @typedef {object} ProtoSignaturePair
