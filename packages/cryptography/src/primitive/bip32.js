@@ -98,7 +98,7 @@ export async function fromSeed(seed) {
 
 /**
  * Create KeyPair from keyData byte array
- * 
+ *
  * @param {Uint8Array} keyData
  * @returns {elliptic.ec.KeyPair}
  */

@@ -98,6 +98,7 @@ export { default as LiveHash } from "./account/LiveHash.js";
 export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransaction.js";
 export { default as LiveHashDeleteTransaction } from "./account/LiveHashDeleteTransaction.js";
 export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
+export { default as LocalProvider } from "./LocalProvider.js";
 export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
