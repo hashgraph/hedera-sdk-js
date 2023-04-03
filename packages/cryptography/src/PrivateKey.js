@@ -13,6 +13,7 @@ import * as ecdsa from "./primitive/ecdsa.js";
 import CACHE from "./Cache.js";
 import elliptic from "elliptic";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 const secp256k1 = new elliptic.ec("secp256k1");
 
 /**
@@ -229,13 +230,16 @@ export default class PrivateKey extends Key {
      */
     static async fromSeedECDSAsecp256k1(seed) {
         const { keyData, chainCode } = await bip32.fromSeed(seed);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const keypair = secp256k1.keyPair({
             priv: Buffer.from(keyData),
             privEnc: "hex",
         });
 
         const key = {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             privateKey: hex.decode(keypair.getPrivate("hex")),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             publicKey: hex.decode(keypair.getPublic(true, "hex")),
         };
 
