@@ -97,6 +97,19 @@ export async function fromSeed(seed) {
 }
 
 /**
+ * Create KeyPair from keyData byte array
+ * 
+ * @param {Uint8Array} keyData
+ * @returns {elliptic.ec.KeyPair}
+ */
+export function generateKeyPair(keyData) {
+    return secp256k1.keyPair({
+        priv: Buffer.from(keyData),
+        privEnc: "hex",
+    });
+}
+
+/**
  * Harden the index
  *
  * @param {number} index         the derivation index

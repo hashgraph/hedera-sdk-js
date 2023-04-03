@@ -11,9 +11,6 @@ import * as bip32 from "./primitive/bip32.js";
 import * as derive from "./util/derive.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import CACHE from "./Cache.js";
-import elliptic from "elliptic";
-
-const secp256k1 = new elliptic.ec("secp256k1");
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -229,10 +226,7 @@ export default class PrivateKey extends Key {
      */
     static async fromSeedECDSAsecp256k1(seed) {
         const { keyData, chainCode } = await bip32.fromSeed(seed);
-        const keypair = secp256k1.keyPair({
-            priv: Buffer.from(keyData),
-            privEnc: "hex",
-        });
+        const keypair = bip32.generateKeyPair(keyData);
 
         const key = {
             privateKey: hex.decode(keypair.getPrivate("hex")),
