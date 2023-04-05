@@ -228,14 +228,7 @@ export default class PrivateKey extends Key {
         const { keyData, chainCode } = await bip32.fromSeed(seed);
         const keypair = bip32.generateKeyPair(keyData);
 
-        const key = {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            privateKey: hex.decode(keypair.getPrivate("hex")),
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            publicKey: hex.decode(keypair.getPublic(true, "hex")),
-        };
-
-        return new PrivateKey(new EcdsaPrivateKey(key, chainCode));
+        return new PrivateKey(new EcdsaPrivateKey(keypair, chainCode));
     }
 
     /**
