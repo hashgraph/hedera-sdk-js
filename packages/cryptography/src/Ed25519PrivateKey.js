@@ -4,6 +4,7 @@ import nacl from "tweetnacl";
 import { arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as random from "./primitive/random.js";
+import * as slip10 from "./primitive/slip10.js";
 
 export const derPrefix = "302e020100300506032b657004220420";
 export const derPrefixBytes = hex.decode(derPrefix);
@@ -163,6 +164,17 @@ export default class Ed25519PrivateKey {
      */
     static fromStringRaw(text) {
         return Ed25519PrivateKey.fromBytesRaw(hex.decode(text));
+    }
+
+    /**
+     * Construct a ED25519 private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<Ed25519PrivateKey>}
+     */
+    static async fromSeed(seed) {
+        const { keyData, chainCode } = await slip10.fromSeed(seed);
+        return new Ed25519PrivateKey(keyData, chainCode);
     }
 
     /**

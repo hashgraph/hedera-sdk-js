@@ -58,6 +58,7 @@ export default class PrivateKey extends Key {
 
         /**
          * @type {Ed25519PrivateKey | EcdsaPrivateKey}
+         * @readonly
          * @private
          */
         this._key = key;
@@ -214,21 +215,19 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromSeedED25519(seed) {
-        const { keyData, chainCode } = await slip10.fromSeed(seed);
-        return new PrivateKey(new Ed25519PrivateKey(keyData, chainCode));
+        const ed25519Key = await Ed25519PrivateKey.fromSeed(seed);
+        return new PrivateKey(ed25519Key);
     }
 
     /**
-     * Construct a Ed25519 private key from a Uint8Array seed.
+     * Construct a ECDSA private key from a Uint8Array seed.
      *
      * @param {Uint8Array} seed
      * @returns {Promise<PrivateKey>}
      */
     static async fromSeedECDSAsecp256k1(seed) {
-        const { keyData, chainCode } = await bip32.fromSeed(seed);
-        const keypair = bip32.generateKeyPair(keyData);
-
-        return new PrivateKey(new EcdsaPrivateKey(keypair, chainCode));
+        const ecdsaKey = await EcdsaPrivateKey.fromSeed(seed);
+        return new PrivateKey(ecdsaKey);
     }
 
     /**

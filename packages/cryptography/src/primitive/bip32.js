@@ -97,26 +97,6 @@ export async function fromSeed(seed) {
 }
 
 /**
- * Create KeyPair from keyData byte array
- *
- * @param {Uint8Array} keyData
- * @returns {{ privateKey: Uint8Array; publicKey: Uint8Array }}
- */
-export function generateKeyPair(keyData) {
-    const keypair = secp256k1.keyPair({
-        priv: Buffer.from(keyData),
-        privEnc: "hex",
-    });
-
-    return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        privateKey: hex.decode(keypair.getPrivate("hex")),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        publicKey: hex.decode(keypair.getPublic(true, "hex")),
-    };
-}
-
-/**
  * Harden the index
  *
  * @param {number} index         the derivation index

@@ -2,6 +2,7 @@ import BadKeyError from "./BadKeyError.js";
 import EcdsaPublicKey from "./EcdsaPublicKey.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
+import * as bip32 from "./primitive/bip32.js";
 import { arrayStartsWith } from "./util/array.js";
 
 const derPrefix = "3030020100300706052b8104000a04220420";
@@ -133,6 +134,17 @@ export default class EcdsaPrivateKey {
      */
     static fromStringRaw(text) {
         return EcdsaPrivateKey.fromBytesRaw(hex.decode(text));
+    }
+
+    /**
+     * Construct a ECDSA private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<EcdsaPrivateKey>}
+     */
+    static async fromSeed(seed) {
+        const { keyData, chainCode } = await bip32.fromSeed(seed);
+        return new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode);
     }
 
     /**
