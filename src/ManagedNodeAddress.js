@@ -76,30 +76,12 @@ export default class ManagedNodeAddress {
     }
 
     toInsecure() {
-        let port = this.port;
-
-        switch (this.port) {
-            case 50212:
-                port = 50211;
-                break;
-            case 443:
-                port = 5600;
-        }
-
+        let port = this.port === 50212 ? 50211 : this.port;
         return new ManagedNodeAddress({ host: this.address, port });
     }
 
     toSecure() {
-        let port = this.port;
-
-        switch (this.port) {
-            case 50211:
-                port = 50212;
-                break;
-            case 5600:
-                port = 443;
-        }
-
+        let port = this.port === 50211 ? 50212 : this.port;
         return new ManagedNodeAddress({ host: this.address, port });
     }
 
