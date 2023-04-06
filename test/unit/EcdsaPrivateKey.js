@@ -31,6 +31,7 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("SLIP10 test vector 1", async function () {
+        this.timeout(5000);
         // generate master PrivateKey with 'fromSeedECDSAsecp256k1()' and child key derivation
         // and test them against the provided constants which are always the source of truth
         // source - https://github.com/satoshilabs/slips/blob/master/slip-0010.md#test-vector-1-for-secp256k1

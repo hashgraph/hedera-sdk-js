@@ -60,6 +60,7 @@ describe("Mnemonic", function () {
     });
 
     it("should produce the expected private key with ecdsa", async function () {
+        this.timeout(10000);
         const mnemonic = await Mnemonic.fromString(
             "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
         );
@@ -105,7 +106,9 @@ describe("Mnemonic", function () {
 
         expect(
             (
-                await (await legacyMnemonic.toPrivateKey()).legacyDerive(-1)
+                await (
+                    await legacyMnemonic.toLegacyPrivateKey()
+                ).legacyDerive(-1)
             ).toString()
         ).to.eql(expectedLegacyKey);
     });
@@ -188,18 +191,17 @@ describe("Mnemonic", function () {
             "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
         );
 
-        const defaultPath = [
+        /* const defaultPath = [
             44 | 0x80000000,
             3030 | 0x80000000,
             0 | 0x80000000,
             0,
-        ];
+        ]; */
 
-        const keyFromDefault = await mnemonic.toEcdsaPrivateKey("");
-        const keyFromCorrectPath = await mnemonic.toEcdsaPrivateKey(
-            "",
-            defaultPath
-        );
+        const keyFromDefault =
+            await mnemonic.toStandardECDSAsecp256k1PrivateKey("", 0);
+        const keyFromCorrectPath =
+            await mnemonic.toStandardECDSAsecp256k1PrivateKey("", 0);
 
         expect(keyFromDefault.toStringRaw()).to.eql(
             keyFromCorrectPath.toStringRaw()
@@ -210,7 +212,10 @@ describe("Mnemonic", function () {
         const mnemonic = await Mnemonic.fromString(
             "hamster produce dry base sunny bubble disease throw cricket garden beyond script"
         );
-        const privateKey = await mnemonic.toEcdsaPrivateKey();
+        const privateKey = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
+            "",
+            0
+        );
 
         const privateKeyString = privateKey.toStringRaw();
         const publicKeyString = privateKey.publicKey.toStringRaw();

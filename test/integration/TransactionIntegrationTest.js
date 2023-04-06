@@ -8,7 +8,7 @@ import {
     TokenCreateTransaction,
     TransferTransaction,
 } from "../../src/exports.js";
-import { Wallet, LocalProvider } from "../../src/index.js";
+import { Wallet } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 

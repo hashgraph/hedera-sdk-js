@@ -46,6 +46,9 @@ export default class Network extends ManagedNetwork {
 
         /** @type {NodeAddressBook | null} */
         this._addressBook = null;
+
+        /** @type {boolean} */
+        this._transportSecurity = false;
     }
 
     /**
@@ -238,6 +241,56 @@ export default class Network extends ManagedNetwork {
      */
     setMaxNodeAttempts(maxNodeAttempts) {
         this._maxNodeAttempts = maxNodeAttempts;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isTransportSecurity() {
+        return this._transportSecurity;
+    }
+
+    /**
+     * @param {boolean} transportSecurity
+     * @returns {this}
+     */
+    setTransportSecurity(transportSecurity) {
+        if (this._transportSecurity == transportSecurity) {
+            return this;
+        }
+
+        this._network.clear();
+
+        for (let i = 0; i < this._nodes.length; i++) {
+            let node = this._nodes[i];
+            node.close();
+
+            node = /** @type {Node} */ (
+                transportSecurity
+                    ? node
+                          .toSecure()
+                          .setCert(
+                              this._ledgerId != null
+                                  ? this._ledgerId.toString()
+                                  : ""
+                          )
+                    : node.toInsecure()
+            );
+            this._nodes[i] = node;
+
+            const nodes =
+                this._network.get(node.getKey()) != null
+                    ? /** @type {Node[]} */ (this._network.get(node.getKey()))
+                    : [];
+            nodes.push(node);
+            this._network.set(node.getKey(), nodes);
+        }
+
+        // Overwrite healthy node list since new ports might make the node work again
+        this._healthyNodes = [...this._nodes];
+
+        this._transportSecurity = transportSecurity;
         return this;
     }
 
