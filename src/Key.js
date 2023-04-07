@@ -66,7 +66,6 @@ export default class Key {
             return CACHE.keyList(key.keyList);
         }
 
-        //TODO think of a better solution
         // @ts-ignore
         return null;
 

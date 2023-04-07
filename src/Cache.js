@@ -24,6 +24,7 @@
  * @typedef {import("./KeyList.js").default} KeyList
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./PrivateKey.js").default} PrivateKey
+ * @typedef {import("./Mnemonic.js").default} Mnemonic
  * @typedef {import("./EvmAddress.js").default} EvmAddress
  * @typedef {import("./EthereumTransactionData.js").default} EthereumTransactionData
  * @typedef {import("./transaction/TransactionReceiptQuery.js").default} TransactionReceiptQuery
@@ -42,6 +43,7 @@
 /**
  * @namespace cryptography
  * @typedef {import("@hashgraph/cryptography").PrivateKey} cryptography.PrivateKey
+ * @typedef {import("@hashgraph/cryptography").Mnemonic} cryptography.Mnemonic
  */
 
 /**
@@ -75,6 +77,9 @@ class Cache {
 
         /** @type {((key: cryptography.PrivateKey) => PrivateKey) | null} */
         this._privateKeyConstructor = null;
+
+        /** @type {((key: cryptography.Mnemonic) => Mnemonic) | null} */
+        this._mnemonicFromString = null;
 
         /** @type {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId) | null} */
         this._accountIdConstructor = null;
@@ -226,6 +231,26 @@ class Cache {
         }
 
         return this._privateKeyConstructor;
+    }
+
+    /**
+     * @param {((key: cryptography.Mnemonic) => Mnemonic)} mnemonicFromString
+     */
+    setMnemonicFromString(mnemonicFromString) {
+        this._mnemonicFromString = mnemonicFromString;
+    }
+
+    /**
+     * @returns {((key: cryptography.PrivateKey) => PrivateKey)}
+     */
+    get mnemonicFromString() {
+        if (this._mnemonicFromString == null) {
+            throw new Error(
+                "Cache.mnemonicFromString was used before it was set"
+            );
+        }
+
+        return this.mnemonicFromString;
     }
 
     /**
