@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.24.0
+
+## What's Changed
+* Expose some PublicKey methods by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1521
+* Fix operator and operator account id override in beforeExecute by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1531
+* fix contract create flow with external signer by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1533
+
+## v2.23.0
+
+## What's Changed
+
+-   Fix examples build warnings by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1475
+-   Refactor variables by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1481
+-   Fix/loop nodes accounts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1493
+-   Fix/get cost query by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1496
+-   Create github workflow for updating the docs by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1516
+
 ## v2.22.0
 
 ## What's Changed

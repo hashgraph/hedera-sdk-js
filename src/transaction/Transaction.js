@@ -1160,7 +1160,7 @@ export default class Transaction extends Executable {
         this._logger?.info(
             `Network used: ${client._network.networkName}`// eslint-disable-line @typescript-eslint/restrict-template-expressions
         );
-        // Makes sure we're frozen
+        // Make sure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
         }
@@ -1170,14 +1170,22 @@ export default class Transaction extends Executable {
             this._validateChecksums(client);
         }
 
-        // Set the operator if the client has one
-        this._operator = client != null ? client._operator : null;
-        this._operatorAccountId =
-            client != null && client._operator != null
-                ? client._operator.accountId
-                : null;
+        // Set the operator if the client has one and the current operator is nullish
+        if (this._operator == null || this._operator == undefined) {
+            this._operator = client != null ? client._operator : null;
+        }
 
-        // If the client has an operaator, sign this request with the operator
+        if (
+            this._operatorAccountId == null ||
+            this._operatorAccountId == undefined
+        ) {
+            this._operatorAccountId =
+                client != null && client._operator != null
+                    ? client._operator.accountId
+                    : null;
+        }
+
+        // If the client has an operator, sign this request with the operator
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,

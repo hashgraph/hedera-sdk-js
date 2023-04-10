@@ -56,22 +56,4 @@ export default class MirrorNode extends ManagedNode {
     getKey() {
         return this._address.toString();
     }
-
-    /**
-     * @returns {MirrorNode}
-     */
-    toInsecure() {
-        return new MirrorNode({
-            cloneNode: { node: this, address: this._address.toInsecure() },
-        });
-    }
-
-    /**
-     * @returns {MirrorNode}
-     */
-    toSecure() {
-        return new MirrorNode({
-            cloneNode: { node: this, address: this._address.toSecure() },
-        });
-    }
 }

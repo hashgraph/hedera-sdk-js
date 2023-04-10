@@ -278,7 +278,6 @@ export default class Client {
      */
     setTransportSecurity(transportSecurity) {
         this._network.setTransportSecurity(transportSecurity);
-        this._mirrorNetwork.setTransportSecurity(transportSecurity);
         return this;
     }
 
