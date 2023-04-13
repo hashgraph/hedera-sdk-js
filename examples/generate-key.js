@@ -3,16 +3,9 @@ import { Mnemonic } from "@hashgraph/sdk";
 async function main() {
     // generate a 24-word mnemonic
     const mnemonic = await Mnemonic.generate();
+    console.log(`24 words mnemonic = ${mnemonic.toString()}`);
 
-    console.log(`mnemonic = ${mnemonic.toString()}`);
-
-    // convert to a new root key
-    const rootKey = await mnemonic.toEd25519PrivateKey();
-
-    // derive index #0
-    // WARN: don't hand out your root key
-    const key = await rootKey.derive(0);
-
+    const key = await mnemonic.toStandardEd25519PrivateKey("", 0);
     console.log(`private key = ${key.toString()}`);
     console.log(`public key = ${key.publicKey.toString()}`);
 
@@ -21,10 +14,19 @@ async function main() {
     // recover your key from the mnemonic
     // this takes space-separated or comma-separated words
     const recoveredMnemonic = await Mnemonic.fromString(mnemonic.toString());
-    const recoveredRootKey = await recoveredMnemonic.toEd25519PrivateKey();
+    const recoveredRootKey =
+        await recoveredMnemonic.toStandardEd25519PrivateKey("", 0);
 
-    // Returns the recover key
-    await recoveredRootKey.derive(0);
+    recoveredRootKey.toString() === key.toString()
+        ? console.log(`succesfull key recovery!`)
+        : console.log(`key recovery failed!`);
+
+    const mnemonic12 = await Mnemonic.generate12();
+    console.log(`12 words mnemonic = ${mnemonic12.toString()}`);
+
+    const key12 = await mnemonic12.toStandardEd25519PrivateKey("", 0);
+    console.log(`private key = ${key12.toString()}`);
+    console.log(`public key = ${key12.publicKey.toString()}`);
 }
 
 void main();
