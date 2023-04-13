@@ -30,18 +30,11 @@ const customFormat = printf(({ level, message, timestamp }) => {
 
 const defaultOptions = {
     level: "debug",
-    //format: format.json(),
     format: combine(
-        //cli(),
         json(),
         errors({ stack: true }),
-        //colorize(),
         timestamp({ format: "HH:mm:ss" })
-        //customFormat
     ),
-    transports: [
-        new transports.Console(),
-    ],
     exceptionHandlers: [
         new transports.Console({ consoleWarnLevels: ["error"] }),
     ],
@@ -50,13 +43,35 @@ const defaultOptions = {
     ],
 };
 
-const defaultLogger = () => {
-    return createLogger(defaultOptions);
+// eslint-disable-next-line jsdoc/require-returns
+/**
+ * Create default logger instance with specified level
+ *
+ * @param {LogLevel} level
+ */
+const defaultLogger = (level) => {
+    let logger = createLogger(defaultOptions);
+    logger.add(new transports.Console({ level: level.toString() }));
+    return logger;
 };
 
 export default class Logger {
-    constructor() {
-        this._logger = defaultLogger();
+    /**
+     * @param {LogLevel} level
+     */
+    constructor(level) {
+        this._logger = defaultLogger(level);
+
+        /**
+         * Whether or not to include lower levels than the specified level
+         * when saving logs to a file location. Default is `false`. This means that
+         * when `saveToFile()` is called for a specific `level`,
+         * the file will contain only logs for this level
+         *
+         * @private
+         * @type {boolean}
+         */
+        this._includeLowerLevelsInFileLogs = false;
     }
 
     /**
@@ -82,7 +97,9 @@ export default class Logger {
         if (level == LogLevel.Off) {
             this._logger.silent = true;
         } else {
-            this._logger.level = level.toString();
+            // The `Console` transport option will always be
+            // the 3rd element in the array, so we edit the level on it
+            this._logger.transports[2].level = level.toString();
             this._logger.silent = false;
         }
         return this;
@@ -95,7 +112,11 @@ export default class Logger {
      * @returns {LogLevel}
      */
     get level() {
-        return LogLevel._fromString(this._logger.level);
+        const level = this._logger.transports[2].level
+            ? this._logger.transports[2].level
+            : this._logger.level;
+
+        return LogLevel._fromString(level);
     }
 
     /**
@@ -122,6 +143,29 @@ export default class Logger {
     }
 
     /**
+     * Set include lower levels in file logs on/off
+     *
+     * @public
+     * @description Whether or not to include lower levels than the specified level when saving logs to a file
+     * @param {boolean} include
+     * @returns {this}
+     */
+    setIncludeLowerLevelsInFileLogs(include) {
+        this._includeLowerLevelsInFileLogs = include;
+        return this;
+    }
+
+    /**
+     * Get include lower levels in file logs
+     *
+     * @public
+     * @returns {boolean}
+     */
+    get includeLowerLevelsInFileLogs() {
+        return this._includeLowerLevelsInFileLogs;
+    }
+
+    /**
      * Save logs in a file location
      *
      * If `level` is provided, only the logs for this specific level will be saved in the file,
@@ -134,44 +178,30 @@ export default class Logger {
      * @returns {this}
      */
     saveToFile(fileLocation, level = null, format = null) {
-        const winstonFormat =
-            format != null && format != undefined
-                ? format == LogFormat.Json
-                    ? json()
-                    : format == LogFormat.String
-                    ? customFormat
-                    : json()
-                : null;
+        const winstonFormat = format
+            ? format == LogFormat.String
+                ? customFormat
+                : json()
+            : json();
+
+        let listFormats = [winstonFormat];
+
+        if (!this._includeLowerLevelsInFileLogs && level != null) {
+            listFormats.push(this.filterOnly(level.toString()));
+        }
 
         level == null
-            ? winstonFormat == null
-                ? this._logger.add(
-                      new transports.File({
-                          filename: fileLocation,
-                      })
-                  )
-                : this._logger.add(
-                      new transports.File({
-                          filename: fileLocation,
-                          format: winstonFormat,
-                      })
-                  )
-            : winstonFormat == null
             ? this._logger.add(
                   new transports.File({
                       filename: fileLocation,
-                      level: level.toString(),
-                      format: this.filterOnly(level.toString())
+                      format: combine(...listFormats),
                   })
               )
             : this._logger.add(
                   new transports.File({
                       filename: fileLocation,
                       level: level.toString(),
-                      format: combine(
-                        winstonFormat,
-                        this.filterOnly(level.toString()),
-                      )
+                      format: combine(...listFormats),
                   })
               );
 
@@ -222,14 +252,15 @@ export default class Logger {
         this._logger.error(message);
     }
 
+    // eslint-disable-next-line jsdoc/require-returns
     /**
      * Log only the messages the match `level`
-     * 
+     *
      * @private
      * @param {string} level
      */
     filterOnly(level) {
-        const LEVEL = Symbol.for('level');
+        const LEVEL = Symbol.for("level");
         // @ts-ignore
         return format(function (info) {
             if (info[LEVEL] === level) {
