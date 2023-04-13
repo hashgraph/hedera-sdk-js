@@ -28,10 +28,7 @@ import PrivateKey from "../PrivateKey.js";
 import LedgerId from "../LedgerId.js";
 import FileId from "../file/FileId.js";
 import CACHE from "../Cache.js";
-/* eslint-disable */
-import Logger from "../logger/Logger.js";
-import LogLevel from "../logger/LogLevel.js";
-/* eslint-enable */
+import Logger from "../logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -318,7 +315,6 @@ export default class Client {
             accountId_.validateChecksum(this);
         }
 
-        this._logger?.debug("setting operator...");
         this._operator = {
             transactionSigner,
 
@@ -661,59 +657,6 @@ export default class Client {
      */
     get logger() {
         return this._logger;
-    }
-
-    /**
-     * Set log level
-     *
-     * @param {LogLevel} level
-     * @returns {this}
-     */
-    setLogLevel(level) {
-        if (this._logger == null) {
-            throw new Error("Logger is not set");
-        }
-        this._logger.setLevel(level);
-        return this;
-    }
-
-    /**
-     * Get logging level
-     *
-     * @returns {LogLevel}
-     */
-    get logLevel() {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        return this._logger.level;
-    }
-
-    /**
-     * Set silent mode on/off
-     *
-     * @description If set to true, the logger will not display any log messages
-     * @param {boolean} silent
-     * @returns {this}
-     */
-    setSilent(silent) {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        this._logger.setSilent(silent);
-        return this;
-    }
-
-    /**
-     * Get silent mode
-     *
-     * @returns {boolean}
-     */
-    get silent() {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        return this._logger.silent;
     }
 
     /**

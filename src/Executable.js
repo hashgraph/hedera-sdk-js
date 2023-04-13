@@ -23,10 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
-/* eslint-disable */
-import Logger from "./logger/Logger.js";
-import LogLevel from "./logger/LogLevel.js";
-/* eslint-enable */
+import Logger from "./logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -512,7 +509,8 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        // If the logger on the request is not set, use the logger in client (if set, otherwise do not use logger)
+        // If the logger on the request is not set, use the logger in client
+        // (if set, otherwise do not use logger)
         this._logger =
             this._logger == null
                 ? client._logger != null
@@ -755,59 +753,6 @@ export default class Executable {
      */
     get logger() {
         return this._logger;
-    }
-
-    /**
-     * Set log level
-     *
-     * @param {LogLevel} level
-     * @returns {this}
-     */
-    setLogLevel(level) {
-        if (this._logger == null) {
-            throw new Error("Logger is not set");
-        }
-        this._logger.setLevel(level);
-        return this;
-    }
-
-    /**
-     * Get logging level
-     *
-     * @returns {LogLevel}
-     */
-    get logLevel() {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        return this._logger.level;
-    }
-
-    /**
-     * Set silent mode on/off
-     *
-     * @description If set to true, the logger will not display any log messages
-     * @param {boolean} silent
-     * @returns {this}
-     */
-    setSilent(silent) {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        this._logger.setSilent(silent);
-        return this;
-    }
-
-    /**
-     * Get silent mode
-     *
-     * @returns {boolean}
-     */
-    get silent() {
-        if (this._logger == null) {
-            throw new Error("Logger not set");
-        }
-        return this._logger.silent;
     }
 }
 

@@ -23,7 +23,7 @@ import LogLevel from "./LogLevel.js";
 import LogFormat from "./LogFormat.js";
 const { combine, timestamp, json, errors, printf } = format;
 
-const myFormat = printf(({ level, message, timestamp }) => {
+const customFormat = printf(({ level, message, timestamp }) => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `[${timestamp}] ${level}: ${message}`;
 });
@@ -37,13 +37,10 @@ const defaultOptions = {
         errors({ stack: true }),
         //colorize(),
         timestamp({ format: "HH:mm:ss" })
-        //myFormat
+        //customFormat
     ),
     transports: [
         new transports.Console(),
-        /* new transports.File({
-            filename: 'logger.log',
-          }) */
     ],
     exceptionHandlers: [
         new transports.Console({ consoleWarnLevels: ["error"] }),
@@ -67,10 +64,11 @@ export default class Logger {
      *
      * @public
      * @param {import("winston").Logger} logger
-     * @returns {void}
+     * @returns {this}
      */
     setLogger(logger) {
         this._logger = logger;
+        return this;
     }
 
     /**
@@ -126,8 +124,8 @@ export default class Logger {
     /**
      * Save logs in a file location
      *
-     * If `level` is provided, only the logs for this specific level will be saved in the file
-     * If `format` is provided, it will be applied in the file logs, otherwise json format is the default
+     * If `level` is provided, only the logs for this specific level will be saved in the file,
+     * If `format` is provided, it will be applied in the file logs, otherwise json format is the default option
      *
      * @public
      * @param {string} fileLocation
@@ -135,13 +133,13 @@ export default class Logger {
      * @param {?LogFormat} format
      * @returns {this}
      */
-    saveToFile(fileLocation, level = null, format) {
+    saveToFile(fileLocation, level = null, format = null) {
         const winstonFormat =
             format != null && format != undefined
                 ? format == LogFormat.Json
                     ? json()
                     : format == LogFormat.String
-                    ? myFormat
+                    ? customFormat
                     : json()
                 : null;
 
@@ -163,13 +161,17 @@ export default class Logger {
                   new transports.File({
                       filename: fileLocation,
                       level: level.toString(),
+                      format: this.filterOnly(level.toString())
                   })
               )
             : this._logger.add(
                   new transports.File({
                       filename: fileLocation,
                       level: level.toString(),
-                      format: winstonFormat,
+                      format: combine(
+                        winstonFormat,
+                        this.filterOnly(level.toString()),
+                      )
                   })
               );
 
@@ -218,5 +220,21 @@ export default class Logger {
      */
     error(message) {
         this._logger.error(message);
+    }
+
+    /**
+     * Log only the messages the match `level`
+     * 
+     * @private
+     * @param {string} level
+     */
+    filterOnly(level) {
+        const LEVEL = Symbol.for('level');
+        // @ts-ignore
+        return format(function (info) {
+            if (info[LEVEL] === level) {
+                return info;
+            }
+        })();
     }
 }

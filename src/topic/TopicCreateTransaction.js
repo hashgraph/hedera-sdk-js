@@ -182,6 +182,7 @@ export default class TopicCreateTransaction extends Transaction {
     setTopicMemo(topicMemo) {
         this._requireNotFrozen();
         this._topicMemo = topicMemo;
+
         return this;
     }
 

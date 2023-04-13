@@ -563,6 +563,7 @@ export default class Transaction extends Executable {
     setTransactionMemo(transactionMemo) {
         this._requireNotFrozen();
         this._transactionMemo = transactionMemo;
+
         return this;
     }
 
@@ -1158,7 +1159,7 @@ export default class Transaction extends Executable {
      */
     async _beforeExecute(client) {
         this._logger?.info(
-            `Network used: ${client._network.networkName}`// eslint-disable-line @typescript-eslint/restrict-template-expressions
+            `Network used: ${client._network.networkName}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
         );
         // Make sure we're frozen
         if (!this._isFrozen()) {
@@ -1426,7 +1427,7 @@ export default class Transaction extends Executable {
         );
 
         this._logger?.info(
-            `Transaction Error Info: ${status.toString()}, ${this.transactionId?.toString()}`// eslint-disable-line @typescript-eslint/restrict-template-expressions
+            `Transaction Error Info: ${status.toString()}, ${this.transactionId?.toString()}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
         );
 
         return new PrecheckStatusError({
