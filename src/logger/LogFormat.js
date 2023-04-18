@@ -41,7 +41,7 @@ export default class LogLevel {
             case LogLevel.String:
                 return "string";
             default:
-                return `UNKNOWN (${this._name})`;
+                return `Unknown log format (${this._name})`;
         }
     }
 
@@ -56,7 +56,7 @@ export default class LogLevel {
             case "string":
                 return LogLevel.String;
             default:
-                throw new Error(`Unknown level: ${format}`);
+                throw new Error(`Unknown log format: ${format}`);
         }
     }
 }

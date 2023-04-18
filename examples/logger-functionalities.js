@@ -48,7 +48,7 @@ async function main() {
 
     let infoLogger = new Logger(LogLevel.Info);
 
-    const client = Client.forPreviewnet()
+    const client = Client.forTestnet()
         // Set the client's logger to `debugLogger` with debug mode
         .setLogger(debugLogger)
         .setOperator(operatorId, operatorKey);

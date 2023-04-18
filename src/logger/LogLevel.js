@@ -53,7 +53,7 @@ export default class LogLevel {
             case LogLevel.Silly:
                 return "silly";
             default:
-                return `UNKNOWN (${this._name})`;
+                return `Unknown log level (${this._name})`;
         }
     }
 
@@ -80,7 +80,7 @@ export default class LogLevel {
             case "silly":
                 return LogLevel.Silly;
             default:
-                throw new Error(`Unknown level: ${level}`);
+                throw new Error(`Unknown log level: ${level}`);
         }
     }
 }
