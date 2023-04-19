@@ -136,12 +136,6 @@ export default class AccountCreateTransaction extends Transaction {
          * @private
          * @type {?EvmAddress}
          */
-        this._aliasEvmAddress = null;
-
-        /**
-         * @private
-         * @type {?EvmAddress}
-         */
         this._alias = null;
 
         if (props.key != null) {
