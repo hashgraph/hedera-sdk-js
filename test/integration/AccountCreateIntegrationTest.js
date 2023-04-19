@@ -9,12 +9,22 @@ import {
     TransactionId,
     KeyList,
 } from "../../src/exports.js";
-import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountCreate", function () {
+    let clientPreviewNet;
     let env;
 
+    const OPERATOR_ID = "0.0.18563";
+    const OPERATOR_KEY =
+        "302e020100300506032b6570042204204fcf95997b95f8a060b989de9a9e96a56ead56d0ce80d0cf11b6958a54f47866";
+
     before(async function () {
+        //TODO: replace each occurence of `clientPreviewNet` with `env.client` when it is available
+        clientPreviewNet = Client.forPreviewnet().setOperator(
+            OPERATOR_ID,
+            OPERATOR_KEY
+        );
         env = await IntegrationTestEnv.new();
     });
 
@@ -101,7 +111,7 @@ describe("AccountCreate", function () {
         await transaction.execute(env.client);
     });
 
-    it("should be executable with only key set", async function () {
+    it("should be executable with key set", async function () {
         this.timeout(15000);
 
         const operatorId = env.operatorId;
@@ -162,7 +172,6 @@ describe("AccountCreate", function () {
     it("should be able to sign transaction and verify transaction signtatures", async function () {
         this.timeout(15000);
 
-        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -204,7 +213,6 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with a single key passed to `KeyList`", async function () {
-        const env = await IntegrationTestEnv.new();
         const publicKey = PrivateKey.generateED25519().publicKey;
         const thresholdKey = new KeyList(publicKey, 1);
 
@@ -233,26 +241,26 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with alias from admin key", async function () {
+        this.timeout(10000);
+
         // Tests the third row of this table
         // https://github.com/hashgraph/hedera-improvement-proposal/blob/d39f740021d7da592524cffeaf1d749803798e9a/HIP/hip-583.md#signatures
 
-        const env = await IntegrationTestEnv.new();
         const adminKey = PrivateKey.generateECDSA();
         const evmAddress = adminKey.publicKey.toEvmAddress();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
+            .execute(clientPreviewNet);
 
         let receipt = await (
             await new AccountCreateTransaction()
                 .setKey(adminKey)
                 .setAlias(evmAddress)
-                .freezeWith(env.client)
-                .execute(env.client)
-        ).getReceipt(env.client);
+                .freezeWith(clientPreviewNet)
+                .execute(clientPreviewNet)
+        ).getReceipt(clientPreviewNet);
 
         const accountId = receipt.accountId;
 
@@ -260,26 +268,29 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(env.client);
+            .execute(clientPreviewNet);
 
         expect(info.accountId.toString()).to.not.be.null;
-        expect(info.contractAccountId.toString()).to.be.equal(evmAddress.toString());
+        expect(info.contractAccountId.toString()).to.be.equal(
+            evmAddress.toString()
+        );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
 
     it("should create account with alias from admin key with receiver sig required", async function () {
+        this.timeout(10000);
+
         // Tests the fourth row of this table
         // https://github.com/hashgraph/hedera-improvement-proposal/blob/d39f740021d7da592524cffeaf1d749803798e9a/HIP/hip-583.md#signatures
 
-        const env = await IntegrationTestEnv.new();
         const adminKey = PrivateKey.generateECDSA();
         const evmAddress = adminKey.publicKey.toEvmAddress();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
 
         let receipt = await (
             await (
@@ -287,10 +298,10 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(env.client)
-                .sign(adminKey))
-            .execute(env.client)
-        ).getReceipt(env.client);
+                    .freezeWith(clientPreviewNet)
+                    .sign(adminKey)
+            ).execute(clientPreviewNet)
+        ).getReceipt(clientPreviewNet);
 
         const accountId = receipt.accountId;
 
@@ -298,23 +309,26 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(env.client);
+            .execute(clientPreviewNet);
 
         expect(info.accountId.toString()).to.not.be.null;
-        expect(info.contractAccountId.toString()).to.be.equal(evmAddress.toString());
+        expect(info.contractAccountId.toString()).to.be.equal(
+            evmAddress.toString()
+        );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
 
     it("should error when trying to create account with alias from admin key with receiver sig required without signature", async function () {
-        const env = await IntegrationTestEnv.new();
+        this.timeout(10000);
+
         const adminKey = PrivateKey.generateECDSA();
         const evmAddress = adminKey.publicKey.toEvmAddress();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
 
         let err = false;
         try {
@@ -323,9 +337,9 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(env.client)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+                    .freezeWith(clientPreviewNet)
+                    .execute(clientPreviewNet)
+            ).getReceipt(clientPreviewNet);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
@@ -336,17 +350,18 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with alias different from admin key", async function () {
+        this.timeout(10000);
+
         // Tests the fifth row of this table
         // https://github.com/hashgraph/hedera-improvement-proposal/blob/d39f740021d7da592524cffeaf1d749803798e9a/HIP/hip-583.md#signatures
 
-        const env = await IntegrationTestEnv.new();
         const adminKey = PrivateKey.generateED25519();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -356,10 +371,10 @@ describe("AccountCreate", function () {
                 await new AccountCreateTransaction()
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(env.client)
-                .sign(key))
-            .execute(env.client)
-        ).getReceipt(env.client);
+                    .freezeWith(clientPreviewNet)
+                    .sign(key)
+            ).execute(clientPreviewNet)
+        ).getReceipt(clientPreviewNet);
 
         const accountId = receipt.accountId;
 
@@ -367,23 +382,26 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(env.client);
+            .execute(clientPreviewNet);
 
         expect(info.accountId.toString()).to.not.be.null;
-        expect(info.contractAccountId.toString()).to.be.equal(evmAddress.toString());
+        expect(info.contractAccountId.toString()).to.be.equal(
+            evmAddress.toString()
+        );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
-    
+
     it("should error when trying to create account with alias different from admin key without signature", async function () {
-        const env = await IntegrationTestEnv.new();
+        this.timeout(10000);
+
         const adminKey = PrivateKey.generateED25519();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
-        
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
+
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
 
@@ -394,12 +412,10 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(env.client)
-                    .execute(env.client)
-                )
-                .getReceipt(env.client);
+                    .freezeWith(clientPreviewNet)
+                    .execute(clientPreviewNet)
+            ).getReceipt(clientPreviewNet);
         } catch (error) {
-            console.log(error.toString());
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
 
@@ -409,17 +425,18 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with alias different from admin key with receiver sig required", async function () {
+        this.timeout(10000);
+
         // Tests the sixth row of this table
         // https://github.com/hashgraph/hedera-improvement-proposal/blob/d39f740021d7da592524cffeaf1d749803798e9a/HIP/hip-583.md#signatures
 
-        const env = await IntegrationTestEnv.new();
         const adminKey = PrivateKey.generateED25519();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -431,10 +448,11 @@ describe("AccountCreate", function () {
                         .setReceiverSignatureRequired(true)
                         .setKey(adminKey)
                         .setAlias(evmAddress)
-                    .freezeWith(env.client)
-                .sign(key)).sign(adminKey))
-            .execute(env.client)
-        ).getReceipt(env.client);
+                        .freezeWith(clientPreviewNet)
+                        .sign(key)
+                ).sign(adminKey)
+            ).execute(clientPreviewNet)
+        ).getReceipt(clientPreviewNet);
 
         const accountId = receipt.accountId;
 
@@ -442,23 +460,26 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(env.client);
+            .execute(clientPreviewNet);
 
         expect(info.accountId.toString()).to.not.be.null;
-        expect(info.contractAccountId.toString()).to.be.equal(evmAddress.toString());
+        expect(info.contractAccountId.toString()).to.be.equal(
+            evmAddress.toString()
+        );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
-        
+
     it("should error when trying to create account with alias different from admin key and receiver sig required without signature", async function () {
-        const env = await IntegrationTestEnv.new();
+        this.timeout(10000);
+
         const adminKey = PrivateKey.generateED25519();
 
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(env.client)
-            .execute(env.client);
-        
+            .freezeWith(clientPreviewNet)
+            .execute(clientPreviewNet);
+
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
 
@@ -470,12 +491,11 @@ describe("AccountCreate", function () {
                         .setReceiverSignatureRequired(true)
                         .setKey(adminKey)
                         .setAlias(evmAddress)
-                        .freezeWith(env.client)
+                        .freezeWith(clientPreviewNet)
                         .sign(key)
-                    ).execute(env.client)
-                ).getReceipt(env.client);
+                ).execute(clientPreviewNet)
+            ).getReceipt(clientPreviewNet);
         } catch (error) {
-            console.log(error.toString());
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
 
@@ -485,6 +505,7 @@ describe("AccountCreate", function () {
     });
 
     after(async function () {
+        clientPreviewNet.close();
         await env.close();
     });
 });
