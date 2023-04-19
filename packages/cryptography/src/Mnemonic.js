@@ -18,24 +18,24 @@ import * as ecdsa from "./primitive/ecdsa.js";
 const ED25519_SEED_TEXT = "ed25519 seed";
 const ECDSA_SEED_TEXT = "Bitcoin seed";
 
-export const HARDEDED = 0x80000000;
+export const HARDENED = 0x80000000;
 
 /// m/44'/3030'/0'/0' - All paths in EdDSA derivation are implicitly hardened.
 export const HEDERA_PATH = [44, 3030, 0, 0];
 
 /// m/44'/3030'/0'/0
 export const SLIP44_ECDSA_HEDERA_PATH = [
-    44 | HARDEDED,
-    3030 | HARDEDED,
-    0 | HARDEDED,
+    44 | HARDENED,
+    3030 | HARDENED,
+    0 | HARDENED,
     0,
 ];
 
 /// m/44'/60'/0'/0
 export const SLIP44_ECDSA_ETH_PATH = [
-    44 | HARDEDED,
-    60 | HARDEDED,
-    0 | HARDEDED,
+    44 | HARDENED,
+    60 | HARDENED,
+    0 | HARDENED,
     0,
     0,
 ];
