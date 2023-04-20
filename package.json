@@ -21,6 +21,7 @@
     "exports": {
         "./package.json": "./package.json",
         ".": {
+            "types": "./lib/index.d.ts",
             "import": "./src/index.js",
             "require": "./lib/index.cjs"
         }
