@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.24.0",
+    "version": "2.24.1",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -54,7 +54,7 @@
     "dependencies": {
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "^1.7.3",
-        "@hashgraph/cryptography": "^1.4.3",
+        "@hashgraph/cryptography": "1.4.6",
         "@hashgraph/proto": "2.12.0",
         "axios": "^1.3.1",
         "bignumber.js": "^9.1.1",

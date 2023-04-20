@@ -85,7 +85,9 @@ async function main() {
      *
      * Sign the `AccountCreateTransaction` transaction with both the new private key and key paying for the transaction fee
      */
-    const accountCreateTxSign = await (await accountCreateTx.sign(privateKey)).sign(adminKey);
+    const accountCreateTxSign = await (
+        await accountCreateTx.sign(privateKey)
+    ).sign(adminKey);
     const accountCreateTxResponse = await accountCreateTxSign.execute(client);
 
     /**
@@ -112,9 +114,10 @@ async function main() {
         .execute(client);
 
     accountInfo.contractAccountId !== null
-        ? console.log(`The newly created account has an alias: ${accountInfo.contractAccountId}`)
+        ? console.log(
+              `The newly created account has an alias: ${accountInfo.contractAccountId}`
+          )
         : console.log(`The new account doesn't have an alias`);
-
 }
 
 void main();

@@ -101,7 +101,7 @@ describe("AccountCreate", function () {
         await transaction.execute(env.client);
     });
 
-    it("should be executable with key set", async function () {
+    it("should be executable with only key set", async function () {
         this.timeout(15000);
 
         const operatorId = env.operatorId;

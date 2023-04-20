@@ -106,9 +106,10 @@ async function main() {
         .execute(client);
 
     accountInfo.contractAccountId !== null
-        ? console.log(`The newly created account has an alias: ${accountInfo.contractAccountId}`)
+        ? console.log(
+              `The newly created account has an alias: ${accountInfo.contractAccountId}`
+          )
         : console.log(`The new account doesn't have an alias`);
-
 }
 
 void main();
