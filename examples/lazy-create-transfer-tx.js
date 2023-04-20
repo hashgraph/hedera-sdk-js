@@ -76,7 +76,7 @@ async function main() {
      * Extract the Ethereum public address
      */
     const evmAddress = publicKey.toEvmAddress();
-    console.log(`New account ID: ${evmAddress}`);
+    console.log(`Corresponding evm address: ${evmAddress}`);
 
     /**
      *
