@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.24.1
+
+## What's Changed
+* Fix: remove the insecure port of mirror nodes by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1535
+* Fix: mnemonic refactoring by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1550
+* Change dependabot interval to monthly by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1547
+* Create example for getting all chunked messages statuses by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1536
+* Fix: spelling of `HARDENED` exported constant by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/1561
+* Feature add alias support in AccountCreateTX by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1563
+* Add exports for types by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1566
+
 ## v2.24.0-beta.1
 
 ## What's Changed
