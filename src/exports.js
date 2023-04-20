@@ -73,6 +73,7 @@ export { default as EthereumTransactionDataLegacy } from "./EthereumTransactionD
 export { default as EthereumTransactionDataEip1559 } from "./EthereumTransactionDataEip1559.js";
 export { default as EthereumTransactionData } from "./EthereumTransactionData.js";
 export { default as EthereumFlow } from "./EthereumFlow.js";
+export { default as EvmAddress } from "./EvmAddress.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
 export { default as ExchangeRates } from "./ExchangeRates.js";
 export { default as Executable } from "./Executable.js";

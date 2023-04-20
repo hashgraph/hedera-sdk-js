@@ -9,23 +9,22 @@ import {
     Timestamp,
     Transaction,
     TransactionId,
+    EvmAddress,
 } from "../../src/index.js";
-import * as HashgraphProto from "@hashgraph/proto";
 
 describe("AccountCreateTransaction", function () {
     it("should round trip from bytes and maintain order", function () {
-        const key1 = PrivateKey.fromString(
-            "302e020100300506032b657004220420ee417dd399722ef8920b2c8ec047cf0c51d6c7d3413e9a660ca28205a5f249cd"
-        );
+        const key1 = PrivateKey.generateECDSA();
         const spenderAccountId1 = new AccountId(7);
         const nodeAccountId = new AccountId(10, 11, 12);
         const timestamp1 = new Timestamp(14, 15);
+        const evmAddress = key1.publicKey.toEvmAddress();
 
         let transaction = new AccountCreateTransaction()
             .setTransactionId(
                 TransactionId.withValidStart(spenderAccountId1, timestamp1)
             )
-            .setAliasKey(key1.publicKey)
+            .setAlias(evmAddress)
             .setNodeAccountIds([nodeAccountId])
             .freeze();
 
@@ -34,9 +33,7 @@ describe("AccountCreateTransaction", function () {
         const data = transaction._makeTransactionData();
 
         expect(data).to.deep.equal({
-            alias: HashgraphProto.proto.Key.encode(
-                key1.publicKey._toProtobufKey()
-            ).finish(),
+            alias: EvmAddress.fromString(evmAddress).toBytes(),
             autoRenewPeriod: {
                 seconds: Long.fromValue(7776000),
             },
