@@ -96,7 +96,6 @@ export default class Mnemonic {
      * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover an Ed25519 private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
@@ -126,7 +125,6 @@ export default class Mnemonic {
      * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover an ECDSA private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
