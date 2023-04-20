@@ -9,22 +9,12 @@ import {
     TransactionId,
     KeyList,
 } from "../../src/exports.js";
-import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountCreate", function () {
-    let clientPreviewNet;
     let env;
 
-    const OPERATOR_ID = "0.0.18563";
-    const OPERATOR_KEY =
-        "302e020100300506032b6570042204204fcf95997b95f8a060b989de9a9e96a56ead56d0ce80d0cf11b6958a54f47866";
-
     before(async function () {
-        //TODO: replace each occurence of `clientPreviewNet` with `env.client` when it is available
-        clientPreviewNet = Client.forPreviewnet().setOperator(
-            OPERATOR_ID,
-            OPERATOR_KEY
-        );
         env = await IntegrationTestEnv.new();
     });
 
@@ -252,15 +242,15 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .execute(clientPreviewNet);
+            .execute(env.client);
 
         let receipt = await (
             await new AccountCreateTransaction()
                 .setKey(adminKey)
                 .setAlias(evmAddress)
-                .freezeWith(clientPreviewNet)
-                .execute(clientPreviewNet)
-        ).getReceipt(clientPreviewNet);
+                .freezeWith(env.client)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         const accountId = receipt.accountId;
 
@@ -268,7 +258,7 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(clientPreviewNet);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
@@ -289,8 +279,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         let receipt = await (
             await (
@@ -298,10 +288,10 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(clientPreviewNet)
+                    .freezeWith(env.client)
                     .sign(adminKey)
-            ).execute(clientPreviewNet)
-        ).getReceipt(clientPreviewNet);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const accountId = receipt.accountId;
 
@@ -309,7 +299,7 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(clientPreviewNet);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
@@ -327,8 +317,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         let err = false;
         try {
@@ -337,9 +327,9 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(clientPreviewNet)
-                    .execute(clientPreviewNet)
-            ).getReceipt(clientPreviewNet);
+                    .freezeWith(env.client)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
@@ -360,8 +350,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -371,10 +361,10 @@ describe("AccountCreate", function () {
                 await new AccountCreateTransaction()
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(clientPreviewNet)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(clientPreviewNet)
-        ).getReceipt(clientPreviewNet);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const accountId = receipt.accountId;
 
@@ -382,7 +372,7 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(clientPreviewNet);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
@@ -399,8 +389,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -412,9 +402,9 @@ describe("AccountCreate", function () {
                     .setReceiverSignatureRequired(true)
                     .setKey(adminKey)
                     .setAlias(evmAddress)
-                    .freezeWith(clientPreviewNet)
-                    .execute(clientPreviewNet)
-            ).getReceipt(clientPreviewNet);
+                    .freezeWith(env.client)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
@@ -435,8 +425,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -448,11 +438,11 @@ describe("AccountCreate", function () {
                         .setReceiverSignatureRequired(true)
                         .setKey(adminKey)
                         .setAlias(evmAddress)
-                        .freezeWith(clientPreviewNet)
+                        .freezeWith(env.client)
                         .sign(key)
                 ).sign(adminKey)
-            ).execute(clientPreviewNet)
-        ).getReceipt(clientPreviewNet);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const accountId = receipt.accountId;
 
@@ -460,7 +450,7 @@ describe("AccountCreate", function () {
 
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
-            .execute(clientPreviewNet);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
@@ -477,8 +467,8 @@ describe("AccountCreate", function () {
         // create an admin account
         await new AccountCreateTransaction()
             .setKey(adminKey)
-            .freezeWith(clientPreviewNet)
-            .execute(clientPreviewNet);
+            .freezeWith(env.client)
+            .execute(env.client);
 
         const key = PrivateKey.generateECDSA();
         const evmAddress = key.publicKey.toEvmAddress();
@@ -491,10 +481,10 @@ describe("AccountCreate", function () {
                         .setReceiverSignatureRequired(true)
                         .setKey(adminKey)
                         .setAlias(evmAddress)
-                        .freezeWith(clientPreviewNet)
+                        .freezeWith(env.client)
                         .sign(key)
-                ).execute(clientPreviewNet)
-            ).getReceipt(clientPreviewNet);
+                ).execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
@@ -505,7 +495,6 @@ describe("AccountCreate", function () {
     });
 
     after(async function () {
-        clientPreviewNet.close();
         await env.close();
     });
 });
