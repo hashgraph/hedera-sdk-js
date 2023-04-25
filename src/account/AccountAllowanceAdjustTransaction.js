@@ -20,6 +20,7 @@
 
 import Transaction from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
+import ContractId from "../contract/ContractId.js";
 import TokenId from "../token/TokenId.js";
 import NftId from "../token/NftId.js";
 import Long from "long";
@@ -37,6 +38,7 @@ import * as util from "../util.js";
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 
 /**
@@ -107,7 +109,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
 
     /**
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {Hbar} amount
      * @returns {AccountAllowanceAdjustTransaction}
      */
@@ -119,10 +121,18 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromSolidityAddress(
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
+                        : ownerAccountId instanceof ContractId
+                        ? AccountId.fromSolidityAddress(
+                              ownerAccountId.toSolidityAddress()
+                          )
                         : ownerAccountId,
                 amount: amount,
             })
@@ -189,7 +199,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {Long | number} amount
      * @returns {AccountAllowanceAdjustTransaction}
      */
@@ -205,10 +215,18 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromSolidityAddress(
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
+                        : ownerAccountId instanceof ContractId
+                        ? AccountId.fromSolidityAddress(
+                              ownerAccountId.toSolidityAddress()
+                          )
                         : ownerAccountId,
                 amount:
                     typeof amount === "number"
@@ -268,7 +286,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @param {NftId} nftId
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @returns {AccountAllowanceAdjustTransaction}
      */
     _adjustTokenNftAllowance(nftId, ownerAccountId, spenderAccountId) {
@@ -277,10 +295,18 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         const spender =
             typeof spenderAccountId === "string"
                 ? AccountId.fromString(spenderAccountId)
+                : spenderAccountId instanceof ContractId
+                ? AccountId.fromSolidityAddress(
+                      spenderAccountId.toSolidityAddress()
+                  )
                 : spenderAccountId;
         const owner =
             typeof ownerAccountId === "string"
                 ? AccountId.fromString(ownerAccountId)
+                : ownerAccountId instanceof ContractId
+                ? AccountId.fromSolidityAddress(
+                      ownerAccountId.toSolidityAddress()
+                  )
                 : ownerAccountId;
         let found = false;
 
@@ -409,7 +435,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {boolean} allSerials
      * @returns {AccountAllowanceAdjustTransaction}
      */
@@ -431,11 +457,19 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     ownerAccountId != null
                         ? typeof ownerAccountId === "string"
                             ? AccountId.fromString(ownerAccountId)
+                            : ownerAccountId instanceof ContractId
+                            ? AccountId.fromSolidityAddress(
+                                  ownerAccountId.toSolidityAddress()
+                              )
                             : ownerAccountId
                         : null,
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromSolidityAddress(
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 serialNumbers: null,
                 allSerials,
