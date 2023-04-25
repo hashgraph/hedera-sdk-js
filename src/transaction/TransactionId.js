@@ -159,7 +159,10 @@ export default class TransactionId {
      */
     toString() {
         if (this.accountId != null && this.validStart != null) {
-            const zeroPaddedNanos = String(this.validStart.nanos).padStart(9, "0");
+            const zeroPaddedNanos = String(this.validStart.nanos).padStart(
+                9,
+                "0"
+            );
             const nonce =
                 this.nonce != null ? "/".concat(this.nonce.toString()) : "";
             const scheduled = this.scheduled ? "?scheduled" : "";
