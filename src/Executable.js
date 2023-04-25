@@ -137,7 +137,7 @@ export default class Executable {
         if (this._nodeAccountIds.isEmpty) {
             return null;
         } else {
-            this._nodeAccountIds//.setLocked();
+            this._nodeAccountIds; //.setLocked();
             return this._nodeAccountIds.list;
         }
     }
@@ -551,7 +551,7 @@ export default class Executable {
 
             let nodeAccountId;
             let node;
-            
+
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
@@ -594,8 +594,8 @@ export default class Executable {
             this._advanceRequest();
 
             let response;
-            console.log(`node: ${nodeAccountId}`)
-            console.log(`healthy? ${node.isHealthy()}`)
+            console.log(`node: ${nodeAccountId}`);
+            console.log(`healthy? ${node.isHealthy()}`);
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
@@ -643,7 +643,7 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
-                console.log(`error: ${JSON.stringify(err)}`)
+                console.log(`error: ${JSON.stringify(err)}`);
                 // Save the error in case we retry
                 persistentError = error;
                 Logger.debug(

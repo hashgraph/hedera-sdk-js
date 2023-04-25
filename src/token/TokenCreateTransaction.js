@@ -808,7 +808,9 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {this}
      */
     freezeWith(client) {
-        console.log(`inner: ${client != null} ${client?.operatorAccountId != null}`)
+        console.log(
+            `inner: ${client != null} ${client?.operatorAccountId != null}`
+        );
         if (client != null && client.operatorAccountId != null) {
             this._freezeWithAccountId(client.operatorAccountId);
         }
