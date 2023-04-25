@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/cryptography",
-    "version": "1.4.3",
+    "version": "1.4.6",
     "description": "Cryptographic utilities and primitives for the Hedera™ Hashgraph SDK",
     "main": "./lib/index.cjs",
     "types": "./lib/index.d.ts",
@@ -14,7 +14,8 @@
         "./src/primitive/sha256.js": "./src/primitive/sha256.native.js",
         "./src/primitive/pbkdf2.js": "./src/primitive/pbkdf2.native.js",
         "./src/primitive/hmac.js": "./src/primitive/hmac.native.js",
-        "./src/primitive/random.js": "./src/primitive/random.native.js"
+        "./src/primitive/random.js": "./src/primitive/random.native.js",
+        "./src/primitive/bip32.js": "./src/primitive/bip32.native.js"
     },
     "browser": {
         "./src/index.js": "./src/index.js",
@@ -25,7 +26,8 @@
         "./src/primitive/sha256.js": "./src/primitive/sha256.browser.js",
         "./src/primitive/pbkdf2.js": "./src/primitive/pbkdf2.browser.js",
         "./src/primitive/random.js": "./src/primitive/random.js",
-        "./src/primitive/hmac.js": "./src/primitive/hmac.browser.js"
+        "./src/primitive/hmac.js": "./src/primitive/hmac.browser.js",
+        "./src/primitive/bip32.js": "./src/primitive/bip32.browser.js"
     },
     "exports": {
         "./package.json": "./package.json",
@@ -58,6 +60,7 @@
     ],
     "dependencies": {
         "bignumber.js": "^9.1.1",
+        "bn.js": "^5.1.1",
         "crypto-js": "^4.1.1",
         "elliptic": "^6.5.4",
         "js-base64": "^3.7.4",
@@ -86,6 +89,7 @@
         "@babel/eslint-parser": "^7.19.1",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.20.11",
+        "@types/bn.js": "^5.1.1",
         "@types/crypto-js": "^4.1.1",
         "@types/elliptic": "^6.4.14",
         "@types/utf8": "^3.0.1",

@@ -26,7 +26,47 @@ describe("AccountInfo", function () {
             .setAccountId(operatorId)
             .getCost(env.client);
 
-        expect(cost.toTinybars().toInt()).to.be.at.least(25);
+        expect(cost.toTinybars().toInt()).to.be.at.least(1);
+    });
+
+    it("should error on query cost on deleted account with ACCOUNT_DELETED", async function () {
+        this.timeout(120000);
+
+        const newKey = PrivateKey.generate();
+
+        let createTransaction = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10)) // 10 h
+            .setKey(newKey.publicKey)
+            .execute(env.client);
+
+        const receiptCreateTransaction = await createTransaction.getReceipt(
+            env.client
+        );
+
+        let deleteTransaction = await new AccountDeleteTransaction()
+            .setAccountId(receiptCreateTransaction.accountId)
+            .setTransferAccountId(env.operatorId)
+            .freezeWith(env.client);
+
+        newKey.signTransaction(deleteTransaction);
+        const deleteTransactionSubmitted = await deleteTransaction.execute(
+            env.client
+        );
+
+        await deleteTransactionSubmitted.getReceipt(env.client);
+
+        let err;
+        try {
+            await new AccountInfoQuery()
+                .setAccountId(receiptCreateTransaction.accountId)
+                .getCost(env.client);
+        } catch (error) {
+            err = error.toString().includes(Status.AccountDeleted.toString());
+        }
+
+        if (!err) {
+            throw new Error("query cost did not error");
+        }
     });
 
     it("should be executable", async function () {

@@ -79,7 +79,7 @@ export default class Mnemonic {
     }
 
     /**
-     * @deprecated - Use `toEd25519PrivateKey()` or `toEcdsaPrivateKey()` instead
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover a private key from this mnemonic phrase, with an
      * optional passphrase.
      * @param {string} [passphrase]
@@ -93,16 +93,46 @@ export default class Mnemonic {
     }
 
     /**
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover an Ed25519 private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
     async toEd25519PrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
+            // eslint-disable-next-line deprecation/deprecation
             await this._mnemonic.toEd25519PrivateKey(passphrase, path)
+        );
+    }
+
+    /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardEd25519PrivateKey(passphrase = "", index) {
+        return CACHE.privateKeyConstructor(
+            await this._mnemonic.toStandardEd25519PrivateKey(passphrase, index)
+        );
+    }
+
+    /**
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     * @param {string} [passphrase]
+     * @param {number[]} [path]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toEcdsaPrivateKey(passphrase = "", path) {
+        return CACHE.privateKeyConstructor(
+            // eslint-disable-next-line deprecation/deprecation
+            await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
         );
     }
 
@@ -111,12 +141,15 @@ export default class Mnemonic {
      * optional passphrase.
      *
      * @param {string} [passphrase]
-     * @param {number[]} [path]
+     * @param {number} [index]
      * @returns {Promise<PrivateKey>}
      */
-    async toEcdsaPrivateKey(passphrase = "", path) {
+    async toStandardECDSAsecp256k1PrivateKey(passphrase = "", index) {
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
+            await this._mnemonic.toStandardECDSAsecp256k1PrivateKey(
+                passphrase,
+                index
+            )
         );
     }
 
@@ -136,6 +169,17 @@ export default class Mnemonic {
     async toLegacyPrivateKey() {
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toLegacyPrivateKey()
+        );
+    }
+
+    /**
+     * @param {string} passphrase
+     * @returns {Promise<Uint8Array>}
+     */
+    async toSeed(passphrase) {
+        return await cryptography.Mnemonic.toSeed(
+            this._mnemonic.words,
+            passphrase
         );
     }
 

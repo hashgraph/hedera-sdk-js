@@ -68,7 +68,7 @@ describe("ContractCallIntegration", function () {
             .setGas(75000)
             .setFunction("getMessage");
 
-        const cost = callQuery.getCost(env.client);
+        const cost = await callQuery.getCost(env.client);
 
         let result = await callQuery
             .setMaxQueryPayment(cost)

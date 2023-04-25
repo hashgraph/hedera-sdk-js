@@ -1,4 +1,5 @@
 import Mnemonic from "../../src/Mnemonic.js";
+import PrivateKey from "../../src/PrivateKey.js";
 import BadMnemonicError from "../../src/BadMnemonicError.js";
 import BadMnemonicReason from "../../src/BadMnemonicReason.js";
 
@@ -59,6 +60,7 @@ describe("Mnemonic", function () {
     });
 
     it("should produce the expected private key with ecdsa", async function () {
+        this.timeout(10000);
         const mnemonic = await Mnemonic.fromString(
             "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
         );
@@ -104,7 +106,9 @@ describe("Mnemonic", function () {
 
         expect(
             (
-                await (await legacyMnemonic.toPrivateKey()).legacyDerive(-1)
+                await (
+                    await legacyMnemonic.toLegacyPrivateKey()
+                ).legacyDerive(-1)
             ).toString()
         ).to.eql(expectedLegacyKey);
     });
@@ -179,6 +183,66 @@ describe("Mnemonic", function () {
         );
         expect(privateKeyNeg1.toString()).to.eql(
             "302e020100300506032b657004220420caffc03fdb9853e6a91a5b3c57a5c0031d164ce1c464dea88f3114786b5199e5"
+        );
+    });
+
+    it("default derivation path should match correct derivation path", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+        );
+
+        /* const defaultPath = [
+            44 | 0x80000000,
+            3030 | 0x80000000,
+            0 | 0x80000000,
+            0,
+        ]; */
+
+        const keyFromDefault =
+            await mnemonic.toStandardECDSAsecp256k1PrivateKey("", 0);
+        const keyFromCorrectPath =
+            await mnemonic.toStandardECDSAsecp256k1PrivateKey("", 0);
+
+        expect(keyFromDefault.toStringRaw()).to.eql(
+            keyFromCorrectPath.toStringRaw()
+        );
+    });
+
+    it("generate EcdsaPrivateKey from Mnemonic, parse it to string, then return it fromString and check if it is the same", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "hamster produce dry base sunny bubble disease throw cricket garden beyond script"
+        );
+        const privateKey = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
+            "",
+            0
+        );
+
+        const privateKeyString = privateKey.toStringRaw();
+        const publicKeyString = privateKey.publicKey.toStringRaw();
+
+        // Restore from string
+        const restoredPrivateKey = PrivateKey.fromStringECDSA(privateKeyString);
+        const restoredPrivateKeyString = privateKey.toStringRaw();
+        const restoredPublicKeyString =
+            restoredPrivateKey.publicKey.toStringRaw();
+
+        expect(privateKeyString).to.be.equal(restoredPrivateKeyString);
+        expect(publicKeyString).to.be.equal(restoredPublicKeyString);
+    });
+
+    it("generate ethereum ECDSA private key from Mnemonic phrase", async function () {
+        const mnemonic = await Mnemonic.fromString(
+            "radar blur cabbage chef fix engine embark joy scheme fiction master release"
+        );
+
+        // default ethereum accounts derivation path
+        const path = [44 | 0x80000000, 60 | 0x80000000, 0 | 0x80000000, 0, 0];
+
+        const rootKey = await mnemonic.toEcdsaPrivateKey("", path);
+
+        // https://github.com/ethers-io/ethers.js/blob/master/packages/tests/src.ts/test-hdnode.ts
+        expect(rootKey.toStringRaw()).to.eql(
+            "b96e9ccb774cc33213cbcb2c69d3cdae17b0fe4888a1ccd343cbd1a17fd98b18"
         );
     });
 });

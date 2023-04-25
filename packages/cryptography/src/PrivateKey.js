@@ -1,4 +1,3 @@
-import Mnemonic from "./Mnemonic.js";
 import BadKeyError from "./BadKeyError.js";
 import Key from "./Key.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
@@ -42,6 +41,10 @@ import CACHE from "./Cache.js";
  */
 
 /**
+ * @typedef {import("./Mnemonic.js").default} Mnemonic
+ */
+
+/**
  * A private key on the Hedera™ network.
  */
 export default class PrivateKey extends Key {
@@ -66,6 +69,13 @@ export default class PrivateKey extends Key {
      */
     get _type() {
         return this._key._type;
+    }
+
+    /**
+     * @returns {Uint8Array | null}
+     */
+    get _chainCode() {
+        return this._key._chainCode;
     }
 
     /**
@@ -199,7 +209,29 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
+     * Construct a Ed25519 private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<PrivateKey>}
+     */
+    static async fromSeedED25519(seed) {
+        const ed25519Key = await Ed25519PrivateKey.fromSeed(seed);
+        return new PrivateKey(ed25519Key);
+    }
+
+    /**
+     * Construct a ECDSA private key from a Uint8Array seed.
+     *
+     * @param {Uint8Array} seed
+     * @returns {Promise<PrivateKey>}
+     */
+    static async fromSeedECDSAsecp256k1(seed) {
+        const ecdsaKey = await EcdsaPrivateKey.fromSeed(seed);
+        return new PrivateKey(ecdsaKey);
+    }
+
+    /**
+     * @deprecated - Use `Mnemonic.from[Words|String]().toStandard[Ed25519|ECDSAsecp256k1]PrivateKey()` instead
      *
      * Recover a private key from a mnemonic phrase (and optionally a password).
      * @param {Mnemonic | string} mnemonic
@@ -207,11 +239,19 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromMnemonic(mnemonic, passphrase = "") {
+        if (CACHE.mnemonicFromString == null) {
+            throw new Error("Mnemonic not found in cache");
+        }
+
         return (
-            typeof mnemonic === "string"
-                ? await Mnemonic.fromString(mnemonic)
-                : mnemonic
-        ).toEd25519PrivateKey(passphrase);
+            (
+                typeof mnemonic === "string"
+                    ? CACHE.mnemonicFromString(mnemonic)
+                    : mnemonic
+            )
+                // eslint-disable-next-line deprecation/deprecation
+                .toEd25519PrivateKey(passphrase)
+        );
     }
 
     /**
@@ -257,7 +297,7 @@ export default class PrivateKey extends Key {
     /**
      * Derive a new private key at the given wallet index.
      *
-     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * Only currently supported for keys created with from mnemonics; other keys will throw
      * an error.
      *
      * You can check if a key supports derivation with `.supportsDerivation()`
