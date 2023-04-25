@@ -95,7 +95,7 @@ describe("TransactionReceiptMocking", function () {
         } catch (error) {
             err =
                 error.message ===
-                "receipt for transaction 0.0.3@4.5 contained error status INVALID_SIGNATURE";
+                "receipt for transaction 0.0.3@4.000000005 contained error status INVALID_SIGNATURE";
         }
 
         expect(err).to.be.true;
