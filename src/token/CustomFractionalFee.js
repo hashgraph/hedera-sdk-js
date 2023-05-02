@@ -233,6 +233,9 @@ export default class CustomFractionalFee extends CustomFee {
                 },
                 minimumAmount: this._min,
                 maximumAmount: this._max,
+                netOfTransfers: this._assessmentMethod
+                    ? this._assessmentMethod.valueOf()
+                    : false,
             },
         };
     }
