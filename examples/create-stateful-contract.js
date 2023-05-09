@@ -68,8 +68,6 @@ async function main() {
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
         .setAdminKey(wallet.getAccountKey())
-        // Set an initial amount in HBARs to be set to the contract when it is deployed (equivalent of `value`)
-        .setInitialBalance(1000)
         .freezeWithSigner(wallet);
     transaction = await transaction.signWithSigner(wallet);
     const contractTransactionResponse = await transaction.executeWithSigner(

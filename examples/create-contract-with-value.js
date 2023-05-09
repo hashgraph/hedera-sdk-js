@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import helloWorld from "./hello_world.json" assert { type: "json" };
+import payableContract from "./payable.json" assert { type: "json" };
 
 async function main() {
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
@@ -29,7 +29,7 @@ async function main() {
     );
 
     // The contract bytecode is located on the `object` field
-    const contractByteCode = helloWorld.object;
+    const contractByteCode = payableContract.object;
 
     // Create a file on Hedera which contains the contact bytecode.
     // Note: The contract bytecode **must** be hex encoded, it should not
@@ -61,6 +61,8 @@ async function main() {
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
         .setAdminKey(wallet.getAccountKey())
+        // Set an initial amount in HBARs to be set to the contract when it is deployed (equivalent of `value`)
+        .setInitialBalance(50)
         .freezeWithSigner(wallet);
     transaction = await transaction.signWithSigner(wallet);
 
