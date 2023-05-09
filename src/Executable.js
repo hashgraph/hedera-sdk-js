@@ -651,6 +651,9 @@ export default class Executable {
                 ) {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
+                    Logger.debug(
+                        `Node with accountId: ${node.accountId} and IP: ${client.network.address}`
+                    );
                     client._network.increaseBackoff(node);
                     continue;
                 }
