@@ -53,6 +53,8 @@ export default class ContractHelper {
             .setMaxChunks(30)
             .setGas(8_000_000)
             .setConstructorParameters(constructorParameters)
+            // Set an initial amount in HBARs to be set to the contract when it is deployed (equivalent of `value`)
+            .setInitialBalance(1000)
             .executeWithSigner(signer);
 
         const receipt = await response.getReceiptWithSigner(signer);
