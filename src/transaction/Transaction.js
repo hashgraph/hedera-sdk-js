@@ -217,7 +217,9 @@ export default class Transaction extends Executable {
         const list =
             HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
 
-        console.log(`\n---------------------------------------------- in signWith\n`);
+        console.log(
+            `\n---------------------------------------------- in fromBytes\n`
+        );
         console.log(`transaction list: ${JSON.stringify(list)}`);
         // If the list is of length 0, then the bytes provided were not a
         // `proto.TransactionList`
@@ -266,8 +268,12 @@ export default class Transaction extends Executable {
             if (body.data == null) {
                 throw new Error("(BUG) body.data was not set in the protobuf");
             }
-            console.log(`body transactionID: ${JSON.stringify(body.transactionID)}`);
-            console.log(`body nodeAccountID: ${JSON.stringify(body.nodeAccountID)}`);
+            console.log(
+                `body transactionID: ${JSON.stringify(body.transactionID)}`
+            );
+            console.log(
+                `body nodeAccountID: ${JSON.stringify(body.nodeAccountID)}`
+            );
             bodies.push(body);
 
             // Make sure the transaction ID within the body is set
@@ -410,7 +416,7 @@ export default class Transaction extends Executable {
         // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
         // be regenerated if we're deserializing a request from bytes
 
-        transaction._transactionIds.setList(transactionIds).setLocked();
+        transaction._transactionIds.setList(transactionIds); //.setLocked();
 
         // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
@@ -427,16 +433,19 @@ export default class Transaction extends Executable {
                 ? Hbar.fromTinybars(body.transactionFee)
                 : new Hbar(0);
         transaction._transactionMemo = body.memo != null ? body.memo : "";
+        console.log(`sigmap: ${JSON.stringify(signedTransactions.length)}`);
 
         // Loop over a single row of `signedTransactions` and add all the public
         // keys to the `signerPublicKeys` set, and `publicKeys` list with
         // `null` in the `transactionSigners` at the same index.
-        for (let i = 0; i < nodeIds.length; i++) {
+        for (let i = 0; i < 1; i++) {
             const signedTransaction = signedTransactions[i];
             if (
                 signedTransaction.sigMap != null &&
                 signedTransaction.sigMap.sigPair != null
             ) {
+                console.log(`wuter`)
+                console.log(`sigPair: ${signedTransaction.sigMap.sigPair.length}`)
                 for (const sigPair of signedTransaction.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
@@ -453,7 +462,9 @@ export default class Transaction extends Executable {
                 }
             }
         }
-
+        console.log(`TEST _signerPublicKeys: ${transaction._signerPublicKeys.size}`);
+        console.log(`TEST _publicKeys: ${transaction._publicKeys.length}`);
+        console.log(`TEST _transactionSigners: ${transaction._transactionSigners.length}`);
         return transaction;
     }
 
@@ -636,13 +647,15 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
-        console.log(`\n---------------------------------------------- in signWith\n`);
+        console.log(
+            `\n---------------------------------------------- in signWith\n`
+        );
         // If signing on demand is disabled, we need to make sure
         // the request is frozen
         /* if (!this._signOnDemand) {
             this._requireFrozen();
         } */
-
+        //this.freeze();
         //this._buildNewTransactionIdList();
 
         const publicKeyData = publicKey.toBytesRaw();
@@ -652,13 +665,17 @@ export default class Transaction extends Executable {
         // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
         // prefixes here
         const publicKeyHex = hex.encode(publicKeyData);
-
+        console.log(`publicKeyHex: ${publicKeyHex}`)
         if (this._signerPublicKeys.has(publicKeyHex)) {
+            console.log(`already signed`)
             // this public key has already signed this transaction
             return this;
         }
 
         console.log(`_transactions: ${JSON.stringify(this._transactions)}`);
+        console.log(
+            `_signedTransactions: ${JSON.stringify(this._signedTransactions)}`
+        );
         // If we add a new signer, then we need to re-create all transactions
         this._transactions.clear();
         // Save the current public key so we don't attempt to sign twice
@@ -679,8 +696,8 @@ export default class Transaction extends Executable {
         // Now that I think of it, this code should likely exist in `freezeWith()`?
         //this._transactionIds.setLocked();
         //this._nodeAccountIds.setLocked();
-        console.log(`in signWith ${JSON.stringify(this._signedTransactions)}`);
-        // Sign each signed transatcion
+
+        // Sign each signed transaction
         for (const signedTransaction of this._signedTransactions.list) {
             const bodyBytes = /** @type {Uint8Array} */ (
                 signedTransaction.bodyBytes
@@ -891,9 +908,11 @@ export default class Transaction extends Executable {
         if (this._signedTransactions.locked) {
             return;
         }
-        console.log(`\n---------------------------------------------- in _buildSignedTransactions\n`);
+        console.log(
+            `\n---------------------------------------------- in _buildSignedTransactions\n`
+        );
         console.log(`_nodeAccountIds: ${this._nodeAccountIds.list}`);
-        
+
         let list =
             this._nodeAccountIds.list.length != 0
                 ? this._nodeAccountIds.list.map((nodeId) =>
@@ -934,7 +953,9 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        console.log(`\n---------------------------------------------- in freezeWith\n`);
+        console.log(
+            `\n---------------------------------------------- in freezeWith\n`
+        );
         // Set sign on demand based on client
         this._signOnDemand = client != null ? client.signOnDemand : false;
 
@@ -954,7 +975,7 @@ export default class Transaction extends Executable {
                     ? client.defaultMaxTransactionFee
                     : this._defaultMaxTransactionFee
                 : this._maxTransactionFee;
-        
+
         console.log(`_maxTransactionFee: ${this._maxTransactionFee}`);
 
         // Determine if transaction ID generation should be enabled.
@@ -988,10 +1009,10 @@ export default class Transaction extends Executable {
         this._buildNewTransactionIdList();
         console.log(`txIds: ${JSON.stringify(this._transactionIds)}`);
         // If sign on demand is disabled we need to build out all the signed transactions
-        if (!this._signOnDemand) {
+        //if (!this._signOnDemand) {
             console.log(`buildSigned`);
             this._buildSignedTransactions();
-        }
+        //}
 
         return this;
     }
@@ -1028,6 +1049,51 @@ export default class Transaction extends Executable {
      * into a `proto.TransactionList` and return the encoded protobuf.
      *
      * **NOTE**: Does not support sign on demand
+     *
+     * @returns {Promise<Uint8Array>}
+     */
+    async toBytesV2() {
+        // If a user is attempting to serialize a transaction into bytes, then the
+        // transaction must be frozen.
+        if (!this._isFrozen()) {
+            this.freeze();
+        }
+        console.log(
+            `\n---------------------------------------------- in toBytesV2\n`
+        );
+
+        console.log(
+            `_nodeAccountIds: ${JSON.stringify(this._nodeAccountIds.list)}`
+        );
+        console.log(
+            `_transactionIds: ${JSON.stringify(this._transactionIds.list)}`
+        );
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        //this._transactionIds.setLocked();
+        //this._nodeAccountIds.setLocked();
+
+        await this._buildAllTransactionsAsync();
+
+        // Lock transaction IDs, and node account IDs
+        //this._transactions.setLocked();
+        //this._signedTransactions.setLocked();
+
+        // Construct and encode the transaction list
+        return HashgraphProto.proto.TransactionList.encode({
+            transactionList:
+                /** @type {HashgraphProto.proto.ITransaction[]} */ (
+                    this._transactions.list
+                ),
+        }).finish();
+    }
+
+    /**
+     * Serialize the request into bytes. This will encode all the transactions
+     * into a `proto.TransactionList` and return the encoded protobuf.
+     *
+     * **NOTE**: Does not support sign on demand
+     *
      * @returns {Uint8Array}
      */
     toBytes() {
@@ -1036,25 +1102,31 @@ export default class Transaction extends Executable {
         if (!this._isFrozen()) {
             this.freeze();
         }
-        console.log(`\n---------------------------------------------- in toBytes\n`);
+        console.log(
+            `\n---------------------------------------------- in toBytes\n`
+        );
 
         console.log(
             `_nodeAccountIds: ${JSON.stringify(this._nodeAccountIds.list)}`
         );
-        console.log(`_transactionIds: ${JSON.stringify(this._transactionIds.list)}`);
+        console.log(
+            `_transactionIds: ${JSON.stringify(this._transactionIds.list)}`
+        );
         //this._buildNewTransactionIdList();
 
         if (!this._signOnDemand) {
             this._buildSignedTransactions();
         }
-        console.log(`after _buildSignedTransactions:`)
+        console.log(`after _buildSignedTransactions:`);
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
         this._requireNotSignOnDemand();
         console.log(
             `_nodeAccountIds: ${JSON.stringify(this._nodeAccountIds.list)}`
         );
-        console.log(`_transactionIds: ${JSON.stringify(this._transactionIds.list)}`);
+        console.log(
+            `_transactionIds: ${JSON.stringify(this._transactionIds.list)}`
+        );
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
         //this._transactionIds.setLocked();
@@ -1192,7 +1264,9 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        console.log(`\n---------------------------------------------- in beforeExecute\n`);
+        console.log(
+            `\n---------------------------------------------- in beforeExecute\n`
+        );
         // Makes sure we're frozen
         //if (!this._isFrozen()) {
         this.freezeWith(client);
@@ -1290,6 +1364,47 @@ export default class Transaction extends Executable {
      * Sign a `proto.SignedTransaction` with all the keys
      *
      * @private
+     * @param {number} index
+     * @returns {Promise<void>}
+     */
+    async _signTransactionAtIndex(index) {
+
+        const signedTransaction = /** @type {Uint8Array} */ this._signedTransactions.get(index)
+        const bodyBytes = /** @type {Uint8Array} */ (
+            signedTransaction.bodyBytes
+        );
+
+        for (let j = 0; j < this._publicKeys.length; j++) {
+            const publicKey = this._publicKeys[j];
+            const transactionSigner = this._transactionSigners[j];
+
+            console.log(`transactionSigner\n`);
+            console.log(transactionSigner);
+
+            if (transactionSigner == null) {
+                continue;
+            }
+
+            const signature = await transactionSigner(bodyBytes);
+
+            if (signedTransaction.sigMap == null) {
+                signedTransaction.sigMap = {};
+            }
+
+            if (signedTransaction.sigMap.sigPair == null) {
+                signedTransaction.sigMap.sigPair = [];
+            }   
+
+            signedTransaction.sigMap.sigPair.push(
+                publicKey._toProtobufSignature(signature)
+            );
+        }
+    }
+
+    /**
+     * Sign a `proto.SignedTransaction` with all the keys
+     *
+     * @private
      * @returns {Promise<HashgraphProto.proto.ISignedTransaction>}
      */
     async _signTransaction() {
@@ -1334,11 +1449,11 @@ export default class Transaction extends Executable {
      */
     _buildNewTransactionIdList() {
         console.log(
-            `_buildNewTransactionIdList: ${this._transactionIds.locked} && ${
+            `_buildNewTransactionIdList: ${!this._transactionIds.isEmpty} && ${
                 this._operatorAccountId == null
             }`
         );
-        if (this._transactionIds.locked || this._operatorAccountId == null) {
+        if (!this._transactionIds.isEmpty || this._operatorAccountId == null) {
             return;
         }
         const transactionId = TransactionId.withValidStart(
@@ -1355,14 +1470,25 @@ export default class Transaction extends Executable {
      * @private
      */
     _buildAllTransactions() {
-        console.log(`\n---------------------------------------------- in _buildAllTransactions\n`);
+        console.log(
+            `\n---------------------------------------------- in _buildAllTransactions\n`
+        );
 
-        console.log(`_signedTransactions: ${JSON.stringify(this._signedTransactions)}`);
+        console.log(
+            `_signedTransactions: ${JSON.stringify(this._signedTransactions)}`
+        );
         console.log(`_transactions: ${JSON.stringify(this._transactions)}`);
+
+
+        
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
-        console.log(`_transactions after _buildTransaction: ${JSON.stringify(this._transactions)}`);
+        console.log(
+            `_transactions after _buildTransaction: ${JSON.stringify(
+                this._transactions
+            )}`
+        );
     }
 
     /**
@@ -1374,11 +1500,15 @@ export default class Transaction extends Executable {
      * @private
      */
     async _buildAllTransactionsAsync() {
-        console.log(!this._signOnDemand);
-        if (!this._signOnDemand) {
+        console.log(
+            `\n---------------------------------------------- in _buildAllTransactionsAsync\n`
+        );
+        console.log(`!this._signOnDemand: ${!this._signOnDemand}`);
+        console.log(`this._transactions.locked: ${this._transactions.locked}`);
+        /* if (!this._signOnDemand) {
             this._buildAllTransactions();
             return;
-        }
+        } */
 
         //this._buildSignedTransactions();
 
@@ -1387,7 +1517,7 @@ export default class Transaction extends Executable {
         }
 
         for (let i = 0; i < this._signedTransactions.length; i++) {
-            this._transactions.push(await this._buildTransactionAsync());
+            await this._buildTransactionAsyncV2(i);
         }
     }
 
@@ -1403,6 +1533,34 @@ export default class Transaction extends Executable {
                 this._transactions.push(null);
             }
         }
+
+        this._transactions.setIfAbsent(index, () => {
+            return {
+                signedTransactionBytes:
+                    HashgraphProto.proto.SignedTransaction.encode(
+                        this._signedTransactions.get(index)
+                    ).finish(),
+            };
+        });
+    }
+
+    /**
+     * Build a transaction using the current index, where the current
+     * index is determined by `this._nodeAccountIds.index` and
+     * `this._transactionIds.index`
+     *
+     * @private
+     * @param {number} index
+     * @returns {Promise<void>}
+     */
+    async _buildTransactionAsyncV2(index) {
+
+        if (this._transactions.get(index) != null &&
+            !(this._transactions.get(index)?.signedTransactionBytes?.length === 0)) {
+            return;
+        }
+
+        this._signTransactionAtIndex(index);
 
         this._transactions.setIfAbsent(index, () => {
             return {
@@ -1539,7 +1697,9 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        console.log(`\n---------------------------------------------- in _makeSignedTransaction\n`);
+        console.log(
+            `\n---------------------------------------------- in _makeSignedTransaction\n`
+        );
 
         console.log(`body.transactionFee: ${body.transactionFee}`);
         const bodyBytes =
@@ -1562,15 +1722,18 @@ export default class Transaction extends Executable {
      */
     _makeTransactionBody(nodeId) {
         const transactionId =
-            this._transactionIds.current === undefined
-                ? null
-                : this._transactionIds.current;
+            this._transactionIds.current != null
+                ? this._transactionIds.current
+                : null;
 
-                const fee = this._maxTransactionFee != null
+        const fee =
+            this._maxTransactionFee != null
                 ? this._maxTransactionFee.toTinybars()
-                : null
-                
-        console.log(`\n---------------------------------------------- in _makeTransactionBody\n`);
+                : null;
+
+        console.log(
+            `\n---------------------------------------------- in _makeTransactionBody\n`
+        );
         console.log(`fee: ${fee}`);
         console.log(`nodeId: ${nodeId}`);
         return {
@@ -1638,7 +1801,9 @@ export default class Transaction extends Executable {
      * @returns {boolean}
      */
     _isFrozen() {
-        console.log(`\n---------------------------------------------- in _isFrozen\n`);
+        console.log(
+            `\n---------------------------------------------- in _isFrozen\n`
+        );
         console.log(`signOnDemand: ${this._signOnDemand}`);
         console.log(
             `signedTransactions length: ${this._signedTransactions.length}`
