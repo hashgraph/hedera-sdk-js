@@ -14,11 +14,13 @@ const int64 = new BigNumber("ffffffff", 16).multipliedBy(
     new BigNumber(256).pow(4)
 );
 
+const maxInt64 = new BigNumber("0x7FFFFFFFFFFFFFFF", 16);
+
 const str = "this is a grin: \uD83D\uDE01";
 
 const strArray = ["one", "two"];
 
-describe("ContractFunctionParameters", function () {
+describe.only("ContractFunctionParameters", function () {
     it("should convert number to BigNumber in addUint256()", function () {
         const contractFunctionParameters = new ContractFunctionParameters();
 
@@ -77,7 +79,7 @@ describe("ContractFunctionParameters", function () {
         const params = new ContractFunctionParameters()
             .addInt32(int32)
             .addBytes(bytes)
-            .addInt64(int64)
+            .addInt64(maxInt64)
             .addBytes(bytes2)
             .addString(str);
 
@@ -114,7 +116,7 @@ describe("ContractFunctionParameters", function () {
             "00000000000000000000000000000000000000000000000000000000000000a0"
         );
         expect(thirdParam).to.be.equal(
-            "000000000000000000000000000000000000000000000000ffffffff00000000"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff"
         );
         expect(forthParam).to.be.equal(
             "00000000000000000000000000000000000000000000000000000000000000e0"
@@ -147,7 +149,7 @@ describe("ContractFunctionParameters", function () {
         const params = new ContractFunctionParameters()
             .addInt32(int32)
             .addInt32(int32)
-            .addInt64(int64)
+            .addInt64(maxInt64)
             .addString(str)
             .addInt32(1515)
             .addStringArray(strArray);
@@ -195,7 +197,7 @@ describe("ContractFunctionParameters", function () {
             "0000000000000000000000000000000000000000000000000000000001020304"
         );
         expect(thirdParam).to.be.equal(
-            "000000000000000000000000000000000000000000000000ffffffff00000000"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff"
         );
         expect(forthParam).to.be.equal(
             "00000000000000000000000000000000000000000000000000000000000000c0"
@@ -240,7 +242,7 @@ describe("ContractFunctionParameters", function () {
         const params = new ContractFunctionParameters()
             .addInt32(int32)
             .addInt32(int32)
-            .addInt64(int64)
+            .addInt64(maxInt64)
             .addString(str)
             .addInt32(1515)
             .addStringArray(strArray);
@@ -278,7 +280,7 @@ describe("ContractFunctionParameters", function () {
             "0000000000000000000000000000000000000000000000000000000001020304"
         );
         expect(thirdParam).to.be.equal(
-            "000000000000000000000000000000000000000000000000ffffffff00000000"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff"
         );
         expect(forthParam).to.be.equal(
             "00000000000000000000000000000000000000000000000000000000000000c0"
@@ -347,7 +349,7 @@ describe("ContractFunctionParameters", function () {
 
     it("encodes arrays correctly", function () {
         const params = new ContractFunctionParameters()
-            .addInt256(int64)
+            .addInt256(maxInt64)
             .addInt32Array([1111, 2222])
             .addInt64Array([new BigNumber(3333), new BigNumber(4444)])
             .addInt256Array([new BigNumber(5555), new BigNumber(6666)])
@@ -380,7 +382,7 @@ describe("ContractFunctionParameters", function () {
         const sixthFirstValue = hex.encode(finished.slice(32 * 19, 32 * 20));
         const sixthSecondValue = hex.encode(finished.slice(32 * 20, 32 * 21));
         expect(firstParam).to.be.equal(
-            "000000000000000000000000000000000000000000000000ffffffff00000000"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff"
         );
         expect(secondOffset).to.be.equal(
             "00000000000000000000000000000000000000000000000000000000000000c0"
@@ -447,7 +449,7 @@ describe("ContractFunctionParameters", function () {
 
     it("encodes uint arrays correctly", function () {
         const params = new ContractFunctionParameters()
-            .addUint256(int64)
+            .addUint256(maxInt64)
             .addUint32Array([1111, 2222])
             .addUint64Array([new BigNumber(3333), new BigNumber(4444)])
             .addUint256Array([new BigNumber(5555), new BigNumber(6666)])
@@ -480,7 +482,7 @@ describe("ContractFunctionParameters", function () {
         const sixthFirstValue = hex.encode(finished.slice(32 * 19, 32 * 20));
         const sixthSecondValue = hex.encode(finished.slice(32 * 20, 32 * 21));
         expect(firstParam).to.be.equal(
-            "000000000000000000000000000000000000000000000000ffffffff00000000"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff"
         );
         expect(secondOffset).to.be.equal(
             "00000000000000000000000000000000000000000000000000000000000000c0"

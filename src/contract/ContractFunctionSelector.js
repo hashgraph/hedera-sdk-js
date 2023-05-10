@@ -1145,7 +1145,7 @@ export default class ContractFunctionSelector {
  * @param {SolidityType} ty
  * @returns {string}
  */
-function solidityTypeToString(ty) {
+export function solidityTypeToString(ty) {
     let s = "";
     switch (ty.ty) {
         case ArgumentType.uint8:

@@ -26,6 +26,7 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
+import ethers from "ethers";
 
 /**
  * @typedef {import("./ContractStateChange.js").default} ContractStateChange
@@ -247,7 +248,8 @@ export default class ContractFunctionResult {
      * @returns {number}
      */
     getInt8(index) {
-        return this.bytes[(index != null ? index : 0) * 32 + 31];
+        const position = (index != null ? index : 0) * 32 + 31;
+        return util.safeView(this.bytes).getInt8(position);
     }
 
     /**
@@ -289,7 +291,7 @@ export default class ContractFunctionResult {
     getInt40(index) {
         return new BigNumber(
             hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(27, 32)
+                this._getBytes32(index != null ? index : 0).subarray(25, 32)
             ),
             16
         );

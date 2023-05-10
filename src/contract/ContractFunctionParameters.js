@@ -20,11 +20,13 @@
 
 import ContractFunctionSelector, {
     ArgumentType,
+    solidityTypeToString,
 } from "./ContractFunctionSelector.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
 import BigNumber from "bignumber.js";
 import * as util from "../util.js";
+import ethers from "ethers";
 
 export default class ContractFunctionParameters {
     constructor() {
@@ -1614,62 +1616,13 @@ function argumentToBytes(param, ty) {
 
     switch (ty.ty) {
         case ArgumentType.uint8:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                31,
-                valueView.setUint8.bind(valueView)
-            );
-            return value;
         case ArgumentType.int8:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                31,
-                valueView.setInt8.bind(valueView)
-            );
-            return value;
         case ArgumentType.uint16:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                30,
-                valueView.setUint16.bind(valueView)
-            );
-            return value;
         case ArgumentType.int16:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                30,
-                valueView.setInt16.bind(valueView)
-            );
-            return value;
         case ArgumentType.uint24:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                28,
-                valueView.setUint32.bind(valueView)
-            );
-            return value;
         case ArgumentType.int24:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                28,
-                valueView.setInt32.bind(valueView)
-            );
-            return value;
         case ArgumentType.uint32:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                28,
-                valueView.setUint32.bind(valueView)
-            );
-            return value;
         case ArgumentType.int32:
-            numberToBytes(
-                /** @type {number | BigNumber } */ (param),
-                28,
-                valueView.setInt32.bind(valueView)
-            );
-            return value;
-        // int64, uint64, and int256 both expect the parameter to be an Uint8Array instead of number
         case ArgumentType.uint40:
         case ArgumentType.int40:
         case ArgumentType.uint48:
@@ -1726,16 +1679,15 @@ function argumentToBytes(param, ty) {
         case ArgumentType.int248:
         case ArgumentType.int256:
         case ArgumentType.uint256: {
-            if (BigNumber.isBigNumber(param)) {
-                let par = param.toString(16);
-                if (par.length % 2 === 1) {
-                    par = `0${par}`;
-                }
+            console.log("HERE PARAM", param);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            const encodedData = ethers.utils.defaultAbiCoder.encode(
+                [solidityTypeToString(ty)],
+                [param.toString()]
+            );
 
-                const buf = hex.decode(par);
-                value.set(buf, 32 - buf.length);
-            }
-            return value;
+            const dataToArrayify = ethers.utils.arrayify(encodedData);
+            return dataToArrayify;
         }
         case ArgumentType.address:
             value.set(/** @type {Uint8Array} */ (param), 32 - 20);
@@ -1788,14 +1740,45 @@ function argumentToBytes(param, ty) {
     }
 }
 
-/**
- * @param {number | BigNumber} param
- * @param {number} byteoffset
- * @param {(byteOffset: number, value: number) => void} func
- * @returns {void}
- */
-function numberToBytes(param, byteoffset, func) {
-    const value = BigNumber.isBigNumber(param) ? param.toNumber() : param;
+// /**
+//  * @param {number | BigNumber} param
+//  * @param {number} byteoffset
+//  * @param {(byteOffset: number, value: number) => void} func
+//  * @returns {void}
+//  */
+// function numberToBytes(param, byteoffset, func) {
+//     const value = BigNumber.isBigNumber(param) ? param.toNumber() : param;
+//     console.log("numberToBytes value ", value);
+//     console.log("HERE Byte offset", byteoffset);
+//     func(byteoffset, value);
+// }
 
-    func(byteoffset, value);
-}
+// /**
+//  * @param {number} value
+//  * @param {number} [bitCount = 0]
+//  * @returns {string} binary representation of the two's complement of `value`.
+//  */
+// function twosComplement(value, bitCount) {
+//     let binaryStr;
+
+//     if (value >= 0) {
+//         let twosComp = value.toString(2);
+//         binaryStr = padAndChop(twosComp, "0", bitCount || twosComp.length);
+//     } else {
+//         binaryStr = (Math.pow(2, bitCount) + value).toString(2);
+
+//         if (Number(binaryStr) < 0) {
+//             return undefined;
+//         }
+//     }
+//     return `0b${binaryStr}`;
+// }
+
+// /**
+//  * @param {string} str
+//  * @param {string} padChar
+//  * @param {number} length
+//  */
+// function padAndChop(str, padChar, length) {
+//     return (Array(length).fill(padChar).join("") + str).slice(length * -1);
+// }
