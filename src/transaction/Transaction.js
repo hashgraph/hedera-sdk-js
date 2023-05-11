@@ -298,7 +298,7 @@ export default class Transaction extends Executable {
                         body.nodeAccountID
                     )
                 );
-
+                console.log(`nodeAccountId: ${nodeAccountId.toString()}`);
                 // If we haven't already seen this node account ID in the list, add it
                 if (!nodeIdStrings.includes(nodeAccountId.toString())) {
                     nodeIds.push(nodeAccountId);
@@ -444,8 +444,10 @@ export default class Transaction extends Executable {
                 signedTransaction.sigMap != null &&
                 signedTransaction.sigMap.sigPair != null
             ) {
-                console.log(`wuter`)
-                console.log(`sigPair: ${signedTransaction.sigMap.sigPair.length}`)
+                console.log(`wuter`);
+                console.log(
+                    `sigPair: ${signedTransaction.sigMap.sigPair.length}`
+                );
                 for (const sigPair of signedTransaction.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
@@ -462,9 +464,13 @@ export default class Transaction extends Executable {
                 }
             }
         }
-        console.log(`TEST _signerPublicKeys: ${transaction._signerPublicKeys.size}`);
+        console.log(
+            `TEST _signerPublicKeys: ${transaction._signerPublicKeys.size}`
+        );
         console.log(`TEST _publicKeys: ${transaction._publicKeys.length}`);
-        console.log(`TEST _transactionSigners: ${transaction._transactionSigners.length}`);
+        console.log(
+            `TEST _transactionSigners: ${transaction._transactionSigners.length}`
+        );
         return transaction;
     }
 
@@ -665,9 +671,9 @@ export default class Transaction extends Executable {
         // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
         // prefixes here
         const publicKeyHex = hex.encode(publicKeyData);
-        console.log(`publicKeyHex: ${publicKeyHex}`)
+        console.log(`publicKeyHex: ${publicKeyHex}`);
         if (this._signerPublicKeys.has(publicKeyHex)) {
-            console.log(`already signed`)
+            console.log(`already signed`);
             // this public key has already signed this transaction
             return this;
         }
@@ -1010,8 +1016,8 @@ export default class Transaction extends Executable {
         console.log(`txIds: ${JSON.stringify(this._transactionIds)}`);
         // If sign on demand is disabled we need to build out all the signed transactions
         //if (!this._signOnDemand) {
-            console.log(`buildSigned`);
-            this._buildSignedTransactions();
+        console.log(`buildSigned`);
+        this._buildSignedTransactions();
         //}
 
         return this;
@@ -1368,8 +1374,8 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _signTransactionAtIndex(index) {
-
-        const signedTransaction = /** @type {Uint8Array} */ this._signedTransactions.get(index)
+        const signedTransaction =
+            /** @type {Uint8Array} */ this._signedTransactions.get(index);
         const bodyBytes = /** @type {Uint8Array} */ (
             signedTransaction.bodyBytes
         );
@@ -1393,7 +1399,7 @@ export default class Transaction extends Executable {
 
             if (signedTransaction.sigMap.sigPair == null) {
                 signedTransaction.sigMap.sigPair = [];
-            }   
+            }
 
             signedTransaction.sigMap.sigPair.push(
                 publicKey._toProtobufSignature(signature)
@@ -1479,8 +1485,6 @@ export default class Transaction extends Executable {
         );
         console.log(`_transactions: ${JSON.stringify(this._transactions)}`);
 
-
-        
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
@@ -1554,9 +1558,13 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _buildTransactionAsyncV2(index) {
-
-        if (this._transactions.get(index) != null &&
-            !(this._transactions.get(index)?.signedTransactionBytes?.length === 0)) {
+        if (
+            this._transactions.get(index) != null &&
+            !(
+                this._transactions.get(index)?.signedTransactionBytes
+                    ?.length === 0
+            )
+        ) {
             return;
         }
 
