@@ -10,6 +10,10 @@ contract ReturnDataTypes {
         return count;
     }
 
+    function returnInt8Multiple(int8 count) external pure returns (int8, int8) {
+        return (count, count + 20);
+    }
+
     function returnUint16(uint16 count) external pure returns (uint16) {
         return count;
     }
@@ -30,6 +34,12 @@ contract ReturnDataTypes {
         return count;
     }
 
+    function returnMultipleTypeParams(
+        uint32 count
+    ) external pure returns (uint32, uint64, string memory) {
+        return (count, count - 1, "OK");
+    }
+
     function returnInt32(int32 count) external pure returns (int32) {
         return count;
     }
@@ -38,8 +48,14 @@ contract ReturnDataTypes {
         return count;
     }
 
+    function returnMultipleInt40(
+        int40 count
+    ) external pure returns (int40, int40) {
+        return (count, count + 1);
+    }
+
     function returnInt40(int40 count) external pure returns (int40) {
-        return count;
+        return (count);
     }
 
     function returnUint48(uint48 count) external pure returns (uint48) {

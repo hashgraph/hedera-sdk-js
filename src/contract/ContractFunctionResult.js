@@ -25,8 +25,9 @@ import BigNumber from "bignumber.js";
 import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ParamType, defaultAbiCoder } from "@ethersproject/abi";
 import Long from "long";
-import ethers from "ethers";
 
 /**
  * @typedef {import("./ContractStateChange.js").default} ContractStateChange
@@ -962,6 +963,15 @@ export default class ContractFunctionResult {
                 (index != null ? index : 0) * 32 + 32
             )
         );
+    }
+
+    /**
+     * @description Decode the data according to the array of types, each of which may be a string or ParamType.
+     * @param {Array<string | ParamType>} types
+     * @returns {string | any}
+     */
+    getResult(types) {
+        return defaultAbiCoder.decode(types, this.bytes);
     }
 
     /**

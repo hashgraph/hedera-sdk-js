@@ -24,9 +24,11 @@ import ContractFunctionSelector, {
 } from "./ContractFunctionSelector.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import BigNumber from "bignumber.js";
 import * as util from "../util.js";
-import ethers from "ethers";
+import { defaultAbiCoder } from "@ethersproject/abi";
+import { arrayify } from "@ethersproject/bytes";
 
 export default class ContractFunctionParameters {
     constructor() {
@@ -1679,14 +1681,13 @@ function argumentToBytes(param, ty) {
         case ArgumentType.int248:
         case ArgumentType.int256:
         case ArgumentType.uint256: {
-            console.log("HERE PARAM", param);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            const encodedData = ethers.utils.defaultAbiCoder.encode(
+            const encodedData = defaultAbiCoder.encode(
                 [solidityTypeToString(ty)],
                 [param.toString()]
             );
 
-            const dataToArrayify = ethers.utils.arrayify(encodedData);
+            const dataToArrayify = arrayify(encodedData);
             return dataToArrayify;
         }
         case ArgumentType.address:

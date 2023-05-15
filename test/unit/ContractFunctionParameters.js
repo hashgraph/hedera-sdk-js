@@ -10,17 +10,13 @@ bytes[1] = 1;
 bytes[4] = 4;
 bytes[9] = 8;
 
-const int64 = new BigNumber("ffffffff", 16).multipliedBy(
-    new BigNumber(256).pow(4)
-);
-
 const maxInt64 = new BigNumber("0x7FFFFFFFFFFFFFFF", 16);
 
 const str = "this is a grin: \uD83D\uDE01";
 
 const strArray = ["one", "two"];
 
-describe.only("ContractFunctionParameters", function () {
+describe("ContractFunctionParameters", function () {
     it("should convert number to BigNumber in addUint256()", function () {
         const contractFunctionParameters = new ContractFunctionParameters();
 
