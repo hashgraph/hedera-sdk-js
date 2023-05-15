@@ -36,22 +36,20 @@ export default class LogLevel {
      */
     toString() {
         switch (this) {
-            case LogLevel.Off:
-                return "off";
-            case LogLevel.Error:
-                return "error";
-            case LogLevel.Warn:
-                return "warn";
-            case LogLevel.Info:
-                return "info";
-            case LogLevel.Http:
-                return "http";
+            case LogLevel.Silent:
+                return "silent";
+            case LogLevel.Trace:
+                return "trace";
             case LogLevel.Debug:
                 return "debug";
-            case LogLevel.Verbose:
-                return "verbose";
-            case LogLevel.Silly:
-                return "silly";
+            case LogLevel.Info:
+                return "info";
+            case LogLevel.Warn:
+                return "warn";
+            case LogLevel.Error:
+                return "error";
+            case LogLevel.Fatal:
+                return "fatal";
             default:
                 return `Unknown log level (${this._name})`;
         }
@@ -63,33 +61,30 @@ export default class LogLevel {
      */
     static _fromString(level) {
         switch (level) {
-            case "off":
-                return LogLevel.Off;
-            case "error":
-                return LogLevel.Error;
-            case "warn":
-                return LogLevel.Warn;
-            case "info":
-                return LogLevel.Info;
-            case "http":
-                return LogLevel.Http;
+            case "silent":
+                return LogLevel.Silent;
+            case "trace":
+                return LogLevel.Trace;
             case "debug":
                 return LogLevel.Debug;
-            case "verbose":
-                return LogLevel.Verbose;
-            case "silly":
-                return LogLevel.Silly;
+            case "info":
+                return LogLevel.Info;
+            case "warn":
+                return LogLevel.Warn;
+            case "error":
+                return LogLevel.Error;
+            case "fatal":
+                return LogLevel.Fatal;
             default:
                 throw new Error(`Unknown log level: ${level}`);
         }
     }
 }
 
-LogLevel.Off = new LogLevel("off");
-LogLevel.Error = new LogLevel("error");
-LogLevel.Warn = new LogLevel("warn");
-LogLevel.Info = new LogLevel("info");
-LogLevel.Http = new LogLevel("http");
+LogLevel.Silent = new LogLevel("silent");
+LogLevel.Trace = new LogLevel("trace");
 LogLevel.Debug = new LogLevel("debug");
-LogLevel.Verbose = new LogLevel("verbose");
-LogLevel.Silly = new LogLevel("silly");
+LogLevel.Info = new LogLevel("info");
+LogLevel.Warn = new LogLevel("warn");
+LogLevel.Error = new LogLevel("error");
+LogLevel.Fatal = new LogLevel("fatal");

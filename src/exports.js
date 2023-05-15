@@ -167,7 +167,6 @@ export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
 export { default as Wallet } from "./Wallet.js";
 export { default as Logger } from "./logger/Logger.js";
-export { default as LogFormat } from "./logger/LogFormat.js";
 export { default as LogLevel } from "./logger/LogLevel.js";
 
 export { default as StatusError } from "./StatusError.js";

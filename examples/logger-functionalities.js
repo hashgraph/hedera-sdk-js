@@ -10,7 +10,6 @@ import {
     TopicCreateTransaction,
     Logger,
     LogLevel,
-    LogFormat,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -28,7 +27,7 @@ dotenv.config();
  * this will be applied in every other usage of the same logger
  *
  * A suggestion is to use different logger instance in the client
- * and in each different transactions
+ * and in each different transaction for best experience
  */
 
 async function main() {
@@ -41,71 +40,74 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    let debugLogger = new Logger(LogLevel.Debug)
-        // Whether or not to include lower levels than the specified level
-        // when logging to a file and if the user provides a specific `level` to `saveToFile()`,
-        .setIncludeLowerLevelsInFileLogs(true);
-
+    let debugLogger = new Logger(LogLevel.Debug);
     let infoLogger = new Logger(LogLevel.Info);
+
+    // Displays the different available log levels
+    // namely: trace, debug, info, warn, error, fatal (weighted in that order)
+    console.log(`Logger levels: ${JSON.stringify(debugLogger.levels)}`);
 
     const client = Client.forTestnet()
         // Set the client's logger to `debugLogger` with debug mode
         .setLogger(debugLogger)
         .setOperator(operatorId, operatorKey);
 
-    const wallet = new Wallet(operatorId, operatorKey, new LocalProvider());
+    const wallet = new Wallet(
+        client.operatorAccountId,
+        operatorKey,
+        new LocalProvider()
+    );
 
     const privateKey = PrivateKey.generateED25519();
     const publicKey = privateKey.publicKey;
     const aliasAccountId = publicKey.toAccountId(0, 0);
 
-    // This will log every `debug` and lower level message to a newly
-    // created `log.txt` file in the current directory in string format
-    debugLogger.saveToFile("debugLogger.txt", LogLevel.Debug, LogFormat.String);
-
-    // This will log only `info` level messages to a newly
-    // created `info.txt` file in the current directory in string format
-    // This is because the default value of `_includeLowerLevelsInFileLogs` flag is `false`
-    infoLogger.saveToFile("infoLogger.txt", LogLevel.Info, LogFormat.String);
-
-    let transferTransaction = new TransferTransaction()
+    let transferTransaction = await new TransferTransaction()
         .addHbarTransfer(wallet.accountId, Hbar.from(-10, HbarUnit.Hbar))
         .addHbarTransfer(aliasAccountId, Hbar.from(10, HbarUnit.Hbar))
-        .setTransactionMemo("");
+        .setTransactionMemo("")
+        .freezeWithSigner(wallet);
 
-    await transferTransaction.execute(client);
+    await transferTransaction.executeWithSigner(wallet);
 
-    let topicTransaction = new TopicCreateTransaction()
+    let topicTransaction = await new TopicCreateTransaction()
         .setLogger(infoLogger)
-        .setTopicMemo("topic memo");
+        .setTopicMemo("topic memo")
+        .freezeWithSigner(wallet);
 
-    await topicTransaction.execute(client);
+    await topicTransaction.executeWithSigner(wallet);
 
-    let infoLogger2 = new Logger(LogLevel.Info);
-    // Change the `infoLogger2` level from `info` to `debug`
-    infoLogger2.setLevel(LogLevel.Debug);
+    // Set the level of the `infoLogger` from `info` to `warn`
+    infoLogger.setLevel(LogLevel.Warn);
 
-    let topicTransaction2 = new TopicCreateTransaction()
-        .setLogger(infoLogger2) // now with `debug` mode
-        .setTopicMemo("topic memo");
+    // This should not display any logs because currently there are no `warn` logs predefined in the SDK
+    let topicTransaction2 = await new TopicCreateTransaction()
+        .setLogger(infoLogger)
+        .setTopicMemo("topic memo")
+        .freezeWithSigner(wallet);
 
-    // This will log only `debug` level messages to a newly
-    // created `info.txt` file in the current directory in json format
-    // This is because the default value of `_includeLowerLevelsInFileLogs` flag is `false`
-    infoLogger2.saveToFile("infoLogger2.txt", LogLevel.Debug, LogFormat.Json);
+    await topicTransaction2.executeWithSigner(wallet);
 
-    await topicTransaction2.execute(client);
+    // Silence the `debugLogger` - no logs should be shown
+    // This can also be achieved by calling `.setLevel(LogLevel.Silent)`
+    debugLogger.setSilent(true);
 
-    let debugLogger2 = new Logger(LogLevel.Debug)
-        .saveToFile("debugLogger2.txt", LogLevel.Debug, LogFormat.Json)
-        // If you set `silent` to `true`, the logger will be muted and there will be no logs
-        .setSilent(true);
+    let topicTransaction3 = await new TopicCreateTransaction()
+        .setLogger(debugLogger)
+        .setTopicMemo("topic memo")
+        .freezeWithSigner(wallet);
 
-    let topicTransaction3 = new TopicCreateTransaction()
-        .setLogger(debugLogger2)
-        .setTopicMemo("topic memo");
+    await topicTransaction3.executeWithSigner(wallet);
 
-    await topicTransaction3.execute(client);
+    // Unsilence the `debugLogger` - applies back the old log level before silencing
+    debugLogger.setSilent(false);
+
+    let topicTransaction4 = await new TopicCreateTransaction()
+        .setLogger(debugLogger)
+        .setTopicMemo("topic memo")
+        .freezeWithSigner(wallet);
+
+    await topicTransaction4.executeWithSigner(wallet);
 }
 
 void main();
