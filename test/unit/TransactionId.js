@@ -66,25 +66,29 @@ describe("TransactionId", function () {
     it("should parse {shard}.{realm}.{num}@{seconds}.{nanos}", function () {
         const transactionId = TransactionId.fromString("1.2.3@4.5");
 
-        expect(transactionId.toString()).to.be.equal("1.2.3@4.5");
+        expect(transactionId.toString()).to.be.equal("1.2.3@4.000000005");
     });
 
     it("should parse {num}@{seconds}.{nanos}", function () {
         const transactionId = TransactionId.fromString("3@4.5");
 
-        expect(transactionId.toString()).to.be.equal("0.0.3@4.5");
+        expect(transactionId.toString()).to.be.equal("0.0.3@4.000000005");
     });
 
     it("should parse {shard}.{realm}.{num}@{seconds}.{nanos}?scheduled", function () {
         const transactionId = TransactionId.fromString("1.2.3@4.5?scheduled");
 
-        expect(transactionId.toString()).to.be.equal("1.2.3@4.5?scheduled");
+        expect(transactionId.toString()).to.be.equal(
+            "1.2.3@4.000000005?scheduled"
+        );
     });
 
     it("should parse {num}@{seconds}.{nanos}?scheduled", function () {
         const transactionId = TransactionId.fromString("3@4.5?scheduled");
 
-        expect(transactionId.toString()).to.be.equal("0.0.3@4.5?scheduled");
+        expect(transactionId.toString()).to.be.equal(
+            "0.0.3@4.000000005?scheduled"
+        );
     });
 
     it("should construct with nonce", function () {
@@ -106,11 +110,15 @@ describe("TransactionId", function () {
         const validStart = new Timestamp(5, 4);
         let transactionId = new TransactionId(accountId, validStart, true);
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4?scheduled");
+        expect(transactionId.toString()).to.equal(
+            "1.1.1@5.000000004?scheduled"
+        );
 
         transactionId = new TransactionId(accountId, validStart, true, null);
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4?scheduled");
+        expect(transactionId.toString()).to.equal(
+            "1.1.1@5.000000004?scheduled"
+        );
 
         transactionId = new TransactionId(
             accountId,
@@ -119,7 +127,9 @@ describe("TransactionId", function () {
             undefined
         );
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4?scheduled");
+        expect(transactionId.toString()).to.equal(
+            "1.1.1@5.000000004?scheduled"
+        );
     });
 
     it("should construct with nonce without scheduled", function () {
@@ -133,11 +143,11 @@ describe("TransactionId", function () {
             nonce
         );
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4/117");
+        expect(transactionId.toString()).to.equal("1.1.1@5.000000004/117");
 
         transactionId = new TransactionId(accountId, validStart, NaN, nonce);
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4/117");
+        expect(transactionId.toString()).to.equal("1.1.1@5.000000004/117");
 
         transactionId = new TransactionId(
             accountId,
@@ -146,7 +156,7 @@ describe("TransactionId", function () {
             nonce
         );
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4/117");
+        expect(transactionId.toString()).to.equal("1.1.1@5.000000004/117");
     });
 
     it("should construct without scheduled and nonce", function () {
@@ -159,7 +169,7 @@ describe("TransactionId", function () {
             null
         );
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4");
+        expect(transactionId.toString()).to.equal("1.1.1@5.000000004");
 
         transactionId = new TransactionId(
             accountId,
@@ -168,35 +178,35 @@ describe("TransactionId", function () {
             undefined
         );
 
-        expect(transactionId.toString()).to.equal("1.1.1@5.4");
+        expect(transactionId.toString()).to.equal("1.1.1@5.000000004");
     });
 
     it("should construct fromString", function () {
         let stringId = "1.1.1@5.4?scheduled/117";
         let transactionId = TransactionId.fromString(stringId).toString();
 
-        expect(transactionId).to.eql(stringId);
+        expect(transactionId).to.eql("1.1.1@5.000000004?scheduled/117");
     });
 
     it("should construct fromString without nonce", function () {
         let stringId = "1.1.1@5.4?scheduled";
         let transactionId = TransactionId.fromString(stringId).toString();
 
-        expect(transactionId).to.eql(stringId);
+        expect(transactionId).to.eql("1.1.1@5.000000004?scheduled");
     });
 
     it("should construct fromString without scheduled", function () {
         let stringId = "1.1.1@5.4/117";
         let transactionId = TransactionId.fromString(stringId).toString();
 
-        expect(transactionId).to.eql(stringId);
+        expect(transactionId).to.eql("1.1.1@5.000000004/117");
     });
 
     it("should construct fromString without nonce and scheduled", function () {
         let stringId = "1.1.1@5.4";
         let transactionId = TransactionId.fromString(stringId).toString();
 
-        expect(transactionId).to.eql(stringId);
+        expect(transactionId).to.eql("1.1.1@5.000000004");
     });
 
     it("should be able to update nonce with a number or date", function () {

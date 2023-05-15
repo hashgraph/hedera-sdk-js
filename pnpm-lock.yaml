@@ -8,8 +8,8 @@ dependencies:
     specifier: ^1.7.3
     version: 1.7.3
   '@hashgraph/cryptography':
-    specifier: 1.4.5-beta.3
-    version: 1.4.5-beta.3(expo@47.0.13)
+    specifier: 1.4.6
+    version: 1.4.6(expo@47.0.13)
   '@hashgraph/proto':
     specifier: 2.12.0
     version: 2.12.0
@@ -1996,8 +1996,8 @@ packages:
       protobufjs: 7.1.2
       yargs: 16.2.0
 
-  /@hashgraph/cryptography@1.4.5-beta.3(expo@47.0.13):
-    resolution: {integrity: sha512-BwkCNcoVZBCG4b/t/T6fcGHIKdo0j/B75nDGnajQOEy+BaZYTR09U94oET85iIX0yyGz3w+ux7xtN6CoJP3Kmw==}
+  /@hashgraph/cryptography@1.4.6(expo@47.0.13):
+    resolution: {integrity: sha512-3HmnT1Lek71l6nHxc4GOyT/hSx/LmgusyWfE7hQda2dnE5vL2umydDw5TK2wq8gqmD9S3uRSMhz/BO55wtzxRA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^45.0.3
@@ -4313,8 +4313,8 @@ packages:
   /fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
 
-  /fast-redact@3.1.2:
-    resolution: {integrity: sha512-+0em+Iya9fKGfEQGcd62Yv6onjBmmhV1uh86XVfOU8VwAe6kaFdQCWI9s0/Nnugx5Vd9tdbZ7e6gE2tR9dzXdw==}
+  /fast-redact@3.2.0:
+    resolution: {integrity: sha512-zaTadChr+NekyzallAMXATXLOR8MNx3zqpZ0MUF2aGf4EathnG0f32VLODNlY8IuGY3HoRO2L6/6fSzNsLaHIw==}
     engines: {node: '>=6'}
     dev: false
 
@@ -6441,7 +6441,7 @@ packages:
     hasBin: true
     dependencies:
       atomic-sleep: 1.0.0
-      fast-redact: 3.1.2
+      fast-redact: 3.2.0
       on-exit-leak-free: 2.1.0
       pino-abstract-transport: 1.0.0
       pino-std-serializers: 6.2.1

@@ -159,10 +159,14 @@ export default class TransactionId {
      */
     toString() {
         if (this.accountId != null && this.validStart != null) {
+            const zeroPaddedNanos = String(this.validStart.nanos).padStart(
+                9,
+                "0"
+            );
             const nonce =
                 this.nonce != null ? "/".concat(this.nonce.toString()) : "";
             const scheduled = this.scheduled ? "?scheduled" : "";
-            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${scheduled}${nonce}`;
+            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${zeroPaddedNanos}${scheduled}${nonce}`;
         } else {
             throw new Error("neither `accountId` nor `validStart` are set");
         }

@@ -637,7 +637,7 @@ export default class Executable {
                         )
                     );
                 }
-                this._logger?.debug(
+                this._logger?.trace(
                     `[${this._getLogId()}] sending protobuf ${hex.encode(
                         this._requestToBytes(request)
                     )}`
@@ -668,6 +668,9 @@ export default class Executable {
                 ) {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
+                    this._logger?.debug(
+                        `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
+                    );
                     client._network.increaseBackoff(node);
                     continue;
                 }
@@ -675,7 +678,7 @@ export default class Executable {
                 throw err;
             }
 
-            this._logger?.debug(
+            this._logger?.trace(
                 `[${this._getLogId()}] sending protobuf ${hex.encode(
                     this._responseToBytes(response)
                 )}`

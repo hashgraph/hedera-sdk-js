@@ -723,7 +723,7 @@ export default class Client {
                     this._scheduleNetworkUpdate();
                 }
             } catch (error) {
-                this._logger?.debug(
+                this._logger?.trace(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`
@@ -745,7 +745,7 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
             } catch (error) {
-                this._logger?.debug(
+                this._logger?.trace(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`
