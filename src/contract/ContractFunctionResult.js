@@ -25,6 +25,8 @@ import BigNumber from "bignumber.js";
 import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ParamType, defaultAbiCoder } from "@ethersproject/abi";
 import Long from "long";
 
 /**
@@ -247,7 +249,8 @@ export default class ContractFunctionResult {
      * @returns {number}
      */
     getInt8(index) {
-        return this.bytes[(index != null ? index : 0) * 32 + 31];
+        const position = (index != null ? index : 0) * 32 + 31;
+        return util.safeView(this.bytes).getInt8(position);
     }
 
     /**
@@ -289,7 +292,7 @@ export default class ContractFunctionResult {
     getInt40(index) {
         return new BigNumber(
             hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(27, 32)
+                this._getBytes32(index != null ? index : 0).subarray(25, 32)
             ),
             16
         );
@@ -960,6 +963,15 @@ export default class ContractFunctionResult {
                 (index != null ? index : 0) * 32 + 32
             )
         );
+    }
+
+    /**
+     * @description Decode the data according to the array of types, each of which may be a string or ParamType.
+     * @param {Array<string | ParamType>} types
+     * @returns {string | any}
+     */
+    getResult(types) {
+        return defaultAbiCoder.decode(types, this.bytes);
     }
 
     /**

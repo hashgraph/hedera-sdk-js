@@ -337,7 +337,7 @@ export function convertToNumber(variable) {
 /**
  * Creates a DataView on top of an Uint8Array that could be or not be pooled, ensuring that we don't get out of bounds.
  *
- * @param {Uint8Array} arr
+ * @param {Uint8Array | Int8Array} arr
  * @param {number | undefined} offset
  * @param {number | undefined} length
  * @returns {DataView}

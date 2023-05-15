@@ -52,6 +52,8 @@
         "not ie > 0"
     ],
     "dependencies": {
+        "@ethersproject/abi": "^5.7.0",
+        "@ethersproject/bytes": "^5.7.0",
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "^1.7.3",
         "@hashgraph/cryptography": "1.4.6",
