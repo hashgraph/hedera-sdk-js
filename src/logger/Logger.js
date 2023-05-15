@@ -97,6 +97,7 @@ export default class Logger {
      *
      * @public
      * @description If set to true, the logger will not display any log messages
+     * - This can also be achieved by calling `.setLevel(LogLevel.Silent)`
      * @param {boolean} silent
      * @returns {this}
      */
