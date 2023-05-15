@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.24.2
+
+## What's Changed
+* Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
+* Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
+* Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
+* Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
+* Add assessment method support for custom fractional fees by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1600
+
+## v2.24.1-beta.1
+
+## What's Changed
+* Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
+* Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
+* Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
+* Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
+
 ## v2.24.1
 
 ## What's Changed
