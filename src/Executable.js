@@ -23,16 +23,17 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
-import Logger from "./logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("./Signer.js").Signer} Signer
  * @typedef {import("./PublicKey.js").default} PublicKey
+ * @typedef {import("./logger/Logger.js").default} Logger
  */
 
 /**
@@ -58,7 +59,7 @@ export default class Executable {
         /**
          * The number of times we can retry the grpc call
          *
-         * @private
+         * @internal
          * @type {number}
          */
         this._maxAttempts = 10;
@@ -89,9 +90,9 @@ export default class Executable {
          * This is the request's max backoff
          *
          * @internal
-         * @type {number | null}
+         * @type {number}
          */
-        this._maxBackoff = null;
+        this._maxBackoff = 8000;
 
         /**
          * The operator that was used to execute this request.
@@ -271,7 +272,7 @@ export default class Executable {
     /**
      * Get the max backoff
      *
-     * @returns {number | null}
+     * @returns {number}
      */
     get maxBackoff() {
         return this._maxBackoff;
@@ -503,7 +504,7 @@ export default class Executable {
      * Execute the request using a client and an optional request timeout
      *
      * @template {Channel} ChannelT
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @param {number=} requestTimeout
      * @returns {Promise<OutputT>}

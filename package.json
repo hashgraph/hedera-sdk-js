@@ -62,7 +62,6 @@
         "bignumber.js": "^9.1.1",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.4",
-        "js-logger": "^1.6.1",
         "long": "^4.0.0",
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.0",
