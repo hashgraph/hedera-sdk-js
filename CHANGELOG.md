@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.26.0-beta.1
+
+## What's Changed
+* Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
+
 ## v2.25.0
 
 ## What's Changed
