@@ -8,11 +8,11 @@ const RAW_KEY =
     "8776c6b831a1b61ac10dac0304a2843de4716f54b1919bb91a2685d0fe3f3048";
 
 describe("EcdsaPrivateKey", function () {
-    it("generate should return  object", function () {
+    it("generate should return object", function () {
         PrivateKey.generateECDSA();
     });
 
-    it("generateAsync should return  object", async function () {
+    it("generateAsync should return object", async function () {
         await PrivateKey.generateECDSAAsync();
     });
 
@@ -203,5 +203,143 @@ describe("EcdsaPrivateKey", function () {
         expect(hex.encode(key6.chainCode)).to.be.equal(CHAIN_CODE6);
         expect(key6.toStringRaw()).to.be.equal(PRIVATE_KEY6);
         expect(PUBLIC_KEY6).to.contain(key6.publicKey.toStringRaw());
+    });
+
+    it.only("PEM import test vectors", async function () {
+        const TEST_VECTOR_PEM_PASSPHRASE = "asdasd123";
+
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
+        const PRIVATE_KEY_PEM1 =
+            "-----BEGIN EC PRIVATE KEY-----\n" +
+            "MHQCAQEEIG8I+jKi+iGVa7ttbfnlnML5AdvPugbgBWnseYjrle6qoAcGBSuBBAAK\n" +
+            "oUQDQgAEqf5BmMeBzkU1Ra9UAbZJo3tytVOlb7erTc36LRLP20mOLU7+mFY+3Cfe\n" +
+            "fAZgBtPXRAmDtRvYGODswAalW85GKA==\n" +
+            "-----END EC PRIVATE KEY-----";
+        const PRIVATE_KEY1 =
+            "6f08fa32a2fa21956bbb6d6df9e59cc2f901dbcfba06e00569ec7988eb95eeaa";
+        const PUBLIC_KEY1 =
+            "02a9fe4198c781ce453545af5401b649a37b72b553a56fb7ab4dcdfa2d12cfdb49";
+
+        const PRIVATE_KEY_PEM2 =
+            "-----BEGIN EC PRIVATE KEY-----\n" +
+            "MFQCAQEEIOHyhclwHbha3f281Kvd884rhBzltxGJxCZyaQCagH9joAcGBSuBBAAK\n" +
+            "oSQDIgACREr6gFZa4K7hBP+bA25VdgQ+0ABFgM+g5RYw/W6T1Og=\n" +
+            "-----END EC PRIVATE KEY-----";
+        const PRIVATE_KEY2 =
+            "e1f285c9701db85addfdbcd4abddf3ce2b841ce5b71189c4267269009a807f63";
+        const PUBLIC_KEY2 =
+            "02444afa80565ae0aee104ff9b036e5576043ed0004580cfa0e51630fd6e93d4e8";
+
+        const PRIVATE_KEY_PEM3 =
+            "-----BEGIN EC PRIVATE KEY-----\n" +
+            "Proc-Type: 4,ENCRYPTED\n" +
+            "DEK-Info: AES-128-CBC,0046A9EED8D16F0CAA66A197CE8BE8BD\n" +
+            "\n" +
+            "9VU9gReUmrn4XywjMx0F0A3oGzpHIksEXma72TCSdcxI7zHy0mtzuGq4Wd25O38s\n" +
+            "H9c6kvhTPS1N/c6iNhx154B0HUoND8jvAvfxbGR/R87vpZJsOoKCmRxGqrxG8HER\n" +
+            "FIHQ1jy16DrAbU95kDyLsiF1dy2vUY/HoqFZwxl/IVc=\n" +
+            "-----END EC PRIVATE KEY-----";
+        const PRIVATE_KEY3 =
+            "cf49eb5206c1b0468854d6ea7b370590619625514f71ff93608a18465e4012ad";
+        const PUBLIC_KEY3 =
+            "025f0d14a7562d6319e5b8f91620d2ce9ad13d9abf21cfe9bd0a092c0f35bf1701";
+
+        const PRIVATE_KEY_PEM4 =
+            "-----BEGIN EC PRIVATE KEY-----\n" +
+            "Proc-Type: 4,ENCRYPTED\n" +
+            "DEK-Info: AES-128-CBC,4A9B3B987EC2EFFA405818327D14FFF7\n" +
+            "\n" +
+            "Wh756RkK5fn1Ke2denR1OYfqE9Kr4BXhgrEMTU/6o0SNhMULUhWGHrCWvmNeEQwp\n" +
+            "ZVZYUxgYoTlJBeREzKAZithcvxIcTbQfLABo1NZbjA6YKqAqlGpM6owwL/f9e2ST\n" +
+            "-----END EC PRIVATE KEY-----";
+        const PRIVATE_KEY4 =
+            "c0d3e16ba5a1abbeac4cd327a3c3c1cc10438431d0bac019054e573e67768bb5";
+        const PUBLIC_KEY4 =
+            "02065f736378134c53c7a2ee46f199fb93b9b32337be4e95660677046476995544";
+
+        const ecdsaPrivateKey1 = await PrivateKey.fromPem(PRIVATE_KEY_PEM1);
+        expect(ecdsaPrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
+        expect(ecdsaPrivateKey1.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY1
+        );
+
+        const ecdsaPrivateKey2 = await PrivateKey.fromPem(PRIVATE_KEY_PEM2);
+        expect(ecdsaPrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
+        expect(ecdsaPrivateKey2.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY2
+        );
+
+        const ecdsaPrivateKey3 = await PrivateKey.fromPem(
+            PRIVATE_KEY_PEM3,
+            TEST_VECTOR_PEM_PASSPHRASE
+        );
+        expect(ecdsaPrivateKey3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
+        expect(ecdsaPrivateKey3.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY3
+        );
+
+        const ecdsaPrivateKey4 = await PrivateKey.fromPem(
+            PRIVATE_KEY_PEM4,
+            TEST_VECTOR_PEM_PASSPHRASE
+        );
+        expect(ecdsaPrivateKey4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
+        expect(ecdsaPrivateKey4.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY4
+        );
+    });
+
+    it.only("DER import test vectors", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
+        const PRIVATE_KEY_DER1 =
+            "3030020100300706052b8104000a042204208c2cdc9575fe67493443967d74958fd7808a3787fd3337e99cfeebbc7566b586";
+        const PRIVATE_KEY1 =
+            "8c2cdc9575fe67493443967d74958fd7808a3787fd3337e99cfeebbc7566b586";
+        const PUBLIC_KEY1 =
+            "028173079d2e996ef6b2d064fc82d5fc7094367211e28422bec50a2f75c365f5fd";
+
+        const PRIVATE_KEY_DER2 =
+            "30540201010420ac318ea8ff8d991ab2f16172b4738e74dc35a56681199cfb1c0cb2e7cb560ffda00706052b8104000aa124032200036843f5cb338bbb4cdb21b0da4ea739d910951d6e8a5f703d313efe31afe788f4";
+        const PRIVATE_KEY2 =
+            "ac318ea8ff8d991ab2f16172b4738e74dc35a56681199cfb1c0cb2e7cb560ffd";
+        const PUBLIC_KEY2 =
+            "036843f5cb338bbb4cdb21b0da4ea739d910951d6e8a5f703d313efe31afe788f4";
+
+        const PRIVATE_KEY_DER3 =
+            "307402010104208927647ad12b29646a1d051da8453462937bb2c813c6815cac6c0b720526ffc6a00706052b8104000aa14403420004aaac1c3ac1bea0245b8e00ce1e2018f9eab61b6331fbef7266f2287750a6597795f855ddcad2377e22259d1fcb4e0f1d35e8f2056300c15070bcbfce3759cc9d";
+        const PRIVATE_KEY3 =
+            "8927647ad12b29646a1d051da8453462937bb2c813c6815cac6c0b720526ffc6";
+        const PUBLIC_KEY3 =
+            "03aaac1c3ac1bea0245b8e00ce1e2018f9eab61b6331fbef7266f2287750a65977";
+
+        const PRIVATE_KEY_DER4 =
+            "302e0201010420a6170a6aa6389a5bd3a3a8f9375f57bd91aa7f7d8b8b46ce0b702e000a21a5fea00706052b8104000a";
+        const PRIVATE_KEY4 =
+            "a6170a6aa6389a5bd3a3a8f9375f57bd91aa7f7d8b8b46ce0b702e000a21a5fe";
+        const PUBLIC_KEY4 =
+            "03b69a75a5ddb1c0747e995d47555019e5d8a28003ab5202bd92f534361fb4ec8a";
+
+        const ecdsaPrivateKey1 = PrivateKey.fromString(PRIVATE_KEY_DER1);
+        expect(ecdsaPrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
+        expect(ecdsaPrivateKey1.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY1
+        );
+
+        const ecdsaPrivateKey2 = PrivateKey.fromString(PRIVATE_KEY_DER2);
+        expect(ecdsaPrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
+        expect(ecdsaPrivateKey2.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY2
+        );
+
+        const ecdsaPrivateKey3 = PrivateKey.fromString(PRIVATE_KEY_DER3);
+        expect(ecdsaPrivateKey3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
+        expect(ecdsaPrivateKey3.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY3
+        );
+
+        const ecdsaPrivateKey4 = PrivateKey.fromString(PRIVATE_KEY_DER4);
+        expect(ecdsaPrivateKey4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
+        expect(ecdsaPrivateKey4.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY4
+        );
     });
 });
