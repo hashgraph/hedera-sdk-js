@@ -231,7 +231,7 @@ export default class ManagedNetwork {
         // `this._healthyNodes.length` times. This can result in a shorter
         // list than `count`, but that is much better than running forever
         for (let i = 0; i < this._healthyNodes.length; i++) {
-            if (nodes.length == count - this._unhealthyNodesCount) {
+            if (nodes.length == count - this._unhealthyNodesCount && nodes.length !== 0) {
                 break;
             }
 

@@ -1473,7 +1473,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Make a signed tranaction given a node account ID
+     * Make a signed transaction given a node account ID
      *
      * @internal
      * @param {?AccountId} nodeId
