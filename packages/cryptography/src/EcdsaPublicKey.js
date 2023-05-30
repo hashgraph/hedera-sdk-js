@@ -40,10 +40,13 @@ export default class EcdsaPublicKey extends Key {
      * @returns {EcdsaPublicKey}
      */
     static fromBytes(data) {
+        console.log(`ECDSA bytes: ${data.length}`)
         switch (data.length) {
             case 33:
                 return EcdsaPublicKey.fromBytesRaw(data);
             case 47:
+                return EcdsaPublicKey.fromBytesDer(data);
+            case 56:
                 return EcdsaPublicKey.fromBytesDer(data);
             default:
                 throw new BadKeyError(
@@ -57,7 +60,11 @@ export default class EcdsaPublicKey extends Key {
      * @returns {EcdsaPublicKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 47 || !arrayStartsWith(data, derPrefixBytes)) {
+        console.log(`array starts? ${arrayStartsWith(data, derPrefixBytes)}`)
+        //if ((data.length != 47 && data.length != 56) || !arrayStartsWith(data, derPrefixBytes)) {
+            if (data.length != 47 && data.length != 56) {
+
+            console.log(`throw`)
             throw new BadKeyError(
                 `invalid public key length: ${data.length} bytes`
             );

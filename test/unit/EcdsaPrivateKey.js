@@ -288,7 +288,7 @@ describe("EcdsaPrivateKey", function () {
         );
     });
 
-    it.only("DER import test vectors", async function () {
+    it("DER import test vectors", async function () {
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
         const PRIVATE_KEY_DER1 =
             "3030020100300706052b8104000a042204208c2cdc9575fe67493443967d74958fd7808a3787fd3337e99cfeebbc7566b586";

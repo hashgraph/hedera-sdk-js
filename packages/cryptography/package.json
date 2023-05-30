@@ -59,6 +59,8 @@
         "last 1 Firefox versions"
     ],
     "dependencies": {
+        "asn1.js": "^5.4.1",
+        "asn1js": "^3.0.5",
         "bignumber.js": "^9.1.1",
         "bn.js": "^5.1.1",
         "crypto-js": "^4.1.1",

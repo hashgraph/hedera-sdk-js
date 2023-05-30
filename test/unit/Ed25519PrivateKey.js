@@ -203,7 +203,7 @@ describe("Ed25519PrivateKey", function () {
         expect(PUBLIC_KEY6).to.contain(key6.publicKey.toStringRaw());
     });
 
-    it.only("PEM import test vectors", async function () {
+    it("PEM import test vectors", async function () {
         const TEST_VECTOR_PEM_PASSPHRASE = "asdasd123";
 
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
@@ -244,7 +244,7 @@ describe("Ed25519PrivateKey", function () {
         );
     });
 
-    it.only("DER import test vectors", async function () {
+    it("DER import test vectors", async function () {
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
         var PRIVATE_KEY_DER1 =
             "302e020100300506032b657004220420feb858a4a69600a5eef2d9c76f7fb84fc0b6627f29e0ab17e160f640c267d404";

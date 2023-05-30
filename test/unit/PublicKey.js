@@ -75,7 +75,7 @@ describe("PublicKey", function () {
         expect(publicKeyED25519.toString()).to.be.equal(ed25519StringKey);
     });
 
-    it.only("ECDSA DER import test vectors", async function () {
+    it("ECDSA DER import test vectors", async function () {
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
         const PUBLIC_KEY_DER1 =
             "302d300706052b8104000a032200028173079d2e996ef6b2d064fc82d5fc7094367211e28422bec50a2f75c365f5fd";
@@ -102,12 +102,14 @@ describe("PublicKey", function () {
         expect(ecdsaPublicKey3.toStringRaw()).to.be.equal(PUBLIC_KEY3);
     });
 
-    it.only("ED25119 DER import test vectors", async function () {
+    it("ED25519 DER import test vectors", async function () {
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
-        const PUBLIC_KEY_DER1 = "302a300506032b65700321008ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
-        const PUBLIC_KEY1 = "8ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
+        const PUBLIC_KEY_DER1 =
+            "302a300506032b65700321008ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
+        const PUBLIC_KEY1 =
+            "8ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
 
-        const ed25519PublicKey1 = PublicKey.fromStringDER(PUBLIC_KEY_DER1);
+        const ed25519PublicKey1 = PublicKey.fromString(PUBLIC_KEY_DER1);
         expect(ed25519PublicKey1.toStringRaw()).to.be.equal(PUBLIC_KEY1);
     });
 });

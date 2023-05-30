@@ -71,12 +71,8 @@ export default class EcdsaPrivateKey {
         switch (data.length) {
             case 32:
                 return EcdsaPrivateKey.fromBytesRaw(data);
-            case 50:
-                return EcdsaPrivateKey.fromBytesDer(data);
             default:
-                throw new BadKeyError(
-                    `invalid private key length: ${data.length} bytes`
-                );
+                return EcdsaPrivateKey.fromBytesDer(data);
         }
     }
 
