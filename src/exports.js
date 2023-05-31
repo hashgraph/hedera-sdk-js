@@ -51,6 +51,7 @@ export { default as AddressBookQuery } from "./network/AddressBookQuery.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
 export { default as ContractByteCodeQuery } from "./contract/ContractByteCodeQuery.js";
 export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";
+export { default as NewContractExecuteTransaction } from "./contract/NewContractExecuteTransaction.js";
 export { default as ContractCreateFlow } from "./contract/ContractCreateFlow.js";
 export { default as ContractCreateTransaction } from "./contract/ContractCreateTransaction.js";
 export { default as ContractDeleteTransaction } from "./contract/ContractDeleteTransaction.js";
