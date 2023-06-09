@@ -16,5 +16,6 @@
             "module-rewrite",
             { "replaceFunc": "./build/replace-module-paths.cjs" }
         ]
-    ]
+    ],
+    "presets": ["@babel/preset-env"]
 }
