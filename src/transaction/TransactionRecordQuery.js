@@ -201,9 +201,11 @@ export default class TransactionRecordQuery extends Query {
                 : proto.ResponseCodeEnum.OK
         );
 
-        this._logger?.debug(
-            `[${this._getLogId()}] received node precheck status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received node precheck status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:
@@ -247,9 +249,11 @@ export default class TransactionRecordQuery extends Query {
             );
         status = Status._fromCode(receiptStatusCode);
 
-        this._logger?.debug(
-            `[${this._getLogId()}] received record's receipt ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received record's receipt ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Ok:
@@ -300,7 +304,8 @@ export default class TransactionRecordQuery extends Query {
                     transactionId: this._getTransactionId(),
                     transactionRecord: TransactionRecord._fromProtobuf({
                         transactionRecord:
-                            response.transactionGetRecord?.transactionRecord,
+                            // @ts-ignore
+                            response.transactionGetRecord.transactionRecord,
                     }),
                 });
 
@@ -337,7 +342,8 @@ export default class TransactionRecordQuery extends Query {
                     transactionId: this._getTransactionId(),
                     transactionRecord: TransactionRecord._fromProtobuf({
                         transactionRecord:
-                            response.transactionGetRecord?.transactionRecord,
+                            // @ts-ignore
+                            response.transactionGetRecord.transactionRecord,
                     }),
                 });
 
