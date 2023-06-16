@@ -294,7 +294,7 @@ export default class ContractFunctionResult {
             ["int40"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -317,7 +317,7 @@ export default class ContractFunctionResult {
             ["int48"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -340,7 +340,7 @@ export default class ContractFunctionResult {
             ["int56"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -363,7 +363,7 @@ export default class ContractFunctionResult {
             ["int64"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -386,7 +386,7 @@ export default class ContractFunctionResult {
             ["int72"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -409,7 +409,7 @@ export default class ContractFunctionResult {
             ["int80"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -432,7 +432,7 @@ export default class ContractFunctionResult {
             ["int88"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -455,7 +455,7 @@ export default class ContractFunctionResult {
             ["int96"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -478,7 +478,7 @@ export default class ContractFunctionResult {
             ["int104"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -501,7 +501,7 @@ export default class ContractFunctionResult {
             ["int112"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -524,7 +524,7 @@ export default class ContractFunctionResult {
             ["int120"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -547,7 +547,7 @@ export default class ContractFunctionResult {
             ["int128"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -570,7 +570,7 @@ export default class ContractFunctionResult {
             ["int136"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -593,7 +593,7 @@ export default class ContractFunctionResult {
             ["int144"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -616,7 +616,7 @@ export default class ContractFunctionResult {
             ["int152"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -639,7 +639,7 @@ export default class ContractFunctionResult {
             ["int160"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -662,7 +662,7 @@ export default class ContractFunctionResult {
             ["int168"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -685,7 +685,7 @@ export default class ContractFunctionResult {
             ["int176"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -708,7 +708,7 @@ export default class ContractFunctionResult {
             ["int184"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -731,7 +731,7 @@ export default class ContractFunctionResult {
             ["int192"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -754,7 +754,7 @@ export default class ContractFunctionResult {
             ["int200"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -777,7 +777,7 @@ export default class ContractFunctionResult {
             ["int208"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -800,7 +800,7 @@ export default class ContractFunctionResult {
             ["int216"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -823,7 +823,7 @@ export default class ContractFunctionResult {
             ["int224"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -846,7 +846,7 @@ export default class ContractFunctionResult {
             ["int232"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -869,7 +869,7 @@ export default class ContractFunctionResult {
             ["int240"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -892,7 +892,7 @@ export default class ContractFunctionResult {
             ["int248"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -915,7 +915,7 @@ export default class ContractFunctionResult {
             ["int256"],
             this._getBytes32(index != null ? index : 0)
         );
-        return new BigNumber(result);
+        return new BigNumber(result.toString());
     }
 
     /**

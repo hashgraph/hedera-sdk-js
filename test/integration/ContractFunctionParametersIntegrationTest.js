@@ -541,7 +541,7 @@ describe("ContractFunctionParameters", function () {
             .setFunction(
                 "returnInt72",
                 new ContractFunctionParameters().addInt72(
-                    2361183241434822606847
+                    new BigNumber(2).pow(71).minus(1)
                 )
             )
             //Set the query payment for the node returning the request
@@ -552,7 +552,7 @@ describe("ContractFunctionParameters", function () {
         const txResponse = await contractQuery.execute(env.client);
 
         expect(txResponse.getInt72(0).toNumber()).to.be.equal(
-            2361183241434822606847
+            new BigNumber(2).pow(71).minus(1).toNumber()
         );
     });
 
@@ -591,7 +591,7 @@ describe("ContractFunctionParameters", function () {
             .setFunction(
                 "returnInt88",
                 new ContractFunctionParameters().addInt88(
-                    154742504910672534362390527
+                    new BigNumber(2).pow(87).minus(1)
                 )
             )
             //Set the query payment for the node returning the request
@@ -602,7 +602,7 @@ describe("ContractFunctionParameters", function () {
         const txResponse = await contractQuery.execute(env.client);
 
         expect(txResponse.getInt88(0).toNumber()).to.be.equal(
-            154742504910672534362390527
+            new BigNumber(2).pow(87).minus(1).toNumber()
         );
     });
 
