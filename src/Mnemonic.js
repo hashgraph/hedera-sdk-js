@@ -71,7 +71,7 @@ export default class Mnemonic {
      * validation error and continue.
      *
      * @param {string[]} words
-     * @throws {BadMnemonicError}
+     * @throws {cryptography.BadMnemonicError}
      * @returns {Promise<Mnemonic>}
      */
     static async fromWords(words) {

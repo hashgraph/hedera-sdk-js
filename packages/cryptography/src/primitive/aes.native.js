@@ -83,3 +83,23 @@ export function createDecipheriv(algorithm, key, iv, data) {
         )
     );
 }
+
+/**
+ * @param {string} passphrase
+ * @param {string} iv
+ * @returns {Promise<Uint8Array>}
+ */
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function messageDigest(passphrase, iv) {
+    console.log(`NATIVE`);
+    const slicedIv = hex.encode(hex.decode(iv).slice(0, 8));
+    return Promise.resolve(
+        hex.decode(
+            CryptoJS.MD5(
+                CryptoJS.enc.Utf8.parse(passphrase).concat(
+                    CryptoJS.MD5(CryptoJS.enc.Hex.parse(slicedIv))
+                )
+            ).toString(CryptoJS.enc.Hex)
+        )
+    );
+}

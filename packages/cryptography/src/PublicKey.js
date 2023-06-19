@@ -41,20 +41,31 @@ export default class PublicKey extends Key {
      * @returns {PublicKey}
      */
     static fromBytes(data) {
+        let message;
         try {
             return new PublicKey(Ed25519PublicKey.fromBytes(data));
-        } catch {
-            // Do nothing
+        } catch (error) {
+            message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
         }
 
         try {
             return new PublicKey(EcdsaPublicKey.fromBytes(data));
-        } catch {
-            // Do nothing
+        } catch (error) {
+            message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
         }
 
         throw new BadKeyError(
-            `invalid public key length: ${data.length} bytes`
+            `public key cannot be decoded from bytes: ${message}`
         );
     }
 

@@ -1,4 +1,3 @@
-import BadKeyError from "./BadKeyError.js";
 import EcdsaPublicKey from "./EcdsaPublicKey.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
@@ -7,6 +6,15 @@ import { arrayStartsWith } from "./util/array.js";
 
 const derPrefix = "3030020100300706052b8104000a04220420";
 const derPrefixBytes = hex.decode(derPrefix);
+
+const derPrefix2 = "30540201010420";
+const derPrefixBytes2 = hex.decode(derPrefix2);
+
+/* const derPrefix3 = "30740201010420";
+const derPrefixBytes3 = hex.decode(derPrefix3);
+
+const derPrefix4 = "302e0201010420";
+const derPrefixBytes4 = hex.decode(derPrefix4); */
 
 /**
  * @typedef {object} KeyPair
@@ -83,13 +91,20 @@ export default class EcdsaPrivateKey {
      * @returns {EcdsaPrivateKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 32 && !arrayStartsWith(data, derPrefixBytes)) {
-            throw new BadKeyError("invalid der header");
+        let ecdsaPrivateKeyBytes = new Uint8Array();
+
+        if (arrayStartsWith(data, derPrefixBytes)) {
+            ecdsaPrivateKeyBytes = data.subarray(derPrefixBytes.length);
+        } else {
+            // For now, we assume that if we get to the `else` statement
+            // the lengths of all other bytePrefixes is equal, so we treat them equally
+            ecdsaPrivateKeyBytes = data.subarray(
+                derPrefixBytes2.length,
+                derPrefixBytes2.length + 32
+            );
         }
 
-        return new EcdsaPrivateKey(
-            ecdsa.fromBytes(data.subarray(derPrefixBytes.length))
-        );
+        return new EcdsaPrivateKey(ecdsa.fromBytes(ecdsaPrivateKeyBytes));
     }
 
     /**
