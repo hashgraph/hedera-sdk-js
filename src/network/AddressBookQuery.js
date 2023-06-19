@@ -18,13 +18,13 @@
  * ‍
  */
 
+import Query from "../query/Query.js";
 import NodeAddress from "../address_book/NodeAddress.js";
 import NodeAddressBook from "../address_book/NodeAddressBook.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
 import CACHE from "../Cache.js";
-import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -37,13 +37,18 @@ import Logger from "js-logger";
  * @typedef {import("../client/Client.js").default<ChannelT, MirrorChannel>} Client<ChannelT, MirrorChannel>
  */
 
-export default class AddressBookQuery {
+/**
+ * @augments {Query<NodeAddressBook>}
+ */
+export default class AddressBookQuery extends Query {
     /**
      * @param {object} props
      * @param {FileId | string} [props.fileId]
      * @param {number} [props.limit]
      */
     constructor(props = {}) {
+        super();
+
         /**
          * @private
          * @type {?FileId}
@@ -107,18 +112,6 @@ export default class AddressBookQuery {
          * @private
          * @type {number}
          */
-        this._maxAttempts = 10;
-
-        /**
-         * @private
-         * @type {number}
-         */
-        this._maxBackoff = 8000;
-
-        /**
-         * @private
-         * @type {number}
-         */
         this._attempt = 0;
     }
 
@@ -161,16 +154,20 @@ export default class AddressBookQuery {
 
     /**
      * @param {number} attempts
+     * @returns {this}
      */
     setMaxAttempts(attempts) {
         this._maxAttempts = attempts;
+        return this;
     }
 
     /**
      * @param {number} backoff
+     * @returns {this}
      */
     setMaxBackoff(backoff) {
         this._maxBackoff = backoff;
+        return this;
     }
 
     /**
@@ -245,7 +242,7 @@ export default class AddressBookQuery {
                                 }. Waiting ${delay} ms before next attempt: ${message}`
                             );
                         }
-                        Logger.debug(
+                        this._logger?.debug(
                             `Error getting nodes from mirror for file ${
                                 this._fileId != null
                                     ? this._fileId.toString()

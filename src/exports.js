@@ -168,13 +168,14 @@ export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
 export { default as Wallet } from "./Wallet.js";
 //export * as EntityIdHelper from "./EntityIdHelper.js";
+export { default as Logger } from "./logger/Logger.js";
+export { default as LogLevel } from "./logger/LogLevel.js";
+//export * as EntityIdHelper from "./EntityIdHelper.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
-
-export { default as Logger } from "js-logger";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

@@ -26,18 +26,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import Key from "../Key.js";
 import Hbar from "../Hbar.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
- * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.IScheduleCreateTransactionBody} HashgraphProto.proto.IScheduleCreateTransactionBody
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
- * @typedef {import("@hashgraph/proto").proto.ISignatureMap} HashgraphProto.proto.ISignatureMap
- */
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -142,30 +131,59 @@ export default class ScheduleCreateTransaction extends Transaction {
                 body.scheduleCreate
             );
 
-        return Transaction._fromProtobufTransactions(
-            new ScheduleCreateTransaction({
-                adminKey:
-                    create.adminKey != null
-                        ? Key._fromProtobufKey(create.adminKey)
-                        : undefined,
-                payerAccountID:
-                    create.payerAccountID != null
-                        ? AccountId._fromProtobuf(
-                              /** @type {HashgraphProto.proto.IAccountID} */ (
-                                  create.payerAccountID
-                              )
+        const scheduledTransaction = new ScheduleCreateTransaction({
+            adminKey:
+                create.adminKey != null
+                    ? Key._fromProtobufKey(create.adminKey)
+                    : undefined,
+            payerAccountID:
+                create.payerAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {HashgraphProto.proto.IAccountID} */ (
+                              create.payerAccountID
                           )
-                        : undefined,
-                scheduleMemo: create.memo != null ? create.memo : undefined,
-                waitForExpiry:
-                    create.waitForExpiry != null
-                        ? create.waitForExpiry
-                        : undefined,
-                expirationTime:
-                    create.expirationTime != null
-                        ? Timestamp._fromProtobuf(create.expirationTime)
-                        : undefined,
-            }),
+                      )
+                    : undefined,
+            scheduleMemo: create.memo != null ? create.memo : undefined,
+            waitForExpiry:
+                create.waitForExpiry != null ? create.waitForExpiry : undefined,
+            expirationTime:
+                create.expirationTime != null
+                    ? Timestamp._fromProtobuf(create.expirationTime)
+                    : undefined,
+        });
+        if (body.scheduleCreate != null) {
+            const scheduleCreateBody =
+                body.scheduleCreate.scheduledTransactionBody;
+
+            const scheduleCreateBodyBytes =
+                HashgraphProto.proto.TransactionBody.encode(
+                    // @ts-ignore
+                    scheduleCreateBody
+                ).finish();
+
+            const signedScheduledCreateTransaction =
+                HashgraphProto.proto.SignedTransaction.encode({
+                    bodyBytes: scheduleCreateBodyBytes,
+                }).finish();
+
+            const scheduleCreatetransaction = {
+                signedTransactionBytes: signedScheduledCreateTransaction,
+            };
+
+            const txlist = HashgraphProto.proto.TransactionList.encode({
+                transactionList: [scheduleCreatetransaction],
+            }).finish();
+
+            const finalScheduledDecodedTx = Transaction.fromBytes(txlist);
+
+            scheduledTransaction._setScheduledTransaction(
+                finalScheduledDecodedTx
+            );
+        }
+
+        return Transaction._fromProtobufTransactions(
+            scheduledTransaction,
             transactions,
             signedTransactions,
             transactionIds,

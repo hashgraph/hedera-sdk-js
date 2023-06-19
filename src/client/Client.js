@@ -28,7 +28,7 @@ import PrivateKey from "../PrivateKey.js";
 import LedgerId from "../LedgerId.js";
 import FileId from "../file/FileId.js";
 import CACHE from "../Cache.js";
-import Logger from "js-logger";
+import Logger from "../logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -154,6 +154,14 @@ export default class Client {
         /** @internal */
         /** @type {NodeJS.Timeout} */
         this._timer;
+
+        /**
+         * Logger
+         *
+         * @external
+         * @type {Logger | null}
+         */
+        this._logger = null;
     }
 
     /**
@@ -631,6 +639,25 @@ export default class Client {
         this._scheduleNetworkUpdate();
         return this;
     }
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     * @returns {this}
+     */
+    setLogger(logger) {
+        this._logger = logger;
+        return this;
+    }
+
+    /**
+     * Get logger if set
+     *
+     * @returns {?Logger}
+     */
+    get logger() {
+        return this._logger;
+    }
 
     /**
      * @param {AccountId | string} accountId
@@ -696,7 +723,7 @@ export default class Client {
                     this._scheduleNetworkUpdate();
                 }
             } catch (error) {
-                Logger.trace(
+                this._logger?.trace(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`
@@ -718,7 +745,7 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
             } catch (error) {
-                Logger.trace(
+                this._logger?.trace(
                     `failed to update client address book: ${
                         /** @type {Error} */ (error).toString()
                     }`

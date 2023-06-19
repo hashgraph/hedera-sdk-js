@@ -25,7 +25,6 @@ import TransactionId from "./TransactionId.js";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
-import Logger from "js-logger";
 import * as HashgraphProto from "@hashgraph/proto";
 
 const { proto } = HashgraphProto;
@@ -212,7 +211,7 @@ export default class TransactionReceiptQuery extends Query {
                 : proto.ResponseCodeEnum.OK
         );
 
-        Logger.debug(
+        this._logger?.debug(
             `[${this._getLogId()}] received node precheck status ${status.toString()}`
         );
 
@@ -242,7 +241,7 @@ export default class TransactionReceiptQuery extends Query {
 
         status = Status._fromCode(receiptStatusCode);
 
-        Logger.debug(
+        this._logger?.debug(
             `[${this._getLogId()}] received receipt status ${status.toString()}`
         );
 
