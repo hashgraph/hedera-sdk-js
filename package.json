@@ -53,6 +53,7 @@
     ],
     "dependencies": {
         "@ethersproject/abi": "^5.7.0",
+        "@ethersproject/bignumber": "^5.7.0",
         "@ethersproject/bytes": "^5.7.0",
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "^1.7.3",

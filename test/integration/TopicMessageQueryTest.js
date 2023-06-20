@@ -18,7 +18,7 @@ describe("TopicMessageQuery", function () {
         let endTime = Date.now() + 50000;
 
         new TopicMessageQuery()
-            .setTopicId("0.0.120438")
+            .setTopicId("0.0.3002507")
             // .setStartTime(0)
             // .setLimit(1)
             // eslint-disable-next-line no-unused-vars

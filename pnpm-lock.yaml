@@ -11,6 +11,7 @@ specifiers:
   '@babel/preset-env': ^7.22.5
   '@babel/register': ^7.18.9
   '@ethersproject/abi': ^5.7.0
+  '@ethersproject/bignumber': ^5.7.0
   '@ethersproject/bytes': ^5.7.0
   '@ethersproject/rlp': ^5.7.0
   '@grpc/grpc-js': ^1.7.3
@@ -66,6 +67,7 @@ specifiers:
 
 dependencies:
   '@ethersproject/abi': 5.7.0
+  '@ethersproject/bignumber': 5.7.0
   '@ethersproject/bytes': 5.7.0
   '@ethersproject/rlp': 5.7.0
   '@grpc/grpc-js': 1.8.14
