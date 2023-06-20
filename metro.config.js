@@ -1,4 +1,4 @@
-/* // Absolute path to your package
+// Absolute path to your package
 const packagePath =
 "/Users/petartonev/Work/hedera/hedera-sdk-js/packages/cryptography/lib";
 
@@ -9,4 +9,4 @@ module.exports = {
   },
   watchFolders: [packagePath],
   // rest of metro options...
-}; */
+};

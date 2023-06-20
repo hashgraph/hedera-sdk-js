@@ -205,7 +205,7 @@ describe("EcdsaPrivateKey", function () {
         expect(PUBLIC_KEY6).to.contain(key6.publicKey.toStringRaw());
     });
 
-    it.only("PEM import test vectors", async function () {
+    it("PEM import test vectors", async function () {
         const TEST_VECTOR_PEM_PASSPHRASE = "asdasd123";
 
         // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
