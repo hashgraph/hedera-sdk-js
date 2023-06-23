@@ -457,16 +457,15 @@ export default class ManagedNetwork {
             // )[0];
             const lockedNodes = this._network.get(key.toString());
             if (lockedNodes) {
-                return /** @type {NetworkNodeT[]} */ (
-                    lockedNodes
-                )[0];
+                return /** @type {NetworkNodeT[]} */ (lockedNodes)[0];
             } else {
                 const nodes = Array.from(this._network.keys());
-                const randomNodeAccountId = nodes[Math.floor(Math.random() * nodes.length)];
-                
+                const randomNodeAccountId =
+                    nodes[Math.floor(Math.random() * nodes.length)];
+
                 // We get the `randomNodeAccountId` from the network mapping,
                 // so it cannot be `undefined`
-                // @ts-ignore 
+                // @ts-ignore
                 return this._network.get(randomNodeAccountId)[0];
             }
         } else {
