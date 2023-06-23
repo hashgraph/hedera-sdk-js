@@ -591,9 +591,11 @@ export default class Executable {
 
             // Get the log ID for the request.
             const logId = this._getLogId();
-            this._logger?.debug(
-                `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
-            );
+            if (this._logger) {
+                this._logger.debug(
+                    `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
+                );
+            }
 
             const channel = node.getChannel();
             const request = await this._makeRequestAsync();
@@ -611,9 +613,12 @@ export default class Executable {
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
             if (!node.isHealthy()) {
-                this._logger?.debug(
-                    `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
-                );
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
+                    );
+                }
+
                 // We don't need to wait, we can proceed to the next attempt.
                 continue;
             }
@@ -638,11 +643,14 @@ export default class Executable {
                         )
                     );
                 }
-                this._logger?.trace(
-                    `[${this._getLogId()}] sending protobuf ${hex.encode(
-                        this._requestToBytes(request)
-                    )}`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `[${this._getLogId()}] sending protobuf ${hex.encode(
+                            this._requestToBytes(request)
+                        )}`
+                    );
+                }
+
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -657,9 +665,11 @@ export default class Executable {
 
                 // Save the error in case we retry
                 persistentError = error;
-                this._logger?.debug(
-                    `[${logId}] received error ${JSON.stringify(error)}`
-                );
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] received error ${JSON.stringify(error)}`
+                    );
+                }
 
                 if (
                     (error instanceof GrpcServiceError ||
@@ -669,21 +679,25 @@ export default class Executable {
                 ) {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
-                    this._logger?.debug(
-                        `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
-                    );
+                    if (this._logger) {
+                        this._logger.debug(
+                            `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
+                        );
+                    }
+
                     client._network.increaseBackoff(node);
                     continue;
                 }
 
                 throw err;
             }
-
-            this._logger?.trace(
-                `[${this._getLogId()}] sending protobuf ${hex.encode(
-                    this._responseToBytes(response)
-                )}`
-            );
+            if (this._logger) {
+                this._logger.trace(
+                    `[${this._getLogId()}] sending protobuf ${hex.encode(
+                        this._responseToBytes(response)
+                    )}`
+                );
+            }
 
             // If we didn't receive an error we should decrease the current nodes backoff
             // in case it is a recovering node

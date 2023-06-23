@@ -242,15 +242,18 @@ export default class AddressBookQuery extends Query {
                                 }. Waiting ${delay} ms before next attempt: ${message}`
                             );
                         }
-                        this._logger?.debug(
-                            `Error getting nodes from mirror for file ${
-                                this._fileId != null
-                                    ? this._fileId.toString()
-                                    : "UNKNOWN"
-                            } during attempt ${
-                                this._attempt
-                            }. Waiting ${delay} ms before next attempt: ${message}`
-                        );
+                        if (this._logger) {
+                            this._logger.debug(
+                                `Error getting nodes from mirror for file ${
+                                    this._fileId != null
+                                        ? this._fileId.toString()
+                                        : "UNKNOWN"
+                                } during attempt ${
+                                    this._attempt
+                                }. Waiting ${delay} ms before next attempt: ${message}`
+                            );
+                        }
+
                         this._attempt += 1;
 
                         setTimeout(() => {

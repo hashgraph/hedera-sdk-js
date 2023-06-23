@@ -273,4 +273,10 @@ contract ReturnDataTypes {
     function returnInt256(int256 count) external pure returns (int256) {
         return count;
     }
+
+    function returnMultipleInt256(
+        int256 count
+    ) external pure returns (int256, int256) {
+        return (count, count + 1);
+    }
 }

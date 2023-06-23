@@ -106,10 +106,11 @@ export default class CostQuery extends Executable {
             /** @type {import("../transaction/TransactionId.js").default} */
             (TransactionId.generate(new AccountId(0)));
         const paymentAmount = new Hbar(0);
-
-        this._logger?.debug(
-            `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+            );
+        }
 
         this._header = {
             payment: await _makePaymentTransaction(

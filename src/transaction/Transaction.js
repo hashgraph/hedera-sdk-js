@@ -1158,9 +1158,12 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        this._logger?.info(
-            `Network used: ${client._network.networkName}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
-        );
+        if (this._logger) {
+            this._logger.info(
+                `Network used: ${client._network.networkName}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+            );
+        }
+
         // Make sure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
@@ -1376,12 +1379,14 @@ export default class Transaction extends Executable {
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
-        this._logger?.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
-        );
-        this._logger?.info(
-            `SDK Transaction Status Response: ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received status ${status.toString()}`
+            );
+            this._logger.info(
+                `SDK Transaction Status Response: ${status.toString()}`
+            );
+        }
 
         // Based on the status what execution state are we in
         switch (status) {
@@ -1425,10 +1430,12 @@ export default class Transaction extends Executable {
                 ? nodeTransactionPrecheckCode
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
-
-        this._logger?.info(
-            `Transaction Error Info: ${status.toString()}, ${this.transactionId?.toString()}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
-        );
+        if (this._logger) {
+            this._logger.info(
+                // @ts-ignore
+                `Transaction Error Info: ${status.toString()}, ${this.transactionId.toString()}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+            );
+        }
 
         return new PrecheckStatusError({
             status,
@@ -1454,16 +1461,17 @@ export default class Transaction extends Executable {
         const transactionId = this._getTransactionId();
 
         this._transactionIds.advance();
-
-        this._logger?.info(
-            `Transaction Info: ${JSON.stringify(
-                new TransactionResponse({
-                    nodeId,
-                    transactionHash,
-                    transactionId,
-                }).toJSON()
-            )}`
-        );
+        if (this._logger) {
+            this._logger.info(
+                `Transaction Info: ${JSON.stringify(
+                    new TransactionResponse({
+                        nodeId,
+                        transactionHash,
+                        transactionId,
+                    }).toJSON()
+                )}`
+            );
+        }
 
         return new TransactionResponse({
             nodeId,
@@ -1481,7 +1489,9 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        this._logger?.info(`Transaction Body: ${JSON.stringify(body)}`);
+        if (this._logger) {
+            this._logger.info(`Transaction Body: ${JSON.stringify(body)}`);
+        }
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 

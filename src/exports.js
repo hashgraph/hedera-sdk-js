@@ -17,6 +17,7 @@
  * limitations under the License.
  * ‍
  */
+import * as EntityIdHelper from "./EntityIdHelper.js";
 
 export { default as Cache } from "./Cache.js";
 export {
@@ -169,7 +170,7 @@ export { default as TransferTransaction } from "./account/TransferTransaction.js
 export { default as Wallet } from "./Wallet.js";
 export { default as Logger } from "./logger/Logger.js";
 export { default as LogLevel } from "./logger/LogLevel.js";
-export * as EntityIdHelper from "./EntityIdHelper.js";
+export { EntityIdHelper };
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
