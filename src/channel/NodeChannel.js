@@ -106,7 +106,6 @@ export default class NodeChannel extends Channel {
                         `/proto.${serviceName}/${method.name}`,
                         (value) => value,
                         (value) => {
-                            //received = true;
                             return value;
                         },
                         Buffer.from(requestData),
