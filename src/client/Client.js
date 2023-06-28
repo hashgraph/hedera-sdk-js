@@ -755,7 +755,7 @@ export default class Client {
                     );
                 }
             }
-        }, 50);
+        }, 1000);
     }
 
     /**

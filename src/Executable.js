@@ -662,7 +662,7 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
-                console.log(`ATTEMPT: ${attempt} ERROR: ${err}`);
+
                 // Save the error in case we retry
                 persistentError = error;
                 if (this._logger) {
