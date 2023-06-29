@@ -73,6 +73,7 @@ tasks:
 
     build:
         cmds:
+            - task: update:addressbooks
             - task: install
             - task: format
             - task: lint
