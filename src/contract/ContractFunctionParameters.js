@@ -1683,7 +1683,7 @@ function argumentToBytes(param, ty) {
         case ArgumentType.uint256: {
             let paramToHex = param.toString(16);
 
-            if (param > 0) {
+            if (param > 0 || param == 0) {
                 paramToHex = "0x" + paramToHex;
             } else {
                 paramToHex =
