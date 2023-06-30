@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.29.0
+
+## What's Changed
+* GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
+* Update the addressbook on SDK build by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1658
+
 ## v2.29.0-beta.1
 
 ## What's Changed
