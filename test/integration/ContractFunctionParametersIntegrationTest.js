@@ -38,7 +38,10 @@ describe("ContractFunctionParameters", function () {
         const fileAppendSign = await fileAppendTx.sign(env.operatorKey);
         const fileAppendSubmit = await fileAppendSign.execute(env.client);
         const fileAppendRx = await fileAppendSubmit.getReceipt(env.client);
-        console.log("Status of file append is", fileAppendRx.status.toString());
+        console.log(
+            "Status of file append is",
+            fileAppendRx.status.toString(10)
+        );
 
         // Instantiate the contract instance
         const contractTx = await new ContractCreateTransaction()
@@ -373,7 +376,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint40(0).toString()).to.be.equal(1099511627775);
+        expect(txResponse.getUint40(0).toString(10)).to.be.equal(1099511627775);
     });
 
     it("should return the right multiple values", async function () {
@@ -396,7 +399,7 @@ describe("ContractFunctionParameters", function () {
 
         const result = txResponse.getResult(["uint32", "uint64", "string"]);
         expect(result[0]).to.be.equal(4294967295); // first param returned by the contrast is in UINT32
-        expect(result[1].toString()).to.be.equal(4294967294); // second param returned by the contract is in UINT64
+        expect(result[1].toString(10)).to.be.equal(4294967294); // second param returned by the contract is in UINT64
         expect(result[2]).to.be.equal("OK"); // third param returned by the contract is in STRING
     });
 
@@ -418,7 +421,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString()).to.be.equal(-549755813888);
+        expect(txResponse.getInt40(0).toString(10)).to.be.equal(-549755813888);
     });
 
     it("should return the right positive int40 value", async function () {
@@ -439,7 +442,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString()).to.be.equal(549755813887);
+        expect(txResponse.getInt40(0).toString(10)).to.be.equal(549755813887);
     });
 
     it("should return the right multiple int40 values", async function () {
@@ -460,8 +463,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString()).to.be.equal(549755813885);
-        expect(txResponse.getInt40(1).toString()).to.be.equal(549755813886);
+        expect(txResponse.getInt40(0).toString(10)).to.be.equal(549755813885);
+        expect(txResponse.getInt40(1).toString(10)).to.be.equal(549755813886);
     });
 
     it("should return the right int48 value", async function () {
@@ -482,7 +485,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt48(0).toString()).to.be.equal(-2147483648);
+        expect(txResponse.getInt48(0).toString(10)).to.be.equal(-2147483648);
     });
 
     it("should return the right int56 value", async function () {
@@ -503,7 +506,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt56(0).toString()).to.be.equal(-2147483648);
+        expect(txResponse.getInt56(0).toString(10)).to.be.equal(-2147483648);
     });
 
     it("should return the right int64 value", async function () {
@@ -524,7 +527,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt64(0).toString()).to.be.equal(-2147483648);
+        expect(txResponse.getInt64(0).toString(10)).to.be.equal(-2147483648);
     });
 
     it("should return the right negative int72 value", async function () {
@@ -547,7 +550,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt72(0).toString()).to.be.equal(
+        expect(txResponse.getInt72(0).toString(10)).to.be.equal(
             -2361183241434822606848
         );
     });
@@ -572,8 +575,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt72(0).toString()).to.be.equal(
-            new BigNumber(2).pow(71).minus(1).toString()
+        expect(txResponse.getInt72(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(71).minus(1).toString(10)
         );
     });
 
@@ -597,7 +600,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt88(0).toString()).to.be.equal(
+        expect(txResponse.getInt88(0).toString(10)).to.be.equal(
             -154742504910672534362390528
         );
     });
@@ -622,8 +625,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt88(0).toString()).to.be.equal(
-            new BigNumber(2).pow(87).minus(1).toString()
+        expect(txResponse.getInt88(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(87).minus(1).toString(10)
         );
     });
 
@@ -647,8 +650,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint96(0).toString()).to.be.equal(
-            new BigNumber(2).pow(96).minus(1).toString()
+        expect(txResponse.getUint96(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(96).minus(1).toString(10)
         );
     });
 
@@ -672,8 +675,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt96(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(95).toString()
+        expect(txResponse.getInt96(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(95).toString(10)
         );
     });
 
@@ -697,8 +700,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt96(0).toString()).to.be.equal(
-            new BigNumber(2).pow(95).minus(1).toString()
+        expect(txResponse.getInt96(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(95).minus(1).toString(10)
         );
     });
 
@@ -722,8 +725,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt104(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(103).toString()
+        expect(txResponse.getInt104(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(103).toString(10)
         );
     });
 
@@ -747,8 +750,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt104(0).toString()).to.be.equal(
-            new BigNumber(2).pow(103).minus(1).toString()
+        expect(txResponse.getInt104(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(103).minus(1).toString(10)
         );
     });
 
@@ -772,8 +775,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint104(0).toString()).to.be.equal(
-            new BigNumber(2).pow(104).minus(1).toString()
+        expect(txResponse.getUint104(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(104).minus(1).toString(10)
         );
     });
 
@@ -797,8 +800,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt112(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(111).toString()
+        expect(txResponse.getInt112(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(111).toString(10)
         );
     });
 
@@ -822,8 +825,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt112(0).toString()).to.be.equal(
-            new BigNumber(2).pow(111).minus(1).toString()
+        expect(txResponse.getInt112(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(111).minus(1).toString(10)
         );
     });
 
@@ -847,8 +850,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint112(0).toString()).to.be.equal(
-            new BigNumber(2).pow(112).minus(1).toString()
+        expect(txResponse.getUint112(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(112).minus(1).toString(10)
         );
     });
 
@@ -872,8 +875,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt120(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(119).toString()
+        expect(txResponse.getInt120(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(119).toString(10)
         );
     });
 
@@ -897,8 +900,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt120(0).toString()).to.be.equal(
-            new BigNumber(2).pow(119).minus(1).toString()
+        expect(txResponse.getInt120(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(119).minus(1).toString(10)
         );
     });
 
@@ -922,8 +925,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint120(0).toString()).to.be.equal(
-            new BigNumber(2).pow(120).minus(1).toString()
+        expect(txResponse.getUint120(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(120).minus(1).toString(10)
         );
     });
 
@@ -947,8 +950,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt128(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(127).toString()
+        expect(txResponse.getInt128(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(127).toString(10)
         );
     });
 
@@ -972,8 +975,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt128(0).toString()).to.be.equal(
-            new BigNumber(2).pow(127).minus(1).toString()
+        expect(txResponse.getInt128(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(127).minus(1).toString(10)
         );
     });
 
@@ -997,8 +1000,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint128(0).toString()).to.be.equal(
-            new BigNumber(2).pow(128).minus(1).toString()
+        expect(txResponse.getUint128(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(128).minus(1).toString(10)
         );
     });
 
@@ -1022,8 +1025,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt136(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(127).toString()
+        expect(txResponse.getInt136(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(127).toString(10)
         );
     });
 
@@ -1047,8 +1050,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt136(0).toString()).to.be.equal(
-            new BigNumber(2).pow(127).minus(1).toString()
+        expect(txResponse.getInt136(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(127).minus(1).toString(10)
         );
     });
 
@@ -1072,8 +1075,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint136(0).toString()).to.be.equal(
-            new BigNumber(2).pow(128).minus(1).toString()
+        expect(txResponse.getUint136(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(128).minus(1).toString(10)
         );
     });
 
@@ -1097,8 +1100,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt144(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(143).toString()
+        expect(txResponse.getInt144(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(143).toString(10)
         );
     });
 
@@ -1122,8 +1125,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt144(0).toString()).to.be.equal(
-            new BigNumber(2).pow(143).minus(1).toString()
+        expect(txResponse.getInt144(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(143).minus(1).toString(10)
         );
     });
 
@@ -1147,8 +1150,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint144(0).toString()).to.be.equal(
-            new BigNumber(2).pow(144).minus(1).toString()
+        expect(txResponse.getUint144(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(144).minus(1).toString(10)
         );
     });
 
@@ -1172,8 +1175,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt152(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(151).toString()
+        expect(txResponse.getInt152(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(151).toString(10)
         );
     });
 
@@ -1197,8 +1200,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt152(0).toString()).to.be.equal(
-            new BigNumber(2).pow(151).minus(1).toString()
+        expect(txResponse.getInt152(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(151).minus(1).toString(10)
         );
     });
 
@@ -1222,8 +1225,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint152(0).toString()).to.be.equal(
-            new BigNumber(2).pow(152).minus(1).toString()
+        expect(txResponse.getUint152(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(152).minus(1).toString(10)
         );
     });
 
@@ -1247,8 +1250,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt160(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(159).toString()
+        expect(txResponse.getInt160(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(159).toString(10)
         );
     });
 
@@ -1272,8 +1275,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt160(0).toString()).to.be.equal(
-            new BigNumber(2).pow(159).minus(1).toString()
+        expect(txResponse.getInt160(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(159).minus(1).toString(10)
         );
     });
 
@@ -1297,8 +1300,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint160(0).toString()).to.be.equal(
-            new BigNumber(2).pow(160).minus(1).toString()
+        expect(txResponse.getUint160(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(160).minus(1).toString(10)
         );
     });
 
@@ -1322,8 +1325,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt168(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(167).toString()
+        expect(txResponse.getInt168(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(167).toString(10)
         );
     });
 
@@ -1347,8 +1350,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt168(0).toString()).to.be.equal(
-            new BigNumber(2).pow(167).minus(1).toString()
+        expect(txResponse.getInt168(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(167).minus(1).toString(10)
         );
     });
 
@@ -1372,8 +1375,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint168(0).toString()).to.be.equal(
-            new BigNumber(2).pow(168).minus(1).toString()
+        expect(txResponse.getUint168(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(168).minus(1).toString(10)
         );
     });
 
@@ -1397,8 +1400,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt176(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(175).toString()
+        expect(txResponse.getInt176(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(175).toString(10)
         );
     });
 
@@ -1422,8 +1425,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt176(0).toString()).to.be.equal(
-            new BigNumber(2).pow(175).minus(1).toString()
+        expect(txResponse.getInt176(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(175).minus(1).toString(10)
         );
     });
 
@@ -1447,8 +1450,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint176(0).toString()).to.be.equal(
-            new BigNumber(2).pow(176).minus(1).toString()
+        expect(txResponse.getUint176(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(176).minus(1).toString(10)
         );
     });
 
@@ -1472,8 +1475,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt184(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(183).toString()
+        expect(txResponse.getInt184(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(183).toString(10)
         );
     });
 
@@ -1497,8 +1500,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt184(0).toString()).to.be.equal(
-            new BigNumber(2).pow(183).minus(1).toString()
+        expect(txResponse.getInt184(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(183).minus(1).toString(10)
         );
     });
 
@@ -1522,8 +1525,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint184(0).toString()).to.be.equal(
-            new BigNumber(2).pow(184).minus(1).toString()
+        expect(txResponse.getUint184(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(184).minus(1).toString(10)
         );
     });
 
@@ -1547,8 +1550,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt192(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(191).toString()
+        expect(txResponse.getInt192(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(191).toString(10)
         );
     });
 
@@ -1572,8 +1575,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt192(0).toString()).to.be.equal(
-            new BigNumber(2).pow(191).minus(1).toString()
+        expect(txResponse.getInt192(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(191).minus(1).toString(10)
         );
     });
 
@@ -1597,8 +1600,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint192(0).toString()).to.be.equal(
-            new BigNumber(2).pow(192).minus(1).toString()
+        expect(txResponse.getUint192(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(192).minus(1).toString(10)
         );
     });
 
@@ -1622,8 +1625,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt200(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(199).toString()
+        expect(txResponse.getInt200(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(199).toString(10)
         );
     });
 
@@ -1647,8 +1650,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt200(0).toString()).to.be.equal(
-            new BigNumber(2).pow(199).minus(1).toString()
+        expect(txResponse.getInt200(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(199).minus(1).toString(10)
         );
     });
 
@@ -1672,8 +1675,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint200(0).toString()).to.be.equal(
-            new BigNumber(2).pow(200).minus(1).toString()
+        expect(txResponse.getUint200(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(200).minus(1).toString(10)
         );
     });
 
@@ -1697,8 +1700,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt208(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(207).toString()
+        expect(txResponse.getInt208(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(207).toString(10)
         );
     });
 
@@ -1722,8 +1725,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt208(0).toString()).to.be.equal(
-            new BigNumber(2).pow(207).minus(1).toString()
+        expect(txResponse.getInt208(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(207).minus(1).toString(10)
         );
     });
 
@@ -1747,8 +1750,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint208(0).toString()).to.be.equal(
-            new BigNumber(2).pow(208).minus(1).toString()
+        expect(txResponse.getUint208(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(208).minus(1).toString(10)
         );
     });
 
@@ -1772,8 +1775,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt216(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(215).toString()
+        expect(txResponse.getInt216(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(215).toString(10)
         );
     });
 
@@ -1797,8 +1800,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt216(0).toString()).to.be.equal(
-            new BigNumber(2).pow(215).minus(1).toString()
+        expect(txResponse.getInt216(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(215).minus(1).toString(10)
         );
     });
 
@@ -1822,8 +1825,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint216(0).toString()).to.be.equal(
-            new BigNumber(2).pow(216).minus(1).toString()
+        expect(txResponse.getUint216(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(216).minus(1).toString(10)
         );
     });
 
@@ -1847,8 +1850,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt224(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(223).toString()
+        expect(txResponse.getInt224(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(223).toString(10)
         );
     });
 
@@ -1872,8 +1875,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt224(0).toString()).to.be.equal(
-            new BigNumber(2).pow(223).minus(1).toString()
+        expect(txResponse.getInt224(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(223).minus(1).toString(10)
         );
     });
 
@@ -1897,8 +1900,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint224(0).toString()).to.be.equal(
-            new BigNumber(2).pow(224).minus(1).toString()
+        expect(txResponse.getUint224(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(224).minus(1).toString(10)
         );
     });
 
@@ -1922,8 +1925,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt232(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(231).toString()
+        expect(txResponse.getInt232(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(231).toString(10)
         );
     });
 
@@ -1947,8 +1950,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt232(0).toString()).to.be.equal(
-            new BigNumber(2).pow(231).minus(1).toString()
+        expect(txResponse.getInt232(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(231).minus(1).toString(10)
         );
     });
 
@@ -1972,8 +1975,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint232(0).toString()).to.be.equal(
-            new BigNumber(2).pow(232).minus(1).toString()
+        expect(txResponse.getUint232(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(232).minus(1).toString(10)
         );
     });
 
@@ -1997,8 +2000,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt240(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(239).toString()
+        expect(txResponse.getInt240(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(239).toString(10)
         );
     });
 
@@ -2022,8 +2025,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt240(0).toString()).to.be.equal(
-            new BigNumber(2).pow(239).minus(1).toString()
+        expect(txResponse.getInt240(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(239).minus(1).toString(10)
         );
     });
 
@@ -2047,8 +2050,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint240(0).toString()).to.be.equal(
-            new BigNumber(2).pow(240).minus(1).toString()
+        expect(txResponse.getUint240(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(240).minus(1).toString(10)
         );
     });
 
@@ -2072,8 +2075,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt248(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(247).toString()
+        expect(txResponse.getInt248(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(247).toString(10)
         );
     });
 
@@ -2097,8 +2100,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt248(0).toString()).to.be.equal(
-            new BigNumber(2).pow(247).minus(1).toString()
+        expect(txResponse.getInt248(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(247).minus(1).toString(10)
         );
     });
 
@@ -2122,8 +2125,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint248(0).toString()).to.be.equal(
-            new BigNumber(2).pow(248).minus(1).toString()
+        expect(txResponse.getUint248(0).toString(10)).to.be.equal(
+            new BigNumber(2).pow(248).minus(1).toString(10)
         );
     });
 
@@ -2148,9 +2151,9 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint256(0).toString()).to.be.equal(
+        expect(txResponse.getUint256(0).toString(10)).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
-            new BigNumber(2).pow(256).minus(1).toString()
+            new BigNumber(2).pow(256).minus(1).toString(10)
         );
     });
 
@@ -2175,7 +2178,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint256(0).toString()).to.be.equal(
+        expect(txResponse.getUint256(0).toString(10)).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
             5000000000000000000000
         );
@@ -2202,7 +2205,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint256(0).toString()).to.be.equal(
+        expect(txResponse.getUint256(0).toString(10)).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
             50
         );
@@ -2228,8 +2231,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString()).to.be.equal(
-            new BigNumber(-2).pow(255).toString()
+        expect(txResponse.getInt256(0).toString(10)).to.be.equal(
+            new BigNumber(-2).pow(255).toString(10)
         );
     });
 
@@ -2251,8 +2254,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString()).to.be.equal(-10);
-        expect(txResponse.getInt256(1).toString()).to.be.equal(-9);
+        expect(txResponse.getInt256(0).toString(10)).to.be.equal(-10);
+        expect(txResponse.getInt256(1).toString(10)).to.be.equal(-9);
     });
 
     it("should return the right int256 value", async function () {
@@ -2273,8 +2276,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString()).to.be.equal(-10);
-        expect(txResponse.getInt256(1).toString()).to.be.equal(-9);
+        expect(txResponse.getInt256(0).toString(10)).to.be.equal(-10);
+        expect(txResponse.getInt256(1).toString(10)).to.be.equal(-9);
     });
 
     after(async function () {
