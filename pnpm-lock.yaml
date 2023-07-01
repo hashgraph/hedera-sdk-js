@@ -132,7 +132,7 @@ devDependencies:
     version: 3.8.3
   dotenv:
     specifier: ^16.0.3
-    version: 16.1.1
+    version: 16.3.1
   dpdm:
     specifier: ^3.11.0
     version: 3.13.0
@@ -4030,8 +4030,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dotenv@16.1.1:
-    resolution: {integrity: sha512-UGmzIqXU/4b6Vb3R1Vrfd/4vGgVlB+mO+vEixOdfRhLeppkyW2BMhuK7TL8d0el+q9c4lW9qK2wZYhNLFhXYLA==}
+  /dotenv@16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
     dev: true
 
