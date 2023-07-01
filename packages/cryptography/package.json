@@ -97,7 +97,7 @@
         "@typescript-eslint/parser": "^5.48.2",
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-rewrite": "^0.2.0",
-        "c8": "^7.12.0",
+        "c8": "^8.0.0",
         "chai": "^4.3.7",
         "chromedriver": "^109.0.0",
         "codecov": "^3.8.3",
