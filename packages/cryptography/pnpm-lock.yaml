@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -117,7 +117,7 @@ devDependencies:
     version: 12.0.0(expo@47.0.13)
   expo-random:
     specifier: ^13.0.0
-    version: 13.0.0(expo@47.0.13)
+    version: 13.1.1(expo@47.0.13)
   geckodriver:
     specifier: ^3.2.0
     version: 3.2.0
@@ -4336,8 +4336,8 @@ packages:
       invariant: 2.2.4
     dev: true
 
-  /expo-random@13.0.0(expo@47.0.13):
-    resolution: {integrity: sha512-aGb0vtUmFFuW0TF1rdOgsz89zEVD/RXUPUnnZy5+i3jJeQ2PerJ4uo72/EuWqHpCBNto8/qT+aCzFinmQDeTAA==}
+  /expo-random@13.1.1(expo@47.0.13):
+    resolution: {integrity: sha512-+KkhGp7xW45GvMRzlcSOzvDwzTgyXo6C84GaG4GI43rOdECBQ2lGUJ12st39OtfZm1lORNskpi66DjnuJ73g9w==}
     peerDependencies:
       expo: '*'
     dependencies:
