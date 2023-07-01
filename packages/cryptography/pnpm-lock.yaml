@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -36,7 +36,7 @@ devDependencies:
     version: 7.20.12
   '@babel/eslint-parser':
     specifier: ^7.19.1
-    version: 7.19.1(@babel/core@7.20.12)(eslint@8.32.0)
+    version: 7.22.5(@babel/core@7.20.12)(eslint@8.32.0)
   '@babel/plugin-syntax-dynamic-import':
     specifier: ^7.8.3
     version: 7.8.3(@babel/core@7.20.12)
@@ -214,8 +214,8 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/eslint-parser@7.19.1(@babel/core@7.20.12)(eslint@8.32.0):
-    resolution: {integrity: sha512-AqNf2QWt1rtu2/1rLswy6CDP7H9Oh3mMhk177Y67Rg8d7RD9WfOLLv8CGn6tisFvS2htm86yIe1yLF6I1UDaGQ==}
+  /@babel/eslint-parser@7.22.5(@babel/core@7.20.12)(eslint@8.32.0):
+    resolution: {integrity: sha512-C69RWYNYtrgIRE5CmTd77ZiLDXqgBipahJc/jHP3sLcAGj6AJzxNIuKNpVnICqbyK7X3pFUfEvL++rvtbQpZkQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
     peerDependencies:
       '@babel/core': '>=7.11.0'
