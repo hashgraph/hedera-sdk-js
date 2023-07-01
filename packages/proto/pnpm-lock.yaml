@@ -45,7 +45,7 @@ devDependencies:
     version: 0.5.2
   chalk:
     specifier: ^5.2.0
-    version: 5.2.0
+    version: 5.3.0
   copyfiles:
     specifier: ^2.4.1
     version: 2.4.1
@@ -1062,8 +1062,8 @@ packages:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  /chalk@5.2.0:
-    resolution: {integrity: sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==}
+  /chalk@5.3.0:
+    resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
     dev: true
 
