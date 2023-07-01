@@ -90,7 +90,7 @@ devDependencies:
     version: 6.3.5
   semver:
     specifier: ^7.3.8
-    version: 7.5.1
+    version: 7.5.3
   tmp:
     specifier: ^0.2.1
     version: 0.2.1
@@ -593,7 +593,7 @@ packages:
       grapheme-splitter: 1.0.4
       ignore: 5.2.0
       natural-compare-lite: 1.4.0
-      semver: 7.5.1
+      semver: 7.5.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -667,7 +667,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -688,7 +688,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.59.6(typescript@4.9.5)
       eslint: 8.40.0
       eslint-scope: 5.1.1
-      semver: 7.5.1
+      semver: 7.5.3
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -1516,7 +1516,7 @@ packages:
       escape-string-regexp: 4.0.0
       eslint: 8.40.0
       esquery: 1.4.0
-      semver: 7.5.1
+      semver: 7.5.3
       spdx-expression-parse: 3.0.1
     transitivePeerDependencies:
       - supports-color
@@ -2602,7 +2602,7 @@ packages:
       jsdoc: 4.0.2
       minimist: 1.2.6
       protobufjs: 7.2.3
-      semver: 7.5.1
+      semver: 7.5.3
       tmp: 0.2.1
       uglify-js: 3.17.4
     dev: false
@@ -2773,8 +2773,8 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /semver@7.5.1:
-    resolution: {integrity: sha512-Wvss5ivl8TMRZXXESstBA4uR5iXgEN/VC5/sOcuXdVLzcdkz4HWetIoRfG5gb5X+ij/G9rw9YoGn3QoQ8OCSpw==}
+  /semver@7.5.3:
+    resolution: {integrity: sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
