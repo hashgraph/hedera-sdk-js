@@ -376,7 +376,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint40(0).toString(10)).to.be.equal(1099511627775);
+        expect(txResponse.getUint40(0).toNumber()).to.be.equal(1099511627775);
     });
 
     it("should return the right multiple values", async function () {
@@ -399,7 +399,7 @@ describe("ContractFunctionParameters", function () {
 
         const result = txResponse.getResult(["uint32", "uint64", "string"]);
         expect(result[0]).to.be.equal(4294967295); // first param returned by the contrast is in UINT32
-        expect(result[1].toString(10)).to.be.equal(4294967294); // second param returned by the contract is in UINT64
+        expect(result[1].toNumber()).to.be.equal(4294967294); // second param returned by the contract is in UINT64
         expect(result[2]).to.be.equal("OK"); // third param returned by the contract is in STRING
     });
 
@@ -421,7 +421,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString(10)).to.be.equal(-549755813888);
+        expect(txResponse.getInt40(0).toNumber()).to.be.equal(-549755813888);
     });
 
     it("should return the right positive int40 value", async function () {
@@ -442,7 +442,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString(10)).to.be.equal(549755813887);
+        expect(txResponse.getInt40(0).toNumber()).to.be.equal(549755813887);
     });
 
     it("should return the right multiple int40 values", async function () {
@@ -463,8 +463,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt40(0).toString(10)).to.be.equal(549755813885);
-        expect(txResponse.getInt40(1).toString(10)).to.be.equal(549755813886);
+        expect(txResponse.getInt40(0).toNumber()).to.be.equal(549755813885);
+        expect(txResponse.getInt40(1).toNumber()).to.be.equal(549755813886);
     });
 
     it("should return the right int48 value", async function () {
@@ -485,7 +485,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt48(0).toString(10)).to.be.equal(-2147483648);
+        expect(txResponse.getInt48(0).toNumber()).to.be.equal(-2147483648);
     });
 
     it("should return the right int56 value", async function () {
@@ -506,7 +506,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt56(0).toString(10)).to.be.equal(-2147483648);
+        expect(txResponse.getInt56(0).toNumber()).to.be.equal(-2147483648);
     });
 
     it("should return the right int64 value", async function () {
@@ -527,7 +527,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt64(0).toString(10)).to.be.equal(-2147483648);
+        expect(txResponse.getInt64(0).toNumber()).to.be.equal(-2147483648);
     });
 
     it("should return the right negative int72 value", async function () {
@@ -540,7 +540,7 @@ describe("ContractFunctionParameters", function () {
             .setFunction(
                 "returnInt72",
                 new ContractFunctionParameters().addInt72(
-                    -2361183241434822606848
+                    new BigNumber(-2).pow(71)
                 )
             )
             //Set the query payment for the node returning the request
@@ -551,7 +551,7 @@ describe("ContractFunctionParameters", function () {
         const txResponse = await contractQuery.execute(env.client);
 
         expect(txResponse.getInt72(0).toString(10)).to.be.equal(
-            -2361183241434822606848
+            new BigNumber(-2).pow(71).toString(10)
         );
     });
 
@@ -590,7 +590,7 @@ describe("ContractFunctionParameters", function () {
             .setFunction(
                 "returnInt88",
                 new ContractFunctionParameters().addInt88(
-                    -154742504910672534362390528
+                    new BigNumber(-2).pow(87)
                 )
             )
             //Set the query payment for the node returning the request
@@ -601,7 +601,7 @@ describe("ContractFunctionParameters", function () {
         const txResponse = await contractQuery.execute(env.client);
 
         expect(txResponse.getInt88(0).toString(10)).to.be.equal(
-            -154742504910672534362390528
+            new BigNumber(-2).pow(87).toString(10)
         );
     });
 
@@ -2157,6 +2157,33 @@ describe("ContractFunctionParameters", function () {
         );
     });
 
+    it("should return the right zero uint256 value", async function () {
+        const contractQuery = await new ContractCallQuery()
+            //Set the gas for the query
+            .setGas(15000000)
+            //Set the contract ID to return the request for
+            .setContractId(newContractId)
+            //Set the contract function to call
+            .setFunction(
+                "returnUint256",
+                new ContractFunctionParameters().addUint256(
+                    // eslint-disable-next-line no-loss-of-precision
+                    0
+                )
+            )
+            //Set the query payment for the node returning the request
+            //This value must cover the cost of the request otherwise will fail
+            .setQueryPayment(new Hbar(10));
+
+        //Submit to a Hedera network
+        const txResponse = await contractQuery.execute(env.client);
+
+        expect(txResponse.getUint256(0).toNumber()).to.be.equal(
+            // eslint-disable-next-line no-loss-of-precision
+            0
+        );
+    });
+
     it("should return the right 20 decimal uint256 value", async function () {
         const contractQuery = await new ContractCallQuery()
             //Set the gas for the query
@@ -2178,7 +2205,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint256(0).toString(10)).to.be.equal(
+        expect(txResponse.getUint256(0).toNumber()).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
             5000000000000000000000
         );
@@ -2205,7 +2232,7 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getUint256(0).toString(10)).to.be.equal(
+        expect(txResponse.getUint256(0).toNumber()).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
             50
         );
@@ -2231,8 +2258,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString(10)).to.be.equal(
-            new BigNumber(-2).pow(255).toString(10)
+        expect(txResponse.getInt256(0).toNumber()).to.be.equal(
+            new BigNumber(-2).pow(255).toNumber()
         );
     });
 
@@ -2254,8 +2281,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString(10)).to.be.equal(-10);
-        expect(txResponse.getInt256(1).toString(10)).to.be.equal(-9);
+        expect(txResponse.getInt256(0).toNumber()).to.be.equal(-10);
+        expect(txResponse.getInt256(1).toNumber()).to.be.equal(-9);
     });
 
     it("should return the right int256 value", async function () {
@@ -2276,8 +2303,8 @@ describe("ContractFunctionParameters", function () {
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
-        expect(txResponse.getInt256(0).toString(10)).to.be.equal(-10);
-        expect(txResponse.getInt256(1).toString(10)).to.be.equal(-9);
+        expect(txResponse.getInt256(0).toNumber()).to.be.equal(-10);
+        expect(txResponse.getInt256(1).toNumber()).to.be.equal(-9);
     });
 
     after(async function () {
