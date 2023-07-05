@@ -5,9 +5,6 @@ import { Buffer } from "buffer";
  * @returns {Uint8Array}
  */
 export function decode(text) {
-    // note: assumes <atob> is available in the global scope if <Buffer> is not
-    // eslint-disable-next-line deprecation/deprecation
-
     return Uint8Array.from(Buffer.from(text, "base64"));
 }
 
@@ -16,7 +13,5 @@ export function decode(text) {
  * @returns {string};
  */
 export function encode(data) {
-    // note: assumes <btoa> is available in the global scope if <Buffer> is not
-    // eslint-disable-next-line deprecation/deprecation
-    return btoa(String.fromCharCode.apply(null, Array.from(data)));
+    return Buffer.from(data).toString("base64");
 }

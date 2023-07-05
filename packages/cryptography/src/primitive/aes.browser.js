@@ -122,7 +122,6 @@ export async function createDecipheriv(algorithm, key, iv, data) {
 export async function messageDigest(passphrase, iv) {
     const pass = utf8.encode(passphrase);
     const sliced = hex.decode(iv).slice(0, 8);
-    console.log(`browser`);
     const result = SparkMD5.ArrayBuffer.hash(
         Buffer.concat([Buffer.from(pass), Buffer.from(sliced)])
     );

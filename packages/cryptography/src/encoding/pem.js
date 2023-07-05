@@ -118,7 +118,6 @@ export async function readPemECDSA(pem, passphrase) {
 export async function read(pem, passphrase) {
     // If not then it is ED25519 type
     const isEcdsa = pem.includes("BEGIN EC PRIVATE KEY") ? true : false;
-    console.log(`localen`);
     if (isEcdsa) {
         return readPemECDSA(pem, passphrase);
     } else {

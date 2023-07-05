@@ -1,5 +1,8 @@
 import CryptoJS from "crypto-js";
 import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
+import SparkMD5 from "spark-md5";
+import { Buffer } from "buffer";
 
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
@@ -89,17 +92,12 @@ export function createDecipheriv(algorithm, key, iv, data) {
  * @param {string} iv
  * @returns {Promise<Uint8Array>}
  */
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function messageDigest(passphrase, iv) {
-    console.log(`NATIVE`);
-    const slicedIv = hex.encode(hex.decode(iv).slice(0, 8));
-    return Promise.resolve(
-        hex.decode(
-            CryptoJS.MD5(
-                CryptoJS.enc.Utf8.parse(passphrase).concat(
-                    CryptoJS.MD5(CryptoJS.enc.Hex.parse(slicedIv))
-                )
-            ).toString(CryptoJS.enc.Hex)
-        )
+    const pass = utf8.encode(passphrase);
+    const sliced = hex.decode(iv).slice(0, 8);
+    const result = SparkMD5.ArrayBuffer.hash(
+        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)])
     );
+
+    return Promise.resolve(hex.decode(result));
 }
