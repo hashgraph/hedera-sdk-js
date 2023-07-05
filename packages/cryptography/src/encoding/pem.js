@@ -1,5 +1,5 @@
 import BadKeyError from "../BadKeyError.js";
-import * as pkcs from "../primitive/pkcs.js";
+import { EncryptedPrivateKeyInfo } from "../primitive/pkcs.js";
 import * as der from "./der.js";
 import * as base64 from "./base64.js";
 import Ed25519PrivateKey from "../Ed25519PrivateKey.js";
@@ -28,7 +28,7 @@ export async function readPemED25519(pem, passphrase) {
         let encrypted;
 
         try {
-            encrypted = pkcs.EncryptedPrivateKeyInfo.parse(key);
+            encrypted = EncryptedPrivateKeyInfo.parse(key);
         } catch (error) {
             const message =
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

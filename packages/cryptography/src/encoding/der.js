@@ -33,7 +33,6 @@
  *@returns {AsnType}
  */
 export function decode(data) {
-    console.log(`------- der decode`);
     return decodeIncremental(data)[0];
 }
 

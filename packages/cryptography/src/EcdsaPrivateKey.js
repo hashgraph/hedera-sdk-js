@@ -10,12 +10,6 @@ const derPrefixBytes = hex.decode(derPrefix);
 const derPrefix2 = "30540201010420";
 const derPrefixBytes2 = hex.decode(derPrefix2);
 
-/* const derPrefix3 = "30740201010420";
-const derPrefixBytes3 = hex.decode(derPrefix3);
-
-const derPrefix4 = "302e0201010420";
-const derPrefixBytes4 = hex.decode(derPrefix4); */
-
 /**
  * @typedef {object} KeyPair
  * @property {Uint8Array} publicKey

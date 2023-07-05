@@ -86,7 +86,11 @@ export default class EcdsaPublicKey extends Key {
                 break;
             /* eslint-enable no-case-declarations */
         }
-
+        if (ecdsaPublicKeyBytes.length == 0) {
+            throw new BadKeyError(
+                `cannot decode ECDSA private key data from DER format`
+            );
+        }
         return new EcdsaPublicKey(ecdsaPublicKeyBytes);
     }
 
