@@ -120,11 +120,13 @@ export default class TopicMessageQuery extends Query {
          * @type {() => void}
          */
         this._completionHandler = () => {
-            this._logger?.info(
-                `Subscription to topic ${
-                    this._topicId != null ? this._topicId.toString() : ""
-                } complete`
-            );
+            if (this._logger) {
+                this._logger.info(
+                    `Subscription to topic ${
+                        this._topicId != null ? this._topicId.toString() : ""
+                    } complete`
+                );
+            }
         };
 
         if (props.completionHandler != null) {

@@ -329,9 +329,11 @@ export default class Query extends Executable {
             }
 
             cost = actualCost;
-            this._logger?.debug(
-                `[${this._getLogId()}] received cost for query ${cost.toString()}`
-            );
+            if (this._logger) {
+                this._logger.debug(
+                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                );
+            }
         }
 
         // Set the either queried cost, or the original value back into `queryPayment`
@@ -354,9 +356,11 @@ export default class Query extends Executable {
                 );
             const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
 
-            this._logger?.debug(
-                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
-            );
+            if (this._logger) {
+                this._logger.debug(
+                    `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                );
+            }
 
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
@@ -451,9 +455,11 @@ export default class Query extends Executable {
                     );
                 const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
 
-                this._logger?.debug(
-                    `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
-                );
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                    );
+                }
 
                 header.payment = await _makePaymentTransaction(
                     paymentTransactionId,
@@ -484,10 +490,11 @@ export default class Query extends Executable {
                 ? nodeTransactionPrecheckCode
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
-
-        this._logger?.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:

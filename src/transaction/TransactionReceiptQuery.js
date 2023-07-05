@@ -211,9 +211,11 @@ export default class TransactionReceiptQuery extends Query {
                 : proto.ResponseCodeEnum.OK
         );
 
-        this._logger?.debug(
-            `[${this._getLogId()}] received node precheck status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received node precheck status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:
@@ -241,9 +243,11 @@ export default class TransactionReceiptQuery extends Query {
 
         status = Status._fromCode(receiptStatusCode);
 
-        this._logger?.debug(
-            `[${this._getLogId()}] received receipt status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received receipt status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:

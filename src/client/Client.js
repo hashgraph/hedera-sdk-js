@@ -723,11 +723,13 @@ export default class Client {
                     this._scheduleNetworkUpdate();
                 }
             } catch (error) {
-                this._logger?.trace(
-                    `failed to update client address book: ${
-                        /** @type {Error} */ (error).toString()
-                    }`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `failed to update client address book: ${
+                            /** @type {Error} */ (error).toString()
+                        }`
+                    );
+                }
             }
         }, this._networkUpdatePeriod);
     }
@@ -745,11 +747,13 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
             } catch (error) {
-                this._logger?.trace(
-                    `failed to update client address book: ${
-                        /** @type {Error} */ (error).toString()
-                    }`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `failed to update client address book: ${
+                            /** @type {Error} */ (error).toString()
+                        }`
+                    );
+                }
             }
         }, 1000);
     }

@@ -1681,12 +1681,22 @@ function argumentToBytes(param, ty) {
         case ArgumentType.int248:
         case ArgumentType.int256:
         case ArgumentType.uint256: {
+            let paramToHex = param.toString(16);
+
+            if (param > 0 || param == 0) {
+                paramToHex = "0x" + paramToHex;
+            } else {
+                paramToHex =
+                    paramToHex.slice(0, 1) + "0x" + paramToHex.slice(1);
+            }
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             const encodedData = defaultAbiCoder.encode(
                 [solidityTypeToString(ty)],
-                [param.toString()]
+                [paramToHex]
             );
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             const dataToArrayify = arrayify(encodedData);
             return dataToArrayify;
         }
