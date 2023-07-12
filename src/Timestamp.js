@@ -138,7 +138,8 @@ export default class Timestamp {
      * @returns {string}
      */
     toString() {
-        return `${this.seconds.toString()}.${this.nanos.toString()}`;
+        const zeroPaddedNanos = String(this.nanos).padStart(9, "0");
+        return `${this.seconds.toString()}.${zeroPaddedNanos}`;
     }
 
     /**
