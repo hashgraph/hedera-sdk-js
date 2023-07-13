@@ -3,8 +3,10 @@ updates:
     - package-ecosystem: npm
       directory: "/"
       schedule:
-          interval: monthly
-      open-pull-requests-limit: 10
+          interval: daily
+          time: "18:40"
+          timezone: "Europe/Sofia"
+      open-pull-requests-limit: 100
     - package-ecosystem: npm
       directory: "packages/cryptography"
       schedule:
