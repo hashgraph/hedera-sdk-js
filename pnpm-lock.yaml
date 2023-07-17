@@ -24,8 +24,8 @@ dependencies:
     specifier: 1.4.7
     version: 1.4.7(expo@47.0.13)
   '@hashgraph/proto':
-    specifier: 2.13.0-beta.2
-    version: 2.13.0-beta.2
+    specifier: 2.13.0
+    version: 2.13.0
   axios:
     specifier: ^1.3.1
     version: 1.4.0
@@ -2536,8 +2536,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto@2.13.0-beta.2:
-    resolution: {integrity: sha512-U18/kmqGqgO3A14oRqtdVovSQ1yxR0FV5PZE38uUgo5SjLzwVhRjw8N9JHHU9fS0OkBRzW2adiUy5Sy+IoCohQ==}
+  /@hashgraph/proto@2.13.0:
+    resolution: {integrity: sha512-Wan4TyiGExymUQOD+WVE/Q/RDjr+eBv5JBVO5+RGa2FDyASFhUWA/E1G0ZyiynXf2clqlewXIHyuNxpR42S80A==}
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0

@@ -24,10 +24,12 @@ import * as protos from "@hashgraph/proto";
 const { proto } = protos;
 
 /**
- * @typedef {object} ContractNonceInfoJSON
+ * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IContractNonceInfo} HashgraphProto.proto.IContractNonceInfo
  * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
- * @property
+ * @typedef {object} ContractNonceInfoJSON
+ * @property {string} contractId
+ * @property {number} nonce
  */
 
 /**
@@ -121,7 +123,7 @@ export default class ContractNonceInfo {
     toJSON() {
         return {
             contractId: this.contractId.toString(),
-            nonce: this.nonce.toString(),
+            nonce: this.nonce.toNumber(),
         };
     }
 
