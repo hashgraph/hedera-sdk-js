@@ -19,11 +19,15 @@
  */
 
 import ContractId from "./ContractId.js";
+import Long from "long";
+import * as protos from "@hashgraph/proto";
+const { proto } = protos;
 
 /**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IContractLoginfo} HashgraphProto.proto.IContractLoginfo
+ * @typedef {object} ContractNonceInfoJSON
+ * @typedef {import("@hashgraph/proto").proto.IContractNonceInfo} HashgraphProto.proto.IContractNonceInfo
  * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
+ * @property
  */
 
 /**
@@ -52,5 +56,90 @@ export default class ContractNonceInfo {
         this.nonce = props.nonce;
 
         Object.freeze(this);
+    }
+
+    /**
+     *  Extract the contractNonce from the protobuf.
+     *
+     * @internal
+     * @param {HashgraphProto.proto.IContractNonceInfo} contractNonceInfo the protobuf
+     * @returns {ContractNonceInfo} the contract object
+     */
+    static _fromProtobuf(contractNonceInfo) {
+        return new ContractNonceInfo({
+            contractId: ContractId._fromProtobuf(
+                /** @type {HashgraphProto.proto.IContractID} */ (
+                    contractNonceInfo.contractId
+                )
+            ),
+            nonce:
+                contractNonceInfo.nonce != null
+                    ? contractNonceInfo.nonce
+                    : Long.ZERO,
+        });
+    }
+
+    /**
+     * Build the protobuf
+     *
+     * @internal
+     * @returns {HashgraphProto.proto.IContractNonceInfo} the protobuf representation
+     */
+    _toProtobuf() {
+        return {
+            contractId: this.contractId._toProtobuf(),
+            nonce: this.nonce,
+        };
+    }
+
+    /**
+     * Extract the contractNonce from a byte array.
+     *
+     * @param {Uint8Array} bytes the byte array
+     * @returns {ContractNonceInfo} the extracted contract nonce info
+     */
+    static fromBytes(bytes) {
+        return ContractNonceInfo._fromProtobuf(
+            proto.ContractNonceInfo.decode(bytes)
+        );
+    }
+
+    /**
+     * Create a byte array representation.
+     *
+     * @returns {Uint8Array} the byte array representation
+     */
+    toBytes() {
+        return proto.ContractNonceInfo.encode(this._toProtobuf()).finish();
+    }
+
+    /**
+     * Create a JSON representation.
+     *
+     * @returns {ContractNonceInfoJSON} the JSON representation
+     */
+    toJSON() {
+        return {
+            contractId: this.contractId.toString(),
+            nonce: this.nonce.toString(),
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
+
+    /**
+     * @param {this} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        return (
+            this.contractId.equals(other.contractId) &&
+            this.nonce.eq(other.nonce)
+        );
     }
 }

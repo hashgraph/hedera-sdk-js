@@ -28,6 +28,7 @@ import * as util from "../util.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ParamType, defaultAbiCoder } from "@ethersproject/abi";
 import Long from "long";
+import ContractNonceInfo from "./ContractNonceInfo.js";
 
 /**
  * @typedef {import("./ContractStateChange.js").default} ContractStateChange
@@ -64,6 +65,7 @@ export default class ContractFunctionResult {
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
      * @param {ContractStateChange[]} result.stateChanges
+     * @param {ContractNonceInfo[]} result.contractNonces
      */
     constructor(result) {
         /**
@@ -141,6 +143,12 @@ export default class ContractFunctionResult {
          * ContractCreateTransactionBody or a ContractCallTransactionBody.
          */
         this.senderAccountId = result.senderAccountId;
+
+        /**
+         * A list of updated contract account nonces containing the new nonce value for each contract account.
+         * This is always empty in a ContractCallLocalResponse#ContractFunctionResult message, since no internal creations can happen in a static EVM call.
+         */
+        this.contractNonces = result.contractNonces;
     }
 
     /**
@@ -190,6 +198,12 @@ export default class ContractFunctionResult {
                 result.senderId != null
                     ? AccountId._fromProtobuf(result.senderId)
                     : null,
+            contractNonces: (result.contractNonces != null
+                ? result.contractNonces
+                : []
+            ).map((contractNonce) =>
+                ContractNonceInfo._fromProtobuf(contractNonce)
+            ),
         });
     }
 
@@ -988,6 +1002,9 @@ export default class ContractFunctionResult {
                 this.senderAccountId != null
                     ? this.senderAccountId._toProtobuf()
                     : null,
+            contractNonces: this.contractNonces.map((contractNonce) =>
+                contractNonce._toProtobuf()
+            ),
         };
     }
 }
