@@ -2362,8 +2362,8 @@ describe("ContractFunctionParameters", function () {
                 nonceInfo.contractId.toString() !== contractId.toString()
         );
 
-        expect(contractAnonce.toNumber()).to.be.equal(2);
-        expect(contractBnonce.toNumber()).to.be.equal(1);
+        expect(contractAnonce.nonce.toNumber()).to.be.equal(2);
+        expect(contractBnonce.nonce.toNumber()).to.be.equal(1);
 
         const contractDeleteTx = await new ContractDeleteTransaction()
             .setTransferAccountId(env.operatorId)
