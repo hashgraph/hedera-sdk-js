@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.30.0
+
+## What's Changed
+* Added new transaction type based on EIP-2930 by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1702
+* Fix contract function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1703
+* Fix integration tests fees by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1715
+* Fix zero padding for nanos in timestamp by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1713
+* Added release doc by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1720
+* Fix DER and PEM headers by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1706
+* Fix dependencies by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1722
+* Feature contract nonces - HIP-729 support by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1723
+
 ## v2.29.0
 
 ## What's Changed
