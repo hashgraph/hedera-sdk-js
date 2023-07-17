@@ -4,7 +4,9 @@ import {
     ContractCallQuery,
     Hbar,
     ContractFunctionParameters,
+    ContractDeleteTransaction,
     FileAppendTransaction,
+    FileDeleteTransaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import BigNumber from "bignumber.js";
@@ -2325,6 +2327,62 @@ describe("ContractFunctionParameters", function () {
         const result = txResponse.getResult(["tuple(string, uint256)"]);
         expect(result[0][0]).to.be.equal("Alex"); // tuple is returned as array
         expect(result[0][1].toNumber()).to.be.equal(1); // tuple is returned as array
+    });
+
+    it("contract create of A nonce, which deploys contract B in CONSTRUCTOR", async function () {
+        const SMART_CONTRACT_BYTECODE =
+            "6080604052348015600f57600080fd5b50604051601a90603b565b604051809103906000f0801580156035573d6000803e3d6000fd5b50506047565b605c8061009483390190565b603f806100556000396000f3fe6080604052600080fdfea2646970667358221220a20122cbad3457fedcc0600363d6e895f17048f5caa4afdab9e655123737567d64736f6c634300081200336080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122053dfd8835e3dc6fedfb8b4806460b9b7163f8a7248bac510c6d6808d9da9d6d364736f6c63430008120033";
+
+        const fileCreate = await new FileCreateTransaction()
+            .setKeys([env.operatorKey])
+            .setContents(SMART_CONTRACT_BYTECODE)
+            .execute(env.client);
+
+        const fileId = (await fileCreate.getReceipt(env.client)).fileId;
+
+        const contractCreate = await new ContractCreateTransaction()
+            .setAdminKey(env.operatorKey)
+            .setGas(100000)
+            .setBytecodeFileId(fileId)
+            .setContractMemo("[e2e::ContractADeploysContractBInConstructor]")
+            .execute(env.client);
+
+        const contractCreateRecord = await contractCreate.getRecord(env.client);
+        const nonces =
+            contractCreateRecord.contractFunctionResult.contractNonces;
+        console.log(`contractNonces: ${JSON.stringify(nonces)}`);
+
+        const contractId = contractCreateRecord.receipt.contractId;
+        const contractAnonce = nonces.find(
+            (nonceInfo) =>
+                nonceInfo.contractId.toString() === contractId.toString()
+        );
+        const contractBnonce = nonces.find(
+            (nonceInfo) =>
+                nonceInfo.contractId.toString() !== contractId.toString()
+        );
+
+        expect(contractAnonce.nonce.toNumber()).to.be.equal(2);
+        expect(contractBnonce.nonce.toNumber()).to.be.equal(1);
+
+        const contractDeleteTx = await new ContractDeleteTransaction()
+            .setTransferAccountId(env.operatorId)
+            .setContractId(contractId)
+            .execute(env.client);
+
+        const contractDeleteResult = await contractDeleteTx.getReceipt(
+            env.client
+        );
+        console.log(
+            `contractDelete status: ${contractDeleteResult.status.toString()}`
+        );
+
+        const fileDeleteTx = await new FileDeleteTransaction()
+            .setFileId(fileId)
+            .execute(env.client);
+
+        const fileDeleteResult = await fileDeleteTx.getReceipt(env.client);
+        console.log(`fileDelete status: ${fileDeleteResult.status.toString()}`);
     });
 
     after(async function () {
