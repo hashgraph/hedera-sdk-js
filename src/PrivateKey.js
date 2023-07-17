@@ -226,7 +226,7 @@ export default class PrivateKey extends Key {
      * @param {Uint8Array} data
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
-     * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
+     * @throws {cryptography.BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
     static async fromKeystore(data, passphrase = "") {
         return new PrivateKey(
@@ -409,6 +409,13 @@ export default class PrivateKey extends Key {
      */
     toAccountId(shard, realm) {
         return this.publicKey.toAccountId(shard, realm);
+    }
+
+    /**
+     * @returns {string}
+     */
+    get type() {
+        return this._key._type;
     }
 }
 

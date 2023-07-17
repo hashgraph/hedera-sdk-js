@@ -1,8 +1,9 @@
 import Key from "./Key.js";
 import BadKeyError from "./BadKeyError.js";
 import nacl from "tweetnacl";
-import { arrayEqual, arrayStartsWith } from "./util/array.js";
+import { arrayEqual } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
+import forge from "node-forge";
 
 const derPrefix = "302a300506032b6570032100";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -56,13 +57,26 @@ export default class Ed25519PublicKey extends Key {
      * @returns {Ed25519PublicKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 44 || !arrayStartsWith(data, derPrefixBytes)) {
+        const asn = forge.asn1.fromDer(new forge.util.ByteStringBuffer(data));
+
+        /** * @type {Uint8Array} */
+        let publicKey;
+
+        try {
+            publicKey = forge.pki.ed25519.publicKeyFromAsn1(asn);
+        } catch (error) {
+            const message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
             throw new BadKeyError(
-                `invalid public key length: ${data.length} bytes`
+                `cannot decode ED25519 public key data from DER format: ${message}`
             );
         }
 
-        return new Ed25519PublicKey(data.subarray(12));
+        return new Ed25519PublicKey(publicKey);
     }
 
     /**

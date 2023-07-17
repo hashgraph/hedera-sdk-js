@@ -27,7 +27,8 @@ $ pnpm add @hashgraph/sdk
 
 The Hedera JavaScript SDK supports the following:
 
-* React Native with Expo
+* React Native with Expo - keep in mind that the SDK uses some functionalities provided from ethers/ethersproject and there is an issue using parts of ethers.js in this environment. A [shims](https://www.npmjs.com/package/@ethersproject/shims) package has to be installed and imported before importing the SDK in your project as it is showed [here](./examples/react-native-example/App.tsx)
+* Useful information: [here](https://github.com/ethers-io/ethers.js/discussions/3652) and [here](https://docs.ethers.org/v5/cookbook/react-native/)
 
 The Hedera JavaScript SDK does not currently support the following:
 

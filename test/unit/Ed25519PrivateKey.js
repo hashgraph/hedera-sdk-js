@@ -202,4 +202,61 @@ describe("Ed25519PrivateKey", function () {
         expect(key6.toStringRaw()).to.be.equal(PRIVATE_KEY6);
         expect(PUBLIC_KEY6).to.contain(key6.publicKey.toStringRaw());
     });
+
+    it("PEM import test vectors", async function () {
+        const TEST_VECTOR_PEM_PASSPHRASE = "asdasd123";
+
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
+        const PRIVATE_KEY_PEM1 =
+            "-----BEGIN PRIVATE KEY-----\n" +
+            "MC4CAQAwBQYDK2VwBCIEIOgbjaHgEqF7PY0t2dUf2VU0u1MRoKii/fywDlze4lvl\n" +
+            "-----END PRIVATE KEY-----";
+        const PRIVATE_KEY1 =
+            "e81b8da1e012a17b3d8d2dd9d51fd95534bb5311a0a8a2fdfcb00e5cdee25be5";
+        const PUBLIC_KEY1 =
+            "f7b9aa4a8e4eee94e4277dfe757d8d7cde027e7cd5349b7d8e6ee21c9b9395be";
+
+        const PRIVATE_KEY_PEM2 =
+            "-----BEGIN ENCRYPTED PRIVATE KEY-----\n" +
+            "MIGbMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAiho4GvPxvL6wICCAAw\n" +
+            "DAYIKoZIhvcNAgkFADAdBglghkgBZQMEAQIEEIdsubXR0QvxXGSprqDuDXwEQJZl\n" +
+            "OBtwm2p2P7WrWE0OnjGxUe24fWwdrvJUuguFtH3FVWc8C5Jbxgbyxsuzbf+utNL6\n" +
+            "0ey+WdbGL06Bw0HGqs8=\n" +
+            "-----END ENCRYPTED PRIVATE KEY-----";
+        const PRIVATE_KEY2 =
+            "fa0857e963946d5f5e035684c40354d3cd3dcc80c0fb77beac2ef7c4b5271599";
+        const PUBLIC_KEY2 =
+            "202af61e141465d4bf2c356d37d18bd026c246bde4eb73258722ad11f790be4e";
+
+        const ed25519PrivateKey1 = await PrivateKey.fromPem(PRIVATE_KEY_PEM1);
+        expect(ed25519PrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
+        expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY1
+        );
+
+        const ed25519PrivateKey2 = await PrivateKey.fromPem(
+            PRIVATE_KEY_PEM2,
+            TEST_VECTOR_PEM_PASSPHRASE
+        );
+        expect(ed25519PrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
+        expect(ed25519PrivateKey2.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY2
+        );
+    });
+
+    it("DER import test vectors", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/93#issue-1665972122
+        var PRIVATE_KEY_DER1 =
+            "302e020100300506032b657004220420feb858a4a69600a5eef2d9c76f7fb84fc0b6627f29e0ab17e160f640c267d404";
+        var PRIVATE_KEY1 =
+            "feb858a4a69600a5eef2d9c76f7fb84fc0b6627f29e0ab17e160f640c267d404";
+        var PUBLIC_KEY1 =
+            "8ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
+
+        var ed25519PrivateKey1 = PrivateKey.fromString(PRIVATE_KEY_DER1);
+        expect(ed25519PrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
+        expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
+            PUBLIC_KEY1
+        );
+    });
 });
