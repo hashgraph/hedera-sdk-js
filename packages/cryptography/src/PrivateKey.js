@@ -4,7 +4,7 @@ import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import PublicKey from "./PublicKey.js";
 import { createKeystore, loadKeystore } from "./primitive/keystore.js";
-import { read as readPem } from "./encoding/pem.js";
+import { read } from "./encoding/pem.js";
 import * as hex from "./encoding/hex.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as bip32 from "./primitive/bip32.js";
@@ -141,20 +141,31 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytes(data) {
+        let message;
         try {
             return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
-        } catch {
-            // Do nothing
+        } catch (error) {
+            message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
         }
 
         try {
             return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
-        } catch {
-            // Do nothing
+        } catch (error) {
+            message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
         }
 
         throw new BadKeyError(
-            `invalid private key length: ${data.length} bytes`
+            `private key cannot be decoded from bytes: ${message}`
         );
     }
 
@@ -282,7 +293,7 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromPem(data, passphrase = "") {
-        const pem = await readPem(data, passphrase);
+        const pem = await read(data, passphrase);
 
         if (
             pem instanceof Ed25519PrivateKey ||
@@ -291,7 +302,12 @@ export default class PrivateKey extends Key {
             return new PrivateKey(pem);
         }
 
-        return PrivateKey.fromBytes(pem);
+        const isEcdsa = data.includes("BEGIN EC PRIVATE KEY") ? true : false;
+        if (isEcdsa) {
+            return new PrivateKey(EcdsaPrivateKey.fromBytes(pem));
+        } else {
+            return new PrivateKey(Ed25519PrivateKey.fromBytes(pem));
+        }
     }
 
     /**

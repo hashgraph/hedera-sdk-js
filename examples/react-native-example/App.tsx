@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';\
+import "@ethersproject/shims";
 
 import {
     Client,

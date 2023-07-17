@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import * as hex from "../encoding/hex.js";
 
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
@@ -32,5 +33,20 @@ export function createDecipheriv(algorithm, key, iv, data) {
 
     return Promise.resolve(
         Buffer.concat([decipher.update(data), decipher["final"]()])
+    );
+}
+
+/**
+ * @param {string} passphrase
+ * @param {string} iv
+ * @returns {Promise<Uint8Array>}
+ */
+export function messageDigest(passphrase, iv) {
+    return Promise.resolve(
+        crypto
+            .createHash("md5")
+            .update(passphrase)
+            .update(hex.decode(iv).slice(0, 8))
+            .digest()
     );
 }
