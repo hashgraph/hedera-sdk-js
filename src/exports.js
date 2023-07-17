@@ -63,6 +63,7 @@ export { default as ContractId } from "./contract/ContractId.js";
 export { default as ContractInfo } from "./contract/ContractInfo.js";
 export { default as ContractInfoQuery } from "./contract/ContractInfoQuery.js";
 export { default as ContractLogInfo } from "./contract/ContractLogInfo.js";
+export { default as ContractNonceInfo } from "./contract/ContractNonceInfo.js";
 export { default as ContractUpdateTransaction } from "./contract/ContractUpdateTransaction.js";
 export { default as CustomFee } from "./token/CustomFee.js";
 export { default as CustomFixedFee } from "./token/CustomFixedFee.js";
