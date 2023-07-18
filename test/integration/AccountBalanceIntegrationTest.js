@@ -22,22 +22,12 @@ describe("AccountBalanceQuery", function () {
     it("can query balance of node 0.0.3", async function () {
         this.timeout(50000);
 
-        const client = new Client({
-            network: "testnet",
-            scheduleNetworkUpdate: false,
-        });
         const balance = await new AccountBalanceQuery()
             .setAccountId("0.0.3")
             .execute(clientTestnet);
         expect(balance.hbars.toTinybars().compare(0)).to.be.equal(1);
     });
 
-    after(async function () {
-        clientPreviewNet.close();
-        clientTestnet.close();
-        await env.close();
-    });
-    
     it("can connect to previewnet with TLS", async function () {
         this.timeout(30000);
         if (skipTestDueToNodeJsVersion(16)) {

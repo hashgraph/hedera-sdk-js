@@ -11,19 +11,19 @@ describe("Logger", function () {
 
         //during initialization of the `Client`, there is no logger set
         expect(client.logger).to.be.null;
-        
+
         //set logger with info level of logging to the `Client`
         let infoLogger = new Logger(LogLevel.Info);
         client.setLogger(infoLogger);
-        
+
         //check if the log level is in fact `info`
         expect(client.logger.level).to.be.equal(LogLevel.Info);
-        
+
         //change the level of the logger to `warn` and check
-        //if it is the same when extracted from the `Client` 
+        //if it is the same when extracted from the `Client`
         infoLogger.setLevel(LogLevel.Warn);
         expect(client.logger.level).to.be.equal(LogLevel.Warn);
-        
+
         //silence the logger and check if it changed inside the `Client`
         infoLogger.setSilent(true);
         expect(client.logger.level).to.be.equal(LogLevel.Silent);
@@ -34,19 +34,19 @@ describe("Logger", function () {
 
         //during initialization of the `Transaction`, there is no logger set
         expect(transaction.logger).to.be.null;
-        
+
         //set logger with info level of logging to the `Transaction`
         let infoLogger = new Logger(LogLevel.Info);
         transaction.setLogger(infoLogger);
-        
+
         //check if the log level is in fact `info`
         expect(transaction.logger.level).to.be.equal(LogLevel.Info);
-        
+
         //change the level of the logger to `warn` and check
-        //if it is the same when extracted from the `Transaction` 
+        //if it is the same when extracted from the `Transaction`
         infoLogger.setLevel(LogLevel.Warn);
         expect(transaction.logger.level).to.be.equal(LogLevel.Warn);
-        
+
         //silence the logger and check if it changed inside the `Transaction`
         infoLogger.setSilent(true);
         expect(transaction.logger.level).to.be.equal(LogLevel.Silent);
@@ -56,7 +56,7 @@ describe("Logger", function () {
         const transaction = new Transaction();
         //during initialization of the `Transaction`, there is no logger set
         expect(transaction.logger).to.be.null;
-        
+
         //set logger with info level of logging to the `Transaction`
         const infoLogger = new Logger(LogLevel.Info);
         const levels = Object.values(infoLogger.levels);
