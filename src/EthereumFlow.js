@@ -41,6 +41,7 @@ import * as hex from "./encoding/hex.js";
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./file/FileId.js").default} FileId
  * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./client/Client.js").default<*, *>} Client
  * @typedef {import("./Timestamp.js").default} Timestamp
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
@@ -169,7 +170,7 @@ export default class EthereumFlow {
 
     /**
      * @template {Channel} ChannelT
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {Promise<TransactionResponse>}
      */
@@ -219,7 +220,7 @@ export default class EthereumFlow {
 
 /**
  * @template {Channel} ChannelT
- * @template MirrorChannelT
+ * @template {MirrorChannel} MirrorChannelT
  * @param {Uint8Array} callData
  * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
  * @param {?number} maxChunks

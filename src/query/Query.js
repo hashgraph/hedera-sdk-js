@@ -27,16 +27,14 @@ import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
-import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("../PublicKey.js").default} PublicKey
- */
-
-/**
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../logger/Logger.js").default} Logger
  */
 
 /**
@@ -253,7 +251,7 @@ export default class Query extends Executable {
     /**
      * Before we proceed exeuction, we need to do a couple checks
      *
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
@@ -331,9 +329,11 @@ export default class Query extends Executable {
             }
 
             cost = actualCost;
-            Logger.debug(
-                `[${this._getLogId()}] received cost for query ${cost.toString()}`
-            );
+            if (this._logger) {
+                this._logger.debug(
+                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                );
+            }
         }
 
         // Set the either queried cost, or the original value back into `queryPayment`
@@ -348,16 +348,26 @@ export default class Query extends Executable {
         //this._nodeAccountIds.setLocked();
 
         // Generate the payment transactions
-        for (const node of this._nodeAccountIds.list) {
+        for (const nodeId of this._nodeAccountIds.list) {
+            const logId = this._getLogId();
+            const paymentTransactionId =
+                /** @type {import("../transaction/TransactionId.js").default} */ (
+                    this._paymentTransactionId
+                );
+            const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
+
+            if (this._logger) {
+                this._logger.debug(
+                    `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                );
+            }
+
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
-                    this._getLogId(),
-                    /** @type {import("../transaction/TransactionId.js").default} */ (
-                        this._paymentTransactionId
-                    ),
-                    node,
+                    paymentTransactionId,
+                    nodeId,
                     this._isPaymentRequired() ? this._operator : null,
-                    /** @type {Hbar} */ (this._queryPayment)
+                    paymentAmount
                 )
             );
         }
@@ -437,14 +447,25 @@ export default class Query extends Executable {
                 header.payment =
                     this._paymentTransactions[this._nodeAccountIds.index];
             } else {
-                header.payment = await _makePaymentTransaction(
-                    this._getLogId(),
+                const logId = this._getLogId();
+                const nodeId = this._nodeAccountIds.current;
+                const paymentTransactionId =
                     /** @type {import("../transaction/TransactionId.js").default} */ (
                         this._paymentTransactionId
-                    ),
-                    this._nodeAccountIds.current,
+                    );
+                const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
+
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                    );
+                }
+
+                header.payment = await _makePaymentTransaction(
+                    paymentTransactionId,
+                    nodeId,
                     this._isPaymentRequired() ? this._operator : null,
-                    /** @type {Hbar} */ (this._queryPayment)
+                    paymentAmount
                 );
             }
         }
@@ -469,10 +490,11 @@ export default class Query extends Executable {
                 ? nodeTransactionPrecheckCode
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
-
-        Logger.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:
@@ -531,7 +553,6 @@ export default class Query extends Executable {
 /**
  * Generate a payment transaction given, aka. `TransferTransaction`
  *
- * @param {string} logId
  * @param {TransactionId} paymentTransactionId
  * @param {AccountId} nodeId
  * @param {?ClientOperator} operator
@@ -539,15 +560,11 @@ export default class Query extends Executable {
  * @returns {Promise<HashgraphProto.proto.ITransaction>}
  */
 export async function _makePaymentTransaction(
-    logId,
     paymentTransactionId,
     nodeId,
     operator,
     paymentAmount
 ) {
-    Logger.debug(
-        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
-    );
     const accountAmounts = [];
 
     // If an operator is provided then we should make sure we transfer

@@ -100,14 +100,24 @@ export default class CostQuery extends Executable {
             this._query.setPaymentTransactionId(transactionId);
         }
 
+        const logId = this._getLogId();
+        const nodeId = new AccountId(0);
+        const paymentTransactionId =
+            /** @type {import("../transaction/TransactionId.js").default} */
+            (TransactionId.generate(new AccountId(0)));
+        const paymentAmount = new Hbar(0);
+        if (this._logger) {
+            this._logger.debug(
+                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+            );
+        }
+
         this._header = {
             payment: await _makePaymentTransaction(
-                this._getLogId(),
-                /** @type {import("../transaction/TransactionId.js").default} */
-                (TransactionId.generate(new AccountId(0))),
+                paymentTransactionId,
                 new AccountId(0),
                 operator,
-                new Hbar(0)
+                paymentAmount
             ),
             responseType: HashgraphProto.proto.ResponseType.COST_ANSWER,
         };

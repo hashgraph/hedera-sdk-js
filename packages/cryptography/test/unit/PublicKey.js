@@ -55,7 +55,7 @@ describe("PublicKey", function () {
         expect(ed25519.equals(ecdsa)).to.be.false;
     });
 
-    it("ecsda consistent toString", function () {
+    it("ECDSA consistent toString", function () {
         const key = PrivateKey.fromString(ECDSA_PRIVATE_DER);
         const publicKey = PublicKey.fromString(key.publicKey.toString());
 
@@ -68,7 +68,7 @@ describe("PublicKey", function () {
         expect(publicKey.toStringRaw()).to.be.equal(ECDSA_PUBLIC_RAW);
     });
 
-    it("ed25519 consistent toString", function () {
+    it("ED25519 consistent toString", function () {
         const key = PrivateKey.fromString(ED25519_PRIVATE_DER);
         const publicKey = PublicKey.fromString(key.publicKey.toString());
 

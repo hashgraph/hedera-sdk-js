@@ -34,6 +34,7 @@ import PublicKey from "../PublicKey.js";
  * @typedef {import("../Hbar.js").default} Hbar
  * @typedef {import("../Duration.js").default} Duration
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../transaction/TransactionReceipt.js").default} TransactionReceipt
@@ -358,7 +359,7 @@ export default class ContractCreateFlow {
 
     /**
      * @template {Channel} ChannelT
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @param {number=} requestTimeout
      * @returns {Promise<TransactionResponse>}

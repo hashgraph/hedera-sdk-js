@@ -1,3 +1,8 @@
+import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
+import SparkMD5 from "spark-md5";
+import { Buffer } from "buffer";
+
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
     Aes128Cbc: "AES-128-CBC",
@@ -87,12 +92,39 @@ export async function createDecipheriv(algorithm, key, iv, data) {
         false,
         ["decrypt"]
     );
+    let decrypted;
+    try {
+        decrypted = await window.crypto.subtle.decrypt(algorithm_, key_, data);
+    } catch (error) {
+        const message =
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            error != null && /** @type {Error} */ (error).message != null
+                ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                  /** @type {Error} */ (error).message
+                : "";
 
+        throw new Error(`Unable to decrypt: ${message}`);
+    }
     return new Uint8Array(
         // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#return_value
         /** @type {ArrayBuffer} */ (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            await window.crypto.subtle.decrypt(algorithm_, key_, data)
+            decrypted
         )
     );
+}
+
+/**
+ * @param {string} passphrase
+ * @param {string} iv
+ * @returns {Promise<Uint8Array>}
+ */
+export async function messageDigest(passphrase, iv) {
+    const pass = utf8.encode(passphrase);
+    const sliced = hex.decode(iv).slice(0, 8);
+    const result = SparkMD5.ArrayBuffer.hash(
+        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)])
+    );
+
+    return Promise.resolve(hex.decode(result));
 }

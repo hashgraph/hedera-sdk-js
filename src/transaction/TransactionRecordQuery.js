@@ -25,8 +25,8 @@ import TransactionId from "./TransactionId.js";
 import Status from "../Status.js";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
+import RecordStatusError from "../RecordStatusError.js";
 import { ExecutionState } from "../Executable.js";
-import Logger from "js-logger";
 import * as HashgraphProto from "@hashgraph/proto";
 
 const { proto } = HashgraphProto;
@@ -201,9 +201,11 @@ export default class TransactionRecordQuery extends Query {
                 : proto.ResponseCodeEnum.OK
         );
 
-        Logger.debug(
-            `[${this._getLogId()}] received node precheck status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received node precheck status ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Busy:
@@ -247,9 +249,11 @@ export default class TransactionRecordQuery extends Query {
             );
         status = Status._fromCode(receiptStatusCode);
 
-        Logger.debug(
-            `[${this._getLogId()}] received record's receipt ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received record's receipt ${status.toString()}`
+            );
+        }
 
         switch (status) {
             case Status.Ok:
@@ -289,11 +293,21 @@ export default class TransactionRecordQuery extends Query {
                 ? nodeTransactionPrecheckCode
                 : proto.ResponseCodeEnum.OK
         );
-
         switch (status) {
             case Status.Ok:
                 // Do nothing
                 break;
+
+            case Status.ContractRevertExecuted:
+                return new RecordStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                    transactionRecord: TransactionRecord._fromProtobuf({
+                        transactionRecord:
+                            // @ts-ignore
+                            response.transactionGetRecord.transactionRecord,
+                    }),
+                });
 
             default:
                 return new PrecheckStatusError({
@@ -321,11 +335,27 @@ export default class TransactionRecordQuery extends Query {
 
         status = Status._fromCode(receiptStatusError);
 
-        return new ReceiptStatusError({
-            status,
-            transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf({ receipt }),
-        });
+        switch (status) {
+            case Status.ContractRevertExecuted:
+                return new RecordStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                    transactionRecord: TransactionRecord._fromProtobuf({
+                        transactionRecord:
+                            // @ts-ignore
+                            response.transactionGetRecord.transactionRecord,
+                    }),
+                });
+
+            default:
+                return new ReceiptStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                    transactionReceipt: TransactionReceipt._fromProtobuf({
+                        receipt,
+                    }),
+                });
+        }
     }
 
     /**

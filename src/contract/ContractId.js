@@ -23,6 +23,7 @@ import Key from "../Key.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
+import { arrayEqual } from "../array.js";
 import Long from "long";
 
 /**
@@ -228,6 +229,24 @@ export default class ContractId extends Key {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
             [other.shard, other.realm, other.num]
+        );
+    }
+
+    /**
+     * @param {this} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        let evmAddresses = false;
+        if (this.evmAddress != null && other.evmAddress != null) {
+            evmAddresses = arrayEqual(this.evmAddress, other.evmAddress);
+        }
+
+        return (
+            this.shard.eq(other.shard) &&
+            this.realm.eq(other.realm) &&
+            this.num.eq(other.num) &&
+            evmAddresses
         );
     }
 

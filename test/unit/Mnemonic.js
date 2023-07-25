@@ -166,6 +166,7 @@ describe("Mnemonic", function () {
     });
 
     it("Mnemonic.toStandardED25519PrivateKey() test vector 1", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/73#issuecomment-1422330626
         const CHAIN_CODE1 =
             "404914563637c92d688deb9d41f3f25cbe8d6659d859cc743712fcfac72d7eda";
         const PRIVATE_KEY1 =
@@ -226,6 +227,7 @@ describe("Mnemonic", function () {
     });
 
     it("Mnemonic.toStandardED25519PrivateKey() test vector 2", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/73#issuecomment-1424761224
         const CHAIN_CODE1 =
             "48c89d67e9920e443f09d2b14525213ff83b245c8b98d63747ea0801e6d0ff3f";
         const PRIVATE_KEY1 =
@@ -298,6 +300,7 @@ describe("Mnemonic", function () {
     });
 
     it("Mnemonic.toStandardECDSAsecp256k1PrivateKey() test vector", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/73#issuecomment-1422330626
         const CHAIN_CODE1 =
             "7717bc71194c257d4b233e16cf48c24adef630052f874a262d19aeb2b527620d";
         const PRIVATE_KEY1 =
@@ -396,6 +399,7 @@ describe("Mnemonic", function () {
     });
 
     it("Mnemonic.toStandardECDSAsecp256k1PrivateKey() test vector 2", async function () {
+        // https://github.com/hashgraph/hedera-sdk-reference/issues/73#issuecomment-1424761224
         const CHAIN_CODE1 =
             "e76e0480faf2790e62dc1a7bac9dce51db1b3571fd74d8e264abc0d240a55d09";
         const PRIVATE_KEY1 =

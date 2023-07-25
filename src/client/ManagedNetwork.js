@@ -195,6 +195,9 @@ export default class ManagedNetwork {
                 searchForNextEarliestReadmitTime = false;
 
                 if (this._nodes[i]._readmitTime <= now) {
+                    // Decrement the unhealthy node count because the readmit time of the node
+                    // has expired and we return it to the list of healthy nodes
+                    this._unhealthyNodesCount--;
                     this._healthyNodes.push(this._nodes[i]);
                 }
             }
@@ -231,7 +234,10 @@ export default class ManagedNetwork {
         // `this._healthyNodes.length` times. This can result in a shorter
         // list than `count`, but that is much better than running forever
         for (let i = 0; i < this._healthyNodes.length; i++) {
-            if (nodes.length == count - this._unhealthyNodesCount) {
+            if (
+                nodes.length == count - this._unhealthyNodesCount &&
+                nodes.length !== 0
+            ) {
                 break;
             }
 
@@ -451,13 +457,16 @@ export default class ManagedNetwork {
             // )[0];
             const lockedNodes = this._network.get(key.toString());
             if (lockedNodes) {
-                return /** @type {NetworkNodeT[]} */ lockedNodes[
-                    Math.floor(Math.random() * lockedNodes.length)
-                ];
+                return /** @type {NetworkNodeT[]} */ (lockedNodes)[0];
             } else {
-                return /** @type {NetworkNodeT[]} */ (
-                    this._network.get(key.toString())
-                )[0];
+                const nodes = Array.from(this._network.keys());
+                const randomNodeAccountId =
+                    nodes[Math.floor(Math.random() * nodes.length)];
+
+                // We get the `randomNodeAccountId` from the network mapping,
+                // so it cannot be `undefined`
+                // @ts-ignore
+                return this._network.get(randomNodeAccountId)[0];
             }
         } else {
             if (this._healthyNodes.length == 0) {
@@ -479,6 +488,8 @@ export default class ManagedNetwork {
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
                 this._healthyNodes.splice(i, 1);
+                // Increment the unhealthy node count because we
+                // remove the current node from the healthy list
                 this._unhealthyNodesCount++;
             }
         }

@@ -1,10 +1,10 @@
 import BadKeyError from "./BadKeyError.js";
 import Ed25519PublicKey from "./Ed25519PublicKey.js";
 import nacl from "tweetnacl";
-import { arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as random from "./primitive/random.js";
 import * as slip10 from "./primitive/slip10.js";
+import forge from "node-forge";
 
 export const derPrefix = "302e020100300506032b657004220420";
 export const derPrefixBytes = hex.decode(derPrefix);
@@ -100,14 +100,27 @@ export default class Ed25519PrivateKey {
      * @returns {Ed25519PrivateKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 48 || !arrayStartsWith(data, derPrefixBytes)) {
+        const asn = forge.asn1.fromDer(new forge.util.ByteStringBuffer(data));
+
+        /** * @type {Uint8Array} */
+        let privateKey;
+
+        try {
+            privateKey =
+                forge.pki.ed25519.privateKeyFromAsn1(asn).privateKeyBytes;
+        } catch (error) {
+            const message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
             throw new BadKeyError(
-                `invalid private key length: ${data.length} bytes`
+                `cannot decode ED25519 private key data from DER format: ${message}`
             );
         }
 
-        const keyPair = nacl.sign.keyPair.fromSeed(data.subarray(16));
-
+        const keyPair = nacl.sign.keyPair.fromSeed(privateKey);
         return new Ed25519PrivateKey(keyPair);
     }
 

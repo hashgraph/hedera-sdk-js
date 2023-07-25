@@ -32,7 +32,7 @@ async function sync() {
     // strongly discourages us using `Date.parse()`, but I'm not sure what we should replace
     // it with without adding any new deps.
     //
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     const worldTime = Math.round(Date.parse(response.headers.date) / 1000);
 
     // Set the time drift value in the SDK Cache

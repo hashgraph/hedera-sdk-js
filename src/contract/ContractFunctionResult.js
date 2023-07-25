@@ -25,7 +25,10 @@ import BigNumber from "bignumber.js";
 import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ParamType, defaultAbiCoder } from "@ethersproject/abi";
 import Long from "long";
+import ContractNonceInfo from "./ContractNonceInfo.js";
 
 /**
  * @typedef {import("./ContractStateChange.js").default} ContractStateChange
@@ -62,6 +65,7 @@ export default class ContractFunctionResult {
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
      * @param {ContractStateChange[]} result.stateChanges
+     * @param {ContractNonceInfo[]} result.contractNonces
      */
     constructor(result) {
         /**
@@ -139,6 +143,12 @@ export default class ContractFunctionResult {
          * ContractCreateTransactionBody or a ContractCallTransactionBody.
          */
         this.senderAccountId = result.senderAccountId;
+
+        /**
+         * A list of updated contract account nonces containing the new nonce value for each contract account.
+         * This is always empty in a ContractCallLocalResponse#ContractFunctionResult message, since no internal creations can happen in a static EVM call.
+         */
+        this.contractNonces = result.contractNonces;
     }
 
     /**
@@ -188,6 +198,12 @@ export default class ContractFunctionResult {
                 result.senderId != null
                     ? AccountId._fromProtobuf(result.senderId)
                     : null,
+            contractNonces: (result.contractNonces != null
+                ? result.contractNonces
+                : []
+            ).map((contractNonce) =>
+                ContractNonceInfo._fromProtobuf(contractNonce)
+            ),
         });
     }
 
@@ -247,7 +263,8 @@ export default class ContractFunctionResult {
      * @returns {number}
      */
     getInt8(index) {
-        return this.bytes[(index != null ? index : 0) * 32 + 31];
+        const position = (index != null ? index : 0) * 32 + 31;
+        return util.safeView(this.bytes).getInt8(position);
     }
 
     /**
@@ -287,12 +304,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt40(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(27, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int40"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -311,12 +327,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt48(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(26, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int48"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -335,12 +350,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt56(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(25, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int56"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -359,12 +373,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt64(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(24, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int64"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -383,12 +396,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt72(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(23, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int72"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -407,12 +419,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt80(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(22, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int80"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -431,12 +442,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt88(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(21, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int88"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -455,12 +465,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt96(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(20, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int96"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -479,12 +488,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt104(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(19, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int104"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -503,12 +511,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt112(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(18, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int112"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -527,12 +534,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt120(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(17, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int120"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -551,12 +557,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt128(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(16, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int128"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -575,12 +580,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt136(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(15, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int136"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -599,12 +603,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt144(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(14, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int144"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -623,12 +626,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt152(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(13, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int152"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -647,12 +649,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt160(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(12, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int160"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -671,12 +672,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt168(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(11, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int168"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -695,12 +695,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt176(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(10, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int176"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -719,12 +718,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt184(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(9, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int184"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -743,12 +741,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt192(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(8, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int192"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -767,12 +764,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt200(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(7, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int200"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -791,12 +787,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt208(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(6, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int208"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -815,12 +810,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt216(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(5, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int216"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -839,12 +833,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt224(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(4, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int224"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -863,12 +856,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt232(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(3, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int232"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -887,12 +879,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt240(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(2, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int240"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -911,12 +902,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt248(index) {
-        return new BigNumber(
-            hex.encode(
-                this._getBytes32(index != null ? index : 0).subarray(1, 32)
-            ),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int248"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -935,10 +925,11 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt256(index) {
-        return new BigNumber(
-            hex.encode(this._getBytes32(index != null ? index : 0)),
-            16
+        const result = defaultAbiCoder.decode(
+            ["int256"],
+            this._getBytes32(index != null ? index : 0)
         );
+        return new BigNumber(result.toString());
     }
 
     /**
@@ -960,6 +951,15 @@ export default class ContractFunctionResult {
                 (index != null ? index : 0) * 32 + 32
             )
         );
+    }
+
+    /**
+     * @description Decode the data according to the array of types, each of which may be a string or ParamType.
+     * @param {Array<string | ParamType>} types
+     * @returns {string | any}
+     */
+    getResult(types) {
+        return defaultAbiCoder.decode(types, this.bytes);
     }
 
     /**
@@ -1002,6 +1002,9 @@ export default class ContractFunctionResult {
                 this.senderAccountId != null
                     ? this.senderAccountId._toProtobuf()
                     : null,
+            contractNonces: this.contractNonces.map((contractNonce) =>
+                contractNonce._toProtobuf()
+            ),
         };
     }
 }

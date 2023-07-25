@@ -21,7 +21,6 @@
 import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
-import Logger from "js-logger";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
 
@@ -29,10 +28,12 @@ import HttpError from "./http/HttpError.js";
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("./Signer.js").Signer} Signer
  * @typedef {import("./PublicKey.js").default} PublicKey
+ * @typedef {import("./logger/Logger.js").default} Logger
  */
 
 /**
@@ -58,7 +59,7 @@ export default class Executable {
         /**
          * The number of times we can retry the grpc call
          *
-         * @private
+         * @internal
          * @type {number}
          */
         this._maxAttempts = 10;
@@ -89,9 +90,9 @@ export default class Executable {
          * This is the request's max backoff
          *
          * @internal
-         * @type {number | null}
+         * @type {number}
          */
-        this._maxBackoff = null;
+        this._maxBackoff = 8000;
 
         /**
          * The operator that was used to execute this request.
@@ -125,6 +126,14 @@ export default class Executable {
          * @type {number | null}
          */
         this._grpcDeadline = null;
+
+        /**
+         * Logger
+         *
+         * @protected
+         * @type {Logger | null}
+         */
+        this._logger = null;
     }
 
     /**
@@ -263,7 +272,7 @@ export default class Executable {
     /**
      * Get the max backoff
      *
-     * @returns {number | null}
+     * @returns {number}
      */
     get maxBackoff() {
         return this._maxBackoff;
@@ -495,7 +504,7 @@ export default class Executable {
      * Execute the request using a client and an optional request timeout
      *
      * @template {Channel} ChannelT
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @param {number=} requestTimeout
      * @returns {Promise<OutputT>}
@@ -504,6 +513,15 @@ export default class Executable {
         console.log(
             `\n---------------------------------------------- in execute\n`
         );
+
+        // If the logger on the request is not set, use the logger in client
+        // (if set, otherwise do not use logger)
+        this._logger =
+            this._logger == null
+                ? client._logger != null
+                    ? client._logger
+                    : null
+                : this._logger;
 
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
@@ -583,9 +601,11 @@ export default class Executable {
 
             // Get the log ID for the request.
             const logId = this._getLogId();
-            Logger.debug(
-                `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
-            );
+            if (this._logger) {
+                this._logger.debug(
+                    `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
+                );
+            }
 
             const channel = node.getChannel();
             const request = await this._makeRequestAsync();
@@ -604,9 +624,12 @@ export default class Executable {
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
             if (!node.isHealthy()) {
-                Logger.debug(
-                    `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
-                );
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
+                    );
+                }
+
                 // We don't need to wait, we can proceed to the next attempt.
                 continue;
             }
@@ -631,11 +654,14 @@ export default class Executable {
                         )
                     );
                 }
-                Logger.trace(
-                    `[${this._getLogId()}] sending protobuf ${hex.encode(
-                        this._requestToBytes(request)
-                    )}`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `[${this._getLogId()}] sending protobuf ${hex.encode(
+                            this._requestToBytes(request)
+                        )}`
+                    );
+                }
+
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -650,9 +676,11 @@ export default class Executable {
                 console.log(`error: ${JSON.stringify(err)}`);
                 // Save the error in case we retry
                 persistentError = error;
-                Logger.debug(
-                    `[${logId}] received error ${JSON.stringify(error)}`
-                );
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] received error ${JSON.stringify(error)}`
+                    );
+                }
 
                 if (
                     (error instanceof GrpcServiceError ||
@@ -662,18 +690,25 @@ export default class Executable {
                 ) {
                     // Increase the backoff for the particular node and remove it from
                     // the healthy node list
+                    if (this._logger) {
+                        this._logger.debug(
+                            `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
+                        );
+                    }
+
                     client._network.increaseBackoff(node);
                     continue;
                 }
 
                 throw err;
             }
-
-            Logger.trace(
-                `[${this._getLogId()}] sending protobuf ${hex.encode(
-                    this._responseToBytes(response)
-                )}`
-            );
+            if (this._logger) {
+                this._logger.trace(
+                    `[${this._getLogId()}] sending protobuf ${hex.encode(
+                        this._responseToBytes(response)
+                    )}`
+                );
+            }
 
             // If we didn't receive an error we should decrease the current nodes backoff
             // in case it is a recovering node
@@ -727,6 +762,26 @@ export default class Executable {
      */
     toBytes() {
         throw new Error("not implemented");
+    }
+
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     * @returns {this}
+     */
+    setLogger(logger) {
+        this._logger = logger;
+        return this;
+    }
+
+    /**
+     * Get logger if set
+     *
+     * @returns {?Logger}
+     */
+    get logger() {
+        return this._logger;
     }
 }
 

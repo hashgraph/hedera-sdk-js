@@ -5,6 +5,78 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## v2.30.0
+
+## What's Changed
+* Added new transaction type based on EIP-2930 by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1702
+* Fix contract function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1703
+* Fix integration tests fees by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1715
+* Fix zero padding for nanos in timestamp by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1713
+* Added release doc by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1720
+* Fix DER and PEM headers by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1706
+* Fix dependencies by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1722
+* Feature contract nonces - HIP-729 support by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1723
+
+## v2.29.0
+
+## What's Changed
+* GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
+* Update the addressbook on SDK build by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1658
+
+## v2.29.0-beta.1
+
+## What's Changed
+* GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
+
+## v2.28.0
+
+## What's Changed
+* Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
+
+## v2.28.0-beta.1
+
+## What's Changed
+* Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
+
+## v2.27.0
+
+## What's Changed
+* Added record for failed transaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1643
+* Fix encode/decode scheduled transactions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1638
+* Fix/issue with encode decode by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1647
+* fix exact version of grpc library by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1652
+* Fix/remove ping all by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1650
+
+## v2.26.0
+
+## What's Changed
+* Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
+* Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
+* Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
+
+## v2.26.0-beta.3
+
+## What's Changed
+* Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
+
+## v2.26.0-beta.2
+
+## What's Changed
+* Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
+
+## v2.26.0-beta.1
+
+## What's Changed
+* Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
+
+## v2.25.0
+
+## What's Changed
+* Create example of deploy contract with value by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1604
+* Unhealthy node info by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1605
+* Fix: encoding decoding function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1608
+
 ## v2.24.2
 
 ## What's Changed
