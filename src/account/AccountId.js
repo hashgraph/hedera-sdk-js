@@ -105,20 +105,15 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
-        const evmAddressObj = typeof evmAddress === "string"
-            ? EvmAddress.fromString(evmAddress)
-            : evmAddress;
+        const evmAddressObj =
+            typeof evmAddress === "string"
+                ? EvmAddress.fromString(evmAddress)
+                : evmAddress;
 
         if (isLongZeroAddress(evmAddressObj.toBytes())) {
-            return this.fromSolidityAddress(evmAddressObj.toString())
+            return this.fromSolidityAddress(evmAddressObj.toString());
         } else {
-            return new AccountId(
-                shard,
-                realm,
-                0,
-                undefined,
-                evmAddressObj
-            );
+            return new AccountId(shard, realm, 0, undefined, evmAddressObj);
         }
     }
 

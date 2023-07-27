@@ -69,7 +69,7 @@ export default class ContractId extends Key {
             return this.fromSolidityAddress(evmAddress);
         } else {
             return new ContractId(shard, realm, 0, hex.decode(evmAddress));
-        }    
+        }
     }
 
     /**
