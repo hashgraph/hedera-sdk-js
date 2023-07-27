@@ -25,6 +25,8 @@ import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
 import EvmAddress from "../EvmAddress.js";
+import * as hex from ".././encoding/hex.js";
+import { isLongZeroAddress } from "../util.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -103,15 +105,21 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
-        return new AccountId(
-            shard,
-            realm,
-            0,
-            undefined,
-            typeof evmAddress === "string"
-                ? EvmAddress.fromString(evmAddress)
-                : evmAddress
-        );
+        const evmAddressObj = typeof evmAddress === "string"
+            ? EvmAddress.fromString(evmAddress)
+            : evmAddress;
+
+        if (isLongZeroAddress(evmAddressObj.toBytes())) {
+            return this.fromSolidityAddress(evmAddressObj.toString())
+        } else {
+            return new AccountId(
+                shard,
+                realm,
+                0,
+                undefined,
+                evmAddressObj
+            );
+        }
     }
 
     /**
@@ -212,7 +220,11 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromSolidityAddress(address) {
-        return new AccountId(...entity_id.fromSolidityAddress(address));
+        if (isLongZeroAddress(hex.decode(address))) {
+            return new AccountId(...entity_id.fromSolidityAddress(address));
+        } else {
+            return this.fromEvmAddress(0, 0, address);
+        }
     }
 
     /**

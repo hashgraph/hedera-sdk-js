@@ -25,6 +25,7 @@ import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
 import { arrayEqual } from "../array.js";
 import Long from "long";
+import { isLongZeroAddress } from "../util.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -64,7 +65,11 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
-        return new ContractId(shard, realm, 0, hex.decode(evmAddress));
+        if (isLongZeroAddress(hex.decode(evmAddress))) {
+            return this.fromSolidityAddress(evmAddress);
+        } else {
+            return new ContractId(shard, realm, 0, hex.decode(evmAddress));
+        }    
     }
 
     /**
@@ -149,8 +154,11 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
-        const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
-        return new ContractId(shard, realm, contract);
+        if (isLongZeroAddress(hex.decode(address))) {
+            return new ContractId(...entity_id.fromSolidityAddress(address));
+        } else {
+            return this.fromEvmAddress(0, 0, address);
+        }
     }
 
     /**
