@@ -26,6 +26,7 @@ module.exports = {
             clientType = "testnet"
         }
         sdk.getClient().setOperator(operatorAccountId, operatorPrivateKey);
+        sdk.getClient().setRequestTimeout(30000);
         return {
             "message": "Successfully setup " + clientType + " client.",
             "status": "SUCCESS"

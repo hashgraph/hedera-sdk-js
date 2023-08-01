@@ -19,7 +19,7 @@ module.exports = {
                                    }) => {
         //Create the transfer to an alias account
         const alias_id = JSON.parse(aliasAccountId)
-        const response = await new TransferTransaction()
+        const response = await new TransferTransaction().setGrpcDeadline(30000)
             .addHbarTransfer(operator_id, new Hbar(initialBalance).negated())
             .addHbarTransfer(alias_id, new Hbar(initialBalance))
             .execute(sdk.getClient())
@@ -54,7 +54,7 @@ module.exports = {
                               autoRenewPeriod
                           }) => {
         //Create the transaction
-        let transaction = new AccountCreateTransaction();
+        let transaction = new AccountCreateTransaction().setGrpcDeadline(30000);
 
         if (publicKey != null) transaction.setKey(PublicKey.fromString(publicKey))
         if (initialBalance != null) transaction.setInitialBalance(Hbar.fromTinybars(LosslessJSON.parse('{"long":' + initialBalance + '}').long))
@@ -81,7 +81,7 @@ module.exports = {
     },
     getAccountInfo: async ({accountId}) => {
         //Create the account info query
-        const query = new AccountInfoQuery().setAccountId(accountId);
+        const query = new AccountInfoQuery().setAccountId(accountId).setGrpcDeadline(30000);
         //Sign with client operator private key and submit the query to a Hedera network and return account info
         let accountInfo = await query.execute(sdk.getClient());
         // return only basic account info (keeps parity with java rpc)
@@ -97,7 +97,7 @@ module.exports = {
     updateAccountKey: async ({accountId, newPublicKey, oldPrivateKey, newPrivateKey}) => {
         // update the key on the account
         // Create the transaction to replace the key on the account
-        const transaction = new AccountUpdateTransaction()
+        const transaction = new AccountUpdateTransaction().setGrpcDeadline(30000)
             .setAccountId(accountId)
             .setKey(PublicKey.fromString(newPublicKey))
             .freezeWith(sdk.getClient());
@@ -120,7 +120,7 @@ module.exports = {
 
         // update the account memo field
         // Create the transaction to update the memo on the account
-        const transaction = new AccountUpdateTransaction()
+        const transaction = new AccountUpdateTransaction().setGrpcDeadline(30000)
             .setAccountId(accountId)
             .setAccountMemo(memo)
             .freezeWith(sdk.getClient());
@@ -137,7 +137,7 @@ module.exports = {
         };
     },
     deleteAccount: async ({accountId, accountKey, recipientId}) => {
-        const transaction = await new AccountDeleteTransaction()
+        const transaction = await new AccountDeleteTransaction().setGrpcDeadline(30000)
             .setAccountId(accountId)
             .setTransferAccountId(recipientId)
             .freezeWith(sdk.getClient());
