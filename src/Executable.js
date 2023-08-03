@@ -459,6 +459,7 @@ export default class Executable {
                 error.status._code === GrpcStatus.Timeout._code ||
                 error.status._code === GrpcStatus.Unavailable._code ||
                 error.status._code === GrpcStatus.ResourceExhausted._code ||
+                error.status._code === GrpcStatus.FailedToFetch._code ||
                 (error.status._code === GrpcStatus.Internal._code &&
                     RST_STREAM.test(error.message))
             );
@@ -618,7 +619,7 @@ export default class Executable {
                         `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
                     );
                 }
-
+                console.log(`not healthy: ${node.accountId.toString()} with ${node.address.toString()}`)
                 // We don't need to wait, we can proceed to the next attempt.
                 continue;
             }
@@ -650,7 +651,7 @@ export default class Executable {
                         )}`
                     );
                 }
-
+                console.log(`att:${attempt} executing against: ${node.accountId.toString()} with ${node.address.toString()}`)
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -670,7 +671,7 @@ export default class Executable {
                         `[${logId}] received error ${JSON.stringify(error)}`
                     );
                 }
-
+                console.log(`??? ${JSON.stringify(err)}`);
                 if (
                     (error instanceof GrpcServiceError ||
                         error instanceof HttpError) &&
@@ -684,7 +685,7 @@ export default class Executable {
                             `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
                         );
                     }
-
+                    console.log(`failed for: ${node.accountId.toString()} with ${node.address.toString()}`)
                     client._network.increaseBackoff(node);
                     continue;
                 }

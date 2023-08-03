@@ -93,7 +93,12 @@ export default class WebChannel extends Channel {
 
                 callback(null, unaryResponse);
             } catch (error) {
-                callback(/** @type {Error} */ (error), null);
+                console.log(`catch ERR: ${JSON.stringify(error)}`);
+                const err = new GrpcServiceError(
+                    // retry on failed to fetch
+                    GrpcStatus._fromValue(18)
+                );
+                callback(err, null);
             }
         };
     }
