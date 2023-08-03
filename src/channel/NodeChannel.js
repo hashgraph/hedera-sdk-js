@@ -92,6 +92,7 @@ export default class NodeChannel extends Channel {
      */
     _createUnaryClient(serviceName) {
         return (method, requestData, callback) => {
+            console.log(`NodeChannel: ${serviceName}/${method.name}`)
             const deadline = new Date();
             const milliseconds = this.maxExecutionTime
                 ? this.maxExecutionTime
@@ -100,6 +101,7 @@ export default class NodeChannel extends Channel {
 
             this._client.waitForReady(deadline, (err) => {
                 if (err) {
+                    //this._client.close();
                     callback(new GrpcServicesError(GrpcStatus.Timeout));
                 } else {
                     this._client.makeUnaryRequest(
@@ -110,6 +112,7 @@ export default class NodeChannel extends Channel {
                         },
                         Buffer.from(requestData),
                         (e, r) => {
+                            //this._client.close();
                             callback(e, r);
                         }
                     );
