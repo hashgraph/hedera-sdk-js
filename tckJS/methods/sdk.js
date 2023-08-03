@@ -18,7 +18,7 @@ module.exports = {
         if (nodeIp && nodeAccountId && mirrorNetworkIp) {
             //Create custom client
             const node = {[nodeIp]: new AccountId(parseInt(nodeAccountId))};
-            sdk.client = Client.forNetwork(node).setMirrorNetwork(mirrorNetworkIp);
+            sdk.client = Client.forNetwork(node);
             clientType = "custom"
         } else {
             // Default to testnet client
