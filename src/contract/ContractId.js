@@ -26,6 +26,7 @@ import * as hex from "../encoding/hex.js";
 import { arrayEqual } from "../array.js";
 import Long from "long";
 import { isLongZeroAddress } from "../util.js";
+import axios from "axios";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -115,6 +116,36 @@ export default class ContractId extends Key {
      */
     get checksum() {
         return this._checksum;
+    }
+
+    /**
+     * @description Gets the actual `num` field of the `AccountId` from the Mirror Node.
+     * Should be used after generating `AccountId.fromEvmAddress()` because it sets the `num` field to `0`
+     * automatically since there is no connection between the `num` and the `evmAddress`
+     * @param {Client} client
+     * @returns {Promise<ContractId>}
+     */
+    async populateAccountNum(client) {
+        if (this.evmAddress === null) {
+            throw new Error("field `evmAddress` should not be null");
+        }
+        const mirrorUrl = client.mirrorNetwork[0].slice(
+            0,
+            client.mirrorNetwork[0].indexOf(":")
+        );
+
+        /* eslint-disable */
+        const url = `https://${mirrorUrl}/api/v1/contracts/${hex.encode(
+            this.evmAddress
+        )}`;
+        const mirrorAccountId = (await axios.get(url)).data.contract_id;
+
+        this.num = Long.fromString(
+            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
+        );
+        /* eslint-enable */
+
+        return this;
     }
 
     /**
