@@ -119,8 +119,8 @@ export default class ContractId extends Key {
     }
 
     /**
-     * @description Gets the actual `num` field of the `AccountId` from the Mirror Node.
-     * Should be used after generating `AccountId.fromEvmAddress()` because it sets the `num` field to `0`
+     * @description Gets the actual `num` field of the `ContractId` from the Mirror Node.
+     * Should be used after generating `ContractId.fromEvmAddress()` because it sets the `num` field to `0`
      * automatically since there is no connection between the `num` and the `evmAddress`
      * @param {Client} client
      * @returns {Promise<ContractId>}
