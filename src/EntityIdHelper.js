@@ -90,7 +90,7 @@ export function constructor(props, realmOrNull, numOrNull) {
         throw new Error("invalid entity ID");
     }
 
-    // If the first parameter is a nubmer then we need to conver the
+    // If the first parameter is a number then we need to convert the
     // first, second, and third parameters into numbers. Otherwise,
     // we should look at the fields `shard`, `realm`, and `num` on
     // `props`
