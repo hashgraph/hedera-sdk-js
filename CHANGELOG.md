@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.32.0-beta.1
+
+## What's Changed
+* Update the client constants file with the mainnet proxies by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1780
+* Add method that queries the mirror node to get the actual num field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1790
+* Add retry logic on grpc web errors by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1802
+
 ## v2.31.0
 
 ## What's Changed
