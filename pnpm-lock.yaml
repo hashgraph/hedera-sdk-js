@@ -84,7 +84,7 @@ devDependencies:
     version: 7.22.5(@babel/core@7.22.1)
   '@babel/register':
     specifier: ^7.18.9
-    version: 7.21.0(@babel/core@7.22.1)
+    version: 7.22.5(@babel/core@7.22.1)
   '@grpc/proto-loader':
     specifier: ^0.7.4
     version: 0.7.7
@@ -1649,8 +1649,8 @@ packages:
       '@babel/types': 7.22.5
       esutils: 2.0.3
 
-  /@babel/register@7.21.0(@babel/core@7.22.1):
-    resolution: {integrity: sha512-9nKsPmYDi5DidAqJaQooxIhsLJiNMkGr8ypQ8Uic7cIox7UCDsM7HuUGxdGT7mSDTYbqzIdsOWzfBton/YJrMw==}
+  /@babel/register@7.22.5(@babel/core@7.22.1):
+    resolution: {integrity: sha512-vV6pm/4CijSQ8Y47RH5SopXzursN35RQINfGJkmOlcpAtGuf94miFvIPhCKGQN7WGIcsgG1BHEX2KVdTYwTwUQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
