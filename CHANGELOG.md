@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.32.0-beta.2
+
+## What's Changed
+* Comment out unavailable web proxies nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1810
+
 ## v2.32.0-beta.1
 
 ## What's Changed
