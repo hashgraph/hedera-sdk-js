@@ -74,6 +74,8 @@ export default class GrpcStatus {
                 return GrpcStatus.Unauthenticated;
             case 17:
                 return GrpcStatus.Timeout;
+            case 18:
+                return GrpcStatus.GrpcWeb;
             default:
                 throw new Error(
                     "(BUG) non-exhaustive GrpcStatus switch statement"
@@ -122,6 +124,8 @@ export default class GrpcStatus {
                 return "DATA_LOSS";
             case GrpcStatus.Timeout:
                 return "TIMEOUT";
+            case GrpcStatus.GrpcWeb:
+                return "GRPC_WEB";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -153,3 +157,4 @@ GrpcStatus.Unavailable = new GrpcStatus(14);
 GrpcStatus.DataLoss = new GrpcStatus(15);
 GrpcStatus.Unauthenticated = new GrpcStatus(16);
 GrpcStatus.Timeout = new GrpcStatus(17);
+GrpcStatus.GrpcWeb = new GrpcStatus(18);

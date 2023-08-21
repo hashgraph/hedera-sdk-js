@@ -6,11 +6,11 @@ export const MAINNET = {
     "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
     "https://node02.swirldslabs.com:443": new AccountId(5),
     "https://node03.swirldslabs.com:443": new AccountId(6),
-    "https://node04.swirldslabs.com:443": new AccountId(7),
+    //"https://node04.swirldslabs.com:443": new AccountId(7),
     "https://node05.swirldslabs.com:443": new AccountId(8),
-    "https://node06.swirldslabs.com:443": new AccountId(9),
+    //"https://node06.swirldslabs.com:443": new AccountId(9),
     "https://node07.swirldslabs.com:443": new AccountId(10),
-    "https://node08.swirldslabs.com:443": new AccountId(11),
+    //"https://node08.swirldslabs.com:443": new AccountId(11),
     "https://node09.swirldslabs.com:443": new AccountId(12),
     "https://node10.swirldslabs.com:443": new AccountId(13),
     "https://node11.swirldslabs.com:443": new AccountId(14),
@@ -29,8 +29,8 @@ export const MAINNET = {
     "https://node24.swirldslabs.com:443": new AccountId(27),
     "https://node25.swirldslabs.com:443": new AccountId(28),
     "https://node26.swirldslabs.com:443": new AccountId(29),
-    "https://node27.swirldslabs.com:443": new AccountId(30),
-    "https://node28.swirldslabs.com:443": new AccountId(31),
+    //"https://node27.swirldslabs.com:443": new AccountId(30),
+    //"https://node28.swirldslabs.com:443": new AccountId(31),
 };
 
 export const WEB_TESTNET = {
