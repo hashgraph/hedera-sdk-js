@@ -100,6 +100,10 @@ export default class AccountId {
     }
 
     /**
+     * @description This handles both long-zero format and evm address format addresses.
+     * If an actual evm address is passed, please use `AccountId.populateAccountNum(client)` method
+     * to get the actual `num` value, since there is no cryptographic relation to the evm address
+     * and cannot be populated directly
      * @param {Long | number} shard
      * @param {Long | number} realm
      * @param {EvmAddress | string} evmAddress
@@ -119,6 +123,7 @@ export default class AccountId {
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @summary Accepts an evm address only as `EvmAddress` type
      * @param {EvmAddress} evmAddress
      * @returns {AccountId}
@@ -240,6 +245,7 @@ export default class AccountId {
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @param {string} address
      * @returns {AccountId}
      */
