@@ -60,6 +60,10 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @description This handles both long-zero format and evm address format addresses.
+     * If an actual evm address is passed, please use `ContractId.populateAccountNum(client)` method
+     * to get the actual `num` value, since there is no cryptographic relation to the evm address
+     * and cannot be populated directly
      * @param {Long | number} shard
      * @param {Long | number} realm
      * @param {string} evmAddress
@@ -181,6 +185,7 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @param {string} address
      * @returns {ContractId}
      */
