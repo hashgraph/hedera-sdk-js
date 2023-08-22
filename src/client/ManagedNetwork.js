@@ -243,12 +243,15 @@ export default class ManagedNetwork {
 
             // Get a random node
             let node = this.getNode();
+            console.log(`_getNumberOfMostHealthyNodes`)
+            console.log(`${node.getKey()}`)
+            console.log(`${node.address.address}`)
             if (
-                !keys.has(node.getKey()) ||
-                !nodeAddresses.has(node.address._address)
+                !keys.has(node.getKey()) /* ||
+                !nodeAddresses.has(node.address._address) */
             ) {
                 keys.add(node.getKey());
-                nodeAddresses.add(node.address._address);
+                //nodeAddresses.add(node.address._address);
                 nodes.push(node);
             } else {
                 i--;
@@ -456,19 +459,27 @@ export default class ManagedNetwork {
             //     this._network.get(key.toString())
             // )[0];
             const lockedNodes = this._network.get(key.toString());
+            //lockedNodes?.forEach(node => {console.log(node._address)});
             if (lockedNodes) {
-                return /** @type {NetworkNodeT[]} */ (lockedNodes)[0];
+                console.log(`if`);
+                const randomNodeAddress = Math.floor(Math.random() * lockedNodes.length);
+                return /** @type {NetworkNodeT[]} */ (lockedNodes)[randomNodeAddress];
             } else {
+                console.log(`if else`);
                 const nodes = Array.from(this._network.keys());
                 const randomNodeAccountId =
                     nodes[Math.floor(Math.random() * nodes.length)];
 
+                const randomNode = this._network.get(randomNodeAccountId);
                 // We get the `randomNodeAccountId` from the network mapping,
                 // so it cannot be `undefined`
                 // @ts-ignore
-                return this._network.get(randomNodeAccountId)[0];
+                const randomNodeAddress = Math.floor(Math.random() * randomNode.length);
+                // @ts-ignore
+                return randomNode[randomNodeAddress];
             }
         } else {
+            console.log(`else`);
             if (this._healthyNodes.length == 0) {
                 throw new Error("failed to find a healthy working node");
             }
