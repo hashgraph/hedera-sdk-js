@@ -1399,9 +1399,9 @@ export default class Transaction extends Executable {
                 return [status, ExecutionState.Finished];
             case Status.TransactionExpired:
                 if (
-                    this._transactionIds.locked || 
+                    this._transactionIds.locked ||
                     (this._regenerateTransactionId != null &&
-                    !this._regenerateTransactionId)
+                        !this._regenerateTransactionId)
                 ) {
                     return [status, ExecutionState.Error];
                 } else {
