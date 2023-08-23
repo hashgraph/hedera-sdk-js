@@ -219,7 +219,6 @@ export default class ManagedNetwork {
         /** @type {NetworkNodeT[]} */
         const nodes = [];
         const keys = new Set();
-        const nodeAddresses = new Set();
 
         // `this.getNode()` uses `Math.random()` internally to fetch
         // nodes, this means _techically_ `this.getNode()` can return
@@ -243,15 +242,10 @@ export default class ManagedNetwork {
 
             // Get a random node
             let node = this.getNode();
-            console.log(`_getNumberOfMostHealthyNodes`)
-            console.log(`${node.getKey()}`)
-            console.log(`${node.address.address}`)
             if (
-                !keys.has(node.getKey()) /* ||
-                !nodeAddresses.has(node.address._address) */
+                !keys.has(node.getKey())
             ) {
                 keys.add(node.getKey());
-                //nodeAddresses.add(node.address._address);
                 nodes.push(node);
             } else {
                 i--;
@@ -455,17 +449,11 @@ export default class ManagedNetwork {
     getNode(key) {
         this._readmitNodes();
         if (key != null && key != undefined) {
-            // return /** @type {NetworkNodeT[]} */ (
-            //     this._network.get(key.toString())
-            // )[0];
             const lockedNodes = this._network.get(key.toString());
-            //lockedNodes?.forEach(node => {console.log(node._address)});
             if (lockedNodes) {
-                console.log(`if`);
                 const randomNodeAddress = Math.floor(Math.random() * lockedNodes.length);
                 return /** @type {NetworkNodeT[]} */ (lockedNodes)[randomNodeAddress];
             } else {
-                console.log(`if else`);
                 const nodes = Array.from(this._network.keys());
                 const randomNodeAccountId =
                     nodes[Math.floor(Math.random() * nodes.length)];
@@ -479,7 +467,6 @@ export default class ManagedNetwork {
                 return randomNode[randomNodeAddress];
             }
         } else {
-            console.log(`else`);
             if (this._healthyNodes.length == 0) {
                 throw new Error("failed to find a healthy working node");
             }
