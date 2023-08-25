@@ -29,6 +29,7 @@ import BigNumber from "bignumber.js";
 import * as util from "../util.js";
 import { defaultAbiCoder } from "@ethersproject/abi";
 import { arrayify } from "@ethersproject/bytes";
+import EvmAddress from "../EvmAddress.js";
 
 export default class ContractFunctionParameters {
     constructor() {
@@ -1274,21 +1275,27 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {string} value
+     * @param {string | EvmAddress} value
      * @returns {ContractFunctionParameters}
      */
     addAddress(value) {
-        // Allow `0x` prefix
-        if (value.length !== 40 && value.length !== 42) {
-            throw new Error(
-                "`address` type requires parameter to be 40 or 42 characters"
-            );
+        let address;
+        if (typeof value === "string") {
+            // Allow `0x` prefix
+            if (value.length !== 40 && value.length !== 42) {
+                throw new Error(
+                    "`address` type requires parameter to be 40 or 42 characters"
+                );
+            }
+            address = value;
+        } else {
+            address = value.toString();
         }
 
         const par =
-            value.length === 40
-                ? hex.decode(value)
-                : hex.decode(value.substring(2));
+            address.length === 40
+                ? hex.decode(address)
+                : hex.decode(address.substring(2));
 
         this._selector.addAddress();
 
@@ -1296,7 +1303,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {string[]} value
+     * @param {string[] | EvmAddress[]} value
      * @returns {ContractFunctionParameters}
      */
     addAddressArray(value) {
@@ -1304,19 +1311,24 @@ export default class ContractFunctionParameters {
          * @type {Uint8Array[]}
          */
         const par = [];
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, entry] of value.entries()) {
-            if (entry.length !== 40 && entry.length !== 42) {
-                throw new Error(
-                    "`address` type requires parameter to be 40 or 42 characters"
-                );
+            let address;
+            if (typeof entry === "string") {
+                if (entry.length !== 40 && entry.length !== 42) {
+                    throw new Error(
+                        "`address` type requires parameter to be 40 or 42 characters"
+                    );
+                }
+                address = entry;
+            } else {
+                address = entry.toString();
             }
 
             const buf =
-                entry.length === 40
-                    ? hex.decode(entry)
-                    : hex.decode(entry.substring(2));
+                address.length === 40
+                    ? hex.decode(address)
+                    : hex.decode(address.substring(2));
 
             par.push(buf);
         }
@@ -1683,6 +1695,7 @@ function argumentToBytes(param, ty) {
         case ArgumentType.uint256: {
             let paramToHex = param.toString(16);
 
+            // @ts-ignore
             if (param > 0 || param == 0) {
                 paramToHex = "0x" + paramToHex;
             } else {

@@ -137,6 +137,21 @@ export function isStringOrUint8Array(variable) {
 }
 
 /**
+ * Takes an address as `Uint8Array` and returns whether or not this is a long-zero address
+ *
+ * @param {Uint8Array} address
+ * @returns {boolean}
+ */
+export function isLongZeroAddress(address) {
+    for (let i = 0; i < 12; i++) {
+        if (address[i] != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
  * Takes any param and returns false if null or undefined.
  *
  * @template {Long | Hbar} T
