@@ -1399,13 +1399,14 @@ export default class Transaction extends Executable {
                 return [status, ExecutionState.Finished];
             case Status.TransactionExpired:
                 if (
-                    this._regenerateTransactionId == null ||
-                    this._regenerateTransactionId
+                    this._transactionIds.locked ||
+                    (this._regenerateTransactionId != null &&
+                        !this._regenerateTransactionId)
                 ) {
+                    return [status, ExecutionState.Error];
+                } else {
                     this._buildNewTransactionIdList();
                     return [status, ExecutionState.Retry];
-                } else {
-                    return [status, ExecutionState.Error];
                 }
             default:
                 return [status, ExecutionState.Error];

@@ -70,14 +70,6 @@ export default class ManagedNetwork {
          */
         this._healthyNodes = [];
 
-        /**
-         * Count of unhealthy nodes.
-         *
-         * @protected
-         * @type {number}
-         */
-        this._unhealthyNodesCount = 0;
-
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
 
@@ -195,9 +187,6 @@ export default class ManagedNetwork {
                 searchForNextEarliestReadmitTime = false;
 
                 if (this._nodes[i]._readmitTime <= now) {
-                    // Decrement the unhealthy node count because the readmit time of the node
-                    // has expired and we return it to the list of healthy nodes
-                    this._unhealthyNodesCount--;
                     this._healthyNodes.push(this._nodes[i]);
                 }
             }
@@ -215,44 +204,18 @@ export default class ManagedNetwork {
      */
     _getNumberOfMostHealthyNodes(count) {
         this._removeDeadNodes();
+        this._readmitNodes();
 
         /** @type {NetworkNodeT[]} */
         const nodes = [];
-        const keys = new Set();
-        const nodeAddresses = new Set();
-
-        // `this.getNode()` uses `Math.random()` internally to fetch
-        // nodes, this means _techically_ `this.getNode()` can return
-        // the same exact node several times in a row, but we do not
-        // want that. We want to get a random node that hasn't been
-        // chosen before. We could use a while loop and just keep calling
-        // `this.getNode()` until we get a list of `count` different nodes,
-        // but a potential issue is if somehow the healthy list gets
-        // corrupted or count is too large then the while loop would
-        // run forever. To resolve this, instead of using a while, we use
-        // a for loop where we call `this.getNode()` a max of
-        // `this._healthyNodes.length` times. This can result in a shorter
-        // list than `count`, but that is much better than running forever
-        for (let i = 0; i < this._healthyNodes.length; i++) {
-            if (
-                nodes.length == count - this._unhealthyNodesCount &&
-                nodes.length !== 0
-            ) {
-                break;
-            }
-
-            // Get a random node
-            let node = this.getNode();
-            if (
-                !keys.has(node.getKey()) ||
-                !nodeAddresses.has(node.address._address)
-            ) {
-                keys.add(node.getKey());
-                nodeAddresses.add(node.address._address);
-                nodes.push(node);
-            } else {
-                i--;
-            }
+        let healthyNodes = this._healthyNodes;
+        for (let i = 0; i < count; i++) {
+            const nodeIndex = Math.floor(Math.random() * healthyNodes.length);
+            const selectedNode = healthyNodes[nodeIndex];
+            nodes.push(selectedNode);
+            healthyNodes = healthyNodes.filter(
+                (node) => node.getKey() !== selectedNode.getKey()
+            );
         }
 
         return nodes;
@@ -452,21 +415,28 @@ export default class ManagedNetwork {
     getNode(key) {
         this._readmitNodes();
         if (key != null && key != undefined) {
-            // return /** @type {NetworkNodeT[]} */ (
-            //     this._network.get(key.toString())
-            // )[0];
             const lockedNodes = this._network.get(key.toString());
             if (lockedNodes) {
-                return /** @type {NetworkNodeT[]} */ (lockedNodes)[0];
+                const randomNodeAddress = Math.floor(
+                    Math.random() * lockedNodes.length
+                );
+                return /** @type {NetworkNodeT[]} */ (lockedNodes)[
+                    randomNodeAddress
+                ];
             } else {
                 const nodes = Array.from(this._network.keys());
                 const randomNodeAccountId =
                     nodes[Math.floor(Math.random() * nodes.length)];
 
+                const randomNode = this._network.get(randomNodeAccountId);
                 // We get the `randomNodeAccountId` from the network mapping,
                 // so it cannot be `undefined`
+                const randomNodeAddress = Math.floor(
+                    // @ts-ignore
+                    Math.random() * randomNode.length
+                );
                 // @ts-ignore
-                return this._network.get(randomNodeAccountId)[0];
+                return randomNode[randomNodeAddress];
             }
         } else {
             if (this._healthyNodes.length == 0) {
@@ -488,9 +458,6 @@ export default class ManagedNetwork {
         for (let i = 0; i < this._healthyNodes.length; i++) {
             if (this._healthyNodes[i] == node) {
                 this._healthyNodes.splice(i, 1);
-                // Increment the unhealthy node count because we
-                // remove the current node from the healthy list
-                this._unhealthyNodesCount++;
             }
         }
     }
