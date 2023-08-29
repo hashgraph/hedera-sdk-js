@@ -578,21 +578,21 @@ export default class Executable {
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
-            /* if (this._nodeAccountIds.locked) {
+            if (this._nodeAccountIds.locked) {
                 nodeAccountId = this._nodeAccountIds.current;
                 node = client._network.getNode(nodeAccountId);
             } else {
                 node = client._network.getNode();
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
-            } */
+            }
 
             /* node = client._network.getNode();
             nodeAccountId = node.accountId;
             this._nodeAccountIds.setList([nodeAccountId]); */
 
-            nodeAccountId = this._nodeAccountIds.current;
-            node = client._network.getNode(nodeAccountId);
+            /* nodeAccountId = this._nodeAccountIds.current;
+            node = client._network.getNode(nodeAccountId); */
 
             if (node == null) {
                 throw new Error(

@@ -258,7 +258,7 @@ export default class Transaction extends Executable {
                     transaction.signedTransactionBytes
                 );
             signedTransactions.push(signedTransaction);
-
+                console.log(`WTF ${JSON.stringify(signedTransaction)}`);
             // Decode a transaction body
             const body = HashgraphProto.proto.TransactionBody.decode(
                 signedTransaction.bodyBytes
@@ -305,6 +305,8 @@ export default class Transaction extends Executable {
                 }
             }
         }
+
+        console.log(`nodes from bytes: ${nodeIds.join(", ")}`);
 
         // FIXME: We should have a length check before we access `0` since that would error
         const body = bodies[0];
@@ -634,6 +636,9 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     sign(privateKey) {
+        if (this._nodeAccountIds.isEmpty) {
+            throw new Error("transaction must be frozen or `nodeAccountIds` must be set explicitly before signing it");
+        }
         return this.signWith(privateKey.publicKey, (message) =>
             Promise.resolve(privateKey.sign(message))
         );
@@ -670,9 +675,7 @@ export default class Transaction extends Executable {
         // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
         // prefixes here
         const publicKeyHex = hex.encode(publicKeyData);
-        console.log(`publicKeyHex: ${publicKeyHex}`);
         if (this._signerPublicKeys.has(publicKeyHex)) {
-            console.log(`already signed`);
             // this public key has already signed this transaction
             return this;
         }
@@ -1119,9 +1122,9 @@ export default class Transaction extends Executable {
         );
         //this._buildNewTransactionIdList();
 
-        if (!this._signOnDemand) {
+        /* if (!this._signOnDemand) {
             this._buildSignedTransactions();
-        }
+        } */
         console.log(`after _buildSignedTransactions:`);
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
@@ -1278,10 +1281,14 @@ export default class Transaction extends Executable {
             );
         }
 
+        console.log(`nodes after: ${this._nodeAccountIds.list.join(", ")}`);
+
         // Makes sure we're frozen
         //if (!this._isFrozen()) {
         this.freezeWith(client);
         //}
+        
+        console.log(`nodes after: ${this._nodeAccountIds.list.join(", ")}`);
 
         // Valid checksums if the option is enabled
         if (client.isAutoValidateChecksumsEnabled()) {
@@ -1305,6 +1312,7 @@ export default class Transaction extends Executable {
 
         // If the client has an operator, sign this request with the operator
         if (this._operator != null) {
+
             await this.signWith(
                 this._operator.publicKey,
                 this._operator.transactionSigner
@@ -1737,7 +1745,7 @@ export default class Transaction extends Executable {
             `\n---------------------------------------------- in _makeSignedTransaction\n`
         );
 
-        console.log(`body.transactionFee: ${body.transactionFee}`);
+        console.log(`body.nodeAccountID: ${body.nodeAccountID?.accountNum}`);
         if (this._logger) {
             this._logger.info(`Transaction Body: ${JSON.stringify(body)}`);
         }
@@ -1773,7 +1781,6 @@ export default class Transaction extends Executable {
         console.log(
             `\n---------------------------------------------- in _makeTransactionBody\n`
         );
-        console.log(`fee: ${fee}`);
         console.log(`nodeId: ${nodeId}`);
         return {
             [this._getTransactionDataCase()]: this._makeTransactionData(),
