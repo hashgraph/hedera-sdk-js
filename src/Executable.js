@@ -146,7 +146,7 @@ export default class Executable {
         if (this._nodeAccountIds.isEmpty) {
             return null;
         } else {
-            this._nodeAccountIds; //.setLocked();
+            this._nodeAccountIds;
             return this._nodeAccountIds.list;
         }
     }
@@ -511,10 +511,6 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        console.log(
-            `\n---------------------------------------------- in execute\n`
-        );
-
         // If the logger on the request is not set, use the logger in client
         // (if set, otherwise do not use logger)
         this._logger =
@@ -531,6 +527,7 @@ export default class Executable {
             this._requestTimeout =
                 requestTimeout != null ? requestTimeout : client.requestTimeout;
         }
+
         // Some request need to perform additional requests before the executing
         // such as paid queries need to fetch the cost of the query before
         // finally executing the actual query.
@@ -578,21 +575,21 @@ export default class Executable {
             // If node account IDs is locked then use the node account IDs
             // from the list, otherwise build a new list of one node account ID
             // using the entire network
-            if (this._nodeAccountIds.locked) {
+            /* if (this._nodeAccountIds.locked) {
                 nodeAccountId = this._nodeAccountIds.current;
                 node = client._network.getNode(nodeAccountId);
             } else {
                 node = client._network.getNode();
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
-            }
+            } */
 
             /* node = client._network.getNode();
             nodeAccountId = node.accountId;
             this._nodeAccountIds.setList([nodeAccountId]); */
 
-            /* nodeAccountId = this._nodeAccountIds.current;
-            node = client._network.getNode(nodeAccountId); */
+            nodeAccountId = this._nodeAccountIds.current;
+            node = client._network.getNode(nodeAccountId);
 
             if (node == null) {
                 throw new Error(
@@ -619,8 +616,7 @@ export default class Executable {
             this._advanceRequest();
 
             let response;
-            console.log(`node: ${nodeAccountId}`);
-            console.log(`healthy? ${node.isHealthy()}`);
+
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
@@ -674,7 +670,7 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
-                console.log(`error: ${JSON.stringify(err)}`);
+
                 // Save the error in case we retry
                 persistentError = error;
                 if (this._logger) {

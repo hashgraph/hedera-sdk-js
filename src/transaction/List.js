@@ -72,7 +72,6 @@ export default class List {
      * @returns {this}
      */
     setLocked() {
-        console.log(`locking...`);
         this.locked = true;
         return this;
     }
