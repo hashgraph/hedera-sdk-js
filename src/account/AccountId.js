@@ -263,7 +263,10 @@ export default class AccountId {
     toSolidityAddress() {
         if (this.evmAddress != null) {
             return this.evmAddress.toString();
-        } else if (this.aliasKey != null) {
+        } else if (
+            this.aliasKey != null &&
+            this.aliasKey._key._type == "secp256k1"
+        ) {
             return this.aliasKey.toEvmAddress();
         } else {
             return entity_id.toSolidityAddress([
