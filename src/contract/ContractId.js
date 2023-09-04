@@ -70,8 +70,9 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (isLongZeroAddress(hex.decode(evmAddress))) {
-            return this.fromSolidityAddress(evmAddress);
+            return this.fromEvmAddress(0, 0, evmAddress);
         } else {
             return new ContractId(shard, realm, 0, hex.decode(evmAddress));
         }
@@ -190,6 +191,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (isLongZeroAddress(hex.decode(address))) {
             return new ContractId(...entity_id.fromSolidityAddress(address));
         } else {
