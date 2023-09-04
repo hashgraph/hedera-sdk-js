@@ -196,6 +196,10 @@ export default class AccountId {
             client.mirrorNetwork[0].indexOf(":")
         );
 
+        await new Promise((resolve) => {
+            setTimeout(resolve, 3000);
+        });
+
         /* eslint-disable */
         const url = `https://${mirrorUrl}/api/v1/accounts/${this.evmAddress.toString()}`;
         const mirrorAccountId = (await axios.get(url)).data.account;
@@ -203,6 +207,34 @@ export default class AccountId {
         this.num = Long.fromString(
             mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
         );
+        /* eslint-enable */
+
+        return this;
+    }
+
+    /**
+     * @description Populates `evmAddress` field of the `AccountId` extracted from the Mirror Node.
+     * @param {Client} client
+     * @returns {Promise<AccountId>}
+     */
+    async populateAccountEvmAddress(client) {
+        if (this.num === null) {
+            throw new Error("field `num` should not be null");
+        }
+        const mirrorUrl = client.mirrorNetwork[0].slice(
+            0,
+            client.mirrorNetwork[0].indexOf(":")
+        );
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 3000);
+        });
+
+        /* eslint-disable */
+        const url = `https://${mirrorUrl}/api/v1/accounts/${this.num.toString()}`;
+        const mirrorAccountId = (await axios.get(url)).data.evm_address;
+
+        this.evmAddress = EvmAddress.fromString(mirrorAccountId);
         /* eslint-enable */
 
         return this;
