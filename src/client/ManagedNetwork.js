@@ -214,6 +214,7 @@ export default class ManagedNetwork {
             const selectedNode = healthyNodes[nodeIndex];
             nodes.push(selectedNode);
             healthyNodes = healthyNodes.filter(
+                // eslint-disable-next-line ie11/no-loop-func
                 (node) => node.getKey() !== selectedNode.getKey()
             );
         }

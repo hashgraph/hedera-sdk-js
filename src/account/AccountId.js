@@ -115,7 +115,9 @@ export default class AccountId {
                 ? EvmAddress.fromString(evmAddress)
                 : evmAddress;
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (isLongZeroAddress(evmAddressObj.toBytes())) {
+            // eslint-disable-next-line deprecation/deprecation
             return this.fromSolidityAddress(evmAddressObj.toString());
         } else {
             return new AccountId(shard, realm, 0, undefined, evmAddressObj);
@@ -250,6 +252,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromSolidityAddress(address) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (isLongZeroAddress(hex.decode(address))) {
             return new AccountId(...entity_id.fromSolidityAddress(address));
         } else {

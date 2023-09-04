@@ -153,7 +153,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               spenderAccountId.toSolidityAddress()
                           )
                         : spenderAccountId,
@@ -161,7 +163,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
                         : ownerAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               ownerAccountId.toSolidityAddress()
                           )
                         : ownerAccountId,
@@ -222,7 +226,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               spenderAccountId.toSolidityAddress()
                           )
                         : spenderAccountId,
@@ -230,7 +236,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
                         : ownerAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               ownerAccountId.toSolidityAddress()
                           )
                         : ownerAccountId,
@@ -317,7 +325,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
             typeof spenderAccountId === "string"
                 ? AccountId.fromString(spenderAccountId)
                 : spenderAccountId instanceof ContractId
-                ? AccountId.fromSolidityAddress(
+                ? AccountId.fromEvmAddress(
+                      0,
+                      0,
                       spenderAccountId.toSolidityAddress()
                   )
                 : spenderAccountId;
@@ -346,7 +356,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                         typeof ownerAccountId === "string"
                             ? AccountId.fromString(ownerAccountId)
                             : ownerAccountId instanceof ContractId
-                            ? AccountId.fromSolidityAddress(
+                            ? AccountId.fromEvmAddress(
+                                  0,
+                                  0,
                                   ownerAccountId.toSolidityAddress()
                               )
                             : ownerAccountId,
@@ -424,7 +436,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               spenderAccountId.toSolidityAddress()
                           )
                         : spenderAccountId,
@@ -432,7 +446,9 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
                         : ownerAccountId instanceof ContractId
-                        ? AccountId.fromSolidityAddress(
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
                               ownerAccountId.toSolidityAddress()
                           )
                         : ownerAccountId,
