@@ -196,6 +196,10 @@ export default class AccountId {
             client.mirrorNetwork[0].indexOf(":")
         );
 
+        await new Promise((resolve) => {
+            setTimeout(resolve, 3000);
+        });
+
         /* eslint-disable */
         const url = `https://${mirrorUrl}/api/v1/accounts/${this.evmAddress.toString()}`;
         const mirrorAccountId = (await axios.get(url)).data.account;
