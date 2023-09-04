@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.33.0
+
+## What's Changed
+* Handle EvmAddress when passed to addAddress as a ContractFunctionParameter by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1819
+* Fix node selection improvement by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1815
+* Enhance AccountId.toSolidityAddress() to handle alias field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1820
+* Allow ED25519 keys to generate long-zero address from alias by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1822
+* Fix warning issues during build by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1850
+* Add mapi call that queries the mirror node to get the actual evm address field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1853
+
 ## v2.32.0
 
 ## What's Changed
