@@ -22,6 +22,13 @@ import AccountId from "./account/AccountId.js";
 import Hbar from "./Hbar.js";
 
 /**
+ * @typedef {object} TransferJSON
+ * @property {string} accountId
+ * @property {number | string | Long | BigNumber | Hbar} amount
+ * @property {boolean} isApproved
+ */
+
+/**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IAccountAmount} HashgraphProto.proto.IAccountAmount
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
@@ -102,5 +109,23 @@ export default class Transfer {
             amount: this.amount.toTinybars(),
             isApproval: this.isApproved,
         };
+    }
+
+    /**
+     * @returns {TransferJSON}
+     */
+    toJSON() {
+        return {
+            accountId: this.accountId.toString(),
+            amount: this.amount,
+            isApproved: this.isApproved,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

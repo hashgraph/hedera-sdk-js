@@ -37,9 +37,41 @@ import EvmAddress from "../EvmAddress.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../token/TokenTransfer.js").TokenTransferJSON} TokenTransferJSON
  * @typedef {import("../account/HbarAllowance.js").default} HbarAllowance
  * @typedef {import("../account/TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
+ * @typedef {import("./TransactionReceipt.js").TransactionReceiptJSON} TransactionReceiptJSON
+ * @typedef {import("../Transfer.js").TransferJSON} TransferJSON
+ */
+
+/**
+ * @typedef {object} TransactionRecordJSON
+ * @property {TransactionReceiptJSON} receipt
+ * @property {string} transactionHash
+ * @property {Timestamp} consensusTimestamp
+ * @property {string} transactionId
+ * @property {string} transactionMemo
+ * @property {Hbar} transactionFee
+ * @property {TransferJSON[]} transfers
+ * @property {TokenTransferMap} tokenTransfers
+ * @property {TokenTransferJSON[]} tokenTransfersList
+ * @property {?ScheduleId} scheduleRef
+ * @property {AssessedCustomFee[]} assessedCustomFees
+ * @property {TokenNftTransferMap} nftTransfers
+ * @property {TokenAssocation[]} automaticTokenAssociations
+ * @property {Timestamp | null} parentConsensusTimestamp
+ * @property {PublicKey | null} aliasKey
+ * @property {TransactionRecord[]} duplicates
+ * @property {TransactionRecord[]} children
+ * @property {HbarAllowance[]} hbarAllowanceAdjustments
+ * @property {TokenAllowance[]} tokenAllowanceAdjustments
+ * @property {TokenNftAllowance[]} nftAllowanceAdjustments
+ * @property {string} ethereumHash
+ * @property {Transfer[]} paidStakingRewards
+ * @property {?Uint8Array} prngBytes
+ * @property {?number} prngNumber
+ * @property {string} evmAddress
  */
 
 /**
@@ -558,5 +590,47 @@ export default class TransactionRecord {
         return HashgraphProto.proto.TransactionGetRecordResponse.encode(
             this._toProtobuf()
         ).finish();
+    }
+
+    /**
+     * @returns {TransactionRecordJSON}
+     */
+    toJSON() {
+        return {
+            receipt: this.receipt.toJSON(),
+            transactionHash: JSON.stringify(this.transactionHash),
+            consensusTimestamp: this.consensusTimestamp,
+            transactionId: this.transactionId.toString(),
+            transactionMemo: this.transactionMemo,
+            transactionFee: this.transactionFee,
+            transfers: this.transfers.map((transfer) => transfer.toJSON()),
+            tokenTransfers: this.tokenTransfers,
+            tokenTransfersList: this.tokenTransfersList.map((transfer) =>
+                transfer.toJSON()
+            ),
+            scheduleRef: this.scheduleRef,
+            assessedCustomFees: this.assessedCustomFees,
+            nftTransfers: this.nftTransfers,
+            automaticTokenAssociations: this.automaticTokenAssociations,
+            parentConsensusTimestamp: this.parentConsensusTimestamp,
+            aliasKey: this.aliasKey,
+            duplicates: this.duplicates,
+            children: this.children,
+            hbarAllowanceAdjustments: [],
+            tokenAllowanceAdjustments: [],
+            nftAllowanceAdjustments: [],
+            ethereumHash: JSON.stringify(this.ethereumHash),
+            paidStakingRewards: this.paidStakingRewards,
+            prngBytes: this.prngBytes,
+            prngNumber: this.prngNumber,
+            evmAddress: JSON.stringify(this.evmAddress),
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

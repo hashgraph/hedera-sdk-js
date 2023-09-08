@@ -35,6 +35,15 @@ import TokenId from "./TokenId.js";
  */
 
 /**
+ * @typedef {object} TokenTransferJSON
+ * @property {string} tokenId
+ * @property {string} accountId
+ * @property {number | null} expectedDecimals
+ * @property {Long | number} amount
+ * @property {boolean} isApproved
+ */
+
+/**
  * An account, and the amount that it sends or receives during a cryptocurrency tokentransfer.
  */
 export default class TokenTransfer {
@@ -129,5 +138,25 @@ export default class TokenTransfer {
             amount: this.amount,
             isApproval: this.isApproved,
         };
+    }
+
+    /**
+     * @returns {TokenTransferJSON}
+     */
+    toJSON() {
+        return {
+            tokenId: this.tokenId.toString(),
+            accountId: this.accountId.toString(),
+            expectedDecimals: this.expectedDecimals,
+            amount: this.amount,
+            isApproved: this.isApproved,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

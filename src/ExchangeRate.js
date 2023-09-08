@@ -20,6 +20,14 @@
 
 import Long from "long";
 
+/**
+ * @typedef {object} ExchangeRateJSON
+ * @property {number} hbars
+ * @property {number} cents
+ * @property {string} expirationTime
+ * @property {number} exchangeRateInCents
+ */
+
 export default class ExchangeRate {
     /**
      * @private
@@ -99,5 +107,24 @@ export default class ExchangeRate {
                 ),
             },
         };
+    }
+
+    /**
+     * @returns {ExchangeRateJSON}
+     */
+    toJSON() {
+        return {
+            hbars: this.hbars,
+            cents: this.cents,
+            expirationTime: this.expirationTime.toString(),
+            exchangeRateInCents: this.exchangeRateInCents,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }
