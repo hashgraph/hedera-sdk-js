@@ -31,6 +31,29 @@ import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
 
 /**
+ * @typedef {import("../ExchangeRate.js").ExchangeRateJSON} ExchangeRateJSON
+ */
+
+/**
+ * @typedef {object} TransactionReceiptJSON
+ * @property {string} status
+ * @property {?string} accountId
+ * @property {?string} filedId
+ * @property {?string} contractId
+ * @property {?string} topicId
+ * @property {?string} tokenId
+ * @property {?string} scheduleId
+ * @property {?ExchangeRateJSON} exchangeRate
+ * @property {?Long} topicSequenceNumber
+ * @property {?Uint8Array} topicRunningHash
+ * @property {?Long} totalSupply
+ * @property {?string} scheduledTransactionId
+ * @property {Long[]} serials
+ * @property {TransactionReceipt[]} duplicates
+ * @property {TransactionReceipt[]} children
+ */
+
+/**
  * The consensus result for a transaction, which might not be currently known,
  * or may succeed or fail.
  */
@@ -339,5 +362,46 @@ export default class TransactionReceipt {
         return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
             this._toProtobuf()
         ).finish();
+    }
+
+    /**
+     * @returns {TransactionReceiptJSON}
+     */
+    toJSON() {
+        return {
+            status: this.status.toString(),
+            accountId:
+                this.accountId != null ? this.accountId.toString() : null,
+            filedId: this.fileId != null ? this.fileId.toString() : null,
+            contractId:
+                this.contractId != null ? this.contractId.toString() : null,
+            topicId: this.topicId != null ? this.topicId.toString() : null,
+            tokenId: this.tokenId != null ? this.tokenId.toString() : null,
+            scheduleId:
+                this.scheduleId != null ? this.scheduleId.toString() : null,
+            exchangeRate:
+                this.exchangeRate != null ? this.exchangeRate.toJSON() : null,
+            topicSequenceNumber:
+                this.topicSequenceNumber != null
+                    ? this.topicSequenceNumber
+                    : null,
+            topicRunningHash:
+                this.topicRunningHash != null ? this.topicRunningHash : null,
+            totalSupply: this.totalSupply != null ? this.totalSupply : null,
+            scheduledTransactionId:
+                this.scheduledTransactionId != null
+                    ? this.scheduledTransactionId.toString()
+                    : null,
+            serials: this.serials,
+            duplicates: this.duplicates,
+            children: this.children,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }
