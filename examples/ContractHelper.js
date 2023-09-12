@@ -41,7 +41,7 @@ export default class ContractHelper {
         /** @type {Map<number, hashgraph.AccountId>} */
         this.stepFeePayers = new Map();
 
-        /** @type {Map<number, () => void>} */
+        /** @type {Map<number, (tokenAddress: string) => Promise<void>>} */
         this.stepLogic = new Map();
     }
 
@@ -75,7 +75,7 @@ export default class ContractHelper {
 
     /**
      * @param {number} stepIndex
-     * @param {() => void} logic
+     * @param {(tokenAddress: string) => Promise<void>} logic
      * @returns {this}
      */
     setStepLogic(stepIndex, logic) {
@@ -132,7 +132,7 @@ export default class ContractHelper {
     /**
      * @private
      * @param {number} stepIndex
-     * @returns {() => void}
+     * @returns {(tokenAddress: string) => Promise<void>}
      */
     getStepLogic(stepIndex) {
         return this.stepLogic.get(stepIndex);
@@ -251,7 +251,6 @@ export default class ContractHelper {
             if (this.getStepLogic(stepIndex)) {
                 const additionalFunction = this.getStepLogic(stepIndex);
                 const tokenAddress = functionResult.getAddress(1);
-                console.log(tokenAddress);
                 await additionalFunction(tokenAddress);
             }
 

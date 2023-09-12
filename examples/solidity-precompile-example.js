@@ -72,8 +72,7 @@ async function main() {
             .freezeWithSigner(wallet);
     accountUpdateOpratorTransaction =
         await accountUpdateOpratorTransaction.signWithSigner(wallet);
-    let accountUpdateOpratorTransactionResponce =
-        await accountUpdateOpratorTransaction.executeWithSigner(wallet);
+    await accountUpdateOpratorTransaction.executeWithSigner(wallet);
 
     // Update the Alice account to have contractId KeyList (this is by security requirement)
     let accountUpdateAliceTransaction =
@@ -88,8 +87,7 @@ async function main() {
             .freezeWithSigner(walletWithAlice);
     accountUpdateAliceTransaction =
         await accountUpdateAliceTransaction.signWithSigner(walletWithAlice);
-    let accountUpdateAliceTransactionResponce =
-        await accountUpdateAliceTransaction.executeWithSigner(walletWithAlice);
+    await accountUpdateAliceTransaction.executeWithSigner(walletWithAlice);
 
     /**
      *

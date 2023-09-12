@@ -54,7 +54,11 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forNetwork("local-node");
+    const nodes = {
+        "127.0.0.1:50211": new AccountId(3),
+    };
+
+    const client = Client.forNetwork(nodes);
     client.setOperator(operatorId, operatorKey);
 
     /**

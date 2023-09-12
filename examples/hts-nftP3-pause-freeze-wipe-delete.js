@@ -18,7 +18,6 @@ import {
     TokenInfoQuery,
     TokenMintTransaction,
     TokenPauseTransaction,
-    TokenRevokeKycTransaction,
     TokenSupplyType,
     TokenType,
     TokenUnfreezeTransaction,
@@ -46,10 +45,11 @@ const aliceId = AccountId.fromString(process.env.ALICE_ID);
 const aliceKey = PrivateKey.fromString(process.env.ALICE_KEY);
 const bobId = AccountId.fromString(process.env.BOB_ID);
 const bobKey = PrivateKey.fromString(process.env.BOB_KEY);
-const client = Client.forNetwork("local-node").setOperator(
-    operatorId,
-    operatorKey
-);
+const nodes = {
+    "127.0.0.1:50211": new AccountId(3),
+};
+
+const client = Client.forNetwork(nodes).setOperator(operatorId, operatorKey);
 
 const supplyKey = PrivateKey.generate();
 const adminKey = PrivateKey.generate();
@@ -170,6 +170,7 @@ async function main() {
         `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`
     );
 
+    // WE NEED TO COMMENT OUT BECAUSE OF THE CODE ON LINE 226, WE CANNOT TRANSFER TO ALICE WITHOUT KYC ENABLED -> // 1st TRANSFER NFT TREASURY -> ALICE
     // // DISABLE TOKEN KYC FOR ALICE
     // let kycDisableTx = await new TokenRevokeKycTransaction()
     //     .setAccountId(aliceId)

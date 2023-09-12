@@ -80,8 +80,7 @@ async function main() {
             .freezeWithSigner(wallet);
     accountUpdateOpratorTransaction =
         await accountUpdateOpratorTransaction.signWithSigner(wallet);
-    let accountUpdateOpratorTransactionResponce =
-        await accountUpdateOpratorTransaction.executeWithSigner(wallet);
+    await accountUpdateOpratorTransaction.executeWithSigner(wallet);
 
     // Update the Alice account to have contractId KeyList (this is by security requirement)
     let accountUpdateAliceTransaction =
@@ -96,53 +95,7 @@ async function main() {
             .freezeWithSigner(walletWithAlice);
     accountUpdateAliceTransaction =
         await accountUpdateAliceTransaction.signWithSigner(walletWithAlice);
-    let accountUpdateAliceTransactionResponce =
-        await accountUpdateAliceTransaction.executeWithSigner(walletWithAlice);
-
-    /**
-     *
-     * @param {string} tokenAddress
-     * @returns {Promise<void>}
-     */
-    let additionalLogic = async function (tokenAddress) {
-        console.log("Token Address for logic", tokenAddress);
-        let accountUpdateOpratorTransaction =
-            await new hashgraph.TokenUpdateTransaction()
-                .setTokenId(hashgraph.TokenId.fromSolidityAddress(tokenAddress))
-                .setAdminKey(
-                    new hashgraph.KeyList(
-                        [operatorPublicKey, contractHelper.contractId],
-                        1
-                    )
-                )
-                .setSupplyKey(
-                    new hashgraph.KeyList(
-                        [operatorPublicKey, contractHelper.contractId],
-                        1
-                    )
-                )
-
-                .setWipeKey(
-                    new hashgraph.KeyList(
-                        [operatorPublicKey, contractHelper.contractId],
-                        1
-                    )
-                )
-                .freezeWithSigner(wallet);
-        accountUpdateOpratorTransaction =
-            await accountUpdateOpratorTransaction.signWithSigner(wallet);
-        let accountUpdateOpratorTransactionResponce =
-            await accountUpdateOpratorTransaction.executeWithSigner(wallet);
-
-        console.log(
-            "Status of Token Update Transactio:",
-            (
-                await accountUpdateOpratorTransactionResponce.getReceiptWithSigner(
-                    wallet
-                )
-            ).status.toString()
-        );
-    };
+    await accountUpdateAliceTransaction.executeWithSigner(walletWithAlice);
 
     // Configure steps in ContracHelper
     contractHelper
