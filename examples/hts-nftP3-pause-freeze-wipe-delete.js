@@ -39,14 +39,17 @@ dotenv.config();
 
 // Configure accounts and client, and generate needed keys
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PVKEY);
+const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-const treasuryKey = PrivateKey.fromString(process.env.TREASURY_PVKEY);
+const treasuryKey = PrivateKey.fromString(process.env.TREASURY_KEY);
 const aliceId = AccountId.fromString(process.env.ALICE_ID);
-const aliceKey = PrivateKey.fromString(process.env.ALICE_PVKEY);
+const aliceKey = PrivateKey.fromString(process.env.ALICE_KEY);
 const bobId = AccountId.fromString(process.env.BOB_ID);
-const bobKey = PrivateKey.fromString(process.env.BOB_PVKEY);
-const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+const bobKey = PrivateKey.fromString(process.env.BOB_KEY);
+const client = Client.forNetwork("local-node").setOperator(
+    operatorId,
+    operatorKey
+);
 
 const supplyKey = PrivateKey.generate();
 const adminKey = PrivateKey.generate();
@@ -167,17 +170,17 @@ async function main() {
         `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`
     );
 
-    // DISABLE TOKEN KYC FOR ALICE
-    let kycDisableTx = await new TokenRevokeKycTransaction()
-        .setAccountId(aliceId)
-        .setTokenId(tokenId)
-        .freezeWith(client)
-        .sign(kycKey);
-    let kycDisableSubmitTx = await kycDisableTx.execute(client);
-    let kycDisableRx = await kycDisableSubmitTx.getReceipt(client);
-    console.log(
-        `- Disabling token KYC for Alice's account: ${kycDisableRx.status.toString()} \n`
-    );
+    // // DISABLE TOKEN KYC FOR ALICE
+    // let kycDisableTx = await new TokenRevokeKycTransaction()
+    //     .setAccountId(aliceId)
+    //     .setTokenId(tokenId)
+    //     .freezeWith(client)
+    //     .sign(kycKey);
+    // let kycDisableSubmitTx = await kycDisableTx.execute(client);
+    // let kycDisableRx = await kycDisableSubmitTx.getReceipt(client);
+    // console.log(
+    //     `- Disabling token KYC for Alice's account: ${kycDisableRx.status.toString()} \n`
+    // );
 
     // QUERY TO CHECK INTIAL KYC KEY
     tokenInfo = await tQueryFcn();

@@ -51,7 +51,10 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+    const client = Client.forNetwork("local-node").setOperator(
+        operatorId,
+        operatorKey
+    );
 
     /**
      * Step 1

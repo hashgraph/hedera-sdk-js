@@ -28,14 +28,17 @@ dotenv.config();
 
 // Configure accounts and client, and generate needed keys
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PVKEY);
+const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-const treasuryKey = PrivateKey.fromString(process.env.TREASURY_PVKEY);
+const treasuryKey = PrivateKey.fromString(process.env.TREASURY_KEY);
 const aliceId = AccountId.fromString(process.env.ALICE_ID);
-const aliceKey = PrivateKey.fromString(process.env.ALICE_PVKEY);
+const aliceKey = PrivateKey.fromString(process.env.ALICE_KEY);
 const bobId = AccountId.fromString(process.env.BOB_ID);
-const bobKey = PrivateKey.fromString(process.env.BOB_PVKEY);
-const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+const bobKey = PrivateKey.fromString(process.env.BOB_KEY);
+const client = Client.forNetwork("local-node").setOperator(
+    operatorId,
+    operatorKey
+);
 
 const supplyKey = PrivateKey.generate();
 const adminKey = PrivateKey.generate();

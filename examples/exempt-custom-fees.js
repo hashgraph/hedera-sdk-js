@@ -228,9 +228,20 @@ async function main() {
 
     /**@type {number} */
     let firstAccountBalanceAfter;
-    const link = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    let link;
+    let link2;
+    let link3;
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    } else {
+        link = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         firstAccountBalanceAfter = (
@@ -245,9 +256,18 @@ async function main() {
 
     /**@type {number} */
     let secondAccountBalanceAfter;
-    const link2 = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link2 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    } else {
+        link2 = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         secondAccountBalanceAfter = (
@@ -262,9 +282,18 @@ async function main() {
 
     /**@type {number} */
     let thirdAccountBalanceAfter;
-    const link3 = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link3 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    } else {
+        link3 = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         thirdAccountBalanceAfter = (

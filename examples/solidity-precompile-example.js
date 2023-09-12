@@ -18,12 +18,21 @@ async function main() {
         new hashgraph.LocalProvider()
     );
 
+    const operatorPrivateKey = hashgraph.PrivateKey.fromString(
+        process.env.OPERATOR_KEY
+    );
+    const operatorPublicKey = operatorPrivateKey.publicKey;
+
+    const operatorAccountId = hashgraph.AccountId.fromString(
+        process.env.OPERATOR_ID
+    );
+
     const alicePrivateKey = hashgraph.PrivateKey.generateED25519();
     const alicePublicKey = alicePrivateKey.publicKey;
 
     let transaction = await new hashgraph.AccountCreateTransaction()
         .setKey(alicePublicKey)
-        .setInitialBalance(hashgraph.Hbar.fromTinybars(1000))
+        .setInitialBalance(hashgraph.Hbar.fromString("1000"))
         .freezeWithSigner(wallet);
     transaction = await transaction.signWithSigner(wallet);
 
@@ -31,10 +40,16 @@ async function main() {
     const aliceAccountId = (await response.getReceiptWithSigner(wallet))
         .accountId;
 
+    const walletWithAlice = new hashgraph.Wallet(
+        aliceAccountId,
+        alicePrivateKey,
+        new hashgraph.LocalProvider()
+    );
+
     // Instantiate ContractHelper
 
     // The contract bytecode is located on the `object` field
-    const contractBytecode = /** @type {string} */ (contract.object);
+    const contractBytecode = /** @type {string} */ (contract.bytecode.object);
 
     const contractHelper = await ContractHelper.init(
         contractBytecode,
@@ -43,6 +58,79 @@ async function main() {
             .addAddress(aliceAccountId.toSolidityAddress()),
         wallet
     );
+
+    // Update the signer to have contractId KeyList (this is by security requirement)
+    let accountUpdateOpratorTransaction =
+        await new hashgraph.AccountUpdateTransaction()
+            .setAccountId(operatorAccountId)
+            .setKey(
+                new hashgraph.KeyList(
+                    [operatorPublicKey, contractHelper.contractId],
+                    1
+                )
+            )
+            .freezeWithSigner(wallet);
+    accountUpdateOpratorTransaction =
+        await accountUpdateOpratorTransaction.signWithSigner(wallet);
+    let accountUpdateOpratorTransactionResponce =
+        await accountUpdateOpratorTransaction.executeWithSigner(wallet);
+
+    // Update the Alice account to have contractId KeyList (this is by security requirement)
+    let accountUpdateAliceTransaction =
+        await new hashgraph.AccountUpdateTransaction()
+            .setAccountId(aliceAccountId)
+            .setKey(
+                new hashgraph.KeyList(
+                    [alicePublicKey, contractHelper.contractId],
+                    1
+                )
+            )
+            .freezeWithSigner(walletWithAlice);
+    accountUpdateAliceTransaction =
+        await accountUpdateAliceTransaction.signWithSigner(walletWithAlice);
+    let accountUpdateAliceTransactionResponce =
+        await accountUpdateAliceTransaction.executeWithSigner(walletWithAlice);
+
+    /**
+     *
+     * @param {string} tokenAddress
+     * @returns {Promise<void>}
+     */
+    let additionalLogic = async function (tokenAddress) {
+        let accountUpdateOpratorTransaction =
+            await new hashgraph.TokenUpdateTransaction()
+                .setTokenId(hashgraph.TokenId.fromSolidityAddress(tokenAddress))
+                .setAdminKey(
+                    new hashgraph.KeyList(
+                        [alicePublicKey, contractHelper.contractId],
+                        1
+                    )
+                )
+                .setSupplyKey(
+                    new hashgraph.KeyList(
+                        [alicePublicKey, contractHelper.contractId],
+                        1
+                    )
+                )
+                .freezeWithSigner(walletWithAlice);
+        accountUpdateOpratorTransaction =
+            await accountUpdateOpratorTransaction.signWithSigner(
+                walletWithAlice
+            );
+        let accountUpdateOpratorTransactionResponce =
+            await accountUpdateOpratorTransaction.executeWithSigner(
+                walletWithAlice
+            );
+
+        console.log(
+            "Status of Token Update Transactio:",
+            (
+                await accountUpdateOpratorTransactionResponce.getReceiptWithSigner(
+                    walletWithAlice
+                )
+            ).status.toString()
+        );
+    };
 
     // Configure steps in ContracHelper
 
@@ -69,6 +157,7 @@ async function main() {
         // Because we're setting the adminKey for the created NFT token to Alice's key,
         // Alice must sign the ContractExecuteTransaction.
         .addSignerForStep(11, alicePrivateKey)
+        .setStepLogic(11, additionalLogic)
         // and Alice must sign for minting because her key is the supply key.
         .addSignerForStep(12, alicePrivateKey)
         .setParameterSupplierForStep(12, () => {
@@ -91,13 +180,13 @@ async function main() {
     // step 2 mints it
     // step 3 associates Alice with it
     // step 4 transfers it to Alice.
-    // step 5 approves an allowance of the fungible token with operator as the owner and Alice as the spender [NOT WORKING]
+    // step 5 approves an allowance of the fungible token with operator as the owner and Alice as the spender
     // steps 6 - 10 test misc functions on the fungible token (see PrecompileExample.sol for details).
     // step 11 creates an NFT token with a custom fee, and with the admin and supply set to Alice's key
     // step 12 mints some NFTs
     // step 13 associates Alice with the NFT token
     // step 14 transfers some NFTs to Alice
-    // step 15 approves an NFT allowance with operator as the owner and Alice as the spender [NOT WORKING]
+    // step 15 approves an NFT allowance with operator as the owner and Alice as the spender
     // step 16 burn some NFTs
 
     await contractHelper.executeSteps(
