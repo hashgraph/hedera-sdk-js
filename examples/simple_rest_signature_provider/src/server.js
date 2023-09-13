@@ -2,6 +2,10 @@ import express from "express";
 import readline from "readline";
 import { Wallet, LocalProvider, Transaction, Query } from "@hashgraph/sdk";
 
+import dotenv from "dotenv";
+
+dotenv.config();
+
 if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
     throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
 }
