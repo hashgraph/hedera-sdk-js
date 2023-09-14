@@ -54,7 +54,11 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forTestnet();
+    const nodes = {
+        "127.0.0.1:50211": new AccountId(3),
+    };
+
+    const client = Client.forNetwork(nodes);
     client.setOperator(operatorId, operatorKey);
 
     /**
@@ -274,7 +278,17 @@ async function main() {
     // Wait some time for the mirror node to be updated
     await wait(10000);
 
-    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
+    let link;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${accountId2}`;
+    } else {
+        link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
+    }
+
     try {
         /* eslint-disable */
         const balance = (

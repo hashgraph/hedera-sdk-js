@@ -4,12 +4,21 @@ pragma experimental ABIEncoderV2;
 
 import "./ExpiryHelper.sol";
 import "./PrngSystemContract.sol";
+import "./KeyHelper.sol";
+import "./HederaTokenService.sol";
+import "./FeeHelper.sol";
 
 // To alter the behavior of the SolidityPrecompileExample, re-compile this solidity file
 // (you will also need the other files in this directory)
 // and copy the outputted json file to ./PrecompileExample.json
 
-contract PrecompileExample is ExpiryHelper, PrngSystemContract {
+contract PrecompileExample is
+    PrngSystemContract,
+    HederaTokenService,
+    ExpiryHelper,
+    KeyHelper,
+    FeeHelper
+{
     address payable owner;
     address payable aliceAccount;
     address fungibleToken;
@@ -33,10 +42,32 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
     function step1() external payable returns (int responseCode) {
         require(msg.sender == owner);
 
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
-        // Set the admin key, supply key, pause key, and freeze key to the key of the account that executed function (INHERIT_ACCOUNT_KEY).
-        keys[0] = createSingleKey(ADMIN_KEY_TYPE | SUPPLY_KEY_TYPE | PAUSE_KEY_TYPE | FREEZE_KEY_TYPE, INHERIT_ACCOUNT_KEY, bytes(""));
+        IHederaTokenService.TokenKey[]
+            memory keys = new IHederaTokenService.TokenKey[](4);
+        keys[0] = getSingleKey(
+            KeyType.ADMIN,
+            KeyType.PAUSE,
+            KeyValueType.INHERIT_ACCOUNT_KEY,
+            bytes("")
+        );
 
+        keys[1] = getSingleKey(
+            KeyType.FREEZE,
+            KeyValueType.INHERIT_ACCOUNT_KEY,
+            bytes("")
+        );
+        keys[2] = getSingleKey(
+            KeyType.WIPE,
+            KeyValueType.INHERIT_ACCOUNT_KEY,
+            bytes("")
+        );
+        keys[3] = getSingleKey(
+            KeyType.SUPPLY,
+            KeyValueType.INHERIT_ACCOUNT_KEY,
+            bytes("")
+        );
+
+        //KeyType.SUPPLY KeyType.FREEZE,
         (responseCode, fungibleToken) = createFungibleToken(
             IHederaTokenService.HederaToken(
                 "Example Fungible token", // name
@@ -47,9 +78,9 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
                 1000, // max supply
                 false, // freeze default (setting to false means that this token will not be initially frozen on creation)
                 keys, // the keys for the new token
-            // auto-renew fee paid by aliceAccount every 7,000,000 seconds (approx. 81 days).
-            // This is the minimum auto renew period.
-                createAutoRenewExpiry(aliceAccount, 7000000)
+                // auto-renew fee paid by aliceAccount every 7,000,000 seconds (approx. 81 days).
+                // This is the minimum auto renew period.
+                createAutoRenewExpiry(address(this), 7000000)
             ),
             100, // initial supply
             0 // decimals
@@ -62,7 +93,7 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
     function step2() external returns (int responseCode) {
         require(msg.sender == owner);
 
-        uint64 newTotalSupply;
+        int64 newTotalSupply;
         int64[] memory mintedSerials; // applicable to NFT tokens only
         (responseCode, newTotalSupply, mintedSerials) = mintToken(
             fungibleToken,
@@ -104,13 +135,13 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
     function step6() external returns (int responseCode) {
         require(msg.sender == owner);
 
-        responseCode = this.pauseToken(fungibleToken);
+        responseCode = HederaTokenService.pauseToken(fungibleToken);
     }
 
     function step7() external returns (int responseCode) {
         require(msg.sender == owner);
 
-        responseCode = this.unpauseToken(fungibleToken);
+        responseCode = HederaTokenService.unpauseToken(fungibleToken);
     }
 
     function step8() external returns (int responseCode) {
@@ -128,7 +159,7 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
     function step10() external returns (int responseCode) {
         require(msg.sender == owner);
 
-        uint64 totalSupplyLeftAfterBurn;
+        int64 totalSupplyLeftAfterBurn;
         (responseCode, totalSupplyLeftAfterBurn) = burnToken(
             fungibleToken,
             50, // amount to burn (applicable to fungible tokens only)
@@ -138,15 +169,25 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
         require(totalSupplyLeftAfterBurn == 100 + 100 - 50);
     }
 
-    function step11(bytes memory keyBytes) external payable returns (int responseCode) {
+    function step11(
+        bytes memory keyBytes
+    ) external payable returns (int responseCode, address) {
         require(msg.sender == owner);
 
-        IHederaTokenService.TokenKey[] memory keys = new IHederaTokenService.TokenKey[](1);
+        IHederaTokenService.TokenKey[]
+            memory keys = new IHederaTokenService.TokenKey[](1);
         // Set the admin key and the supply key to given ED25519 public key bytes.
         // These must be the key's raw bytes acquired via key.toBytesRaw()
-        keys[0] = createSingleKey(ADMIN_KEY_TYPE | SUPPLY_KEY_TYPE, ED25519_KEY, keyBytes);
 
-        IHederaTokenService.FixedFee[] memory fixedFees = new IHederaTokenService.FixedFee[](1);
+        keys[0] = getSingleKey(
+            KeyType.ADMIN,
+            KeyType.SUPPLY,
+            KeyValueType.ED25519,
+            keyBytes
+        );
+
+        IHederaTokenService.FixedFee[]
+            memory fixedFees = new IHederaTokenService.FixedFee[](1);
         // Create a fixed fee of 1 Hbar (100,000,000 tinybar) that is collected by owner
         fixedFees[0] = createFixedFeeForHbars(100000000, owner);
 
@@ -160,9 +201,9 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
                 1000, // max supply
                 false, // freeze default (setting to false means that this token will not be initially frozen on creation)
                 keys, // the keys for the new token
-            // auto-renew fee paid by aliceAccount every 7,000,000 seconds (approx. 81 days).
-            // This is the minimum auto renew period.
-                createAutoRenewExpiry(aliceAccount, 7000000)
+                // auto-renew fee paid by aliceAccount every 7,000,000 seconds (approx. 81 days).
+                // This is the minimum auto renew period.
+                createAutoRenewExpiry(address(this), 7000000)
             ),
             fixedFees,
             new IHederaTokenService.RoyaltyFee[](0)
@@ -170,13 +211,16 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
 
         // send any excess Hbar back to the owner
         owner.transfer(address(this).balance);
+        return (responseCode, nftToken);
     }
 
-    function step12(bytes[] memory metadatas) external returns (int responseCode) {
+    function step12(
+        bytes[] memory metadatas
+    ) external returns (int responseCode) {
         require(msg.sender == owner);
         require(metadatas.length == 3);
 
-        uint64 mintedCount;
+        int64 mintedCount;
         int64[] memory mintedSerials; // applicable to NFT tokens only
         (responseCode, mintedCount, mintedSerials) = mintToken(
             nftToken,
@@ -222,7 +266,7 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
         int64[] memory serialsToBurn = new int64[](1);
         serialsToBurn[0] = 3;
 
-        uint64 totalSupplyLeftAfterBurn;
+        int64 totalSupplyLeftAfterBurn;
         (responseCode, totalSupplyLeftAfterBurn) = burnToken(
             nftToken,
             0, // amount to burn (applicable to fungible tokens only)
@@ -232,4 +276,3 @@ contract PrecompileExample is ExpiryHelper, PrngSystemContract {
         require(totalSupplyLeftAfterBurn == 2);
     }
 }
-

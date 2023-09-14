@@ -40,6 +40,9 @@ export default class ContractHelper {
 
         /** @type {Map<number, hashgraph.AccountId>} */
         this.stepFeePayers = new Map();
+
+        /** @type {Map<number, (tokenAddress: string) => Promise<void>>} */
+        this.stepLogic = new Map();
     }
 
     /**
@@ -67,6 +70,16 @@ export default class ContractHelper {
      */
     setResultValidatorForStep(stepIndex, validator) {
         this.stepResultValidators.set(stepIndex, validator);
+        return this;
+    }
+
+    /**
+     * @param {number} stepIndex
+     * @param {(tokenAddress: string) => Promise<void>} logic
+     * @returns {this}
+     */
+    setStepLogic(stepIndex, logic) {
+        this.stepLogic.set(stepIndex, logic);
         return this;
     }
 
@@ -114,6 +127,15 @@ export default class ContractHelper {
     setFeePayerForStep(stepIndex, feePayerAccountId, feePayerAccountKey) {
         this.stepFeePayers.set(stepIndex, feePayerAccountId);
         return this.addSignerForStep(stepIndex, feePayerAccountKey);
+    }
+
+    /**
+     * @private
+     * @param {number} stepIndex
+     * @returns {(tokenAddress: string) => Promise<void>}
+     */
+    getStepLogic(stepIndex) {
+        return this.stepLogic.get(stepIndex);
     }
 
     /**
@@ -225,6 +247,12 @@ export default class ContractHelper {
             const response = await transaction.executeWithSigner(signer);
             const record = await response.getRecordWithSigner(signer);
             const functionResult = record.contractFunctionResult;
+
+            if (this.getStepLogic(stepIndex)) {
+                const additionalFunction = this.getStepLogic(stepIndex);
+                const tokenAddress = functionResult.getAddress(1);
+                await additionalFunction(tokenAddress);
+            }
 
             if (this.getResultValidator(stepIndex)(functionResult)) {
                 console.log(
