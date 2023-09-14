@@ -209,7 +209,6 @@ async function main() {
 
     /**
      * TOKEN MINTER FUNCTION
-     *
      * @param {string} CID
      * @returns {Promise<TransactionReceipt>}
      */
@@ -226,7 +225,6 @@ async function main() {
     // BALANCE CHECKER FUNCTION ==========================================
     /**
      * BALANCE CHECKER FUNCTION
-     *
      * @param {string | AccountId} id
      * @returns {Promise<Hbar>}
      */

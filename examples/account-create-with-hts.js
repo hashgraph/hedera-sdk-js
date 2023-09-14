@@ -10,6 +10,8 @@ import {
     TokenNftInfoQuery,
     NftId,
     AccountInfoQuery,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TransactionReceipt,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -311,8 +313,8 @@ async function main() {
 
     /**
      * TOKEN MINTER FUNCTION
-     *
      * @param {string} CID
+     * @returns {Promise<TransactionReceipt>}
      */
     async function tokenMinterFcn(CID) {
         const mintTx = new TokenMintTransaction()

@@ -49,6 +49,7 @@ export default class ContractHelper {
      * @param {string} bytecode
      * @param {hashgraph.ContractFunctionParameters} constructorParameters
      * @param {hashgraph.Signer} signer
+     * @returns {Promise<ContractHelper>}
      */
     static async init(bytecode, constructorParameters, signer) {
         const response = await new hashgraph.ContractCreateFlow()
