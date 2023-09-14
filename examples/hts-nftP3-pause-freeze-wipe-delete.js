@@ -476,7 +476,6 @@ async function main() {
 
     /**
      * TOKEN MINTER FUNCTION
-     *
      * @param {string} CID
      * @returns {Promise<TransactionReceipt>}
      */
@@ -492,7 +491,6 @@ async function main() {
 
     /**
      * BALANCE CHECKER FUNCTION
-     *
      * @param {string | AccountId} id
      * @returns {Promise<Hbar>}
      */
@@ -505,7 +503,6 @@ async function main() {
 
     /**
      * KYC ENABLE FUNCTION
-     *
      * @param {string | AccountId} id
      * @returns {Promise<TransactionReceipt>}
      */
@@ -521,7 +518,6 @@ async function main() {
 
     /**
      * TOKEN QUERY FUNCTION
-     *
      * @returns {Promise<TokenInfo>}
      */
     async function tQueryFcn() {

@@ -14,6 +14,8 @@ import {
     AccountCreateTransaction,
     AccountAllowanceApproveTransaction,
     AccountAllowanceDeleteTransaction,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TransactionReceipt,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -87,9 +89,8 @@ async function main() {
 
     const nftCollection = [];
     for (var i = 0; i < CID.length; i++) {
-        nftCollection[i] = await (
-            await tokenMinterFcn(CID[i], nftTokenId.toString())
-        ).getReceipt(client);
+        nftCollection[i] = await tokenMinterFcn(CID[i], nftTokenId.toString());
+
         console.log(
             `Created NFT ${nftTokenId.toString()} with serial: ${nftCollection[
                 i
@@ -260,9 +261,10 @@ async function main() {
 
     const nftCollection2 = [];
     for (let i = 0; i < CID2.length; i++) {
-        nftCollection2[i] = await (
-            await tokenMinterFcn(CID2[i], nftTokenId2.toString())
-        ).getReceipt(client);
+        nftCollection2[i] = await tokenMinterFcn(
+            CID2[i],
+            nftTokenId2.toString()
+        );
         console.log(
             `Created NFT ${nftTokenId2.toString()} with serial: ${nftCollection2[
                 i
@@ -475,9 +477,9 @@ async function main() {
 
     /**
      * TOKEN MINTER FUNCTION
-     *
      * @param {string} CID
      * @param {string} nftTokenId
+     * @returns {Promise<TransactionReceipt>}
      */
     async function tokenMinterFcn(CID, nftTokenId) {
         const mintTx = new TokenMintTransaction()
@@ -485,7 +487,8 @@ async function main() {
             .setMetadata([Buffer.from(CID)])
             .freezeWith(client);
         let mintTxSign = await mintTx.sign(operatorKey);
-        return await mintTxSign.execute(client);
+        let mintTxSubmit = await mintTxSign.execute(client);
+        return mintTxSubmit.getReceipt(client);
     }
 }
 
