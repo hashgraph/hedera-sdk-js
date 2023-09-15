@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.34.0
+
+## What's Changed
+* Add toJSON method for tx response, receipt and record by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1859
+* Add example on how to generate transaction IDs on demand and scenarios by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1860
+* Ensure that generated tx ids are unique by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1862
+* Fix the examples to work with local node as well as with the new precompile contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1863
+* Update dependencies across examples and packages v2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1879
+* Finalize toJson functionality by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1880
+
 ## v2.33.0
 
 ## What's Changed
