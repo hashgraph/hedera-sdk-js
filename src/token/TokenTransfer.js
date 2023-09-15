@@ -39,7 +39,7 @@ import TokenId from "./TokenId.js";
  * @property {string} tokenId
  * @property {string} accountId
  * @property {number | null} expectedDecimals
- * @property {Long | number} amount
+ * @property {Long | number | string} amount
  * @property {boolean} isApproved
  */
 
@@ -143,12 +143,12 @@ export default class TokenTransfer {
     /**
      * @returns {TokenTransferJSON}
      */
-    toJSON() {
+    toJson() {
         return {
             tokenId: this.tokenId.toString(),
             accountId: this.accountId.toString(),
             expectedDecimals: this.expectedDecimals,
-            amount: this.amount,
+            amount: this.amount.toString(),
             isApproved: this.isApproved,
         };
     }
@@ -157,6 +157,6 @@ export default class TokenTransfer {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return JSON.stringify(this.toJson());
     }
 }

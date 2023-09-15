@@ -168,7 +168,7 @@ export default class TransactionResponse {
     /**
      * @returns {TransactionResponseJSON}
      */
-    toJSON() {
+    toJson() {
         return {
             nodeId: this.nodeId.toString(),
             transactionHash: hex.encode(this.transactionHash),
@@ -180,6 +180,6 @@ export default class TransactionResponse {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return JSON.stringify(this.toJson());
     }
 }
