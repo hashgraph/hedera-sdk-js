@@ -114,7 +114,7 @@ export default class Transfer {
     /**
      * @returns {TransferJSON}
      */
-    toJson() {
+    toJSON() {
         return {
             accountId: this.accountId.toString(),
             amount: this.amount.toString(),
@@ -126,6 +126,6 @@ export default class Transfer {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJson());
+        return JSON.stringify(this.toJSON());
     }
 }

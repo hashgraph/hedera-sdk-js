@@ -143,7 +143,7 @@ export default class TokenTransfer {
     /**
      * @returns {TokenTransferJSON}
      */
-    toJson() {
+    toJSON() {
         return {
             tokenId: this.tokenId.toString(),
             accountId: this.accountId.toString(),
@@ -157,6 +157,6 @@ export default class TokenTransfer {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJson());
+        return JSON.stringify(this.toJSON());
     }
 }
