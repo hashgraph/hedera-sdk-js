@@ -34,6 +34,7 @@ import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import EvmAddress from "../EvmAddress.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -48,11 +49,11 @@ import EvmAddress from "../EvmAddress.js";
 /**
  * @typedef {object} TransactionRecordJSON
  * @property {TransactionReceiptJSON} receipt
- * @property {string} transactionHash
- * @property {Timestamp} consensusTimestamp
+ * @property {?string} transactionHash
+ * @property {Date} consensusTimestamp
  * @property {string} transactionId
  * @property {string} transactionMemo
- * @property {Hbar} transactionFee
+ * @property {string} transactionFee
  * @property {TransferJSON[]} transfers
  * @property {TokenTransferMap} tokenTransfers
  * @property {TokenTransferJSON[]} tokenTransfersList
@@ -60,18 +61,18 @@ import EvmAddress from "../EvmAddress.js";
  * @property {AssessedCustomFee[]} assessedCustomFees
  * @property {TokenNftTransferMap} nftTransfers
  * @property {TokenAssocation[]} automaticTokenAssociations
- * @property {Timestamp | null} parentConsensusTimestamp
+ * @property {Date | null} parentConsensusTimestamp
  * @property {PublicKey | null} aliasKey
  * @property {TransactionRecord[]} duplicates
  * @property {TransactionRecord[]} children
  * @property {HbarAllowance[]} hbarAllowanceAdjustments
  * @property {TokenAllowance[]} tokenAllowanceAdjustments
  * @property {TokenNftAllowance[]} nftAllowanceAdjustments
- * @property {string} ethereumHash
+ * @property {?string} ethereumHash
  * @property {Transfer[]} paidStakingRewards
  * @property {?Uint8Array} prngBytes
  * @property {?number} prngNumber
- * @property {string} evmAddress
+ * @property {?string} evmAddress
  */
 
 /**
@@ -595,35 +596,44 @@ export default class TransactionRecord {
     /**
      * @returns {TransactionRecordJSON}
      */
-    toJSON() {
+    toJson() {
         return {
-            receipt: this.receipt.toJSON(),
-            transactionHash: JSON.stringify(this.transactionHash),
-            consensusTimestamp: this.consensusTimestamp,
+            receipt: this.receipt.toJson(),
+            transactionHash: hex.encode(this.transactionHash),
+            consensusTimestamp: this.consensusTimestamp.toDate(),
             transactionId: this.transactionId.toString(),
             transactionMemo: this.transactionMemo,
-            transactionFee: this.transactionFee,
-            transfers: this.transfers.map((transfer) => transfer.toJSON()),
+            transactionFee: this.transactionFee.toString(),
+            transfers: this.transfers.map((transfer) => transfer.toJson()),
             tokenTransfers: this.tokenTransfers,
             tokenTransfersList: this.tokenTransfersList.map((transfer) =>
-                transfer.toJSON()
+                transfer.toJson()
             ),
             scheduleRef: this.scheduleRef,
             assessedCustomFees: this.assessedCustomFees,
             nftTransfers: this.nftTransfers,
             automaticTokenAssociations: this.automaticTokenAssociations,
-            parentConsensusTimestamp: this.parentConsensusTimestamp,
+            parentConsensusTimestamp:
+                this.parentConsensusTimestamp != null
+                    ? this.parentConsensusTimestamp.toDate()
+                    : null,
             aliasKey: this.aliasKey,
             duplicates: this.duplicates,
             children: this.children,
             hbarAllowanceAdjustments: [],
             tokenAllowanceAdjustments: [],
             nftAllowanceAdjustments: [],
-            ethereumHash: JSON.stringify(this.ethereumHash),
+            ethereumHash:
+                this.ethereumHash != null && this.ethereumHash.length != 0
+                    ? hex.encode(this.ethereumHash)
+                    : null,
             paidStakingRewards: this.paidStakingRewards,
             prngBytes: this.prngBytes,
             prngNumber: this.prngNumber,
-            evmAddress: JSON.stringify(this.evmAddress),
+            evmAddress:
+                this.evmAddress != null && this.evmAddress.toBytes().length != 0
+                    ? hex.encode(this.evmAddress.toBytes())
+                    : null,
         };
     }
 
@@ -631,6 +641,6 @@ export default class TransactionRecord {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return JSON.stringify(this.toJson());
     }
 }

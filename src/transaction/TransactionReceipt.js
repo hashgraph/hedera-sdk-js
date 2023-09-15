@@ -44,13 +44,13 @@ import TransactionId from "../transaction/TransactionId.js";
  * @property {?string} tokenId
  * @property {?string} scheduleId
  * @property {?ExchangeRateJSON} exchangeRate
- * @property {?Long} topicSequenceNumber
+ * @property {?string} topicSequenceNumber
  * @property {?Uint8Array} topicRunningHash
- * @property {?Long} totalSupply
+ * @property {?string} totalSupply
  * @property {?string} scheduledTransactionId
- * @property {Long[]} serials
- * @property {TransactionReceipt[]} duplicates
- * @property {TransactionReceipt[]} children
+ * @property {string[]} serials
+ * @property {TransactionReceiptJSON[]} duplicates
+ * @property {TransactionReceiptJSON[]} children
  */
 
 /**
@@ -367,7 +367,7 @@ export default class TransactionReceipt {
     /**
      * @returns {TransactionReceiptJSON}
      */
-    toJSON() {
+    toJson() {
         return {
             status: this.status.toString(),
             accountId:
@@ -380,21 +380,22 @@ export default class TransactionReceipt {
             scheduleId:
                 this.scheduleId != null ? this.scheduleId.toString() : null,
             exchangeRate:
-                this.exchangeRate != null ? this.exchangeRate.toJSON() : null,
+                this.exchangeRate != null ? this.exchangeRate.toJson() : null,
             topicSequenceNumber:
                 this.topicSequenceNumber != null
-                    ? this.topicSequenceNumber
+                    ? this.topicSequenceNumber.toString()
                     : null,
             topicRunningHash:
                 this.topicRunningHash != null ? this.topicRunningHash : null,
-            totalSupply: this.totalSupply != null ? this.totalSupply : null,
+            totalSupply:
+                this.totalSupply != null ? this.totalSupply.toString() : null,
             scheduledTransactionId:
                 this.scheduledTransactionId != null
                     ? this.scheduledTransactionId.toString()
                     : null,
-            serials: this.serials,
-            duplicates: this.duplicates,
-            children: this.children,
+            serials: this.serials.map((serial) => serial.toString()),
+            duplicates: this.duplicates.map((receipt) => receipt.toJson()),
+            children: this.children.map((receipt) => receipt.toJson()),
         };
     }
 
@@ -402,6 +403,6 @@ export default class TransactionReceipt {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return JSON.stringify(this.toJson());
     }
 }

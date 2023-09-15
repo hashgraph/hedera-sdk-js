@@ -24,7 +24,7 @@ import Long from "long";
  * @typedef {object} ExchangeRateJSON
  * @property {number} hbars
  * @property {number} cents
- * @property {string} expirationTime
+ * @property {Date} expirationTime
  * @property {number} exchangeRateInCents
  */
 
@@ -112,11 +112,11 @@ export default class ExchangeRate {
     /**
      * @returns {ExchangeRateJSON}
      */
-    toJSON() {
+    toJson() {
         return {
             hbars: this.hbars,
             cents: this.cents,
-            expirationTime: this.expirationTime.toString(),
+            expirationTime: this.expirationTime,
             exchangeRateInCents: this.exchangeRateInCents,
         };
     }
@@ -125,6 +125,6 @@ export default class ExchangeRate {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJSON());
+        return JSON.stringify(this.toJson());
     }
 }
