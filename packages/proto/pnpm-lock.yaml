@@ -10,7 +10,7 @@ dependencies:
     version: 4.0.0
   protobufjs:
     specifier: ^7.1.2
-    version: 7.2.3
+    version: 7.2.5
 
 devDependencies:
   '@babel/cli':
@@ -84,7 +84,7 @@ devDependencies:
     version: 2.8.8
   protobufjs-cli:
     specifier: ^1.0.2
-    version: 1.1.1(protobufjs@7.2.3)
+    version: 1.1.1(protobufjs@7.2.5)
   replace-in-file:
     specifier: ^6.3.5
     version: 6.3.5
@@ -1723,6 +1723,7 @@ packages:
   /fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
     engines: {node: '>=8'}
+    requiresBuild: true
     dependencies:
       to-regex-range: 5.0.1
     dev: true
@@ -2088,6 +2089,7 @@ packages:
   /is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
+    requiresBuild: true
     dev: true
 
   /is-path-inside@3.0.3:
@@ -2633,7 +2635,7 @@ packages:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: true
 
-  /protobufjs-cli@1.1.1(protobufjs@7.2.3):
+  /protobufjs-cli@1.1.1(protobufjs@7.2.5):
     resolution: {integrity: sha512-VPWMgIcRNyQwWUv8OLPyGQ/0lQY/QTQAVN5fh+XzfDwsVw1FZ2L3DM/bcBf8WPiRz2tNpaov9lPZfNcmNo6LXA==}
     engines: {node: '>=12.0.0'}
     hasBin: true
@@ -2647,14 +2649,14 @@ packages:
       glob: 8.1.0
       jsdoc: 4.0.2
       minimist: 1.2.6
-      protobufjs: 7.2.3
+      protobufjs: 7.2.5
       semver: 7.5.1
       tmp: 0.2.1
       uglify-js: 3.17.4
     dev: true
 
-  /protobufjs@7.2.3:
-    resolution: {integrity: sha512-TtpvOqwB5Gdz/PQmOjgsrGH1nHjAQVCN7JG4A6r1sXRWESL5rNMAiRcBQlCAdKxZcAbstExQePYG8xof/JVRgg==}
+  /protobufjs@7.2.5:
+    resolution: {integrity: sha512-gGXRSXvxQ7UiPgfw8gevrfRWcTlSbOFg+p/N+JVJEK5VhueL2miT6qTymqAmjr1Q5WbOCyJbyrk6JfWKwlFn6A==}
     engines: {node: '>=12.0.0'}
     requiresBuild: true
     dependencies:
@@ -3035,6 +3037,7 @@ packages:
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
+    requiresBuild: true
     dependencies:
       is-number: 7.0.0
     dev: true
