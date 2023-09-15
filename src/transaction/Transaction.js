@@ -1469,7 +1469,7 @@ export default class Transaction extends Executable {
                         nodeId,
                         transactionHash,
                         transactionId,
-                    }).toJson()
+                    }).toJSON()
                 )}`
             );
         }

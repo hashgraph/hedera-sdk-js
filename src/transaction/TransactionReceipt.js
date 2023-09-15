@@ -367,7 +367,7 @@ export default class TransactionReceipt {
     /**
      * @returns {TransactionReceiptJSON}
      */
-    toJson() {
+    toJSON() {
         return {
             status: this.status.toString(),
             accountId:
@@ -380,7 +380,7 @@ export default class TransactionReceipt {
             scheduleId:
                 this.scheduleId != null ? this.scheduleId.toString() : null,
             exchangeRate:
-                this.exchangeRate != null ? this.exchangeRate.toJson() : null,
+                this.exchangeRate != null ? this.exchangeRate.toJSON() : null,
             topicSequenceNumber:
                 this.topicSequenceNumber != null
                     ? this.topicSequenceNumber.toString()
@@ -394,8 +394,8 @@ export default class TransactionReceipt {
                     ? this.scheduledTransactionId.toString()
                     : null,
             serials: this.serials.map((serial) => serial.toString()),
-            duplicates: this.duplicates.map((receipt) => receipt.toJson()),
-            children: this.children.map((receipt) => receipt.toJson()),
+            duplicates: this.duplicates.map((receipt) => receipt.toJSON()),
+            children: this.children.map((receipt) => receipt.toJSON()),
         };
     }
 
@@ -403,6 +403,6 @@ export default class TransactionReceipt {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJson());
+        return JSON.stringify(this.toJSON());
     }
 }
