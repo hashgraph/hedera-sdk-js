@@ -112,7 +112,7 @@ export default class ExchangeRate {
     /**
      * @returns {ExchangeRateJSON}
      */
-    toJson() {
+    toJSON() {
         return {
             hbars: this.hbars,
             cents: this.cents,
@@ -125,6 +125,6 @@ export default class ExchangeRate {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJson());
+        return JSON.stringify(this.toJSON());
     }
 }

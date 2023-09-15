@@ -596,18 +596,18 @@ export default class TransactionRecord {
     /**
      * @returns {TransactionRecordJSON}
      */
-    toJson() {
+    toJSON() {
         return {
-            receipt: this.receipt.toJson(),
+            receipt: this.receipt.toJSON(),
             transactionHash: hex.encode(this.transactionHash),
             consensusTimestamp: this.consensusTimestamp.toDate(),
             transactionId: this.transactionId.toString(),
             transactionMemo: this.transactionMemo,
             transactionFee: this.transactionFee.toString(),
-            transfers: this.transfers.map((transfer) => transfer.toJson()),
+            transfers: this.transfers.map((transfer) => transfer.toJSON()),
             tokenTransfers: this.tokenTransfers,
             tokenTransfersList: this.tokenTransfersList.map((transfer) =>
-                transfer.toJson()
+                transfer.toJSON()
             ),
             scheduleRef: this.scheduleRef,
             assessedCustomFees: this.assessedCustomFees,
@@ -641,6 +641,6 @@ export default class TransactionRecord {
      * @returns {string}
      */
     toString() {
-        return JSON.stringify(this.toJson());
+        return JSON.stringify(this.toJSON());
     }
 }
