@@ -65,7 +65,7 @@ export default class PublicKey extends Key {
         }
 
         throw new BadKeyError(
-            `public key cannot be decoded from bytes: ${message}`
+            `public key cannot be decoded from bytes: ${message}`,
         );
     }
 
@@ -90,7 +90,6 @@ export default class PublicKey extends Key {
      *
      * The public key may optionally be prefixed with
      * the DER header.
-     *
      * @param {string} text
      * @returns {PublicKey}
      */
@@ -116,7 +115,6 @@ export default class PublicKey extends Key {
 
     /**
      * Verify a signature on a message with this public key.
-     *
      * @param {Uint8Array} message
      * @param {Uint8Array} signature
      * @returns {boolean}

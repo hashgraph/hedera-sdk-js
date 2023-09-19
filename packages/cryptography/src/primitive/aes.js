@@ -17,7 +17,7 @@ export function createCipheriv(algorithm, key, iv, data) {
     const cipher = crypto.createCipheriv(algorithm, key.slice(0, 16), iv);
 
     return Promise.resolve(
-        Buffer.concat([cipher.update(data), cipher["final"]()])
+        Buffer.concat([cipher.update(data), cipher["final"]()]),
     );
 }
 
@@ -32,7 +32,7 @@ export function createDecipheriv(algorithm, key, iv, data) {
     const decipher = crypto.createDecipheriv(algorithm, key.slice(0, 16), iv);
 
     return Promise.resolve(
-        Buffer.concat([decipher.update(data), decipher["final"]()])
+        Buffer.concat([decipher.update(data), decipher["final"]()]),
     );
 }
 
@@ -47,6 +47,6 @@ export function messageDigest(passphrase, iv) {
             .createHash("md5")
             .update(passphrase)
             .update(hex.decode(iv).slice(0, 8))
-            .digest()
+            .digest(),
     );
 }

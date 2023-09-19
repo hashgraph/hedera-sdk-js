@@ -54,7 +54,7 @@ export async function createKeystore(privateKey, passphrase) {
         passphrase,
         salt,
         c,
-        dkLen
+        dkLen,
     );
 
     const iv = await random.bytesAsync(16);
@@ -64,13 +64,13 @@ export async function createKeystore(privateKey, passphrase) {
         crypto.CipherAlgorithm.Aes128Ctr,
         key.slice(0, 16),
         iv,
-        privateKey
+        privateKey,
     );
 
     const mac = await hmac.hash(
         hmac.HashAlgorithm.Sha384,
         key.slice(16),
-        cipherText
+        cipherText,
     );
 
     /**
@@ -110,7 +110,7 @@ export async function loadKeystore(keystoreBytes, passphrase) {
 
     if (keystore.version !== 1) {
         throw new BadKeyError(
-            `unsupported keystore version: ${keystore.version}`
+            `unsupported keystore version: ${keystore.version}`,
         );
     }
 
@@ -129,7 +129,7 @@ export async function loadKeystore(keystoreBytes, passphrase) {
 
     if (prf !== HMAC_SHA256) {
         throw new BadKeyError(
-            `unsupported key derivation hash function: ${prf}`
+            `unsupported key derivation hash function: ${prf}`,
         );
     }
 
@@ -142,14 +142,14 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         passphrase,
         saltBytes,
         c,
-        dkLen
+        dkLen,
     );
 
     const macHex = hex.decode(mac);
     const verifyHmac = await hmac.hash(
         hmac.HashAlgorithm.Sha384,
         key.slice(16),
-        cipherBytes
+        cipherBytes,
     );
 
     // compare that these two Uint8Arrays are equivalent
@@ -161,6 +161,6 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         cipher,
         key.slice(0, 16),
         ivBytes,
-        cipherBytes
+        cipherBytes,
     );
 }

@@ -1,6 +1,5 @@
 /**
  * Possible statuses for {@link Mnemonic#validate()}.
- *
  * @readonly
  * @enum {string}
  */

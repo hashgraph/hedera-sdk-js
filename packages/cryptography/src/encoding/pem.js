@@ -20,7 +20,7 @@ const ID_ED25519 = "1.3.101.112";
 export async function readPemED25519(pem, passphrase) {
     const pemKeyData = pem.replace(
         /-----BEGIN (.*)-----|-----END (.*)-----|\n|\r/g,
-        ""
+        "",
     );
 
     const key = base64.decode(pemKeyData);
@@ -38,7 +38,7 @@ export async function readPemED25519(pem, passphrase) {
                     : "";
 
             throw new BadKeyError(
-                `failed to parse encrypted private key: ${message}`
+                `failed to parse encrypted private key: ${message}`,
             );
         }
 
@@ -50,7 +50,7 @@ export async function readPemED25519(pem, passphrase) {
             privateKey = Ed25519PrivateKey;
         } else {
             throw new BadKeyError(
-                `unknown private key algorithm ${decrypted.algId.toString()}`
+                `unknown private key algorithm ${decrypted.algId.toString()}`,
             );
         }
 
@@ -58,7 +58,7 @@ export async function readPemED25519(pem, passphrase) {
 
         if (!("bytes" in keyData)) {
             throw new BadKeyError(
-                `expected ASN bytes, got ${JSON.stringify(keyData)}`
+                `expected ASN bytes, got ${JSON.stringify(keyData)}`,
             );
         }
 
@@ -76,7 +76,7 @@ export async function readPemED25519(pem, passphrase) {
 export async function readPemECDSA(pem, passphrase) {
     const pemKeyData = pem.replace(
         /-----BEGIN (.*)-----|-----END (.*)-----|\n|\r/g,
-        ""
+        "",
     );
     const key = base64.decode(pemKeyData);
 
@@ -90,13 +90,13 @@ export async function readPemECDSA(pem, passphrase) {
         const key = await aes.messageDigest(passphrase, ivString);
         const dataToDecrypt = Buffer.from(
             pemLines.slice(4, pemLines.length - 1).join(""),
-            "base64"
+            "base64",
         );
         const keyDerBytes = await aes.createDecipheriv(
             aes.CipherAlgorithm.Aes128Cbc,
             key,
             iv,
-            dataToDecrypt
+            dataToDecrypt,
         );
 
         return EcdsaPrivateKey.fromBytesDer(keyDerBytes);

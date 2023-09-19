@@ -28,7 +28,6 @@
 
 /**
  * Note: may throw weird errors on malformed input. Catch and rethrow with, e.g. `BadKeyError`.
- *
  *@param {Uint8Array} data
  *@returns {AsnType}
  */
@@ -144,7 +143,7 @@ function decodeInt(intBytes) {
     let view = new DataView(
         intBytes.buffer,
         intBytes.byteOffset,
-        intBytes.byteLength
+        intBytes.byteLength,
     );
 
     if (len === 2) return view.getUint16(0, false);

@@ -47,7 +47,7 @@ export default class Ed25519PublicKey extends Key {
                 return Ed25519PublicKey.fromBytesDer(data);
             default:
                 throw new BadKeyError(
-                    `invalid public key length: ${data.length} bytes`
+                    `invalid public key length: ${data.length} bytes`,
                 );
         }
     }
@@ -72,7 +72,7 @@ export default class Ed25519PublicKey extends Key {
                       /** @type {Error} */ (error).message
                     : "";
             throw new BadKeyError(
-                `cannot decode ED25519 public key data from DER format: ${message}`
+                `cannot decode ED25519 public key data from DER format: ${message}`,
             );
         }
 
@@ -86,7 +86,7 @@ export default class Ed25519PublicKey extends Key {
     static fromBytesRaw(data) {
         if (data.length != 32) {
             throw new BadKeyError(
-                `invalid public key length: ${data.length} bytes`
+                `invalid public key length: ${data.length} bytes`,
             );
         }
 
@@ -98,7 +98,6 @@ export default class Ed25519PublicKey extends Key {
      *
      * The public key may optionally be prefixed with
      * the DER header.
-     *
      * @param {string} text
      * @returns {Ed25519PublicKey}
      */
@@ -108,7 +107,6 @@ export default class Ed25519PublicKey extends Key {
 
     /**
      * Verify a signature on a message with this public key.
-     *
      * @param {Uint8Array} message
      * @param {Uint8Array} signature
      * @returns {boolean}

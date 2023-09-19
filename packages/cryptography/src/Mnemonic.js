@@ -62,7 +62,6 @@ export default class Mnemonic {
     /**
      * Returns a new random 24-word mnemonic from the BIP-39
      * standard English word list.
-     *
      * @returns {Promise<Mnemonic>}
      */
     static generate() {
@@ -72,7 +71,6 @@ export default class Mnemonic {
     /**
      * Returns a new random 12-word mnemonic from the BIP-39
      * standard English word list.
-     *
      * @returns {Promise<Mnemonic>}
      */
     static generate12() {
@@ -91,7 +89,7 @@ export default class Mnemonic {
         else if (length === 24) neededEntropy = 32;
         else {
             throw new Error(
-                `unsupported phrase length ${length}, only 12 or 24 are supported`
+                `unsupported phrase length ${length}, only 12 or 24 are supported`,
             );
         }
 
@@ -104,7 +102,7 @@ export default class Mnemonic {
         const chunks = bits.match(/(.{1,11})/g);
 
         const words = (chunks != null ? chunks : []).map(
-            (binary) => bip39Words[binaryToByte(binary)]
+            (binary) => bip39Words[binaryToByte(binary)],
         );
 
         return new Mnemonic({ words });
@@ -118,7 +116,6 @@ export default class Mnemonic {
      * can still be used to create private keys, the exception will
      * contain the failing mnemonic in case you wish to ignore the
      * validation error and continue.
-     *
      * @param {string[]} words
      * @throws {BadMnemonicError}
      * @returns {Promise<Mnemonic>}
@@ -152,14 +149,14 @@ export default class Mnemonic {
     async toEd25519PrivateKey(passphrase = "", path = HEDERA_PATH) {
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
-            ED25519_SEED_TEXT
+            ED25519_SEED_TEXT,
         );
 
         for (const index of path) {
             ({ keyData, chainCode } = await slip10.derive(
                 keyData,
                 chainCode,
-                index
+                index,
             ));
         }
 
@@ -170,14 +167,13 @@ export default class Mnemonic {
         }
 
         return CACHE.privateKeyConstructor(
-            new Ed25519PrivateKey(keyPair, chainCode)
+            new Ed25519PrivateKey(keyPair, chainCode),
         );
     }
 
     /**
      * Recover an Ed25519 private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number} [index]
      * @returns {Promise<PrivateKey>}
@@ -205,14 +201,14 @@ export default class Mnemonic {
     async toEcdsaPrivateKey(passphrase = "", path = HEDERA_PATH) {
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
-            ECDSA_SEED_TEXT
+            ECDSA_SEED_TEXT,
         );
 
         for (const index of path) {
             ({ keyData, chainCode } = await bip32.derive(
                 keyData,
                 chainCode,
-                index
+                index,
             ));
         }
 
@@ -221,14 +217,13 @@ export default class Mnemonic {
         }
 
         return CACHE.privateKeyConstructor(
-            new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode),
         );
     }
 
     /**
      * Recover an ECDSA private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number} [index]
      * @returns {Promise<PrivateKey>}
@@ -270,7 +265,7 @@ export default class Mnemonic {
         const digest = await hmac.hash(
             hmac.HashAlgorithm.Sha512,
             seedText,
-            seed
+            seed,
         );
 
         return {
@@ -281,7 +276,6 @@ export default class Mnemonic {
 
     /**
      * Recover a mnemonic phrase from a string, splitting on spaces. Handles 12, 22 (legacy), and 24 words.
-     *
      * @param {string} mnemonic
      * @returns {Promise<Mnemonic>}
      */
@@ -319,14 +313,14 @@ export default class Mnemonic {
                     legacyWords.includes(word.toLowerCase())
                         ? unknowns
                         : [...unknowns, index],
-                []
+                [],
             );
 
             if (unknownWordIndices.length > 0) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.UnknownWords,
-                    unknownWordIndices
+                    unknownWordIndices,
                 );
             }
 
@@ -337,7 +331,7 @@ export default class Mnemonic {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.ChecksumMismatch,
-                    []
+                    [],
                 );
             }
         } else {
@@ -345,21 +339,21 @@ export default class Mnemonic {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.BadLength,
-                    []
+                    [],
                 );
             }
 
             const unknownWordIndices = this.words.reduce(
                 (/** @type {number[]} */ unknowns, word, index) =>
                     bip39Words.includes(word) ? unknowns : [...unknowns, index],
-                []
+                [],
             );
 
             if (unknownWordIndices.length > 0) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.UnknownWords,
-                    unknownWordIndices
+                    unknownWordIndices,
                 );
             }
 
@@ -384,14 +378,14 @@ export default class Mnemonic {
             ).map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(
-                Uint8Array.from(entropyBytes)
+                Uint8Array.from(entropyBytes),
             );
 
             if (newChecksum !== checksumBits) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.ChecksumMismatch,
-                    []
+                    [],
                 );
             }
         }

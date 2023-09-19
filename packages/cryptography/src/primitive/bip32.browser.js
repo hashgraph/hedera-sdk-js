@@ -8,7 +8,7 @@ const secp256k1 = new elliptic.ec("secp256k1");
 // https://github.com/ethers-io/ethers.js/blob/master/packages/hdnode/src.ts/index.ts#L23
 const N = new BN(
     "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
-    "hex"
+    "hex",
 );
 const HARDENED_BIT = 0x80000000;
 
@@ -16,7 +16,6 @@ const HARDENED_BIT = 0x80000000;
  * Mostly copied from https://github.com/bitcoinjs/bip32/blob/master/ts-src/bip32.ts
  * We cannot use that library directly because it uses `Buffer` and we want to avoid
  * polyfills as much as possible. Also, we only need the `derive` function.
- *
  * @param {Uint8Array} parentKey
  * @param {Uint8Array} chainCode
  * @param {number} index
@@ -27,7 +26,7 @@ export async function derive(parentKey, chainCode, index) {
     const data = new Uint8Array(37);
 
     const publicKey = hex.decode(
-        secp256k1.keyFromPrivate(parentKey).getPublic(true, "hex")
+        secp256k1.keyFromPrivate(parentKey).getPublic(true, "hex"),
     );
 
     // Hardened child
@@ -46,7 +45,7 @@ export async function derive(parentKey, chainCode, index) {
     new DataView(data.buffer, data.byteOffset, data.byteLength).setUint32(
         33,
         index,
-        false
+        false,
     );
 
     const I = await hmac.hash(hmac.HashAlgorithm.Sha512, chainCode, data);
@@ -98,7 +97,6 @@ export async function fromSeed(seed) {
 
 /**
  * Harden the index
- *
  * @param {number} index         the derivation index
  * @returns {number}              the hardened index
  */
@@ -108,7 +106,6 @@ export function toHardenedIndex(index) {
 
 /**
  * Check if the index is hardened
- *
  * @param {number} index         the derivation index
  * @returns {boolean}            true if the index is hardened
  */

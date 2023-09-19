@@ -9,7 +9,7 @@ export default class BadKeyError extends Error {
         super(
             messageOrCause instanceof Error
                 ? messageOrCause.message
-                : messageOrCause
+                : messageOrCause,
         );
 
         this.name = "BadKeyError";

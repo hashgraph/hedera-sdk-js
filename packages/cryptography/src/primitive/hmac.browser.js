@@ -29,11 +29,11 @@ export async function hash(algorithm, secretKey, data) {
                 hash: algorithm,
             },
             false,
-            ["sign"]
+            ["sign"],
         );
 
         return new Uint8Array(
-            await window.crypto.subtle.sign("HMAC", key_, value)
+            await window.crypto.subtle.sign("HMAC", key_, value),
         );
     } catch {
         throw new Error("Fallback if SubtleCrypto fails is not implemented");

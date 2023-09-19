@@ -13,7 +13,7 @@ export function legacy(seed, index) {
     const view = new DataView(
         password.buffer,
         password.byteOffset,
-        password.byteLength
+        password.byteLength,
     );
 
     if (index === 0xffffffffff) {
@@ -30,6 +30,6 @@ export function legacy(seed, index) {
         password,
         salt,
         2048,
-        32
+        32,
     );
 }

@@ -31,7 +31,7 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
                 hash: algorithm,
             },
             false,
-            ["deriveBits"]
+            ["deriveBits"],
         );
 
         return new Uint8Array(
@@ -43,8 +43,8 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
                     iterations,
                 },
                 key,
-                length << 3
-            )
+                length << 3,
+            ),
         );
     } catch {
         throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");

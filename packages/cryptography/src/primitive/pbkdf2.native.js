@@ -37,7 +37,7 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
             break;
         default:
             throw new Error(
-                "(BUG) Non-Exhaustive switch statement for algorithms"
+                "(BUG) Non-Exhaustive switch statement for algorithms",
             );
     }
 
@@ -49,7 +49,7 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
 
     return Promise.resolve(
         hex.decode(
-            CryptoJS.PBKDF2(password_, nacl_, cfg).toString(CryptoJS.enc.Hex)
-        )
+            CryptoJS.PBKDF2(password_, nacl_, cfg).toString(CryptoJS.enc.Hex),
+        ),
     );
 }

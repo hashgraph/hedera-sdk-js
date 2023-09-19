@@ -30,7 +30,7 @@ export function decode(text) {
     const result = str.match(/.{1,2}/gu);
 
     return new Uint8Array(
-        (result == null ? [] : result).map((byte) => parseInt(byte, 16))
+        (result == null ? [] : result).map((byte) => parseInt(byte, 16)),
     );
 }
 
@@ -38,7 +38,6 @@ export function decode(text) {
  * Encode with a specified length. Supports zero padding if the most significant byte is 0
  *
  * https://github.com/ethers-io/ethers.js/blob/master/packages/bytes/src.ts/index.ts#L315
- *
  * @param {Uint8Array} value
  * @param {number} length
  * @returns {string}
