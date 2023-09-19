@@ -78,7 +78,7 @@ async function main() {
     const contractReceipt =
         await contractTransactionResponse.getReceiptWithSigner(wallet);
 
-    // The conract ID is located on the transaction receipt
+    // The contract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
 
     console.log(`new contract ID: ${contractId.toString()}`);
@@ -126,7 +126,7 @@ async function main() {
         .setGas(75000)
         // Set the function to call and the parameters to send
         // in this case we're calling function "set_message" with a single
-        // string paramater of value "hello from hedera again!"
+        // string parameter of value "hello from hedera again!"
         // If instead the "set_message" method were to require "string[], uint32, string"
         // parameters then you must do:
         //      new ContractFunctionParameters()

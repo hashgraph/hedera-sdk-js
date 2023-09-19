@@ -107,7 +107,7 @@ async function main() {
                         // "addApproved*Transfer()" means that the transfer has been approved by an allowance
                         .addApprovedHbarTransfer(aliceId, new Hbar(1).negated())
                         .addHbarTransfer(charlieId, new Hbar(1))
-                        // The allowance spender must be pay the fee for the transaction.
+                        // The allowance spender must pay the fee for the transaction.
                         // use setTransactionId() to set the account ID that will pay the fee for the transaction.
                         .setTransactionId(TransactionId.generate(bobId))
                         .freezeWithSigner(wallet)

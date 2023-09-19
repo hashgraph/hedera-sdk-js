@@ -72,7 +72,7 @@ async function main() {
     const contractReceipt =
         await contractTransactionResponse.getReceiptWithSigner(wallet);
 
-    // The conract ID is located on the transaction receipt
+    // The contract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
 
     console.log(`new contract ID: ${contractId.toString()}`);

@@ -18,7 +18,7 @@ async function main() {
         await recoveredMnemonic.toStandardEd25519PrivateKey("", 0);
 
     recoveredRootKey.toString() === key.toString()
-        ? console.log(`succesfull key recovery!`)
+        ? console.log(`successful key recovery!`)
         : console.log(`key recovery failed!`);
 
     const mnemonic12 = await Mnemonic.generate12();
