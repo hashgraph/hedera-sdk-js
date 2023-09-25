@@ -20,7 +20,7 @@ export async function derive(parentKey, chainCode, index) {
     new DataView(input.buffer, input.byteOffset, input.byteLength).setUint32(
         33,
         index,
-        false
+        false,
     );
 
     // set the index to hardened
@@ -39,7 +39,7 @@ export async function fromSeed(seed) {
     const digest = await hmac.hash(
         hmac.HashAlgorithm.Sha512,
         "ed25519 seed",
-        seed
+        seed,
     );
 
     return { keyData: digest.subarray(0, 32), chainCode: digest.subarray(32) };

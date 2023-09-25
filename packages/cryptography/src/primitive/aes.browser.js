@@ -34,7 +34,7 @@ export async function createCipheriv(algorithm, key, iv, data) {
             break;
         default:
             throw new Error(
-                "(BUG) non-exhaustive switch statement for CipherAlgorithm"
+                "(BUG) non-exhaustive switch statement for CipherAlgorithm",
             );
     }
 
@@ -43,7 +43,7 @@ export async function createCipheriv(algorithm, key, iv, data) {
         key,
         algorithm_.name,
         false,
-        ["encrypt"]
+        ["encrypt"],
     );
 
     return new Uint8Array(
@@ -51,7 +51,7 @@ export async function createCipheriv(algorithm, key, iv, data) {
         /** @type {ArrayBuffer} */ (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             await window.crypto.subtle.encrypt(algorithm_, key_, data)
-        )
+        ),
     );
 }
 
@@ -81,7 +81,7 @@ export async function createDecipheriv(algorithm, key, iv, data) {
             break;
         default:
             throw new Error(
-                "(BUG) non-exhaustive switch statement for CipherAlgorithm"
+                "(BUG) non-exhaustive switch statement for CipherAlgorithm",
             );
     }
 
@@ -90,7 +90,7 @@ export async function createDecipheriv(algorithm, key, iv, data) {
         key,
         algorithm_.name,
         false,
-        ["decrypt"]
+        ["decrypt"],
     );
     let decrypted;
     try {
@@ -110,7 +110,7 @@ export async function createDecipheriv(algorithm, key, iv, data) {
         /** @type {ArrayBuffer} */ (
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             decrypted
-        )
+        ),
     );
 }
 
@@ -123,7 +123,7 @@ export async function messageDigest(passphrase, iv) {
     const pass = utf8.encode(passphrase);
     const sliced = hex.decode(iv).slice(0, 8);
     const result = SparkMD5.ArrayBuffer.hash(
-        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)])
+        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)]),
     );
 
     return Promise.resolve(hex.decode(result));

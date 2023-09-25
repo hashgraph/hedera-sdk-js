@@ -39,9 +39,9 @@ export function createCipheriv(algorithm, key, iv, data) {
     return Promise.resolve(
         hex.decode(
             CryptoJS.AES.encrypt(data_, key_, cfg_).toString(
-                CryptoJS.format.Hex
-            )
-        )
+                CryptoJS.format.Hex,
+            ),
+        ),
     );
 }
 
@@ -81,9 +81,9 @@ export function createDecipheriv(algorithm, key, iv, data) {
     return Promise.resolve(
         hex.decode(
             CryptoJS.AES.decrypt(params, key_, { iv: iv_, mode }).toString(
-                CryptoJS.enc.Hex
-            )
-        )
+                CryptoJS.enc.Hex,
+            ),
+        ),
     );
 }
 
@@ -96,7 +96,7 @@ export async function messageDigest(passphrase, iv) {
     const pass = utf8.encode(passphrase);
     const sliced = hex.decode(iv).slice(0, 8);
     const result = SparkMD5.ArrayBuffer.hash(
-        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)])
+        Buffer.concat([Buffer.from(pass), Buffer.from(sliced)]),
     );
 
     return Promise.resolve(hex.decode(result));

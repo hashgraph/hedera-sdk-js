@@ -80,7 +80,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Generate a random Ed25519 private key.
-     *
      * @returns {PrivateKey}
      */
     static generateED25519() {
@@ -89,7 +88,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Generate a random EDSA private key.
-     *
      * @returns {PrivateKey}
      */
     static generateECDSA() {
@@ -99,7 +97,6 @@ export default class PrivateKey extends Key {
     /**
      * Depredated - Use `generateED25519()` instead
      * Generate a random Ed25519 private key.
-     *
      * @returns {PrivateKey}
      */
     static generate() {
@@ -109,7 +106,6 @@ export default class PrivateKey extends Key {
     /**
      * Depredated - Use `generateED25519Async()` instead
      * Generate a random Ed25519 private key.
-     *
      * @returns {Promise<PrivateKey>}
      */
     static async generateAsync() {
@@ -118,7 +114,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Generate a random Ed25519 private key.
-     *
      * @returns {Promise<PrivateKey>}
      */
     static async generateED25519Async() {
@@ -127,7 +122,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Generate a random ECDSA private key.
-     *
      * @returns {Promise<PrivateKey>}
      */
     static async generateECDSAAsync() {
@@ -136,7 +130,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a private key from bytes. Requires DER header.
-     *
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
@@ -165,13 +158,12 @@ export default class PrivateKey extends Key {
         }
 
         throw new BadKeyError(
-            `private key cannot be decoded from bytes: ${message}`
+            `private key cannot be decoded from bytes: ${message}`,
         );
     }
 
     /**
      * Construct a ECDSA private key from bytes.
-     *
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
@@ -181,7 +173,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a ED25519 private key from bytes.
-     *
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
@@ -191,7 +182,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a private key from a hex-encoded string. Requires DER header.
-     *
      * @param {string} text
      * @returns {PrivateKey}
      */
@@ -201,7 +191,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a ECDSA private key from a hex-encoded string.
-     *
      * @param {string} text
      * @returns {PrivateKey}
      */
@@ -211,7 +200,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a Ed25519 private key from a hex-encoded string.
-     *
      * @param {string} text
      * @returns {PrivateKey}
      */
@@ -221,7 +209,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a Ed25519 private key from a Uint8Array seed.
-     *
      * @param {Uint8Array} seed
      * @returns {Promise<PrivateKey>}
      */
@@ -232,7 +219,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Construct a ECDSA private key from a Uint8Array seed.
-     *
      * @param {Uint8Array} seed
      * @returns {Promise<PrivateKey>}
      */
@@ -269,7 +255,6 @@ export default class PrivateKey extends Key {
      * Recover a private key from a keystore, previously created by `.toKeystore()`.
      *
      * This key will _not_ support child key derivation.
-     *
      * @param {Uint8Array} data
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
@@ -287,7 +272,6 @@ export default class PrivateKey extends Key {
      * If `passphrase` is not null or empty, this looks for the first `ENCRYPTED PRIVATE KEY`
      * section and uses `passphrase` to decrypt it; otherwise, it looks for the first `PRIVATE KEY`
      * section and decodes that as a DER-encoded  private key.
-     *
      * @param {string} data
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
@@ -317,7 +301,6 @@ export default class PrivateKey extends Key {
      * an error.
      *
      * You can check if a key supports derivation with `.supportsDerivation()`
-     *
      * @param {number} index
      * @returns {Promise<PrivateKey>}
      * @throws If this key does not support derivation.
@@ -331,7 +314,7 @@ export default class PrivateKey extends Key {
             const { keyData, chainCode } = await slip10.derive(
                 this.toBytesRaw(),
                 this._key._chainCode,
-                index
+                index,
             );
 
             return new PrivateKey(new Ed25519PrivateKey(keyData, chainCode));
@@ -339,11 +322,11 @@ export default class PrivateKey extends Key {
             const { keyData, chainCode } = await bip32.derive(
                 this.toBytesRaw(),
                 this._key._chainCode,
-                index
+                index,
             );
 
             return new PrivateKey(
-                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode),
             );
         }
     }
@@ -356,7 +339,7 @@ export default class PrivateKey extends Key {
     async legacyDerive(index) {
         const keyBytes = await derive.legacy(
             this.toBytesRaw().subarray(0, 32),
-            index
+            index,
         );
 
         /** @type {new (bytes: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
@@ -371,7 +354,6 @@ export default class PrivateKey extends Key {
      *
      * The public key can be freely given and used by other parties to verify
      * the signatures generated by this private key.
-     *
      * @returns {PublicKey}
      */
     get publicKey() {
@@ -380,7 +362,6 @@ export default class PrivateKey extends Key {
 
     /**
      * Sign a message with this private key.
-     *
      * @param {Uint8Array} bytes
      * @returns {Uint8Array} - The signature bytes without the message
      */
@@ -399,7 +380,7 @@ export default class PrivateKey extends Key {
 
         if (transaction._signedTransactions.length != 1) {
             throw new Error(
-                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set",
             );
         }
 
@@ -434,7 +415,7 @@ export default class PrivateKey extends Key {
         }
 
         const siganture = this.sign(
-            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
+            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array(),
         );
 
         /** @type {ProtoSignaturePair} */
@@ -461,7 +442,6 @@ export default class PrivateKey extends Key {
      * Check if `derive` can be called on this private key.
      *
      * This is only the case if the key was created from a mnemonic.
-     *
      * @returns {boolean}
      */
     isDerivable() {
@@ -522,7 +502,6 @@ export default class PrivateKey extends Key {
      * Note that this will not retain the ancillary data used for
      * deriving child keys, thus `.derive()` on the restored key will
      * throw even if this instance supports derivation.
-     *
      * @param {string} [passphrase]
      * @returns {Promise<Uint8Array>}
      */

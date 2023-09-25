@@ -15,12 +15,12 @@ export function arrayEqual(array1, array2) {
     const view1 = new DataView(
         array1.buffer,
         array1.byteOffset,
-        array1.byteLength
+        array1.byteLength,
     );
     const view2 = new DataView(
         array2.buffer,
         array2.byteOffset,
-        array2.byteLength
+        array2.byteLength,
     );
 
     let i = array1.byteLength;

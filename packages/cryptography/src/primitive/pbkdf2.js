@@ -32,7 +32,7 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
             return pbkdf2(pass, nacl, iterations, length, "sha512");
         default:
             throw new Error(
-                "(BUG) Non-Exhaustive switch statement for algorithms"
+                "(BUG) Non-Exhaustive switch statement for algorithms",
             );
     }
 }

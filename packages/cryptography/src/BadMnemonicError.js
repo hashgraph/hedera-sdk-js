@@ -28,7 +28,7 @@ export default class BadMnemonicError extends Error {
 
             default:
                 throw new Error(
-                    `unexpected value ${reason.toString()} for 'reason'`
+                    `unexpected value ${reason.toString()} for 'reason'`,
                 );
         }
 

@@ -10,8 +10,8 @@ export async function digest(data) {
     return Promise.resolve(
         hex.decode(
             CryptoJS.SHA256(CryptoJS.enc.Hex.parse(hex.encode(data))).toString(
-                CryptoJS.enc.Hex
-            )
-        )
+                CryptoJS.enc.Hex,
+            ),
+        ),
     );
 }
