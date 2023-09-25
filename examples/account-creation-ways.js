@@ -11,7 +11,7 @@ function main() {
             -   An account can have an account ID in shard.realm.accountNumber format (0.0.10)
             -   An account can have a public key alias in 0.0.CIQNOWUYAGBLCCVX2VF75U6JMQDTUDXBOLZ5VJRDEWXQEGTI64DVCGQ format
             -   An account can have an AccountId that is represented in 0x000000000000000000000000000000000000000a (for account ID 0.0.10) long zero format
-            -   An account have be represented by an Ethereum public address 0xb794f5ea0ba39494ce839613fffba74279579268
+            -   An account has been represented by an Ethereum public address 0xb794f5ea0ba39494ce839613fffba74279579268
     */
 
     /*

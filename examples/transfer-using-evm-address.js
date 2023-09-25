@@ -23,7 +23,7 @@ Reference: [HIP-583 Expand alias support in CryptoCreate & CryptoTransfer Transa
 - Extract the Ethereum public address
   - Add function to calculate the Ethereum Address to example in SDK
   - Ethereum account address / public-address - This is the rightmost 20 bytes of the 32 byte Keccak-256 hash of the ECDSA public key of the account. This calculation is in the manner described by the Ethereum Yellow Paper.
-- Transfer tokens using the `TransferTransaction` to the Etherum Account Address
+- Transfer tokens using the `TransferTransaction` to the Ethereum Account Address
 - The From field should be a complete account that has a public address
 - The To field should be to a public address (to create a new account)
 - Get the child receipt or child record to return the Hedera Account ID for the new account that was created

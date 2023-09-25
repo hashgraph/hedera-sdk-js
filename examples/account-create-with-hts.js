@@ -28,7 +28,7 @@ Example for HIP-542.
 1. Create an NFT using the Hedera Token Service
 2. Mint the NFT
 3. Create an ECDSA public key alias
-4. Tranfer the NFT to the public key alias using the transfer transaction
+4. Transfer the NFT to the public key alias using the transfer transaction
 5. Return the new account ID in the child record
 6. Show the new account ID owns the NFT
 
@@ -144,7 +144,7 @@ async function main() {
     /**
      * Step 4
      *
-     * Tranfer the NFT to the public key alias using the transfer transaction
+     * Transfer the NFT to the public key alias using the transfer transaction
      */
     let nftTransferTx = new TransferTransaction()
         .addNftTransfer(nftTokenId, exampleNftId, operatorId, aliasAccountId)
@@ -302,7 +302,7 @@ async function main() {
 
         balance === 10
             ? console.log(
-                  `Account is created succesfully using HTS 'TransferTransaction'`
+                  `Account is created successfully using HTS 'TransferTransaction'`
               )
             : console.log(
                   "Creating account with HTS using public key alias failed"
