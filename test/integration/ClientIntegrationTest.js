@@ -132,7 +132,7 @@ describe("ClientIntegration", function () {
 
         let error = null;
         try {
-            await env.client.ping("0.0.100"); // Non exist Node ID
+            await env.client.ping(""); // Non exist Node ID
         } catch (err) {
             error = err;
         }

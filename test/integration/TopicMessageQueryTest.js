@@ -1,28 +1,56 @@
-import { TopicMessageQuery } from "../../src/exports.js";
-import { Client } from "./client/NodeIntegrationTestEnv.js";
+import {
+    TopicMessageQuery,
+    TopicCreateTransaction,
+    TopicMessageSubmitTransaction,
+} from "../../src/exports.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessageQuery", function () {
-    let client;
+    let env;
 
     before(async function () {
-        client = Client.forNetwork({});
+        env = await IntegrationTestEnv.new({ throwaway: true });
     });
 
     it("should be executable", async function () {
         this.timeout(60000);
 
-        client.setTransportSecurity(true);
-        client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
+        // client.setTransportSecurity(true);
+        // client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
+
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
+        const response = await new TopicCreateTransaction()
+            .setAdminKey(operatorKey)
+            .setSubmitKey(operatorKey)
+            .setAutoRenewAccountId(operatorId)
+            .execute(env.client);
+
+        const topic = (await response.getReceipt(env.client)).topicId;
+        const contents = "Hello from Hedera SDK JS";
+
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setTopicId(topic)
+                .setMessage(contents)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         let finished = false;
         let endTime = Date.now() + 50000;
 
         new TopicMessageQuery()
-            .setTopicId("0.0.3002507")
+            .setTopicId(topic)
             // .setStartTime(0)
             // .setLimit(1)
             // eslint-disable-next-line no-unused-vars
-            .subscribe(client, (_) => {
+            .subscribe(env, (_) => {
                 finished = true;
             });
 
@@ -37,6 +65,6 @@ describe("TopicMessageQuery", function () {
     });
 
     after(async function () {
-        await client.close();
+        await env.close();
     });
 });
