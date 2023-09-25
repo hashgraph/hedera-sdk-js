@@ -309,7 +309,7 @@ export default class Query extends Executable {
         const maxQueryPayment =
             this._maxQueryPayment != null
                 ? this._maxQueryPayment
-                : client.maxQueryPayment;
+                : client.defaultMaxQueryPayment;
 
         if (this._queryPayment != null) {
             cost = this._queryPayment;
