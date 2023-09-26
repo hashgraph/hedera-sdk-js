@@ -56,6 +56,7 @@ export default class NodeChannel extends Channel {
                 // https://github.com/grpc/grpc-node/issues/1593
                 // https://github.com/grpc/grpc-node/issues/1545
                 // https://github.com/grpc/grpc/issues/13163
+                "grpc.keepalive_time_ms": 100000,
                 "grpc.keepalive_timeout_ms": 10000,
                 "grpc.keepalive_permit_without_calls": 1,
                 "grpc.enable_retries": 0,
@@ -63,6 +64,7 @@ export default class NodeChannel extends Channel {
         } else {
             security = credentials.createInsecure();
             options = {
+                "grpc.keepalive_time_ms": 100000,
                 "grpc.keepalive_timeout_ms": 10000,
                 "grpc.keepalive_permit_without_calls": 1,
                 "grpc.enable_retries": 0,
