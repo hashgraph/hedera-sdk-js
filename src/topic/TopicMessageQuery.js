@@ -48,7 +48,7 @@ export default class TopicMessageQuery extends Query {
      * @param {TopicId | string} [props.topicId]
      * @param {Timestamp} [props.startTime]
      * @param {Timestamp} [props.endTime]
-     * @param {(message: TopicMessage, error: Error)=> void} [props.errorHandler]
+     * @param {(message: TopicMessage | null, error: Error)=> void} [props.errorHandler]
      * @param {() => void} [props.completionHandler]
      * @param {(error: MirrorError | Error | null) => boolean} [props.retryHandler]
      * @param {Long | number} [props.limit]
@@ -94,7 +94,7 @@ export default class TopicMessageQuery extends Query {
 
         /**
          * @private
-         * @type {(message: TopicMessage, error: Error) => void}
+         * @type {(message: TopicMessage | null, error: Error) => void}
          */
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this._errorHandler = (message, error) => {
@@ -278,7 +278,7 @@ export default class TopicMessageQuery extends Query {
     }
 
     /**
-     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
+     * @param {(message: TopicMessage | null, error: Error)=> void} errorHandler
      * @returns {TopicMessageQuery}
      */
     setErrorHandler(errorHandler) {
@@ -321,7 +321,7 @@ export default class TopicMessageQuery extends Query {
 
     /**
      * @param {Client<Channel>} client
-     * @param {((message: TopicMessage, error: Error) => void) | null} errorHandler
+     * @param {((message: TopicMessage | null, error: Error) => void) | null} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {SubscriptionHandle}
      */
@@ -461,6 +461,8 @@ export default class TopicMessageQuery extends Query {
                         setTimeout(() => {
                             this._makeServerStreamRequest(client);
                         }, delay);
+                    } else {
+                        this._errorHandler(null, new Error(message));
                     }
                 },
                 this._completionHandler

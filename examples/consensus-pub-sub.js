@@ -37,8 +37,11 @@ async function main() {
     new TopicMessageQuery()
         .setTopicId(topicId)
         .setStartTime(0)
-        .subscribe(client, null, (message) =>
-            console.log(Buffer.from(message.contents).toString("utf8"))
+        .subscribe(client, (message, error) => {
+                console.log(message)
+                console.log(error)
+            }, (message) =>
+                console.log(Buffer.from(message.contents).toString("utf8"))
         );
 
     for (let i = 0; ; i += 1) {
