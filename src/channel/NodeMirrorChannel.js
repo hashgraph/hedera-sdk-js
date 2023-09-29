@@ -45,7 +45,11 @@ export default class NodeMirrorChannel extends MirrorChannel {
             address,
             address.endsWith(":50212") || address.endsWith(":443")
                 ? grpc.credentials.createSsl()
-                : grpc.credentials.createInsecure()
+                : grpc.credentials.createInsecure(),
+            {
+                "grpc.keepalive_time_ms": 90000,
+                "grpc.keepalive_timeout_ms": 5000,
+            }
         );
     }
 
@@ -94,8 +98,8 @@ export default class NodeMirrorChannel extends MirrorChannel {
                 }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .on("error", (/** @type {grpc.StatusObject} */ _) => {
-                // Do nothing
+            .on("error", (/** @type {grpc.StatusObject} */ err) => {
+                error(err);
             });
 
         return () => {
