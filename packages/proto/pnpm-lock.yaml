@@ -66,7 +66,7 @@ devDependencies:
     version: 2.28.1(@typescript-eslint/parser@5.62.0)(eslint@8.49.0)
   eslint-plugin-jsdoc:
     specifier: ^46.8.0
-    version: 46.8.1(eslint@8.49.0)
+    version: 46.8.2(eslint@8.49.0)
   eslint-plugin-node:
     specifier: ^11.1.0
     version: 11.1.0(eslint@8.49.0)
@@ -820,7 +820,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -841,7 +841,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.5.4
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -862,7 +862,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.59.6(typescript@4.9.5)
       eslint: 8.49.0
       eslint-scope: 5.1.1
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -882,7 +882,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@4.9.5)
       eslint: 8.49.0
       eslint-scope: 5.1.1
-      semver: 7.5.1
+      semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -1855,8 +1855,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-jsdoc@46.8.1(eslint@8.49.0):
-    resolution: {integrity: sha512-uTce7IBluPKXIQMWJkIwFsI1gv7sZRmLjctca2K5DIxPi8fSBj9f4iru42XmGwuiMyH2f3nfc60sFmnSGv4Z/A==}
+  /eslint-plugin-jsdoc@46.8.2(eslint@8.49.0):
+    resolution: {integrity: sha512-5TSnD018f3tUJNne4s4gDWQflbsgOycIKEUBoCLn6XtBMgNHxQFmV8vVxUtiPxAQq8lrX85OaSG/2gnctxw9uQ==}
     engines: {node: '>=16'}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
