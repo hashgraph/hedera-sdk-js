@@ -63,4 +63,6 @@ async function main() {
     console.log(receipt.status.toString());
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

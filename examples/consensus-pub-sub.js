@@ -46,8 +46,8 @@ async function main() {
             (message) =>
                 console.log(Buffer.from(message.contents).toString("utf8"))
         );
-
-    for (let i = 0; ; i += 1) {
+    const MESSAGES_LIMIT = 20;
+    for (let i = 0; i < MESSAGES_LIMIT; i += 1) {
         //NOSONAR
         // eslint-disable-next-line no-await-in-loop
         await (
@@ -73,7 +73,9 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.

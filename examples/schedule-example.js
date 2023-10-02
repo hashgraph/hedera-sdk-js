@@ -120,4 +120,6 @@ async function main() {
     // console.log(mirrorNodeResponse);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

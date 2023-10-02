@@ -167,4 +167,6 @@ async function main() {
     console.log(`Deleted account ${newAccountId.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

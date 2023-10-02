@@ -97,4 +97,6 @@ function user2Signs(transactionBytes) {
     return user2Key.signTransaction(transaction);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

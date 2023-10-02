@@ -280,7 +280,9 @@ async function printBalances(wallet, aliceId, bobId, charlieId) {
     );
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 // .catch((err) => {
 //     console.log(err.valueOf());
 //     process.exit(1);

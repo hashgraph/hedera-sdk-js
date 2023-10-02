@@ -54,4 +54,6 @@ async function main() {
     console.log(`deleted account id = ${receipt.accountId.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

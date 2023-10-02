@@ -121,4 +121,6 @@ async function main() {
     console.log("Example complete!");
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

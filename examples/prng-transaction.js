@@ -27,4 +27,6 @@ async function main() {
     console.log(`The random number generated is: ${record.prngNumber}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

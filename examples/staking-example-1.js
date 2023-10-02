@@ -96,4 +96,6 @@ async function main() {
     console.log(`Staking info: ${info.stakingInfo.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
