@@ -25,7 +25,8 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 5
-  ignore:
-      # For all packages, ignore all minor & patch updates
-      - dependency-name: "*"
-        update-types: ["version-update:semver-minor","version-update:semver-patch"]
+    - ignore:
+          # For all packages, ignore all minor & patch updates
+          - dependency-name: "*"
+            update-types:
+                ["version-update:semver-minor", "version-update:semver-patch"]
