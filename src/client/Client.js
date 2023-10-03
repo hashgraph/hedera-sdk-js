@@ -108,7 +108,7 @@ export default class Client {
          * @private
          * @type {Hbar}
          */
-        this._maxQueryPayment = new Hbar(1);
+        this._defaultMaxQueryPayment = new Hbar(1);
 
         if (props != null) {
             if (props.operator != null) {
@@ -360,30 +360,18 @@ export default class Client {
     }
 
     /**
-     * @deprecated - Use `defaultMaxTransactionFee` instead
-     * @returns {?Hbar}
-     */
-    get maxTransactionFee() {
-        return this._defaultMaxTransactionFee;
-    }
-
-    /**
-     * @deprecated - Use `setDefaultMaxTransactionFee()` instead
-     * Set the maximum fee to be paid for transactions
-     * executed by this client.
-     * @param {Hbar} maxTransactionFee
-     * @returns {this}
-     */
-    setMaxTransactionFee(maxTransactionFee) {
-        this._defaultMaxTransactionFee = maxTransactionFee;
-        return this;
-    }
-
-    /**
      * @returns {?Hbar}
      */
     get defaultMaxTransactionFee() {
         return this._defaultMaxTransactionFee;
+    }
+
+    /**
+     * @deprecated - Use `defaultMaxTransactionFee` instead
+     * @returns {?Hbar}
+     */
+    get maxTransactionFee() {
+        return this.defaultMaxTransactionFee;
     }
 
     /**
@@ -394,8 +382,22 @@ export default class Client {
      * @returns {this}
      */
     setDefaultMaxTransactionFee(defaultMaxTransactionFee) {
+        if (defaultMaxTransactionFee.toTinybars().toInt() < 0) {
+            throw new Error("defaultMaxTransactionFee must be non-negative");
+        }
         this._defaultMaxTransactionFee = defaultMaxTransactionFee;
         return this;
+    }
+
+    /**
+     * @deprecated - Use `setDefaultMaxTransactionFee()` instead
+     * Set the maximum fee to be paid for transactions
+     * executed by this client.
+     * @param {Hbar} maxTransactionFee
+     * @returns {this}
+     */
+    setMaxTransactionFee(maxTransactionFee) {
+        return this.setDefaultMaxTransactionFee(maxTransactionFee);
     }
 
     /**
@@ -420,19 +422,39 @@ export default class Client {
     /**
      * @returns {Hbar}
      */
+    get defaultMaxQueryPayment() {
+        return this._defaultMaxQueryPayment;
+    }
+
+    /**
+     * @deprecated in a favor of defaultMaxQueryPayment
+     * @returns {Hbar}
+     */
     get maxQueryPayment() {
-        return this._maxQueryPayment;
+        return this.defaultMaxQueryPayment;
     }
 
     /**
      * Set the maximum payment allowable for queries.
      *
+     * @param {Hbar} defaultMaxQueryPayment
+     * @returns {Client<ChannelT, MirrorChannelT>}
+     */
+    setDefaultMaxQueryPayment(defaultMaxQueryPayment) {
+        if (defaultMaxQueryPayment.toTinybars().toInt() < 0) {
+            throw new Error("defaultMaxQueryPayment must be non-negative");
+        }
+        this._defaultMaxQueryPayment = defaultMaxQueryPayment;
+        return this;
+    }
+    /**
+     * @deprecated in a favor of setDefaultMaxQueryPayment()
+     * Set the maximum payment allowable for queries.
      * @param {Hbar} maxQueryPayment
      * @returns {Client<ChannelT, MirrorChannelT>}
      */
     setMaxQueryPayment(maxQueryPayment) {
-        this._maxQueryPayment = maxQueryPayment;
-        return this;
+        return this.setDefaultMaxQueryPayment(maxQueryPayment);
     }
 
     /**

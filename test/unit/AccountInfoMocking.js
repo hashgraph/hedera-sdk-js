@@ -125,7 +125,7 @@ describe("AccountInfoMocking", function () {
             ],
         ]));
 
-        client.setMaxQueryPayment(Hbar.fromTinybars(10));
+        client.setDefaultMaxQueryPayment(Hbar.fromTinybars(10));
 
         let err = false;
 
@@ -183,7 +183,7 @@ describe("AccountInfoMocking", function () {
             ],
         ]));
 
-        client.setMaxQueryPayment(Hbar.fromTinybars(24));
+        client.setDefaultMaxQueryPayment(Hbar.fromTinybars(24));
 
         let err = false;
 
