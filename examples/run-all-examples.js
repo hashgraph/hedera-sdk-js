@@ -10,6 +10,7 @@ const excludedDirectories = [
     "./simple_rest_signature_provider",
 ];
 const excludedJSFile = "run-all-examples.js";
+const command = " node";
 
 fs.readdir(examplesDirectory, (err, files) => {
     if (err) {
@@ -40,7 +41,9 @@ fs.readdir(examplesDirectory, (err, files) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync("node", [examplePath]);
+        const result = spawnSync(command, [examplePath], {
+            stdio: "ignore",
+        });
 
         if (result.status === 0) {
             completed += 1;
