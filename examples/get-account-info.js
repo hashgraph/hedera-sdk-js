@@ -17,23 +17,29 @@ async function main() {
         new LocalProvider()
     );
 
-    const info = await new AccountInfoQuery()
-        .setAccountId(wallet.getAccountId())
-        .setQueryPayment(new Hbar(1))
-        .executeWithSigner(wallet);
+    try {
+        const info = await new AccountInfoQuery()
+            .setAccountId(wallet.getAccountId())
+            .setQueryPayment(new Hbar(1))
+            .executeWithSigner(wallet);
 
-    console.log(`info.key                          = ${info.key.toString()}`);
+        console.log(
+            `info.key                          = ${info.key.toString()}`
+        );
 
-    console.log(
-        `info.isReceiverSignatureRequired  =`,
-        info.isReceiverSignatureRequired
-    );
+        console.log(
+            `info.isReceiverSignatureRequired  =`,
+            info.isReceiverSignatureRequired
+        );
 
-    console.log(
-        `info.expirationTime               = ${info.expirationTime
-            .toDate()
-            .toString()}`
-    );
+        console.log(
+            `info.expirationTime               = ${info.expirationTime
+                .toDate()
+                .toString()}`
+        );
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()

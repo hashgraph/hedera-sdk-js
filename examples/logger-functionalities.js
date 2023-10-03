@@ -66,52 +66,56 @@ async function main() {
     const publicKey = privateKey.publicKey;
     const aliasAccountId = publicKey.toAccountId(0, 0);
 
-    let transferTransaction = await new TransferTransaction()
-        .addHbarTransfer(wallet.accountId, Hbar.from(-10, HbarUnit.Hbar))
-        .addHbarTransfer(aliasAccountId, Hbar.from(10, HbarUnit.Hbar))
-        .setTransactionMemo("")
-        .freezeWithSigner(wallet);
+    try {
+        let transferTransaction = await new TransferTransaction()
+            .addHbarTransfer(wallet.accountId, Hbar.from(-10, HbarUnit.Hbar))
+            .addHbarTransfer(aliasAccountId, Hbar.from(10, HbarUnit.Hbar))
+            .setTransactionMemo("")
+            .freezeWithSigner(wallet);
 
-    await transferTransaction.executeWithSigner(wallet);
+        await transferTransaction.executeWithSigner(wallet);
 
-    let topicTransaction = await new TopicCreateTransaction()
-        .setLogger(infoLogger)
-        .setTopicMemo("topic memo")
-        .freezeWithSigner(wallet);
+        let topicTransaction = await new TopicCreateTransaction()
+            .setLogger(infoLogger)
+            .setTopicMemo("topic memo")
+            .freezeWithSigner(wallet);
 
-    await topicTransaction.executeWithSigner(wallet);
+        await topicTransaction.executeWithSigner(wallet);
 
-    // Set the level of the `infoLogger` from `info` to `warn`
-    infoLogger.setLevel(LogLevel.Warn);
+        // Set the level of the `infoLogger` from `info` to `warn`
+        infoLogger.setLevel(LogLevel.Warn);
 
-    // This should not display any logs because currently there are no `warn` logs predefined in the SDK
-    let topicTransaction2 = await new TopicCreateTransaction()
-        .setLogger(infoLogger)
-        .setTopicMemo("topic memo")
-        .freezeWithSigner(wallet);
+        // This should not display any logs because currently there are no `warn` logs predefined in the SDK
+        let topicTransaction2 = await new TopicCreateTransaction()
+            .setLogger(infoLogger)
+            .setTopicMemo("topic memo")
+            .freezeWithSigner(wallet);
 
-    await topicTransaction2.executeWithSigner(wallet);
+        await topicTransaction2.executeWithSigner(wallet);
 
-    // Silence the `debugLogger` - no logs should be shown
-    // This can also be achieved by calling `.setLevel(LogLevel.Silent)`
-    debugLogger.setSilent(true);
+        // Silence the `debugLogger` - no logs should be shown
+        // This can also be achieved by calling `.setLevel(LogLevel.Silent)`
+        debugLogger.setSilent(true);
 
-    let topicTransaction3 = await new TopicCreateTransaction()
-        .setLogger(debugLogger)
-        .setTopicMemo("topic memo")
-        .freezeWithSigner(wallet);
+        let topicTransaction3 = await new TopicCreateTransaction()
+            .setLogger(debugLogger)
+            .setTopicMemo("topic memo")
+            .freezeWithSigner(wallet);
 
-    await topicTransaction3.executeWithSigner(wallet);
+        await topicTransaction3.executeWithSigner(wallet);
 
-    // Unsilence the `debugLogger` - applies back the old log level before silencing
-    debugLogger.setSilent(false);
+        // Unsilence the `debugLogger` - applies back the old log level before silencing
+        debugLogger.setSilent(false);
 
-    let topicTransaction4 = await new TopicCreateTransaction()
-        .setLogger(debugLogger)
-        .setTopicMemo("topic memo")
-        .freezeWithSigner(wallet);
+        let topicTransaction4 = await new TopicCreateTransaction()
+            .setLogger(debugLogger)
+            .setTopicMemo("topic memo")
+            .freezeWithSigner(wallet);
 
-    await topicTransaction4.executeWithSigner(wallet);
+        await topicTransaction4.executeWithSigner(wallet);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()

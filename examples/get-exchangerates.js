@@ -21,10 +21,14 @@ async function main() {
         process.env.OPERATOR_KEY,
         new LocalProvider()
     );
-
-    const resp = await new FileContentsQuery()
-        .setFileId("0.0.112")
-        .executeWithSigner(wallet);
+    let resp;
+    try {
+        resp = await new FileContentsQuery()
+            .setFileId("0.0.112")
+            .executeWithSigner(wallet);
+    } catch (error) {
+        console.error(error);
+    }
 
     const exchangeRates = ExchangeRates.fromBytes(resp);
 

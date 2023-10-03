@@ -69,14 +69,18 @@ async function main() {
     const user1Signature = user1Signs(transactionBytes);
     const user2Signature = user2Signs(transactionBytes);
 
-    // recreate the transaction from bytes
-    await transactionToExecute.signWithOperator(client);
-    transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
-    transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+    try {
+        // recreate the transaction from bytes
+        await transactionToExecute.signWithOperator(client);
+        transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
+        transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
 
-    const result = await transactionToExecute.execute(client);
-    receipt = await result.getReceipt(client);
-    console.log(receipt.status.toString());
+        const result = await transactionToExecute.execute(client);
+        receipt = await result.getReceipt(client);
+        console.log(`Status: ${receipt.status.toString()}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 /**

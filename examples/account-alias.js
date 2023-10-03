@@ -84,41 +84,45 @@ async function main() {
     ).toAccountId(0, 0);
 
     console.log("Transferring some Hbar to the new account");
-    let transaction = await new TransferTransaction()
-        .addHbarTransfer(wallet.getAccountId(), new Hbar(10).negated())
-        .addHbarTransfer(aliasAccountId, new Hbar(10))
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
+    try {
+        let transaction = await new TransferTransaction()
+            .addHbarTransfer(wallet.getAccountId(), new Hbar(10).negated())
+            .addHbarTransfer(aliasAccountId, new Hbar(10))
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
 
-    const response = await transaction.executeWithSigner(wallet);
-    await response.getReceiptWithSigner(wallet);
+        const response = await transaction.executeWithSigner(wallet);
+        await response.getReceiptWithSigner(wallet);
 
-    const balance = await new AccountBalanceQuery()
-        .setNodeAccountIds([response.nodeId])
-        .setAccountId(aliasAccountId)
-        .executeWithSigner(wallet);
+        const balance = await new AccountBalanceQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setAccountId(aliasAccountId)
+            .executeWithSigner(wallet);
 
-    console.log(`Balances of the new account: ${balance.toString()}`);
+        console.log(`Balances of the new account: ${balance.toString()}`);
 
-    const info = await new AccountInfoQuery()
-        .setNodeAccountIds([response.nodeId])
-        .setAccountId(aliasAccountId)
-        .executeWithSigner(wallet);
+        const info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setAccountId(aliasAccountId)
+            .executeWithSigner(wallet);
 
-    console.log(`Info about the new account: ${info.toString()}`);
+        console.log(`Info about the new account: ${info.toString()}`);
 
-    /*
-     * Note that once an account exists in the ledger, it is assigned a normal AccountId, which can be retrieved
-     * via an AccountInfoQuery.
-     *
-     * Users may continue to refer to the account by its aliasKey AccountId, but they may also
-     * now refer to it by its normal AccountId
-     */
+        /*
+         * Note that once an account exists in the ledger, it is assigned a normal AccountId, which can be retrieved
+         * via an AccountInfoQuery.
+         *
+         * Users may continue to refer to the account by its aliasKey AccountId, but they may also
+         * now refer to it by its normal AccountId
+         */
 
-    console.log(`The normal account ID: ${info.accountId.toString()}`);
-    console.log(`The alias key: ${info.aliasKey.toString()}`);
+        console.log(`The normal account ID: ${info.accountId.toString()}`);
+        console.log(`The alias key: ${info.aliasKey.toString()}`);
 
-    console.log("Example complete!");
+        console.log("Example complete!");
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()

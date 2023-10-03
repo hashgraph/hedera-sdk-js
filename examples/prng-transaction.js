@@ -17,14 +17,18 @@ async function main() {
         new LocalProvider()
     );
 
-    let transaction = await new PrngTransaction()
-        .setRange(100)
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
-    const response = await transaction.executeWithSigner(wallet);
+    try {
+        let transaction = await new PrngTransaction()
+            .setRange(100)
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
+        const response = await transaction.executeWithSigner(wallet);
 
-    const record = await response.getRecordWithSigner(wallet);
-    console.log(`The random number generated is: ${record.prngNumber}`);
+        const record = await response.getRecordWithSigner(wallet);
+        console.log(`The random number generated is: ${record.prngNumber}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()

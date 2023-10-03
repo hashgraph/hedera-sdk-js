@@ -14,54 +14,62 @@ dotenv.config();
 async function main() {
     let client;
 
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK === null
+    ) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
 
-    const response = await new TopicCreateTransaction()
-        .setTopicMemo("sdk example create_pub_sub.js")
-        .execute(client);
+    client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
-    const receipt = await response.getReceipt(client);
-    const topicId = receipt.topicId;
+    try {
+        const response = await new TopicCreateTransaction()
+            .setTopicMemo("sdk example create_pub_sub.js")
+            .execute(client);
 
-    console.log(`topicId = ${topicId.toString()}`);
+        const receipt = await response.getReceipt(client);
+        const topicId = receipt.topicId;
 
-    new TopicMessageQuery()
-        .setTopicId(topicId)
-        .setStartTime(0)
-        .subscribe(
-            client,
-            (message, error) => {
-                console.log(message);
-                console.log(error);
-            },
-            (message) =>
-                console.log(Buffer.from(message.contents).toString("utf8"))
-        );
-    const MESSAGES_LIMIT = 20;
-    for (let i = 0; i < MESSAGES_LIMIT; i += 1) {
-        //NOSONAR
-        // eslint-disable-next-line no-await-in-loop
-        await (
-            await new TopicMessageSubmitTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTopicId(topicId)
-                .setMessage(bigContents)
-                .execute(client)
-        ).getReceipt(client);
+        console.log(`topicId = ${topicId.toString()}`);
 
-        console.log(`Sent message ${i}`);
+        new TopicMessageQuery()
+            .setTopicId(topicId)
+            .setStartTime(0)
+            .subscribe(
+                client,
+                (message, error) => {
+                    console.log(message);
+                    console.log(error);
+                },
+                (message) =>
+                    console.log(Buffer.from(message.contents).toString("utf8"))
+            );
+        const MESSAGES_LIMIT = 20;
+        for (let i = 0; i < MESSAGES_LIMIT; i += 1) {
+            //NOSONAR
+            // eslint-disable-next-line no-await-in-loop
+            await (
+                await new TopicMessageSubmitTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setTopicId(topicId)
+                    .setMessage(bigContents)
+                    .execute(client)
+            ).getReceipt(client);
 
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(2500);
+            console.log(`Sent message ${i}`);
+
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(2500);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 

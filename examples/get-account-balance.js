@@ -17,15 +17,19 @@ async function main() {
         new LocalProvider()
     );
 
-    const balance = await new AccountBalanceQuery()
-        .setAccountId(wallet.getAccountId())
-        .executeWithSigner(wallet);
+    try {
+        const balance = await new AccountBalanceQuery()
+            .setAccountId(wallet.getAccountId())
+            .executeWithSigner(wallet);
 
-    console.log(
-        `${wallet
-            .getAccountId()
-            .toString()} balance = ${balance.hbars.toString()}`
-    );
+        console.log(
+            `${wallet
+                .getAccountId()
+                .toString()} balance = ${balance.hbars.toString()}`
+        );
+    } catch (error) {
+        console.error(Error);
+    }
 }
 
 void main()

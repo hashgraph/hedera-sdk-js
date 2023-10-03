@@ -17,20 +17,26 @@ async function main() {
         new LocalProvider()
     );
 
-    const info = await wallet.getAccountInfo();
+    try {
+        const info = await wallet.getAccountInfo();
 
-    console.log(`info.key                          = ${info.key.toString()}`);
+        console.log(
+            `info.key                          = ${info.key.toString()}`
+        );
 
-    console.log(
-        `info.isReceiverSignatureRequired  =`,
-        info.isReceiverSignatureRequired
-    );
+        console.log(
+            `info.isReceiverSignatureRequired  =`,
+            info.isReceiverSignatureRequired
+        );
 
-    console.log(
-        `info.expirationTime               = ${info.expirationTime
-            .toDate()
-            .toString()}`
-    );
+        console.log(
+            `info.expirationTime               = ${info.expirationTime
+                .toDate()
+                .toString()}`
+        );
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()

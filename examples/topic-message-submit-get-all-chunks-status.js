@@ -20,46 +20,52 @@ async function main() {
             -   If the user uses the execute, and get receipt, the receipt is only returned on the first transaction
             -   The user can use executeAll and then as showed in this example, to track every chunk transaction status. 
     */
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK === null
+    ) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
 
-    const response = await new TopicCreateTransaction()
-        .setTopicMemo("sdk example create_pub_sub.js")
-        .execute(client);
+    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
-    const receipt = await response.getReceipt(client);
-    const topicId = receipt.topicId;
-
-    console.log(`topicId = ${topicId.toString()}`);
-
-    const txMessage = await new TopicMessageSubmitTransaction()
-        .setNodeAccountIds([response.nodeId])
-        .setTopicId(topicId)
-        .setMessage(bigContents)
-        .executeAll(client);
-
-    for (let index = 0; index < txMessage.length; index++) {
-        const txReceipt = await new TransactionReceiptQuery()
-            .setTransactionId(txMessage[index].transactionId)
-            .setIncludeChildren(true)
+    try {
+        const response = await new TopicCreateTransaction()
+            .setTopicMemo("sdk example create_pub_sub.js")
             .execute(client);
 
-        console.log(
-            `Status for transaction with ID ${
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                txMessage[index].transactionId
-            } is ${txReceipt.status.toString()}`
-        );
+        const receipt = await response.getReceipt(client);
+        const topicId = receipt.topicId;
+
+        console.log(`topicId = ${topicId.toString()}`);
+
+        const txMessage = await new TopicMessageSubmitTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTopicId(topicId)
+            .setMessage(bigContents)
+            .executeAll(client);
+
+        for (let index = 0; index < txMessage.length; index++) {
+            const txReceipt = await new TransactionReceiptQuery()
+                .setTransactionId(txMessage[index].transactionId)
+                .setIncludeChildren(true)
+                .execute(client);
+
+            console.log(
+                `Status for transaction with ID ${
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    txMessage[index].transactionId
+                } is ${txReceipt.status.toString()}`
+            );
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 

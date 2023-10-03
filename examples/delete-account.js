@@ -29,29 +29,33 @@ async function main() {
     console.log(`private key = ${newKey.toString()}`);
     console.log(`public key = ${newKey.publicKey.toString()}`);
 
-    let transaction = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(newKey.publicKey)
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
-    const response = await transaction.executeWithSigner(wallet);
+    try {
+        let transaction = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10)) // 10 h
+            .setKey(newKey.publicKey)
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
+        const response = await transaction.executeWithSigner(wallet);
 
-    const receipt = await response.getReceiptWithSigner(wallet);
+        const receipt = await response.getReceiptWithSigner(wallet);
 
-    console.log(`created account id = ${receipt.accountId.toString()}`);
+        console.log(`created account id = ${receipt.accountId.toString()}`);
 
-    transaction = await new AccountDeleteTransaction()
-        .setNodeAccountIds([response.nodeId])
-        .setAccountId(receipt.accountId)
-        .setTransferAccountId(wallet.getAccountId())
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
+        transaction = await new AccountDeleteTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setAccountId(receipt.accountId)
+            .setTransferAccountId(wallet.getAccountId())
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
 
-    newKey.signTransaction(transaction);
+        newKey.signTransaction(transaction);
 
-    await transaction.executeWithSigner(wallet);
+        await transaction.executeWithSigner(wallet);
 
-    console.log(`deleted account id = ${receipt.accountId.toString()}`);
+        console.log(`deleted account id = ${receipt.accountId.toString()}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 void main()
