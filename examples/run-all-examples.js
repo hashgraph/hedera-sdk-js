@@ -1,6 +1,27 @@
 import fs from "fs";
 import path from "path";
-import { spawnSync } from "child_process";
+import { spawnSync, execSync } from "child_process";
+import os from "os";
+
+function getNodePath() {
+    try {
+        if (os.platform() === "darwin" || os.platform() === "linux") {
+            // macOS or Linux
+            const result = execSync("which node").toString().trim();
+            return result;
+        } else if (os.platform() === "win32") {
+            // Windows
+            const result = execSync("where node").toString().trim();
+            return result;
+        } else {
+            console.log("Unsupported operating system.");
+            return null;
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
 
 const examplesDirectory = "./";
 const excludedDirectories = [
@@ -36,11 +57,19 @@ fs.readdir(examplesDirectory, (err, files) => {
 
     const total = examples.length;
 
+    const nodePath = getNodePath();
+
+    if (!nodePath) {
+        throw new Error(
+            "Node.js not found. Make sure it's installed and in the PATH."
+        );
+    }
+
     examples.forEach((file, index) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync("node", [examplePath], { stdio: "ignore" });
+        const result = spawnSync(nodePath, [examplePath]);
 
         if (result.status === 0) {
             completed += 1;
