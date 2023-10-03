@@ -3,7 +3,12 @@ import path from "path";
 import { spawnSync } from "child_process";
 
 const examplesDirectory = "./";
-const excludedDirectory = "./node_modules";
+const excludedDirectories = [
+    "./node_modules",
+    "./precompile-example",
+    "./react-native-example",
+    "./simple_rest_signature_provider",
+];
 const excludedJSFile = "run-all-examples.js";
 
 fs.readdir(examplesDirectory, (err, files) => {
@@ -15,11 +20,18 @@ fs.readdir(examplesDirectory, (err, files) => {
     let completed = 0;
     let failed = 0;
 
+    const isPathStartsWith = (
+        /** @type {string} */ file,
+        /** @type {string} */ directory
+    ) => path.join(examplesDirectory, file).startsWith(directory);
+
     const examples = files.filter(
         (file) =>
             file.endsWith(".js") &&
             file !== excludedJSFile &&
-            !path.join(examplesDirectory, file).startsWith(excludedDirectory)
+            excludedDirectories.some(
+                (directory) => !isPathStartsWith(directory, file)
+            )
     );
 
     const total = examples.length;
