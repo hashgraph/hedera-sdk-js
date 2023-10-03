@@ -10,7 +10,7 @@ const excludedDirectories = [
     "./simple_rest_signature_provider",
 ];
 const excludedJSFile = "run-all-examples.js";
-const command = " node";
+const command = "node";
 
 fs.readdir(examplesDirectory, (err, files) => {
     if (err) {
