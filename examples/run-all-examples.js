@@ -36,17 +36,11 @@ fs.readdir(examplesDirectory, (err, files) => {
 
     const total = examples.length;
 
-    const nodePath = getNodePath();
-
-    if (!nodePath) {
-        return;
-    }
-
     examples.forEach((file, index) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync(process.env.COMMAND, [examplePath], {
+        const result = spawnSync(process.env.NODE_COMMAND, [examplePath], {
             stdio: "ignore",
         });
 
