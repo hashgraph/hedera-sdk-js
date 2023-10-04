@@ -38,8 +38,8 @@ import TokenId from "./TokenId.js";
  * @typedef {object} TokenTransferJSON
  * @property {string} tokenId
  * @property {string} accountId
- * @property {number | null} expectedDecimals
- * @property {Long | number | string} amount
+ * @property {?number} expectedDecimals
+ * @property {string} amount
  * @property {boolean} isApproved
  */
 

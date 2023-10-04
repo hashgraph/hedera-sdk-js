@@ -29,6 +29,7 @@ import Status from "../Status.js";
 import Long from "long";
 import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("../ExchangeRate.js").ExchangeRateJSON} ExchangeRateJSON
@@ -45,7 +46,7 @@ import TransactionId from "../transaction/TransactionId.js";
  * @property {?string} scheduleId
  * @property {?ExchangeRateJSON} exchangeRate
  * @property {?string} topicSequenceNumber
- * @property {?Uint8Array} topicRunningHash
+ * @property {?string} topicRunningHash
  * @property {?string} totalSupply
  * @property {?string} scheduledTransactionId
  * @property {string[]} serials
@@ -157,17 +158,17 @@ export default class TransactionReceipt {
 
         this.scheduledTransactionId = props.scheduledTransactionId;
 
-        this.serials = props.serials;
+        this.serials = props.serials ?? [];
 
         /**
          * @readonly
          */
-        this.duplicates = props.duplicates;
+        this.duplicates = props.duplicates ?? [];
 
         /**
          * @readonly
          */
-        this.children = props.children;
+        this.children = props.children ?? [];
 
         Object.freeze(this);
     }
@@ -370,29 +371,21 @@ export default class TransactionReceipt {
     toJSON() {
         return {
             status: this.status.toString(),
-            accountId:
-                this.accountId != null ? this.accountId.toString() : null,
-            filedId: this.fileId != null ? this.fileId.toString() : null,
-            contractId:
-                this.contractId != null ? this.contractId.toString() : null,
-            topicId: this.topicId != null ? this.topicId.toString() : null,
-            tokenId: this.tokenId != null ? this.tokenId.toString() : null,
-            scheduleId:
-                this.scheduleId != null ? this.scheduleId.toString() : null,
-            exchangeRate:
-                this.exchangeRate != null ? this.exchangeRate.toJSON() : null,
-            topicSequenceNumber:
-                this.topicSequenceNumber != null
-                    ? this.topicSequenceNumber.toString()
-                    : null,
+            accountId: this.accountId?.toString() || null,
+            filedId: this.fileId?.toString() || null,
+            contractId: this.contractId?.toString() || null,
+            topicId: this.topicId?.toString() || null,
+            tokenId: this.tokenId?.toString() || null,
+            scheduleId: this.scheduleId?.toString() || null,
+            exchangeRate: this.exchangeRate?.toJSON() || null,
+            topicSequenceNumber: this.topicSequenceNumber?.toString() || null,
             topicRunningHash:
-                this.topicRunningHash != null ? this.topicRunningHash : null,
-            totalSupply:
-                this.totalSupply != null ? this.totalSupply.toString() : null,
-            scheduledTransactionId:
-                this.scheduledTransactionId != null
-                    ? this.scheduledTransactionId.toString()
+                this.topicRunningHash != null
+                    ? hex.encode(this.topicRunningHash)
                     : null,
+            totalSupply: this.totalSupply?.toString() || null,
+            scheduledTransactionId:
+                this.scheduledTransactionId?.toString() || null,
             serials: this.serials.map((serial) => serial.toString()),
             duplicates: this.duplicates.map((receipt) => receipt.toJSON()),
             children: this.children.map((receipt) => receipt.toJSON()),

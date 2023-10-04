@@ -133,4 +133,20 @@ export default class TokenNftTransferMap extends ObjectMap {
 
         return tokenTransferList;
     }
+
+    toJSON() {
+        const obj = {};
+
+        this._map.forEach((value, key) => {
+            // @ts-ignore
+            obj[key] = value.map((nftTransfer) => ({
+                sender: nftTransfer.sender.toString(),
+                recipient: nftTransfer.recipient.toString(),
+                serial: nftTransfer.serial,
+                isApproved: nftTransfer.isApproved,
+            }));
+        });
+
+        return obj;
+    }
 }
