@@ -13,11 +13,16 @@ const excludedDirectories = [
     "./simple_rest_signature_provider",
 ];
 const excludedJSFile = "run-all-examples.js";
+const cmd = process.env.NODE_COMMAND;
 
 fs.readdir(examplesDirectory, (err, files) => {
     if (err) {
         console.error("Error reading directory:", err);
         return;
+    }
+
+    if (cmd === undefined) {
+        throw new Error("Environment variable NODE_COMMAND is required.");
     }
 
     let completed = 0;
@@ -43,7 +48,7 @@ fs.readdir(examplesDirectory, (err, files) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync(process.env.NODE_COMMAND, [examplePath], {
+        const result = spawnSync(cmd, [examplePath], {
             stdio: "ignore",
         });
 
