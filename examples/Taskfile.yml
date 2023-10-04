@@ -11,6 +11,10 @@ tasks:
         cmds:
             - pnpm i
 
+    run-examples:
+        description: Run JavaScript examples in the "examples" folder
+        cmds:
+            - node run-all-examples.js
     build:
         cmds:
             - task: install

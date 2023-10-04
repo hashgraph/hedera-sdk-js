@@ -28,6 +28,10 @@ tasks:
         deps:
             - build
 
+    "run:examples":
+        cmds:
+            - task: "examples:run-examples"
+
     docs:
         cmds:
             - ./node_modules/.bin/typedoc
