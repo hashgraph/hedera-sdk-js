@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { spawnSync } from "child_process";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const examplesDirectory = "./";
 const excludedDirectories = [
