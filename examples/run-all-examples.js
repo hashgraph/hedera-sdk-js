@@ -46,7 +46,7 @@ fs.readdir(examplesDirectory, (err, files) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync("~/bin/node", [examplePath], {
+        const result = spawnSync(process.env.COMMAND, [examplePath], {
             stdio: "ignore",
         });
 
