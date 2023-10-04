@@ -610,7 +610,8 @@ export default class TransactionRecord {
             assessedCustomFees: this.assessedCustomFees,
             nftTransfers: this.nftTransfers,
             automaticTokenAssociations: this.automaticTokenAssociations,
-            parentConsensusTimestamp: this.parentConsensusTimestamp?.toDate() || null,
+            parentConsensusTimestamp:
+                this.parentConsensusTimestamp?.toDate() || null,
             aliasKey: this.aliasKey?.toString() || null,
             duplicates: this.duplicates,
             children: this.children,
@@ -620,9 +621,7 @@ export default class TransactionRecord {
                     : null,
             paidStakingRewards: this.paidStakingRewards,
             prngBytes:
-                this.prngBytes != null
-                    ? hex.encode(this.prngBytes)
-                    : null,
+                this.prngBytes != null ? hex.encode(this.prngBytes) : null,
             prngNumber: this.prngNumber,
             evmAddress: this.evmAddress?.toString() || null,
         };
