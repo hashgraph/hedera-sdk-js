@@ -57,20 +57,17 @@ import * as hex from "../encoding/hex.js";
  * @property {TransferJSON[]} transfers
  * @property {TokenTransferMap} tokenTransfers
  * @property {TokenTransferJSON[]} tokenTransfersList
- * @property {?ScheduleId} scheduleRef
+ * @property {?string} scheduleRef
  * @property {AssessedCustomFee[]} assessedCustomFees
  * @property {TokenNftTransferMap} nftTransfers
  * @property {TokenAssocation[]} automaticTokenAssociations
  * @property {Date | null} parentConsensusTimestamp
- * @property {PublicKey | null} aliasKey
+ * @property {?string} aliasKey
  * @property {TransactionRecord[]} duplicates
  * @property {TransactionRecord[]} children
- * @property {HbarAllowance[]} hbarAllowanceAdjustments
- * @property {TokenAllowance[]} tokenAllowanceAdjustments
- * @property {TokenNftAllowance[]} nftAllowanceAdjustments
  * @property {?string} ethereumHash
  * @property {Transfer[]} paidStakingRewards
- * @property {?Uint8Array} prngBytes
+ * @property {?string} prngBytes
  * @property {?number} prngNumber
  * @property {?string} evmAddress
  */
@@ -603,37 +600,31 @@ export default class TransactionRecord {
             consensusTimestamp: this.consensusTimestamp.toDate(),
             transactionId: this.transactionId.toString(),
             transactionMemo: this.transactionMemo,
-            transactionFee: this.transactionFee.toString(),
+            transactionFee: this.transactionFee.toTinybars().toString(),
             transfers: this.transfers.map((transfer) => transfer.toJSON()),
             tokenTransfers: this.tokenTransfers,
             tokenTransfersList: this.tokenTransfersList.map((transfer) =>
                 transfer.toJSON()
             ),
-            scheduleRef: this.scheduleRef,
+            scheduleRef: this.scheduleRef?.toString() || null,
             assessedCustomFees: this.assessedCustomFees,
             nftTransfers: this.nftTransfers,
             automaticTokenAssociations: this.automaticTokenAssociations,
-            parentConsensusTimestamp:
-                this.parentConsensusTimestamp != null
-                    ? this.parentConsensusTimestamp.toDate()
-                    : null,
-            aliasKey: this.aliasKey,
+            parentConsensusTimestamp: this.parentConsensusTimestamp?.toDate() || null,
+            aliasKey: this.aliasKey?.toString() || null,
             duplicates: this.duplicates,
             children: this.children,
-            hbarAllowanceAdjustments: [],
-            tokenAllowanceAdjustments: [],
-            nftAllowanceAdjustments: [],
             ethereumHash:
-                this.ethereumHash != null && this.ethereumHash.length != 0
+                this.ethereumHash != null
                     ? hex.encode(this.ethereumHash)
                     : null,
             paidStakingRewards: this.paidStakingRewards,
-            prngBytes: this.prngBytes,
-            prngNumber: this.prngNumber,
-            evmAddress:
-                this.evmAddress != null && this.evmAddress.toBytes().length != 0
-                    ? hex.encode(this.evmAddress.toBytes())
+            prngBytes:
+                this.prngBytes != null
+                    ? hex.encode(this.prngBytes)
                     : null,
+            prngNumber: this.prngNumber,
+            evmAddress: this.evmAddress?.toString() || null,
         };
     }
 

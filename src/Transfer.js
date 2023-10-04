@@ -24,7 +24,7 @@ import Hbar from "./Hbar.js";
 /**
  * @typedef {object} TransferJSON
  * @property {string} accountId
- * @property {number | string | Long | BigNumber | Hbar} amount
+ * @property {string} amount
  * @property {boolean} isApproved
  */
 
@@ -117,7 +117,7 @@ export default class Transfer {
     toJSON() {
         return {
             accountId: this.accountId.toString(),
-            amount: this.amount.toString(),
+            amount: this.amount.toTinybars().toString(),
             isApproved: this.isApproved,
         };
     }

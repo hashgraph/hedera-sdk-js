@@ -141,4 +141,15 @@ export default class ObjectMap {
 
         return JSON.stringify(map);
     }
+
+    toJSON() {
+        const obj = {};
+
+        this._map.forEach((value, key) => {
+            // @ts-ignore
+            obj[key] = value;
+        });
+
+        return obj;
+    }
 }

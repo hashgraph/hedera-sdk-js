@@ -27,6 +27,14 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").proto.IAssessedCustomFee} HashgraphProto.proto.IAssessedCustomFee
  */
 
+/**
+ * @typedef {object} AssessedCustomFeeJSON
+ * @property {?string} feeCollectorAccountId
+ * @property {?string} tokenId
+ * @property {?string} amount
+ * @property {string[]} payerAccountIds
+ */
+
 export default class AssessedCustomFee {
     /**
      * @param {object} props
@@ -184,6 +192,18 @@ export default class AssessedCustomFee {
                 this._payerAccountIds != null
                     ? this._payerAccountIds.map((id) => id._toProtobuf())
                     : null,
+        };
+    }
+
+    /**
+     * @returns {AssessedCustomFeeJSON}
+     */
+    toJSON() {
+        return {
+            feeCollectorAccountId: this.feeCollectorAccountId?.toString() || null,
+            tokenId: this._tokenId?.toString() || null,
+            amount: this._amount?.toString() || null,
+            payerAccountIds: this._payerAccountIds?.map((id) => id.toString()) || [],
         };
     }
 }

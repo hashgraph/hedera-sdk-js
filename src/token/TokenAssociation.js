@@ -27,6 +27,12 @@ import Hbar from "../Hbar.js";
  * @typedef {import("@hashgraph/proto").proto.ITokenAssociation} HashgraphProto.proto.ITokenAssociation
  */
 
+/**
+ * @typedef {object} TokenAssociationJSON
+ * @property {?string} accountId
+ * @property {?string} tokenId
+ */
+
 export default class TokenAssociation {
     /**
      * @param {object} props
@@ -124,6 +130,16 @@ export default class TokenAssociation {
                     : undefined,
             tokenId:
                 this._tokenId != null ? this._tokenId._toProtobuf() : undefined,
+        };
+    }
+
+    /**
+     * @returns {TokenAssociationJSON}
+     */
+    toJSON() {
+        return {
+            accountId: this._accountId?.toString() || null,
+            tokenId: this._tokenId?.toString() || null,
         };
     }
 }
