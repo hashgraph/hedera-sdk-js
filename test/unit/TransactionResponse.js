@@ -14,10 +14,10 @@ describe("TransactionResponse", function () {
             transactionId: TransactionId.fromString("0.0.12@13.000000014"),
         });
 
-        console.log(JSON.stringify(response))
+        console.log(JSON.stringify(response));
 
         const expectedJSON = `{"nodeId":"0.0.3","transactionHash":"010203","transactionId":"0.0.12@13.000000014"}`;
-        const expectedJSONParsed = JSON.parse(expectedJSON)
+        const expectedJSONParsed = JSON.parse(expectedJSON);
 
         const resultJSON = JSON.parse(JSON.stringify(response));
         expect(resultJSON).to.deep.equal(expectedJSONParsed);

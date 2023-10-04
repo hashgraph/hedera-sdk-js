@@ -200,10 +200,12 @@ export default class AssessedCustomFee {
      */
     toJSON() {
         return {
-            feeCollectorAccountId: this.feeCollectorAccountId?.toString() || null,
+            feeCollectorAccountId:
+                this.feeCollectorAccountId?.toString() || null,
             tokenId: this._tokenId?.toString() || null,
             amount: this._amount?.toString() || null,
-            payerAccountIds: this._payerAccountIds?.map((id) => id.toString()) || [],
+            payerAccountIds:
+                this._payerAccountIds?.map((id) => id.toString()) || [],
         };
     }
 }
