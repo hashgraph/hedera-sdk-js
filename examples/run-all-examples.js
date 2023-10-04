@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { spawnSync } from "child_process";
+import { spawnSync, execSync } from "child_process";
+import os from "os";
 
 const examplesDirectory = "./";
 const excludedDirectories = [
@@ -10,7 +11,26 @@ const excludedDirectories = [
     "./simple_rest_signature_provider",
 ];
 const excludedJSFile = "run-all-examples.js";
-const command = "node";
+
+function getNodePath() {
+    try {
+        if (os.platform() === "darwin" || os.platform() === "linux") {
+            // macOS or Linux
+            const result = execSync("which node").toString().trim();
+            return result;
+        } else if (os.platform() === "win32") {
+            // Windows
+            const result = execSync("where node").toString().trim();
+            return result;
+        } else {
+            console.log("Unsupported operating system.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error finding Node.js path:", error);
+        return null;
+    }
+}
 
 fs.readdir(examplesDirectory, (err, files) => {
     if (err) {
@@ -37,11 +57,17 @@ fs.readdir(examplesDirectory, (err, files) => {
 
     const total = examples.length;
 
+    const nodePath = getNodePath();
+
+    if (!nodePath) {
+        return;
+    }
+
     examples.forEach((file, index) => {
         console.log(`\n⏳ ${index + 1}. Running ${file}...`);
         const examplePath = path.join(examplesDirectory, file);
 
-        const result = spawnSync(command, [examplePath], {
+        const result = spawnSync(nodePath, [examplePath], {
             stdio: "ignore",
         });
 
