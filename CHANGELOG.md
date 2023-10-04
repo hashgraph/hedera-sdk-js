@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.35.0
+
+## What's Changed
+* Fix integration tests by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1896
+* Update packages and release beta versions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1891
+* Fix typos by @omahs in https://github.com/hashgraph/hedera-sdk-js/pull/1889
+* Fixed duplicated doc comments by @0xMimir in https://github.com/hashgraph/hedera-sdk-js/pull/1888
+* Fix topic subscription error handling by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1907
+* Update precompile system contracts by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1910
+* Update/packages vol2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1905
+* Ignore minor and patch updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1937
+* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1938
+* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1939
+* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1940
+* Add keepalive_time property when we init grpc client by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1908
+* Update the precompiled jsons of the contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1954
+* Add setDefaultMaxQueryPayment() and deprecate setMaxQueruPayment() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1897
+* Fixed toJSON functionality in TranasctionRecord/Receipt/Response by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1956
+* [#1857] Аdding task to run all example by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1955
+* Adding new env variable by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1957
+
 ## v2.34.1
 
 ## What's Changed
