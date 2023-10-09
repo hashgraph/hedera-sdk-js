@@ -130,6 +130,10 @@ export default class TokenWipeTransaction extends Transaction {
                         ? AccountId._fromProtobuf(wipeToken.account)
                         : undefined,
                 amount: wipeToken.amount != null ? wipeToken.amount : undefined,
+                serials:
+                    wipeToken.serialNumbers != null
+                        ? wipeToken.serialNumbers
+                        : undefined,
             }),
             transactions,
             signedTransactions,
