@@ -23,10 +23,10 @@ async function main() {
     if (
         process.env.OPERATOR_ID == null ||
         process.env.OPERATOR_KEY == null ||
-        process.env.HEDERA_NETWORK === null
+        process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 

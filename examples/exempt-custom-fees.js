@@ -32,16 +32,19 @@ that was created was not charged a custom fee in the transfer
 */
 
 async function main() {
+    // If we weren't able to get them, we should throw a new error
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
+        throw new Error(
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+        );
+    }
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-
-    // If we weren't able to get them, we should throw a new error
-    if (operatorId == null || operatorKey == null) {
-        throw new Error(
-            "Could not fetch 'operatorId' and 'operatorKey' properly"
-        );
-    }
 
     const wallet = new Wallet(operatorId, operatorKey, new LocalProvider());
 
