@@ -43,94 +43,88 @@ async function main() {
         operatorKey
     );
 
-    try {
-        /**
-         * Step 1
-         *
-         * Create an ECSDA private key and an ED25519 admin private key
-         */
-        const adminKey = PrivateKey.generateED25519();
-        console.log(`Admin private key: ${adminKey.toStringDer()}`);
+    /**
+     * Step 1
+     *
+     * Create an ECSDA private key and an ED25519 admin private key
+     */
+    const adminKey = PrivateKey.generateED25519();
+    console.log(`Admin private key: ${adminKey.toStringDer()}`);
 
-        const privateKey = PrivateKey.generateECDSA();
-        console.log(`Private key: ${privateKey.toStringDer()}`);
+    const privateKey = PrivateKey.generateECDSA();
+    console.log(`Private key: ${privateKey.toStringDer()}`);
 
-        /**
-         * Step 2
-         *
-         * Extract the ECDSA public key
-         */
-        const publicKey = privateKey.publicKey;
-        console.log(`Public key: ${publicKey.toStringDer()}`);
+    /**
+     * Step 2
+     *
+     * Extract the ECDSA public key
+     */
+    const publicKey = privateKey.publicKey;
+    console.log(`Public key: ${publicKey.toStringDer()}`);
 
-        /**
-         *
-         * Step 3
-         *
-         * Extract the Ethereum public address
-         */
-        const evmAddress = publicKey.toEvmAddress();
-        console.log(`Corresponding evm address: ${evmAddress}`);
+    /**
+     *
+     * Step 3
+     *
+     * Extract the Ethereum public address
+     */
+    const evmAddress = publicKey.toEvmAddress();
+    console.log(`Corresponding evm address: ${evmAddress}`);
 
-        /**
-         *
-         * Step 4
-         *
-         * Use the `AccountCreateTransaction`
-         *   - Populate `setAlias(evmAddress)` field with the Ethereum public address
-         *   - Populate the `setReceiverSignatureRequired()` to `true`
-         */
-        const accountCreateTx = new AccountCreateTransaction()
-            .setReceiverSignatureRequired(true)
-            .setInitialBalance(Hbar.fromTinybars(100))
-            .setKey(adminKey)
-            .setAlias(evmAddress)
-            .freezeWith(client);
+    /**
+     *
+     * Step 4
+     *
+     * Use the `AccountCreateTransaction`
+     *   - Populate `setAlias(evmAddress)` field with the Ethereum public address
+     *   - Populate the `setReceiverSignatureRequired()` to `true`
+     */
+    const accountCreateTx = new AccountCreateTransaction()
+        .setReceiverSignatureRequired(true)
+        .setInitialBalance(Hbar.fromTinybars(100))
+        .setKey(adminKey)
+        .setAlias(evmAddress)
+        .freezeWith(client);
 
-        /**
-         *
-         * Step 5
-         *
-         * Sign the `AccountCreateTransaction` transaction with both the new private key and key paying for the transaction fee
-         */
-        const accountCreateTxSign = await (
-            await accountCreateTx.sign(privateKey)
-        ).sign(adminKey);
-        const accountCreateTxResponse = await accountCreateTxSign.execute(
-            client
-        );
+    /**
+     *
+     * Step 5
+     *
+     * Sign the `AccountCreateTransaction` transaction with both the new private key and key paying for the transaction fee
+     */
+    const accountCreateTxSign = await (
+        await accountCreateTx.sign(privateKey)
+    ).sign(adminKey);
+    const accountCreateTxResponse = await accountCreateTxSign.execute(client);
 
-        /**
-         *
-         * Step 6
-         *
-         * Get the account ID of the newly created account
-         */
-        const receipt = await new TransactionReceiptQuery()
-            .setTransactionId(accountCreateTxResponse.transactionId)
-            .execute(client);
+    /**
+     *
+     * Step 6
+     *
+     * Get the account ID of the newly created account
+     */
+    const receipt = await new TransactionReceiptQuery()
+        .setTransactionId(accountCreateTxResponse.transactionId)
+        .execute(client);
 
-        const newAccountId = receipt.accountId.toString();
-        console.log(`Account ID of the newly created account: ${newAccountId}`);
+    const newAccountId = receipt.accountId.toString();
+    console.log(`Account ID of the newly created account: ${newAccountId}`);
 
-        /**
-         *
-         * Step 7
-         *
-         * Get the `AccountInfo` and show that the account has contractAccountId
-         */
-        const accountInfo = await new AccountInfoQuery()
-            .setAccountId(newAccountId)
-            .execute(client);
+    /**
+     *
+     * Step 7
+     *
+     * Get the `AccountInfo` and show that the account has contractAccountId
+     */
+    const accountInfo = await new AccountInfoQuery()
+        .setAccountId(newAccountId)
+        .execute(client);
 
-        accountInfo.contractAccountId !== null
-            ? console.log(
-                  `The newly created account has an alias: ${accountInfo.contractAccountId}`
-              )
-            : console.log(`The new account doesn't have an alias`);
-    } catch (error) {
-        console.error(error);
-    }
+    accountInfo.contractAccountId !== null
+        ? console.log(
+              `The newly created account has an alias: ${accountInfo.contractAccountId}`
+          )
+        : console.log(`The new account doesn't have an alias`);
 }
 
 void main()
