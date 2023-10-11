@@ -297,6 +297,13 @@ export default class Client {
     }
 
     /**
+     * @returns {?ClientOperator}
+     */
+    getOperator() {
+        return this._operator;
+    }
+
+    /**
      * Sets the account that will, by default, pay for transactions and queries built with
      * this client.
      *
