@@ -42,12 +42,13 @@ async function main() {
     if (
         process.env.OPERATOR_ID == null ||
         process.env.OPERATOR_KEY == null ||
-        process.env.HEDERA_NETWORK === null
+        process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
             "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
+
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
@@ -173,4 +174,6 @@ function wait(timeout) {
     });
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

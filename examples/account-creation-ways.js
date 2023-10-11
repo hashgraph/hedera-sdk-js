@@ -53,6 +53,16 @@ function main() {
     console.log(
         `Ethereum Account Address / public-address: ${evmAddress.toString()}`
     );
+
+    if (
+        hederaFormat.toString() &&
+        aliasAccountId.toString() &&
+        evmAddress.toString() &&
+        longZeroAddress.toString()
+    ) {
+        process.exit(0);
+    }
+    process.exit(1);
 }
 
 void main();

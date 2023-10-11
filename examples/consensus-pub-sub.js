@@ -12,56 +12,64 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
-    const response = await new TopicCreateTransaction()
-        .setTopicMemo("sdk example create_pub_sub.js")
-        .execute(client);
+    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
-    const receipt = await response.getReceipt(client);
-    const topicId = receipt.topicId;
+    const LIMIT = 20;
 
-    console.log(`topicId = ${topicId.toString()}`);
+    try {
+        const response = await new TopicCreateTransaction()
+            .setTopicMemo("sdk example create_pub_sub.js")
+            .execute(client);
 
-    new TopicMessageQuery()
-        .setTopicId(topicId)
-        .setStartTime(0)
-        .subscribe(
-            client,
-            (message, error) => {
-                console.log(message);
-                console.log(error);
-            },
-            (message) =>
-                console.log(Buffer.from(message.contents).toString("utf8"))
-        );
+        const receipt = await response.getReceipt(client);
+        const topicId = receipt.topicId;
 
-    for (let i = 0; ; i += 1) {
-        //NOSONAR
-        // eslint-disable-next-line no-await-in-loop
-        await (
-            await new TopicMessageSubmitTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTopicId(topicId)
-                .setMessage(bigContents)
-                .execute(client)
-        ).getReceipt(client);
+        console.log(`topicId = ${topicId.toString()}`);
 
-        console.log(`Sent message ${i}`);
+        new TopicMessageQuery()
+            .setTopicId(topicId)
+            .setStartTime(0)
+            .subscribe(
+                client,
+                (message, error) => {
+                    console.log(message);
+                    console.log(error);
+                },
+                (message) =>
+                    console.log(Buffer.from(message.contents).toString("utf8"))
+            );
 
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(2500);
+        for (let i = 0; i < LIMIT; i += 1) {
+            //NOSONAR
+            // eslint-disable-next-line no-await-in-loop
+            await (
+                await new TopicMessageSubmitTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setTopicId(topicId)
+                    .setMessage(bigContents)
+                    .execute(client)
+            ).getReceipt(client);
+
+            console.log(`Sent message ${i}`);
+
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(2500);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -73,7 +81,9 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.

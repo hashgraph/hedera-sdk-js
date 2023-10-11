@@ -20,18 +20,20 @@ async function main() {
             -   If the user uses the execute, and get receipt, the receipt is only returned on the first transaction
             -   The user can use executeAll and then as showed in this example, to track every chunk transaction status. 
     */
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
+
+    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
     const response = await new TopicCreateTransaction()
         .setTopicMemo("sdk example create_pub_sub.js")
@@ -63,7 +65,9 @@ async function main() {
     }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.

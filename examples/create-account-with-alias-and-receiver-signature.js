@@ -127,4 +127,6 @@ async function main() {
         : console.log(`The new account doesn't have an alias`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

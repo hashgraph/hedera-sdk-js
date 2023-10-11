@@ -13,11 +13,16 @@ dotenv.config();
 async function main() {
     // Keys should be ED25519
     // TODO: Fix the wallet to work with ECDSA
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
+
     const myAccountId = hashgraph.AccountId.fromString(process.env.OPERATOR_ID);
 
     const wallet = new hashgraph.Wallet(
@@ -176,4 +181,6 @@ async function main() {
     console.log("All steps completed with valid results.");
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

@@ -11,9 +11,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
@@ -42,4 +46,6 @@ async function main() {
     console.log(`account id = ${receipt.accountId.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

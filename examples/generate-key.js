@@ -29,4 +29,6 @@ async function main() {
     console.log(`public key = ${key12.publicKey.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

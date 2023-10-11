@@ -40,6 +40,7 @@ async function main() {
             "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
@@ -163,4 +164,6 @@ async function main() {
         : console.log(`Account ${newAccountId} is still a hollow account`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

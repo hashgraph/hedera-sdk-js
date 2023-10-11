@@ -114,4 +114,6 @@ async function main() {
     await topicTransaction4.executeWithSigner(wallet);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
