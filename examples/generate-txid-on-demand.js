@@ -42,7 +42,7 @@ async function main() {
     if (
         process.env.OPERATOR_ID == null ||
         process.env.OPERATOR_KEY == null ||
-        process.env.HEDERA_NETWORK === null
+        process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
             "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
@@ -51,116 +51,137 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-        operatorId,
-        operatorKey
-    );
+    let client;
 
-    /**
-     *     Example 1
-     *
-     * Step 1
-     *
-     * Create an account to whom to send tinybars
-     */
-    const newKey = PrivateKey.generate();
+    try {
+        // Local node
+        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+            operatorId,
+            operatorKey
+        );
+    } catch (error) {
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
+    }
 
-    console.log(`New account private key: ${newKey.toString()}`);
-    console.log(`New account public key: ${newKey.publicKey.toString()}`);
+    try {
+        /**
+         *     Example 1
+         *
+         * Step 1
+         *
+         * Create an account to whom to send tinybars
+         */
+        const newKey = PrivateKey.generate();
 
-    const accountCreateTx = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(newKey.publicKey)
-        .freezeWith(client)
-        .execute(client);
+        console.log(`New account private key: ${newKey.toString()}`);
+        console.log(`New account public key: ${newKey.publicKey.toString()}`);
 
-    const newAccountId = (
-        await accountCreateTx.getReceipt(client)
-    ).accountId.toString();
-    console.log(`New account id: ${newAccountId}`);
+        const accountCreateTx = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10)) // 10 h
+            .setKey(newKey.publicKey)
+            .freezeWith(client)
+            .execute(client);
 
-    /**
-     * Step 2
-     *
-     * Make a thousand iterations of transfer transactions
-     * with custom generated `transactionId`
-     */
-    const transactionsCount = 1000;
-    let transactions = [];
-    let nanosOffset = 1000000;
-    for (let i = 0; i < transactionsCount; i++) {
-        const seconds = Math.round(Date.now() / 1000);
-        const validStart = new Timestamp(seconds, nanosOffset);
-        nanosOffset += 10000;
+        const newAccountId = (
+            await accountCreateTx.getReceipt(client)
+        ).accountId.toString();
+        console.log(`New account id: ${newAccountId}`);
 
+        /**
+         * Step 2
+         *
+         * Make a thousand iterations of transfer transactions
+         * with custom generated `transactionId`
+         */
+        const transactionsCount = 1000;
+        let transactions = [];
+        let nanosOffset = 1000000;
+        for (let i = 0; i < transactionsCount; i++) {
+            const seconds = Math.round(Date.now() / 1000);
+            const validStart = new Timestamp(seconds, nanosOffset);
+            nanosOffset += 10000;
+
+            const transactionId = TransactionId.withValidStart(
+                operatorId,
+                validStart
+            );
+
+            const transferHbar = new TransferTransaction()
+                .setTransactionId(transactionId)
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
+                .addHbarTransfer(newAccountId, Hbar.fromTinybars(1));
+
+            transactions.push(transferHbar.execute(client));
+        }
+        const responsesResult = await Promise.all(transactions);
+
+        /**
+         * Step 3
+         *
+         * Await the receipts of every transaction
+         */
+        let count = 0;
+        let receipts = [];
+        for (let i = 0; i < responsesResult.length; i++) {
+            receipts.push(responsesResult[i].getReceipt(client));
+        }
+        const receiptsResult = await Promise.all(receipts);
+
+        /**
+         * Step 4
+         *
+         * Check if the count of receipts with status `SUCCESS` equals the count of transactions (should be 1000)
+         */
+        receiptsResult.forEach((receipt) =>
+            receipt.status.toString() == "SUCCESS"
+                ? count++
+                : console.log(`Failed with: ${receipt.status.toString()}`)
+        );
+        transactionsCount == count
+            ? console.log(`All transactions are executed successfully`)
+            : console.log(
+                  `${transactionsCount - count} unsuccessful transactions`
+              );
+
+        /**
+         *     Example 2
+         *
+         * Step 1
+         *
+         * Create custom `transactionId` with valid start 10 seconds after the current time
+         */
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+        const secondsDelay = 10;
+        const seconds = nowInSeconds + secondsDelay;
+        const validStart = new Timestamp(seconds, 0);
         const transactionId = TransactionId.withValidStart(
             operatorId,
             validStart
         );
 
-        const transferHbar = new TransferTransaction()
+        /**
+         * Step 2
+         *
+         * Wait 15 seconds in order for the transaction to be valid and then submit it
+         */
+        await wait(15000);
+
+        const transferHbar = await new TransferTransaction()
             .setTransactionId(transactionId)
             .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
-            .addHbarTransfer(newAccountId, Hbar.fromTinybars(1));
+            .addHbarTransfer(newAccountId, Hbar.fromTinybars(1))
+            .execute(client);
 
-        transactions.push(transferHbar.execute(client));
+        const status = (
+            await transferHbar.getReceipt(client)
+        ).status.toString();
+
+        console.log(`STATUS: ${status}`);
+    } catch (error) {
+        console.log("ERROR", error);
     }
-    const responsesResult = await Promise.all(transactions);
-
-    /**
-     * Step 3
-     *
-     * Await the receipts of every transaction
-     */
-    let count = 0;
-    let receipts = [];
-    for (let i = 0; i < responsesResult.length; i++) {
-        receipts.push(responsesResult[i].getReceipt(client));
-    }
-    const receiptsResult = await Promise.all(receipts);
-
-    /**
-     * Step 4
-     *
-     * Check if the count of receipts with status `SUCCESS` equals the count of transactions (should be 1000)
-     */
-    receiptsResult.forEach((receipt) =>
-        receipt.status.toString() == "SUCCESS"
-            ? count++
-            : console.log(`Failed with: ${receipt.status.toString()}`)
-    );
-    transactionsCount == count
-        ? console.log(`All transactions are executed successfully`)
-        : console.log(`${transactionsCount - count} unsuccessful transactions`);
-
-    /**
-     *     Example 2
-     *
-     * Step 1
-     *
-     * Create custom `transactionId` with valid start 10 seconds after the current time
-     */
-    const nowInSeconds = Math.floor(Date.now() / 1000);
-    const secondsDelay = 10;
-    const seconds = nowInSeconds + secondsDelay;
-    const validStart = new Timestamp(seconds, 0);
-    const transactionId = TransactionId.withValidStart(operatorId, validStart);
-
-    /**
-     * Step 2
-     *
-     * Wait 15 seconds in order for the transaction to be valid and then submit it
-     */
-    await wait(15000);
-
-    const transferHbar = await new TransferTransaction()
-        .setTransactionId(transactionId)
-        .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
-        .addHbarTransfer(newAccountId, Hbar.fromTinybars(1))
-        .execute(client);
-
-    const status = (await transferHbar.getReceipt(client)).status.toString();
-    console.log(status);
 }
 
 /**
@@ -173,4 +194,6 @@ function wait(timeout) {
     });
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

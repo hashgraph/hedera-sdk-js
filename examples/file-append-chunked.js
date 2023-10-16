@@ -60,9 +60,13 @@ Etiam ut sodales ex. Nulla luctus, magna eu scelerisque sagittis, nibh quam cons
 `;
 
 async function main() {
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
@@ -72,39 +76,45 @@ async function main() {
         new LocalProvider()
     );
 
-    let transaction = await new FileCreateTransaction()
-        .setKeys([wallet.getAccountKey()])
-        .setContents("[e2e::FileCreateTransaction]")
-        .setMaxTransactionFee(new Hbar(5))
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
-    const resp = await transaction.executeWithSigner(wallet);
+    try {
+        let transaction = await new FileCreateTransaction()
+            .setKeys([wallet.getAccountKey()])
+            .setContents("[e2e::FileCreateTransaction]")
+            .setMaxTransactionFee(new Hbar(5))
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
+        const resp = await transaction.executeWithSigner(wallet);
 
-    const receipt = await resp.getReceiptWithSigner(wallet);
-    const fileId = receipt.fileId;
+        const receipt = await resp.getReceiptWithSigner(wallet);
+        const fileId = receipt.fileId;
 
-    console.log(`file ID = ${fileId.toString()}`);
+        console.log(`file ID = ${fileId.toString()}`);
 
-    await (
         await (
             await (
-                await new FileAppendTransaction()
-                    .setNodeAccountIds([resp.nodeId])
-                    .setFileId(fileId)
-                    .setContents(bigContents)
-                    .setMaxTransactionFee(new Hbar(5))
-                    .freezeWithSigner(wallet)
-            ).signWithSigner(wallet)
-        ).executeWithSigner(wallet)
-    ).getReceiptWithSigner(wallet);
+                await (
+                    await new FileAppendTransaction()
+                        .setNodeAccountIds([resp.nodeId])
+                        .setFileId(fileId)
+                        .setContents(bigContents)
+                        .setMaxTransactionFee(new Hbar(5))
+                        .freezeWithSigner(wallet)
+                ).signWithSigner(wallet)
+            ).executeWithSigner(wallet)
+        ).getReceiptWithSigner(wallet);
 
-    const contents = await new FileContentsQuery()
-        .setFileId(fileId)
-        .executeWithSigner(wallet);
+        const contents = await new FileContentsQuery()
+            .setFileId(fileId)
+            .executeWithSigner(wallet);
 
-    console.log(
-        `File content length according to \`FileInfoQuery\`: ${contents.length}`
-    );
+        console.log(
+            `File content length according to \`FileInfoQuery\`: ${contents.length}`
+        );
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

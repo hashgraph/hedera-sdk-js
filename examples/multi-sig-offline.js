@@ -20,18 +20,20 @@ let user1Key;
 let user2Key;
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
+
+    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
     user1Key = PrivateKey.generate();
     user2Key = PrivateKey.generate();
@@ -69,14 +71,18 @@ async function main() {
     const user1Signature = user1Signs(transactionBytes);
     const user2Signature = user2Signs(transactionBytes);
 
-    // recreate the transaction from bytes
-    await transactionToExecute.signWithOperator(client);
-    transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
-    transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+    try {
+        // recreate the transaction from bytes
+        await transactionToExecute.signWithOperator(client);
+        transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
+        transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
 
-    const result = await transactionToExecute.execute(client);
-    receipt = await result.getReceipt(client);
-    console.log(receipt.status.toString());
+        const result = await transactionToExecute.execute(client);
+        receipt = await result.getReceipt(client);
+        console.log(`Status: ${receipt.status.toString()}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 /**
@@ -97,4 +103,6 @@ function user2Signs(transactionBytes) {
     return user2Key.signTransaction(transaction);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

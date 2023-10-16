@@ -5,9 +5,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
@@ -17,20 +21,28 @@ async function main() {
         new LocalProvider()
     );
 
-    const info = await wallet.getAccountInfo();
+    try {
+        const info = await wallet.getAccountInfo();
 
-    console.log(`info.key                          = ${info.key.toString()}`);
+        console.log(
+            `info.key                          = ${info.key.toString()}`
+        );
 
-    console.log(
-        `info.isReceiverSignatureRequired  =`,
-        info.isReceiverSignatureRequired
-    );
+        console.log(
+            `info.isReceiverSignatureRequired  =`,
+            info.isReceiverSignatureRequired
+        );
 
-    console.log(
-        `info.expirationTime               = ${info.expirationTime
-            .toDate()
-            .toString()}`
-    );
+        console.log(
+            `info.expirationTime               = ${info.expirationTime
+                .toDate()
+                .toString()}`
+        );
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
