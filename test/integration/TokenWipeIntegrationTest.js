@@ -256,7 +256,7 @@ describe("TokenWipe", function () {
         }
     });
 
-    it.only("should convert fromBytes", async function () {
+    it("should convert fromBytes", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
