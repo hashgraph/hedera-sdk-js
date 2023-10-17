@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.36.0
+
+## What's Changed
+
+* Fix the fromBytes for tokenWipeTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1968
+* Exposing client operator with a getter by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1970
+* Examples related changes by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1953
+* Fix integration tests and remove .only by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1971
+
 ## v2.35.0
 
 ## What's Changed
