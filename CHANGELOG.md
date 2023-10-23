@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v2.37.0-beta.2
+
+## What's Changed
+
+* Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
+
 ## v2.37.0-beta.1
 
 ## What's Changed
