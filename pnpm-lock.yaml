@@ -21,8 +21,8 @@ dependencies:
     specifier: 1.8.2
     version: 1.8.2
   '@hashgraph/cryptography':
-    specifier: 1.4.8-beta.2
-    version: 1.4.8-beta.2(expo@49.0.10)
+    specifier: 1.4.8-beta.3
+    version: 1.4.8-beta.3(expo@49.0.10)
   '@hashgraph/proto':
     specifier: 2.14.0-beta.2
     version: 2.14.0-beta.2
@@ -2585,8 +2585,8 @@ packages:
       protobufjs: 7.2.5
       yargs: 17.7.2
 
-  /@hashgraph/cryptography@1.4.8-beta.2(expo@49.0.10):
-    resolution: {integrity: sha512-kY1rlBU6jXjjuahqTe3YTyugEZB5sJYvTHhIg5y6hdS/qqSaS4dEBvTb7jY/8el+hnc9w07bTM1jL75l3EQLUw==}
+  /@hashgraph/cryptography@1.4.8-beta.3(expo@49.0.10):
+    resolution: {integrity: sha512-ABmJOMr17ZeH8hf+SAKy+91SNdGjnfqTQlmm0LE4YFyT4Euo/YyIjyhCDQA2Oi+VBOC4p6CdRRa9vs3Q/Waxgg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^45.0.3
