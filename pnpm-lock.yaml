@@ -37,7 +37,7 @@ dependencies:
     version: 5.2.1
   crypto-js:
     specifier: ^4.1.1
-    version: 4.1.1
+    version: 4.2.0
   js-base64:
     specifier: ^3.7.4
     version: 3.7.5
@@ -2604,7 +2604,7 @@ packages:
       bignumber.js: 9.1.1
       bn.js: 5.2.1
       buffer: 6.0.3
-      crypto-js: 4.1.1
+      crypto-js: 4.2.0
       elliptic: 6.5.4
       expo: 49.0.10(@babel/core@7.22.17)
       js-base64: 3.7.5
@@ -3998,8 +3998,8 @@ packages:
   /crypt@0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
 
-  /crypto-js@4.1.1:
-    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: false
 
   /crypto-random-string@1.0.0:
