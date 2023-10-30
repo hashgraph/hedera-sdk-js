@@ -25,7 +25,7 @@ $ pnpm add @hashgraph/sdk
 ```
 ## Build
 
-After download the repo run `task build` command to build the SDK.
+After downloading the repo run `task build` to build the SDK.
 
 ## React Native Support
 
