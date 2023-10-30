@@ -23,6 +23,10 @@ $ yarn add @hashgraph/sdk
 # with PNPM
 $ pnpm add @hashgraph/sdk
 ```
+## Build
+
+After download the repo run `task build` command to build the SDK.
+
 ## React Native Support
 
 The Hedera JavaScript SDK supports the following:
