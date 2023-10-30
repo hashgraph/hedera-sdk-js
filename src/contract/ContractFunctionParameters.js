@@ -124,7 +124,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt8(value) {
@@ -133,7 +133,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint8(value) {
@@ -142,7 +142,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt16(value) {
@@ -151,7 +151,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint16(value) {
@@ -160,7 +160,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt24(value) {
@@ -169,7 +169,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint24(value) {
@@ -178,7 +178,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt32(value) {
@@ -187,7 +187,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint32(value) {
@@ -196,7 +196,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt40(value) {
@@ -205,7 +205,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint40(value) {
@@ -214,7 +214,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt48(value) {
@@ -223,7 +223,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint48(value) {
@@ -232,7 +232,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt56(value) {
@@ -241,7 +241,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint56(value) {
@@ -250,7 +250,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt64(value) {
@@ -259,7 +259,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint64(value) {
@@ -268,7 +268,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt72(value) {
@@ -277,7 +277,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint72(value) {
@@ -286,7 +286,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt80(value) {
@@ -295,7 +295,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint80(value) {
@@ -304,7 +304,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt88(value) {
@@ -313,7 +313,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint88(value) {
@@ -322,7 +322,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt96(value) {
@@ -331,7 +331,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint96(value) {
@@ -340,7 +340,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt104(value) {
@@ -349,7 +349,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint104(value) {
@@ -358,7 +358,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt112(value) {
@@ -367,7 +367,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint112(value) {
@@ -376,7 +376,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt120(value) {
@@ -385,7 +385,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint120(value) {
@@ -394,7 +394,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt128(value) {
@@ -403,7 +403,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint128(value) {
@@ -412,7 +412,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt136(value) {
@@ -421,7 +421,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint136(value) {
@@ -430,7 +430,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt144(value) {
@@ -439,7 +439,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint144(value) {
@@ -448,7 +448,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt152(value) {
@@ -457,7 +457,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint152(value) {
@@ -466,7 +466,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt160(value) {
@@ -475,7 +475,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint160(value) {
@@ -484,7 +484,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt168(value) {
@@ -493,7 +493,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint168(value) {
@@ -502,7 +502,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt176(value) {
@@ -511,7 +511,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint176(value) {
@@ -520,7 +520,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt184(value) {
@@ -529,7 +529,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint184(value) {
@@ -538,7 +538,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt192(value) {
@@ -547,7 +547,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint192(value) {
@@ -556,7 +556,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt200(value) {
@@ -565,7 +565,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint200(value) {
@@ -574,7 +574,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt208(value) {
@@ -583,7 +583,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint208(value) {
@@ -592,7 +592,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt216(value) {
@@ -601,7 +601,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint216(value) {
@@ -610,7 +610,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt224(value) {
@@ -619,7 +619,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint224(value) {
@@ -628,7 +628,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt232(value) {
@@ -637,7 +637,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint232(value) {
@@ -646,7 +646,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt240(value) {
@@ -655,7 +655,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint240(value) {
@@ -664,7 +664,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt248(value) {
@@ -673,7 +673,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint248(value) {
@@ -682,7 +682,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addInt256(value) {
@@ -691,7 +691,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber | number} value
+     * @param {number | BigNumber | Long} value
      * @returns {ContractFunctionParameters}
      */
     addUint256(value) {
