@@ -5,216 +5,239 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## v2.37.0-beta.2
 
 ## What's Changed
 
-* Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
+-   Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
 
 ## v2.37.0-beta.1
 
 ## What's Changed
 
-* Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
+-   Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
 
 ## v2.36.0
 
 ## What's Changed
 
-* Fix the fromBytes for tokenWipeTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1968
-* Exposing client operator with a getter by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1970
-* Examples related changes by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1953
-* Fix integration tests and remove .only by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1971
+-   Fix the fromBytes for tokenWipeTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1968
+-   Exposing client operator with a getter by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1970
+-   Examples related changes by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1953
+-   Fix integration tests and remove .only by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1971
 
 ## v2.35.0
 
 ## What's Changed
-* Fix integration tests by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1896
-* Update packages and release beta versions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1891
-* Fix typos by @omahs in https://github.com/hashgraph/hedera-sdk-js/pull/1889
-* Fixed duplicated doc comments by @0xMimir in https://github.com/hashgraph/hedera-sdk-js/pull/1888
-* Fix topic subscription error handling by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1907
-* Update precompile system contracts by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1910
-* Update/packages vol2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1905
-* Ignore minor and patch updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1937
-* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1938
-* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1939
-* Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1940
-* Add keepalive_time property when we init grpc client by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1908
-* Update the precompiled jsons of the contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1954
-* Add setDefaultMaxQueryPayment() and deprecate setMaxQueruPayment() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1897
-* Fixed toJSON functionality in TranasctionRecord/Receipt/Response by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1956
-* [#1857] Аdding task to run all example by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1955
-* Adding new env variable by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1957
+
+-   Fix integration tests by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1896
+-   Update packages and release beta versions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1891
+-   Fix typos by @omahs in https://github.com/hashgraph/hedera-sdk-js/pull/1889
+-   Fixed duplicated doc comments by @0xMimir in https://github.com/hashgraph/hedera-sdk-js/pull/1888
+-   Fix topic subscription error handling by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1907
+-   Update precompile system contracts by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1910
+-   Update/packages vol2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1905
+-   Ignore minor and patch updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1937
+-   Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1938
+-   Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1939
+-   Fix/dependabot updates by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1940
+-   Add keepalive_time property when we init grpc client by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1908
+-   Update the precompiled jsons of the contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1954
+-   Add setDefaultMaxQueryPayment() and deprecate setMaxQueruPayment() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1897
+-   Fixed toJSON functionality in TranasctionRecord/Receipt/Response by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1956
+-   [#1857] Аdding task to run all example by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1955
+-   Adding new env variable by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1957
 
 ## v2.34.1
 
 ## What's Changed
-* Follow convention toJSON by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1885
+
+-   Follow convention toJSON by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1885
 
 ## v2.34.0
 
 ## What's Changed
-* Add toJSON method for tx response, receipt and record by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1859
-* Add example on how to generate transaction IDs on demand and scenarios by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1860
-* Ensure that generated tx ids are unique by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1862
-* Fix the examples to work with local node as well as with the new precompile contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1863
-* Update dependencies across examples and packages v2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1879
-* Finalize toJson functionality by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1880
+
+-   Add toJSON method for tx response, receipt and record by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1859
+-   Add example on how to generate transaction IDs on demand and scenarios by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1860
+-   Ensure that generated tx ids are unique by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1862
+-   Fix the examples to work with local node as well as with the new precompile contracts by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1863
+-   Update dependencies across examples and packages v2 by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1879
+-   Finalize toJson functionality by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1880
 
 ## v2.33.0
 
 ## What's Changed
-* Handle EvmAddress when passed to addAddress as a ContractFunctionParameter by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1819
-* Fix node selection improvement by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1815
-* Enhance AccountId.toSolidityAddress() to handle alias field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1820
-* Allow ED25519 keys to generate long-zero address from alias by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1822
-* Fix warning issues during build by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1850
-* Add mapi call that queries the mirror node to get the actual evm address field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1853
+
+-   Handle EvmAddress when passed to addAddress as a ContractFunctionParameter by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1819
+-   Fix node selection improvement by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1815
+-   Enhance AccountId.toSolidityAddress() to handle alias field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1820
+-   Allow ED25519 keys to generate long-zero address from alias by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1822
+-   Fix warning issues during build by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1850
+-   Add mapi call that queries the mirror node to get the actual evm address field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1853
 
 ## v2.32.0
 
 ## What's Changed
-* Update the client constants file with the mainnet proxies by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1780
-* Add method that queries the mirror node to get the actual num field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1790
-* Add retry logic on grpc web errors by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1802
-* Add method handler by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1804
-* Comment out unavailable web proxies nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1810
-* Fix deprecation and add comments by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1811
+
+-   Update the client constants file with the mainnet proxies by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1780
+-   Add method that queries the mirror node to get the actual num field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1790
+-   Add retry logic on grpc web errors by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1802
+-   Add method handler by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1804
+-   Comment out unavailable web proxies nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1810
+-   Fix deprecation and add comments by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1811
 
 ## v2.32.0-beta.2
 
 ## What's Changed
-* Comment out unavailable web proxies nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1810
+
+-   Comment out unavailable web proxies nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1810
 
 ## v2.32.0-beta.1
 
 ## What's Changed
-* Update the client constants file with the mainnet proxies by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1780
-* Add method that queries the mirror node to get the actual num field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1790
-* Add retry logic on grpc web errors by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1802
+
+-   Update the client constants file with the mainnet proxies by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1780
+-   Add method that queries the mirror node to get the actual num field by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1790
+-   Add retry logic on grpc web errors by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1802
 
 ## v2.31.0
 
 ## What's Changed
-* Add logger tests by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1725
-* Change copyright year by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1738
-* Add handlers inside parsing methods from evm address by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1741
+
+-   Add logger tests by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1725
+-   Change copyright year by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1738
+-   Add handlers inside parsing methods from evm address by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1741
 
 ## v2.30.0
 
 ## What's Changed
-* Added new transaction type based on EIP-2930 by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1702
-* Fix contract function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1703
-* Fix integration tests fees by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1715
-* Fix zero padding for nanos in timestamp by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1713
-* Added release doc by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1720
-* Fix DER and PEM headers by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1706
-* Fix dependencies by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1722
-* Feature contract nonces - HIP-729 support by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1723
+
+-   Added new transaction type based on EIP-2930 by @rokn in https://github.com/hashgraph/hedera-sdk-js/pull/1702
+-   Fix contract function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1703
+-   Fix integration tests fees by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1715
+-   Fix zero padding for nanos in timestamp by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1713
+-   Added release doc by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1720
+-   Fix DER and PEM headers by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1706
+-   Fix dependencies by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1722
+-   Feature contract nonces - HIP-729 support by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1723
 
 ## v2.29.0
 
 ## What's Changed
-* GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
-* Update the addressbook on SDK build by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1658
+
+-   GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
+-   Update the addressbook on SDK build by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1658
 
 ## v2.29.0-beta.1
 
 ## What's Changed
-* GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
+
+-   GRPC improvements by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1656
 
 ## v2.28.0
 
 ## What's Changed
-* Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
+
+-   Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
 
 ## v2.28.0-beta.1
 
 ## What's Changed
-* Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
+
+-   Fix conditions in getNode by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1654
 
 ## v2.27.0
 
 ## What's Changed
-* Added record for failed transaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1643
-* Fix encode/decode scheduled transactions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1638
-* Fix/issue with encode decode by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1647
-* fix exact version of grpc library by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1652
-* Fix/remove ping all by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1650
+
+-   Added record for failed transaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1643
+-   Fix encode/decode scheduled transactions by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1638
+-   Fix/issue with encode decode by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1647
+-   fix exact version of grpc library by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1652
+-   Fix/remove ping all by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1650
 
 ## v2.26.0
 
 ## What's Changed
-* Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
-* Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
-* Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
+
+-   Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
+-   Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
+-   Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
 
 ## v2.26.0-beta.3
 
 ## What's Changed
-* Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
+
+-   Fix: decrement unhealthy nodes count on readmit time expiry by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1613
 
 ## v2.26.0-beta.2
 
 ## What's Changed
-* Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
+
+-   Fix: unhealthy nodes by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1611
 
 ## v2.26.0-beta.1
 
 ## What's Changed
-* Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
+
+-   Add logger and transaction stats inside the SDK by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1607
 
 ## v2.25.0
 
 ## What's Changed
-* Create example of deploy contract with value by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1604
-* Unhealthy node info by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1605
-* Fix: encoding decoding function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1608
+
+-   Create example of deploy contract with value by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1604
+-   Unhealthy node info by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1605
+-   Fix: encoding decoding function params by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1608
 
 ## v2.24.2
 
 ## What's Changed
-* Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
-* Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
-* Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
-* Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
-* Add assessment method support for custom fractional fees by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1600
+
+-   Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
+-   Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
+-   Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
+-   Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
+-   Add assessment method support for custom fractional fees by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1600
 
 ## v2.24.1-beta.1
 
 ## What's Changed
-* Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
-* Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
-* Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
-* Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
+
+-   Fix: list is locked when trying to get the hash before signing the transaction by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1576
+-   Add zero padding for nanos by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1573
+-   Аdd export for EntityIdHelper by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1574
+-   Add contractId as possible input for AccountAllowancesApproveTransaction by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1575
 
 ## v2.24.1
 
 ## What's Changed
-* Fix: remove the insecure port of mirror nodes by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1535
-* Fix: mnemonic refactoring by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1550
-* Change dependabot interval to monthly by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1547
-* Create example for getting all chunked messages statuses by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1536
-* Fix: spelling of `HARDENED` exported constant by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/1561
-* Feature add alias support in AccountCreateTX by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1563
-* Add exports for types by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1566
+
+-   Fix: remove the insecure port of mirror nodes by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1535
+-   Fix: mnemonic refactoring by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1550
+-   Change dependabot interval to monthly by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1547
+-   Create example for getting all chunked messages statuses by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1536
+-   Fix: spelling of `HARDENED` exported constant by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/1561
+-   Feature add alias support in AccountCreateTX by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1563
+-   Add exports for types by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1566
 
 ## v2.24.0-beta.1
 
 ## What's Changed
-* Fix: remove the insecure port of mirror nodes by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1535
-* Fix: mnemonic refactoring by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1550
-* Change dependabot interval to monthly by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1547
-* Create example for getting all chunked messages statuses by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1536
+
+-   Fix: remove the insecure port of mirror nodes by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1535
+-   Fix: mnemonic refactoring by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1550
+-   Change dependabot interval to monthly by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1547
+-   Create example for getting all chunked messages statuses by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1536
 
 ## v2.24.0
 
 ## What's Changed
-* Expose some PublicKey methods by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1521
-* Fix operator and operator account id override in beforeExecute by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1531
-* fix contract create flow with external signer by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1533
+
+-   Expose some PublicKey methods by @petreze in https://github.com/hashgraph/hedera-sdk-js/pull/1521
+-   Fix operator and operator account id override in beforeExecute by @dikel in https://github.com/hashgraph/hedera-sdk-js/pull/1531
+-   fix contract create flow with external signer by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/1533
 
 ## v2.23.0
 
