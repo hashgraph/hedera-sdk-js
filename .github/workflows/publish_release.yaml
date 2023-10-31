@@ -61,7 +61,7 @@ jobs:
       - name: Extract Tag Information
         id: tag
         run: |
-          REF_NAME="$(git describe --exact-match --tags $(git log -n1 --pretty='%h')"
+          REF_NAME="$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))"
           IS_VALID_SEMVER="$(semver validate "${REF_NAME}")"
           
           if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
