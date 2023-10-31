@@ -14,7 +14,7 @@ on:
   push:
     tags:
       - "v*.*.*"
-Intentionally broken
+
 defaults:
   run:
     shell: bash
