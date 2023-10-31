@@ -156,4 +156,4 @@ jobs:
       - name: Publish Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: task publish ${{ steps.publish.outputs.args }}
+        run: task publish -- ${{ steps.publish.outputs.args }}
