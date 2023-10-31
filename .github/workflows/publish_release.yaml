@@ -56,7 +56,7 @@ jobs:
 
       - name: Extract NPM Package Information
         id: npm-package
-        run: echo "::set-output name=version::$(jq -r '.version' package.json)"
+        run: echo "version=$(jq -r '.version' package.json)" >>"${GITHUB_OUTPUT}"
 
       - name: Extract Tag Information
         id: tag
@@ -156,4 +156,4 @@ jobs:
       - name: Publish Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: echo "task publish ${{ steps.publish.outputs.args }}"
+        run: task publish ${{ steps.publish.outputs.args }}
