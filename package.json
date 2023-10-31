@@ -117,7 +117,8 @@
         "typedoc": "^0.24.8",
         "typescript": "^4.9.4",
         "vite": "^4.4.9",
-        "yalc": "1.0.0-pre.53"
+        "yalc": "1.0.0-pre.53",
+        "elliptic": "^6.5.4"
     },
     "peerDependencies": {
         "expo": "^49.0.10"
