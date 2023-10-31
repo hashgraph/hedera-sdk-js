@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -189,7 +189,7 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
-     * Sets the contract ID which is being executed in this transaction.
+     * Sets the amount of gas to use for the call.
      *
      * @param {number | Long} gas
      * @returns {ContractExecuteTransaction}
@@ -209,7 +209,7 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
-     * Sets the contract ID which is being executed in this transaction.
+     * Sets the number of hbars to be sent with this function call.
      *
      * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {ContractExecuteTransaction}

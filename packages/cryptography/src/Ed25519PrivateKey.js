@@ -1,9 +1,10 @@
 import BadKeyError from "./BadKeyError.js";
 import Ed25519PublicKey from "./Ed25519PublicKey.js";
 import nacl from "tweetnacl";
-import { arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as random from "./primitive/random.js";
+import * as slip10 from "./primitive/slip10.js";
+import forge from "node-forge";
 
 export const derPrefix = "302e020100300506032b657004220420";
 export const derPrefixBytes = hex.decode(derPrefix);
@@ -42,7 +43,6 @@ export default class Ed25519PrivateKey {
 
     /**
      * Generate a random Ed25519 private key.
-     *
      * @returns {Ed25519PrivateKey}
      */
     static generate() {
@@ -52,13 +52,12 @@ export default class Ed25519PrivateKey {
 
         return new Ed25519PrivateKey(
             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
+            entropy.subarray(32),
         );
     }
 
     /**
      * Generate a random Ed25519 private key.
-     *
      * @returns {Promise<Ed25519PrivateKey>}
      */
     static async generateAsync() {
@@ -68,13 +67,12 @@ export default class Ed25519PrivateKey {
 
         return new Ed25519PrivateKey(
             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
+            entropy.subarray(32),
         );
     }
 
     /**
      * Construct a private key from bytes.
-     *
      * @param {Uint8Array} data
      * @returns {Ed25519PrivateKey}
      */
@@ -87,32 +85,43 @@ export default class Ed25519PrivateKey {
                 return Ed25519PrivateKey.fromBytesRaw(data);
             default:
                 throw new BadKeyError(
-                    `invalid private key length: ${data.length} bytes`
+                    `invalid private key length: ${data.length} bytes`,
                 );
         }
     }
 
     /**
      * Construct a private key from bytes with DER header.
-     *
      * @param {Uint8Array} data
      * @returns {Ed25519PrivateKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 48 || !arrayStartsWith(data, derPrefixBytes)) {
+        const asn = forge.asn1.fromDer(new forge.util.ByteStringBuffer(data));
+
+        /** * @type {Uint8Array} */
+        let privateKey;
+
+        try {
+            privateKey =
+                forge.pki.ed25519.privateKeyFromAsn1(asn).privateKeyBytes;
+        } catch (error) {
+            const message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
             throw new BadKeyError(
-                `invalid private key length: ${data.length} bytes`
+                `cannot decode ED25519 private key data from DER format: ${message}`,
             );
         }
 
-        const keyPair = nacl.sign.keyPair.fromSeed(data.subarray(16));
-
+        const keyPair = nacl.sign.keyPair.fromSeed(privateKey);
         return new Ed25519PrivateKey(keyPair);
     }
 
     /**
      * Construct a private key from bytes without DER header.
-     *
      * @param {Uint8Array} data
      * @returns {Ed25519PrivateKey}
      */
@@ -124,20 +133,19 @@ export default class Ed25519PrivateKey {
             case 64:
                 // priv + pub key
                 return new Ed25519PrivateKey(
-                    nacl.sign.keyPair.fromSecretKey(data)
+                    nacl.sign.keyPair.fromSecretKey(data),
                 );
 
             default:
         }
 
         throw new BadKeyError(
-            `invalid private key length: ${data.length} bytes`
+            `invalid private key length: ${data.length} bytes`,
         );
     }
 
     /**
      * Construct a private key from a hex-encoded string.
-     *
      * @param {string} text
      * @returns {Ed25519PrivateKey}
      */
@@ -147,7 +155,6 @@ export default class Ed25519PrivateKey {
 
     /**
      * Construct a private key from a hex-encoded string.
-     *
      * @param {string} text
      * @returns {Ed25519PrivateKey}
      */
@@ -157,7 +164,6 @@ export default class Ed25519PrivateKey {
 
     /**
      * Construct a private key from a hex-encoded string.
-     *
      * @param {string} text
      * @returns {Ed25519PrivateKey}
      */
@@ -166,11 +172,20 @@ export default class Ed25519PrivateKey {
     }
 
     /**
+     * Construct a ED25519 private key from a Uint8Array seed.
+     * @param {Uint8Array} seed
+     * @returns {Promise<Ed25519PrivateKey>}
+     */
+    static async fromSeed(seed) {
+        const { keyData, chainCode } = await slip10.fromSeed(seed);
+        return new Ed25519PrivateKey(keyData, chainCode);
+    }
+
+    /**
      * Get the public key associated with this private key.
      *
      * The public key can be freely given and used by other parties to verify
      * the signatures generated by this private key.
-     *
      * @returns {Ed25519PublicKey}
      */
     get publicKey() {
@@ -179,7 +194,6 @@ export default class Ed25519PrivateKey {
 
     /**
      * Sign a message with this private key.
-     *
      * @param {Uint8Array} bytes
      * @returns {Uint8Array} - The signature bytes without the message
      */
@@ -196,7 +210,7 @@ export default class Ed25519PrivateKey {
         bytes.set(derPrefixBytes, 0);
         bytes.set(
             this._keyPair.secretKey.subarray(0, 32),
-            derPrefixBytes.length
+            derPrefixBytes.length,
         );
 
         return bytes;

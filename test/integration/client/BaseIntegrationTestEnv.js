@@ -104,8 +104,6 @@ export default class BaseIntegrationTestEnv {
             .setNodeMinReadmitPeriod(0)
             .setNodeMaxReadmitPeriod(0);
 
-        await client.pingAll();
-
         const network = {};
         const nodeAccountIds =
             options.nodeAccountIds != null ? options.nodeAccountIds : 1;

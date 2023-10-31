@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
  * @typedef {import("./KeyList.js").default} KeyList
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./PrivateKey.js").default} PrivateKey
+ * @typedef {import("./Mnemonic.js").default} Mnemonic
  * @typedef {import("./EvmAddress.js").default} EvmAddress
  * @typedef {import("./EthereumTransactionData.js").default} EthereumTransactionData
  * @typedef {import("./transaction/TransactionReceiptQuery.js").default} TransactionReceiptQuery
@@ -42,6 +43,7 @@
 /**
  * @namespace cryptography
  * @typedef {import("@hashgraph/cryptography").PrivateKey} cryptography.PrivateKey
+ * @typedef {import("@hashgraph/cryptography").Mnemonic} cryptography.Mnemonic
  */
 
 /**
@@ -76,6 +78,9 @@ class Cache {
         /** @type {((key: cryptography.PrivateKey) => PrivateKey) | null} */
         this._privateKeyConstructor = null;
 
+        /** @type {((key: cryptography.Mnemonic) => Mnemonic) | null} */
+        this._mnemonicFromString = null;
+
         /** @type {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId) | null} */
         this._accountIdConstructor = null;
 
@@ -90,6 +95,9 @@ class Cache {
 
         /** @type {((bytes: Uint8Array) => EthereumTransactionData) | null} */
         this._ethereumTransactionDataEip1559FromBytes = null;
+
+        /** @type {((bytes: Uint8Array) => EthereumTransactionData) | null} */
+        this._ethereumTransactionDataEip2930FromBytes = null;
 
         /** @type {(() => TransactionReceiptQuery) | null} */
         this._transactionReceiptQueryConstructor = null;
@@ -229,6 +237,26 @@ class Cache {
     }
 
     /**
+     * @param {((key: cryptography.Mnemonic) => Mnemonic)} mnemonicFromString
+     */
+    setMnemonicFromString(mnemonicFromString) {
+        this._mnemonicFromString = mnemonicFromString;
+    }
+
+    /**
+     * @returns {((key: cryptography.PrivateKey) => PrivateKey)}
+     */
+    get mnemonicFromString() {
+        if (this._mnemonicFromString == null) {
+            throw new Error(
+                "Cache.mnemonicFromString was used before it was set"
+            );
+        }
+
+        return this.mnemonicFromString;
+    }
+
+    /**
      * @param {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId)} accountIdConstructor
      */
     setAccountIdConstructor(accountIdConstructor) {
@@ -330,6 +358,29 @@ class Cache {
         }
 
         return this._ethereumTransactionDataEip1559FromBytes;
+    }
+
+    /**
+     * @param {((bytes: Uint8Array) => EthereumTransactionData)} ethereumTransactionDataEip2930FromBytes
+     */
+    setEthereumTransactionDataEip2930FromBytes(
+        ethereumTransactionDataEip2930FromBytes
+    ) {
+        this._ethereumTransactionDataEip2930FromBytes =
+            ethereumTransactionDataEip2930FromBytes;
+    }
+
+    /**
+     * @returns {((bytes: Uint8Array) => EthereumTransactionData)}
+     */
+    get ethereumTransactionDataEip2930FromBytes() {
+        if (this._ethereumTransactionDataEip2930FromBytes == null) {
+            throw new Error(
+                "Cache.ethereumTransactionDataEip2930FromBytes was used before it was set"
+            );
+        }
+
+        return this._ethereumTransactionDataEip2930FromBytes;
     }
 
     /**

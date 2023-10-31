@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,14 @@
  */
 
 import Long from "long";
+
+/**
+ * @typedef {object} ExchangeRateJSON
+ * @property {number} hbars
+ * @property {number} cents
+ * @property {Date} expirationTime
+ * @property {number} exchangeRateInCents
+ */
 
 export default class ExchangeRate {
     /**
@@ -99,5 +107,24 @@ export default class ExchangeRate {
                 ),
             },
         };
+    }
+
+    /**
+     * @returns {ExchangeRateJSON}
+     */
+    toJSON() {
+        return {
+            hbars: this.hbars,
+            cents: this.cents,
+            expirationTime: this.expirationTime,
+            exchangeRateInCents: this.exchangeRateInCents,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

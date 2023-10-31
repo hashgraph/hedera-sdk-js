@@ -2,13 +2,13 @@
 export default {
     server: {
         hmr: false,
-        force: true,
     },
     envDir: "./",
     build: {
         polyfillDynamicImport: false,
     },
     optimizeDeps: {
+        force: true,
         entries: [
             "./test/unit/AccountId.js",
             "./test/unit/Hbar.js",

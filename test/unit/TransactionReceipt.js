@@ -89,4 +89,75 @@ describe("TransactionReceipt", function () {
         expect(receipt.duplicateTransactionReceipts).to.deep.equal([]);
         expect(receipt.childTransactionReceipts).to.deep.equal([]);
     });
+
+    it("toJSON()", function () {
+        const status = Status.Ok;
+        const accountId = AccountId.fromString("0.0.1");
+        const fileId = FileId.fromString("0.0.2");
+        const contractId = ContractId.fromString("0.0.3");
+        const topicId = TopicId.fromString("0.0.3");
+        const tokenId = TokenId.fromString("0.0.4");
+        const scheduleId = ScheduleId.fromString("0.0.5");
+        const exchangeRate = new ExchangeRate({
+            hbars: 6,
+            cents: 7,
+            expirationTime: new Date(Date.parse("1973-11-25T17:31:44.000Z")),
+        });
+        const topicSequenceNumber = Long.fromNumber(9);
+        const topicRunningHash = new Uint8Array([10]);
+        const totalSupply = Long.fromNumber(11);
+        const scheduledTransactionId = TransactionId.withValidStart(
+            AccountId.fromString("0.0.12"),
+            new Timestamp(13, 14)
+        );
+        const serials = [Long.fromNumber(15)];
+
+        const receipt = new TransactionReceipt({
+            status,
+            accountId,
+            fileId,
+            contractId,
+            topicId,
+            tokenId,
+            scheduleId,
+            exchangeRate,
+            topicSequenceNumber,
+            topicRunningHash,
+            totalSupply,
+            scheduledTransactionId,
+            serials,
+            duplicates: [],
+            children: [],
+        });
+        const child = new TransactionReceipt({
+            status,
+            accountId,
+            fileId,
+            contractId,
+            topicId,
+        });
+        receipt.children.push(child);
+        receipt.duplicates.push(child);
+
+        const expectedJSON = JSON.parse(
+            `{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":"0.0.4","scheduleId":"0.0.5","exchangeRate":{"hbars":6,"cents":7,"expirationTime":"1973-11-25T17:31:44.000Z","exchangeRateInCents":1.1666666666666667},"topicSequenceNumber":"9","topicRunningHash":"0a","totalSupply":"11","scheduledTransactionId":"0.0.12@13.000000014","serials":["15"],"duplicates":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}],"children":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}]}`
+        );
+
+        const resultJSON = JSON.parse(JSON.stringify(receipt));
+        expect(resultJSON).to.deep.equal(expectedJSON);
+    });
+
+    it("toJSON() with missing fields", function () {
+        const status = Status.Ok;
+        const receipt = new TransactionReceipt({
+            status,
+        });
+        console.log(JSON.stringify(receipt));
+
+        const expectedJSON = `{"status":"OK","accountId":null,"filedId":null,"contractId":null,"topicId":null,"tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}`;
+        const expectedJSONParsed = JSON.parse(expectedJSON);
+
+        const resultJSON = JSON.parse(JSON.stringify(receipt));
+        expect(resultJSON).to.deep.equal(expectedJSONParsed);
+    });
 });

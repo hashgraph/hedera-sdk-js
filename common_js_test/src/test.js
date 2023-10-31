@@ -10,7 +10,6 @@ describe("CommonJS", function () {
             await new AccountBalanceQuery()
                 .setNodeAccountIds([nodeAccountId])
                 .setAccountId(nodeAccountId)
-                .setMaxAttempts(1)
                 .execute(client);
         }
         client.close();

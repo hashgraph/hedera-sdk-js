@@ -2,6 +2,7 @@
     "plugins": [
         "@babel/plugin-transform-modules-commonjs",
         "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-proposal-export-namespace-from",
         [
             "babel-plugin-dynamic-import-node",
             {

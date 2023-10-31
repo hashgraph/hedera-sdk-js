@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,14 +78,8 @@ export default class List {
 
     /**
      * Clear the list
-     *
-     * @throws if the list is locked
      */
     clear() {
-        if (this.locked) {
-            throw new Error("list is locked");
-        }
-
         this.list = [];
         this.index = 0;
     }
@@ -103,16 +97,11 @@ export default class List {
     /**
      * Set value at index
      *
-     * @throws if the list is locked
      * @param {number} index
      * @param {T} item
      * @returns {this}
      */
     set(index, item) {
-        if (this.locked) {
-            throw new Error("list is locked");
-        }
-
         // QoL: If the index is at the end simply push the element to the end
         if (index === this.length) {
             this.list.push(item);

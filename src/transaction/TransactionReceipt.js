@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,30 @@ import Status from "../Status.js";
 import Long from "long";
 import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
+import * as hex from "../encoding/hex.js";
+
+/**
+ * @typedef {import("../ExchangeRate.js").ExchangeRateJSON} ExchangeRateJSON
+ */
+
+/**
+ * @typedef {object} TransactionReceiptJSON
+ * @property {string} status
+ * @property {?string} accountId
+ * @property {?string} filedId
+ * @property {?string} contractId
+ * @property {?string} topicId
+ * @property {?string} tokenId
+ * @property {?string} scheduleId
+ * @property {?ExchangeRateJSON} exchangeRate
+ * @property {?string} topicSequenceNumber
+ * @property {?string} topicRunningHash
+ * @property {?string} totalSupply
+ * @property {?string} scheduledTransactionId
+ * @property {string[]} serials
+ * @property {TransactionReceiptJSON[]} duplicates
+ * @property {TransactionReceiptJSON[]} children
+ */
 
 /**
  * The consensus result for a transaction, which might not be currently known,
@@ -134,17 +158,17 @@ export default class TransactionReceipt {
 
         this.scheduledTransactionId = props.scheduledTransactionId;
 
-        this.serials = props.serials;
+        this.serials = props.serials ?? [];
 
         /**
          * @readonly
          */
-        this.duplicates = props.duplicates;
+        this.duplicates = props.duplicates ?? [];
 
         /**
          * @readonly
          */
-        this.children = props.children;
+        this.children = props.children ?? [];
 
         Object.freeze(this);
     }
@@ -339,5 +363,39 @@ export default class TransactionReceipt {
         return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
             this._toProtobuf()
         ).finish();
+    }
+
+    /**
+     * @returns {TransactionReceiptJSON}
+     */
+    toJSON() {
+        return {
+            status: this.status.toString(),
+            accountId: this.accountId?.toString() || null,
+            filedId: this.fileId?.toString() || null,
+            contractId: this.contractId?.toString() || null,
+            topicId: this.topicId?.toString() || null,
+            tokenId: this.tokenId?.toString() || null,
+            scheduleId: this.scheduleId?.toString() || null,
+            exchangeRate: this.exchangeRate?.toJSON() || null,
+            topicSequenceNumber: this.topicSequenceNumber?.toString() || null,
+            topicRunningHash:
+                this.topicRunningHash != null
+                    ? hex.encode(this.topicRunningHash)
+                    : null,
+            totalSupply: this.totalSupply?.toString() || null,
+            scheduledTransactionId:
+                this.scheduledTransactionId?.toString() || null,
+            serials: this.serials.map((serial) => serial.toString()),
+            duplicates: this.duplicates.map((receipt) => receipt.toJSON()),
+            children: this.children.map((receipt) => receipt.toJSON()),
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

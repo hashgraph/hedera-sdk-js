@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
-import Logger from "js-logger";
 import * as util from "../util.js";
 
 /**
@@ -1159,6 +1158,12 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        if (this._logger) {
+            this._logger.info(
+                `Network used: ${client._network.networkName}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+            );
+        }
+
         // Make sure we're frozen
         if (!this._isFrozen()) {
             this.freezeWith(client);
@@ -1374,9 +1379,14 @@ export default class Transaction extends Executable {
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
-        Logger.debug(
-            `[${this._getLogId()}] received status ${status.toString()}`
-        );
+        if (this._logger) {
+            this._logger.debug(
+                `[${this._getLogId()}] received status ${status.toString()}`
+            );
+            this._logger.info(
+                `SDK Transaction Status Response: ${status.toString()}`
+            );
+        }
 
         // Based on the status what execution state are we in
         switch (status) {
@@ -1389,13 +1399,14 @@ export default class Transaction extends Executable {
                 return [status, ExecutionState.Finished];
             case Status.TransactionExpired:
                 if (
-                    this._regenerateTransactionId == null ||
-                    this._regenerateTransactionId
+                    this._transactionIds.locked ||
+                    (this._regenerateTransactionId != null &&
+                        !this._regenerateTransactionId)
                 ) {
+                    return [status, ExecutionState.Error];
+                } else {
                     this._buildNewTransactionIdList();
                     return [status, ExecutionState.Retry];
-                } else {
-                    return [status, ExecutionState.Error];
                 }
             default:
                 return [status, ExecutionState.Error];
@@ -1420,6 +1431,12 @@ export default class Transaction extends Executable {
                 ? nodeTransactionPrecheckCode
                 : HashgraphProto.proto.ResponseCodeEnum.OK
         );
+        if (this._logger) {
+            this._logger.info(
+                // @ts-ignore
+                `Transaction Error Info: ${status.toString()}, ${this.transactionId.toString()}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+            );
+        }
 
         return new PrecheckStatusError({
             status,
@@ -1445,6 +1462,17 @@ export default class Transaction extends Executable {
         const transactionId = this._getTransactionId();
 
         this._transactionIds.advance();
+        if (this._logger) {
+            this._logger.info(
+                `Transaction Info: ${JSON.stringify(
+                    new TransactionResponse({
+                        nodeId,
+                        transactionHash,
+                        transactionId,
+                    }).toJSON()
+                )}`
+            );
+        }
 
         return new TransactionResponse({
             nodeId,
@@ -1454,7 +1482,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Make a signed tranaction given a node account ID
+     * Make a signed transaction given a node account ID
      *
      * @internal
      * @param {?AccountId} nodeId
@@ -1462,6 +1490,9 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
+        if (this._logger) {
+            this._logger.info(`Transaction Body: ${JSON.stringify(body)}`);
+        }
         const bodyBytes =
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 

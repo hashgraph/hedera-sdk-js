@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
 import EvmAddress from "../EvmAddress.js";
+import * as hex from ".././encoding/hex.js";
+import { isLongZeroAddress } from "../util.js";
+import axios from "axios";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -97,24 +100,32 @@ export default class AccountId {
     }
 
     /**
+     * @description This handles both long-zero format and evm address format addresses.
+     * If an actual evm address is passed, please use `AccountId.populateAccountNum(client)` method
+     * to get the actual `num` value, since there is no cryptographic relation to the evm address
+     * and cannot be populated directly
      * @param {Long | number} shard
      * @param {Long | number} realm
      * @param {EvmAddress | string} evmAddress
      * @returns {AccountId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
-        return new AccountId(
-            shard,
-            realm,
-            0,
-            undefined,
+        const evmAddressObj =
             typeof evmAddress === "string"
                 ? EvmAddress.fromString(evmAddress)
-                : evmAddress
-        );
+                : evmAddress;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        if (isLongZeroAddress(evmAddressObj.toBytes())) {
+            // eslint-disable-next-line deprecation/deprecation
+            return this.fromSolidityAddress(evmAddressObj.toString());
+        } else {
+            return new AccountId(shard, realm, 0, undefined, evmAddressObj);
+        }
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @summary Accepts an evm address only as `EvmAddress` type
      * @param {EvmAddress} evmAddress
      * @returns {AccountId}
@@ -170,6 +181,66 @@ export default class AccountId {
     }
 
     /**
+     * @description Gets the actual `num` field of the `AccountId` from the Mirror Node.
+     * Should be used after generating `AccountId.fromEvmAddress()` because it sets the `num` field to `0`
+     * automatically since there is no connection between the `num` and the `evmAddress`
+     * @param {Client} client
+     * @returns {Promise<AccountId>}
+     */
+    async populateAccountNum(client) {
+        if (this.evmAddress === null) {
+            throw new Error("field `evmAddress` should not be null");
+        }
+        const mirrorUrl = client.mirrorNetwork[0].slice(
+            0,
+            client.mirrorNetwork[0].indexOf(":")
+        );
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 3000);
+        });
+
+        /* eslint-disable */
+        const url = `https://${mirrorUrl}/api/v1/accounts/${this.evmAddress.toString()}`;
+        const mirrorAccountId = (await axios.get(url)).data.account;
+
+        this.num = Long.fromString(
+            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
+        );
+        /* eslint-enable */
+
+        return this;
+    }
+
+    /**
+     * @description Populates `evmAddress` field of the `AccountId` extracted from the Mirror Node.
+     * @param {Client} client
+     * @returns {Promise<AccountId>}
+     */
+    async populateAccountEvmAddress(client) {
+        if (this.num === null) {
+            throw new Error("field `num` should not be null");
+        }
+        const mirrorUrl = client.mirrorNetwork[0].slice(
+            0,
+            client.mirrorNetwork[0].indexOf(":")
+        );
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 3000);
+        });
+
+        /* eslint-disable */
+        const url = `https://${mirrorUrl}/api/v1/accounts/${this.num.toString()}`;
+        const mirrorAccountId = (await axios.get(url)).data.evm_address;
+
+        this.evmAddress = EvmAddress.fromString(mirrorAccountId);
+        /* eslint-enable */
+
+        return this;
+    }
+
+    /**
      * @deprecated - Use `validateChecksum` instead
      * @param {Client} client
      */
@@ -208,18 +279,37 @@ export default class AccountId {
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @param {string} address
      * @returns {AccountId}
      */
     static fromSolidityAddress(address) {
-        return new AccountId(...entity_id.fromSolidityAddress(address));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        if (isLongZeroAddress(hex.decode(address))) {
+            return new AccountId(...entity_id.fromSolidityAddress(address));
+        } else {
+            return this.fromEvmAddress(0, 0, address);
+        }
     }
 
     /**
      * @returns {string}
      */
     toSolidityAddress() {
-        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+        if (this.evmAddress != null) {
+            return this.evmAddress.toString();
+        } else if (
+            this.aliasKey != null &&
+            this.aliasKey._key._type == "secp256k1"
+        ) {
+            return this.aliasKey.toEvmAddress();
+        } else {
+            return entity_id.toSolidityAddress([
+                this.shard,
+                this.realm,
+                this.num,
+            ]);
+        }
     }
 
     //TODO remove the comments after we get to HIP-631

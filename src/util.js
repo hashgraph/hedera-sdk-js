@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,6 +134,21 @@ export function isStringOrUint8Array(variable) {
     return (
         isNonNull(variable) && (isString(variable) || isUint8Array(variable))
     );
+}
+
+/**
+ * Takes an address as `Uint8Array` and returns whether or not this is a long-zero address
+ *
+ * @param {Uint8Array} address
+ * @returns {boolean}
+ */
+export function isLongZeroAddress(address) {
+    for (let i = 0; i < 12; i++) {
+        if (address[i] != 0) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -337,7 +352,7 @@ export function convertToNumber(variable) {
 /**
  * Creates a DataView on top of an Uint8Array that could be or not be pooled, ensuring that we don't get out of bounds.
  *
- * @param {Uint8Array} arr
+ * @param {Uint8Array | Int8Array} arr
  * @param {number | undefined} offset
  * @param {number | undefined} length
  * @returns {DataView}

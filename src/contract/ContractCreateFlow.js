@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import PublicKey from "../PublicKey.js";
  * @typedef {import("../Hbar.js").default} Hbar
  * @typedef {import("../Duration.js").default} Duration
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../transaction/TransactionReceipt.js").default} TransactionReceipt
@@ -358,7 +359,7 @@ export default class ContractCreateFlow {
 
     /**
      * @template {Channel} ChannelT
-     * @template MirrorChannelT
+     * @template {MirrorChannel} MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @param {number=} requestTimeout
      * @returns {Promise<TransactionResponse>}

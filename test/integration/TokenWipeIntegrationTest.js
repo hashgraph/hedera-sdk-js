@@ -9,8 +9,10 @@ import {
     TokenGrantKycTransaction,
     TokenWipeTransaction,
     TransferTransaction,
+    Transaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import Long from "long";
 
 describe("TokenWipe", function () {
     let env;
@@ -252,6 +254,52 @@ describe("TokenWipe", function () {
         if (err) {
             throw new Error("token wipe did error");
         }
+    });
+
+    it("should convert fromBytes", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+        const key = PrivateKey.generateED25519();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
+
+        const account = (await response.getReceipt(env.client)).accountId;
+
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setDecimals(3)
+                    .setInitialSupply(1000000)
+                    .setTreasuryAccountId(operatorId)
+                    .setAdminKey(operatorKey)
+                    .setKycKey(operatorKey)
+                    .setFreezeKey(operatorKey)
+                    .setWipeKey(operatorKey)
+                    .setSupplyKey(operatorKey)
+                    .setFreezeDefault(false)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
+        const transaction = new TokenWipeTransaction()
+            .setTokenId(token)
+            .setAccountId(account)
+            .setSerials([1, 2, 3])
+            .freezeWith(env.client)
+            .toBytes();
+
+        const restoredTransaction = Transaction.fromBytes(transaction);
+        expect(restoredTransaction._serials).to.deep.equal([
+            Long.fromNumber(1),
+            Long.fromNumber(2),
+            Long.fromNumber(3),
+        ]);
     });
 
     after(async function () {

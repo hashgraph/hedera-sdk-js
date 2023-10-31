@@ -32,16 +32,19 @@ that was created was not charged a custom fee in the transfer
 */
 
 async function main() {
+    // If we weren't able to get them, we should throw a new error
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
+        throw new Error(
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+        );
+    }
     // Configure accounts and client, and generate needed keys
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-
-    // If we weren't able to get them, we should throw a new error
-    if (operatorId == null || operatorKey == null) {
-        throw new Error(
-            "Could not fetch 'operatorId' and 'operatorKey' properly"
-        );
-    }
 
     const wallet = new Wallet(operatorId, operatorKey, new LocalProvider());
 
@@ -228,9 +231,20 @@ async function main() {
 
     /**@type {number} */
     let firstAccountBalanceAfter;
-    const link = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    let link;
+    let link2;
+    let link3;
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    } else {
+        link = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${firstAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         firstAccountBalanceAfter = (
@@ -245,9 +259,18 @@ async function main() {
 
     /**@type {number} */
     let secondAccountBalanceAfter;
-    const link2 = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link2 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    } else {
+        link2 = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${secondAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         secondAccountBalanceAfter = (
@@ -262,9 +285,18 @@ async function main() {
 
     /**@type {number} */
     let thirdAccountBalanceAfter;
-    const link3 = `https://${
-        process.env.HEDERA_NETWORK
-    }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link3 = `http://127.0.0.1:5551/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    } else {
+        link3 = `https://${
+            process.env.HEDERA_NETWORK
+        }.mirrornode.hedera.com/api/v1/accounts?account.id=${thirdAccountId.toString()}`;
+    }
+
     try {
         /* eslint-disable */
         thirdAccountBalanceAfter = (
@@ -308,4 +340,6 @@ function wait(timeout) {
     });
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

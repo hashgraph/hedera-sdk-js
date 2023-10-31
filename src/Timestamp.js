@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import Cache from "./Cache.js";
  */
 
 const MAX_NS = Long.fromNumber(1000000000);
+const generatedIds = new Set();
 
 export default class Timestamp {
     /**
@@ -61,7 +62,13 @@ export default class Timestamp {
             Math.floor(now % 1000) * 1000000 +
             Math.floor(Math.random() * 1000000);
 
-        return new Timestamp(seconds, nanos);
+        const timestamp = new Timestamp(seconds, nanos);
+        if (generatedIds.has(timestamp.toString())) {
+            return this.generate();
+        } else {
+            generatedIds.add(timestamp.toString());
+            return timestamp;
+        }
     }
 
     /**
@@ -138,7 +145,8 @@ export default class Timestamp {
      * @returns {string}
      */
     toString() {
-        return `${this.seconds.toString()}.${this.nanos.toString()}`;
+        const zeroPaddedNanos = String(this.nanos).padStart(9, "0");
+        return `${this.seconds.toString()}.${zeroPaddedNanos}`;
     }
 
     /**

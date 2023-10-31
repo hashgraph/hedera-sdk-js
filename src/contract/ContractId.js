@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,10 @@ import Key from "../Key.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
+import { arrayEqual } from "../array.js";
 import Long from "long";
+import { isLongZeroAddress } from "../util.js";
+import axios from "axios";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -57,13 +60,22 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @description This handles both long-zero format and evm address format addresses.
+     * If an actual evm address is passed, please use `ContractId.populateAccountNum(client)` method
+     * to get the actual `num` value, since there is no cryptographic relation to the evm address
+     * and cannot be populated directly
      * @param {Long | number} shard
      * @param {Long | number} realm
      * @param {string} evmAddress
      * @returns {ContractId}
      */
     static fromEvmAddress(shard, realm, evmAddress) {
-        return new ContractId(shard, realm, 0, hex.decode(evmAddress));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        if (isLongZeroAddress(hex.decode(evmAddress))) {
+            return this.fromEvmAddress(0, 0, evmAddress);
+        } else {
+            return new ContractId(shard, realm, 0, hex.decode(evmAddress));
+        }
     }
 
     /**
@@ -112,6 +124,36 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @description Gets the actual `num` field of the `ContractId` from the Mirror Node.
+     * Should be used after generating `ContractId.fromEvmAddress()` because it sets the `num` field to `0`
+     * automatically since there is no connection between the `num` and the `evmAddress`
+     * @param {Client} client
+     * @returns {Promise<ContractId>}
+     */
+    async populateAccountNum(client) {
+        if (this.evmAddress === null) {
+            throw new Error("field `evmAddress` should not be null");
+        }
+        const mirrorUrl = client.mirrorNetwork[0].slice(
+            0,
+            client.mirrorNetwork[0].indexOf(":")
+        );
+
+        /* eslint-disable */
+        const url = `https://${mirrorUrl}/api/v1/contracts/${hex.encode(
+            this.evmAddress
+        )}`;
+        const mirrorAccountId = (await axios.get(url)).data.contract_id;
+
+        this.num = Long.fromString(
+            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
+        );
+        /* eslint-enable */
+
+        return this;
+    }
+
+    /**
      * @deprecated - Use `validateChecksum` instead
      * @param {Client} client
      */
@@ -144,12 +186,17 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @deprecated - Use `fromEvmAddress` instead
      * @param {string} address
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
-        const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
-        return new ContractId(shard, realm, contract);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        if (isLongZeroAddress(hex.decode(address))) {
+            return new ContractId(...entity_id.fromSolidityAddress(address));
+        } else {
+            return this.fromEvmAddress(0, 0, address);
+        }
     }
 
     /**
@@ -228,6 +275,24 @@ export default class ContractId extends Key {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
             [other.shard, other.realm, other.num]
+        );
+    }
+
+    /**
+     * @param {this} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        let evmAddresses = false;
+        if (this.evmAddress != null && other.evmAddress != null) {
+            evmAddresses = arrayEqual(this.evmAddress, other.evmAddress);
+        }
+
+        return (
+            this.shard.eq(other.shard) &&
+            this.realm.eq(other.realm) &&
+            this.num.eq(other.num) &&
+            evmAddresses
         );
     }
 

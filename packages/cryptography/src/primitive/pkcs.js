@@ -20,7 +20,7 @@ export class AlgorithmIdentifier {
             this.parameters = asn.seq[1];
         } else {
             throw new Error(
-                `error parsing AlgorithmIdentifier from ${JSON.stringify(asn)}`
+                `error parsing AlgorithmIdentifier from ${JSON.stringify(asn)}`,
             );
         }
     }
@@ -50,7 +50,7 @@ class PBES2Params {
             this.encScheme = new AlgorithmIdentifier(asn.seq[1]);
         } else {
             throw new Error(
-                `error parsing PBES2Params from ${JSON.stringify(asn)}`
+                `error parsing PBES2Params from ${JSON.stringify(asn)}`,
             );
         }
     }
@@ -100,7 +100,7 @@ class PBKDF2Params {
         }
 
         throw new Error(
-            `error parsing PBKDF2Params from ${JSON.stringify(asn)}`
+            `error parsing PBKDF2Params from ${JSON.stringify(asn)}`,
         );
     }
 }
@@ -118,7 +118,7 @@ export class PrivateKeyInfo {
                 this.version = 0;
             } else {
                 throw new Error(
-                    `expected version = 0, got ${JSON.stringify(asn.seq[0])}`
+                    `expected version = 0, got ${JSON.stringify(asn.seq[0])}`,
                 );
             }
 
@@ -135,8 +135,8 @@ export class PrivateKeyInfo {
             } else {
                 throw new Error(
                     `expected octet string as 3rd element, got ${JSON.stringify(
-                        asn.seq[2]
-                    )}`
+                        asn.seq[2],
+                    )}`,
                 );
             }
 
@@ -144,7 +144,7 @@ export class PrivateKeyInfo {
         }
 
         throw new Error(
-            `error parsing PrivateKeyInfo from ${JSON.stringify(asn)}`
+            `error parsing PrivateKeyInfo from ${JSON.stringify(asn)}`,
         );
     }
 
@@ -176,7 +176,7 @@ export class EncryptedPrivateKeyInfo {
         }
 
         throw new Error(
-            `error parsing EncryptedPrivateKeyInfo from ${JSON.stringify(asn)}`
+            `error parsing EncryptedPrivateKeyInfo from ${JSON.stringify(asn)}`,
         );
     }
 
@@ -199,7 +199,7 @@ export class EncryptedPrivateKeyInfo {
         ) {
             // PBES2
             throw new Error(
-                `unsupported key encryption algorithm: ${this.algId.toString()}`
+                `unsupported key encryption algorithm: ${this.algId.toString()}`,
             );
         }
 
@@ -211,7 +211,7 @@ export class EncryptedPrivateKeyInfo {
         ) {
             // PBKDF2
             throw new Error(
-                `unsupported key derivation function: ${pbes2Params.kdf.toString()}`
+                `unsupported key derivation function: ${pbes2Params.kdf.toString()}`,
             );
         }
 
@@ -227,7 +227,7 @@ export class EncryptedPrivateKeyInfo {
         if (pbes2Params.encScheme.algIdent !== "2.16.840.1.101.3.4.1.2") {
             // AES-128-CBC
             throw new Error(
-                `unsupported encryption scheme: ${pbes2Params.encScheme.toString()}`
+                `unsupported encryption scheme: ${pbes2Params.encScheme.toString()}`,
             );
         }
 
@@ -237,7 +237,7 @@ export class EncryptedPrivateKeyInfo {
         ) {
             throw new Error(
                 "expected IV as bytes for AES-128-CBC, " +
-                    `got: ${JSON.stringify(pbes2Params.encScheme.parameters)}`
+                    `got: ${JSON.stringify(pbes2Params.encScheme.parameters)}`,
             );
         }
 
@@ -249,14 +249,14 @@ export class EncryptedPrivateKeyInfo {
             passphrase,
             pbkdf2Params.salt,
             pbkdf2Params.iterCount,
-            keyLen
+            keyLen,
         );
 
         const decrypted = await crypto.createDecipheriv(
             crypto.CipherAlgorithm.Aes128Cbc,
             key,
             iv,
-            this.data
+            this.data,
         );
 
         return PrivateKeyInfo.parse(decrypted);

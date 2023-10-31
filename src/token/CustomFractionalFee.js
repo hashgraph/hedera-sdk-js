@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,8 @@
 
 import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
+import FeeAssessmentMethod from "./FeeAssessmentMethod.js";
 import Long from "long";
-
-/**
- * @typedef {import("./FeeAssessmentMethod.js").default} FeeAssessmentMethod
- */
 
 /**
  * @namespace proto
@@ -211,6 +208,10 @@ export default class CustomFractionalFee extends CustomFee {
                     : undefined,
             min: fee.minimumAmount != null ? fee.minimumAmount : undefined,
             max: fee.maximumAmount != null ? fee.maximumAmount : undefined,
+            assessmentMethod:
+                fee.netOfTransfers != null
+                    ? new FeeAssessmentMethod(fee.netOfTransfers)
+                    : undefined,
         });
     }
 
@@ -233,6 +234,10 @@ export default class CustomFractionalFee extends CustomFee {
                 },
                 minimumAmount: this._min,
                 maximumAmount: this._max,
+                netOfTransfers:
+                    this._assessmentMethod != null
+                        ? this._assessmentMethod.valueOf()
+                        : false,
             },
         };
     }

@@ -132,7 +132,7 @@ describe("ClientIntegration", function () {
 
         let error = null;
         try {
-            await env.client.ping("0.0.100"); // Non exist Node ID
+            await env.client.ping(""); // Non exist Node ID
         } catch (err) {
             error = err;
         }
@@ -154,6 +154,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can use same proxies of one node", async function () {
+        this.timeout(100000);
         let nodes = {
             "0.testnet.hedera.com:50211": new AccountId(3),
             "34.94.106.61:50211": new AccountId(3),

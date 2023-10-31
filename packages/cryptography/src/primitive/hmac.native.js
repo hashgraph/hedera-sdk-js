@@ -29,24 +29,30 @@ export function hash(algorithm, secretKey, data) {
         case HashAlgorithm.Sha256:
             return Promise.resolve(
                 hex.decode(
-                    CryptoJS.HmacSHA256(value_, key_).toString(CryptoJS.enc.Hex)
-                )
+                    CryptoJS.HmacSHA256(value_, key_).toString(
+                        CryptoJS.enc.Hex,
+                    ),
+                ),
             );
         case HashAlgorithm.Sha384:
             return Promise.resolve(
                 hex.decode(
-                    CryptoJS.HmacSHA384(value_, key_).toString(CryptoJS.enc.Hex)
-                )
+                    CryptoJS.HmacSHA384(value_, key_).toString(
+                        CryptoJS.enc.Hex,
+                    ),
+                ),
             );
         case HashAlgorithm.Sha512:
             return Promise.resolve(
                 hex.decode(
-                    CryptoJS.HmacSHA512(value_, key_).toString(CryptoJS.enc.Hex)
-                )
+                    CryptoJS.HmacSHA512(value_, key_).toString(
+                        CryptoJS.enc.Hex,
+                    ),
+                ),
             );
         default:
             throw new Error(
-                "(BUG) Non-Exhaustive switch statement for algorithms"
+                "(BUG) Non-Exhaustive switch statement for algorithms",
             );
     }
 }

@@ -43,7 +43,7 @@ const privKeyBytes = Uint8Array.of(
     -126,
     83,
     -114,
-    16
+    16,
 );
 
 const privateKey = PrivateKey.fromBytes(privKeyBytes);
@@ -87,7 +87,7 @@ const pubKeyBytes = Uint8Array.of(
     121,
     -120,
     -92,
-    -73
+    -73,
 );
 
 const message = utf8.encode("hello, world");
@@ -170,15 +170,15 @@ describe("PrivateKey", function () {
         const privateKey4 = PrivateKey.fromString(iosWalletPrivKey);
         expect(privateKey4.toBytesRaw()).to.deep.equal(iosWalletPrivKeyBytes);
         expect(privateKey4.publicKey.toBytesRaw()).to.deep.equal(
-            iosWalletPubKeyBytes
+            iosWalletPubKeyBytes,
         );
 
         const privateKey5 = PrivateKey.fromString(androidWalletPrivKey);
         expect(privateKey5.toBytesRaw()).to.deep.equal(
-            androidWalletPrivKeyBytes
+            androidWalletPrivKeyBytes,
         );
         expect(privateKey5.publicKey.toBytesRaw()).to.deep.equal(
-            androidWalletPubKeyBytes
+            androidWalletPubKeyBytes,
         );
     });
 
@@ -190,12 +190,12 @@ describe("PrivateKey", function () {
 
         await PrivateKey.fromKeystore(
             keystoreBytes,
-            "some random password"
+            "some random password",
         ).catch((err) => {
             expect(err).to.be.instanceOf(BadKeyError);
             expect(err).to.have.property(
                 "message",
-                "HMAC mismatch; passphrase is incorrect"
+                "HMAC mismatch; passphrase is incorrect",
             );
         });
     });
@@ -205,7 +205,7 @@ describe("PrivateKey", function () {
 
         const key = await PrivateKey.fromKeystore(
             keystoreBytesFromFile,
-            keystorePassword
+            keystorePassword,
         );
 
         expect(privateKeystore).to.deep.equal(key.toString());
@@ -213,25 +213,26 @@ describe("PrivateKey", function () {
 
     it("derive() produces correct value", async function () {
         const iosMnemonic = await Mnemonic.fromString(iosWalletMnemonic);
-        const iosKey = await PrivateKey.fromMnemonic(iosMnemonic, "");
-        const iosChildKey = await iosKey.derive(0);
+        const iosKey = await iosMnemonic.toStandardEd25519PrivateKey("", 0);
 
-        expect(iosChildKey.toBytesRaw()).to.deep.equal(iosWalletPrivKeyBytes);
-        expect(iosChildKey.publicKey.toBytesRaw()).to.deep.equal(
-            iosWalletPubKeyBytes
+        expect(iosKey.toBytesRaw()).to.deep.equal(iosWalletPrivKeyBytes);
+        expect(iosKey.publicKey.toBytesRaw()).to.deep.equal(
+            iosWalletPubKeyBytes,
         );
 
         const androidMnemonic = await Mnemonic.fromString(
-            androidWalletMnemonic
+            androidWalletMnemonic,
         );
-        const androidKey = await PrivateKey.fromMnemonic(androidMnemonic, "");
-        const androidChildKey = await androidKey.derive(0);
+        const androidKey = await androidMnemonic.toStandardEd25519PrivateKey(
+            "",
+            0,
+        );
 
-        expect(androidChildKey.toBytesRaw()).to.deep.equal(
-            androidWalletPrivKeyBytes
+        expect(androidKey.toBytesRaw()).to.deep.equal(
+            androidWalletPrivKeyBytes,
         );
-        expect(androidChildKey.publicKey.toBytesRaw()).to.deep.equal(
-            androidWalletPubKeyBytes
+        expect(androidKey.publicKey.toBytesRaw()).to.deep.equal(
+            androidWalletPubKeyBytes,
         );
     });
 

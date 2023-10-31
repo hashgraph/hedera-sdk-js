@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,12 @@ import Hbar from "../Hbar.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.ITokenAssociation} HashgraphProto.proto.ITokenAssociation
+ */
+
+/**
+ * @typedef {object} TokenAssociationJSON
+ * @property {?string} accountId
+ * @property {?string} tokenId
  */
 
 export default class TokenAssociation {
@@ -124,6 +130,16 @@ export default class TokenAssociation {
                     : undefined,
             tokenId:
                 this._tokenId != null ? this._tokenId._toProtobuf() : undefined,
+        };
+    }
+
+    /**
+     * @returns {TokenAssociationJSON}
+     */
+    toJSON() {
+        return {
+            accountId: this._accountId?.toString() || null,
+            tokenId: this._tokenId?.toString() || null,
         };
     }
 }

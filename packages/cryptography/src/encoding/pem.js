@@ -4,35 +4,26 @@ import * as der from "./der.js";
 import * as base64 from "./base64.js";
 import Ed25519PrivateKey from "../Ed25519PrivateKey.js";
 import EcdsaPrivateKey from "../EcdsaPrivateKey.js";
+import * as asn1 from "asn1js";
+import forge from "node-forge";
+import * as hex from "./hex.js";
+import * as aes from "../primitive/aes.js";
+import { Buffer } from "buffer";
 
-const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
-const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
-
-const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
-const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
+const ID_ED25519 = "1.3.101.112";
 
 /**
  * @param {string} pem
  * @param {string} [passphrase]
  * @returns {Promise<Ed25519PrivateKey | EcdsaPrivateKey | Uint8Array>}
  */
-export async function read(pem, passphrase) {
-    //NOSONAR
-    const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
+export async function readPemED25519(pem, passphrase) {
+    const pemKeyData = pem.replace(
+        /-----BEGIN (.*)-----|-----END (.*)-----|\n|\r/g,
+        "",
+    );
 
-    const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
-
-    const beginIndex = pem.indexOf(beginTag);
-    const endIndex = pem.indexOf(endTag);
-
-    if (beginIndex === -1 || endIndex === -1) {
-        throw new BadKeyError("failed to find a private key in the PEM file");
-    }
-
-    const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
-
-    const key = base64.decode(keyEncoded);
-
+    const key = base64.decode(pemKeyData);
     if (passphrase) {
         let encrypted;
 
@@ -47,7 +38,7 @@ export async function read(pem, passphrase) {
                     : "";
 
             throw new BadKeyError(
-                `failed to parse encrypted private key: ${message}`
+                `failed to parse encrypted private key: ${message}`,
             );
         }
 
@@ -55,13 +46,11 @@ export async function read(pem, passphrase) {
 
         let privateKey = null;
 
-        if (decrypted.algId.algIdent === "1.3.101.112") {
+        if (decrypted.algId.algIdent === ID_ED25519) {
             privateKey = Ed25519PrivateKey;
-        } else if (decrypted.algId.algIdent === "1.3.132.0.10") {
-            privateKey = EcdsaPrivateKey;
         } else {
             throw new BadKeyError(
-                `unknown private key algorithm ${decrypted.algId.toString()}`
+                `unknown private key algorithm ${decrypted.algId.toString()}`,
             );
         }
 
@@ -69,7 +58,7 @@ export async function read(pem, passphrase) {
 
         if (!("bytes" in keyData)) {
             throw new BadKeyError(
-                `expected ASN bytes, got ${JSON.stringify(keyData)}`
+                `expected ASN bytes, got ${JSON.stringify(keyData)}`,
             );
         }
 
@@ -77,4 +66,61 @@ export async function read(pem, passphrase) {
     }
 
     return key.subarray(16);
+}
+
+/**
+ * @param {string} pem
+ * @param {string} [passphrase]
+ * @returns {Promise<Ed25519PrivateKey | EcdsaPrivateKey | Uint8Array>}
+ */
+export async function readPemECDSA(pem, passphrase) {
+    const pemKeyData = pem.replace(
+        /-----BEGIN (.*)-----|-----END (.*)-----|\n|\r/g,
+        "",
+    );
+    const key = base64.decode(pemKeyData);
+
+    if (passphrase) {
+        const decodedPem = forge.pem.decode(pem)[0];
+        /** @type {string} */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        const ivString = decodedPem.dekInfo.parameters;
+        const iv = hex.decode(ivString);
+        const pemLines = pem.split("\n");
+        const key = await aes.messageDigest(passphrase, ivString);
+        const dataToDecrypt = Buffer.from(
+            pemLines.slice(4, pemLines.length - 1).join(""),
+            "base64",
+        );
+        const keyDerBytes = await aes.createDecipheriv(
+            aes.CipherAlgorithm.Aes128Cbc,
+            key,
+            iv,
+            dataToDecrypt,
+        );
+
+        return EcdsaPrivateKey.fromBytesDer(keyDerBytes);
+    } else {
+        const asnData = asn1.fromBER(key);
+        const parsedKey = asnData.result;
+
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
+        return parsedKey.valueBlock.value[1].valueBlock.valueHexView;
+    }
+}
+
+/**
+ * @param {string} pem
+ * @param {string} [passphrase]
+ * @returns {Promise<Ed25519PrivateKey | EcdsaPrivateKey | Uint8Array>}
+ */
+export async function read(pem, passphrase) {
+    // If not then it is ED25519 type
+    const isEcdsa = pem.includes("BEGIN EC PRIVATE KEY") ? true : false;
+    if (isEcdsa) {
+        return readPemECDSA(pem, passphrase);
+    } else {
+        return readPemED25519(pem, passphrase);
+    }
 }

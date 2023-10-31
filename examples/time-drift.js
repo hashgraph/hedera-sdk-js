@@ -32,7 +32,7 @@ async function sync() {
     // strongly discourages us using `Date.parse()`, but I'm not sure what we should replace
     // it with without adding any new deps.
     //
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     const worldTime = Math.round(Date.parse(response.headers.date) / 1000);
 
     // Set the time drift value in the SDK Cache
@@ -42,18 +42,20 @@ async function sync() {
 }
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
+
+    const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        AccountId.fromString(process.env.OPERATOR_ID),
+        PrivateKey.fromString(process.env.OPERATOR_KEY)
+    );
 
     await sync();
 
@@ -72,4 +74,6 @@ async function main() {
     console.log(`account id = ${receipt.accountId.toString()}`);
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

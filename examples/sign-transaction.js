@@ -17,9 +17,13 @@ let user1Key;
 let user2Key;
 
 async function main() {
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
@@ -35,32 +39,38 @@ async function main() {
     // create a multi-sig account
     const keyList = new KeyList([user1Key, user2Key]);
 
-    let transaction = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(2)) // 5 h
-        .setKey(keyList)
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
-    const response = await transaction.executeWithSigner(wallet);
+    try {
+        let transaction = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(2)) // 5 h
+            .setKey(keyList)
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
+        const response = await transaction.executeWithSigner(wallet);
 
-    let receipt = await response.getReceiptWithSigner(wallet);
+        let receipt = await response.getReceiptWithSigner(wallet);
 
-    console.log(`account id = ${receipt.accountId.toString()}`);
+        console.log(`account id = ${receipt.accountId.toString()}`);
 
-    // create a transfer from new account to 0.0.3
-    transaction = await new TransferTransaction()
-        .setNodeAccountIds([new AccountId(3)])
-        .addHbarTransfer(receipt.accountId, -1)
-        .addHbarTransfer("0.0.3", 1)
-        .freezeWithSigner(wallet);
-    transaction = await transaction.signWithSigner(wallet);
+        // create a transfer from new account to 0.0.3
+        transaction = await new TransferTransaction()
+            .setNodeAccountIds([new AccountId(3)])
+            .addHbarTransfer(receipt.accountId, -1)
+            .addHbarTransfer("0.0.3", 1)
+            .freezeWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
 
-    user1Key.signTransaction(transaction);
-    user2Key.signTransaction(transaction);
+        user1Key.signTransaction(transaction);
+        user2Key.signTransaction(transaction);
 
-    const result = await transaction.executeWithSigner(wallet);
-    receipt = await result.getReceiptWithSigner(wallet);
+        const result = await transaction.executeWithSigner(wallet);
+        receipt = await result.getReceiptWithSigner(wallet);
 
-    console.log(receipt.status.toString());
+        console.log(`Status: ${receipt.status.toString()}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

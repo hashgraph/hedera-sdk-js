@@ -13,36 +13,33 @@ import * as bip39 from "./primitive/bip39.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import PrivateKey from "./PrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
 const ED25519_SEED_TEXT = "ed25519 seed";
 const ECDSA_SEED_TEXT = "Bitcoin seed";
 
-export const HARDEDED = 0x80000000;
+export const HARDENED = 0x80000000;
 
 /// m/44'/3030'/0'/0' - All paths in EdDSA derivation are implicitly hardened.
 export const HEDERA_PATH = [44, 3030, 0, 0];
 
 /// m/44'/3030'/0'/0
 export const SLIP44_ECDSA_HEDERA_PATH = [
-    44 | HARDEDED,
-    3030 | HARDEDED,
-    0 | HARDEDED,
+    44 | HARDENED,
+    3030 | HARDENED,
+    0 | HARDENED,
     0,
 ];
 
 /// m/44'/60'/0'/0
 export const SLIP44_ECDSA_ETH_PATH = [
-    44 | HARDEDED,
-    60 | HARDEDED,
-    0 | HARDEDED,
+    44 | HARDENED,
+    60 | HARDENED,
+    0 | HARDENED,
     0,
     0,
 ];
-
-/**
- * @typedef {import("./PrivateKey.js").default} PrivateKey
- */
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -54,20 +51,17 @@ export default class Mnemonic {
     /**
      * @param {object} props
      * @param {string[]} props.words
-     * @param {boolean} props.legacy
      * @throws {BadMnemonicError}
      * @hideconstructor
      * @private
      */
-    constructor({ words, legacy }) {
+    constructor({ words }) {
         this.words = words;
-        this._isLegacy = legacy;
     }
 
     /**
      * Returns a new random 24-word mnemonic from the BIP-39
      * standard English word list.
-     *
      * @returns {Promise<Mnemonic>}
      */
     static generate() {
@@ -77,7 +71,6 @@ export default class Mnemonic {
     /**
      * Returns a new random 12-word mnemonic from the BIP-39
      * standard English word list.
-     *
      * @returns {Promise<Mnemonic>}
      */
     static generate12() {
@@ -96,7 +89,7 @@ export default class Mnemonic {
         else if (length === 24) neededEntropy = 32;
         else {
             throw new Error(
-                `unsupported phrase length ${length}, only 12 or 24 are supported`
+                `unsupported phrase length ${length}, only 12 or 24 are supported`,
             );
         }
 
@@ -109,10 +102,10 @@ export default class Mnemonic {
         const chunks = bits.match(/(.{1,11})/g);
 
         const words = (chunks != null ? chunks : []).map(
-            (binary) => bip39Words[binaryToByte(binary)]
+            (binary) => bip39Words[binaryToByte(binary)],
         );
 
-        return new Mnemonic({ words, legacy: false });
+        return new Mnemonic({ words });
     }
 
     /**
@@ -123,7 +116,6 @@ export default class Mnemonic {
      * can still be used to create private keys, the exception will
      * contain the failing mnemonic in case you wish to ignore the
      * validation error and continue.
-     *
      * @param {string[]} words
      * @throws {BadMnemonicError}
      * @returns {Promise<Mnemonic>}
@@ -131,50 +123,40 @@ export default class Mnemonic {
     static fromWords(words) {
         return new Mnemonic({
             words,
-            legacy: words.length === 22,
         })._validate();
     }
 
     /**
-     * @deprecated - Use `toEd25519PrivateKey()` or `toEcdsaPrivateKey()` instead
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover a private key from this mnemonic phrase, with an
      * optional passphrase.
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
     toPrivateKey(passphrase = "") {
+        // eslint-disable-next-line deprecation/deprecation
         return this.toEd25519PrivateKey(passphrase);
     }
 
     /**
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover an Ed25519 private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
     async toEd25519PrivateKey(passphrase = "", path = HEDERA_PATH) {
-        if (this._isLegacy) {
-            if (passphrase.length > 0) {
-                throw new Error(
-                    "legacy 22-word mnemonics do not support passphrases"
-                );
-            }
-
-            return this.toLegacyPrivateKey();
-        }
-
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
-            ED25519_SEED_TEXT
+            ED25519_SEED_TEXT,
         );
 
         for (const index of path) {
             ({ keyData, chainCode } = await slip10.derive(
                 keyData,
                 chainCode,
-                index
+                index,
             ));
         }
 
@@ -185,14 +167,33 @@ export default class Mnemonic {
         }
 
         return CACHE.privateKeyConstructor(
-            new Ed25519PrivateKey(keyPair, chainCode)
+            new Ed25519PrivateKey(keyPair, chainCode),
         );
     }
 
     /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardEd25519PrivateKey(passphrase = "", index) {
+        const seed = await Mnemonic.toSeed(this.words, passphrase);
+        let derivedKey = await PrivateKey.fromSeedED25519(seed);
+        index = index == null ? 0 : index;
+
+        for (const currentIndex of [44, 3030, 0, 0, index]) {
+            derivedKey = await derivedKey.derive(currentIndex);
+        }
+
+        return derivedKey;
+    }
+
+    /**
+     * @deprecated - Use `toStandardEd25519PrivateKey()` or `toStandardECDSAsecp256k1PrivateKey()` instead
      * Recover an ECDSA private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
@@ -200,14 +201,14 @@ export default class Mnemonic {
     async toEcdsaPrivateKey(passphrase = "", path = HEDERA_PATH) {
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
-            ECDSA_SEED_TEXT
+            ECDSA_SEED_TEXT,
         );
 
         for (const index of path) {
             ({ keyData, chainCode } = await bip32.derive(
                 keyData,
                 chainCode,
-                index
+                index,
             ));
         }
 
@@ -216,8 +217,42 @@ export default class Mnemonic {
         }
 
         return CACHE.privateKeyConstructor(
-            new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode),
         );
+    }
+
+    /**
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     * @param {string} [passphrase]
+     * @param {number} [index]
+     * @returns {Promise<PrivateKey>}
+     */
+    async toStandardECDSAsecp256k1PrivateKey(passphrase = "", index) {
+        const seed = await Mnemonic.toSeed(this.words, passphrase);
+        let derivedKey = await PrivateKey.fromSeedECDSAsecp256k1(seed);
+        index = index == null ? 0 : index;
+
+        for (const currentIndex of [
+            bip32.toHardenedIndex(44),
+            bip32.toHardenedIndex(3030),
+            bip32.toHardenedIndex(0),
+            0,
+            index,
+        ]) {
+            derivedKey = await derivedKey.derive(currentIndex);
+        }
+
+        return derivedKey;
+    }
+
+    /**
+     * @param {string[]} words
+     * @param {string} passphrase
+     * @returns {Promise<Uint8Array>}
+     */
+    static async toSeed(words, passphrase) {
+        return await bip39.toSeed(words, passphrase);
     }
 
     /**
@@ -230,7 +265,7 @@ export default class Mnemonic {
         const digest = await hmac.hash(
             hmac.HashAlgorithm.Sha512,
             seedText,
-            seed
+            seed,
         );
 
         return {
@@ -241,7 +276,6 @@ export default class Mnemonic {
 
     /**
      * Recover a mnemonic phrase from a string, splitting on spaces. Handles 12, 22 (legacy), and 24 words.
-     *
      * @param {string} mnemonic
      * @returns {Promise<Mnemonic>}
      */
@@ -272,28 +306,21 @@ export default class Mnemonic {
         //  3) The calculated checksum for the mnemonic equals the
         //     checksum encoded in the mnemonic
 
-        if (this._isLegacy) {
-            if (this.words.length !== 22) {
-                throw new BadMnemonicError(
-                    this,
-                    BadMnemonicReason.BadLength,
-                    []
-                );
-            }
-
+        // If words count is 22, it means that this is a legacy private key
+        if (this.words.length === 22) {
             const unknownWordIndices = this.words.reduce(
                 (/** @type {number[]} */ unknowns, word, index) =>
                     legacyWords.includes(word.toLowerCase())
                         ? unknowns
                         : [...unknowns, index],
-                []
+                [],
             );
 
             if (unknownWordIndices.length > 0) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.UnknownWords,
-                    unknownWordIndices
+                    unknownWordIndices,
                 );
             }
 
@@ -304,7 +331,7 @@ export default class Mnemonic {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.ChecksumMismatch,
-                    []
+                    [],
                 );
             }
         } else {
@@ -312,21 +339,21 @@ export default class Mnemonic {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.BadLength,
-                    []
+                    [],
                 );
             }
 
             const unknownWordIndices = this.words.reduce(
                 (/** @type {number[]} */ unknowns, word, index) =>
                     bip39Words.includes(word) ? unknowns : [...unknowns, index],
-                []
+                [],
             );
 
             if (unknownWordIndices.length > 0) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.UnknownWords,
-                    unknownWordIndices
+                    unknownWordIndices,
                 );
             }
 
@@ -351,14 +378,14 @@ export default class Mnemonic {
             ).map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(
-                Uint8Array.from(entropyBytes)
+                Uint8Array.from(entropyBytes),
             );
 
             if (newChecksum !== checksumBits) {
                 throw new BadMnemonicError(
                     this,
                     BadMnemonicReason.ChecksumMismatch,
-                    []
+                    [],
                 );
             }
         }
@@ -371,7 +398,7 @@ export default class Mnemonic {
      */
     async toLegacyPrivateKey() {
         let seed;
-        if (this._isLegacy) {
+        if (this.words.length === 22) {
             [seed] = entropy.legacy1(this.words, legacyWords);
         } else {
             seed = await entropy.legacy2(this.words, bip39Words);

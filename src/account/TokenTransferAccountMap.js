@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,5 +27,16 @@ import ObjectMap from "../ObjectMap.js";
 export default class TokenTransferAccountMap extends ObjectMap {
     constructor() {
         super((s) => AccountId.fromString(s));
+    }
+
+    toJSON() {
+        const obj = {};
+
+        this._map.forEach((value, key) => {
+            // @ts-ignore
+            obj[key] = value.toString();
+        });
+
+        return obj;
     }
 }

@@ -111,7 +111,7 @@ describe("Transaction", function () {
         const nodeAccountId = new AccountId(3);
         const client = Client.forTestnet({
             scheduleNetworkUpdate: false,
-        }).setMaxTransactionFee(Hbar.fromTinybars(1));
+        }).setDefaultMaxTransactionFee(Hbar.fromTinybars(1));
 
         const transaction = new FileCreateTransaction()
             .setNodeAccountIds([nodeAccountId])

@@ -1,11 +1,16 @@
 import Key from "./Key.js";
 import BadKeyError from "./BadKeyError.js";
-import { arrayEqual, arrayStartsWith } from "./util/array.js";
+import { arrayEqual } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import { keccak256 } from "./primitive/keccak.js";
+import elliptic from "elliptic";
+const ec = new elliptic.ec("secp256k1");
 
-const derPrefix = "302d300706052b8104000a032200";
+const legacyDerPrefix = "302d300706052b8104000a032200";
+const legacyDerPrefixBytes = hex.decode(legacyDerPrefix);
+
+const derPrefix = "3036301006072a8648ce3d020106052b8104000a032200";
 const derPrefixBytes = hex.decode(derPrefix);
 
 /**
@@ -43,12 +48,8 @@ export default class EcdsaPublicKey extends Key {
         switch (data.length) {
             case 33:
                 return EcdsaPublicKey.fromBytesRaw(data);
-            case 47:
-                return EcdsaPublicKey.fromBytesDer(data);
             default:
-                throw new BadKeyError(
-                    `invalid public key length: ${data.length} bytes`
-                );
+                return EcdsaPublicKey.fromBytesDer(data);
         }
     }
 
@@ -57,13 +58,40 @@ export default class EcdsaPublicKey extends Key {
      * @returns {EcdsaPublicKey}
      */
     static fromBytesDer(data) {
-        if (data.length != 47 || !arrayStartsWith(data, derPrefixBytes)) {
+        let ecdsaPublicKeyBytes = new Uint8Array();
+
+        switch (data.length) {
+            case 47: // In the case of legace DER prefix
+                ecdsaPublicKeyBytes = data.subarray(
+                    legacyDerPrefixBytes.length,
+                );
+                break;
+            case 56: // The lengths of all other bytePrefixes is equal, so we treat them equally
+                ecdsaPublicKeyBytes = data.subarray(
+                    derPrefixBytes.length,
+                    derPrefixBytes.length + 33,
+                );
+                break;
+            default: // In the case of uncompressed DER prefix public keys
+                /* eslint-disable no-case-declarations */
+                const keyPair = ec.keyFromPublic(
+                    data.subarray(derPrefixBytes.length),
+                    "der",
+                );
+
+                const pk = keyPair.getPublic();
+
+                const compressedPublicKeyBytes = pk.encodeCompressed("hex");
+                ecdsaPublicKeyBytes = hex.decode(compressedPublicKeyBytes);
+                break;
+            /* eslint-enable no-case-declarations */
+        }
+        if (ecdsaPublicKeyBytes.length == 0) {
             throw new BadKeyError(
-                `invalid public key length: ${data.length} bytes`
+                `cannot decode ECDSA private key data from DER format`,
             );
         }
-
-        return new EcdsaPublicKey(data.subarray(derPrefixBytes.length));
+        return new EcdsaPublicKey(ecdsaPublicKeyBytes);
     }
 
     /**
@@ -73,7 +101,7 @@ export default class EcdsaPublicKey extends Key {
     static fromBytesRaw(data) {
         if (data.length != 33) {
             throw new BadKeyError(
-                `invalid public key length: ${data.length} bytes`
+                `invalid public key length: ${data.length} bytes`,
             );
         }
 
@@ -85,7 +113,6 @@ export default class EcdsaPublicKey extends Key {
      *
      * The public key may optionally be prefixed with
      * the DER header.
-     *
      * @param {string} text
      * @returns {EcdsaPublicKey}
      */
@@ -95,7 +122,6 @@ export default class EcdsaPublicKey extends Key {
 
     /**
      * Verify a signature on a message with this public key.
-     *
      * @param {Uint8Array} message
      * @param {Uint8Array} signature
      * @returns {boolean}
@@ -109,11 +135,11 @@ export default class EcdsaPublicKey extends Key {
      */
     toBytesDer() {
         const bytes = new Uint8Array(
-            derPrefixBytes.length + this._keyData.length
+            legacyDerPrefixBytes.length + this._keyData.length,
         );
 
-        bytes.set(derPrefixBytes, 0);
-        bytes.set(this._keyData, derPrefixBytes.length);
+        bytes.set(legacyDerPrefixBytes, 0);
+        bytes.set(this._keyData, legacyDerPrefixBytes.length);
 
         return bytes;
     }
@@ -132,9 +158,9 @@ export default class EcdsaPublicKey extends Key {
         const hash = hex.decode(
             keccak256(
                 `0x${hex.encode(
-                    ecdsa.getFullPublicKey(this.toBytesRaw()).subarray(1)
-                )}`
-            )
+                    ecdsa.getFullPublicKey(this.toBytesRaw()).subarray(1),
+                )}`,
+            ),
         );
         return hex.encode(hash.subarray(12));
     }

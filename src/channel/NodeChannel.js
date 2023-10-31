@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,11 +56,19 @@ export default class NodeChannel extends Channel {
                 // https://github.com/grpc/grpc-node/issues/1593
                 // https://github.com/grpc/grpc-node/issues/1545
                 // https://github.com/grpc/grpc/issues/13163
-                "grpc.keepalive_timeout_ms": 1,
+                "grpc.keepalive_time_ms": 100000,
+                "grpc.keepalive_timeout_ms": 10000,
                 "grpc.keepalive_permit_without_calls": 1,
+                "grpc.enable_retries": 0,
             };
         } else {
             security = credentials.createInsecure();
+            options = {
+                "grpc.keepalive_time_ms": 100000,
+                "grpc.keepalive_timeout_ms": 10000,
+                "grpc.keepalive_permit_without_calls": 1,
+                "grpc.enable_retries": 0,
+            };
         }
 
         /**
@@ -86,32 +94,29 @@ export default class NodeChannel extends Channel {
      */
     _createUnaryClient(serviceName) {
         return (method, requestData, callback) => {
-            if (this._client.getChannel().getConnectivityState(false) == 4) {
-                callback(new GrpcServicesError(GrpcStatus.Unavailable));
-                return;
-            }
+            const deadline = new Date();
+            const milliseconds = this.maxExecutionTime
+                ? this.maxExecutionTime
+                : 10000;
+            deadline.setMilliseconds(deadline.getMilliseconds() + milliseconds);
 
-            let received = false;
-
-            setTimeout(() => {
-                if (!received) {
-                    this._client.close();
+            this._client.waitForReady(deadline, (err) => {
+                if (err) {
                     callback(new GrpcServicesError(GrpcStatus.Timeout));
+                } else {
+                    this._client.makeUnaryRequest(
+                        `/proto.${serviceName}/${method.name}`,
+                        (value) => value,
+                        (value) => {
+                            return value;
+                        },
+                        Buffer.from(requestData),
+                        (e, r) => {
+                            callback(e, r);
+                        }
+                    );
                 }
-            }, this.maxExecutionTime);
-
-            this._client.makeUnaryRequest(
-                `/proto.${serviceName}/${method.name}`,
-                (value) => value,
-                (value) => {
-                    received = true;
-                    return value;
-                },
-                Buffer.from(requestData),
-                (e, r) => {
-                    callback(e, r);
-                }
-            );
+            });
         };
     }
 }

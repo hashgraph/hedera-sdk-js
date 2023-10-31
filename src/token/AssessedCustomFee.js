@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,14 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IAssessedCustomFee} HashgraphProto.proto.IAssessedCustomFee
+ */
+
+/**
+ * @typedef {object} AssessedCustomFeeJSON
+ * @property {?string} feeCollectorAccountId
+ * @property {?string} tokenId
+ * @property {?string} amount
+ * @property {string[]} payerAccountIds
  */
 
 export default class AssessedCustomFee {
@@ -184,6 +192,20 @@ export default class AssessedCustomFee {
                 this._payerAccountIds != null
                     ? this._payerAccountIds.map((id) => id._toProtobuf())
                     : null,
+        };
+    }
+
+    /**
+     * @returns {AssessedCustomFeeJSON}
+     */
+    toJSON() {
+        return {
+            feeCollectorAccountId:
+                this.feeCollectorAccountId?.toString() || null,
+            tokenId: this._tokenId?.toString() || null,
+            amount: this._amount?.toString() || null,
+            payerAccountIds:
+                this._payerAccountIds?.map((id) => id.toString()) || [],
         };
     }
 }

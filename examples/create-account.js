@@ -11,9 +11,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
         );
     }
 
@@ -28,18 +32,24 @@ async function main() {
     console.log(`private key = ${newKey.toString()}`);
     console.log(`public key = ${newKey.publicKey.toString()}`);
 
-    let transaction = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(10)) // 10 h
-        .setKey(newKey.publicKey)
-        .freezeWithSigner(wallet);
+    try {
+        let transaction = await new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10)) // 10 h
+            .setKey(newKey.publicKey)
+            .freezeWithSigner(wallet);
 
-    transaction = await transaction.signWithSigner(wallet);
+        transaction = await transaction.signWithSigner(wallet);
 
-    const response = await transaction.executeWithSigner(wallet);
+        const response = await transaction.executeWithSigner(wallet);
 
-    const receipt = await response.getReceiptWithSigner(wallet);
+        const receipt = await response.getReceiptWithSigner(wallet);
 
-    console.log(`account id = ${receipt.accountId.toString()}`);
+        console.log(`account id = ${receipt.accountId.toString()}`);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

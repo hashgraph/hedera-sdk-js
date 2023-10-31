@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,15 @@ import TokenId from "./TokenId.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
+ */
+
+/**
+ * @typedef {object} TokenTransferJSON
+ * @property {string} tokenId
+ * @property {string} accountId
+ * @property {?number} expectedDecimals
+ * @property {string} amount
+ * @property {boolean} isApproved
  */
 
 /**
@@ -129,5 +138,25 @@ export default class TokenTransfer {
             amount: this.amount,
             isApproval: this.isApproved,
         };
+    }
+
+    /**
+     * @returns {TokenTransferJSON}
+     */
+    toJSON() {
+        return {
+            tokenId: this.tokenId.toString(),
+            accountId: this.accountId.toString(),
+            expectedDecimals: this.expectedDecimals,
+            amount: this.amount.toString(),
+            isApproved: this.isApproved,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

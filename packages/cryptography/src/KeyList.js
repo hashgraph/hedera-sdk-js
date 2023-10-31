@@ -84,7 +84,7 @@ export default class KeyList extends Key {
     splice(start, deleteCount, ...items) {
         return new KeyList(
             this._keys.splice(start, deleteCount, ...items),
-            this.threshold
+            this.threshold,
         );
     }
 

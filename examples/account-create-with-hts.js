@@ -10,6 +10,8 @@ import {
     TokenNftInfoQuery,
     NftId,
     AccountInfoQuery,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TransactionReceipt,
 } from "@hashgraph/sdk";
 import axios from "axios";
 
@@ -26,7 +28,7 @@ Example for HIP-542.
 1. Create an NFT using the Hedera Token Service
 2. Mint the NFT
 3. Create an ECDSA public key alias
-4. Tranfer the NFT to the public key alias using the transfer transaction
+4. Transfer the NFT to the public key alias using the transfer transaction
 5. Return the new account ID in the child record
 6. Show the new account ID owns the NFT
 
@@ -54,7 +56,11 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const client = Client.forTestnet();
+    const nodes = {
+        "127.0.0.1:50211": new AccountId(3),
+    };
+
+    const client = Client.forNetwork(nodes);
     client.setOperator(operatorId, operatorKey);
 
     /**
@@ -138,7 +144,7 @@ async function main() {
     /**
      * Step 4
      *
-     * Tranfer the NFT to the public key alias using the transfer transaction
+     * Transfer the NFT to the public key alias using the transfer transaction
      */
     let nftTransferTx = new TransferTransaction()
         .addNftTransfer(nftTokenId, exampleNftId, operatorId, aliasAccountId)
@@ -274,7 +280,17 @@ async function main() {
     // Wait some time for the mirror node to be updated
     await wait(10000);
 
-    const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
+    let link;
+
+    if (
+        process.env.HEDERA_NETWORK == "local-node" ||
+        process.env.HEDERA_NETWORK == "localhost"
+    ) {
+        link = `http://127.0.0.1:5551/api/v1/accounts?account.id=${accountId2}`;
+    } else {
+        link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/accounts?account.id=${accountId2}`;
+    }
+
     try {
         /* eslint-disable */
         const balance = (
@@ -286,7 +302,7 @@ async function main() {
 
         balance === 10
             ? console.log(
-                  `Account is created succesfully using HTS 'TransferTransaction'`
+                  `Account is created successfully using HTS 'TransferTransaction'`
               )
             : console.log(
                   "Creating account with HTS using public key alias failed"
@@ -297,8 +313,8 @@ async function main() {
 
     /**
      * TOKEN MINTER FUNCTION
-     *
      * @param {string} CID
+     * @returns {Promise<TransactionReceipt>}
      */
     async function tokenMinterFcn(CID) {
         const mintTx = new TokenMintTransaction()
@@ -321,4 +337,6 @@ async function main() {
     }
 }
 
-void main();
+void main()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));

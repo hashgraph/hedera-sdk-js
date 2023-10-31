@@ -19,10 +19,13 @@ export default class EthereumTransactionData {
             throw new Error("empty bytes");
         }
 
-        if (bytes[0] != 2) {
-            return CACHE.ethereumTransactionDataLegacyFromBytes(bytes);
-        } else {
-            return CACHE.ethereumTransactionDataEip1559FromBytes(bytes);
+        switch (bytes[0]) {
+            case 1:
+                return CACHE.ethereumTransactionDataEip2930FromBytes(bytes);
+            case 2:
+                return CACHE.ethereumTransactionDataEip1559FromBytes(bytes);
+            default:
+                return CACHE.ethereumTransactionDataLegacyFromBytes(bytes);
         }
     }
 

@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  * limitations under the License.
  * ‍
  */
+import * as EntityIdHelper from "./EntityIdHelper.js";
 
 export { default as Cache } from "./Cache.js";
 export {
@@ -62,6 +63,7 @@ export { default as ContractId } from "./contract/ContractId.js";
 export { default as ContractInfo } from "./contract/ContractInfo.js";
 export { default as ContractInfoQuery } from "./contract/ContractInfoQuery.js";
 export { default as ContractLogInfo } from "./contract/ContractLogInfo.js";
+export { default as ContractNonceInfo } from "./contract/ContractNonceInfo.js";
 export { default as ContractUpdateTransaction } from "./contract/ContractUpdateTransaction.js";
 export { default as CustomFee } from "./token/CustomFee.js";
 export { default as CustomFixedFee } from "./token/CustomFixedFee.js";
@@ -71,8 +73,10 @@ export { default as DelegateContractId } from "./contract/DelegateContractId.js"
 export { default as EthereumTransaction } from "./EthereumTransaction.js";
 export { default as EthereumTransactionDataLegacy } from "./EthereumTransactionDataLegacy.js";
 export { default as EthereumTransactionDataEip1559 } from "./EthereumTransactionDataEip1559.js";
+export { default as EthereumTransactionDataEip2930 } from "./EthereumTransactionDataEip2930.js";
 export { default as EthereumTransactionData } from "./EthereumTransactionData.js";
 export { default as EthereumFlow } from "./EthereumFlow.js";
+export { default as EvmAddress } from "./EvmAddress.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
 export { default as ExchangeRates } from "./ExchangeRates.js";
 export { default as Executable } from "./Executable.js";
@@ -166,13 +170,14 @@ export { default as TransactionResponse } from "./transaction/TransactionRespons
 export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
 export { default as Wallet } from "./Wallet.js";
+export { default as Logger } from "./logger/Logger.js";
+export { default as LogLevel } from "./logger/LogLevel.js";
+export { EntityIdHelper };
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
-
-export { default as Logger } from "js-logger";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

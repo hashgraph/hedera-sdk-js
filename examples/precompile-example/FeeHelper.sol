@@ -2,15 +2,12 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-// This file was copied from github.com/hashgraph/hedera-smart-contracts on Aug 31 2022
+// This file was copied from github.com/hashgraph/hedera-smart-contracts on Sep 27 2023
 
-import "./HederaTokenService.sol";
-import "./HederaResponseCodes.sol";
 import "./IHederaTokenService.sol";
-import "./KeyHelper.sol";
 
-abstract contract FeeHelper is KeyHelper {
-    function createFixedHbarFee(uint32 amount, address feeCollector)
+abstract contract FeeHelper {
+    function createFixedHbarFee(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee memory fixedFee)
@@ -21,7 +18,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFixedTokenFee(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee memory fixedFee) {
@@ -30,7 +27,7 @@ abstract contract FeeHelper is KeyHelper {
         fixedFee.feeCollector = feeCollector;
     }
 
-    function createFixedSelfDenominatedFee(uint32 amount, address feeCollector)
+    function createFixedSelfDenominatedFee(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee memory fixedFee)
@@ -41,8 +38,8 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFractionalFee(
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         bool netOfTransfers,
         address feeCollector
     )
@@ -57,10 +54,10 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFractionalFeeWithMinAndMax(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 minimumAmount,
-        uint32 maximumAmount,
+        int64 numerator,
+        int64 denominator,
+        int64 minimumAmount,
+        int64 maximumAmount,
         bool netOfTransfers,
         address feeCollector
     )
@@ -77,10 +74,10 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFractionalFeeWithLimits(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 minimumAmount,
-        uint32 maximumAmount,
+        int64 numerator,
+        int64 denominator,
+        int64 minimumAmount,
+        int64 maximumAmount,
         bool netOfTransfers,
         address feeCollector
     )
@@ -97,8 +94,8 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFeeWithoutFallback(
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         address feeCollector
     ) internal pure returns (IHederaTokenService.RoyaltyFee memory royaltyFee) {
         royaltyFee.numerator = numerator;
@@ -107,9 +104,9 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFeeWithHbarFallbackFee(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 amount,
+        int64 numerator,
+        int64 denominator,
+        int64 amount,
         address feeCollector
     ) internal pure returns (IHederaTokenService.RoyaltyFee memory royaltyFee) {
         royaltyFee.numerator = numerator;
@@ -120,9 +117,9 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFeeWithTokenDenominatedFallbackFee(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 amount,
+        int64 numerator,
+        int64 denominator,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.RoyaltyFee memory royaltyFee) {
@@ -135,7 +132,7 @@ abstract contract FeeHelper is KeyHelper {
 
     function createNAmountFixedFeesForHbars(
         uint8 numberOfFees,
-        uint32 amount,
+        int64 amount,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
         fixedFees = new IHederaTokenService.FixedFee[](numberOfFees);
@@ -148,7 +145,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFixedFeeForToken(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
@@ -162,7 +159,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFixedFeesForToken(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address firstFeeCollector,
         address secondFeeCollector
@@ -182,7 +179,7 @@ abstract contract FeeHelper is KeyHelper {
         fixedFees[0] = fixedFee2;
     }
 
-    function createSingleFixedFeeForHbars(uint32 amount, address feeCollector)
+    function createSingleFixedFeeForHbars(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee[] memory fixedFees)
@@ -196,7 +193,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFixedFeeForCurrentToken(
-        uint32 amount,
+        int64 amount,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
         fixedFees = new IHederaTokenService.FixedFee[](1);
@@ -209,7 +206,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFixedFeeWithInvalidFlags(
-        uint32 amount,
+        int64 amount,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
         fixedFees = new IHederaTokenService.FixedFee[](1);
@@ -222,7 +219,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFixedFeeWithTokenIdAndHbars(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
@@ -237,7 +234,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFixedFeesWithAllTypes(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee[] memory fixedFees) {
@@ -264,7 +261,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createFixedFeeForToken(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee memory fixedFee) {
@@ -273,7 +270,7 @@ abstract contract FeeHelper is KeyHelper {
         fixedFee.feeCollector = feeCollector;
     }
 
-    function createFixedFeeForHbars(uint32 amount, address feeCollector)
+    function createFixedFeeForHbars(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee memory fixedFee)
@@ -283,7 +280,7 @@ abstract contract FeeHelper is KeyHelper {
         fixedFee.feeCollector = feeCollector;
     }
 
-    function createFixedFeeForCurrentToken(uint32 amount, address feeCollector)
+    function createFixedFeeForCurrentToken(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee memory fixedFee)
@@ -294,7 +291,7 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     //Used for negative scenarios
-    function createFixedFeeWithInvalidFlags(uint32 amount, address feeCollector)
+    function createFixedFeeWithInvalidFlags(int64 amount, address feeCollector)
         internal
         pure
         returns (IHederaTokenService.FixedFee memory fixedFee)
@@ -307,7 +304,7 @@ abstract contract FeeHelper is KeyHelper {
 
     //Used for negative scenarios
     function createFixedFeeWithTokenIdAndHbars(
-        uint32 amount,
+        int64 amount,
         address tokenId,
         address feeCollector
     ) internal pure returns (IHederaTokenService.FixedFee memory fixedFee) {
@@ -325,8 +322,8 @@ abstract contract FeeHelper is KeyHelper {
 
     function createNAmountFractionalFees(
         uint8 numberOfFees,
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         bool netOfTransfers,
         address feeCollector
     )
@@ -349,8 +346,8 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFractionalFee(
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         bool netOfTransfers,
         address feeCollector
     )
@@ -370,10 +367,10 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleFractionalFeeWithLimits(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 minimumAmount,
-        uint32 maximumAmount,
+        int64 numerator,
+        int64 denominator,
+        int64 minimumAmount,
+        int64 maximumAmount,
         bool netOfTransfers,
         address feeCollector
     )
@@ -404,8 +401,8 @@ abstract contract FeeHelper is KeyHelper {
 
     function createNAmountRoyaltyFees(
         uint8 numberOfFees,
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         address feeCollector
     )
         internal
@@ -433,8 +430,8 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleRoyaltyFee(
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         address feeCollector
     )
         internal
@@ -452,9 +449,9 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createSingleRoyaltyFeeWithFallbackFee(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 amount,
+        int64 numerator,
+        int64 denominator,
+        int64 amount,
         address tokenId,
         bool useHbarsForPayment,
         address feeCollector
@@ -478,9 +475,9 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFeesWithAllTypes(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 amount,
+        int64 numerator,
+        int64 denominator,
+        int64 amount,
         address tokenId,
         address feeCollector
     )
@@ -519,8 +516,8 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFee(
-        uint32 numerator,
-        uint32 denominator,
+        int64 numerator,
+        int64 denominator,
         address feeCollector
     ) internal pure returns (IHederaTokenService.RoyaltyFee memory royaltyFee) {
         royaltyFee.numerator = numerator;
@@ -529,9 +526,9 @@ abstract contract FeeHelper is KeyHelper {
     }
 
     function createRoyaltyFeeWithFallbackFee(
-        uint32 numerator,
-        uint32 denominator,
-        uint32 amount,
+        int64 numerator,
+        int64 denominator,
+        int64 amount,
         address tokenId,
         bool useHbarsForPayment,
         address feeCollector

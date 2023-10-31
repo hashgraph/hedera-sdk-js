@@ -2,13 +2,13 @@
 export default {
     server: {
         hmr: false,
-        force: true,
     },
     envDir: "./",
     build: {
         polyfillDynamicImport: false,
     },
     optimizeDeps: {
+        force: true,
         entries: [
             "./test/unit/encoding/hex.js",
             "./test/unit/encoding/utf8.js",

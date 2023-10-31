@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,10 +159,14 @@ export default class TransactionId {
      */
     toString() {
         if (this.accountId != null && this.validStart != null) {
+            const zeroPaddedNanos = String(this.validStart.nanos).padStart(
+                9,
+                "0"
+            );
             const nonce =
                 this.nonce != null ? "/".concat(this.nonce.toString()) : "";
             const scheduled = this.scheduled ? "?scheduled" : "";
-            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${scheduled}${nonce}`;
+            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${zeroPaddedNanos}${scheduled}${nonce}`;
         } else {
             throw new Error("neither `accountId` nor `validStart` are set");
         }

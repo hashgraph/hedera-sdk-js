@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
  * ‍
  */
 
+import Query from "../query/Query.js";
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
@@ -26,7 +27,6 @@ import TopicId from "./TopicId.js";
 import Long from "long";
 import Timestamp from "../Timestamp.js";
 import { RST_STREAM } from "../Executable.js";
-import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -39,18 +39,23 @@ import Logger from "js-logger";
  * @typedef {import("../client/Client.js").default<ChannelT, MirrorChannel>} Client<ChannelT, MirrorChannel>
  */
 
-export default class TopicMessageQuery {
+/**
+ * @augments {Query<TopicMessageQuery>}
+ */
+export default class TopicMessageQuery extends Query {
     /**
      * @param {object} props
      * @param {TopicId | string} [props.topicId]
      * @param {Timestamp} [props.startTime]
      * @param {Timestamp} [props.endTime]
-     * @param {(message: TopicMessage, error: Error)=> void} [props.errorHandler]
+     * @param {(message: TopicMessage | null, error: Error)=> void} [props.errorHandler]
      * @param {() => void} [props.completionHandler]
      * @param {(error: MirrorError | Error | null) => boolean} [props.retryHandler]
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
+        super();
+
         /**
          * @private
          * @type {?TopicId}
@@ -89,7 +94,7 @@ export default class TopicMessageQuery {
 
         /**
          * @private
-         * @type {(message: TopicMessage, error: Error) => void}
+         * @type {(message: TopicMessage | null, error: Error) => void}
          */
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this._errorHandler = (message, error) => {
@@ -115,11 +120,13 @@ export default class TopicMessageQuery {
          * @type {() => void}
          */
         this._completionHandler = () => {
-            Logger.log(
-                `Subscription to topic ${
-                    this._topicId != null ? this._topicId.toString() : ""
-                } complete`
-            );
+            if (this._logger) {
+                this._logger.info(
+                    `Subscription to topic ${
+                        this._topicId != null ? this._topicId.toString() : ""
+                    } complete`
+                );
+            }
         };
 
         if (props.completionHandler != null) {
@@ -172,18 +179,6 @@ export default class TopicMessageQuery {
          * @private
          * @type {number}
          */
-        this._maxAttempts = 10;
-
-        /**
-         * @private
-         * @type {number}
-         */
-        this._maxBackoff = 8000;
-
-        /**
-         * @private
-         * @type {number}
-         */
         this._attempt = 0;
 
         /**
@@ -191,6 +186,8 @@ export default class TopicMessageQuery {
          * @type {SubscriptionHandle | null}
          */
         this._handle = null;
+
+        this.setMaxBackoff(8000);
     }
 
     /**
@@ -281,7 +278,7 @@ export default class TopicMessageQuery {
     }
 
     /**
-     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
+     * @param {(message: TopicMessage | null, error: Error)=> void} errorHandler
      * @returns {TopicMessageQuery}
      */
     setErrorHandler(errorHandler) {
@@ -304,25 +301,27 @@ export default class TopicMessageQuery {
 
     /**
      * @param {number} attempts
+     * @returns {this}
      */
     setMaxAttempts(attempts) {
         this.requireNotSubscribed();
-
         this._maxAttempts = attempts;
+        return this;
     }
 
     /**
      * @param {number} backoff
+     * @returns {this}
      */
     setMaxBackoff(backoff) {
         this.requireNotSubscribed();
-
         this._maxBackoff = backoff;
+        return this;
     }
 
     /**
      * @param {Client<Channel>} client
-     * @param {((message: TopicMessage, error: Error) => void) | null} errorHandler
+     * @param {((message: TopicMessage | null, error: Error) => void) | null} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {SubscriptionHandle}
      */
@@ -462,6 +461,8 @@ export default class TopicMessageQuery {
                         setTimeout(() => {
                             this._makeServerStreamRequest(client);
                         }, delay);
+                    } else {
+                        this._errorHandler(null, new Error(message));
                     }
                 },
                 this._completionHandler

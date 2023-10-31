@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,13 @@
 
 import AccountId from "./account/AccountId.js";
 import Hbar from "./Hbar.js";
+
+/**
+ * @typedef {object} TransferJSON
+ * @property {string} accountId
+ * @property {string} amount
+ * @property {boolean} isApproved
+ */
 
 /**
  * @namespace proto
@@ -102,5 +109,23 @@ export default class Transfer {
             amount: this.amount.toTinybars(),
             isApproval: this.isApproved,
         };
+    }
+
+    /**
+     * @returns {TransferJSON}
+     */
+    toJSON() {
+        return {
+            accountId: this.accountId.toString(),
+            amount: this.amount.toTinybars().toString(),
+            isApproved: this.isApproved,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

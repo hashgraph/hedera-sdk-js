@@ -22,7 +22,7 @@ describe("bip39", function () {
         const seed = await bip39.toSeed(words, passphrase);
 
         expect(hex.encode(seed)).to.be.equal(
-            "ed37b3442b3d550d0fbb6f01f20aac041c245d4911e13452cac7b1676a070eda66771b71c0083b34cc57ca9c327c459a0ec3600dbaf7f238ff27626c8430a806"
+            "ed37b3442b3d550d0fbb6f01f20aac041c245d4911e13452cac7b1676a070eda66771b71c0083b34cc57ca9c327c459a0ec3600dbaf7f238ff27626c8430a806",
         );
     });
 

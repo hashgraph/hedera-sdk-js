@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,42 @@ import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import EvmAddress from "../EvmAddress.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../token/TokenTransfer.js").TokenTransferJSON} TokenTransferJSON
  * @typedef {import("../account/HbarAllowance.js").default} HbarAllowance
  * @typedef {import("../account/TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
+ * @typedef {import("./TransactionReceipt.js").TransactionReceiptJSON} TransactionReceiptJSON
+ * @typedef {import("../Transfer.js").TransferJSON} TransferJSON
+ */
+
+/**
+ * @typedef {object} TransactionRecordJSON
+ * @property {TransactionReceiptJSON} receipt
+ * @property {?string} transactionHash
+ * @property {Date} consensusTimestamp
+ * @property {string} transactionId
+ * @property {string} transactionMemo
+ * @property {string} transactionFee
+ * @property {TransferJSON[]} transfers
+ * @property {TokenTransferMap} tokenTransfers
+ * @property {TokenTransferJSON[]} tokenTransfersList
+ * @property {?string} scheduleRef
+ * @property {AssessedCustomFee[]} assessedCustomFees
+ * @property {TokenNftTransferMap} nftTransfers
+ * @property {TokenAssocation[]} automaticTokenAssociations
+ * @property {Date | null} parentConsensusTimestamp
+ * @property {?string} aliasKey
+ * @property {TransactionRecord[]} duplicates
+ * @property {TransactionRecord[]} children
+ * @property {?string} ethereumHash
+ * @property {Transfer[]} paidStakingRewards
+ * @property {?string} prngBytes
+ * @property {?number} prngNumber
+ * @property {?string} evmAddress
  */
 
 /**
@@ -558,5 +588,49 @@ export default class TransactionRecord {
         return HashgraphProto.proto.TransactionGetRecordResponse.encode(
             this._toProtobuf()
         ).finish();
+    }
+
+    /**
+     * @returns {TransactionRecordJSON}
+     */
+    toJSON() {
+        return {
+            receipt: this.receipt.toJSON(),
+            transactionHash: hex.encode(this.transactionHash),
+            consensusTimestamp: this.consensusTimestamp.toDate(),
+            transactionId: this.transactionId.toString(),
+            transactionMemo: this.transactionMemo,
+            transactionFee: this.transactionFee.toTinybars().toString(),
+            transfers: this.transfers.map((transfer) => transfer.toJSON()),
+            tokenTransfers: this.tokenTransfers,
+            tokenTransfersList: this.tokenTransfersList.map((transfer) =>
+                transfer.toJSON()
+            ),
+            scheduleRef: this.scheduleRef?.toString() || null,
+            assessedCustomFees: this.assessedCustomFees,
+            nftTransfers: this.nftTransfers,
+            automaticTokenAssociations: this.automaticTokenAssociations,
+            parentConsensusTimestamp:
+                this.parentConsensusTimestamp?.toDate() || null,
+            aliasKey: this.aliasKey?.toString() || null,
+            duplicates: this.duplicates,
+            children: this.children,
+            ethereumHash:
+                this.ethereumHash != null
+                    ? hex.encode(this.ethereumHash)
+                    : null,
+            paidStakingRewards: this.paidStakingRewards,
+            prngBytes:
+                this.prngBytes != null ? hex.encode(this.prngBytes) : null,
+            prngNumber: this.prngNumber,
+            evmAddress: this.evmAddress?.toString() || null,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

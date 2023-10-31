@@ -125,7 +125,7 @@ describe("AccountInfoMocking", function () {
             ],
         ]));
 
-        client.setMaxQueryPayment(Hbar.fromTinybars(10));
+        client.setDefaultMaxQueryPayment(Hbar.fromTinybars(10));
 
         let err = false;
 
@@ -183,7 +183,7 @@ describe("AccountInfoMocking", function () {
             ],
         ]));
 
-        client.setMaxQueryPayment(Hbar.fromTinybars(24));
+        client.setDefaultMaxQueryPayment(Hbar.fromTinybars(24));
 
         let err = false;
 
@@ -399,7 +399,7 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             if (
                 error.message !==
-                "transaction 0.0.1854@1651168054.29348185 failed precheck with status TRANSACTION_EXPIRED"
+                "transaction 0.0.1854@1651168054.029348185 failed precheck with status TRANSACTION_EXPIRED"
             ) {
                 throw error;
             }

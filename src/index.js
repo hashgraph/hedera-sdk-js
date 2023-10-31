@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,32 +22,7 @@
  * The entry point for NodeJS applications
  */
 
-import Logger from "js-logger";
-
 export * from "./exports.js";
 
 export { default as LocalProvider } from "./LocalProvider.js";
 export { default as Client } from "./client/NodeClient.js";
-
-if (
-    process != null &&
-    process.env != null &&
-    process.env.HEDERA_SDK_LOG_LEVEL != null
-) {
-    Logger.useDefaults();
-
-    switch (process.env.HEDERA_SDK_LOG_LEVEL) {
-        case "DEBUG":
-            Logger.setLevel(Logger.DEBUG);
-            break;
-        case "TRACE":
-            Logger.setLevel(Logger.TRACE);
-            break;
-        case "WARN":
-            Logger.setLevel(Logger.WARN);
-            break;
-        case "INFO":
-            Logger.setLevel(Logger.INFO);
-            break;
-    }
-}

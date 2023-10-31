@@ -28,6 +28,10 @@ tasks:
         deps:
             - build
 
+    "run:examples":
+        cmds:
+            - task: "examples:run-examples"
+
     docs:
         cmds:
             - ./node_modules/.bin/typedoc
@@ -74,6 +78,7 @@ tasks:
     build:
         cmds:
             - task: install
+            - task: update:addressbooks
             - task: format
             - task: lint
             - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null

@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,11 @@ export default class NodeMirrorChannel extends MirrorChannel {
             address,
             address.endsWith(":50212") || address.endsWith(":443")
                 ? grpc.credentials.createSsl()
-                : grpc.credentials.createInsecure()
+                : grpc.credentials.createInsecure(),
+            {
+                "grpc.keepalive_time_ms": 90000,
+                "grpc.keepalive_timeout_ms": 5000,
+            }
         );
     }
 
@@ -94,8 +98,8 @@ export default class NodeMirrorChannel extends MirrorChannel {
                 }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .on("error", (/** @type {grpc.StatusObject} */ _) => {
-                // Do nothing
+            .on("error", (/** @type {grpc.StatusObject} */ err) => {
+                error(err);
             });
 
         return () => {

@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import PrivateKey from "../PrivateKey.js";
 import LedgerId from "../LedgerId.js";
 import FileId from "../file/FileId.js";
 import CACHE from "../Cache.js";
-import Logger from "js-logger";
+import Logger from "../logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -108,7 +108,7 @@ export default class Client {
          * @private
          * @type {Hbar}
          */
-        this._maxQueryPayment = new Hbar(1);
+        this._defaultMaxQueryPayment = new Hbar(1);
 
         if (props != null) {
             if (props.operator != null) {
@@ -154,6 +154,14 @@ export default class Client {
         /** @internal */
         /** @type {NodeJS.Timeout} */
         this._timer;
+
+        /**
+         * Logger
+         *
+         * @external
+         * @type {Logger | null}
+         */
+        this._logger = null;
     }
 
     /**
@@ -267,7 +275,6 @@ export default class Client {
      */
     setTransportSecurity(transportSecurity) {
         this._network.setTransportSecurity(transportSecurity);
-        this._mirrorNetwork.setTransportSecurity(transportSecurity);
         return this;
     }
 
@@ -287,6 +294,13 @@ export default class Client {
         return this.setOperatorWith(accountId, key.publicKey, (message) =>
             Promise.resolve(key.sign(message))
         );
+    }
+
+    /**
+     * @returns {?ClientOperator}
+     */
+    getOperator() {
+        return this._operator;
     }
 
     /**
@@ -353,30 +367,18 @@ export default class Client {
     }
 
     /**
-     * @deprecated - Use `defaultMaxTransactionFee` instead
-     * @returns {?Hbar}
-     */
-    get maxTransactionFee() {
-        return this._defaultMaxTransactionFee;
-    }
-
-    /**
-     * @deprecated - Use `setDefaultMaxTransactionFee()` instead
-     * Set the maximum fee to be paid for transactions
-     * executed by this client.
-     * @param {Hbar} maxTransactionFee
-     * @returns {this}
-     */
-    setMaxTransactionFee(maxTransactionFee) {
-        this._defaultMaxTransactionFee = maxTransactionFee;
-        return this;
-    }
-
-    /**
      * @returns {?Hbar}
      */
     get defaultMaxTransactionFee() {
         return this._defaultMaxTransactionFee;
+    }
+
+    /**
+     * @deprecated - Use `defaultMaxTransactionFee` instead
+     * @returns {?Hbar}
+     */
+    get maxTransactionFee() {
+        return this.defaultMaxTransactionFee;
     }
 
     /**
@@ -387,8 +389,22 @@ export default class Client {
      * @returns {this}
      */
     setDefaultMaxTransactionFee(defaultMaxTransactionFee) {
+        if (defaultMaxTransactionFee.toTinybars().toInt() < 0) {
+            throw new Error("defaultMaxTransactionFee must be non-negative");
+        }
         this._defaultMaxTransactionFee = defaultMaxTransactionFee;
         return this;
+    }
+
+    /**
+     * @deprecated - Use `setDefaultMaxTransactionFee()` instead
+     * Set the maximum fee to be paid for transactions
+     * executed by this client.
+     * @param {Hbar} maxTransactionFee
+     * @returns {this}
+     */
+    setMaxTransactionFee(maxTransactionFee) {
+        return this.setDefaultMaxTransactionFee(maxTransactionFee);
     }
 
     /**
@@ -413,19 +429,39 @@ export default class Client {
     /**
      * @returns {Hbar}
      */
+    get defaultMaxQueryPayment() {
+        return this._defaultMaxQueryPayment;
+    }
+
+    /**
+     * @deprecated in a favor of defaultMaxQueryPayment
+     * @returns {Hbar}
+     */
     get maxQueryPayment() {
-        return this._maxQueryPayment;
+        return this.defaultMaxQueryPayment;
     }
 
     /**
      * Set the maximum payment allowable for queries.
      *
+     * @param {Hbar} defaultMaxQueryPayment
+     * @returns {Client<ChannelT, MirrorChannelT>}
+     */
+    setDefaultMaxQueryPayment(defaultMaxQueryPayment) {
+        if (defaultMaxQueryPayment.toTinybars().toInt() < 0) {
+            throw new Error("defaultMaxQueryPayment must be non-negative");
+        }
+        this._defaultMaxQueryPayment = defaultMaxQueryPayment;
+        return this;
+    }
+    /**
+     * @deprecated in a favor of setDefaultMaxQueryPayment()
+     * Set the maximum payment allowable for queries.
      * @param {Hbar} maxQueryPayment
      * @returns {Client<ChannelT, MirrorChannelT>}
      */
     setMaxQueryPayment(maxQueryPayment) {
-        this._maxQueryPayment = maxQueryPayment;
-        return this;
+        return this.setDefaultMaxQueryPayment(maxQueryPayment);
     }
 
     /**
@@ -632,6 +668,25 @@ export default class Client {
         this._scheduleNetworkUpdate();
         return this;
     }
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     * @returns {this}
+     */
+    setLogger(logger) {
+        this._logger = logger;
+        return this;
+    }
+
+    /**
+     * Get logger if set
+     *
+     * @returns {?Logger}
+     */
+    get logger() {
+        return this._logger;
+    }
 
     /**
      * @param {AccountId | string} accountId
@@ -697,11 +752,13 @@ export default class Client {
                     this._scheduleNetworkUpdate();
                 }
             } catch (error) {
-                Logger.trace(
-                    `failed to update client address book: ${
-                        /** @type {Error} */ (error).toString()
-                    }`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `failed to update client address book: ${
+                            /** @type {Error} */ (error).toString()
+                        }`
+                    );
+                }
             }
         }, this._networkUpdatePeriod);
     }
@@ -719,11 +776,13 @@ export default class Client {
                     .execute(this);
                 this.setNetworkFromAddressBook(addressBook);
             } catch (error) {
-                Logger.trace(
-                    `failed to update client address book: ${
-                        /** @type {Error} */ (error).toString()
-                    }`
-                );
+                if (this._logger) {
+                    this._logger.trace(
+                        `failed to update client address book: ${
+                            /** @type {Error} */ (error).toString()
+                        }`
+                    );
+                }
             }
         }, 1000);
     }

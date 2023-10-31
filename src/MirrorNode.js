@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,23 +55,5 @@ export default class MirrorNode extends ManagedNode {
      */
     getKey() {
         return this._address.toString();
-    }
-
-    /**
-     * @returns {MirrorNode}
-     */
-    toInsecure() {
-        return new MirrorNode({
-            cloneNode: { node: this, address: this._address.toInsecure() },
-        });
-    }
-
-    /**
-     * @returns {MirrorNode}
-     */
-    toSecure() {
-        return new MirrorNode({
-            cloneNode: { node: this, address: this._address.toSecure() },
-        });
     }
 }

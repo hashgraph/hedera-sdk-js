@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
+import ContractId from "../contract/ContractId.js";
 import TokenId from "../token/TokenId.js";
 import NftId from "../token/NftId.js";
 import Long from "long";
@@ -39,6 +40,7 @@ import TokenNftAllowance from "./TokenNftAllowance.js";
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").proto.ICryptoApproveAllowanceTransactionBody} HashgraphProto.proto.ICryptoApproveAllowanceTransactionBody
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 
 /**
@@ -138,7 +140,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
 
     /**
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
      * @returns {AccountAllowanceApproveTransaction}
      */
@@ -150,10 +152,22 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
+                        : ownerAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              ownerAccountId.toSolidityAddress()
+                          )
                         : ownerAccountId,
                 amount: amount instanceof Hbar ? amount : new Hbar(amount),
             })
@@ -195,7 +209,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {Long | number} amount
      * @returns {AccountAllowanceApproveTransaction}
      */
@@ -211,10 +225,22 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
+                        : ownerAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              ownerAccountId.toSolidityAddress()
+                          )
                         : ownerAccountId,
                 amount:
                     typeof amount === "number"
@@ -260,7 +286,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @deprecated - Use `approveTokenNftAllowance()` instead
      * @param {NftId | string} nftId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
     addTokenNftAllowance(nftId, spenderAccountId) {
@@ -282,7 +308,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {NftId | string} nftId
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {AccountId | string | null} delegatingSpender
      * @returns {AccountAllowanceApproveTransaction}
      */
@@ -298,6 +324,12 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
         const spender =
             typeof spenderAccountId === "string"
                 ? AccountId.fromString(spenderAccountId)
+                : spenderAccountId instanceof ContractId
+                ? AccountId.fromEvmAddress(
+                      0,
+                      0,
+                      spenderAccountId.toSolidityAddress()
+                  )
                 : spenderAccountId;
         let found = false;
 
@@ -323,6 +355,12 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     ownerAccountId:
                         typeof ownerAccountId === "string"
                             ? AccountId.fromString(ownerAccountId)
+                            : ownerAccountId instanceof ContractId
+                            ? AccountId.fromEvmAddress(
+                                  0,
+                                  0,
+                                  ownerAccountId.toSolidityAddress()
+                              )
                             : ownerAccountId,
                     serialNumbers: [id.serial],
                     allSerials: false,
@@ -340,7 +378,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
     approveTokenNftAllowance(nftId, ownerAccountId, spenderAccountId) {
@@ -355,7 +393,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {AccountId | string} delegatingSpender
      * @returns {AccountAllowanceApproveTransaction}
      */
@@ -376,7 +414,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string | null} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @param {boolean} allSerials
      * @returns {AccountAllowanceApproveTransaction}
      */
@@ -397,10 +435,22 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              spenderAccountId.toSolidityAddress()
+                          )
                         : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
+                        : ownerAccountId instanceof ContractId
+                        ? AccountId.fromEvmAddress(
+                              0,
+                              0,
+                              ownerAccountId.toSolidityAddress()
+                          )
                         : ownerAccountId,
                 serialNumbers: null,
                 allSerials,
@@ -430,7 +480,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
     approveTokenNftAllowanceAllSerials(
@@ -449,7 +499,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
-     * @param {AccountId | string} spenderAccountId
+     * @param {AccountId | ContractId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
     deleteTokenNftAllowanceAllSerials(

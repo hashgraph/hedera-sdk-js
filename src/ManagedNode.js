@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,24 +121,6 @@ export default class ManagedNode {
      */
     // eslint-disable-next-line jsdoc/require-returns-check
     getKey() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {ManagedNode<ChannelT>}
-     */
-    // eslint-disable-next-line jsdoc/require-returns-check
-    toInsecure() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {ManagedNode<ChannelT>}
-     */
-    // eslint-disable-next-line jsdoc/require-returns-check
-    toSecure() {
         throw new Error("not implemented");
     }
 
