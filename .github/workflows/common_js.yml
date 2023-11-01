@@ -1,5 +1,4 @@
 name: Common JS
-
 on:
   push:
     branches:
@@ -12,8 +11,16 @@ on:
       - develop
       - release/*
 
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
 jobs:
   test-integration-node:
+    name: Integration Tests on Node ${{ matrix.node }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     strategy:
       matrix:

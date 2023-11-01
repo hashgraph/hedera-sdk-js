@@ -1,5 +1,4 @@
 name: Build & Test
-
 on:
   push:
     branches:
@@ -22,6 +21,7 @@ permissions:
 
 jobs:
   build:
+    name: Build using Node ${{ matrix.node }}
     runs-on: [self-hosted, Linux, medium, ephemeral]
     strategy:
       matrix:
@@ -52,6 +52,7 @@ jobs:
         run: task -v build
 
   test:
+    name: Test using Node ${{ matrix.node }}
     runs-on: [self-hosted, Linux, large, ephemeral]
     strategy:
       matrix:

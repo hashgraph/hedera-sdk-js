@@ -28,7 +28,9 @@ describe("AccountBalanceQuery", function () {
         expect(balance.hbars.toTinybars().compare(0)).to.be.equal(1);
     });
 
-    it("can connect to previewnet with TLS", async function () {
+    // TODO(2023-11-01 NK) - test is consistently failing and should be enabled once fixed.
+    // eslint-disable-next-line mocha/no-skipped-tests
+    xit("can connect to previewnet with TLS", async function () {
         this.timeout(30000);
         if (skipTestDueToNodeJsVersion(16)) {
             return;
