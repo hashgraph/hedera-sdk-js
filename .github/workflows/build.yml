@@ -87,39 +87,45 @@ jobs:
           version: 8.10.0
 
       - name: Build @hashgraph/sdk
+        id: build-sdk
         run: task build
 
       - name: Start the local node
+        id: start-local-node
+        if: ${{ steps.build-sdk.conclusion == 'success' }}
         run: |
           npx @hashgraph/hedera-local start -d --network local
           # Wait for the network to fully start
           sleep 30 
 
       - name: Run Hedera SDK Integration Tests Codecov
-        continue-on-error: true
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' }}
         run: task test:integration:codecov
 
       - name: Stop the local node
+        id: stop-local-node
+        if: ${{ steps.start-local-node.conclusion == 'success' }}
         run: npx @hashgraph/hedera-local stop
 
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' }}
         run: task build
 
       - name: Uint Test @hashgraph/cryptography
         working-directory: packages/cryptography
-        continue-on-error: true
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' }}
         run: task test:unit
 
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
-        continue-on-error: true
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' }}
         run: task test:unit:codecov
 
       - name: Unit Test @hashgraph/sdk
-        continue-on-error: true
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' }}
         run: task test:unit
 
       - name: Codecov @hashgraph/sdk
-        continue-on-error: true
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' }}
         run: task test:unit:codecov
