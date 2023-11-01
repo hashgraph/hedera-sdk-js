@@ -34,7 +34,7 @@ tasks:
 
     docs:
         cmds:
-            - ./node_modules/.bin/typedoc
+            - npx typedoc
               --excludeInternal
               --excludePrivate
               --excludeProtected
@@ -51,7 +51,7 @@ tasks:
         cmds:
             - task: "install:deps"
             - task: "cryptography:build"
-            - ./node_modules/.bin/yalc add @hashgraph/cryptography > /dev/null
+            - npx yalc add @hashgraph/cryptography > /dev/null
         status:
             - ./check_yalc_dep.sh @hashgraph/cryptography
 
@@ -59,7 +59,7 @@ tasks:
         cmds:
             - task: "install:deps"
             - task: "proto:build"
-            - ./node_modules/.bin/yalc add @hashgraph/proto > /dev/null
+            - npx yalc add @hashgraph/proto > /dev/null
         status:
             - ./check_yalc_dep.sh @hashgraph/proto
 
@@ -81,8 +81,8 @@ tasks:
             - task: update:addressbooks
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
-            - ./node_modules/.bin/yalc publish > /dev/null
+            - npx babel src -d lib --out-file-extension .cjs > /dev/null
+            - npx yalc publish > /dev/null
 
     clean:
         deps:
@@ -96,7 +96,7 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" "scripts/*.js" --write > /dev/null
+            - npx prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" "scripts/*.js" --write > /dev/null
 
     lint:
         deps:
@@ -107,20 +107,20 @@ tasks:
 
     "lint:types":
         cmds:
-            - ./node_modules/.bin/tsc
+            - npx tsc
 
     "lint:dpdm":
         cmds:
             # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false
+            - npx dpdm src/index.js --circular true --tree false --warning false
 
     "lint:format":
         cmds:
-            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --check > /dev/null
+            - npx prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --check > /dev/null
 
     "lint:js":
         cmds:
-            - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
+            - npx eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
 
     "test:release":
         cmds:
@@ -142,13 +142,13 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
     "test:unit:codecov":
         cmds:
-            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-            - ./node_modules/.bin/c8 report
-            - ./node_modules/.bin/codecov
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx c8 report
+            - npx codecov
 
     "test:unit:browser":
         cmds:
@@ -160,19 +160,19 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - npx mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
     "test:integration:codecov":
         cmds:
-            - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
-            - ./node_modules/.bin/c8 report
-            - ./node_modules/.bin/codecov
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - npx c8 report
+            - npx codecov
 
     "update:proto":
         deps:
             - "proto:update"
         cmds:
-            - ./node_modules/.bin/yalc add @hashgraph/proto
+            - npx yalc add @hashgraph/proto
             # Remove proto so on `task build` we fix the link
             - rm -rf ./node_modules/@hashgraph/proto
 

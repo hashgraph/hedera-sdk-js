@@ -9,7 +9,7 @@ tasks:
 
     docs:
         cmds:
-            - ./node_modules/.bin/typedoc
+            - npx typedoc
                 --excludeInternal 
                 --excludePrivate 
                 --excludeProtected 
@@ -38,13 +38,13 @@ tasks:
         deps:
             - install
         cmds:
-            - ./node_modules/.bin/pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
-            - ./node_modules/.bin/pbts -n hashgraph -o src/proto.d.ts src/proto.js
+            - npx pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
+            - npx pbts -n hashgraph -o src/proto.d.ts src/proto.js
             - perl -pi -e "s#(?<!api\.)proto\.#hashgraph.proto.#g" src/proto.d.ts
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib
-            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/ > /dev/null
+            - npx babel src -d lib
+            - npx copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/ > /dev/null
             # This is necessary to correctly run browser tests with an unpublished proto package
             # - ../../node_modules/.bin/yalc publish > /dev/null
 
@@ -54,7 +54,7 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier "*.json" "src/*.js" --write > /dev/null
+            - npx prettier "*.json" "src/*.js" --write > /dev/null
 
     lint:
         deps:
@@ -64,15 +64,15 @@ tasks:
 
     "lint:types":
         cmds:
-            - ./node_modules/.bin/tsc
+            - npx tsc
 
     "lint:format":
         cmds:
-            - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
+            - npx prettier "*.json" "src/*.js" --check > /dev/null
 
     "lint:js":
         cmds:
-            - ./node_modules/.bin/eslint --fix "src/*.js"
+            - npx eslint --fix "src/*.js"
 
     "test:release":
         deps:
