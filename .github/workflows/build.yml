@@ -45,7 +45,7 @@ jobs:
           version: 7.6.0
 
       - name: Build @hashgraph/sdk
-        run: task build
+        run: task -v build
 
   test:
     runs-on: [self-hosted, Linux, medium, ephemeral]
