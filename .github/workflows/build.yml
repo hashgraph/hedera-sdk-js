@@ -90,6 +90,11 @@ jobs:
         id: build-sdk
         run: task build
 
+      - name: Install Playwright Dependencies
+        id: playwright-deps
+        if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
+        run: sudo npx playwright install-deps
+
       - name: Start the local node
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
@@ -123,7 +128,7 @@ jobs:
         run: task test:unit:codecov
 
       - name: Unit Test @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit
 
       - name: Codecov @hashgraph/sdk
