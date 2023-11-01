@@ -73,7 +73,7 @@ tasks:
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
-            - pnpm i
+            - pnpm i > /dev/null
 
     build:
         cmds:

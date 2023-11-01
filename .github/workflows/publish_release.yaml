@@ -152,6 +152,8 @@ jobs:
           PUBLISH_ARGS="--access public"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
+          
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >>".npmrc"
 
       - name: Publish Release
         env:
