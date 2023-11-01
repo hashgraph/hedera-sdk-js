@@ -114,14 +114,14 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
-          version: 7.6.0
+          version: 8.10.0
 
       - name: Compile Code
         run: task build
 
   publish-release:
     name: Publish Release
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: [self-hosted, Linux, large, ephemeral]
     needs:
       - validate-release
       - run-safety-checks
@@ -144,7 +144,7 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
-          version: 7.6.0
+          version: 8.10.0
 
       - name: Calculate Publish Arguments
         id: publish
@@ -152,7 +152,7 @@ jobs:
           PUBLISH_ARGS="--access public"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
-          
+          # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >>".npmrc"
 
       - name: Publish Release

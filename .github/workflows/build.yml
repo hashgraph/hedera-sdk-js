@@ -13,6 +13,10 @@ on:
       - develop
       - release/*
 
+defaults:
+  run:
+    shell: bash
+
 permissions:
   contents: read
 
@@ -42,13 +46,13 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
-          version: 7.6.0
+          version: 8.10.0
 
       - name: Build @hashgraph/sdk
         run: task -v build
 
   test:
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: [self-hosted, Linux, large, ephemeral]
     strategy:
       matrix:
         node: [ "16" ]
@@ -80,13 +84,16 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
-          version: 7.6.0
+          version: 8.10.0
 
       - name: Build @hashgraph/sdk
         run: task build
 
       - name: Start the local node
-        run: npx @hashgraph/hedera-local start -d --network local
+        run: |
+          npx @hashgraph/hedera-local start -d --network local
+          # Wait for the network to fully start
+          sleep 30 
 
       - name: Run Hedera SDK Integration Tests Codecov
         run: task test:integration:codecov
