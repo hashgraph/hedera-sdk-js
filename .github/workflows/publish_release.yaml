@@ -106,15 +106,15 @@ jobs:
         with:
           version: 3.7.0
 
-      - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
-        with:
-          node-version: 18
-
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
           version: 8.10.0
+
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: 18
 
       - name: Compile Code
         run: task build
@@ -136,15 +136,15 @@ jobs:
         with:
           version: 3.7.0
 
-      - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
-        with:
-          node-version: 18
-
       - name: Install PNPM
         uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
         with:
           version: 8.10.0
+
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: 18
 
       - name: Calculate Publish Arguments
         id: publish
@@ -159,3 +159,13 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: task publish -- ${{ steps.publish.outputs.args }}
+
+      - name: Generate Github Release
+        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+        if: ${{ github.event.inputs.dry-run-enabled != 'true' }}
+        with:
+          tag: ${{ steps.validate-release.outputs.tag }}
+          prerelease: ${{ steps.validate-release.outputs.prerelease == 'true' }}
+          draft: false
+          generateReleaseNotes: true
+          skipIfReleaseExists: true
