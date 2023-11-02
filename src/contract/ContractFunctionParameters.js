@@ -1458,6 +1458,8 @@ function argumentToBytes(param, ty) {
             case ArgumentType.int8:
             case ArgumentType.uint16:
             case ArgumentType.int16:
+            case ArgumentType.uint24:
+            case ArgumentType.int24:
             case ArgumentType.uint32:
             case ArgumentType.int32:
             case ArgumentType.uint40:
