@@ -880,27 +880,6 @@ describe.only("ContractFunctionParameters", function () {
         );
     });
 
-    // it("should return the right User value", async function () {
-    //     const contractQuery = await new ContractCallQuery()
-    //         //Set the gas for the query
-    //         .setGas(15000000)
-    //         //Set the contract ID to return the request for
-    //         .setContractId(newContractId)
-    //         //Set the contract function to call
-    //         .setFunction("get_user")
-    //         //Set the query payment for the node returning the request
-    //         //This value must cover the cost of the request otherwise will fail
-    //         .setQueryPayment(new Hbar(15));
-
-    //     //Submit to a Hedera network
-    //     const txResponse = await contractQuery.execute(env.client);
-
-    //     const result = txResponse.getResult(["tuple(string, uint256)"]);
-    //     console.log("result", result);
-    //     // expect(result[0][0]).to.be.equal("Alex"); // tuple is returned as array
-    //     // expect(result[0][1].toNumber()).to.be.equal(1); // tuple is returned as array
-    // });
-
     it("contract create of A nonce, which deploys contract B in CONSTRUCTOR", async function () {
         const SMART_CONTRACT_BYTECODE =
             "6080604052348015600f57600080fd5b50604051601a90603b565b604051809103906000f0801580156035573d6000803e3d6000fd5b50506047565b605c8061009483390190565b603f806100556000396000f3fe6080604052600080fdfea2646970667358221220a20122cbad3457fedcc0600363d6e895f17048f5caa4afdab9e655123737567d64736f6c634300081200336080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122053dfd8835e3dc6fedfb8b4806460b9b7163f8a7248bac510c6d6808d9da9d6d364736f6c63430008120033";
