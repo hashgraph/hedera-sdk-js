@@ -115,8 +115,6 @@ const bitSizes = [
     152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256,
 ];
 
-// const bitSizes = [112];
-
 describe.only("ContractFunctionParameters", function () {
     this.timeout(120000);
     let env;
