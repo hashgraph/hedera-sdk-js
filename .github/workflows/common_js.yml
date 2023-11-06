@@ -1,59 +1,60 @@
 name: Common JS
-
 on:
-    push:
-        branches:
-            - main
-            - develop
-            - release/*
-    pull_request:
-        branches:
-            - main
-            - develop
-            - release/*
+  push:
+    branches:
+      - main
+      - develop
+      - release/*
+  pull_request:
+    branches:
+      - main
+      - develop
+      - release/*
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
 
 jobs:
-    test-integration-node:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: ["16", "18"]
+  test-integration-node:
+    name: Integration Tests on Node ${{ matrix.node }}
+    runs-on: [self-hosted, Linux, large, ephemeral]
+    strategy:
+      matrix:
+        node: [ "16", "18" ]
 
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  submodules: recursive
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node }}
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Build @hashgraph/sdk
+        run: task build
 
-            - name: Build @hashgraph/sdk
-              run: task build
+      - name: Install dependencies
+        working-directory: common_js_test
+        run: task install
 
-            - name: Install dependencies
-              working-directory: common_js_test
-              run: task install
-
-            - name: Test
-              working-directory: common_js_test
-              run: task test
+      - name: Test
+        working-directory: common_js_test
+        run: task test

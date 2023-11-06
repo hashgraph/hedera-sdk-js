@@ -124,17 +124,17 @@ async function main() {
         console.log(`Account ID of the newly created account: ${newAccountId}`);
 
         /**
-     *
-     * Step 7
-     *
-     * Get the `AccountInfo` and verify the account is a hollow account with the supplied public address
-     * 
-     * The Hedera Account that was created has a public address the user specified in the TransferTransaction ToAddress
+         *
+         * Step 7
+         *
+         * Get the `AccountInfo` and verify the account is a hollow account with the supplied public address
+         * 
+         * The Hedera Account that was created has a public address the user specified in the TransferTransaction ToAddress
        - Will not have a public key at this stage
        - Cannot do anything besides receive tokens or hbars
        - The alias property of the account does not have the public address
        - Referred to as a hollow account
-     */
+         */
         const hollowAccountInfo = await new AccountInfoQuery()
             .setAccountId(newAccountId)
             .execute(client);

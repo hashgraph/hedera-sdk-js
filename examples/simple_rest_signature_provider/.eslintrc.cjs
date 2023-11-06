@@ -13,7 +13,7 @@ module.exports = {
         "plugin:jsdoc/recommended",
         "plugin:import/errors",
         "plugin:import/typescript",
-        "plugin:node/recommended",
+        "plugin:n/recommended",
         "plugin:compat/recommended"
     ],
     parser: "@typescript-eslint/parser",
@@ -32,7 +32,7 @@ module.exports = {
         "@typescript-eslint/no-empty-function": "off",
 
         // allow import syntax as we compile that away with babel for node
-        "node/no-unsupported-features/es-syntax": [
+        "n/no-unsupported-features/es-syntax": [
             "error",
             {
                 ignores: ["dynamicImport", "modules"],

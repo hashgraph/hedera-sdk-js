@@ -1,134 +1,125 @@
+# This workflow has been disabled from the GH Actions Server side (gh CLI or Github UI).
 name: React Native
-
 on:
-    push:
-        branches:
-            - main
-            - develop
-            - release/*
-            - build
-    pull_request:
-        branches:
-            - main
-            - develop
-            - release/*
+  push:
+    branches:
+      - main
+      - develop
+      - release/*
+      - build
+  pull_request:
+    branches:
+      - main
+      - develop
+      - release/*
+
+permissions:
+  contents: read
 
 jobs:
-    android:
-        if: ${{ false }} # disable for now
-        runs-on: macos-latest
+  android:
+    name: Android
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-        steps:
-            - uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+        with:
+          distribution: "zulu"
+          java-version: "8"
 
-            - uses: actions/setup-java@v2
-              with:
-                  distribution: "zulu"
-                  java-version: "8"
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: "16"
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: "16"
+      - name: Install Yarn
+        run: npm install -g yarn
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Build @hashgraph/sdk
+        run: task build
 
-            - run: npm install -g yarn
+      - name: Install detox
+        run: npm install -g detox-cli
 
-            - name: Build @hashgraph/sdk
-              run: task build
+      - name: AVD
+        run: |
+          brew install android-platform-tools
+          pnpm install -g envinfo detox-cli && envinfo
+          echo yes | $ANDROID_HOME/tools/bin/sdkmanager --channel=0 --verbose "system-images;android-28;default;x86_64"
+          $ANDROID_HOME/tools/bin/avdmanager --verbose create avd --force --name "Nexus6P" --package "system-images;android-28;default;x86_64" --sdcard 200M --device 11
+          adb start-server
 
-            - name: Install detox
-              run: npm install -g detox-cli
+      - name: Build
+        working-directory: examples/react-native-example
+        run: |
+          ../../node_modules/.bin/yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration android
 
-            - name: AVD
-              run: |
-                  brew install android-platform-tools
-                  pnpm install -g envinfo detox-cli && envinfo
-                  echo yes | $ANDROID_HOME/tools/bin/sdkmanager --channel=0 --verbose "system-images;android-28;default;x86_64"
-                  $ANDROID_HOME/tools/bin/avdmanager --verbose create avd --force --name "Nexus6P" --package "system-images;android-28;default;x86_64" --sdcard 200M --device 11
-                  adb start-server
+      - name: Test
+        working-directory: examples/react-native-example
+        run: detox test --configuration android
 
-            - name: Build
-              working-directory: examples/react-native-example
-              run: |
-                  ../../node_modules/.bin/yalc add "@hashgraph/sdk"
-                  yarn
-                  detox build --configuration android
+  ios:
+    name: iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-            - name: Test
-              working-directory: examples/react-native-example
-              run: detox test --configuration android
+      - name: Setup Java
+        uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3.13.0
+        with:
+          distribution: "zulu"
+          java-version: "8"
 
-    ios:
-        if: ${{ false }} # disable for now
-        runs-on: macos-latest
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-        steps:
-            - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: "16"
 
-            - uses: actions/setup-java@v2
-              with:
-                  distribution: "zulu"
-                  java-version: "8"
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: Install Yarn
+        run: npm install -g yarn
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Build @hashgraph/sdk
+        run: task build
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: "16"
+      - name: Install detox
+        run: npm install -g detox-cli
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Build
+        working-directory: examples/react-native-example
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration ios
 
-            - run: npm install -g yarn
-
-            - name: Build @hashgraph/sdk
-              run: task build
-
-            - name: Install detox
-              run: npm install -g detox-cli
-
-            - name: Build
-              working-directory: examples/react-native-example
-              run: |
-                  brew tap wix/brew
-                  brew install applesimutils
-                  yalc add "@hashgraph/sdk"
-                  yarn
-                  detox build --configuration ios
-
-            - name: Test
-              working-directory: examples/react-native
-              run: |
-                  detox test --configuration ios
+      - name: Test
+        working-directory: examples/react-native
+        run: |
+          detox test --configuration ios

@@ -1,127 +1,139 @@
 name: Build & Test
-
 on:
-    push:
-        branches:
-            - main
-            - develop
-            - release/*
-            - integration-test-workflow
-    pull_request:
-        branches:
-            - main
-            - develop
-            - release/*
+  push:
+    branches:
+      - main
+      - develop
+      - release/*
+      - integration-test-workflow
+  pull_request:
+    branches:
+      - main
+      - develop
+      - release/*
 
-env:
-    PNPM_HOME: /home/runner/work/hedera-sdk-js
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: ["16", "18"]
+  build:
+    name: Build using Node ${{ matrix.node }}
+    runs-on: [self-hosted, Linux, medium, ephemeral]
+    strategy:
+      matrix:
+        node: [ "16", "18" ]
 
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  submodules: recursive
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: true
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node }}
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Build @hashgraph/sdk
+        run: task -v build
 
-            - name: Build @hashgraph/sdk
-              run: task build
+  test:
+    name: Test using Node ${{ matrix.node }}
+    runs-on: [self-hosted, Linux, large, ephemeral]
+    strategy:
+      matrix:
+        node: [ "16" ]
 
-    test:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: ["16"]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: recursive
 
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  submodules: recursive
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: "Create env file"
+        run: |
+          touch .env
+          echo OPERATOR_KEY="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" >> .env
+          echo OPERATOR_ID="0.0.2" >> .env
+          echo HEDERA_NETWORK="local-node" >> .env
+          cat .env
 
-            - name: "Create env file"
-              run: |
-                  touch .env
-                  echo OPERATOR_KEY="302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137" >> .env
-                  echo OPERATOR_ID="0.0.2" >> .env
-                  echo HEDERA_NETWORK="local-node" >> .env
-                  cat .env
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node }}
+      - name: Build @hashgraph/sdk
+        id: build-sdk
+        run: task build
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Install Playwright Dependencies
+        id: playwright-deps
+        if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
+        run: sudo npx playwright install-deps
 
-            - name: Build @hashgraph/sdk
-              run: task build
+      - name: Start the local node
+        id: start-local-node
+        if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
+        run: |
+          npx @hashgraph/hedera-local start -d --network local
+          # Wait for the network to fully start
+          sleep 30 
 
-            - name: Start the local node
-              run: npx @hashgraph/hedera-local start -d --network local
+      - name: Run Hedera SDK Integration Tests Codecov
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:integration:codecov
 
-            - name: Run Hedera SDK Integration Tests Codecov
-              run: task test:integration:codecov
+      - name: Stop the local node
+        id: stop-local-node
+        if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: npx @hashgraph/hedera-local stop
 
-            - name: Stop the local node
-              run: npx @hashgraph/hedera-local stop
+      - name: Build @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task build
 
-            - name: Build @hashgraph/cryptography
-              working-directory: packages/cryptography
-              run: task build
+      - name: Unit Test @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit
 
-            - name: Uint Test @hashgraph/cryptography
-              working-directory: packages/cryptography
-              run: task test:unit
+      - name: Codecov @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:codecov
 
-            - name: Codecov @hashgraph/cryptography
-              working-directory: packages/cryptography
-              run: task test:unit:codecov
+      - name: Unit Test @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit
 
-            - name: Unit Test @hashgraph/sdk
-              run: task test:unit
-
-            - name: Codecov @hashgraph/sdk
-              run: task test:unit:codecov
+      - name: Codecov @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:codecov

@@ -1,60 +1,55 @@
-name: Build & Test
-
+name: Publish GH Pages
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
-env:
-    PNPM_HOME: /home/runner/work/hedera-sdk-js
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  pages: write
+  contents: read
 
 jobs:
-    build-and-deploy-docs:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: ["16", "18"]
+  build-and-deploy-docs:
+    name: Documentation
+    runs-on: [self-hosted, Linux, medium, ephemeral]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          submodules: recursive
 
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  submodules: recursive
+      - name: Install Task
+        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        with:
+          version: 3.7.0
 
-            - name: Install Task
-              uses: arduino/setup-task@v1
-              with:
-                  version: 3.7.0
+      - name: Setup Node
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: 18
 
-            - name: Cache pnpm modules
-              uses: actions/cache@v2
-              env:
-                  cache-name: cache-pnpm-modules
-              with:
-                  path: ~/.pnpm-store
-                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install PNPM
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        with:
+          version: 8.10.0
 
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: ${{ matrix.node }}
+      - name: Build @hashgraph/sdk
+        run: task build
 
-            - uses: pnpm/action-setup@v2.0.1
-              with:
-                  version: 7.6.0
+      - name: Generate pages
+        run: task docs
 
-            - name: Build @hashgraph/sdk
-              run: task build
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@a753861a5debcf57bf8b404356158c8e1e33150c # v2.0.0
+        with:
+          path: "./docs"
 
-            - name: Generate pages
-              run: task docs
-
-            - name: Pages
-              uses: actions/upload-pages-artifact@v1
-              with:
-                  path: "./docs"
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v1
-              with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@9dbe3824824f8a1377b8e298bafde1a50ede43e5 # v2.0.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -9,7 +9,7 @@ tasks:
 
     docs:
         cmds:
-            - ./node_modules/.bin/typedoc
+            - npx typedoc
                 --excludeInternal 
                 --excludePrivate 
                 --excludeProtected 
@@ -26,8 +26,8 @@ tasks:
             - task: install
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
-            - ../../node_modules/.bin/yalc publish > /dev/null
+            - npx babel src -d lib --out-file-extension .cjs > /dev/null
+            - npx yalc publish > /dev/null
 
     clean:
         cmds:
@@ -35,7 +35,7 @@ tasks:
 
     format:
         cmds:
-            - ./node_modules/.bin/prettier src "test/unit/*.js" "*.json" "src/*.js" --write > /dev/null
+            - npx prettier src "test/unit/*.js" "*.json" "src/*.js" --write > /dev/null
 
     lint:
         deps:
@@ -46,20 +46,20 @@ tasks:
 
     "lint:types":
         cmds:
-            - ./node_modules/.bin/tsc
+            - npx tsc
 
     "lint:dpdm":
         cmds:
            # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
+            - npx dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
 
     "lint:format":
         cmds:
-            - ./node_modules/.bin/prettier src "test/unit/*.js" "*.json" "src/*.js" --check > /dev/null
+            - npx prettier src "test/unit/*.js" "*.json" "src/*.js" --check > /dev/null
 
     "lint:js":
         cmds:
-            - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/unit/**/*.js"
+            - npx eslint --fix "src/**/*.js" "test/unit/**/*.js"
 
     "test:release":
         cmds:
@@ -77,13 +77,13 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
     "test:unit:codecov":
         cmds:
-           - ./node_modules/.bin/c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-           - ./node_modules/.bin/c8 report
-           - ./node_modules/.bin/codecov
+           - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+           - npx c8 report
+           - npx codecov
 
     "test:unit:browser":
         cmds:

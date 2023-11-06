@@ -13,7 +13,7 @@ module.exports = {
         "plugin:jsdoc/recommended",
         "plugin:import/errors",
         "plugin:import/typescript",
-        "plugin:node/recommended",
+        "plugin:n/recommended",
         "plugin:compat/recommended"
     ],
     parser: "@typescript-eslint/parser",
@@ -29,9 +29,11 @@ module.exports = {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "n/no-process-exit": "off",
+        "no-inner-declarations": "off",
 
         // allow import syntax as we compile that away with babel for node
-        "node/no-unsupported-features/es-syntax": [
+        "n/no-unsupported-features/es-syntax": [
             "error",
             {
                 ignores: ["dynamicImport", "modules"],
