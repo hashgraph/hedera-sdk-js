@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.37.0
+
+## What's Changed
+
+* Bug on mnemonic.toStandardECDSAsecp256k1PrivateKey() and mnemonic.toEcdsaPrivateKey() by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1989
+* Add Long and BigNumber support for ContractFunctionParameters methods #1972 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/1997
+* Update readme file by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2004
 
 ## v2.37.0-beta.2
 
