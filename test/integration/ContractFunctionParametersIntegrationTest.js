@@ -485,7 +485,7 @@ describe("ContractFunctionParameters", function () {
                 }
             );
 
-            it.only(`addInt${bitSize}Array method should return an empty array`, async function () {
+            it(`addInt${bitSize}Array method should return an empty array`, async function () {
                 const contractQuery = await new ContractCallQuery()
                     //Set the gas for the query
                     .setGas(15000000)
@@ -734,7 +734,7 @@ describe("ContractFunctionParameters", function () {
                 }
             );
 
-            it.only(`addUint${bitSize}Array method should return an empty array`, async function () {
+            it(`addUint${bitSize}Array method should return an empty array`, async function () {
                 const contractQuery = await new ContractCallQuery()
                     //Set the gas for the query
                     .setGas(15000000)
