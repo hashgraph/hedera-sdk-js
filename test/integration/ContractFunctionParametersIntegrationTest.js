@@ -484,6 +484,32 @@ describe("ContractFunctionParameters", function () {
                     });
                 }
             );
+
+            it.only(`addInt${bitSize}Array method should return an empty array`, async function () {
+                const contractQuery = await new ContractCallQuery()
+                    //Set the gas for the query
+                    .setGas(15000000)
+                    //Set the contract ID to return the request for
+                    .setContractId(newContractId)
+                    //Set the contract function to call
+                    .setFunction(
+                        `returnInt${bitSize}Array`,
+                        new ContractFunctionParameters()[
+                            `addInt${bitSize}Array`
+                        ](
+                            // eslint-disable-next-line no-loss-of-precision
+                            []
+                        )
+                    )
+                    //Set the query payment for the node returning the request
+                    //This value must cover the cost of the request otherwise will fail
+                    .setQueryPayment(new Hbar(15));
+
+                //Submit to a Hedera network
+                const txResponse = await contractQuery.execute(env.client);
+                const result = txResponse.getResult([`uint${bitSize}[]`])[0];
+                expect(result).to.be.an("array").to.have.length(0);
+            });
         });
 
         describe(`Tests for addUint${bitSize} method`, function () {
@@ -707,6 +733,32 @@ describe("ContractFunctionParameters", function () {
                     });
                 }
             );
+
+            it.only(`addUint${bitSize}Array method should return an empty array`, async function () {
+                const contractQuery = await new ContractCallQuery()
+                    //Set the gas for the query
+                    .setGas(15000000)
+                    //Set the contract ID to return the request for
+                    .setContractId(newContractId)
+                    //Set the contract function to call
+                    .setFunction(
+                        `returnUint${bitSize}Array`,
+                        new ContractFunctionParameters()[
+                            `addUint${bitSize}Array`
+                        ](
+                            // eslint-disable-next-line no-loss-of-precision
+                            []
+                        )
+                    )
+                    //Set the query payment for the node returning the request
+                    //This value must cover the cost of the request otherwise will fail
+                    .setQueryPayment(new Hbar(15));
+
+                //Submit to a Hedera network
+                const txResponse = await contractQuery.execute(env.client);
+                const result = txResponse.getResult([`uint${bitSize}[]`])[0];
+                expect(result).to.be.an("array").to.have.length(0);
+            });
         });
     });
 
