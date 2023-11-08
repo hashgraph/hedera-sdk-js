@@ -510,6 +510,31 @@ describe("ContractFunctionParameters", function () {
                 const result = txResponse.getResult([`uint${bitSize}[]`])[0];
                 expect(result).to.be.an("array").to.have.length(0);
             });
+
+            it(`addInt${bitSize}Array method should throw an error`, async function () {
+                try {
+                    await new ContractCallQuery()
+                        //Set the gas for the query
+                        .setGas(15000000)
+                        //Set the contract ID to return the request for
+                        .setContractId(newContractId)
+                        //Set the contract function to call
+                        .setFunction(
+                            `returnInt${bitSize}Array`,
+                            new ContractFunctionParameters()[
+                                `addInt${bitSize}Array`
+                            ]()
+                        )
+                        //Set the query payment for the node returning the request
+                        //This value must cover the cost of the request otherwise will fail
+                        .setQueryPayment(new Hbar(15));
+                } catch (error) {
+                    expect(error).to.be.instanceOf(Error);
+                    expect(error.message).to.be.equal(
+                        "The provided variable must be an Array."
+                    );
+                }
+            });
         });
 
         describe(`Tests for addUint${bitSize} method`, function () {
@@ -758,6 +783,31 @@ describe("ContractFunctionParameters", function () {
                 const txResponse = await contractQuery.execute(env.client);
                 const result = txResponse.getResult([`uint${bitSize}[]`])[0];
                 expect(result).to.be.an("array").to.have.length(0);
+            });
+
+            it(`addUint${bitSize}Array method should throw an error`, async function () {
+                try {
+                    await new ContractCallQuery()
+                        //Set the gas for the query
+                        .setGas(15000000)
+                        //Set the contract ID to return the request for
+                        .setContractId(newContractId)
+                        //Set the contract function to call
+                        .setFunction(
+                            `returnUint${bitSize}Array`,
+                            new ContractFunctionParameters()[
+                                `addUint${bitSize}Array`
+                            ]()
+                        )
+                        //Set the query payment for the node returning the request
+                        //This value must cover the cost of the request otherwise will fail
+                        .setQueryPayment(new Hbar(15));
+                } catch (error) {
+                    expect(error).to.be.instanceOf(Error);
+                    expect(error.message).to.be.equal(
+                        "The provided variable must be an Array."
+                    );
+                }
             });
         });
     });
