@@ -52,7 +52,7 @@ describe("ContractId", function () {
         });
     });
 
-    it("should return the contract id from long zero number", function () {
+    it("should return the contract id from long zero address", function () {
         const shard = 0,
             realm = 0,
             num = 5;
