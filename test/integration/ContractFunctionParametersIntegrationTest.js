@@ -9,6 +9,7 @@ import {
     FileAppendTransaction,
     FileDeleteTransaction,
 } from "../../src/exports.js";
+import { REQUIRE_ARRAY_ERROR } from "../../src/util.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import BigNumber from "bignumber.js";
 import Long from "long";
@@ -530,9 +531,7 @@ describe("ContractFunctionParameters", function () {
                         .setQueryPayment(new Hbar(15));
                 } catch (error) {
                     expect(error).to.be.instanceOf(Error);
-                    expect(error.message).to.be.equal(
-                        "The provided variable must be an Array."
-                    );
+                    expect(error.message).to.be.equal(REQUIRE_ARRAY_ERROR);
                 }
             });
         });
@@ -804,9 +803,7 @@ describe("ContractFunctionParameters", function () {
                         .setQueryPayment(new Hbar(15));
                 } catch (error) {
                     expect(error).to.be.instanceOf(Error);
-                    expect(error.message).to.be.equal(
-                        "The provided variable must be an Array."
-                    );
+                    expect(error.message).to.be.equal(REQUIRE_ARRAY_ERROR);
                 }
             });
         });
