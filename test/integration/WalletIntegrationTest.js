@@ -34,7 +34,7 @@ describe("WalletIntegration", function () {
             .addHbarTransfer(signerId, new Hbar(-1))
             .addHbarTransfer(env.operatorId, new Hbar(1));
 
-        wallet.populateTransaction(transferTx);
+        await wallet.populateTransaction(transferTx);
 
         const tx = await wallet.call(transferTx);
         const transferRecord = await tx.getRecord(env.client);
