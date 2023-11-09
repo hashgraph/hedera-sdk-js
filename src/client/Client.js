@@ -143,7 +143,7 @@ export default class Client {
         /** @private */
         this._networkUpdatePeriod = 24 * 60 * 60 * 1000;
 
-        /** @private */
+        /** @internal */
         this._isShutdown = false;
 
         if (props != null && props.scheduleNetworkUpdate !== false) {
