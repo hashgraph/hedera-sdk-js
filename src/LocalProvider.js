@@ -168,9 +168,6 @@ export default class LocalProvider {
      * @returns {void}
      */
     close() {
-        this._client._network.close();
-        this._client._mirrorNetwork.close();
-        this._client._isShutdown = true;
-        clearTimeout(this._client._timer);
+        this._client.close();
     }
 }
