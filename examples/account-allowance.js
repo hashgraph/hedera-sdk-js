@@ -30,10 +30,12 @@ async function main() {
         );
     }
 
+    const provider = new LocalProvider();
+
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        new LocalProvider()
+        provider
     );
 
     console.log("Generating accounts for example...");
@@ -262,6 +264,8 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    provider.close();
 }
 
 /**
@@ -294,10 +298,4 @@ async function printBalances(wallet, aliceId, bobId, charlieId) {
     );
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
-// .catch((err) => {
-//     console.log(err.valueOf());
-//     process.exit(1);
-// });
+void main();

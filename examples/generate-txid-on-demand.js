@@ -182,6 +182,8 @@ async function main() {
     } catch (error) {
         console.log("ERROR", error);
     }
+
+    client.close();
 }
 
 /**
@@ -194,6 +196,4 @@ function wait(timeout) {
     });
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

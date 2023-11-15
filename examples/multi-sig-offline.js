@@ -83,6 +83,8 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    client.close();
 }
 
 /**
@@ -103,6 +105,4 @@ function user2Signs(transactionBytes) {
     return user2Key.signTransaction(transaction);
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

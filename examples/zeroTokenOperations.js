@@ -24,10 +24,13 @@ async function main() {
     }
     const myAccountId = hashgraph.AccountId.fromString(process.env.OPERATOR_ID);
 
+    const provider = new hashgraph.LocalProvider();
+    const aliceProvider = new hashgraph.LocalProvider();
+
     const wallet = new hashgraph.Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        new hashgraph.LocalProvider()
+        provider
     );
 
     const operatorPrivateKey = hashgraph.PrivateKey.fromString(
@@ -56,7 +59,7 @@ async function main() {
         const walletWithAlice = new hashgraph.Wallet(
             aliceAccountId,
             alicePrivateKey,
-            new hashgraph.LocalProvider()
+            aliceProvider
         );
 
         // Instantiate ContractHelper
@@ -186,8 +189,9 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    provider.close();
+    aliceProvider.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();
