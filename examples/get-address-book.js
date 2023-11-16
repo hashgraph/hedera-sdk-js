@@ -26,8 +26,8 @@ async function main() {
     console.log(JSON.stringify(addressBook.toJSON(), null, 2));
 
     await fs.writeFile("address-book.proto.bin", addressBook.toBytes());
+
+    client.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

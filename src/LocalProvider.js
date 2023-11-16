@@ -163,4 +163,11 @@ export default class LocalProvider {
     call(request) {
         return request.execute(this._client);
     }
+
+    /**
+     * @returns {void}
+     */
+    close() {
+        this._client.close();
+    }
 }

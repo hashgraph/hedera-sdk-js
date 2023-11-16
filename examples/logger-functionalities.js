@@ -56,11 +56,9 @@ async function main() {
         .setLogger(debugLogger)
         .setOperator(operatorId, operatorKey);
 
-    const wallet = new Wallet(
-        client.operatorAccountId,
-        operatorKey,
-        new LocalProvider()
-    );
+    const provider = new LocalProvider();
+
+    const wallet = new Wallet(client.operatorAccountId, operatorKey, provider);
 
     const privateKey = PrivateKey.generateED25519();
     const publicKey = privateKey.publicKey;
@@ -116,8 +114,9 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    provider.close();
+    client.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

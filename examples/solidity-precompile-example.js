@@ -16,10 +16,12 @@ async function main() {
         );
     }
 
+    const provider = new hashgraph.LocalProvider();
+
     const wallet = new hashgraph.Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        new hashgraph.LocalProvider()
+        provider
     );
 
     const operatorPrivateKey = hashgraph.PrivateKey.fromString(
@@ -206,8 +208,8 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    provider.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

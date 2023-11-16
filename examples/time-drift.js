@@ -72,8 +72,8 @@ async function main() {
     const receipt = await response.getReceipt(client);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
+
+    client.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

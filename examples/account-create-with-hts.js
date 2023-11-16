@@ -335,8 +335,8 @@ async function main() {
             setTimeout(resolve, timeout);
         });
     }
+
+    client.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

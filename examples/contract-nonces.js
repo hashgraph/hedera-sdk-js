@@ -21,10 +21,12 @@ async function main() {
         );
     }
 
+    const provider = new LocalProvider();
+
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        new LocalProvider()
+        provider
     );
 
     // The contract bytecode is located on the `object` field
@@ -67,8 +69,8 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+
+    provider.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

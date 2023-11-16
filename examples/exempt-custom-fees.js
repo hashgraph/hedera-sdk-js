@@ -46,7 +46,9 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
 
-    const wallet = new Wallet(operatorId, operatorKey, new LocalProvider());
+    const provider = new LocalProvider();
+
+    const wallet = new Wallet(operatorId, operatorKey, provider);
 
     /**
      *     Example 1
@@ -328,6 +330,8 @@ async function main() {
             `Fee collector accounts were not charged after transfer transaction`
         );
     }
+
+    provider.close();
 }
 
 /**
@@ -340,6 +344,4 @@ function wait(timeout) {
     });
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();

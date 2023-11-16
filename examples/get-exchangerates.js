@@ -20,10 +20,12 @@ async function main() {
         );
     }
 
+    const provider = new LocalProvider();
+
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        new LocalProvider()
+        provider
     );
     let resp;
     try {
@@ -53,8 +55,8 @@ async function main() {
     console.log(
         `Next Exchange Rate ${exchangeRates.nextRate.exchangeRateInCents}`
     );
+
+    provider.close();
 }
 
-void main()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
+void main();
