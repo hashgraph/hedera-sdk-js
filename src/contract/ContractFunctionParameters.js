@@ -1451,7 +1451,7 @@ function argumentToBytes(param, ty) {
 
         const totalLengthOfValues = values
             .map((a) => a.length)
-            .reduce((total, current) => total + current);
+            .reduce((total, current) => total + current, 0);
 
         switch (ty.ty) {
             case ArgumentType.uint8:
