@@ -140,12 +140,23 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * @deprecated - Use fromStringECDSA() or fromStringED25519() or fromStringDer() instead.
      * Construct a private key from a hex-encoded string. Requires DER header.
      *
      * @param {string} text
      * @returns {PrivateKey}
      */
     static fromString(text) {
+        return new PrivateKey(cryptography.PrivateKey.fromString(text));
+    }
+
+    /**
+     * Construct a private key from a hex string with a der prefix
+     *
+     * @param {string} text
+     * @returns {PrivateKey}
+     */
+    static fromStringDer(text) {
         return new PrivateKey(cryptography.PrivateKey.fromString(text));
     }
 

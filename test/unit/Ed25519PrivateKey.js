@@ -21,7 +21,17 @@ describe("Ed25519PrivateKey", function () {
         );
     });
 
-    it("public key from a private key", function () {
+    it("should return a public key from a der private key", function () {
+        const DER_PRIVATE_KEY =
+            "302e020100300506032b6570042204203a056f85d71921be62466f5e93a4af0aa2e09a9eb4b2d839e06d805366659a74";
+        const DER_PUBLIC_KEY =
+            "302a300506032b65700321004a6892f034d2d1c9b1a76acca8e34884055172f4210a0c02e3c7d55084f224d1";
+        const publicKey =
+            PrivateKey.fromStringDer(DER_PRIVATE_KEY).publicKey.toStringDer();
+        expect(publicKey).to.be.equal(DER_PUBLIC_KEY);
+    });
+
+    it("should return a public key from a raw private key", function () {
         expect(
             PrivateKey.fromStringED25519(RAW_KEY).publicKey.toStringRaw()
         ).to.be.equal(
