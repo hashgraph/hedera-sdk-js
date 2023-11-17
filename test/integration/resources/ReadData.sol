@@ -279,4 +279,260 @@ contract ReturnDataTypes {
     ) external pure returns (int256, int256) {
         return (count, count + 1);
     }
+
+    function returnInt8Array(int8[] memory arr) external pure returns (int8[] memory) {
+        return arr;
+    }
+
+    function returnUint8Array(uint8[] memory arr) external pure returns (uint8[] memory) {
+        return arr;
+    }
+
+    function returnInt16Array(int16[] memory arr) external pure returns (int16[] memory) {
+        return arr;
+    }
+
+    function returnUint16Array(uint16[] memory arr) external pure returns (uint16[] memory) {
+        return arr;
+    }
+
+    function returnInt24Array(int24[] memory arr) external pure returns (int24[] memory) {
+        return arr;
+    }
+
+    function returnUint24Array(uint24[] memory arr) external pure returns (uint24[] memory) {
+        return arr;
+    }
+
+    function returnInt32Array(int32[] memory arr) external pure returns (int32[] memory) {
+        return arr;
+    }
+
+    function returnUint32Array(uint32[] memory arr) external pure returns (uint32[] memory) {
+        return arr;
+    }
+
+    function returnInt40Array(int40[] memory arr) external pure returns (int40[] memory) {
+        return arr;
+    }
+
+    function returnUint40Array(uint40[] memory arr) external pure returns (uint40[] memory) {
+        return arr;
+    }
+
+    function returnInt48Array(int48[] memory arr) external pure returns (int48[] memory) {
+        return arr;
+    }
+
+    function returnUint48Array(uint48[] memory arr) external pure returns (uint48[] memory) {
+        return arr;
+    }
+
+    function returnInt56Array(int56[] memory arr) external pure returns (int56[] memory) {
+        return arr;
+    }
+
+    function returnUint56Array(uint56[] memory arr) external pure returns (uint56[] memory) {
+        return arr;
+    }
+
+    function returnInt64Array(int64[] memory arr) external pure returns (int64[] memory) {
+        return arr;
+    }
+
+    function returnUint64Array(uint64[] memory arr) external pure returns (uint64[] memory) {
+        return arr;
+    }
+
+    function returnInt72Array(int72[] memory arr) external pure returns (int72[] memory) {
+        return arr;
+    }
+
+    function returnUint72Array(uint72[] memory arr) external pure returns (uint72[] memory) {
+        return arr;
+    }
+
+    function returnInt80Array(int80[] memory arr) external pure returns (int80[] memory) {
+        return arr;
+    }
+
+    function returnUint80Array(uint80[] memory arr) external pure returns (uint80[] memory) {
+        return arr;
+    }
+
+    function returnInt88Array(int88[] memory arr) external pure returns (int88[] memory) {
+        return arr;
+    }
+
+    function returnUint88Array(uint88[] memory arr) external pure returns (uint88[] memory) {
+        return arr;
+    }
+
+    function returnInt96Array(int96[] memory arr) external pure returns (int96[] memory) {
+        return arr;
+    }
+
+    function returnUint96Array(uint96[] memory arr) external pure returns (uint96[] memory) {
+        return arr;
+    }
+
+    function returnInt104Array(int104[] memory arr) external pure returns (int104[] memory) {
+        return arr;
+    }
+
+    function returnUint104Array(uint104[] memory arr) external pure returns (uint104[] memory) {
+        return arr;
+    }
+
+    function returnInt112Array(int112[] memory arr) external pure returns (int112[] memory) {
+        return arr;
+    }
+
+    function returnUint16Array(uint112[] memory arr) external pure returns (uint112[] memory) {
+        return arr;
+    }
+
+    function returnInt120Array(int120[] memory arr) external pure returns (int120[] memory) {
+        return arr;
+    }
+
+    function returnUint120Array(uint120[] memory arr) external pure returns (uint120[] memory) {
+        return arr;
+    }
+
+    function returnInt128Array(int128[] memory arr) external pure returns (int128[] memory) {
+        return arr;
+    }
+
+    function returnUint128Array(uint128[] memory arr) external pure returns (uint128[] memory) {
+        return arr;
+    }
+
+    function returnInt136Array(int136[] memory arr) external pure returns (int136[] memory) {
+        return arr;
+    }
+
+    function returnUint136Array(uint136[] memory arr) external pure returns (uint136[] memory) {
+        return arr;
+    }
+
+    function returnInt144Array(int144[] memory arr) external pure returns (int144[] memory) {
+        return arr;
+    }
+
+    function returnUint144Array(uint144[] memory arr) external pure returns (uint144[] memory) {
+        return arr;
+    }
+
+    function returnInt152Array(int152[] memory arr) external pure returns (int152[] memory) {
+        return arr;
+    }
+
+    function returnUint152Array(uint152[] memory arr) external pure returns (uint152[] memory) {
+        return arr;
+    }
+
+    function returnInt160Array(int160[] memory arr) external pure returns (int160[] memory) {
+        return arr;
+    }
+
+    function returnUint160Array(uint160[] memory arr) external pure returns (uint160[] memory) {
+        return arr;
+    }
+
+    function returnInt168Array(int168[] memory arr) external pure returns (int168[] memory) {
+        return arr;
+    }
+
+    function returnUint168Array(uint168[] memory arr) external pure returns (uint168[] memory) {
+        return arr;
+    }
+
+    function returnInt176Array(int176[] memory arr) external pure returns (int176[] memory) {
+        return arr;
+    }
+
+    function returnUint176Array(uint176[] memory arr) external pure returns (uint176[] memory) {
+        return arr;
+    }
+
+    function returnInt184Array(int184[] memory arr) external pure returns (int184[] memory) {
+        return arr;
+    }
+
+    function returnUint184Array(uint184[] memory arr) external pure returns (uint184[] memory) {
+        return arr;
+    }
+
+    function returnInt192Array(int192[] memory arr) external pure returns (int192[] memory) {
+        return arr;
+    }
+
+    function returnUint192Array(uint192[] memory arr) external pure returns (uint192[] memory) {
+        return arr;
+    }
+
+    function returnInt200Array(int200[] memory arr) external pure returns (int200[] memory) {
+        return arr;
+    }
+
+    function returnUint200Array(uint200[] memory arr) external pure returns (uint200[] memory) {
+        return arr;
+    }
+
+    function returnInt208Array(int208[] memory arr) external pure returns (int208[] memory) {
+        return arr;
+    }
+
+    function returnUint208Array(uint208[] memory arr) external pure returns (uint208[] memory) {
+        return arr;
+    }
+
+    function returnInt216Array(int216[] memory arr) external pure returns (int216[] memory) {
+        return arr;
+    }
+
+    function returnUint216Array(uint216[] memory arr) external pure returns (uint216[] memory) {
+        return arr;
+    }
+
+    function returnInt224Array(int224[] memory arr) external pure returns (int224[] memory) {
+        return arr;
+    }
+
+    function returnUint224Array(uint224[] memory arr) external pure returns (uint224[] memory) {
+        return arr;
+    }
+
+    function returnInt232Array(int232[] memory arr) external pure returns (int232[] memory) {
+        return arr;
+    }
+
+    function returnUint232Array(uint232[] memory arr) external pure returns (uint232[] memory) {
+        return arr;
+    }
+
+    function returnInt240Array(int240[] memory arr) external pure returns (int240[] memory) {
+        return arr;
+    }
+
+    function returnUint240Array(uint240[] memory arr) external pure returns (uint240[] memory) {
+        return arr;
+    }
+
+    function returnInt248Array(int248[] memory arr) external pure returns (int248[] memory) {
+        return arr;
+    }
+
+    function returnUint248Array(uint248[] memory arr) external pure returns (uint248[] memory) {
+        return arr;
+    }
+
+    function returnInt256Array(int256[] memory arr) external pure returns (int256[] memory) {
+        return arr;
+    }
+
+    function returnUint256Array(uint256[] memory arr) external pure returns (uint256[] memory) {
+        return arr;
+    }
 }
