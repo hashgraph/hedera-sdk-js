@@ -155,7 +155,7 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Construct a private key from a hex string with a der prefix
+     * Construct a private key from a HEX-encoded string with a der prefix
      *
      * @param {string} text
      * @returns {PrivateKey}
