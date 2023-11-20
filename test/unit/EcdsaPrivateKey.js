@@ -22,7 +22,17 @@ describe("EcdsaPrivateKey", function () {
         );
     });
 
-    it("public key fro a private key", function () {
+    it("should return a public key from a der private key", function () {
+        const DER_PRIVATE_KEY =
+            "3030020100300706052b8104000a04220420e06ecd79f00124bfc030b0321006683a6a579be7602f2eb52ca73e2901880682";
+        const DER_PUBLIC_KEY =
+            "302d300706052b8104000a032200033697a2b3f9f0b9f4831b39986f7f3885636a3e8622a0bc3814a4a56f7ecdc4f1";
+        const publicKey =
+            PrivateKey.fromStringDer(DER_PRIVATE_KEY).publicKey.toStringDer();
+        expect(publicKey).to.be.equal(DER_PUBLIC_KEY);
+    });
+
+    it("should return a public key from a raw private key", function () {
         expect(
             PrivateKey.fromStringECDSA(RAW_KEY).publicKey.toStringRaw()
         ).to.be.equal(
