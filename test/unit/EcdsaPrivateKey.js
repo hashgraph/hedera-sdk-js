@@ -17,7 +17,7 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("fromStringRaw and fromStringDer work", function () {
-        PrivateKey.fromString(
+        PrivateKey.fromStringDer(
             hex.encode(PrivateKey.fromStringECDSA(RAW_KEY).toBytesDer())
         );
     });
@@ -328,25 +328,25 @@ describe("EcdsaPrivateKey", function () {
         const PUBLIC_KEY4 =
             "03b69a75a5ddb1c0747e995d47555019e5d8a28003ab5202bd92f534361fb4ec8a";
 
-        const ecdsaPrivateKey1 = PrivateKey.fromString(PRIVATE_KEY_DER1);
+        const ecdsaPrivateKey1 = PrivateKey.fromStringDer(PRIVATE_KEY_DER1);
         expect(ecdsaPrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ecdsaPrivateKey1.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY1
         );
 
-        const ecdsaPrivateKey2 = PrivateKey.fromString(PRIVATE_KEY_DER2);
+        const ecdsaPrivateKey2 = PrivateKey.fromStringDer(PRIVATE_KEY_DER2);
         expect(ecdsaPrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
         expect(ecdsaPrivateKey2.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY2
         );
 
-        const ecdsaPrivateKey3 = PrivateKey.fromString(PRIVATE_KEY_DER3);
+        const ecdsaPrivateKey3 = PrivateKey.fromStringDer(PRIVATE_KEY_DER3);
         expect(ecdsaPrivateKey3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
         expect(ecdsaPrivateKey3.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY3
         );
 
-        const ecdsaPrivateKey4 = PrivateKey.fromString(PRIVATE_KEY_DER4);
+        const ecdsaPrivateKey4 = PrivateKey.fromStringDer(PRIVATE_KEY_DER4);
         expect(ecdsaPrivateKey4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
         expect(ecdsaPrivateKey4.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY4
