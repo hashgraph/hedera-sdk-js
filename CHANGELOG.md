@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.38.0
+
+## What's Changed
+
+* Add two grpc-web endpoints for node27/28 to ClientConstants.js by @ElijahLynn in https://github.com/hashgraph/hedera-sdk-js/pull/2019
+* LocalProvider - close method by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2020
+* Method fromEvmAddress() fails to return the contract id from long zero address by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2018
+* Add support for Long and BigNumber to the array methods of ContractFunctionParameters by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2013
+* Added fromStringDer() method (and tests) and deprecated fromString() method by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2030
+* Remove all warnings by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2033
+
 ## v2.37.0
 
 ## What's Changed
