@@ -57,6 +57,8 @@ import * as util from "./util.js";
  */
 export default class Wallet {
     /**
+     * NOTE: When using string for private key, the string needs to contain DER headers
+     *
      * @param {AccountId | string} accountId
      * @param {PrivateKey | string} privateKey
      * @param {Provider=} provider

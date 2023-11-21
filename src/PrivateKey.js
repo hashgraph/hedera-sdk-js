@@ -147,9 +147,6 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromString(text) {
-        console.warn(
-            "NOTE: When using string for private key, the string needs to contain DER headers"
-        );
         return new PrivateKey(cryptography.PrivateKey.fromString(text));
     }
 
