@@ -66,7 +66,7 @@ export default class Wallet {
     constructor(accountId, privateKey, provider) {
         const key =
             typeof privateKey === "string"
-                ? PrivateKey.fromString(privateKey)
+                ? PrivateKey.fromStringDer(privateKey)
                 : privateKey;
 
         this.publicKey = key.publicKey;
