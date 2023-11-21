@@ -138,7 +138,7 @@ export default class PrivateKey extends Key {
 
         if (data.length == 32) {
             console.warn(
-                "WARNING: Consider using fromStringECDSA() or fromStringED2551() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead."
+                "WARNING: Consider using fromStringECDSA() or fromStringED2551() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead.",
             );
         }
 
@@ -165,7 +165,7 @@ export default class PrivateKey extends Key {
         }
 
         throw new BadKeyError(
-            `private key cannot be decoded from bytes: ${message}`
+            `private key cannot be decoded from bytes: ${message}`,
         );
     }
 
@@ -321,7 +321,7 @@ export default class PrivateKey extends Key {
             const { keyData, chainCode } = await slip10.derive(
                 this.toBytesRaw(),
                 this._key._chainCode,
-                index
+                index,
             );
 
             return new PrivateKey(new Ed25519PrivateKey(keyData, chainCode));
@@ -329,11 +329,11 @@ export default class PrivateKey extends Key {
             const { keyData, chainCode } = await bip32.derive(
                 this.toBytesRaw(),
                 this._key._chainCode,
-                index
+                index,
             );
 
             return new PrivateKey(
-                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode),
             );
         }
     }
@@ -346,7 +346,7 @@ export default class PrivateKey extends Key {
     async legacyDerive(index) {
         const keyBytes = await derive.legacy(
             this.toBytesRaw().subarray(0, 32),
-            index
+            index,
         );
 
         /** @type {new (bytes: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
@@ -387,7 +387,7 @@ export default class PrivateKey extends Key {
 
         if (transaction._signedTransactions.length != 1) {
             throw new Error(
-                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set",
             );
         }
 
@@ -422,7 +422,7 @@ export default class PrivateKey extends Key {
         }
 
         const siganture = this.sign(
-            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
+            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array(),
         );
 
         /** @type {ProtoSignaturePair} */
