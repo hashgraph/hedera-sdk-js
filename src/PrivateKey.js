@@ -147,9 +147,6 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromString(text) {
-        console.warn(
-            "WARNING: Consider using fromStringECDSA() or fromStringED2551() on a HEX-encoded string and fromStringDer() on a HEX-encoded string with DER prefix instead."
-        );
         return new PrivateKey(cryptography.PrivateKey.fromString(text));
     }
 

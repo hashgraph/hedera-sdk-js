@@ -288,7 +288,7 @@ export default class Client {
     setOperator(accountId, privateKey) {
         const key =
             typeof privateKey === "string"
-                ? PrivateKey.fromStringDer(privateKey)
+                ? PrivateKey.fromString(privateKey)
                 : privateKey;
 
         return this.setOperatorWith(accountId, key.publicKey, (message) =>
