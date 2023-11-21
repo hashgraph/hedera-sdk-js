@@ -38,13 +38,13 @@ dotenv.config();
 
 // Configure accounts and client, and generate needed keys
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+const operatorKey = PrivateKey.fromStringDer(process.env.OPERATOR_KEY);
 const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-const treasuryKey = PrivateKey.fromString(process.env.TREASURY_KEY);
+const treasuryKey = PrivateKey.fromStringDer(process.env.TREASURY_KEY);
 const aliceId = AccountId.fromString(process.env.ALICE_ID);
-const aliceKey = PrivateKey.fromString(process.env.ALICE_KEY);
+const aliceKey = PrivateKey.fromStringDer(process.env.ALICE_KEY);
 const bobId = AccountId.fromString(process.env.BOB_ID);
-const bobKey = PrivateKey.fromString(process.env.BOB_KEY);
+const bobKey = PrivateKey.fromStringDer(process.env.BOB_KEY);
 const nodes = {
     "127.0.0.1:50211": new AccountId(3),
 };

@@ -15,7 +15,7 @@ import Long from "long";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
-        const key = PrivateKey.fromString(
+        const key = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
         );
         const account = AccountId.fromString("0.0.1004");
@@ -125,10 +125,10 @@ describe("Transaction", function () {
     });
 
     it("fromBytes fails when bodies differ", function () {
-        const key1 = PrivateKey.fromString(
+        const key1 = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
         );
-        const key2 = PrivateKey.fromString(
+        const key2 = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511d"
         );
 

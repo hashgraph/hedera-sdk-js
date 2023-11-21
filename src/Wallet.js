@@ -57,6 +57,8 @@ import * as util from "./util.js";
  */
 export default class Wallet {
     /**
+     * NOTE: When using string for private key, the string needs to contain DER headers
+     *
      * @param {AccountId | string} accountId
      * @param {PrivateKey | string} privateKey
      * @param {Provider=} provider
@@ -64,7 +66,7 @@ export default class Wallet {
     constructor(accountId, privateKey, provider) {
         const key =
             typeof privateKey === "string"
-                ? PrivateKey.fromString(privateKey)
+                ? PrivateKey.fromStringDer(privateKey)
                 : privateKey;
 
         this.publicKey = key.publicKey;

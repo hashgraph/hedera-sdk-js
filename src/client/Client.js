@@ -280,6 +280,7 @@ export default class Client {
 
     /**
      * Set the account that will, by default, pay for transactions and queries built with this client.
+     * NOTE: When using string for private key, the string needs to contain DER headers
      *
      * @param {AccountId | string} accountId
      * @param {PrivateKey | string} privateKey
@@ -288,7 +289,7 @@ export default class Client {
     setOperator(accountId, privateKey) {
         const key =
             typeof privateKey === "string"
-                ? PrivateKey.fromString(privateKey)
+                ? PrivateKey.fromStringDer(privateKey)
                 : privateKey;
 
         return this.setOperatorWith(accountId, key.publicKey, (message) =>
