@@ -26,7 +26,7 @@ async function main() {
 
     client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
         AccountId.fromString(process.env.OPERATOR_ID),
-        PrivateKey.fromString(process.env.OPERATOR_KEY)
+        PrivateKey.fromStringDer(process.env.OPERATOR_KEY)
     );
 
     try {

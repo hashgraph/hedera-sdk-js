@@ -15,8 +15,8 @@ describe("Ed25519PrivateKey", function () {
         await PrivateKey.generateED25519Async();
     });
 
-    it("fromStringRaw and fromStringDer work", function () {
-        PrivateKey.fromString(
+    it("fromStringDer works", function () {
+        PrivateKey.fromStringDer(
             hex.encode(PrivateKey.fromStringED25519(RAW_KEY).toBytesDer())
         );
     });
@@ -263,7 +263,7 @@ describe("Ed25519PrivateKey", function () {
         var PUBLIC_KEY1 =
             "8ccd31b53d1835b467aac795dab19b274dd3b37e3daf12fcec6bc02bac87b53d";
 
-        var ed25519PrivateKey1 = PrivateKey.fromString(PRIVATE_KEY_DER1);
+        var ed25519PrivateKey1 = PrivateKey.fromStringDer(PRIVATE_KEY_DER1);
         expect(ed25519PrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY1
