@@ -51,12 +51,12 @@ export default class TokenRelationshipMap extends ObjectMap {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     relationship.tokenId
-                )
+                ),
             );
 
             tokenRelationships._set(
                 tokenId,
-                TokenRelationship._fromProtobuf(relationship)
+                TokenRelationship._fromProtobuf(relationship),
             );
         }
 

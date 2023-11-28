@@ -80,7 +80,7 @@ export default class Client {
          * @type {MirrorNetwork}
          */
         this._mirrorNetwork = new MirrorNetwork(
-            this._createMirrorNetworkChannel()
+            this._createMirrorNetworkChannel(),
         );
 
         /**
@@ -114,7 +114,7 @@ export default class Client {
             if (props.operator != null) {
                 this.setOperator(
                     props.operator.accountId,
-                    props.operator.privateKey
+                    props.operator.privateKey,
                 );
             }
         }
@@ -193,7 +193,7 @@ export default class Client {
         this._network.setLedgerId(
             typeof ledgerId === "string"
                 ? LedgerId.fromString(ledgerId)
-                : ledgerId
+                : ledgerId,
         );
 
         return this;
@@ -293,7 +293,7 @@ export default class Client {
                 : privateKey;
 
         return this.setOperatorWith(accountId, key.publicKey, (message) =>
-            Promise.resolve(key.sign(message))
+            Promise.resolve(key.sign(message)),
         );
     }
 
@@ -757,7 +757,7 @@ export default class Client {
                     this._logger.trace(
                         `failed to update client address book: ${
                             /** @type {Error} */ (error).toString()
-                        }`
+                        }`,
                     );
                 }
             }
@@ -781,7 +781,7 @@ export default class Client {
                     this._logger.trace(
                         `failed to update client address book: ${
                             /** @type {Error} */ (error).toString()
-                        }`
+                        }`,
                     );
                 }
             }

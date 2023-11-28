@@ -36,7 +36,7 @@ export default class RecordStatusError extends StatusError {
     constructor(props) {
         super(
             props,
-            `Record for transaction ${props.transactionId.toString()} contained error status ${props.status.toString()}`
+            `Record for transaction ${props.transactionId.toString()} contained error status ${props.status.toString()}`,
         );
 
         /**

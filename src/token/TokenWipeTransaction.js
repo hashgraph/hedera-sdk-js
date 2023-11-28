@@ -111,7 +111,7 @@ export default class TokenWipeTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const wipeToken =
@@ -139,7 +139,7 @@ export default class TokenWipeTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -230,7 +230,7 @@ export default class TokenWipeTransaction extends Transaction {
     setSerials(serials) {
         this._requireNotFrozen();
         this._serials = serials.map((serial) =>
-            typeof serial === "number" ? Long.fromNumber(serial) : serial
+            typeof serial === "number" ? Long.fromNumber(serial) : serial,
         );
 
         return this;
@@ -285,5 +285,5 @@ export default class TokenWipeTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenWipe",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenWipeTransaction._fromProtobuf
+    TokenWipeTransaction._fromProtobuf,
 );

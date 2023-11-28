@@ -37,7 +37,7 @@ describe("AccountBalanceQuery", function () {
         }
 
         for (const [address, nodeAccountId] of Object.entries(
-            clientPreviewNet.network
+            clientPreviewNet.network,
         )) {
             expect(address.endsWith(":50212")).to.be.true;
 
@@ -56,7 +56,7 @@ describe("AccountBalanceQuery", function () {
         }
 
         for (const [address, nodeAccountId] of Object.entries(
-            clientTestnet.network
+            clientTestnet.network,
         )) {
             expect(address.endsWith(":50212")).to.be.true;
 

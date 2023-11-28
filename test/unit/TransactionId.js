@@ -8,7 +8,7 @@ describe("TransactionId", function () {
         let transactionId = TransactionId.fromString("1.2.3@4.5/6");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf(),
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),
@@ -27,7 +27,7 @@ describe("TransactionId", function () {
         transactionId = TransactionId.fromString("1.2.3@4.5?scheduled/6");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf(),
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),
@@ -46,7 +46,7 @@ describe("TransactionId", function () {
         transactionId = TransactionId.fromString("1.2.3@4.5");
 
         expect(
-            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf(),
         ).to.deep.equal({
             accountID: {
                 shardNum: Long.fromNumber(1),
@@ -79,7 +79,7 @@ describe("TransactionId", function () {
         const transactionId = TransactionId.fromString("1.2.3@4.5?scheduled");
 
         expect(transactionId.toString()).to.be.equal(
-            "1.2.3@4.000000005?scheduled"
+            "1.2.3@4.000000005?scheduled",
         );
     });
 
@@ -87,7 +87,7 @@ describe("TransactionId", function () {
         const transactionId = TransactionId.fromString("3@4.5?scheduled");
 
         expect(transactionId.toString()).to.be.equal(
-            "0.0.3@4.000000005?scheduled"
+            "0.0.3@4.000000005?scheduled",
         );
     });
 
@@ -99,7 +99,7 @@ describe("TransactionId", function () {
             accountId,
             validStart,
             true,
-            nonce
+            nonce,
         );
 
         expect(transactionId.toString().includes("/117")).to.be.true;
@@ -111,24 +111,24 @@ describe("TransactionId", function () {
         let transactionId = new TransactionId(accountId, validStart, true);
 
         expect(transactionId.toString()).to.equal(
-            "1.1.1@5.000000004?scheduled"
+            "1.1.1@5.000000004?scheduled",
         );
 
         transactionId = new TransactionId(accountId, validStart, true, null);
 
         expect(transactionId.toString()).to.equal(
-            "1.1.1@5.000000004?scheduled"
+            "1.1.1@5.000000004?scheduled",
         );
 
         transactionId = new TransactionId(
             accountId,
             validStart,
             true,
-            undefined
+            undefined,
         );
 
         expect(transactionId.toString()).to.equal(
-            "1.1.1@5.000000004?scheduled"
+            "1.1.1@5.000000004?scheduled",
         );
     });
 
@@ -140,7 +140,7 @@ describe("TransactionId", function () {
             accountId,
             validStart,
             null,
-            nonce
+            nonce,
         );
 
         expect(transactionId.toString()).to.equal("1.1.1@5.000000004/117");
@@ -153,7 +153,7 @@ describe("TransactionId", function () {
             accountId,
             validStart,
             undefined,
-            nonce
+            nonce,
         );
 
         expect(transactionId.toString()).to.equal("1.1.1@5.000000004/117");
@@ -166,7 +166,7 @@ describe("TransactionId", function () {
             accountId,
             validStart,
             null,
-            null
+            null,
         );
 
         expect(transactionId.toString()).to.equal("1.1.1@5.000000004");
@@ -175,7 +175,7 @@ describe("TransactionId", function () {
             accountId,
             validStart,
             undefined,
-            undefined
+            undefined,
         );
 
         expect(transactionId.toString()).to.equal("1.1.1@5.000000004");
@@ -230,7 +230,7 @@ describe("TransactionId", function () {
         }
 
         expect(new Date(transactionId.nonce).getTime()).equals(
-            secondNonceToSet.getTime()
+            secondNonceToSet.getTime(),
         );
     });
 });

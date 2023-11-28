@@ -38,7 +38,7 @@ describe("FileContents", function () {
             .execute(env.client);
 
         expect(utf8.decode(contents)).to.be.equal(
-            "[e2e::FileCreateTransaction]"
+            "[e2e::FileCreateTransaction]",
         );
 
         await (

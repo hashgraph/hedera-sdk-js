@@ -109,7 +109,7 @@ export class SimpleRestProvider {
      */
     getTransactionReceipt(transactionId) {
         return this.call(
-            new TransactionReceiptQuery().setTransactionId(transactionId)
+            new TransactionReceiptQuery().setTransactionId(transactionId),
         );
     }
 
@@ -120,8 +120,8 @@ export class SimpleRestProvider {
     waitForReceipt(response) {
         return this.call(
             new TransactionReceiptQuery().setTransactionId(
-                response.transactionId
-            )
+                response.transactionId,
+            ),
         );
     }
 
@@ -161,7 +161,7 @@ export class SimpleRestProvider {
                     return TransactionReceipt.fromBytes(bytes);
                 default:
                     throw new Error(
-                        `unrecognzied request time ${request.constructor.name}`
+                        `unrecognzied request time ${request.constructor.name}`,
                     );
             }
         } else {
@@ -211,7 +211,7 @@ export class SimpleRestSigner {
         const provider = new SimpleRestProvider(
             ledgerId,
             response.network,
-            response.mirrorNetwork
+            response.mirrorNetwork,
         );
 
         return new SimpleRestSigner(id, publicKey, provider);
@@ -276,7 +276,7 @@ export class SimpleRestSigner {
      */
     getAccountBalance() {
         return this.call(
-            new AccountBalanceQuery().setAccountId(this.accountId)
+            new AccountBalanceQuery().setAccountId(this.accountId),
         );
     }
 
@@ -294,7 +294,7 @@ export class SimpleRestSigner {
      */
     getAccountRecords() {
         return this.call(
-            new AccountRecordsQuery().setAccountId(this.accountId)
+            new AccountRecordsQuery().setAccountId(this.accountId),
         );
     }
 
@@ -334,7 +334,7 @@ export class SimpleRestSigner {
             transactionId.accountId.compare(this.accountId) != 0
         ) {
             throw new Error(
-                "transaction's ID constructed with a different account ID"
+                "transaction's ID constructed with a different account ID",
             );
         }
 
@@ -346,17 +346,17 @@ export class SimpleRestSigner {
             transaction.nodeAccountIds != null ? transaction.nodeAccountIds : []
         ).map((nodeAccountId) => nodeAccountId.toString());
         const network = Object.values(this.provider.getNetwork()).map(
-            (nodeAccountId) => nodeAccountId.toString()
+            (nodeAccountId) => nodeAccountId.toString(),
         );
 
         if (
             !nodeAccountIds.reduce(
                 (previous, current) => previous && network.includes(current),
-                true
+                true,
             )
         ) {
             throw new Error(
-                "Transaction already set node account IDs to values not within the current network"
+                "Transaction already set node account IDs to values not within the current network",
             );
         }
 
@@ -374,7 +374,7 @@ export class SimpleRestSigner {
             (nodeAccountId) =>
                 typeof nodeAccountId === "string"
                     ? AccountId.fromString(nodeAccountId)
-                    : new AccountId(nodeAccountId)
+                    : new AccountId(nodeAccountId),
         );
         transaction.setNodeAccountIds(network);
         return Promise.resolve(transaction);
@@ -390,7 +390,7 @@ export class SimpleRestSigner {
     call(request) {
         if (this.provider == null) {
             throw new Error(
-                "cannot send request with an wallet that doesn't contain a provider"
+                "cannot send request with an wallet that doesn't contain a provider",
             );
         }
 

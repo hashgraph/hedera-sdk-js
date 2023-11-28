@@ -120,7 +120,7 @@ export default class Query extends Executable {
 
         if (fromProtobuf == null) {
             throw new Error(
-                `(BUG) Query.fromBytes() not implemented for type ${query.query}`
+                `(BUG) Query.fromBytes() not implemented for type ${query.query}`,
             );
         }
 
@@ -175,7 +175,7 @@ export default class Query extends Executable {
         // The node account IDs must be set to execute a cost query
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(
-                client._network.getNodeAccountIdsForExecute()
+                client._network.getNodeAccountIdsForExecute(),
             );
         }
 
@@ -187,7 +187,7 @@ export default class Query extends Executable {
         this._timestamp = Date.now();
         const cost = await COST_QUERY[0](this).execute(client);
         return Hbar.fromTinybars(
-            cost._valueInTinybar.multipliedBy(1.1).toFixed(0)
+            cost._valueInTinybar.multipliedBy(1.1).toFixed(0),
         );
     }
 
@@ -219,7 +219,7 @@ export default class Query extends Executable {
     _getTransactionId() {
         if (this._paymentTransactionId == null) {
             throw new Error(
-                "Query.PaymentTransactionId was not set duration execution"
+                "Query.PaymentTransactionId was not set duration execution",
             );
         }
 
@@ -270,7 +270,7 @@ export default class Query extends Executable {
         // If the nodes aren't set, set them.
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(
-                client._network.getNodeAccountIdsForExecute()
+                client._network.getNodeAccountIdsForExecute(),
             );
         }
 
@@ -286,12 +286,12 @@ export default class Query extends Executable {
                 if (this._operator != null) {
                     // Generate the payment transaction ID
                     this._paymentTransactionId = TransactionId.generate(
-                        this._operator.accountId
+                        this._operator.accountId,
                     );
                 } else {
                     // If payment is required, but an operator did not exist, throw an error
                     throw new Error(
-                        "`client` must have an `operator` or an explicit payment transaction must be provided"
+                        "`client` must have an `operator` or an explicit payment transaction must be provided",
                     );
                 }
             } else {
@@ -299,7 +299,7 @@ export default class Query extends Executable {
                 // set the payment transaction ID to an empty transaction ID.
                 // FIXME: Should use `TransactionId.withValidStart()` instead
                 this._paymentTransactionId = TransactionId.generate(
-                    new AccountId(0)
+                    new AccountId(0),
                 );
             }
         }
@@ -331,7 +331,7 @@ export default class Query extends Executable {
             cost = actualCost;
             if (this._logger) {
                 this._logger.debug(
-                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                    `[${this._getLogId()}] received cost for query ${cost.toString()}`,
                 );
             }
         }
@@ -358,7 +358,7 @@ export default class Query extends Executable {
 
             if (this._logger) {
                 this._logger.debug(
-                    `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                    `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
                 );
             }
 
@@ -367,8 +367,8 @@ export default class Query extends Executable {
                     paymentTransactionId,
                     nodeId,
                     this._isPaymentRequired() ? this._operator : null,
-                    paymentAmount
-                )
+                    paymentAmount,
+                ),
             );
         }
     }
@@ -457,7 +457,7 @@ export default class Query extends Executable {
 
                 if (this._logger) {
                     this._logger.debug(
-                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
                     );
                 }
 
@@ -465,7 +465,7 @@ export default class Query extends Executable {
                     paymentTransactionId,
                     nodeId,
                     this._isPaymentRequired() ? this._operator : null,
-                    paymentAmount
+                    paymentAmount,
                 );
             }
         }
@@ -488,11 +488,11 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK,
         );
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received status ${status.toString()}`
+                `[${this._getLogId()}] received status ${status.toString()}`,
             );
         }
 
@@ -523,7 +523,7 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK,
         );
 
         return new PrecheckStatusError({
@@ -563,7 +563,7 @@ export async function _makePaymentTransaction(
     paymentTransactionId,
     nodeId,
     operator,
-    paymentAmount
+    paymentAmount,
 ) {
     const accountAmounts = [];
 
@@ -620,7 +620,7 @@ export async function _makePaymentTransaction(
     // something we can deduplicate?
     if (operator != null) {
         const signature = await operator.transactionSigner(
-            /** @type {Uint8Array} */ (signedTransaction.bodyBytes)
+            /** @type {Uint8Array} */ (signedTransaction.bodyBytes),
         );
 
         signedTransaction.sigMap = {
@@ -632,7 +632,7 @@ export async function _makePaymentTransaction(
     return {
         signedTransactionBytes:
             HashgraphProto.proto.SignedTransaction.encode(
-                signedTransaction
+                signedTransaction,
             ).finish(),
     };
 }

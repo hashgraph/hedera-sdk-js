@@ -86,17 +86,17 @@ HbarUnit.Hbar = new HbarUnit("hbar", "ℏ", new BigNumber("100000000"));
 HbarUnit.Kilobar = new HbarUnit(
     "kilobar",
     "kℏ",
-    new BigNumber(1000).multipliedBy(new BigNumber("100000000"))
+    new BigNumber(1000).multipliedBy(new BigNumber("100000000")),
 );
 
 HbarUnit.Megabar = new HbarUnit(
     "megabar",
     "Mℏ",
-    new BigNumber(1000000).multipliedBy(new BigNumber("100000000"))
+    new BigNumber(1000000).multipliedBy(new BigNumber("100000000")),
 );
 
 HbarUnit.Gigabar = new HbarUnit(
     "gigabar",
     "Gℏ",
-    new BigNumber("1000000000").multipliedBy(new BigNumber("100000000"))
+    new BigNumber("1000000000").multipliedBy(new BigNumber("100000000")),
 );

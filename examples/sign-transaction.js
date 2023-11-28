@@ -23,7 +23,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -32,7 +32,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     user1Key = PrivateKey.generate();
@@ -54,17 +54,17 @@ async function main() {
         console.log(`account id = ${receipt.accountId.toString()}`);
 
         // create a transfer from new account to 0.0.3
-        transaction = await new TransferTransaction()
+        let trasnferTransaction = await new TransferTransaction()
             .setNodeAccountIds([new AccountId(3)])
             .addHbarTransfer(receipt.accountId, -1)
             .addHbarTransfer("0.0.3", 1)
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
+        trasnferTransaction = await trasnferTransaction.signWithSigner(wallet);
 
-        user1Key.signTransaction(transaction);
-        user2Key.signTransaction(transaction);
+        user1Key.signTransaction(trasnferTransaction);
+        user2Key.signTransaction(trasnferTransaction);
 
-        const result = await transaction.executeWithSigner(wallet);
+        const result = await trasnferTransaction.executeWithSigner(wallet);
         receipt = await result.getReceiptWithSigner(wallet);
 
         console.log(`Status: ${receipt.status.toString()}`);

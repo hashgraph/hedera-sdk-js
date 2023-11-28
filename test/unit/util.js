@@ -138,7 +138,7 @@ describe("util", function () {
         }
 
         expect(util.requireBigNumber(new BigNumber(111))).to.eql(
-            new BigNumber(111)
+            new BigNumber(111),
         );
     });
 
@@ -184,7 +184,7 @@ describe("util", function () {
         }
 
         expect(util.requireUint8Array(new Uint8Array())).to.eql(
-            new Uint8Array()
+            new Uint8Array(),
         );
     });
 
@@ -227,13 +227,13 @@ describe("util", function () {
             util.requireStringOrUint8Array(1);
         } catch (error) {
             expect(error.message).to.eql(
-                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR
+                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR,
             );
         }
 
         expect(util.requireStringOrUint8Array("1")).to.eql("1");
         expect(util.requireUint8Array(new Uint8Array())).to.eql(
-            new Uint8Array()
+            new Uint8Array(),
         );
     });
 
@@ -254,7 +254,7 @@ describe("util", function () {
             util.convertToBigNumber({});
         } catch (error) {
             expect(error.message).to.eql(
-                util.FUNCTION_CONVERT_TO_BIGNUMBER_ERROR
+                util.FUNCTION_CONVERT_TO_BIGNUMBER_ERROR,
             );
         }
 
@@ -286,10 +286,10 @@ describe("util", function () {
 
         expect(util.convertToBigNumberArray([1, 2, 3])).to.eql(bigNumberArray);
         expect(util.convertToBigNumberArray(["1", "2", "3"])).to.eql(
-            bigNumberArray
+            bigNumberArray,
         );
         expect(util.convertToBigNumberArray(bigNumberArray)).to.eql(
-            bigNumberArray
+            bigNumberArray,
         );
     });
 
@@ -316,7 +316,7 @@ describe("util", function () {
             util.convertToNumber("asdf");
         } catch (error) {
             expect(error.message).to.eql(
-                util.FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR
+                util.FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR,
             );
         }
 
@@ -347,14 +347,14 @@ describe("util", function () {
         expect(
             util.compare(
                 { hello: { world: false } },
-                { hello: { world: true } }
-            )
+                { hello: { world: true } },
+            ),
         ).to.be.false;
         expect(
             util.compare(
                 { hello: { world: false } },
-                { hello: { world: false } }
-            )
+                { hello: { world: false } },
+            ),
         ).to.be.true;
     });
 });

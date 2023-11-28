@@ -64,7 +64,7 @@ export default class TokenSupplyType {
         }
 
         throw new Error(
-            `(BUG) TokenSupplyType.fromCode() does not handle code: ${code}`
+            `(BUG) TokenSupplyType.fromCode() does not handle code: ${code}`,
         );
     }
 

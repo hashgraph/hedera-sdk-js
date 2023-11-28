@@ -77,7 +77,7 @@ export default class TokenDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const deleteToken =
@@ -96,7 +96,7 @@ export default class TokenDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -175,5 +175,5 @@ export default class TokenDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenDeletion",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenDeleteTransaction._fromProtobuf
+    TokenDeleteTransaction._fromProtobuf,
 );

@@ -124,7 +124,7 @@ export default class FileUpdateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const update =
@@ -142,7 +142,7 @@ export default class FileUpdateTransaction extends Transaction {
                     update.keys != null
                         ? update.keys.keys != null
                             ? update.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key._fromProtobufKey(key),
                               )
                             : undefined
                         : undefined,
@@ -162,7 +162,7 @@ export default class FileUpdateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 

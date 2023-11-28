@@ -40,7 +40,7 @@ describe("AccountInfo", function () {
             .execute(env.client);
 
         const receiptCreateTransaction = await createTransaction.getReceipt(
-            env.client
+            env.client,
         );
 
         let deleteTransaction = await new AccountDeleteTransaction()
@@ -50,7 +50,7 @@ describe("AccountInfo", function () {
 
         newKey.signTransaction(deleteTransaction);
         const deleteTransactionSubmitted = await deleteTransaction.execute(
-            env.client
+            env.client,
         );
 
         await deleteTransactionSubmitted.getReceipt(env.client);
@@ -93,7 +93,7 @@ describe("AccountInfo", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(2).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -145,7 +145,7 @@ describe("AccountInfo", function () {
                         .setAccountId(receipt[i].accountId)
                         .setTransferAccountId(operatorId)
                         .setTransactionId(
-                            TransactionId.generate(receipt[i].accountId)
+                            TransactionId.generate(receipt[i].accountId),
                         )
                         .freezeWith(env.client)
                         .sign(key)

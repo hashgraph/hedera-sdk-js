@@ -18,7 +18,7 @@ describe("EcdsaPrivateKey", function () {
 
     it("fromStringRaw and fromStringDer work", function () {
         PrivateKey.fromStringDer(
-            hex.encode(PrivateKey.fromStringECDSA(RAW_KEY).toBytesDer())
+            hex.encode(PrivateKey.fromStringECDSA(RAW_KEY).toBytesDer()),
         );
     });
 
@@ -34,9 +34,9 @@ describe("EcdsaPrivateKey", function () {
 
     it("should return a public key from a raw private key", function () {
         expect(
-            PrivateKey.fromStringECDSA(RAW_KEY).publicKey.toStringRaw()
+            PrivateKey.fromStringECDSA(RAW_KEY).publicKey.toStringRaw(),
         ).to.be.equal(
-            "02703a9370b0443be6ae7c507b0aec81a55e94e4a863b9655360bd65358caa6588"
+            "02703a9370b0443be6ae7c507b0aec81a55e94e4a863b9655360bd65358caa6588",
         );
     });
 
@@ -175,7 +175,7 @@ describe("EcdsaPrivateKey", function () {
             "024d902e1a2fc7a8755ab5b694c575fce742c48d9ff192e63df5193e4c7afe1f9c";
 
         const seed = hex.decode(
-            "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"
+            "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542",
         );
 
         // Chain m
@@ -270,31 +270,31 @@ describe("EcdsaPrivateKey", function () {
         const ecdsaPrivateKey1 = await PrivateKey.fromPem(PRIVATE_KEY_PEM1);
         expect(ecdsaPrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ecdsaPrivateKey1.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY1
+            PUBLIC_KEY1,
         );
 
         const ecdsaPrivateKey2 = await PrivateKey.fromPem(PRIVATE_KEY_PEM2);
         expect(ecdsaPrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
         expect(ecdsaPrivateKey2.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY2
+            PUBLIC_KEY2,
         );
 
         const ecdsaPrivateKey3 = await PrivateKey.fromPem(
             PRIVATE_KEY_PEM3,
-            TEST_VECTOR_PEM_PASSPHRASE
+            TEST_VECTOR_PEM_PASSPHRASE,
         );
         expect(ecdsaPrivateKey3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
         expect(ecdsaPrivateKey3.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY3
+            PUBLIC_KEY3,
         );
 
         const ecdsaPrivateKey4 = await PrivateKey.fromPem(
             PRIVATE_KEY_PEM4,
-            TEST_VECTOR_PEM_PASSPHRASE
+            TEST_VECTOR_PEM_PASSPHRASE,
         );
         expect(ecdsaPrivateKey4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
         expect(ecdsaPrivateKey4.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY4
+            PUBLIC_KEY4,
         );
     });
 
@@ -331,25 +331,25 @@ describe("EcdsaPrivateKey", function () {
         const ecdsaPrivateKey1 = PrivateKey.fromStringDer(PRIVATE_KEY_DER1);
         expect(ecdsaPrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ecdsaPrivateKey1.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY1
+            PUBLIC_KEY1,
         );
 
         const ecdsaPrivateKey2 = PrivateKey.fromStringDer(PRIVATE_KEY_DER2);
         expect(ecdsaPrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
         expect(ecdsaPrivateKey2.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY2
+            PUBLIC_KEY2,
         );
 
         const ecdsaPrivateKey3 = PrivateKey.fromStringDer(PRIVATE_KEY_DER3);
         expect(ecdsaPrivateKey3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
         expect(ecdsaPrivateKey3.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY3
+            PUBLIC_KEY3,
         );
 
         const ecdsaPrivateKey4 = PrivateKey.fromStringDer(PRIVATE_KEY_DER4);
         expect(ecdsaPrivateKey4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
         expect(ecdsaPrivateKey4.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY4
+            PUBLIC_KEY4,
         );
     });
 });

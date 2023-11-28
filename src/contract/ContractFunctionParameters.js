@@ -79,7 +79,7 @@ export default class ContractFunctionParameters {
     addBytes32(value) {
         if (value.length !== 32) {
             throw new Error(
-                `addBytes32 expected array to be of length 32, but received ${value.length}`
+                `addBytes32 expected array to be of length 32, but received ${value.length}`,
             );
         }
 
@@ -105,7 +105,7 @@ export default class ContractFunctionParameters {
         for (const [_, entry] of value.entries()) {
             if (entry.length !== 32) {
                 throw new Error(
-                    `addBytes32 expected array to be of length 32, but received ${entry.length}`
+                    `addBytes32 expected array to be of length 32, but received ${entry.length}`,
                 );
             }
         }
@@ -1285,7 +1285,7 @@ export default class ContractFunctionParameters {
             // Allow `0x` prefix
             if (value.length !== 40 && value.length !== 42) {
                 throw new Error(
-                    "`address` type requires parameter to be 40 or 42 characters"
+                    "`address` type requires parameter to be 40 or 42 characters",
                 );
             }
             address = value;
@@ -1318,7 +1318,7 @@ export default class ContractFunctionParameters {
             if (typeof entry === "string") {
                 if (entry.length !== 40 && entry.length !== 42) {
                     throw new Error(
-                        "`address` type requires parameter to be 40 or 42 characters"
+                        "`address` type requires parameter to be 40 or 42 characters",
                     );
                 }
                 address = entry;
@@ -1350,7 +1350,7 @@ export default class ContractFunctionParameters {
 
         if (addressParam.length !== 20) {
             throw new Error(
-                "`function` type requires parameter `address` to be exactly 20 bytes"
+                "`function` type requires parameter `address` to be exactly 20 bytes",
             );
         }
 
@@ -1432,7 +1432,7 @@ function argumentToBytes(param, ty) {
     if (ty.array) {
         if (!Array.isArray(param)) {
             throw new TypeError(
-                "SolidityType indicates type is array, but parameter is not an array"
+                "SolidityType indicates type is array, but parameter is not an array",
             );
         }
 
@@ -1527,12 +1527,12 @@ function argumentToBytes(param, ty) {
             case ArgumentType.bytes:
             case ArgumentType.string:
                 value = new Uint8Array(
-                    values.length * 32 + totalLengthOfValues + 32
+                    values.length * 32 + totalLengthOfValues + 32,
                 );
                 break;
             default:
                 throw new TypeError(
-                    `Expected param type to be ArgumentType, but received ${ty.ty}`
+                    `Expected param type to be ArgumentType, but received ${ty.ty}`,
                 );
         }
 
@@ -1623,7 +1623,7 @@ function argumentToBytes(param, ty) {
                     break;
                 default:
                     throw new TypeError(
-                        `Expected param type to be ArgumentType, but received ${ty.ty}`
+                        `Expected param type to be ArgumentType, but received ${ty.ty}`,
                     );
             }
         }
@@ -1709,7 +1709,7 @@ function argumentToBytes(param, ty) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             const encodedData = defaultAbiCoder.encode(
                 [solidityTypeToString(ty)],
-                [paramToHex]
+                [paramToHex],
             );
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -1745,11 +1745,11 @@ function argumentToBytes(param, ty) {
             if (Math.floor(par.length / 32) >= 0) {
                 if (Math.floor(par.length % 32) !== 0) {
                     value = new Uint8Array(
-                        (Math.floor(par.length / 32) + 1) * 32 + 32
+                        (Math.floor(par.length / 32) + 1) * 32 + 32,
                     );
                 } else {
                     value = new Uint8Array(
-                        Math.floor(par.length / 32) * 32 + 32
+                        Math.floor(par.length / 32) * 32 + 32,
                     );
                 }
             } else {

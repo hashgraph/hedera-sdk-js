@@ -77,7 +77,7 @@ export default class TokenPauseTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const pauseToken =
@@ -96,7 +96,7 @@ export default class TokenPauseTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -175,5 +175,5 @@ export default class TokenPauseTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenPause",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenPauseTransaction._fromProtobuf
+    TokenPauseTransaction._fromProtobuf,
 );

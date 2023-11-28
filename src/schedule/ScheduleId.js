@@ -70,7 +70,7 @@ export default class ScheduleId {
         const scheduleId = new ScheduleId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.scheduleNum != null ? id.scheduleNum : 0
+            id.scheduleNum != null ? id.scheduleNum : 0,
         );
 
         return scheduleId;
@@ -101,7 +101,7 @@ export default class ScheduleId {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -111,7 +111,7 @@ export default class ScheduleId {
      */
     static fromBytes(bytes) {
         return ScheduleId._fromProtobuf(
-            HashgraphProto.proto.ScheduleID.decode(bytes)
+            HashgraphProto.proto.ScheduleID.decode(bytes),
         );
     }
 
@@ -162,7 +162,7 @@ export default class ScheduleId {
      */
     toBytes() {
         return HashgraphProto.proto.ScheduleID.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 
@@ -182,7 +182,7 @@ export default class ScheduleId {
     compare(other) {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
+            [other.shard, other.realm, other.num],
         );
     }
 }

@@ -312,7 +312,7 @@ export function decode(text) {
     const result = str.match(/.{1,2}/gu);
 
     return new Uint8Array(
-        (result == null ? [] : result).map((byte) => parseInt(byte, 16))
+        (result == null ? [] : result).map((byte) => parseInt(byte, 16)),
     );
 }
 

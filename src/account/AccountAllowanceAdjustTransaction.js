@@ -103,7 +103,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return this._adjustHbarAllowance(
             null,
             spenderAccountId,
-            util.requireNotNegative(value)
+            util.requireNotNegative(value),
         );
     }
 
@@ -122,24 +122,24 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromEvmAddress(
-                              0,
-                              0,
-                              spenderAccountId.toSolidityAddress()
-                          )
-                        : spenderAccountId,
+                          ? AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                spenderAccountId.toSolidityAddress(),
+                            )
+                          : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
                         : ownerAccountId instanceof ContractId
-                        ? AccountId.fromEvmAddress(
-                              0,
-                              0,
-                              ownerAccountId.toSolidityAddress()
-                          )
-                        : ownerAccountId,
+                          ? AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                ownerAccountId.toSolidityAddress(),
+                            )
+                          : ownerAccountId,
                 amount: amount,
-            })
+            }),
         );
 
         return this;
@@ -157,7 +157,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return this._adjustHbarAllowance(
             ownerAccountId,
             spenderAccountId,
-            util.requireNotNegative(value)
+            util.requireNotNegative(value),
         );
     }
 
@@ -173,7 +173,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return this._adjustHbarAllowance(
             ownerAccountId,
             spenderAccountId,
-            util.requireNotNegative(value).negated()
+            util.requireNotNegative(value).negated(),
         );
     }
 
@@ -196,7 +196,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
             tokenId,
             null,
             spenderAccountId,
-            util.requireNotNegative(Long.fromValue(amount))
+            util.requireNotNegative(Long.fromValue(amount)),
         );
     }
 
@@ -220,27 +220,27 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromEvmAddress(
-                              0,
-                              0,
-                              spenderAccountId.toSolidityAddress()
-                          )
-                        : spenderAccountId,
+                          ? AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                spenderAccountId.toSolidityAddress(),
+                            )
+                          : spenderAccountId,
                 ownerAccountId:
                     typeof ownerAccountId === "string"
                         ? AccountId.fromString(ownerAccountId)
                         : ownerAccountId instanceof ContractId
-                        ? AccountId.fromEvmAddress(
-                              0,
-                              0,
-                              ownerAccountId.toSolidityAddress()
-                          )
-                        : ownerAccountId,
+                          ? AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                ownerAccountId.toSolidityAddress(),
+                            )
+                          : ownerAccountId,
                 amount:
                     typeof amount === "number"
                         ? Long.fromNumber(amount)
                         : amount,
-            })
+            }),
         );
 
         return this;
@@ -259,7 +259,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
             tokenId,
             ownerAccountId,
             spenderAccountId,
-            util.requireNotNegative(Long.fromValue(amount))
+            util.requireNotNegative(Long.fromValue(amount)),
         );
     }
 
@@ -276,7 +276,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
             tokenId,
             ownerAccountId,
             spenderAccountId,
-            util.requireNotNegative(Long.fromValue(amount))
+            util.requireNotNegative(Long.fromValue(amount)),
         );
     }
 
@@ -304,22 +304,22 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
             typeof spenderAccountId === "string"
                 ? AccountId.fromString(spenderAccountId)
                 : spenderAccountId instanceof ContractId
-                ? AccountId.fromEvmAddress(
-                      0,
-                      0,
-                      spenderAccountId.toSolidityAddress()
-                  )
-                : spenderAccountId;
+                  ? AccountId.fromEvmAddress(
+                        0,
+                        0,
+                        spenderAccountId.toSolidityAddress(),
+                    )
+                  : spenderAccountId;
         const owner =
             typeof ownerAccountId === "string"
                 ? AccountId.fromString(ownerAccountId)
                 : ownerAccountId instanceof ContractId
-                ? AccountId.fromEvmAddress(
-                      0,
-                      0,
-                      ownerAccountId.toSolidityAddress()
-                  )
-                : ownerAccountId;
+                  ? AccountId.fromEvmAddress(
+                        0,
+                        0,
+                        ownerAccountId.toSolidityAddress(),
+                    )
+                  : ownerAccountId;
         let found = false;
 
         for (const allowance of this._nftAllowances) {
@@ -345,7 +345,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     ownerAccountId: owner,
                     allSerials: false,
                     delegatingSpender: null,
-                })
+                }),
             );
         }
 
@@ -367,7 +367,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return this._adjustTokenNftAllowance(
             id,
             ownerAccountId,
-            spenderAccountId
+            spenderAccountId,
         );
     }
 
@@ -385,7 +385,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return this._adjustTokenNftAllowance(
             new NftId(id.tokenId, id.serial.negate()),
             ownerAccountId,
-            spenderAccountId
+            spenderAccountId,
         );
     }
 
@@ -400,7 +400,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
             tokenId,
             null,
             spenderAccountId,
-            true
+            true,
         );
     }
 
@@ -414,13 +414,13 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     grantTokenNftAllowanceAllSerials(
         tokenId,
         ownerAccountId,
-        spenderAccountId
+        spenderAccountId,
     ) {
         return this._adjustTokenNftAllowanceAllSerials(
             tokenId,
             ownerAccountId,
             spenderAccountId,
-            true
+            true,
         );
     }
 
@@ -434,13 +434,13 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     revokeTokenNftAllowanceAllSerials(
         tokenId,
         ownerAccountId,
-        spenderAccountId
+        spenderAccountId,
     ) {
         return this._adjustTokenNftAllowanceAllSerials(
             tokenId,
             ownerAccountId,
             spenderAccountId,
-            false
+            false,
         );
     }
 
@@ -455,7 +455,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         tokenId,
         ownerAccountId,
         spenderAccountId,
-        allSerials
+        allSerials,
     ) {
         this._requireNotFrozen();
 
@@ -470,27 +470,27 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                         ? typeof ownerAccountId === "string"
                             ? AccountId.fromString(ownerAccountId)
                             : ownerAccountId instanceof ContractId
-                            ? AccountId.fromEvmAddress(
-                                  0,
-                                  0,
-                                  ownerAccountId.toSolidityAddress()
-                              )
-                            : ownerAccountId
+                              ? AccountId.fromEvmAddress(
+                                    0,
+                                    0,
+                                    ownerAccountId.toSolidityAddress(),
+                                )
+                              : ownerAccountId
                         : null,
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId instanceof ContractId
-                        ? AccountId.fromEvmAddress(
-                              0,
-                              0,
-                              spenderAccountId.toSolidityAddress()
-                          )
-                        : spenderAccountId,
+                          ? AccountId.fromEvmAddress(
+                                0,
+                                0,
+                                spenderAccountId.toSolidityAddress(),
+                            )
+                          : spenderAccountId,
                 serialNumbers: null,
                 allSerials,
                 delegatingSpender: null,
-            })
+            }),
         );
 
         return this;
@@ -501,13 +501,13 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      */
     _validateChecksums(client) {
         this._hbarAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
+            allowance._validateChecksums(client),
         );
         this._tokenAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
+            allowance._validateChecksums(client),
         );
         this._nftAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
+            allowance._validateChecksums(client),
         );
     }
 
@@ -521,7 +521,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _execute(channel, request) {
         return Promise.reject(
-            new Error("This feature has been deprecated for this class.")
+            new Error("This feature has been deprecated for this class."),
         );
     }
 

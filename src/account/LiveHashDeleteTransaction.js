@@ -83,7 +83,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const hashes =
@@ -106,7 +106,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -205,5 +205,5 @@ export default class LiveHashDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDeleteLiveHash",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    LiveHashDeleteTransaction._fromProtobuf
+    LiveHashDeleteTransaction._fromProtobuf,
 );

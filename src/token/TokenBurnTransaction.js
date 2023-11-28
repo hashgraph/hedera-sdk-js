@@ -100,7 +100,7 @@ export default class TokenBurnTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const burnToken =
@@ -124,7 +124,7 @@ export default class TokenBurnTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -190,7 +190,7 @@ export default class TokenBurnTransaction extends Transaction {
     setSerials(serials) {
         this._requireNotFrozen();
         this._serials = serials.map((serial) =>
-            serial instanceof Long ? serial : Long.fromValue(serial)
+            serial instanceof Long ? serial : Long.fromValue(serial),
         );
 
         return this;
@@ -243,5 +243,5 @@ export default class TokenBurnTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenBurn",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenBurnTransaction._fromProtobuf
+    TokenBurnTransaction._fromProtobuf,
 );

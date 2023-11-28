@@ -84,13 +84,13 @@ export default class CostQuery extends Executable {
 
         if (operator == null) {
             throw new Error(
-                "`client` must have an `operator` or an explicit payment transaction must be provided"
+                "`client` must have an `operator` or an explicit payment transaction must be provided",
             );
         }
 
         if (this._query._nodeAccountIds.isEmpty) {
             this._query._nodeAccountIds.setList(
-                client._network.getNodeAccountIdsForExecute()
+                client._network.getNodeAccountIdsForExecute(),
             );
         }
 
@@ -108,7 +108,7 @@ export default class CostQuery extends Executable {
         const paymentAmount = new Hbar(0);
         if (this._logger) {
             this._logger.debug(
-                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
             );
         }
 
@@ -117,7 +117,7 @@ export default class CostQuery extends Executable {
                 paymentTransactionId,
                 new AccountId(0),
                 operator,
-                paymentAmount
+                paymentAmount,
             ),
             responseType: HashgraphProto.proto.ResponseType.COST_ANSWER,
         };
@@ -131,8 +131,8 @@ export default class CostQuery extends Executable {
     _makeRequestAsync() {
         return Promise.resolve(
             this._query._onMakeRequest(
-                /** @type {HashgraphProto.proto.IQueryHeader} */ (this._header)
-            )
+                /** @type {HashgraphProto.proto.IQueryHeader} */ (this._header),
+            ),
         );
     }
 
@@ -172,7 +172,7 @@ export default class CostQuery extends Executable {
     _mapResponse(response, nodeAccountId, request) {
         const cost = this._query._mapResponseHeader(response).cost;
         return Promise.resolve(
-            Hbar.fromTinybars(/** @type {Long | number} */ (cost))
+            Hbar.fromTinybars(/** @type {Long | number} */ (cost)),
         );
     }
 

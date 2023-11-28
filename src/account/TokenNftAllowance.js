@@ -104,14 +104,16 @@ export default class TokenNftAllowance {
             allowance.approvedForAll.value == true;
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    allowance.tokenId
+                ),
             ),
             spenderAccountId:
                 allowance.spender != null
                     ? AccountId._fromProtobuf(
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               allowance.spender
-                          )
+                          ),
                       )
                     : null,
             ownerAccountId:
@@ -119,23 +121,23 @@ export default class TokenNftAllowance {
                     ? AccountId._fromProtobuf(
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
-                          )
+                          ),
                       )
                     : null,
             serialNumbers: allSerials
                 ? null
                 : allowance.serialNumbers != null
-                ? allowance.serialNumbers.map((serialNumber) =>
-                      Long.fromValue(serialNumber)
-                  )
-                : [],
+                  ? allowance.serialNumbers.map((serialNumber) =>
+                        Long.fromValue(serialNumber),
+                    )
+                  : [],
             allSerials,
             delegatingSpender:
                 allowance.delegatingSpender != null
                     ? AccountId._fromProtobuf(
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.delegatingSpender
-                          )
+                          ),
                       )
                     : null,
         });
@@ -150,12 +152,14 @@ export default class TokenNftAllowance {
     static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    allowance.tokenId
+                ),
             ),
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
-                )
+                ),
             ),
             ownerAccountId,
             serialNumbers: [],
@@ -172,7 +176,9 @@ export default class TokenNftAllowance {
     static _fromRemoveProtobuf(allowance) {
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    allowance.tokenId
+                ),
             ),
             spenderAccountId: null,
             ownerAccountId:
@@ -180,13 +186,13 @@ export default class TokenNftAllowance {
                     ? AccountId._fromProtobuf(
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
-                          )
+                          ),
                       )
                     : null,
             serialNumbers:
                 allowance.serialNumbers != null
                     ? allowance.serialNumbers.map((serialNumber) =>
-                          Long.fromValue(serialNumber)
+                          Long.fromValue(serialNumber),
                       )
                     : [],
             allSerials: null,

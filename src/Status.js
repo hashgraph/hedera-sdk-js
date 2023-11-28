@@ -1219,7 +1219,7 @@ export default class Status {
                 return Status.AliasAlreadyAssigned;
             default:
                 throw new Error(
-                    `(BUG) Status.fromCode() does not handle code: ${code}`
+                    `(BUG) Status.fromCode() does not handle code: ${code}`,
                 );
         }
     }
@@ -2365,7 +2365,7 @@ Status.ExistingAutomaticAssociationsExceedGivenLimit = new Status(263);
  * token associations <tt>tokens.maxPerAccount</tt>.
  */
 Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit = new Status(
-    264
+    264,
 );
 
 /**

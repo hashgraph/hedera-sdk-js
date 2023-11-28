@@ -127,7 +127,7 @@ export default class NodeClient extends Client {
                 ? /** @type {ClientConfiguration | undefined} */ (
                       JSON.parse(data)
                   )
-                : data
+                : data,
         );
     }
 
@@ -243,7 +243,7 @@ export default class NodeClient extends Client {
         switch (name) {
             case "mainnet":
                 this.setNetworkFromAddressBook(
-                    NodeAddressBook.fromBytes(hex.decode(mainnet.addressBook))
+                    NodeAddressBook.fromBytes(hex.decode(mainnet.addressBook)),
                 );
                 this.setMirrorNetwork(MirrorNetwork.MAINNET);
                 this.setLedgerId(LedgerId.MAINNET);
@@ -251,7 +251,7 @@ export default class NodeClient extends Client {
 
             case "testnet":
                 this.setNetworkFromAddressBook(
-                    NodeAddressBook.fromBytes(hex.decode(testnet.addressBook))
+                    NodeAddressBook.fromBytes(hex.decode(testnet.addressBook)),
                 );
                 this.setMirrorNetwork(MirrorNetwork.TESTNET);
                 this.setLedgerId(LedgerId.TESTNET);
@@ -260,8 +260,8 @@ export default class NodeClient extends Client {
             case "previewnet":
                 this.setNetworkFromAddressBook(
                     NodeAddressBook.fromBytes(
-                        hex.decode(previewnet.addressBook)
-                    )
+                        hex.decode(previewnet.addressBook),
+                    ),
                 );
                 this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
                 this.setLedgerId(LedgerId.PREVIEWNET);
@@ -276,7 +276,7 @@ export default class NodeClient extends Client {
             default:
                 throw new Error(
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    `unknown network: ${name}`
+                    `unknown network: ${name}`,
                 );
         }
         return this;

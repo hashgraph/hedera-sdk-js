@@ -91,7 +91,7 @@ describe("TokenNft", function () {
             .execute(env.client);
 
         expect(info[0].accountId.toString()).to.be.equal(
-            env.operatorId.toString()
+            env.operatorId.toString(),
         );
 
         await (
@@ -259,7 +259,7 @@ describe("TokenNft", function () {
             .execute(env.client);
 
         expect(info[0].accountId.toString()).to.be.equal(
-            env.operatorId.toString()
+            env.operatorId.toString(),
         );
 
         await (
@@ -452,8 +452,8 @@ describe("TokenNft", function () {
                             0x00,
                             0x00,
                             0x00,
-                            0x00
-                        )
+                            0x00,
+                        ),
                     )
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -668,7 +668,7 @@ describe("TokenNft", function () {
             .execute(env.client);
 
         expect(info[0].accountId.toString()).to.be.equal(
-            env.operatorId.toString()
+            env.operatorId.toString(),
         );
 
         await (
@@ -781,7 +781,7 @@ describe("TokenNft", function () {
             .execute(env.client);
 
         expect(info[0].accountId.toString()).to.be.equal(
-            env.operatorId.toString()
+            env.operatorId.toString(),
         );
 
         await (

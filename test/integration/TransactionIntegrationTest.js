@@ -33,7 +33,7 @@ describe("TransactionIntegration", function () {
         const record = await response.getRecord(env.client);
 
         expect(hex.encode(expectedHash)).to.be.equal(
-            hex.encode(record.transactionHash)
+            hex.encode(record.transactionHash),
         );
 
         const account = record.receipt.accountId;
@@ -85,7 +85,7 @@ describe("TransactionIntegration", function () {
         ).signWithOperator(env.client);
 
         expect(
-            transaction._signedTransactions.list[0].sigMap.sigPair.length
+            transaction._signedTransactions.list[0].sigMap.sigPair.length,
         ).to.eql(2);
 
         transaction = await (
@@ -96,7 +96,7 @@ describe("TransactionIntegration", function () {
         ).sign(key);
 
         expect(
-            transaction._signedTransactions.list[0].sigMap.sigPair.length
+            transaction._signedTransactions.list[0].sigMap.sigPair.length,
         ).to.eql(2);
 
         await env.close();
@@ -120,7 +120,7 @@ describe("TransactionIntegration", function () {
             .setNodeAccountIds([nodeAccountId])
             .addHbarTransfer(
                 env.client.operatorAccountId,
-                new Hbar(1).negated()
+                new Hbar(1).negated(),
             )
             .addHbarTransfer(new AccountId(3), new Hbar(1))
             .freezeWith(env.client);

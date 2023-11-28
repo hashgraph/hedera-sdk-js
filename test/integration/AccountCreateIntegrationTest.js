@@ -42,7 +42,7 @@ describe("AccountCreate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toNumber()).to.be.equal(
-            new Hbar(2).toTinybars().toNumber()
+            new Hbar(2).toTinybars().toNumber(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -84,7 +84,7 @@ describe("AccountCreate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toNumber()).to.be.equal(
-            new Hbar(2).toTinybars().toNumber()
+            new Hbar(2).toTinybars().toNumber(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -213,7 +213,7 @@ describe("AccountCreate", function () {
 
         const txAccountCreate = await transaction.execute(env.client);
         const txAccountCreateReceipt = await txAccountCreate.getReceipt(
-            env.client
+            env.client,
         );
         const accountId = txAccountCreateReceipt.accountId;
 
@@ -226,7 +226,7 @@ describe("AccountCreate", function () {
 
         expect(info.accountId.toString()).to.be.equal(accountId.toString());
         expect(info.key.toArray()[0].toString()).to.be.equal(
-            publicKey.toString()
+            publicKey.toString(),
         );
     });
 
@@ -262,7 +262,7 @@ describe("AccountCreate", function () {
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
-            evmAddress.toString()
+            evmAddress.toString(),
         );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
@@ -303,7 +303,7 @@ describe("AccountCreate", function () {
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
-            evmAddress.toString()
+            evmAddress.toString(),
         );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
@@ -376,7 +376,7 @@ describe("AccountCreate", function () {
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
-            evmAddress.toString()
+            evmAddress.toString(),
         );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });
@@ -454,7 +454,7 @@ describe("AccountCreate", function () {
 
         expect(info.accountId.toString()).to.not.be.null;
         expect(info.contractAccountId.toString()).to.be.equal(
-            evmAddress.toString()
+            evmAddress.toString(),
         );
         expect(info.key.toString()).to.be.equal(adminKey.publicKey.toString());
     });

@@ -113,7 +113,7 @@ export default class NodeChannel extends Channel {
                         Buffer.from(requestData),
                         (e, r) => {
                             callback(e, r);
-                        }
+                        },
                     );
                 }
             });

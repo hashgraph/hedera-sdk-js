@@ -26,13 +26,13 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
     const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
         AccountId.fromString(process.env.OPERATOR_ID),
-        PrivateKey.fromStringDer(process.env.OPERATOR_KEY)
+        PrivateKey.fromStringDer(process.env.OPERATOR_KEY),
     );
 
     try {
@@ -61,7 +61,7 @@ async function main() {
                 `Status for transaction with ID ${
                     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                     txMessage[index].transactionId
-                } is ${txReceipt.status.toString()}`
+                } is ${txReceipt.status.toString()}`,
             );
         }
     } catch (error) {

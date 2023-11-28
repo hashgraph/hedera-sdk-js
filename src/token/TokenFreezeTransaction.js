@@ -88,7 +88,7 @@ export default class TokenFreezeTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const freezeToken =
@@ -111,7 +111,7 @@ export default class TokenFreezeTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -217,5 +217,5 @@ export default class TokenFreezeTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenFreeze",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenFreezeTransaction._fromProtobuf
+    TokenFreezeTransaction._fromProtobuf,
 );

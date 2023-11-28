@@ -119,7 +119,7 @@ describe("TransactionReceiptMocking", function () {
             .execute(client);
 
         expect(receipt.status.toString()).to.be.equal(
-            Status.InvalidSignature.toString()
+            Status.InvalidSignature.toString(),
         );
     });
 });

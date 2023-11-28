@@ -159,7 +159,7 @@ export default class Wallet {
                     publicKey: this.publicKey,
                     signature: await this.signer(message),
                     accountId: this.accountId,
-                })
+                }),
             );
         }
 
@@ -171,7 +171,7 @@ export default class Wallet {
      */
     getAccountBalance() {
         return this.call(
-            new AccountBalanceQuery().setAccountId(this.accountId)
+            new AccountBalanceQuery().setAccountId(this.accountId),
         );
     }
 
@@ -189,7 +189,7 @@ export default class Wallet {
      */
     getAccountRecords() {
         return this.call(
-            new AccountRecordsQuery().setAccountId(this.accountId)
+            new AccountRecordsQuery().setAccountId(this.accountId),
         );
     }
 
@@ -215,7 +215,7 @@ export default class Wallet {
             transactionId.accountId.compare(this.accountId) != 0
         ) {
             throw new Error(
-                "transaction's ID constructed with a different account ID"
+                "transaction's ID constructed with a different account ID",
             );
         }
 
@@ -227,17 +227,17 @@ export default class Wallet {
             transaction.nodeAccountIds != null ? transaction.nodeAccountIds : []
         ).map((nodeAccountId) => nodeAccountId.toString());
         const network = Object.values(this.provider.getNetwork()).map(
-            (nodeAccountId) => nodeAccountId.toString()
+            (nodeAccountId) => nodeAccountId.toString(),
         );
 
         if (
             !nodeAccountIds.reduce(
                 (previous, current) => previous && network.includes(current),
-                true
+                true,
             )
         ) {
             throw new Error(
-                "Transaction already set node account IDs to values not within the current network"
+                "Transaction already set node account IDs to values not within the current network",
             );
         }
 
@@ -254,7 +254,7 @@ export default class Wallet {
 
         if (transaction.transactionId == null) {
             transaction.setTransactionId(
-                TransactionId.generate(this.accountId)
+                TransactionId.generate(this.accountId),
             );
         }
 
@@ -270,11 +270,11 @@ export default class Wallet {
         }
 
         const nodeAccountIds = Object.values(this.provider.getNetwork()).map(
-            (id) => (typeof id === "string" ? AccountId.fromString(id) : id)
+            (id) => (typeof id === "string" ? AccountId.fromString(id) : id),
         );
         util.shuffle(nodeAccountIds);
         transaction.setNodeAccountIds(
-            nodeAccountIds.slice(0, (nodeAccountIds.length + 3 - 1) / 3)
+            nodeAccountIds.slice(0, (nodeAccountIds.length + 3 - 1) / 3),
         );
 
         return Promise.resolve(transaction.freeze());
@@ -290,7 +290,7 @@ export default class Wallet {
     call(request) {
         if (this.provider == null) {
             throw new Error(
-                "cannot send request with an wallet that doesn't contain a provider"
+                "cannot send request with an wallet that doesn't contain a provider",
             );
         }
 
@@ -298,8 +298,8 @@ export default class Wallet {
             request._setOperatorWith(
                 this.accountId,
                 this.publicKey,
-                this.signer
-            )
+                this.signer,
+            ),
         );
     }
 }

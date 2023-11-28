@@ -22,7 +22,7 @@ import { proto } from "@hashgraph/proto";
  */
 
 export const PRIVATE_KEY = PrivateKey.fromString(
-    "302e020100300506032b657004220420d45e1557156908c967804615af59a000be88c7aa7058bfcbe0f46b16c28f887d"
+    "302e020100300506032b657004220420d45e1557156908c967804615af59a000be88c7aa7058bfcbe0f46b16c28f887d",
 );
 
 const PROTOS = [
@@ -245,7 +245,7 @@ class GrpcServer {
                 router[key] =
                     /** @type {grpc.handleUnaryCall<any, any> | grpc.handleServerStreamingCall<any, any>} */ (
                         call,
-                        callback
+                        callback,
                     ) => {
                         if (
                             index >= responses.length ||
@@ -258,7 +258,7 @@ class GrpcServer {
                                         message: `no response found for index ${index}`,
                                         code: 10,
                                     },
-                                    null
+                                    null,
                                 );
                             } else {
                                 call.end();
@@ -289,7 +289,7 @@ class GrpcServer {
                                         }`,
                                         code: 10,
                                     },
-                                    null
+                                    null,
                                 );
                                 return;
                             }
@@ -336,7 +336,7 @@ class GrpcServer {
 
                 this.server.start();
                 resolve(this);
-            })
+            }),
         );
     }
 
@@ -388,11 +388,11 @@ export default class Mocker {
 
             if (sigPair.ed25519 != null) {
                 verified = PublicKey.fromBytesED25519(
-                    sigPair.pubKeyPrefix
+                    sigPair.pubKeyPrefix,
                 ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
             } else if (sigPair.ECDSASecp256k1 != null) {
                 verified = PublicKey.fromBytesECDSA(
-                    sigPair.pubKeyPrefix
+                    sigPair.pubKeyPrefix,
                 ).verify(signedTransaction.bodyBytes, sigPair.ECDSASecp256k1);
             }
 

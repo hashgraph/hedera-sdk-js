@@ -62,7 +62,7 @@ export default class TopicMessageChunk {
         return new TopicMessageChunk({
             consensusTimestamp: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */
-                (response.consensusTimestamp)
+                (response.consensusTimestamp),
             ),
             contents:
                 response.message != null ? response.message : new Uint8Array(),

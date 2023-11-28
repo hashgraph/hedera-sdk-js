@@ -50,7 +50,7 @@ async function main() {
 
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required.",
         );
     }
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
@@ -118,7 +118,7 @@ async function main() {
         console.log(
             `Created NFT ${nftTokenId.toString()} with serial: ${nftCollection[
                 i
-            ].serials[0].toString()}`
+            ].serials[0].toString()}`,
         );
     }
 
@@ -188,7 +188,7 @@ async function main() {
 
     nftOwnerAccountId === accountId
         ? console.log(
-              `The NFT owner accountId matches the accountId created with the HTS\n`
+              `The NFT owner accountId matches the accountId created with the HTS\n`,
           )
         : console.log(`The two account IDs does not match\n`);
 
@@ -296,16 +296,16 @@ async function main() {
         const balance = (
             await axios.get(link)
         ).data.accounts[0].balance.tokens.find(
-            (token) => token.token_id === tokenId
+            (token) => token.token_id === tokenId,
         ).balance;
         /* eslint-enable */
 
         balance === 10
             ? console.log(
-                  `Account is created successfully using HTS 'TransferTransaction'`
+                  `Account is created successfully using HTS 'TransferTransaction'`,
               )
             : console.log(
-                  "Creating account with HTS using public key alias failed"
+                  "Creating account with HTS using public key alias failed",
               );
     } catch (e) {
         console.log(e);

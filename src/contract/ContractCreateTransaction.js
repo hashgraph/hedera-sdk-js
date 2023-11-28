@@ -194,7 +194,7 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (props.maxAutomaticTokenAssociations != null) {
             this.setMaxAutomaticTokenAssociations(
-                props.maxAutomaticTokenAssociations
+                props.maxAutomaticTokenAssociations,
             );
         }
 
@@ -229,7 +229,7 @@ export default class ContractCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -244,7 +244,7 @@ export default class ContractCreateTransaction extends Transaction {
                         ? FileId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   create.fileID
-                              )
+                              ),
                           )
                         : undefined,
                 adminKey:
@@ -261,7 +261,7 @@ export default class ContractCreateTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
-                              )
+                              ),
                           )
                         : undefined,
                 autoRenewPeriod:
@@ -297,7 +297,7 @@ export default class ContractCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -670,5 +670,5 @@ export default class ContractCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractCreateInstance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractCreateTransaction._fromProtobuf
+    ContractCreateTransaction._fromProtobuf,
 );

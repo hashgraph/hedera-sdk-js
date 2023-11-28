@@ -175,7 +175,7 @@ export default class ManagedNetwork {
                     ) {
                         nextEarliestReadmitTime = Math.min(
                             this._nodes[i]._readmitTime,
-                            nextEarliestReadmitTime
+                            nextEarliestReadmitTime,
                         );
                     }
 
@@ -193,7 +193,7 @@ export default class ManagedNetwork {
 
             this._earliestReadmitTime = Math.min(
                 Math.max(nextEarliestReadmitTime, this._nodeMinReadmitPeriod),
-                this._nodeMaxReadmitPeriod
+                this._nodeMaxReadmitPeriod,
             );
         }
     }
@@ -215,7 +215,7 @@ export default class ManagedNetwork {
             nodes.push(selectedNode);
             healthyNodes = healthyNodes.filter(
                 // eslint-disable-next-line ie11/no-loop-func
-                (node) => node.getKey() !== selectedNode.getKey()
+                (node) => node.getKey() !== selectedNode.getKey(),
             );
         }
 
@@ -419,7 +419,7 @@ export default class ManagedNetwork {
             const lockedNodes = this._network.get(key.toString());
             if (lockedNodes) {
                 const randomNodeAddress = Math.floor(
-                    Math.random() * lockedNodes.length
+                    Math.random() * lockedNodes.length,
                 );
                 return /** @type {NetworkNodeT[]} */ (lockedNodes)[
                     randomNodeAddress
@@ -434,7 +434,7 @@ export default class ManagedNetwork {
                 // so it cannot be `undefined`
                 const randomNodeAddress = Math.floor(
                     // @ts-ignore
-                    Math.random() * randomNode.length
+                    Math.random() * randomNode.length,
                 );
                 // @ts-ignore
                 return randomNode[randomNodeAddress];

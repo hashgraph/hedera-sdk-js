@@ -96,13 +96,13 @@ export default class FileInfo {
 
         return new FileInfo({
             fileId: FileId._fromProtobuf(
-                /** @type {HashgraphProto.proto.IFileID} */ (info.fileID)
+                /** @type {HashgraphProto.proto.IFileID} */ (info.fileID),
             ),
             size: size instanceof Long ? size : Long.fromValue(size),
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
-                )
+                ),
             ),
             isDeleted: /** @type {boolean} */ (info.deleted),
             keys:
@@ -139,7 +139,7 @@ export default class FileInfo {
      */
     static fromBytes(bytes) {
         return FileInfo._fromProtobuf(
-            HashgraphProto.proto.FileGetInfoResponse.FileInfo.decode(bytes)
+            HashgraphProto.proto.FileGetInfoResponse.FileInfo.decode(bytes),
         );
     }
 
@@ -148,7 +148,7 @@ export default class FileInfo {
      */
     toBytes() {
         return proto.FileGetInfoResponse.FileInfo.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

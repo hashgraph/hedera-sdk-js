@@ -7,11 +7,11 @@ describe("ExchangeRate", function () {
         const exchangeRate = ExchangeRate._fromProtobuf(
             new ExchangeRate({
                 expirationTime: date,
-            })._toProtobuf()
+            })._toProtobuf(),
         );
 
         expect(exchangeRate.expirationTime.toString()).to.be.equal(
-            date.toString()
+            date.toString(),
         );
     });
 });

@@ -28,7 +28,7 @@ export default class BadEntityIdError extends Error {
      */
     constructor(shard, realm, num, presentChecksum, expectedChecksum) {
         super(
-            `Entity ID ${shard.toString()}.${realm.toString()}.${num.toString()}-${presentChecksum} was incorrect.`
+            `Entity ID ${shard.toString()}.${realm.toString()}.${num.toString()}-${presentChecksum} was incorrect.`,
         );
 
         this.name = "BadEntityIdException";

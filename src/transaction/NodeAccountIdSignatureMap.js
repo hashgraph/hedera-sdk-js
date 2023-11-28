@@ -43,12 +43,12 @@ export default class NodeAccountIdSignatureMap extends ObjectMap {
                 if (sigPair.ed25519 != null) {
                     signatures._set(
                         PublicKey.fromBytesED25519(sigPair.pubKeyPrefix),
-                        sigPair.ed25519
+                        sigPair.ed25519,
                     );
                 } else if (sigPair.ECDSASecp256k1 != null) {
                     signatures._set(
                         PublicKey.fromBytesECDSA(sigPair.pubKeyPrefix),
-                        sigPair.ECDSASecp256k1
+                        sigPair.ECDSASecp256k1,
                     );
                 }
             }

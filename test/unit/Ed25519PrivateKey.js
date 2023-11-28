@@ -17,7 +17,7 @@ describe("Ed25519PrivateKey", function () {
 
     it("fromStringDer works", function () {
         PrivateKey.fromStringDer(
-            hex.encode(PrivateKey.fromStringED25519(RAW_KEY).toBytesDer())
+            hex.encode(PrivateKey.fromStringED25519(RAW_KEY).toBytesDer()),
         );
     });
 
@@ -33,9 +33,9 @@ describe("Ed25519PrivateKey", function () {
 
     it("should return a public key from a raw private key", function () {
         expect(
-            PrivateKey.fromStringED25519(RAW_KEY).publicKey.toStringRaw()
+            PrivateKey.fromStringED25519(RAW_KEY).publicKey.toStringRaw(),
         ).to.be.equal(
-            "b0c169d4e4b6b70f5a6d7beecd892e009390e1a113821f5d761b21725c39ac91"
+            "b0c169d4e4b6b70f5a6d7beecd892e009390e1a113821f5d761b21725c39ac91",
         );
     });
 
@@ -173,7 +173,7 @@ describe("Ed25519PrivateKey", function () {
             "0047150c75db263559a70d5778bf36abbab30fb061ad69f69ece61a72b0cfa4fc0";
 
         const seed = hex.decode(
-            "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542"
+            "fffcf9f6f3f0edeae7e4e1dedbd8d5d2cfccc9c6c3c0bdbab7b4b1aeaba8a5a29f9c999693908d8a8784817e7b7875726f6c696663605d5a5754514e4b484542",
         );
 
         // Chain m
@@ -241,16 +241,16 @@ describe("Ed25519PrivateKey", function () {
         const ed25519PrivateKey1 = await PrivateKey.fromPem(PRIVATE_KEY_PEM1);
         expect(ed25519PrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY1
+            PUBLIC_KEY1,
         );
 
         const ed25519PrivateKey2 = await PrivateKey.fromPem(
             PRIVATE_KEY_PEM2,
-            TEST_VECTOR_PEM_PASSPHRASE
+            TEST_VECTOR_PEM_PASSPHRASE,
         );
         expect(ed25519PrivateKey2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
         expect(ed25519PrivateKey2.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY2
+            PUBLIC_KEY2,
         );
     });
 
@@ -266,7 +266,7 @@ describe("Ed25519PrivateKey", function () {
         var ed25519PrivateKey1 = PrivateKey.fromStringDer(PRIVATE_KEY_DER1);
         expect(ed25519PrivateKey1.toStringRaw()).to.be.equal(PRIVATE_KEY1);
         expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
-            PUBLIC_KEY1
+            PUBLIC_KEY1,
         );
     });
 });

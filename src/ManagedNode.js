@@ -110,7 +110,7 @@ export default class ManagedNode {
             this._maxBackoff = props.cloneNode.node._minBackoff;
         } else {
             throw new Error(
-                `failed to create ManagedNode: ${JSON.stringify(props)}`
+                `failed to create ManagedNode: ${JSON.stringify(props)}`,
             );
         }
     }
@@ -197,7 +197,7 @@ export default class ManagedNode {
 
         this._channel = this._channelInitFunction(
             this.address.toString(),
-            this._cert
+            this._cert,
         );
         return this._channel;
     }
@@ -217,7 +217,7 @@ export default class ManagedNode {
     increaseBackoff() {
         this._currentBackoff = Math.min(
             this._currentBackoff * 2,
-            this._maxBackoff
+            this._maxBackoff,
         );
         this._readmitTime = Date.now() + this._currentBackoff;
     }
@@ -225,7 +225,7 @@ export default class ManagedNode {
     decreaseBackoff() {
         this._currentBackoff = Math.max(
             this._currentBackoff / 2,
-            this._minBackoff
+            this._minBackoff,
         );
     }
 
@@ -245,7 +245,7 @@ export default class ManagedNode {
      */
     backoff() {
         return new Promise((resolve) =>
-            setTimeout(resolve, this.getRemainingTime())
+            setTimeout(resolve, this.getRemainingTime()),
         );
     }
 

@@ -86,13 +86,13 @@ export default class Transfer {
                     accountId: AccountId._fromProtobuf(
                         /** @type {HashgraphProto.proto.IAccountID} */ (
                             transfer.accountID
-                        )
+                        ),
                     ),
                     amount: Hbar.fromTinybars(
-                        transfer.amount != null ? transfer.amount : 0
+                        transfer.amount != null ? transfer.amount : 0,
                     ),
                     isApproved: /** @type {boolean} */ (transfer.isApproval),
-                })
+                }),
             );
         }
 

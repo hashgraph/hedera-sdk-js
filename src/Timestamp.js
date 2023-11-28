@@ -86,7 +86,7 @@ export default class Timestamp {
             nanos = Long.fromNumber(date.getTime()).mul(1000000);
         } else {
             throw new TypeError(
-                `invalid type '${typeof date}' for 'data', expected 'Date'`
+                `invalid type '${typeof date}' for 'data', expected 'Date'`,
             );
         }
 
@@ -99,7 +99,7 @@ export default class Timestamp {
     toDate() {
         return new Date(
             this.seconds.toInt() * 1000 +
-                Math.floor(this.nanos.toInt() / 1000000)
+                Math.floor(this.nanos.toInt() / 1000000),
         );
     }
 
@@ -134,10 +134,10 @@ export default class Timestamp {
             timestamp.seconds instanceof Long
                 ? timestamp.seconds.toInt()
                 : timestamp.seconds != null
-                ? timestamp.seconds
-                : 0,
+                  ? timestamp.seconds
+                  : 0,
 
-            timestamp.nanos != null ? timestamp.nanos : 0
+            timestamp.nanos != null ? timestamp.nanos : 0,
         );
     }
 

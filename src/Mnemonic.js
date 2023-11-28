@@ -88,7 +88,7 @@ export default class Mnemonic {
     async toPrivateKey(passphrase = "") {
         return CACHE.privateKeyConstructor(
             // eslint-disable-next-line deprecation/deprecation
-            await this._mnemonic.toPrivateKey(passphrase)
+            await this._mnemonic.toPrivateKey(passphrase),
         );
     }
 
@@ -103,7 +103,7 @@ export default class Mnemonic {
     async toEd25519PrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
             // eslint-disable-next-line deprecation/deprecation
-            await this._mnemonic.toEd25519PrivateKey(passphrase, path)
+            await this._mnemonic.toEd25519PrivateKey(passphrase, path),
         );
     }
 
@@ -117,7 +117,7 @@ export default class Mnemonic {
      */
     async toStandardEd25519PrivateKey(passphrase = "", index) {
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toStandardEd25519PrivateKey(passphrase, index)
+            await this._mnemonic.toStandardEd25519PrivateKey(passphrase, index),
         );
     }
 
@@ -132,7 +132,7 @@ export default class Mnemonic {
     async toEcdsaPrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
             // eslint-disable-next-line deprecation/deprecation
-            await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
+            await this._mnemonic.toEcdsaPrivateKey(passphrase, path),
         );
     }
 
@@ -148,8 +148,8 @@ export default class Mnemonic {
         return CACHE.privateKeyConstructor(
             await this._mnemonic.toStandardECDSAsecp256k1PrivateKey(
                 passphrase,
-                index
-            )
+                index,
+            ),
         );
     }
 
@@ -168,7 +168,7 @@ export default class Mnemonic {
      */
     async toLegacyPrivateKey() {
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toLegacyPrivateKey()
+            await this._mnemonic.toLegacyPrivateKey(),
         );
     }
 
@@ -179,7 +179,7 @@ export default class Mnemonic {
     async toSeed(passphrase) {
         return await cryptography.Mnemonic.toSeed(
             this._mnemonic.words,
-            passphrase
+            passphrase,
         );
     }
 

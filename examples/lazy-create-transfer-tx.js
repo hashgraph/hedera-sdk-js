@@ -45,7 +45,7 @@ Reference: [HIP-583 Expand alias support in CryptoCreate & CryptoTransfer Transa
 async function main() {
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required.",
         );
     }
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
@@ -57,7 +57,7 @@ async function main() {
 
     const client = Client.forNetwork(nodes).setOperator(
         operatorId,
-        operatorKey
+        operatorKey,
     );
 
     try {
@@ -186,7 +186,7 @@ async function main() {
             .execute(client);
         completeAccountInfo.key !== null
             ? console.log(
-                  `The public key of the newly created and now complete account: ${completeAccountInfo.key.toString()}`
+                  `The public key of the newly created and now complete account: ${completeAccountInfo.key.toString()}`,
               )
             : console.log(`Account ${newAccountId} is still a hollow account`);
     } catch (error) {

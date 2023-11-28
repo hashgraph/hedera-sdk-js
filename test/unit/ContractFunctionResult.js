@@ -25,7 +25,7 @@ describe("ContractFunctionResult", function () {
 
         const callResult = hex.decode(CALL_RESULT_HEX);
         const evmAddress = hex.decode(
-            "98329e006610472e6B372C080833f6D79ED833cf"
+            "98329e006610472e6B372C080833f6D79ED833cf",
         );
         const nonce = new ContractNonceInfo({
             contractId: AccountId.fromString("1.2.3"),
@@ -43,18 +43,18 @@ describe("ContractFunctionResult", function () {
         expect(result.getBool(0)).to.be.true;
         expect(result.getInt32(0)).to.be.equal(-1);
         expect(result.getInt64(0).toString()).to.be.equal(
-            (BigNumber.from(1).shl(32) - BigNumber.from(1)).toString()
+            (BigNumber.from(1).shl(32) - BigNumber.from(1)).toString(),
         );
         expect(result.getInt256(0).toString()).to.be.equal(
-            (BigNumber.from(1).shl(32) - BigNumber.from(1)).toString()
+            (BigNumber.from(1).shl(32) - BigNumber.from(1)).toString(),
         );
         expect(result.getInt256(1).toString()).to.be.equal(
             (BigNumber.from(1).shl(255) - BigNumber.from(1))
                 .toExponential(76)
-                .replace("8e+76", "7e+76")
+                .replace("8e+76", "7e+76"),
         );
         expect(result.getAddress(2)).to.be.equal(
-            "11223344556677889900aabbccddeeff00112233"
+            "11223344556677889900aabbccddeeff00112233",
         );
 
         //expect(result.getUint32(3)).to.be.equal(-1);
@@ -62,17 +62,17 @@ describe("ContractFunctionResult", function () {
         expect(result.getUint256(3).toString()).to.be.equal(
             (BigNumber.from(1).shl(256) - BigNumber.from(1))
                 .toExponential(77)
-                .replace("36e+77", "35e+77")
+                .replace("36e+77", "35e+77"),
         );
 
         expect(result.getString(4)).to.be.equal("Hello, world!");
         expect(result.getString(5)).to.be.equal("Hello, world, again!");
 
         expect(result.senderAccountId.toString()).to.be.equal(
-            AccountId.fromString("1.2.3")._toProtobuf().toString()
+            AccountId.fromString("1.2.3")._toProtobuf().toString(),
         );
         expect(result.contractId.toString()).to.be.equal(
-            ContractId.fromString("1.2.3")._toProtobuf().toString()
+            ContractId.fromString("1.2.3")._toProtobuf().toString(),
         );
         expect(result.evmAddress).to.be.equal(evmAddress);
         expect(result.contractNonces).to.include(nonce);

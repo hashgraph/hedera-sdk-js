@@ -89,7 +89,7 @@ export default class WebClient extends Client {
                     default:
                         throw new Error(
                             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                            `unknown network: ${props.network}`
+                            `unknown network: ${props.network}`,
                         );
                 }
             } else if (props.network != null) {
@@ -108,7 +108,7 @@ export default class WebClient extends Client {
                 ? /** @type {ClientConfiguration | undefined} */ (
                       JSON.parse(data)
                   )
-                : data
+                : data,
         );
     }
 

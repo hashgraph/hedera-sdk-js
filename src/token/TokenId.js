@@ -68,7 +68,7 @@ export default class TokenId {
         const tokenId = new TokenId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.tokenNum != null ? id.tokenNum : 0
+            id.tokenNum != null ? id.tokenNum : 0,
         );
 
         return tokenId;
@@ -99,7 +99,7 @@ export default class TokenId {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -109,7 +109,7 @@ export default class TokenId {
      */
     static fromBytes(bytes) {
         return TokenId._fromProtobuf(
-            HashgraphProto.proto.TokenID.decode(bytes)
+            HashgraphProto.proto.TokenID.decode(bytes),
         );
     }
 
@@ -178,7 +178,7 @@ export default class TokenId {
     compare(other) {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
+            [other.shard, other.realm, other.num],
         );
     }
 }

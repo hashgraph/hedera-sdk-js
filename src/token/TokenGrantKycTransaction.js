@@ -88,7 +88,7 @@ export default class TokenGrantKycTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const grantKycToken =
@@ -111,7 +111,7 @@ export default class TokenGrantKycTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -217,5 +217,5 @@ export default class TokenGrantKycTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenGrantKyc",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenGrantKycTransaction._fromProtobuf
+    TokenGrantKycTransaction._fromProtobuf,
 );

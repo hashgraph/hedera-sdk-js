@@ -35,7 +35,7 @@ describe("ScheduleCreate", function () {
         const keyList = KeyList.of(
             key1.publicKey,
             key2.publicKey,
-            key3.publicKey
+            key3.publicKey,
         );
 
         const response = await new AccountCreateTransaction()
@@ -84,10 +84,10 @@ describe("ScheduleCreate", function () {
 
         expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(
-            transaction.topicId.toString()
+            transaction.topicId.toString(),
         );
         expect(infoTransaction.message.length).to.be.equal(
-            transaction.message.length
+            transaction.message.length,
         );
         expect(infoTransaction.nodeAccountIds).to.be.null;
 
@@ -120,7 +120,7 @@ describe("ScheduleCreate", function () {
         const keyList = KeyList.of(
             key1.publicKey,
             key2.publicKey,
-            key3.publicKey
+            key3.publicKey,
         );
 
         const balance = await new AccountBalanceQuery()

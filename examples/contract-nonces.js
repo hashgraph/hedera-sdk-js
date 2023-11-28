@@ -17,7 +17,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -26,7 +26,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     // The contract bytecode is located on the `object` field
@@ -52,19 +52,18 @@ async function main() {
                 .setGas(100000)
                 .setBytecodeFileId(newFileId)
                 .setContractMemo(
-                    "[e2e::ContractADeploysContractBInConstructor]"
+                    "[e2e::ContractADeploysContractBInConstructor]",
                 )
                 .freezeWithSigner(wallet)
         ).executeWithSigner(wallet);
 
-        const record = await contractCreateTxResponse.getRecordWithSigner(
-            wallet
-        );
+        const record =
+            await contractCreateTxResponse.getRecordWithSigner(wallet);
 
         console.log(
             `contractNonces: ${JSON.stringify(
-                record.contractFunctionResult.contractNonces
-            )}`
+                record.contractFunctionResult.contractNonces,
+            )}`,
         );
     } catch (error) {
         console.error(error);

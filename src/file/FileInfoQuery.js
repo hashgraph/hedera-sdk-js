@@ -163,8 +163,8 @@ export default class FileInfoQuery extends Query {
 
         return Promise.resolve(
             FileInfo._fromProtobuf(
-                /** @type {HashgraphProto.proto.IFileInfo} */ (info.fileInfo)
-            )
+                /** @type {HashgraphProto.proto.IFileInfo} */ (info.fileInfo),
+            ),
         );
     }
 

@@ -13,7 +13,7 @@ describe("ContractId", function () {
 
     it("fromString() with evmAddress", function () {
         expect(
-            ContractId.fromString(`1.2.${evmAddress}`).toString()
+            ContractId.fromString(`1.2.${evmAddress}`).toString(),
         ).to.be.equal(`1.2.${evmAddress}`);
     });
 
@@ -65,7 +65,7 @@ describe("ContractId", function () {
         const contractIdFromAddress = ContractId.fromEvmAddress(
             shard,
             realm,
-            longZeroAddress
+            longZeroAddress,
         );
 
         expect(contractId).to.deep.equal(contractIdFromAddress);

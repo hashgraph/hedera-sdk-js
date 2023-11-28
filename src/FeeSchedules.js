@@ -49,7 +49,7 @@ export default class FeeSchedules {
      */
     static fromBytes(bytes) {
         return FeeSchedules._fromProtobuf(
-            HashgraphProto.proto.CurrentAndNextFeeSchedule.decode(bytes)
+            HashgraphProto.proto.CurrentAndNextFeeSchedule.decode(bytes),
         );
     }
 
@@ -89,7 +89,7 @@ export default class FeeSchedules {
      */
     toBytes() {
         return HashgraphProto.proto.CurrentAndNextFeeSchedule.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

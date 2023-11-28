@@ -45,7 +45,7 @@ describe("AccountUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key1.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(2).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -73,7 +73,7 @@ describe("AccountUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key2.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(2).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;

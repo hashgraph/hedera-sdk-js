@@ -45,7 +45,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
@@ -57,11 +57,11 @@ async function main() {
         // Local node
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
             operatorId,
-            operatorKey
+            operatorKey,
         );
     } catch (error) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.",
         );
     }
 
@@ -105,7 +105,7 @@ async function main() {
 
             const transactionId = TransactionId.withValidStart(
                 operatorId,
-                validStart
+                validStart,
             );
 
             const transferHbar = new TransferTransaction()
@@ -137,12 +137,12 @@ async function main() {
         receiptsResult.forEach((receipt) =>
             receipt.status.toString() == "SUCCESS"
                 ? count++
-                : console.log(`Failed with: ${receipt.status.toString()}`)
+                : console.log(`Failed with: ${receipt.status.toString()}`),
         );
         transactionsCount == count
             ? console.log(`All transactions are executed successfully`)
             : console.log(
-                  `${transactionsCount - count} unsuccessful transactions`
+                  `${transactionsCount - count} unsuccessful transactions`,
               );
 
         /**
@@ -158,7 +158,7 @@ async function main() {
         const validStart = new Timestamp(seconds, 0);
         const transactionId = TransactionId.withValidStart(
             operatorId,
-            validStart
+            validStart,
         );
 
         /**

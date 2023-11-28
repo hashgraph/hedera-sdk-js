@@ -163,8 +163,8 @@ export default class TokenInfoQuery extends Query {
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenInfo} */ (info.tokenInfo)
-            )
+                /** @type {HashgraphProto.proto.ITokenInfo} */ (info.tokenInfo),
+            ),
         );
     }
 

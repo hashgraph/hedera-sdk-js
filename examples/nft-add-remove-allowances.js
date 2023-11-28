@@ -38,7 +38,7 @@ to the allowances for NFTs does not allow users to:
 async function main() {
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required.",
         );
     }
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
@@ -49,13 +49,13 @@ async function main() {
 
     const client = Client.forNetwork(nodes).setOperator(
         operatorId,
-        operatorKey
+        operatorKey,
     );
 
     try {
         // Example 1
         console.log(
-            `\nExample 1: Approve/delete allowances for single serial numbers`
+            `\nExample 1: Approve/delete allowances for single serial numbers`,
         );
 
         const CID = [
@@ -90,13 +90,13 @@ async function main() {
         for (var i = 0; i < CID.length; i++) {
             nftCollection[i] = await tokenMinterFcn(
                 CID[i],
-                nftTokenId.toString()
+                nftTokenId.toString(),
             );
 
             console.log(
                 `Created NFT ${nftTokenId.toString()} with serial: ${nftCollection[
                     i
-                ].serials[0].toString()}`
+                ].serials[0].toString()}`,
             );
         }
 
@@ -127,18 +127,16 @@ async function main() {
             .setTokenIds([nftTokenId])
             .freezeWith(client);
 
-        const spenderSignAssociateTx = await spenderAssociateTx.sign(
-            spenderKey
-        );
-        const spenderExecuteAssociateTx = await spenderSignAssociateTx.execute(
-            client
-        );
+        const spenderSignAssociateTx =
+            await spenderAssociateTx.sign(spenderKey);
+        const spenderExecuteAssociateTx =
+            await spenderSignAssociateTx.execute(client);
 
         const spenderAssociateReceipt =
             await spenderExecuteAssociateTx.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Spender associate TX status: ${spenderAssociateReceipt.status}`
+            `Spender associate TX status: ${spenderAssociateReceipt.status}`,
         );
 
         // Associate the `receiver` with the NFT
@@ -147,9 +145,8 @@ async function main() {
             .setTokenIds([nftTokenId])
             .freezeWith(client);
 
-        const receiverSignAssociateTx = await receiverAssociateTx.sign(
-            receiverKey
-        );
+        const receiverSignAssociateTx =
+            await receiverAssociateTx.sign(receiverKey);
         const receiverExecuteAssociateTx =
             await receiverSignAssociateTx.execute(client);
 
@@ -157,7 +154,7 @@ async function main() {
             await receiverExecuteAssociateTx.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Receiver associate TX status: ${receiverAssociateReceipt.status}`
+            `Receiver associate TX status: ${receiverAssociateReceipt.status}`,
         );
 
         const nft1 = new NftId(nftTokenId, 1);
@@ -172,7 +169,7 @@ async function main() {
         const approveReceipt = await approveRx.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Approve spender allowance for serials 1 and 2 - status: ${approveReceipt.status}`
+            `Approve spender allowance for serials 1 and 2 - status: ${approveReceipt.status}`,
         );
 
         // Generate TransactionId from spender's account id in order
@@ -192,20 +189,20 @@ async function main() {
         const approvedSendRx = await approvedSendSubmit.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Transfer serial 1 on behalf of the spender status: ${approvedSendRx.status}`
+            `Transfer serial 1 on behalf of the spender status: ${approvedSendRx.status}`,
         );
 
         // Remove `spender's` allowance for serial 2
         const accountDeleteAllowanceTx =
             new AccountAllowanceDeleteTransaction().deleteAllTokenNftAllowances(
                 nft2,
-                operatorId
+                operatorId,
             );
         const deleteTx = await accountDeleteAllowanceTx.execute(client);
         const deleteAllowanceReceipt = await deleteTx.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Remove spender's allowance for serial 2 - status: ${deleteAllowanceReceipt.status}`
+            `Remove spender's allowance for serial 2 - status: ${deleteAllowanceReceipt.status}`,
         );
 
         const onBehalfOfTransactionId2 =
@@ -221,22 +218,21 @@ async function main() {
         const approvedSendSigned2 = await approvedSendTx2.sign(spenderKey);
 
         try {
-            const approvedSendSubmit2 = await approvedSendSigned2.execute(
-                client
-            );
+            const approvedSendSubmit2 =
+                await approvedSendSigned2.execute(client);
             await approvedSendSubmit2.getReceipt(client);
         } catch (error) {
             console.log("The transfer failed as expected.");
             console.log(
                 `Transfer serial 2 on behalf of the spender - status: ${
                     /** @type {Error} */ (error).message
-                }`
+                }`,
             );
         }
 
         // Example 2
         console.log(
-            `\nExample 2: Approve/delete allowances for ALL serial numbers at once`
+            `\nExample 2: Approve/delete allowances for ALL serial numbers at once`,
         );
 
         const CID2 = [
@@ -271,13 +267,13 @@ async function main() {
         for (let i = 0; i < CID2.length; i++) {
             nftCollection2[i] = await tokenMinterFcn(
                 CID2[i],
-                nftTokenId2.toString()
+                nftTokenId2.toString(),
             );
 
             console.log(
                 `Created NFT ${nftTokenId2.toString()} with serial: ${nftCollection2[
                     i
-                ].serials[0].toString()}`
+                ].serials[0].toString()}`,
             );
         }
 
@@ -292,7 +288,7 @@ async function main() {
             await createDelegateSpenderTx.getReceipt(client)
         ).accountId;
         console.log(
-            `delegatingSpenderAccountId: ${delegatingSpenderAccountId.toString()}`
+            `delegatingSpenderAccountId: ${delegatingSpenderAccountId.toString()}`,
         );
 
         // Create `receiver` account
@@ -320,7 +316,7 @@ async function main() {
             await delegatingSpenderExecuteAssociateTx.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Spender associate TX status: ${delegatingSpenderAssociateReceipt.status}`
+            `Spender associate TX status: ${delegatingSpenderAssociateReceipt.status}`,
         );
 
         // Associate the `receiver` with the NFT
@@ -329,9 +325,8 @@ async function main() {
             .setTokenIds([nftTokenId2])
             .freezeWith(client);
 
-        const receiverSignAssociateTx2 = await receiverAssociateTx2.sign(
-            receiverKey2
-        );
+        const receiverSignAssociateTx2 =
+            await receiverAssociateTx2.sign(receiverKey2);
         const receiverExecuteAssociateTx2 =
             await receiverSignAssociateTx2.execute(client);
 
@@ -339,7 +334,7 @@ async function main() {
             await receiverExecuteAssociateTx2.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Receiver associate TX status: ${receiverAssociateReceipt2.status}`
+            `Receiver associate TX status: ${receiverAssociateReceipt2.status}`,
         );
 
         const example2Nft1 = new NftId(nftTokenId2, 1);
@@ -351,14 +346,14 @@ async function main() {
             new AccountAllowanceApproveTransaction().approveTokenNftAllowanceAllSerials(
                 nftTokenId2,
                 operatorId,
-                delegatingSpenderAccountId
+                delegatingSpenderAccountId,
             );
 
         const approveRx2 = await delegatingSpenderApproveTx.execute(client);
         const approveReceipt2 = await approveRx2.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Approve spender allowance for all serials - status: ${approveReceipt2.status}`
+            `Approve spender allowance for all serials - status: ${approveReceipt2.status}`,
         );
 
         // Create `spender` account
@@ -382,18 +377,17 @@ async function main() {
                     example2Nft3,
                     operatorId,
                     spenderAccountId2,
-                    delegatingSpenderAccountId
+                    delegatingSpenderAccountId,
                 )
                 .freezeWith(client);
 
-        const approveDelegateSpender = await delegateSpenderAllowance.execute(
-            client
-        );
+        const approveDelegateSpender =
+            await delegateSpenderAllowance.execute(client);
         const approveDelegateAllowanceReceipt =
             await approveDelegateSpender.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Approve delegated spender allowance for serial 3 - status: ${approveDelegateAllowanceReceipt.status}`
+            `Approve delegated spender allowance for serial 3 - status: ${approveDelegateAllowanceReceipt.status}`,
         );
 
         // Set the operatorId and operatorKey of the client back to the original ones
@@ -410,7 +404,7 @@ async function main() {
             .addApprovedNftTransfer(
                 example2Nft3,
                 operatorId,
-                receiverAccountId2
+                receiverAccountId2,
             )
             .setTransactionId(delegatedOnBehalfOfTxId)
             .freezeWith(client);
@@ -420,13 +414,13 @@ async function main() {
         const delegatedSendRx = await delegatedSendSubmit.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Transfer serial 3 on behalf of the delegated spender status: ${delegatedSendRx.status}`
+            `Transfer serial 3 on behalf of the delegated spender status: ${delegatedSendRx.status}`,
         );
 
         // Generate TransactionId from spender's account id in order
         // for the transaction to be to be executed on behalf of the spender
         const onBehalfOfTransactionId3 = TransactionId.generate(
-            delegatingSpenderAccountId
+            delegatingSpenderAccountId,
         );
 
         // Sending NFT with serial number 1
@@ -435,19 +429,18 @@ async function main() {
             .addApprovedNftTransfer(
                 example2Nft1,
                 operatorId,
-                receiverAccountId2
+                receiverAccountId2,
             )
             .setTransactionId(onBehalfOfTransactionId3)
             .freezeWith(client);
 
-        const approvedSendSigned3 = await approvedSendTx3.sign(
-            delegatingSpenderKey
-        );
+        const approvedSendSigned3 =
+            await approvedSendTx3.sign(delegatingSpenderKey);
         const approvedSendSubmit3 = await approvedSendSigned3.execute(client);
         const approvedSendRx3 = await approvedSendSubmit3.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Transfer serial 1 on behalf of the spender status: ${approvedSendRx3.status}`
+            `Transfer serial 1 on behalf of the spender status: ${approvedSendRx3.status}`,
         );
 
         // Remove `delegating spender's` allowance for ALL serials
@@ -455,20 +448,20 @@ async function main() {
             new AccountAllowanceApproveTransaction().deleteTokenNftAllowanceAllSerials(
                 nftTokenId2,
                 operatorId,
-                delegatingSpenderAccountId
+                delegatingSpenderAccountId,
             );
 
         const deleteTx2 = await accountDeleteAllowanceTx2.execute(client);
         const deleteAllowanceReceipt2 = await deleteTx2.getReceipt(client);
         console.log(
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Remove spender's allowance for ALL serials - status: ${deleteAllowanceReceipt2.status}`
+            `Remove spender's allowance for ALL serials - status: ${deleteAllowanceReceipt2.status}`,
         );
 
         // Generate TransactionId from delegating spender's account id in order
         // for the transaction to be to be executed on behalf of the spender
         const onBehalfOfTransactionId4 = TransactionId.generate(
-            delegatingSpenderAccountId
+            delegatingSpenderAccountId,
         );
 
         // Sending NFT with serial number 2
@@ -477,25 +470,23 @@ async function main() {
             .addApprovedNftTransfer(
                 example2Nft2,
                 operatorId,
-                receiverAccountId2
+                receiverAccountId2,
             )
             .setTransactionId(onBehalfOfTransactionId4)
             .freezeWith(client);
 
-        const approvedSendSigned4 = await approvedSendTx4.sign(
-            delegatingSpenderKey
-        );
+        const approvedSendSigned4 =
+            await approvedSendTx4.sign(delegatingSpenderKey);
         try {
-            const approvedSendSubmit4 = await approvedSendSigned4.execute(
-                client
-            );
+            const approvedSendSubmit4 =
+                await approvedSendSigned4.execute(client);
             await approvedSendSubmit4.getReceipt(client);
         } catch (error) {
             console.log("The transfer failed as expected.");
             console.log(
                 `Transfer serial 2 on behalf of the spender status: ${
                     /** @type {Error} */ (error).message
-                }`
+                }`,
             );
         }
 

@@ -66,12 +66,12 @@ export default class WebChannel extends Channel {
                             "x-grpc-web": "1",
                         },
                         body: encodeRequest(requestData),
-                    }
+                    },
                 );
 
                 if (!response.ok) {
                     const error = new HttpError(
-                        HttpStatus._fromValue(response.status)
+                        HttpStatus._fromValue(response.status),
                     );
                     callback(error, null);
                 }
@@ -82,7 +82,7 @@ export default class WebChannel extends Channel {
 
                 if (grpcStatus != null && grpcMessage != null) {
                     const error = new GrpcServiceError(
-                        GrpcStatus._fromValue(parseInt(grpcStatus))
+                        GrpcStatus._fromValue(parseInt(grpcStatus)),
                     );
                     error.message = grpcMessage;
                     callback(error, null);
@@ -95,7 +95,7 @@ export default class WebChannel extends Channel {
             } catch (error) {
                 const err = new GrpcServiceError(
                     // retry on grpc web errors
-                    GrpcStatus._fromValue(18)
+                    GrpcStatus._fromValue(18),
                 );
                 callback(err, null);
             }

@@ -67,7 +67,7 @@ export default class TokenTransferMap extends ObjectMap {
 
         for (const transfer of transfers) {
             const token = TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token)
+                /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token),
             );
 
             for (const aa of transfer.transfers != null
@@ -76,13 +76,13 @@ export default class TokenTransferMap extends ObjectMap {
                 const account = AccountId._fromProtobuf(
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         aa.accountID
-                    )
+                    ),
                 );
 
                 tokenTransfersMap.__set(
                     token,
                     account,
-                    /** @type {Long} */ (aa.amount)
+                    /** @type {Long} */ (aa.amount),
                 );
             }
         }

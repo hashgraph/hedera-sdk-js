@@ -70,7 +70,7 @@ export default class SemanticVersion {
      */
     static fromBytes(bytes) {
         return SemanticVersion._fromProtobuf(
-            HashgraphProto.proto.SemanticVersion.decode(bytes)
+            HashgraphProto.proto.SemanticVersion.decode(bytes),
         );
     }
 
@@ -79,7 +79,7 @@ export default class SemanticVersion {
      */
     toBytes() {
         return HashgraphProto.proto.SemanticVersion.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

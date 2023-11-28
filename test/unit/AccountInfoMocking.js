@@ -67,8 +67,8 @@ describe("AccountInfoMocking", function () {
                     call: (request) => {
                         const transaction = TransferTransaction.fromBytes(
                             proto.Transaction.encode(
-                                request.cryptoGetInfo.header.payment
-                            ).finish()
+                                request.cryptoGetInfo.header.payment,
+                            ).finish(),
                         );
                         const hbarTransfers = transaction.hbarTransfers;
                         expect(hbarTransfers.size).to.be.equal(2);
@@ -76,13 +76,13 @@ describe("AccountInfoMocking", function () {
                             hbarTransfers
                                 .get(client.operatorAccountId)
                                 .toTinybars()
-                                .toInt()
+                                .toInt(),
                         ).to.be.lt(0);
                         expect(
                             hbarTransfers
                                 .get(Object.values(client.network)[0])
                                 .toTinybars()
-                                .toInt()
+                                .toInt(),
                         ).to.be.gt(0);
                         return ACCOUNT_INFO_QUERY_RESPONSE;
                     },
@@ -295,7 +295,7 @@ describe("AccountInfoMocking", function () {
 
         expect(hash.length).to.be.equal(48);
         expect(hex.encode(hash)).to.be.equal(
-            hex.encode(response.transactionHash)
+            hex.encode(response.transactionHash),
         );
     });
 
@@ -316,7 +316,7 @@ describe("AccountInfoMocking", function () {
 
         expect(hash.length).to.be.equal(48);
         expect(hex.encode(hash)).to.be.equal(
-            hex.encode(response.transactionHash)
+            hex.encode(response.transactionHash),
         );
     });
 
@@ -338,17 +338,17 @@ describe("AccountInfoMocking", function () {
         const call = (request, index) => {
             expect(request.signedTransactionBytes).to.not.be.null;
             const signedTransaction = proto.SignedTransaction.decode(
-                request.signedTransactionBytes
+                request.signedTransactionBytes,
             );
 
             expect(signedTransaction.bodyBytes).to.not.be.null;
             const transactionBody = proto.TransactionBody.decode(
-                signedTransaction.bodyBytes
+                signedTransaction.bodyBytes,
             );
 
             expect(transactionBody.transactionId).to.not.be.null;
             const transactionId = TransactionId._fromProtobuf(
-                transactionBody.transactionID
+                transactionBody.transactionID,
             ).toString();
             expect(transactionId).to.not.be.equal("");
 
@@ -391,7 +391,7 @@ describe("AccountInfoMocking", function () {
         try {
             await new FileCreateTransaction()
                 .setTransactionId(
-                    TransactionId.fromString("0.0.1854@1651168054.29348185")
+                    TransactionId.fromString("0.0.1854@1651168054.29348185"),
                 )
                 .setContents("hello 1")
                 .setRegenerateTransactionId(false)
@@ -424,17 +424,17 @@ describe("AccountInfoMocking", function () {
         const call = (request, index) => {
             expect(request.signedTransactionBytes).to.not.be.null;
             const signedTransaction = proto.SignedTransaction.decode(
-                request.signedTransactionBytes
+                request.signedTransactionBytes,
             );
 
             expect(signedTransaction.bodyBytes).to.not.be.null;
             const transactionBody = proto.TransactionBody.decode(
-                signedTransaction.bodyBytes
+                signedTransaction.bodyBytes,
             );
 
             expect(transactionBody.transactionId).to.not.be.null;
             const transactionId = TransactionId._fromProtobuf(
-                transactionBody.transactionID
+                transactionBody.transactionID,
             ).toString();
             expect(transactionId).to.not.be.equal("");
 

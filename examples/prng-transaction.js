@@ -11,7 +11,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -20,7 +20,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     try {

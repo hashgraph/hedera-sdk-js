@@ -65,7 +65,7 @@ export default class AccountInfoFlow {
         }
 
         return /** @type {PublicKey} */ (info.key).verifyTransaction(
-            transaction
+            transaction,
         );
     }
 
@@ -80,7 +80,7 @@ export default class AccountInfoFlow {
         signer,
         accountId,
         message,
-        signature
+        signature,
     ) {
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
@@ -109,7 +109,7 @@ export default class AccountInfoFlow {
         }
 
         return /** @type {PublicKey} */ (info.key).verifyTransaction(
-            transaction
+            transaction,
         );
     }
 }

@@ -160,7 +160,7 @@ export default class StakingInfo {
      */
     static fromBytes(bytes) {
         return StakingInfo._fromProtobuf(
-            HashgraphProto.proto.StakingInfo.decode(bytes)
+            HashgraphProto.proto.StakingInfo.decode(bytes),
         );
     }
 
@@ -169,7 +169,7 @@ export default class StakingInfo {
      */
     toBytes() {
         return HashgraphProto.proto.StakingInfo.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 

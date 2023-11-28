@@ -54,12 +54,12 @@ export default class ExchangeRates {
             currentRate: ExchangeRate._fromProtobuf(
                 /** @type {HashgraphProto.proto.IExchangeRate} */ (
                     rateSet.currentRate
-                )
+                ),
             ),
             nextRate: ExchangeRate._fromProtobuf(
                 /** @type {HashgraphProto.proto.IExchangeRate} */ (
                     rateSet.nextRate
-                )
+                ),
             ),
         });
     }

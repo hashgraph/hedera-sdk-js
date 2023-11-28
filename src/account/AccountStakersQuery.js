@@ -159,8 +159,8 @@ export default class AccountStakersQuery extends Query {
 
         return Promise.resolve(
             (stakers.proxyStaker != null ? stakers.proxyStaker : []).map(
-                (staker) => ProxyStaker._fromProtobuf(staker)
-            )
+                (staker) => ProxyStaker._fromProtobuf(staker),
+            ),
         );
     }
 

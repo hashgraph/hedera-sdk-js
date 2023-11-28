@@ -144,7 +144,7 @@ describe("ContractFunctionParameters", function () {
         const fileAppendRx = await fileAppendSubmit.getReceipt(env.client);
         console.log(
             "Status of file append is",
-            fileAppendRx.status.toString(10)
+            fileAppendRx.status.toString(10),
         );
 
         // Instantiate the contract instance
@@ -176,7 +176,7 @@ describe("ContractFunctionParameters", function () {
                     EXTREMUM.MIN,
                     bitSize,
                     INPUT_TYPE.NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -189,7 +189,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](-calculateRange(bitSize, INPUT_TYPE.NUMBER).min)
+                            ](-calculateRange(bitSize, INPUT_TYPE.NUMBER).min),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -198,19 +198,19 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
                         (-calculateRange(bitSize, INPUT_TYPE.NUMBER)
-                            .min).toString(10)
+                            .min).toString(10),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -223,7 +223,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](calculateRange(bitSize, INPUT_TYPE.NUMBER).max)
+                            ](calculateRange(bitSize, INPUT_TYPE.NUMBER).max),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -232,20 +232,20 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
                         calculateRange(bitSize, INPUT_TYPE.NUMBER).max.toString(
-                            10
-                        )
+                            10,
+                        ),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MIN,
                     bitSize,
                     INPUT_TYPE.BIG_NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -258,7 +258,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](new BigNumber(-2).pow(bitSize - 1))
+                            ](new BigNumber(-2).pow(bitSize - 1)),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -267,18 +267,18 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
-                        new BigNumber(-2).pow(bitSize - 1).toString(10)
+                        new BigNumber(-2).pow(bitSize - 1).toString(10),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.BIG_NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -291,7 +291,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](new BigNumber(2).pow(bitSize - 1).minus(1))
+                            ](new BigNumber(2).pow(bitSize - 1).minus(1)),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -300,21 +300,21 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
                         new BigNumber(2)
                             .pow(bitSize - 1)
                             .minus(1)
-                            .toString(10)
+                            .toString(10),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MIN,
                     bitSize,
                     INPUT_TYPE.LONG,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -327,7 +327,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](new Long(calculateRange(bitSize).min).neg())
+                            ](new Long(calculateRange(bitSize).min).neg()),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -336,18 +336,20 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
-                        new Long(calculateRange(bitSize).min).neg().toString(10)
+                        new Long(calculateRange(bitSize).min)
+                            .neg()
+                            .toString(10),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.LONG,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -360,7 +362,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}`
-                            ](new Long(calculateRange(bitSize).max))
+                            ](new Long(calculateRange(bitSize).max)),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -369,11 +371,11 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getInt${bitSize}`](0).toString(10)
+                        txResponse[`getInt${bitSize}`](0).toString(10),
                     ).to.be.equal(
-                        new Long(calculateRange(bitSize).max).toString(10)
+                        new Long(calculateRange(bitSize).max).toString(10),
                     );
-                }
+                },
             );
         });
 
@@ -382,7 +384,7 @@ describe("ContractFunctionParameters", function () {
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const arr = createArray(bitSize, INPUT_TYPE.NUMBER);
@@ -396,7 +398,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -408,17 +410,17 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
 
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.BIG_NUMBER,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const arr = createArray(bitSize, INPUT_TYPE.BIG_NUMBER);
@@ -432,7 +434,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -444,17 +446,17 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
 
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.LONG,
-                    METHOD_TYPE.INT
+                    METHOD_TYPE.INT,
                 ),
                 async function () {
                     const arr = createArray(bitSize, INPUT_TYPE.LONG);
@@ -468,7 +470,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -480,10 +482,10 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
 
             it(`addInt${bitSize}Array method should return an empty array`, async function () {
@@ -499,8 +501,8 @@ describe("ContractFunctionParameters", function () {
                             `addInt${bitSize}Array`
                         ](
                             // eslint-disable-next-line no-loss-of-precision
-                            []
-                        )
+                            [],
+                        ),
                     )
                     //Set the query payment for the node returning the request
                     //This value must cover the cost of the request otherwise will fail
@@ -524,7 +526,7 @@ describe("ContractFunctionParameters", function () {
                             `returnInt${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addInt${bitSize}Array`
-                            ]()
+                            ](),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -542,7 +544,7 @@ describe("ContractFunctionParameters", function () {
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.NUMBER,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -555,7 +557,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}`
-                            ](calculateRange(bitSize, INPUT_TYPE.NUMBER).max)
+                            ](calculateRange(bitSize, INPUT_TYPE.NUMBER).max),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -564,20 +566,20 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getUint${bitSize}`](0).toString(10)
+                        txResponse[`getUint${bitSize}`](0).toString(10),
                     ).to.be.equal(
                         calculateRange(bitSize, INPUT_TYPE.NUMBER).max.toString(
-                            10
-                        )
+                            10,
+                        ),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.BIG_NUMBER,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -590,7 +592,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}`
-                            ](new BigNumber(2).pow(bitSize - 1).minus(1))
+                            ](new BigNumber(2).pow(bitSize - 1).minus(1)),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -599,21 +601,21 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getUint${bitSize}`](0).toString(10)
+                        txResponse[`getUint${bitSize}`](0).toString(10),
                     ).to.be.equal(
                         new BigNumber(2)
                             .pow(bitSize - 1)
                             .minus(1)
-                            .toString(10)
+                            .toString(10),
                     );
-                }
+                },
             );
             it(
                 getDescription(
                     EXTREMUM.MAX,
                     bitSize,
                     INPUT_TYPE.LONG,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const contractQuery = await new ContractCallQuery()
@@ -626,7 +628,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}`
-                            ](new Long(calculateRange(bitSize).max))
+                            ](new Long(calculateRange(bitSize).max)),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -635,11 +637,11 @@ describe("ContractFunctionParameters", function () {
                     //Submit to a Hedera network
                     const txResponse = await contractQuery.execute(env.client);
                     expect(
-                        txResponse[`getUint${bitSize}`](0).toString(10)
+                        txResponse[`getUint${bitSize}`](0).toString(10),
                     ).to.be.equal(
-                        new Long(calculateRange(bitSize).max).toString(10)
+                        new Long(calculateRange(bitSize).max).toString(10),
                     );
-                }
+                },
             );
         });
 
@@ -648,7 +650,7 @@ describe("ContractFunctionParameters", function () {
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.NUMBER,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const range = calculateRange(bitSize, INPUT_TYPE.NUMBER);
@@ -663,7 +665,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -677,16 +679,16 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.BIG_NUMBER,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const arr = [0, new BigNumber(2).pow(bitSize - 1).minus(1)];
@@ -700,7 +702,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -714,16 +716,16 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
                     INPUT_TYPE.LONG,
-                    METHOD_TYPE.UINT
+                    METHOD_TYPE.UINT,
                 ),
                 async function () {
                     const range = calculateRange(bitSize, INPUT_TYPE.NUMBER);
@@ -738,7 +740,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}Array`
-                            ](arr)
+                            ](arr),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -752,10 +754,10 @@ describe("ContractFunctionParameters", function () {
                     expect(result).to.be.an("array");
                     arr.map((item, i) => {
                         expect(item.toString(10)).to.be.equal(
-                            result[i].toString(10)
+                            result[i].toString(10),
                         );
                     });
-                }
+                },
             );
 
             it(`addUint${bitSize}Array method should return an empty array`, async function () {
@@ -771,8 +773,8 @@ describe("ContractFunctionParameters", function () {
                             `addUint${bitSize}Array`
                         ](
                             // eslint-disable-next-line no-loss-of-precision
-                            []
-                        )
+                            [],
+                        ),
                     )
                     //Set the query payment for the node returning the request
                     //This value must cover the cost of the request otherwise will fail
@@ -796,7 +798,7 @@ describe("ContractFunctionParameters", function () {
                             `returnUint${bitSize}Array`,
                             new ContractFunctionParameters()[
                                 `addUint${bitSize}Array`
-                            ]()
+                            ](),
                         )
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
@@ -818,7 +820,7 @@ describe("ContractFunctionParameters", function () {
             //Set the contract function to call
             .setFunction(
                 "returnInt8Multiple", // return two params: input & input (+) 20 // -128 + 20 = - 108
-                new ContractFunctionParameters().addInt8(-128)
+                new ContractFunctionParameters().addInt8(-128),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -840,7 +842,7 @@ describe("ContractFunctionParameters", function () {
             //Set the contract function to call
             .setFunction(
                 "returnUint32",
-                new ContractFunctionParameters().addUint32(0)
+                new ContractFunctionParameters().addUint32(0),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -861,7 +863,7 @@ describe("ContractFunctionParameters", function () {
             //Set the contract function to call
             .setFunction(
                 "returnMultipleTypeParams",
-                new ContractFunctionParameters().addUint32(4294967295)
+                new ContractFunctionParameters().addUint32(4294967295),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -885,7 +887,7 @@ describe("ContractFunctionParameters", function () {
             //Set the contract function to call
             .setFunction(
                 "returnMultipleInt40",
-                new ContractFunctionParameters().addInt40(549755813885)
+                new ContractFunctionParameters().addInt40(549755813885),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -909,8 +911,8 @@ describe("ContractFunctionParameters", function () {
                 "returnUint256",
                 new ContractFunctionParameters().addUint256(
                     // eslint-disable-next-line no-loss-of-precision
-                    0
-                )
+                    0,
+                ),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -921,7 +923,7 @@ describe("ContractFunctionParameters", function () {
 
         expect(txResponse.getUint256(0).toNumber()).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
-            0
+            0,
         );
     });
 
@@ -936,8 +938,8 @@ describe("ContractFunctionParameters", function () {
                 "returnUint256",
                 new ContractFunctionParameters().addUint256(
                     // eslint-disable-next-line no-loss-of-precision
-                    5000000000000000000000
-                )
+                    5000000000000000000000,
+                ),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -948,7 +950,7 @@ describe("ContractFunctionParameters", function () {
 
         expect(txResponse.getUint256(0).toNumber()).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
-            5000000000000000000000
+            5000000000000000000000,
         );
     });
 
@@ -963,8 +965,8 @@ describe("ContractFunctionParameters", function () {
                 "returnUint256",
                 new ContractFunctionParameters().addUint256(
                     // eslint-disable-next-line no-loss-of-precision
-                    50
-                )
+                    50,
+                ),
             )
             //Set the query payment for the node returning the request
             //This value must cover the cost of the request otherwise will fail
@@ -975,7 +977,7 @@ describe("ContractFunctionParameters", function () {
 
         expect(txResponse.getUint256(0).toNumber()).to.be.equal(
             // eslint-disable-next-line no-loss-of-precision
-            50
+            50,
         );
     });
 
@@ -1005,11 +1007,11 @@ describe("ContractFunctionParameters", function () {
         const contractId = contractCreateRecord.receipt.contractId;
         const contractAnonce = nonces.find(
             (nonceInfo) =>
-                nonceInfo.contractId.toString() === contractId.toString()
+                nonceInfo.contractId.toString() === contractId.toString(),
         );
         const contractBnonce = nonces.find(
             (nonceInfo) =>
-                nonceInfo.contractId.toString() !== contractId.toString()
+                nonceInfo.contractId.toString() !== contractId.toString(),
         );
 
         expect(contractAnonce.nonce.toNumber()).to.be.equal(2);
@@ -1021,10 +1023,10 @@ describe("ContractFunctionParameters", function () {
             .execute(env.client);
 
         const contractDeleteResult = await contractDeleteTx.getReceipt(
-            env.client
+            env.client,
         );
         console.log(
-            `contractDelete status: ${contractDeleteResult.status.toString()}`
+            `contractDelete status: ${contractDeleteResult.status.toString()}`,
         );
 
         const fileDeleteTx = await new FileDeleteTransaction()

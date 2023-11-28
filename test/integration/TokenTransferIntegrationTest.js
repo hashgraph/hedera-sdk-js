@@ -312,7 +312,7 @@ describe("TokenTransfer", function () {
             err = error
                 .toString()
                 .includes(
-                    Status.AccountAmountTransfersOnlyAllowedForFungibleCommon
+                    Status.AccountAmountTransfersOnlyAllowedForFungibleCommon,
                 );
         }
 
@@ -387,10 +387,10 @@ describe("TokenTransfer", function () {
 
         expect(record.automaticTokenAssociations.length).to.be.equal(1);
         expect(
-            record.automaticTokenAssociations[0].accountId.toString()
+            record.automaticTokenAssociations[0].accountId.toString(),
         ).to.be.equal(account.toString());
         expect(
-            record.automaticTokenAssociations[0].tokenId.toString()
+            record.automaticTokenAssociations[0].tokenId.toString(),
         ).to.be.equal(token.toString());
 
         await (

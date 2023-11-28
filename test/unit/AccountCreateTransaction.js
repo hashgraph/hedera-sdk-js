@@ -22,7 +22,7 @@ describe("AccountCreateTransaction", function () {
 
         let transaction = new AccountCreateTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(spenderAccountId1, timestamp1)
+                TransactionId.withValidStart(spenderAccountId1, timestamp1),
             )
             .setAlias(evmAddress)
             .setNodeAccountIds([nodeAccountId])

@@ -22,7 +22,7 @@ const TRANSACTION_RESPONSE_SUCCESS = {
 };
 
 const bytes = hex.decode(
-    "f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792"
+    "f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792",
 );
 
 const callDataFileId = FileId.fromString("0.0.1");
@@ -45,12 +45,12 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         expect(
-                            transactionBody.ethereumTransaction.ethereumData
+                            transactionBody.ethereumTransaction.ethereumData,
                         ).to.deep.equal(bytes);
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -74,12 +74,12 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         expect(
-                            transactionBody.ethereumTransaction.ethereumData
+                            transactionBody.ethereumTransaction.ethereumData,
                         ).to.deep.equal(bytes);
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -94,7 +94,7 @@ describe("EthereumFlowMocking", function () {
         } catch (error) {
             if (
                 !error.message.startsWith(
-                    "cannot submit ethereum transaction with no ethereum data"
+                    "cannot submit ethereum transaction with no ethereum data",
                 )
             ) {
                 throw error;
@@ -118,16 +118,16 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileCreate = transactionBody.fileCreate;
                         expect(
-                            `0x${fileCreate.contents.toString()}`
+                            `0x${fileCreate.contents.toString()}`,
                         ).to.deep.equal(
                             // includes 0x prefix
-                            longCallData.substring(0, 4098)
+                            longCallData.substring(0, 4098),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -151,13 +151,13 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileAppend = transactionBody.fileAppend;
                         expect(fileAppend.contents.toString()).to.deep.equal(
-                            longCallData.substring(4098, 8194)
+                            longCallData.substring(4098, 8194),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -174,19 +174,19 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const ethereumTransaction =
                             transactionBody.ethereumTransaction;
                         expect(ethereumTransaction.ethereumData).to.deep.equal(
-                            encodedWithoutCallData
+                            encodedWithoutCallData,
                         );
                         expect(
                             FileId._fromProtobuf(
-                                ethereumTransaction.callData
-                            ).toString()
+                                ethereumTransaction.callData,
+                            ).toString(),
                         ).to.equal(callDataFileId.toString());
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -217,16 +217,16 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileCreate = transactionBody.fileCreate;
                         expect(
-                            `0x${fileCreate.contents.toString()}`
+                            `0x${fileCreate.contents.toString()}`,
                         ).to.deep.equal(
                             // includes 0x prefix
-                            longCallData.substring(0, 4098)
+                            longCallData.substring(0, 4098),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -250,13 +250,13 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileAppend = transactionBody.fileAppend;
                         expect(fileAppend.contents.toString()).to.deep.equal(
-                            longCallData.substring(4098, 8194)
+                            longCallData.substring(4098, 8194),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -280,13 +280,13 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileAppend = transactionBody.fileAppend;
                         expect(fileAppend.contents.toString()).to.deep.equal(
-                            longCallData.substring(8194, 12290)
+                            longCallData.substring(8194, 12290),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -320,19 +320,19 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const ethereumTransaction =
                             transactionBody.ethereumTransaction;
                         expect(ethereumTransaction.ethereumData).to.deep.equal(
-                            encodedWithoutCallData
+                            encodedWithoutCallData,
                         );
                         expect(
                             FileId._fromProtobuf(
-                                ethereumTransaction.callData
-                            ).toString()
+                                ethereumTransaction.callData,
+                            ).toString(),
                         ).to.equal(callDataFileId.toString());
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -370,16 +370,16 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileCreate = transactionBody.fileCreate;
                         expect(
-                            `0x${fileCreate.contents.toString()}`
+                            `0x${fileCreate.contents.toString()}`,
                         ).to.deep.equal(
                             // includes 0x prefix
-                            longCallData.substring(0, 4098)
+                            longCallData.substring(0, 4098),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -403,13 +403,13 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileAppend = transactionBody.fileAppend;
                         expect(fileAppend.contents.toString()).to.deep.equal(
-                            longCallData.substring(4098, 8194)
+                            longCallData.substring(4098, 8194),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -433,13 +433,13 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const fileAppend = transactionBody.fileAppend;
                         expect(fileAppend.contents.toString()).to.deep.equal(
-                            longCallData.substring(8194, 12290)
+                            longCallData.substring(8194, 12290),
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -473,19 +473,19 @@ describe("EthereumFlowMocking", function () {
                     call: (request) => {
                         const transactionBody = proto.TransactionBody.decode(
                             proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
+                                request.signedTransactionBytes,
+                            ).bodyBytes,
                         );
 
                         const ethereumTransaction =
                             transactionBody.ethereumTransaction;
                         expect(ethereumTransaction.ethereumData).to.deep.equal(
-                            encodedWithoutCallData
+                            encodedWithoutCallData,
                         );
                         expect(
                             FileId._fromProtobuf(
-                                ethereumTransaction.callData
-                            ).toString()
+                                ethereumTransaction.callData,
+                            ).toString(),
                         ).to.equal(callDataFileId.toString());
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };

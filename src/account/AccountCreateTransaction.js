@@ -165,7 +165,7 @@ export default class AccountCreateTransaction extends Transaction {
 
         if (props.maxAutomaticTokenAssociations != null) {
             this.setMaxAutomaticTokenAssociations(
-                props.maxAutomaticTokenAssociations
+                props.maxAutomaticTokenAssociations,
             );
         }
 
@@ -200,7 +200,7 @@ export default class AccountCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -234,7 +234,7 @@ export default class AccountCreateTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
-                              )
+                              ),
                           )
                         : undefined,
                 autoRenewPeriod:
@@ -263,7 +263,7 @@ export default class AccountCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -517,7 +517,7 @@ export default class AccountCreateTransaction extends Transaction {
                 this._alias = EvmAddress.fromString(alias);
             } else {
                 throw new Error(
-                    'evmAddress must be a valid EVM address with or without "0x" prefix'
+                    'evmAddress must be a valid EVM address with or without "0x" prefix',
                 );
             }
         } else {
@@ -610,5 +610,5 @@ export default class AccountCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoCreateAccount",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountCreateTransaction._fromProtobuf
+    AccountCreateTransaction._fromProtobuf,
 );

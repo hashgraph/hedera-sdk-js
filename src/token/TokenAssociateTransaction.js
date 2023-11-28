@@ -91,7 +91,7 @@ export default class TokenAssociateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const associateToken =
@@ -104,7 +104,7 @@ export default class TokenAssociateTransaction extends Transaction {
                 tokenIds:
                     associateToken.tokens != null
                         ? associateToken.tokens.map((token) =>
-                              TokenId._fromProtobuf(token)
+                              TokenId._fromProtobuf(token),
                           )
                         : undefined,
                 accountId:
@@ -116,7 +116,7 @@ export default class TokenAssociateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -136,7 +136,7 @@ export default class TokenAssociateTransaction extends Transaction {
         this._tokenIds = tokenIds.map((tokenId) =>
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : tokenId.clone()
+                : tokenId.clone(),
         );
 
         return this;
@@ -228,5 +228,5 @@ export default class TokenAssociateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenAssociate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenAssociateTransaction._fromProtobuf
+    TokenAssociateTransaction._fromProtobuf,
 );

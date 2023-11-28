@@ -13,7 +13,7 @@ describe("PrngTransaction", function () {
 
         let transaction = await new PrngTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(spenderAccountId, timestamp)
+                TransactionId.withValidStart(spenderAccountId, timestamp),
             )
             .setNodeAccountIds([spenderAccountId])
             .setRange(100)

@@ -188,7 +188,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     get accountId() {
         console.warn(
-            "`TokenNftInfoQuery.accountId` is deprecated with no replacement"
+            "`TokenNftInfoQuery.accountId` is deprecated with no replacement",
         );
         return this._accountId;
     }
@@ -201,7 +201,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     setAccountId(accountId) {
         console.warn(
-            "`TokenNftInfoQuery.setAccountId()` is deprecated with no replacement"
+            "`TokenNftInfoQuery.setAccountId()` is deprecated with no replacement",
         );
         this._accountId =
             typeof accountId === "string"
@@ -217,7 +217,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     get tokenId() {
         console.warn(
-            "`TokenNftInfoQuery.tokenId` is deprecated with no replacement"
+            "`TokenNftInfoQuery.tokenId` is deprecated with no replacement",
         );
         return this._tokenId;
     }
@@ -230,7 +230,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     setTokenId(tokenId) {
         console.warn(
-            "`TokenNftInfoQuery.setTokenId()` is deprecated with no replacement"
+            "`TokenNftInfoQuery.setTokenId()` is deprecated with no replacement",
         );
         this._tokenId =
             typeof tokenId === "string"
@@ -246,7 +246,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     get start() {
         console.warn(
-            "`TokenNftInfoQuery.start` is deprecated with no replacement"
+            "`TokenNftInfoQuery.start` is deprecated with no replacement",
         );
         return this._start;
     }
@@ -259,7 +259,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     setStart(start) {
         console.warn(
-            "`TokenNftInfoQuery.setStart()` is deprecated with no replacement"
+            "`TokenNftInfoQuery.setStart()` is deprecated with no replacement",
         );
         this._start =
             typeof start === "number" ? Long.fromNumber(start) : start;
@@ -273,7 +273,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     get end() {
         console.warn(
-            "`TokenNftInfoQuery.end` is deprecated with no replacement"
+            "`TokenNftInfoQuery.end` is deprecated with no replacement",
         );
         return this._end;
     }
@@ -286,7 +286,7 @@ export default class TokenNftInfoQuery extends Query {
      */
     setEnd(end) {
         console.warn(
-            "`TokenNftInfoQuery.setEnd()` is deprecated with no replacement"
+            "`TokenNftInfoQuery.setEnd()` is deprecated with no replacement",
         );
         this._end = typeof end === "number" ? Long.fromNumber(end) : end;
 
@@ -352,9 +352,9 @@ export default class TokenNftInfoQuery extends Query {
         return Promise.resolve(
             nfts.map((nft) =>
                 TokenNftInfo._fromProtobuf(
-                    /** @type {HashgraphProto.proto.ITokenNftInfo} */ (nft)
-                )
-            )
+                    /** @type {HashgraphProto.proto.ITokenNftInfo} */ (nft),
+                ),
+            ),
         );
     }
 

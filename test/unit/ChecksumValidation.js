@@ -14,8 +14,8 @@ describe("ChecksumValidation", function () {
 
         expect(
             accountId.toStringWithChecksum(
-                Client.forMainnet({ scheduleNetworkUpdate: false })
-            )
+                Client.forMainnet({ scheduleNetworkUpdate: false }),
+            ),
         ).to.be.eql("0.0.123-vfmkw");
     });
 
@@ -28,8 +28,8 @@ describe("ChecksumValidation", function () {
 
         expect(
             accountId.toStringWithChecksum(
-                Client.forTestnet({ scheduleNetworkUpdate: false })
-            )
+                Client.forTestnet({ scheduleNetworkUpdate: false }),
+            ),
         ).to.be.eql("0.0.123-esxsf");
     });
 
@@ -42,8 +42,8 @@ describe("ChecksumValidation", function () {
 
         expect(
             accountId.toStringWithChecksum(
-                Client.forPreviewnet({ scheduleNetworkUpdate: false })
-            )
+                Client.forPreviewnet({ scheduleNetworkUpdate: false }),
+            ),
         ).to.be.eql("0.0.123-ogizo");
     });
 });

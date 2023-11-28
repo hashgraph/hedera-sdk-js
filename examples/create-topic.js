@@ -16,7 +16,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -25,13 +25,13 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     try {
         // create topic
         let transaction = await new TopicCreateTransaction().freezeWithSigner(
-            wallet
+            wallet,
         );
         transaction = await transaction.signWithSigner(wallet);
         const createResponse = await transaction.executeWithSigner(wallet);
@@ -40,17 +40,20 @@ async function main() {
         console.log(`topic id = ${createReceipt.topicId.toString()}`);
 
         // send one message
-        transaction = await new TopicMessageSubmitTransaction({
-            topicId: createReceipt.topicId,
-            message: "Hello World",
-        }).freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
-        const sendResponse = await transaction.executeWithSigner(wallet);
+        let topicMessageSubmitTransaction =
+            await new TopicMessageSubmitTransaction({
+                topicId: createReceipt.topicId,
+                message: "Hello World",
+            }).freezeWithSigner(wallet);
+        topicMessageSubmitTransaction =
+            await topicMessageSubmitTransaction.signWithSigner(wallet);
+        const sendResponse =
+            await topicMessageSubmitTransaction.executeWithSigner(wallet);
 
         const sendReceipt = await sendResponse.getReceiptWithSigner(wallet);
 
         console.log(
-            `topic sequence number = ${sendReceipt.topicSequenceNumber.toString()}`
+            `topic sequence number = ${sendReceipt.topicSequenceNumber.toString()}`,
         );
     } catch (error) {
         console.error(error);

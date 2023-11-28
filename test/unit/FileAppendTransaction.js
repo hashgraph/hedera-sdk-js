@@ -20,7 +20,7 @@ describe("FileAppendTransaction", function () {
 
         let transaction = new FileAppendTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(spenderAccountId1, timestamp1)
+                TransactionId.withValidStart(spenderAccountId1, timestamp1),
             )
             .setNodeAccountIds([nodeAccountId])
             .setFileId(fileId)
@@ -46,7 +46,7 @@ describe("FileAppendTransaction", function () {
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[0]._toProtobuf()
+            transaction._transactionIds.list[0]._toProtobuf(),
         );
         expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
         expect(body.transactionValidDuration).to.deep.equal({
@@ -62,7 +62,7 @@ describe("FileAppendTransaction", function () {
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[1]._toProtobuf()
+            transaction._transactionIds.list[1]._toProtobuf(),
         );
         expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
         expect(body.transactionValidDuration).to.deep.equal({
@@ -78,7 +78,7 @@ describe("FileAppendTransaction", function () {
         expect(body.transactionFee).to.deep.equal(fee.toTinybars());
         expect(body.memo).to.be.equal("");
         expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[2]._toProtobuf()
+            transaction._transactionIds.list[2]._toProtobuf(),
         );
         expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
         expect(body.transactionValidDuration).to.deep.equal({

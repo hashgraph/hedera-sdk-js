@@ -110,7 +110,7 @@ export default class ContractId extends Key {
         const contractId = new ContractId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.contractNum != null ? id.contractNum : 0
+            id.contractNum != null ? id.contractNum : 0,
         );
 
         return contractId;
@@ -136,17 +136,17 @@ export default class ContractId extends Key {
         }
         const mirrorUrl = client.mirrorNetwork[0].slice(
             0,
-            client.mirrorNetwork[0].indexOf(":")
+            client.mirrorNetwork[0].indexOf(":"),
         );
 
         /* eslint-disable */
         const url = `https://${mirrorUrl}/api/v1/contracts/${hex.encode(
-            this.evmAddress
+            this.evmAddress,
         )}`;
         const mirrorAccountId = (await axios.get(url)).data.contract_id;
 
         this.num = Long.fromString(
-            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
+            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1),
         );
         /* eslint-enable */
 
@@ -171,7 +171,7 @@ export default class ContractId extends Key {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -181,7 +181,7 @@ export default class ContractId extends Key {
      */
     static fromBytes(bytes) {
         return ContractId._fromProtobuf(
-            HashgraphProto.proto.ContractID.decode(bytes)
+            HashgraphProto.proto.ContractID.decode(bytes),
         );
     }
 
@@ -233,7 +233,7 @@ export default class ContractId extends Key {
     toString() {
         if (this.evmAddress != null) {
             return `${this.shard.toString()}.${this.realm.toString()}.${hex.encode(
-                this.evmAddress
+                this.evmAddress,
             )}`;
         } else {
             return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
@@ -253,7 +253,7 @@ export default class ContractId extends Key {
      */
     toBytes() {
         return HashgraphProto.proto.ContractID.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 
@@ -274,7 +274,7 @@ export default class ContractId extends Key {
     compare(other) {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
+            [other.shard, other.realm, other.num],
         );
     }
 

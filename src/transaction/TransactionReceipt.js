@@ -182,13 +182,13 @@ export default class TransactionReceipt {
             (receipt) =>
                 /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
                     receipt._toProtobuf().receipt
-                )
+                ),
         );
         const children = this.children.map(
             (receipt) =>
                 /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
                     receipt._toProtobuf().receipt
-                )
+                ),
         );
 
         return {
@@ -260,20 +260,20 @@ export default class TransactionReceipt {
         const children =
             response.childTransactionReceipts != null
                 ? response.childTransactionReceipts.map((child) =>
-                      TransactionReceipt._fromProtobuf({ receipt: child })
+                      TransactionReceipt._fromProtobuf({ receipt: child }),
                   )
                 : [];
 
         const duplicates =
             response.duplicateTransactionReceipts != null
                 ? response.duplicateTransactionReceipts.map((duplicate) =>
-                      TransactionReceipt._fromProtobuf({ receipt: duplicate })
+                      TransactionReceipt._fromProtobuf({ receipt: duplicate }),
                   )
                 : [];
 
         return new TransactionReceipt({
             status: Status._fromCode(
-                receipt.status != null ? receipt.status : 0
+                receipt.status != null ? receipt.status : 0,
             ),
 
             accountId:
@@ -310,7 +310,7 @@ export default class TransactionReceipt {
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           /** @type {HashgraphProto.proto.IExchangeRate} */
-                          (exchangeRateSet.currentRate)
+                          (exchangeRateSet.currentRate),
                       )
                     : null,
 
@@ -332,13 +332,13 @@ export default class TransactionReceipt {
             scheduledTransactionId:
                 receipt.scheduledTransactionID != null
                     ? TransactionId._fromProtobuf(
-                          receipt.scheduledTransactionID
+                          receipt.scheduledTransactionID,
                       )
                     : null,
             serials:
                 receipt.serialNumbers != null
                     ? receipt.serialNumbers.map((serial) =>
-                          Long.fromValue(serial)
+                          Long.fromValue(serial),
                       )
                     : [],
             children,
@@ -352,7 +352,7 @@ export default class TransactionReceipt {
      */
     static fromBytes(bytes) {
         return TransactionReceipt._fromProtobuf(
-            HashgraphProto.proto.TransactionGetReceiptResponse.decode(bytes)
+            HashgraphProto.proto.TransactionGetReceiptResponse.decode(bytes),
         );
     }
 
@@ -361,7 +361,7 @@ export default class TransactionReceipt {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 

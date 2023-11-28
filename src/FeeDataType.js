@@ -80,7 +80,7 @@ export default class FeeDataType {
         }
 
         throw new Error(
-            `(BUG) SubType.fromCode() does not handle code: ${code}`
+            `(BUG) SubType.fromCode() does not handle code: ${code}`,
         );
     }
 

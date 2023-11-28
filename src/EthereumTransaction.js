@@ -108,7 +108,7 @@ export default class EthereumTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const transaction =
@@ -135,7 +135,7 @@ export default class EthereumTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -312,5 +312,5 @@ export default class EthereumTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "ethereumTransaction",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    EthereumTransaction._fromProtobuf
+    EthereumTransaction._fromProtobuf,
 );

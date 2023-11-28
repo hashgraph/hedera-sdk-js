@@ -92,7 +92,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const feeScheduleUpdate =
@@ -123,7 +123,7 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -212,5 +212,5 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenFeeScheduleUpdate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenFeeScheduleUpdateTransaction._fromProtobuf
+    TokenFeeScheduleUpdateTransaction._fromProtobuf,
 );

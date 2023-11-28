@@ -81,7 +81,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const allowance =
@@ -95,14 +95,14 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
                     ? allowance.nftAllowances
                     : []
                 ).map((allowance) =>
-                    TokenNftAllowance._fromProtobuf(allowance)
+                    TokenNftAllowance._fromProtobuf(allowance),
                 ),
             }),
             transactions,
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -150,7 +150,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
                     ownerAccountId: owner,
                     allSerials: false,
                     delegatingSpender: null,
-                })
+                }),
             );
         }
 
@@ -162,7 +162,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      */
     _validateChecksums(client) {
         this._nftAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
+            allowance._validateChecksums(client),
         );
     }
 
@@ -194,7 +194,7 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             nftAllowances: this._nftAllowances.map((allowance) =>
-                allowance._toProtobuf()
+                allowance._toProtobuf(),
             ),
         };
     }
@@ -213,5 +213,5 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDeleteAllowance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountAllowanceDeleteTransaction._fromProtobuf
+    AccountAllowanceDeleteTransaction._fromProtobuf,
 );

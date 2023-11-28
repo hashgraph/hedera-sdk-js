@@ -75,7 +75,7 @@ export default class TokenNftTransferMap extends ObjectMap {
 
         for (const transfer of transfers) {
             const token = TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token)
+                /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token),
             );
 
             for (const aa of transfer.nftTransfers != null
@@ -84,19 +84,19 @@ export default class TokenNftTransferMap extends ObjectMap {
                 const sender = AccountId._fromProtobuf(
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         aa.senderAccountID
-                    )
+                    ),
                 );
                 const recipient = AccountId._fromProtobuf(
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         aa.receiverAccountID
-                    )
+                    ),
                 );
 
                 tokenTransfersMap.__set(token, {
                     sender,
                     recipient,
                     serial: Long.fromValue(
-                        /** @type {Long} */ (aa.serialNumber)
+                        /** @type {Long} */ (aa.serialNumber),
                     ),
                     isApproved: false,
                 });

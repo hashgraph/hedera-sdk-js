@@ -152,14 +152,14 @@ describe("TokenAllowances", function () {
                 tokenId,
                 env.operatorId,
                 spenderAccountId,
-                100
+                100,
             );
 
         const approveRx = await receiverApproveTx.execute(env.client);
 
         const approveReceipt = await approveRx.getReceipt(env.client);
         console.log(
-            `Approve spender allowance - status: ${approveReceipt.status}`
+            `Approve spender allowance - status: ${approveReceipt.status}`,
         );
 
         let err = false;
@@ -267,7 +267,7 @@ describe("TokenAllowances", function () {
             await txResponseAssociatedTokenWithContract.getReceipt(env.client);
         console.log(
             "The associate token to contract transaction consensus is",
-            txReceipt2.status.toString()
+            txReceipt2.status.toString(),
         );
 
         //Associate Token with Receiver
@@ -285,7 +285,7 @@ describe("TokenAllowances", function () {
             await txResponseAssociatedTokenWithContract1.getReceipt(env.client);
         console.log(
             "The associate token to receiver transaction consensus is",
-            txReceipt21.status.toString()
+            txReceipt21.status.toString(),
         );
 
         // Give `spender` allowance for Token
@@ -294,14 +294,14 @@ describe("TokenAllowances", function () {
                 tokenId,
                 env.operatorId,
                 contractId,
-                100
+                100,
             );
 
         const approveRx = await receiverApproveTx.execute(env.client);
 
         const approveReceipt = await approveRx.getReceipt(env.client);
         console.log(
-            `Approve spender allowance - status: ${approveReceipt.status}`
+            `Approve spender allowance - status: ${approveReceipt.status}`,
         );
 
         // Get Allowances
@@ -313,7 +313,7 @@ describe("TokenAllowances", function () {
                 new ContractFunctionParameters()
                     .addAddress(tokenId.toSolidityAddress())
                     .addAddress(env.operatorId.toSolidityAddress())
-                    .addAddress(contractId.toSolidityAddress())
+                    .addAddress(contractId.toSolidityAddress()),
             );
 
         const checkAllowanceTx = await checkAllowance.execute(env.client);

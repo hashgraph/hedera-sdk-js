@@ -311,7 +311,7 @@ export default class TokenCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -404,7 +404,7 @@ export default class TokenCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -918,5 +918,5 @@ export default class TokenCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenCreation",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenCreateTransaction._fromProtobuf
+    TokenCreateTransaction._fromProtobuf,
 );

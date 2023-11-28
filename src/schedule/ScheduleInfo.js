@@ -124,14 +124,14 @@ export default class ScheduleInfo {
             scheduleId: ScheduleId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IScheduleID} */ (
                     info.scheduleID
-                )
+                ),
             ),
             creatorAccountID:
                 info.creatorAccountID != null
                     ? AccountId._fromProtobuf(
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.creatorAccountID
-                          )
+                          ),
                       )
                     : null,
             payerAccountID:
@@ -139,7 +139,7 @@ export default class ScheduleInfo {
                     ? AccountId._fromProtobuf(
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.payerAccountID
-                          )
+                          ),
                       )
                     : null,
             schedulableTransactionBody:
@@ -160,7 +160,7 @@ export default class ScheduleInfo {
                     ? Timestamp._fromProtobuf(
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.expirationTime
-                          )
+                          ),
                       )
                     : null,
             executed:
@@ -168,7 +168,7 @@ export default class ScheduleInfo {
                     ? Timestamp._fromProtobuf(
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.executionTime
-                          )
+                          ),
                       )
                     : null,
             deleted:
@@ -176,7 +176,7 @@ export default class ScheduleInfo {
                     ? Timestamp._fromProtobuf(
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.deletionTime
-                          )
+                          ),
                       )
                     : null,
             scheduledTransactionId:
@@ -235,7 +235,7 @@ export default class ScheduleInfo {
         }
 
         const scheduled = new proto.SchedulableTransactionBody(
-            this.schedulableTransactionBody
+            this.schedulableTransactionBody,
         );
         const data =
             /** @type {NonNullable<HashgraphProto.proto.SchedulableTransactionBody["data"]>} */ (
@@ -257,7 +257,7 @@ export default class ScheduleInfo {
                         }).finish(),
                     },
                 ],
-            }).finish()
+            }).finish(),
         );
     }
 }

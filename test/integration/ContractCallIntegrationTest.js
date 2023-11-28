@@ -48,8 +48,8 @@ describe("ContractCallIntegration", function () {
                 .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
-                        "Hello from Hedera."
-                    )
+                        "Hello from Hedera.",
+                    ),
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -82,7 +82,7 @@ describe("ContractCallIntegration", function () {
                 .setGas(75000)
                 .setFunction(
                     "setMessage",
-                    new ContractFunctionParameters().addString("new message")
+                    new ContractFunctionParameters().addString("new message"),
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
@@ -134,8 +134,8 @@ describe("ContractCallIntegration", function () {
                 .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
-                        "Hello from Hedera."
-                    )
+                        "Hello from Hedera.",
+                    ),
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -203,8 +203,8 @@ describe("ContractCallIntegration", function () {
                 .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
-                        "Hello from Hedera."
-                    )
+                        "Hello from Hedera.",
+                    ),
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -271,8 +271,8 @@ describe("ContractCallIntegration", function () {
                 .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
-                        "Hello from Hedera."
-                    )
+                        "Hello from Hedera.",
+                    ),
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -362,7 +362,7 @@ describe("ContractCallIntegration", function () {
         expect(
             contractReceipt.contractId != null
                 ? contractReceipt.contractId.num > 0
-                : false
+                : false,
         ).to.be.true;
 
         const contractId = contractReceipt.contractId;
@@ -377,7 +377,7 @@ describe("ContractCallIntegration", function () {
                 //Set the contract function to call
                 .setFunction(
                     "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(17000)
+                    new ContractFunctionParameters().addUint24(17000),
                 )
                 //Set the query payment for the node returning the request
                 //This value must cover the cost of the request otherwise will fail

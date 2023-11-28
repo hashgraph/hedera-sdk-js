@@ -124,7 +124,7 @@ export default class TopicInfo {
             topicId: TopicId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITopicID} */ (
                     infoResponse.topicID
-                )
+                ),
             ),
             topicMemo: info.memo != null ? info.memo : "",
             runningHash:
@@ -150,7 +150,7 @@ export default class TopicInfo {
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? new Duration(
-                          /** @type {Long} */ (info.autoRenewPeriod.seconds)
+                          /** @type {Long} */ (info.autoRenewPeriod.seconds),
                       )
                     : null,
             autoRenewAccountId:
@@ -216,7 +216,7 @@ export default class TopicInfo {
         return HashgraphProto.proto.ConsensusTopicInfo.encode(
             /** @type {HashgraphProto.proto.IConsensusTopicInfo} */ (
                 this._toProtobuf().topicInfo
-            )
+            ),
         ).finish();
     }
 }

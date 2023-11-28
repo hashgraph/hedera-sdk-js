@@ -70,7 +70,7 @@ describe("LedgerId", function () {
         expect(LedgerId.fromString(PREVIEWNET).isLocalNode()).to.eql(false);
 
         expect(LedgerId.fromString(HEX_PREVIEWNET).toString()).to.eql(
-            PREVIEWNET
+            PREVIEWNET,
         );
         expect(LedgerId.fromString(HEX_PREVIEWNET).isMainnet()).to.eql(false);
         expect(LedgerId.fromString(HEX_PREVIEWNET).isTestnet()).to.eql(false);

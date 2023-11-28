@@ -27,7 +27,7 @@ describe("ContractCreateFlowMocking", function () {
             const transaction = Transaction.fromBytes(
                 proto.Transaction.encode({
                     signedTransactionBytes: request.signedTransactionBytes,
-                }).finish()
+                }).finish(),
             );
 
             expect(key.publicKey.verifyTransaction(transaction)).to.be.true;
@@ -75,7 +75,7 @@ describe("ContractCreateFlowMocking", function () {
             const transaction = Transaction.fromBytes(
                 proto.Transaction.encode({
                     signedTransactionBytes: request.signedTransactionBytes,
-                }).finish()
+                }).finish(),
             );
 
             expect(key.publicKey.verifyTransaction(transaction)).to.be.true;

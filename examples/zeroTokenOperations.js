@@ -19,7 +19,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
     const myAccountId = hashgraph.AccountId.fromString(process.env.OPERATOR_ID);
@@ -30,16 +30,16 @@ async function main() {
     const wallet = new hashgraph.Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     const operatorPrivateKey = hashgraph.PrivateKey.fromStringDer(
-        process.env.OPERATOR_KEY
+        process.env.OPERATOR_KEY,
     );
     const operatorPublicKey = operatorPrivateKey.publicKey;
 
     const operatorAccountId = hashgraph.AccountId.fromString(
-        process.env.OPERATOR_ID
+        process.env.OPERATOR_ID,
     );
 
     const alicePrivateKey = hashgraph.PrivateKey.generateED25519();
@@ -59,7 +59,7 @@ async function main() {
         const walletWithAlice = new hashgraph.Wallet(
             aliceAccountId,
             alicePrivateKey,
-            aliceProvider
+            aliceProvider,
         );
 
         // Instantiate ContractHelper
@@ -74,7 +74,7 @@ async function main() {
             new hashgraph.ContractFunctionParameters()
                 .addAddress(wallet.getAccountId().toSolidityAddress())
                 .addAddress(aliceAccountId.toSolidityAddress()),
-            wallet
+            wallet,
         );
 
         // Update the signer to have contractId KeyList (this is by security requirement)
@@ -84,8 +84,8 @@ async function main() {
                 .setKey(
                     new hashgraph.KeyList(
                         [operatorPublicKey, contractHelper.contractId],
-                        1
-                    )
+                        1,
+                    ),
                 )
                 .freezeWithSigner(wallet);
         accountUpdateOpratorTransaction =
@@ -99,8 +99,8 @@ async function main() {
                 .setKey(
                     new hashgraph.KeyList(
                         [alicePublicKey, contractHelper.contractId],
-                        1
-                    )
+                        1,
+                    ),
                 )
                 .freezeWithSigner(walletWithAlice);
         accountUpdateAliceTransaction =
@@ -122,7 +122,7 @@ async function main() {
         await contractHelper.executeSteps(
             /* from step */ 0,
             /* to step */ 5,
-            wallet
+            wallet,
         );
 
         // step 6 use SDK and transfer passing a zero value
@@ -139,9 +139,8 @@ async function main() {
                 .setAutoRenewAccountId(myAccountId)
                 .freezeWithSigner(wallet);
 
-        tokenCreateTransaction = await tokenCreateTransaction.signWithSigner(
-            wallet
-        );
+        tokenCreateTransaction =
+            await tokenCreateTransaction.signWithSigner(wallet);
         let responseTokenCreate =
             await tokenCreateTransaction.executeWithSigner(wallet);
         const tokenId = (await responseTokenCreate.getReceiptWithSigner(wallet))
@@ -171,9 +170,8 @@ async function main() {
             .addTokenTransfer(tokenId, aliceAccountId, 0) // increase balance by 0
             .freezeWithSigner(wallet);
 
-        const signedTransferTokenTX = await transferToken.signWithSigner(
-            wallet
-        );
+        const signedTransferTokenTX =
+            await transferToken.signWithSigner(wallet);
         const txResponseTransferToken =
             await signedTransferTokenTX.executeWithSigner(wallet);
 
@@ -182,7 +180,7 @@ async function main() {
             await txResponseTransferToken.getRecordWithSigner(wallet);
 
         console.log(
-            `step 6 completed, and returned valid result. (TransactionId "${transferReceipRecord.transactionId.toString()}")`
+            `step 6 completed, and returned valid result. (TransactionId "${transferReceipRecord.transactionId.toString()}")`,
         );
 
         console.log("All steps completed with valid results.");

@@ -182,8 +182,8 @@ export default class LiveHashQuery extends Query {
 
         return Promise.resolve(
             LiveHash._fromProtobuf(
-                /** @type {HashgraphProto.proto.ILiveHash} */ (hashes.liveHash)
-            )
+                /** @type {HashgraphProto.proto.ILiveHash} */ (hashes.liveHash),
+            ),
         );
     }
 

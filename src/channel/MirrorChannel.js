@@ -60,7 +60,7 @@ export default class MirrorChannel {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         error,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        end
+        end,
     ) {
         throw new Error("not implemented");
     }

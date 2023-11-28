@@ -12,8 +12,8 @@ describe("TokenUnpauseTransaction", function () {
             .setTransactionId(
                 TransactionId.withValidStart(
                     new AccountId(1),
-                    new Timestamp(2, 3)
-                )
+                    new Timestamp(2, 3),
+                ),
             )
             .setNodeAccountIds([new AccountId(4)])
             .setTokenId("0.0.5")

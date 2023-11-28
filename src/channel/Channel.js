@@ -104,7 +104,7 @@ export default class Channel {
         }
 
         this._crypto = proto.CryptoService.create(
-            this._createUnaryClient("CryptoService")
+            this._createUnaryClient("CryptoService"),
         );
 
         return this._crypto;
@@ -119,7 +119,7 @@ export default class Channel {
         }
 
         this._smartContract = proto.SmartContractService.create(
-            this._createUnaryClient("SmartContractService")
+            this._createUnaryClient("SmartContractService"),
         );
 
         return this._smartContract;
@@ -134,7 +134,7 @@ export default class Channel {
         }
 
         this._file = proto.FileService.create(
-            this._createUnaryClient("FileService")
+            this._createUnaryClient("FileService"),
         );
 
         return this._file;
@@ -149,7 +149,7 @@ export default class Channel {
         }
 
         this._consensus = proto.ConsensusService.create(
-            this._createUnaryClient("ConsensusService")
+            this._createUnaryClient("ConsensusService"),
         );
 
         return this._consensus;
@@ -164,7 +164,7 @@ export default class Channel {
         }
 
         this._freeze = proto.FreezeService.create(
-            this._createUnaryClient("FreezeService")
+            this._createUnaryClient("FreezeService"),
         );
 
         return this._freeze;
@@ -179,7 +179,7 @@ export default class Channel {
         }
 
         this._network = proto.NetworkService.create(
-            this._createUnaryClient("NetworkService")
+            this._createUnaryClient("NetworkService"),
         );
 
         return this._network;
@@ -194,7 +194,7 @@ export default class Channel {
         }
 
         this._token = proto.TokenService.create(
-            this._createUnaryClient("TokenService")
+            this._createUnaryClient("TokenService"),
         );
 
         return this._token;
@@ -209,7 +209,7 @@ export default class Channel {
         }
 
         this._schedule = proto.ScheduleService.create(
-            this._createUnaryClient("ScheduleService")
+            this._createUnaryClient("ScheduleService"),
         );
 
         return this._schedule;
@@ -224,7 +224,7 @@ export default class Channel {
         }
 
         this._util = proto.UtilService.create(
-            this._createUnaryClient("UtilService")
+            this._createUnaryClient("UtilService"),
         );
 
         return this._util;
@@ -276,7 +276,7 @@ export function encodeRequest(data) {
 export function decodeUnaryResponse(
     data,
     byteOffset = 0,
-    byteLength = data.byteLength
+    byteLength = data.byteLength,
 ) {
     const dataView = new DataView(data, byteOffset, byteLength);
     let dataOffset = 0;
@@ -298,13 +298,13 @@ export function decodeUnaryResponse(
         const frameData = new Uint8Array(
             data,
             dataView.byteOffset + frameOffset,
-            frameByteLength
+            frameByteLength,
         );
 
         if (frameType === 0) {
             if (unaryResponse != null) {
                 throw new Error(
-                    "(BUG) unexpectedly received more than one data frame"
+                    "(BUG) unexpectedly received more than one data frame",
                 );
             }
 

@@ -45,7 +45,7 @@ export default class PrecheckStatusError extends StatusError {
     constructor(props) {
         super(
             props,
-            `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()}`
+            `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()}`,
         );
 
         /**

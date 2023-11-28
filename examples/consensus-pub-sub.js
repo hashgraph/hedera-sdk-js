@@ -20,13 +20,13 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
     client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
         AccountId.fromString(process.env.OPERATOR_ID),
-        PrivateKey.fromStringDer(process.env.OPERATOR_KEY)
+        PrivateKey.fromStringDer(process.env.OPERATOR_KEY),
     );
 
     try {
@@ -49,7 +49,7 @@ async function main() {
                     console.log(error);
                 },
                 (message) =>
-                    console.log(Buffer.from(message.contents).toString("utf8"))
+                    console.log(Buffer.from(message.contents).toString("utf8")),
             );
         const MESSAGES_LIMIT = 20;
         for (let i = 0; i < MESSAGES_LIMIT; i += 1) {

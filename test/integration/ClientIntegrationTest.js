@@ -43,7 +43,7 @@ describe("ClientIntegration", function () {
                 break;
             default:
                 throw new Error(
-                    `(BUG) operator network is unrecognized value: ${env.client.ledgerId.toString()}`
+                    `(BUG) operator network is unrecognized value: ${env.client.ledgerId.toString()}`,
                 );
         }
 
@@ -88,7 +88,7 @@ describe("ClientIntegration", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toNumber()).to.be.equal(
-            new Hbar(2).toTinybars().toNumber()
+            new Hbar(2).toTinybars().toNumber(),
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;

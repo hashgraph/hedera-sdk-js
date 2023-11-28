@@ -123,7 +123,7 @@ export default class ScheduleCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -141,7 +141,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                     ? AccountId._fromProtobuf(
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               create.payerAccountID
-                          )
+                          ),
                       )
                     : undefined,
             scheduleMemo: create.memo != null ? create.memo : undefined,
@@ -159,7 +159,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             const scheduleCreateBodyBytes =
                 HashgraphProto.proto.TransactionBody.encode(
                     // @ts-ignore
-                    scheduleCreateBody
+                    scheduleCreateBody,
                 ).finish();
 
             const signedScheduledCreateTransaction =
@@ -178,7 +178,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             const finalScheduledDecodedTx = Transaction.fromBytes(txlist);
 
             scheduledTransaction._setScheduledTransaction(
-                finalScheduledDecodedTx
+                finalScheduledDecodedTx,
             );
         }
 
@@ -188,7 +188,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -383,7 +383,7 @@ export default class ScheduleCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "scheduleCreate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleCreateTransaction._fromProtobuf
+    ScheduleCreateTransaction._fromProtobuf,
 );
 
 SCHEDULE_CREATE_TRANSACTION.push(() => new ScheduleCreateTransaction());

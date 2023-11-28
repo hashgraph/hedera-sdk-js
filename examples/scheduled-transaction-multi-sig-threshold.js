@@ -29,7 +29,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -38,7 +38,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     // generate keys
@@ -68,7 +68,7 @@ async function main() {
             await txAccountCreate.getReceiptWithSigner(wallet);
         const multiSigAccountId = txAccountCreateReceipt.accountId;
         console.log(
-            `3-of-4 multi-sig account ID:  ${multiSigAccountId.toString()}`
+            `3-of-4 multi-sig account ID:  ${multiSigAccountId.toString()}`,
         );
         await queryBalance(multiSigAccountId, wallet);
 
@@ -79,11 +79,11 @@ async function main() {
                     await new TransferTransaction()
                         .addHbarTransfer(
                             multiSigAccountId,
-                            Hbar.fromTinybars(-1)
+                            Hbar.fromTinybars(-1),
                         )
                         .addHbarTransfer(
                             wallet.getAccountId(),
-                            Hbar.fromTinybars(1)
+                            Hbar.fromTinybars(1),
                         )
                         .schedule() // create schedule
                         .freezeWithSigner(wallet)
@@ -114,7 +114,7 @@ async function main() {
             await txScheduleSign1.getReceiptWithSigner(wallet);
         console.log(
             "1. ScheduleSignTransaction status: " +
-                txScheduleSign1Receipt.status.toString()
+                txScheduleSign1Receipt.status.toString(),
         );
         await queryBalance(multiSigAccountId, wallet);
 
@@ -133,7 +133,7 @@ async function main() {
             await txScheduleSign2.getReceiptWithSigner(wallet);
         console.log(
             "2. ScheduleSignTransaction status: " +
-                txScheduleSign2Receipt.status.toString()
+                txScheduleSign2Receipt.status.toString(),
         );
         await queryBalance(multiSigAccountId, wallet);
 
@@ -167,7 +167,7 @@ async function queryBalance(accountId, wallet) {
     console.log(
         `Balance of account ${accountId.toString()}: ${accountBalance.hbars
             .toTinybars()
-            .toInt()} tinybar`
+            .toInt()} tinybar`,
     );
     return accountBalance;
 }

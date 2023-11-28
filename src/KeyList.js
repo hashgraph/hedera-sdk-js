@@ -112,7 +112,7 @@ export default class KeyList extends Key {
     splice(start, deleteCount, ...items) {
         return new KeyList(
             this._keys.splice(start, deleteCount, ...items),
-            this.threshold
+            this.threshold,
         );
     }
 
@@ -175,7 +175,7 @@ export default class KeyList extends Key {
      */
     static __fromProtobufKeyList(key) {
         const keys = (key.keys != null ? key.keys : []).map((key) =>
-            Key._fromProtobufKey(key)
+            Key._fromProtobufKey(key),
         );
         return new KeyList(keys);
     }
@@ -186,7 +186,7 @@ export default class KeyList extends Key {
      */
     static __fromProtobufThresoldKey(key) {
         const list = KeyList.__fromProtobufKeyList(
-            key.keys != null ? key.keys : {}
+            key.keys != null ? key.keys : {},
         );
         list.setThreshold(key.threshold != null ? key.threshold : 0);
         return list;

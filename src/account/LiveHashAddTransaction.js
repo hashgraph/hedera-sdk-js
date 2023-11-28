@@ -109,7 +109,7 @@ export default class LiveHashAddTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const hashes =
@@ -127,7 +127,7 @@ export default class LiveHashAddTransaction extends Transaction {
                     liveHash_.keys != null
                         ? liveHash_.keys.keys != null
                             ? liveHash_.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key._fromProtobufKey(key),
                               )
                             : undefined
                         : undefined,
@@ -146,7 +146,7 @@ export default class LiveHashAddTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -268,7 +268,7 @@ export default class LiveHashAddTransaction extends Transaction {
                     this._keys != null
                         ? {
                               keys: this._keys.map((key) =>
-                                  key._toProtobufKey()
+                                  key._toProtobufKey(),
                               ),
                           }
                         : undefined,
@@ -298,5 +298,5 @@ export default class LiveHashAddTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoAddLiveHash",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    LiveHashAddTransaction._fromProtobuf
+    LiveHashAddTransaction._fromProtobuf,
 );

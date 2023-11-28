@@ -52,6 +52,7 @@ module.exports = {
         "jsdoc/require-property-description": "off",
         "jsdoc/require-returns-description": "off",
         "jsdoc/require-param-description": "off",
+        "jsdoc/tag-lines": ["error"|"warn", "any",{"startLines":0}],
         "jsdoc/check-tag-names": [
             "warn",
             {

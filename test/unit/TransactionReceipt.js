@@ -34,7 +34,7 @@ describe("TransactionReceipt", function () {
         const totalSupply = Long.fromNumber(11);
         const scheduledTransactionId = TransactionId.withValidStart(
             AccountId.fromString("0.0.12"),
-            new Timestamp(13, 14)
+            new Timestamp(13, 14),
         );
         const serials = [Long.fromNumber(15)];
 
@@ -55,34 +55,34 @@ describe("TransactionReceipt", function () {
                 serials,
                 duplicates: [],
                 children: [],
-            }).toBytes()
+            }).toBytes(),
         )._toProtobuf();
 
         expect(receipt.receipt.status).to.deep.equal(status._code);
         expect(receipt.receipt.accountID).to.deep.equal(
-            accountId._toProtobuf()
+            accountId._toProtobuf(),
         );
         expect(receipt.receipt.contractID).to.deep.equal(
-            contractId._toProtobuf()
+            contractId._toProtobuf(),
         );
         expect(receipt.receipt.fileID).to.deep.equal(fileId._toProtobuf());
         expect(receipt.receipt.scheduleID).to.deep.equal(
-            scheduleId._toProtobuf()
+            scheduleId._toProtobuf(),
         );
         expect(receipt.receipt.tokenID).to.deep.equal(tokenId._toProtobuf());
         expect(receipt.receipt.topicID).to.deep.equal(topicId._toProtobuf());
         expect(receipt.receipt.topicRunningHash).to.deep.equal(
-            topicRunningHash
+            topicRunningHash,
         );
         expect(receipt.receipt.topicSequenceNumber).to.deep.equal(
-            topicSequenceNumber
+            topicSequenceNumber,
         );
         expect(receipt.receipt.exchangeRate).to.deep.equal({
             currentRate: exchangeRate._toProtobuf(),
             nextRate: null,
         });
         expect(receipt.receipt.scheduledTransactionID).to.deep.equal(
-            scheduledTransactionId._toProtobuf()
+            scheduledTransactionId._toProtobuf(),
         );
         expect(receipt.receipt.serialNumbers).to.deep.equal(serials);
         expect(receipt.receipt.newTotalSupply).to.deep.equal(totalSupply);
@@ -108,7 +108,7 @@ describe("TransactionReceipt", function () {
         const totalSupply = Long.fromNumber(11);
         const scheduledTransactionId = TransactionId.withValidStart(
             AccountId.fromString("0.0.12"),
-            new Timestamp(13, 14)
+            new Timestamp(13, 14),
         );
         const serials = [Long.fromNumber(15)];
 
@@ -140,7 +140,7 @@ describe("TransactionReceipt", function () {
         receipt.duplicates.push(child);
 
         const expectedJSON = JSON.parse(
-            `{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":"0.0.4","scheduleId":"0.0.5","exchangeRate":{"hbars":6,"cents":7,"expirationTime":"1973-11-25T17:31:44.000Z","exchangeRateInCents":1.1666666666666667},"topicSequenceNumber":"9","topicRunningHash":"0a","totalSupply":"11","scheduledTransactionId":"0.0.12@13.000000014","serials":["15"],"duplicates":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}],"children":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}]}`
+            `{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":"0.0.4","scheduleId":"0.0.5","exchangeRate":{"hbars":6,"cents":7,"expirationTime":"1973-11-25T17:31:44.000Z","exchangeRateInCents":1.1666666666666667},"topicSequenceNumber":"9","topicRunningHash":"0a","totalSupply":"11","scheduledTransactionId":"0.0.12@13.000000014","serials":["15"],"duplicates":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}],"children":[{"status":"OK","accountId":"0.0.1","filedId":"0.0.2","contractId":"0.0.3","topicId":"0.0.3","tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}]}`,
         );
 
         const resultJSON = JSON.parse(JSON.stringify(receipt));

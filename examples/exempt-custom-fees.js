@@ -39,7 +39,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
     // Configure accounts and client, and generate needed keys
@@ -74,7 +74,7 @@ async function main() {
     const firstAccountWallet = new Wallet(
         firstAccountId,
         firstAccountPrivateKey,
-        new LocalProvider()
+        new LocalProvider(),
     );
 
     let secondAccountPrivateKey = PrivateKey.generateED25519();
@@ -93,7 +93,7 @@ async function main() {
     const secondAccountWallet = new Wallet(
         secondAccountId,
         secondAccountPrivateKey,
-        new LocalProvider()
+        new LocalProvider(),
     );
 
     let thirdAccountPrivateKey = PrivateKey.generateED25519();
@@ -112,7 +112,7 @@ async function main() {
     const thirdAccountWallet = new Wallet(
         thirdAccountId,
         thirdAccountPrivateKey,
-        new LocalProvider()
+        new LocalProvider(),
     );
 
     /**
@@ -184,9 +184,8 @@ async function main() {
         .addTokenTransfer(tokenId, secondAccountWallet.getAccountId(), 10000)
         .freezeWithSigner(wallet);
 
-    treasuryTokenTransferTx = await treasuryTokenTransferTx.signWithSigner(
-        wallet
-    );
+    treasuryTokenTransferTx =
+        await treasuryTokenTransferTx.signWithSigner(wallet);
 
     let treasuryTokenTransferSubmit =
         await treasuryTokenTransferTx.executeWithSigner(wallet);
@@ -194,7 +193,7 @@ async function main() {
         await treasuryTokenTransferSubmit.getReceiptWithSigner(wallet)
     ).status.toString();
     console.log(
-        `Sending from treasury account to the second account - 'TransferTransaction' status: ${status}`
+        `Sending from treasury account to the second account - 'TransferTransaction' status: ${status}`,
     );
 
     let tokenTransferTx = await new TransferTransaction()
@@ -252,7 +251,7 @@ async function main() {
         firstAccountBalanceAfter = (
             await axios.get(link)
         ).data.accounts[0].balance.tokens.find(
-            (token) => token.token_id === tokenId.toString()
+            (token) => token.token_id === tokenId.toString(),
         ).balance;
         /* eslint-enable */
     } catch (e) {
@@ -278,7 +277,7 @@ async function main() {
         secondAccountBalanceAfter = (
             await axios.get(link2)
         ).data.accounts[0].balance.tokens.find(
-            (token) => token.token_id === tokenId.toString()
+            (token) => token.token_id === tokenId.toString(),
         ).balance;
         /* eslint-enable */
     } catch (e) {
@@ -304,7 +303,7 @@ async function main() {
         thirdAccountBalanceAfter = (
             await axios.get(link3)
         ).data.accounts[0].balance.tokens.find(
-            (token) => token.token_id === tokenId.toString()
+            (token) => token.token_id === tokenId.toString(),
         ).balance;
         /* eslint-enable */
     } catch (e) {
@@ -312,13 +311,13 @@ async function main() {
     }
 
     console.log(
-        `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`
+        `First account balance after TransferTransaction: ${firstAccountBalanceAfter}`,
     );
     console.log(
-        `Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`
+        `Second account balance after TransferTransaction: ${secondAccountBalanceAfter}`,
     );
     console.log(
-        `Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`
+        `Third account balance after TransferTransaction: ${thirdAccountBalanceAfter}`,
     );
 
     if (
@@ -327,7 +326,7 @@ async function main() {
         thirdAccountBalanceAfter === 0
     ) {
         console.log(
-            `Fee collector accounts were not charged after transfer transaction`
+            `Fee collector accounts were not charged after transfer transaction`,
         );
     }
 

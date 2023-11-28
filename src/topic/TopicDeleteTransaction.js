@@ -81,7 +81,7 @@ export default class TopicDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const topicDelete =
@@ -100,7 +100,7 @@ export default class TopicDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -181,5 +181,5 @@ export default class TopicDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusDeleteTopic",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicDeleteTransaction._fromProtobuf
+    TopicDeleteTransaction._fromProtobuf,
 );

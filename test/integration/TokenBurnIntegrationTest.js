@@ -105,7 +105,7 @@ describe("TokenBurn", function () {
             .execute(env.client);
 
         expect(
-            accountBalance.tokens._map.get(token.toString()).toNumber()
+            accountBalance.tokens._map.get(token.toString()).toNumber(),
         ).to.be.equal(1000000);
 
         if (err) {
