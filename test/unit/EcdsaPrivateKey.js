@@ -6,6 +6,17 @@ import * as bip32 from "../../packages/cryptography/src/primitive/bip32.js";
 
 const RAW_KEY =
     "8776c6b831a1b61ac10dac0304a2843de4716f54b1919bb91a2685d0fe3f3048";
+const DER_PRIVATE_KEY =
+    "3030020100300706052b8104000a04220420e06ecd79f00124bfc030b0321006683a6a579be7602f2eb52ca73e2901880682";
+const DER_PRIVATE_KEY_BYTES = new Uint8Array([
+    48,  48,  2,   1,   0,  48,   7,   6,   5,  43, 129,
+     4,   0, 10,   4,  34,   4,  32, 224, 110, 205, 121,
+   240,   1, 36, 191, 192,  48, 176,  50,  16,   6, 104,
+    58, 106, 87, 155, 231,  96,  47,  46, 181,  44, 167,
+    62,  41,  1, 136,   6, 130
+])
+const DER_PUBLIC_KEY =
+    "302d300706052b8104000a032200033697a2b3f9f0b9f4831b39986f7f3885636a3e8622a0bc3814a4a56f7ecdc4f1";
 
 describe("EcdsaPrivateKey", function () {
     it("generate should return object", function () {
@@ -23,10 +34,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("should return a public key from a der private key", function () {
-        const DER_PRIVATE_KEY =
-            "3030020100300706052b8104000a04220420e06ecd79f00124bfc030b0321006683a6a579be7602f2eb52ca73e2901880682";
-        const DER_PUBLIC_KEY =
-            "302d300706052b8104000a032200033697a2b3f9f0b9f4831b39986f7f3885636a3e8622a0bc3814a4a56f7ecdc4f1";
         const publicKey =
             PrivateKey.fromStringDer(DER_PRIVATE_KEY).publicKey.toStringDer();
         expect(publicKey).to.be.equal(DER_PUBLIC_KEY);
@@ -352,4 +359,10 @@ describe("EcdsaPrivateKey", function () {
             PUBLIC_KEY4
         );
     });
+
+    it('should return private key from bytes', async function() {
+        const privateKeyFromBytes = PrivateKey.fromBytesECDSA(DER_PRIVATE_KEY_BYTES)
+        const publicKeyDer = privateKeyFromBytes.toStringDer()
+        expect(publicKeyDer).to.be.equal(DER_PRIVATE_KEY);
+    })
 });
