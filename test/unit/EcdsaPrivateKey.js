@@ -9,12 +9,10 @@ const RAW_KEY =
 const DER_PRIVATE_KEY =
     "3030020100300706052b8104000a04220420e06ecd79f00124bfc030b0321006683a6a579be7602f2eb52ca73e2901880682";
 const DER_PRIVATE_KEY_BYTES = new Uint8Array([
-    48,  48,  2,   1,   0,  48,   7,   6,   5,  43, 129,
-     4,   0, 10,   4,  34,   4,  32, 224, 110, 205, 121,
-   240,   1, 36, 191, 192,  48, 176,  50,  16,   6, 104,
-    58, 106, 87, 155, 231,  96,  47,  46, 181,  44, 167,
-    62,  41,  1, 136,   6, 130
-])
+    48, 48, 2, 1, 0, 48, 7, 6, 5, 43, 129, 4, 0, 10, 4, 34, 4, 32, 224, 110,
+    205, 121, 240, 1, 36, 191, 192, 48, 176, 50, 16, 6, 104, 58, 106, 87, 155,
+    231, 96, 47, 46, 181, 44, 167, 62, 41, 1, 136, 6, 130,
+]);
 const DER_PUBLIC_KEY =
     "302d300706052b8104000a032200033697a2b3f9f0b9f4831b39986f7f3885636a3e8622a0bc3814a4a56f7ecdc4f1";
 
@@ -360,9 +358,30 @@ describe("EcdsaPrivateKey", function () {
         );
     });
 
-    it('should return private key from bytes', async function() {
-        const privateKeyFromBytes = PrivateKey.fromBytesECDSA(DER_PRIVATE_KEY_BYTES)
-        const publicKeyDer = privateKeyFromBytes.toStringDer()
+    it("should return private key from bytes", async function () {
+        const privateKeyFromBytes = PrivateKey.fromBytesECDSA(
+            DER_PRIVATE_KEY_BYTES
+        );
+        const publicKeyDer = privateKeyFromBytes.toStringDer();
         expect(publicKeyDer).to.be.equal(DER_PRIVATE_KEY);
-    })
+    });
+
+    it("should return a constructed aliasKey accountId", async function () {
+        const privateKey = PrivateKey.generateECDSA();
+        const publicKey = privateKey.publicKey;
+
+        console.log(privateKey.type);
+
+        const aliasAccountId = publicKey.toAccountId(0, 0);
+
+        expect(aliasAccountId.toString()).to.be.equal(
+            `0.0.${publicKey.toString()}`
+        );
+    });
+
+    it("should return type of the private key", async function () {
+        const privateKey = PrivateKey.generateECDSA();
+
+        expect(privateKey.type).to.be.string("secp256k1");
+    });
 });

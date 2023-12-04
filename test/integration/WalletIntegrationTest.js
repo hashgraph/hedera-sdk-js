@@ -1,3 +1,4 @@
+import { expect } from "chai";
 import {
     AccountCreateTransaction,
     Hbar,
@@ -8,6 +9,18 @@ import { Wallet, LocalProvider } from "../../src/index.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("WalletIntegration", function () {
+    it("should create a wallet (ECDSA)", async () => {
+        const wallet = await Wallet.createRandomECDSA()
+        expect(wallet.getAccountKey()).to.not.equal(null)
+        expect(wallet.getAccountId()).to.not.equal(null)
+    })
+
+    it("should create a wallet (ED25519)", async () => {
+        const wallet = await Wallet.createRandomED25519()
+        expect(wallet.getAccountKey()).to.not.equal(null)
+        expect(wallet.getAccountId()).to.not.equal(null)
+    })
+
     it("issue-1530", async function () {
         this.timeout(30000);
         const env = await IntegrationTestEnv.new();
