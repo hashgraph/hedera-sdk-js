@@ -50,6 +50,6 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@9dbe3824824f8a1377b8e298bafde1a50ede43e5 # v2.0.4
+        uses: actions/deploy-pages@77d7344265e1f960dab5c00dbff52287a70b0d4f # v3.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
