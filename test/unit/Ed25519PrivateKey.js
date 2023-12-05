@@ -5,6 +5,15 @@ import * as hex from "../../src/encoding/hex.js";
 
 const RAW_KEY =
     "302e020100300506032b657004220420a7bd8982bb05415bbc1e2dc2ae6aced66cba5eb871a4afd1579f8620b8c00d37";
+// ED25519 key
+const DER_PRIVATE_KEY =
+    "302e020100300506032b6570042204203a056f85d71921be62466f5e93a4af0aa2e09a9eb4b2d839e06d805366659a74";
+const DER_PRIVATE_KEY_BYTES = new Uint8Array([
+    58, 5, 111, 133, 215, 25, 33, 190, 98, 70, 111, 94, 147, 164, 175, 10, 162,
+    224, 154, 158, 180, 178, 216, 57, 224, 109, 128, 83, 102, 101, 154, 116,
+]);
+const DER_PUBLIC_KEY =
+    "302a300506032b65700321004a6892f034d2d1c9b1a76acca8e34884055172f4210a0c02e3c7d55084f224d1";
 
 describe("Ed25519PrivateKey", function () {
     it("generate should return  object", function () {
@@ -22,10 +31,6 @@ describe("Ed25519PrivateKey", function () {
     });
 
     it("should return a public key from a der private key", function () {
-        const DER_PRIVATE_KEY =
-            "302e020100300506032b6570042204203a056f85d71921be62466f5e93a4af0aa2e09a9eb4b2d839e06d805366659a74";
-        const DER_PUBLIC_KEY =
-            "302a300506032b65700321004a6892f034d2d1c9b1a76acca8e34884055172f4210a0c02e3c7d55084f224d1";
         const publicKey =
             PrivateKey.fromStringDer(DER_PRIVATE_KEY).publicKey.toStringDer();
         expect(publicKey).to.be.equal(DER_PUBLIC_KEY);
@@ -268,5 +273,30 @@ describe("Ed25519PrivateKey", function () {
         expect(ed25519PrivateKey1.publicKey.toStringRaw()).to.be.equal(
             PUBLIC_KEY1
         );
+    });
+
+    it("should return private key from bytes", async function () {
+        const privateKeyFromBytes = PrivateKey.fromBytesED25519(
+            DER_PRIVATE_KEY_BYTES
+        );
+        const publicKeyDer = privateKeyFromBytes.toStringDer();
+        expect(publicKeyDer).to.be.equal(DER_PRIVATE_KEY);
+    });
+
+    it("should return a constructed aliasKey accountId", async function () {
+        const privateKey = PrivateKey.generateED25519();
+        const publicKey = privateKey.publicKey;
+
+        const aliasAccountId = publicKey.toAccountId(0, 0);
+
+        expect(aliasAccountId.toString()).to.be.equal(
+            `0.0.${publicKey.toString()}`
+        );
+    });
+
+    it("should return type of the private key", async function () {
+        const privateKey = PrivateKey.generateED25519();
+
+        expect(privateKey.type).to.be.string("ED25519");
     });
 });

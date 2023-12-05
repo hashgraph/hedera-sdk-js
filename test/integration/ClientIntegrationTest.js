@@ -168,6 +168,10 @@ describe("ClientIntegration", function () {
         await clientForNetwork.pingAll();
     });
 
+    it("should return a boolean for client transport security", function () {
+        expect(clientTestnet.isTransportSecurity()).to.be.an("boolean");
+    });
+
     after(async function () {
         await env.close();
         clientTestnet.close();
