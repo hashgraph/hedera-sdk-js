@@ -26,7 +26,7 @@ describe("ClientConstantsIntegrationTest", function () {
             it(`should fetch ${MAINNET[proxy]} account balnace`, async function () {
                 const accountBalance = await new AccountBalanceQuery()
                     .setNodeAccountIds([MAINNET[proxy]])
-                    .setAccountId(env.operatorId)
+                    .setAccountId(MAINNET[proxy])
                     .execute(env.client);
 
                 expect(accountBalance instanceof AccountBalance).to.be.true;
@@ -41,7 +41,7 @@ describe("ClientConstantsIntegrationTest", function () {
             it(`should fetch ${WEB_TESTNET[proxy]} account balnace`, async function () {
                 const accountBalance = await new AccountBalanceQuery()
                     .setNodeAccountIds([WEB_TESTNET[proxy]])
-                    .setAccountId(env.operatorId)
+                    .setAccountId(WEB_TESTNET[proxy])
                     .execute(env.client);
 
                 expect(accountBalance instanceof AccountBalance).to.be.true;
@@ -56,7 +56,7 @@ describe("ClientConstantsIntegrationTest", function () {
             it(`should fetch ${WEB_PREVIEWNET[proxy]} account balnace`, async function () {
                 const accountBalance = await new AccountBalanceQuery()
                     .setNodeAccountIds([WEB_PREVIEWNET[proxy]])
-                    .setAccountId(env.operatorId)
+                    .setAccountId(WEB_PREVIEWNET[proxy])
                     .execute(env.client);
 
                 expect(accountBalance instanceof AccountBalance).to.be.true;
@@ -71,7 +71,7 @@ describe("ClientConstantsIntegrationTest", function () {
             it(`should fetch ${NATIVE_PREVIEWNET[proxy]} account balnace`, async function () {
                 const accountBalance = await new AccountBalanceQuery()
                     .setNodeAccountIds([NATIVE_PREVIEWNET[proxy]])
-                    .setAccountId(env.operatorId)
+                    .setAccountId(NATIVE_PREVIEWNET[proxy])
                     .execute(env.client);
 
                 expect(accountBalance instanceof AccountBalance).to.be.true;
@@ -86,7 +86,7 @@ describe("ClientConstantsIntegrationTest", function () {
             it(`should fetch ${NATIVE_TESTNET[proxy]} account balnace`, async function () {
                 const accountBalance = await new AccountBalanceQuery()
                     .setNodeAccountIds([NATIVE_TESTNET[proxy]])
-                    .setAccountId(env.operatorId)
+                    .setAccountId(NATIVE_TESTNET[proxy])
                     .execute(env.client);
 
                 expect(accountBalance instanceof AccountBalance).to.be.true;
