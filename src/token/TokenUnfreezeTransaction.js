@@ -88,7 +88,7 @@ export default class TokenUnfreezeTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const unfreezeToken =
@@ -111,7 +111,7 @@ export default class TokenUnfreezeTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -217,5 +217,5 @@ export default class TokenUnfreezeTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenUnfreeze",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenUnfreezeTransaction._fromProtobuf
+    TokenUnfreezeTransaction._fromProtobuf,
 );

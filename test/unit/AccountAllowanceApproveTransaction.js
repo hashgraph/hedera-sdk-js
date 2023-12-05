@@ -31,7 +31,7 @@ describe("AccountAllowanceApproveTransaction", function () {
 
         let transaction = new AccountAllowanceApproveTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(spenderAccountId1, timestamp1)
+                TransactionId.withValidStart(spenderAccountId1, timestamp1),
             )
             .setNodeAccountIds([nodeAccountId])
             .approveHbarAllowance(ownerAccountId, spenderAccountId1, hbarAmount)
@@ -39,7 +39,7 @@ describe("AccountAllowanceApproveTransaction", function () {
                 tokenId1,
                 ownerAccountId,
                 spenderAccountId1,
-                tokenAmount
+                tokenAmount,
             )
             .approveTokenNftAllowance(nftId1, ownerAccountId, spenderAccountId1)
             .approveTokenNftAllowance(nftId2, ownerAccountId, spenderAccountId1)
@@ -47,7 +47,7 @@ describe("AccountAllowanceApproveTransaction", function () {
             .approveTokenNftAllowanceAllSerials(
                 tokenId1,
                 ownerAccountId,
-                spenderAccountId1
+                spenderAccountId1,
             )
             .freeze();
 

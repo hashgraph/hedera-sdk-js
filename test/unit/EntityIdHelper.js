@@ -32,7 +32,7 @@ describe("EntityIdHelper", function () {
         const arrayLong = [new Long(11), new Long(12), new Long(13)];
 
         const address = EntityIdHelper.fromSolidityAddress(
-            EntityIdHelper.toSolidityAddress(arrayLong)
+            EntityIdHelper.toSolidityAddress(arrayLong),
         );
 
         expect(address).to.eql(arrayLong);

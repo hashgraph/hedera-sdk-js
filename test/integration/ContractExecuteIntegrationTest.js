@@ -40,7 +40,9 @@ describe("ContractExecute", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -60,7 +62,7 @@ describe("ContractExecute", function () {
                 .setGas(100000)
                 .setFunction(
                     "setMessage",
-                    new ContractFunctionParameters().addString("new message")
+                    new ContractFunctionParameters().addString("new message"),
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
@@ -101,7 +103,9 @@ describe("ContractExecute", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -124,8 +128,8 @@ describe("ContractExecute", function () {
                     .setFunction(
                         "setMessage",
                         new ContractFunctionParameters().addString(
-                            "new message"
-                        )
+                            "new message",
+                        ),
                     )
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -173,7 +177,9 @@ describe("ContractExecute", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -240,7 +246,9 @@ describe("ContractExecute", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -263,8 +271,8 @@ describe("ContractExecute", function () {
                     .setFunction(
                         "setMessage",
                         new ContractFunctionParameters().addString(
-                            "new message"
-                        )
+                            "new message",
+                        ),
                     )
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -312,7 +320,9 @@ describe("ContractExecute", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")

@@ -215,7 +215,7 @@ export default class AccountBalanceQuery extends Query {
                 response.cryptogetAccountBalance
             );
         return Promise.resolve(
-            AccountBalance._fromProtobuf(cryptogetAccountBalance)
+            AccountBalance._fromProtobuf(cryptogetAccountBalance),
         );
     }
 
@@ -252,5 +252,5 @@ export default class AccountBalanceQuery extends Query {
 QUERY_REGISTRY.set(
     "cryptogetAccountBalance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountBalanceQuery._fromProtobuf
+    AccountBalanceQuery._fromProtobuf,
 );

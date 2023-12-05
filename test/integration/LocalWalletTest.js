@@ -7,7 +7,7 @@ describe("LocalWallet", function () {
         const wallet = new Wallet(
             process.env.OPERATOR_ID,
             process.env.OPERATOR_KEY,
-            new LocalProvider()
+            new LocalProvider(),
         );
 
         const info = await wallet.getAccountInfo();

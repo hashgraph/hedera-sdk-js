@@ -61,7 +61,7 @@ export default class StorageChange {
     static fromBytes(bytes) {
         // eslint-disable-next-line deprecation/deprecation
         return StorageChange._fromProtobuf(
-            HashgraphProto.proto.StorageChange.decode(bytes)
+            HashgraphProto.proto.StorageChange.decode(bytes),
         );
     }
 
@@ -83,7 +83,7 @@ export default class StorageChange {
      */
     toBytes() {
         return HashgraphProto.proto.StorageChange.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

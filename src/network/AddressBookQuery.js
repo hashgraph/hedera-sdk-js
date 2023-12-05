@@ -181,7 +181,7 @@ export default class AddressBookQuery extends Query {
                 client,
                 /** @type {(value: NodeAddressBook) => void} */ (resolve),
                 reject,
-                requestTimeout
+                requestTimeout,
             );
         });
     }
@@ -211,8 +211,8 @@ export default class AddressBookQuery extends Query {
                 (data) => {
                     this._addresses.push(
                         NodeAddress._fromProtobuf(
-                            HashgraphProto.proto.NodeAddress.decode(data)
-                        )
+                            HashgraphProto.proto.NodeAddress.decode(data),
+                        ),
                     );
 
                     if (this._limit != null && this._limit > 0) {
@@ -229,7 +229,7 @@ export default class AddressBookQuery extends Query {
                     ) {
                         const delay = Math.min(
                             250 * 2 ** this._attempt,
-                            this._maxBackoff
+                            this._maxBackoff,
                         );
                         if (this._attempt >= this._maxAttempts) {
                             console.warn(
@@ -239,7 +239,7 @@ export default class AddressBookQuery extends Query {
                                         : "UNKNOWN"
                                 } during attempt ${
                                     this._attempt
-                                }. Waiting ${delay} ms before next attempt: ${message}`
+                                }. Waiting ${delay} ms before next attempt: ${message}`,
                             );
                         }
                         if (this._logger) {
@@ -250,7 +250,7 @@ export default class AddressBookQuery extends Query {
                                         : "UNKNOWN"
                                 } during attempt ${
                                     this._attempt
-                                }. Waiting ${delay} ms before next attempt: ${message}`
+                                }. Waiting ${delay} ms before next attempt: ${message}`,
                             );
                         }
 
@@ -261,7 +261,7 @@ export default class AddressBookQuery extends Query {
                                 client,
                                 resolve,
                                 reject,
-                                requestTimeout
+                                requestTimeout,
                             );
                         }, delay);
                     } else {
@@ -270,9 +270,9 @@ export default class AddressBookQuery extends Query {
                 },
                 () => {
                     resolve(
-                        new NodeAddressBook({ nodeAddresses: this._addresses })
+                        new NodeAddressBook({ nodeAddresses: this._addresses }),
                     );
-                }
+                },
             );
     }
 }

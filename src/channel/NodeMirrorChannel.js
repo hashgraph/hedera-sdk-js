@@ -49,7 +49,7 @@ export default class NodeMirrorChannel extends MirrorChannel {
             {
                 "grpc.keepalive_time_ms": 90000,
                 "grpc.keepalive_timeout_ms": 5000,
-            }
+            },
         );
     }
 
@@ -78,14 +78,14 @@ export default class NodeMirrorChannel extends MirrorChannel {
         requestData,
         callback,
         error,
-        end
+        end,
     ) {
         const stream = this._client
             .makeServerStreamRequest(
                 `/com.hedera.mirror.api.proto.${serviceName}/${methodName}`,
                 (value) => value,
                 (value) => value,
-                Buffer.from(requestData)
+                Buffer.from(requestData),
             )
             .on("data", (/** @type {Uint8Array} */ data) => {
                 callback(data);

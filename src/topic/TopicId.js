@@ -68,7 +68,7 @@ export default class TopicId {
         const topicId = new TopicId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.topicNum != null ? id.topicNum : 0
+            id.topicNum != null ? id.topicNum : 0,
         );
 
         return topicId;
@@ -99,7 +99,7 @@ export default class TopicId {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -109,7 +109,7 @@ export default class TopicId {
      */
     static fromBytes(bytes) {
         return TopicId._fromProtobuf(
-            HashgraphProto.proto.TopicID.decode(bytes)
+            HashgraphProto.proto.TopicID.decode(bytes),
         );
     }
 
@@ -178,7 +178,7 @@ export default class TopicId {
     compare(other) {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
+            [other.shard, other.realm, other.num],
         );
     }
 }

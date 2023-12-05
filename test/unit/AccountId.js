@@ -14,7 +14,7 @@ describe("AccountId", function () {
                 shard: 1,
                 realm: 2,
                 num: 3,
-            }).toString()
+            }).toString(),
         ).to.be.equal("1.2.3");
         expect(
             new AccountId(
@@ -22,19 +22,19 @@ describe("AccountId", function () {
                 2,
                 0,
                 PublicKey.fromString(
-                    "302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
-                )
-            ).toString()
+                    "302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
+                ),
+            ).toString(),
         ).to.be.equal(
-            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
         );
         expect(AccountId.fromString("1.2.3").toString()).to.be.equal("1.2.3");
         expect(
             AccountId.fromString(
-                "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
-            ).toString()
+                "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
+            ).toString(),
         ).to.be.equal(
-            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
         );
         expect(
             new AccountId(
@@ -43,21 +43,21 @@ describe("AccountId", function () {
                 0,
                 undefined,
                 EvmAddress.fromString(
-                    "0011223344556677889900112233445566778899"
-                )
-            ).toString()
+                    "0011223344556677889900112233445566778899",
+                ),
+            ).toString(),
         ).to.be.equal("1.2.0011223344556677889900112233445566778899");
     });
 
     it("clones with alias key", function () {
         expect(
             AccountId.fromString(
-                "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+                "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
             )
                 .clone()
-                .toString()
+                .toString(),
         ).to.be.equal(
-            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542",
         );
     });
 
@@ -190,7 +190,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -202,7 +202,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -214,7 +214,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -226,7 +226,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -238,7 +238,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -250,7 +250,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
 
@@ -258,7 +258,7 @@ describe("AccountId", function () {
             new AccountId(
                 new BigNumber(-1),
                 new BigNumber(-1),
-                new BigNumber(-1)
+                new BigNumber(-1),
             );
         } catch {
             err = true;
@@ -266,7 +266,7 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error(
-                "`AccountId.constructor` with negative numbers did not error"
+                "`AccountId.constructor` with negative numbers did not error",
             );
         }
     });

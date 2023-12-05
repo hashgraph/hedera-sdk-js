@@ -122,7 +122,7 @@ export default class ContractExecuteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const call =
@@ -137,7 +137,7 @@ export default class ContractExecuteTransaction extends Transaction {
                         ? ContractId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   call.contractID
-                              )
+                              ),
                           )
                         : undefined,
                 gas: call.gas != null ? call.gas : undefined,
@@ -154,7 +154,7 @@ export default class ContractExecuteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -314,5 +314,5 @@ export default class ContractExecuteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractCall",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractExecuteTransaction._fromProtobuf
+    ContractExecuteTransaction._fromProtobuf,
 );

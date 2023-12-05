@@ -102,7 +102,7 @@ async function main() {
             console.log(
                 `Created NFT ${tokenId.toString()} with serial: ${nftLeaf[
                     i
-                ].serials[0].toString()}`
+                ].serials[0].toString()}`,
             );
         }
 
@@ -117,14 +117,14 @@ async function main() {
         console.log(
             `\nBurn NFT with serial ${
                 CID.length
-            }: ${tokenBurnRx.status.toString()} \n`
+            }: ${tokenBurnRx.status.toString()} \n`,
         );
 
         tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(client);
         console.log(
-            `Current NFT supply: ${tokenInfo.totalSupply.toString()} \n`
+            `Current NFT supply: ${tokenInfo.totalSupply.toString()} \n`,
         );
 
         // AUTO-ASSOCIATION FOR ALICE'S ACCOUNT
@@ -136,7 +136,7 @@ async function main() {
         let associateTxSubmit = await associateTx.execute(client);
         let associateRx = await associateTxSubmit.getReceipt(client);
         console.log(
-            `Alice NFT Auto-Association: ${associateRx.status.toString()} \n`
+            `Alice NFT Auto-Association: ${associateRx.status.toString()} \n`,
         );
 
         // MANUAL ASSOCIATION FOR BOB'S ACCOUNT
@@ -148,7 +148,7 @@ async function main() {
         let associateBobTxSubmit = await associateBobTx.execute(client);
         let associateBobRx = await associateBobTxSubmit.getReceipt(client);
         console.log(
-            `Bob NFT Manual Association: ${associateBobRx.status.toString()} \n`
+            `Bob NFT Manual Association: ${associateBobRx.status.toString()} \n`,
         );
 
         // BALANCE CHECK 1
@@ -156,13 +156,13 @@ async function main() {
         let aB = await bCheckerFcn(aliceId);
         let bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         // 1st TRANSFER NFT Treasury->Alice
@@ -173,7 +173,7 @@ async function main() {
         let tokenTransferSubmit = await tokenTransferTx.execute(client);
         let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
         console.log(
-            `\n NFT transfer Treasury->Alice status: ${tokenTransferRx.status.toString()} \n`
+            `\n NFT transfer Treasury->Alice status: ${tokenTransferRx.status.toString()} \n`,
         );
 
         // BALANCE CHECK 2
@@ -181,13 +181,13 @@ async function main() {
         aB = await bCheckerFcn(aliceId);
         bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         // 2nd NFT TRANSFER NFT Alice->Bob
@@ -201,7 +201,7 @@ async function main() {
         let tokenTransferSubmit2 = await tokenTransferTx2Sign.execute(client);
         let tokenTransferRx2 = await tokenTransferSubmit2.getReceipt(client);
         console.log(
-            `\n NFT transfer Alice->Bob status: ${tokenTransferRx2.status.toString()} \n`
+            `\n NFT transfer Alice->Bob status: ${tokenTransferRx2.status.toString()} \n`,
         );
 
         // BALANCE CHECK 3
@@ -209,13 +209,13 @@ async function main() {
         aB = await bCheckerFcn(aliceId);
         bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         /**

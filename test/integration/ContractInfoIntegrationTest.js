@@ -40,7 +40,9 @@ describe("ContractInfo", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -62,15 +64,15 @@ describe("ContractInfo", function () {
         expect(info.contractId.toString()).to.be.equal(contract.toString());
         expect(info.accountId).to.be.not.null;
         expect(
-            info.contractId != null ? info.contractId.toString() : ""
+            info.contractId != null ? info.contractId.toString() : "",
         ).to.be.equal(contract.toString());
         expect(info.adminKey).to.be.not.null;
         expect(
-            info.adminKey != null ? info.adminKey.toString() : ""
+            info.adminKey != null ? info.adminKey.toString() : "",
         ).to.be.equal(operatorKey.toString());
         expect(info.storage.toInt()).to.be.equal(128);
         expect(info.contractMemo).to.be.equal(
-            "[e2e::ContractCreateTransaction]"
+            "[e2e::ContractCreateTransaction]",
         );
 
         await (
@@ -107,7 +109,9 @@ describe("ContractInfo", function () {
         response = await new ContractCreateTransaction()
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -129,7 +133,7 @@ describe("ContractInfo", function () {
         expect(info.contractId.toString()).to.be.equal(contract.toString());
         expect(info.accountId).to.be.not.null;
         expect(
-            info.contractId != null ? info.contractId.toString() : ""
+            info.contractId != null ? info.contractId.toString() : "",
         ).to.be.equal(contract.toString());
         expect(info.adminKey).to.be.not.null;
         // expect(info.adminKey.toString()).to.be.equal(
@@ -137,7 +141,7 @@ describe("ContractInfo", function () {
         // );
         expect(info.storage.toInt()).to.be.equal(128);
         expect(info.contractMemo).to.be.equal(
-            "[e2e::ContractCreateTransaction]"
+            "[e2e::ContractCreateTransaction]",
         );
     });
 
@@ -162,7 +166,9 @@ describe("ContractInfo", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
@@ -221,7 +227,9 @@ describe("ContractInfo", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")

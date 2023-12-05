@@ -91,7 +91,7 @@ export default class AccountDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const accountDelete =
@@ -106,7 +106,7 @@ export default class AccountDeleteTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.deleteAccountID
-                              )
+                              ),
                           )
                         : undefined,
                 transferAccountId:
@@ -114,7 +114,7 @@ export default class AccountDeleteTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.transferAccountID
-                              )
+                              ),
                           )
                         : undefined,
             }),
@@ -122,7 +122,7 @@ export default class AccountDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -235,5 +235,5 @@ export default class AccountDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoDelete",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountDeleteTransaction._fromProtobuf
+    AccountDeleteTransaction._fromProtobuf,
 );

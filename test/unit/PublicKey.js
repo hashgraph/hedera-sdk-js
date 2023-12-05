@@ -69,7 +69,7 @@ describe("PublicKey", function () {
         const ed25519StringKey =
             "302a300506032b6570032100bc46c36d8aeb94270064edb8d3d4d5d29446e1bb2f36cc47b2c9b755ef0aac25";
         const publicKeyED25519 = PublicKey.fromStringED25519(
-            "302a300506032b6570032100bc46c36d8aeb94270064edb8d3d4d5d29446e1bb2f36cc47b2c9b755ef0aac25"
+            "302a300506032b6570032100bc46c36d8aeb94270064edb8d3d4d5d29446e1bb2f36cc47b2c9b755ef0aac25",
         );
 
         expect(publicKeyED25519.toString()).to.be.equal(ed25519StringKey);

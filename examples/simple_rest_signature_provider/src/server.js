@@ -23,7 +23,7 @@ const provider = new LocalProvider();
 const wallet = new Wallet(
     process.env.OPERATOR_ID,
     process.env.OPERATOR_KEY,
-    provider
+    provider,
 );
 
 const ledgerId = provider.getLedgerId();

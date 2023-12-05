@@ -183,10 +183,10 @@ export default class ContractInfo {
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     info.contractID
-                )
+                ),
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID),
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
@@ -197,7 +197,7 @@ export default class ContractInfo {
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
-                )
+                ),
             ),
             autoRenewPeriod: new Duration(autoRenewPeriod),
             autoRenewAccountId:
@@ -214,7 +214,7 @@ export default class ContractInfo {
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             isDeleted: /** @type {boolean} */ (info.deleted),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
-                info.tokenRelationships != null ? info.tokenRelationships : []
+                info.tokenRelationships != null ? info.tokenRelationships : [],
             ),
             ledgerId:
                 info.ledgerId != null
@@ -269,7 +269,7 @@ export default class ContractInfo {
      */
     static fromBytes(bytes) {
         return ContractInfo._fromProtobuf(
-            proto.ContractGetInfoResponse.ContractInfo.decode(bytes)
+            proto.ContractGetInfoResponse.ContractInfo.decode(bytes),
         );
     }
 
@@ -278,7 +278,7 @@ export default class ContractInfo {
      */
     toBytes() {
         return proto.ContractGetInfoResponse.ContractInfo.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

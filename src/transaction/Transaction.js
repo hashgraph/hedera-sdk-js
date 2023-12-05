@@ -53,7 +53,7 @@ export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000);
 
 // maximum value of i64 (so there is never a record generated)
 export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
-    Long.fromString("9223372036854775807")
+    Long.fromString("9223372036854775807"),
 );
 
 // 120 seconds
@@ -251,13 +251,13 @@ export default class Transaction extends Executable {
             // Decode a signed transaction
             const signedTransaction =
                 HashgraphProto.proto.SignedTransaction.decode(
-                    transaction.signedTransactionBytes
+                    transaction.signedTransactionBytes,
                 );
             signedTransactions.push(signedTransaction);
 
             // Decode a transaction body
             const body = HashgraphProto.proto.TransactionBody.decode(
-                signedTransaction.bodyBytes
+                signedTransaction.bodyBytes,
             );
 
             // Make sure the body is set
@@ -272,7 +272,7 @@ export default class Transaction extends Executable {
                 const transactionId = TransactionId._fromProtobuf(
                     /** @type {HashgraphProto.proto.ITransactionID} */ (
                         body.transactionID
-                    )
+                    ),
                 );
 
                 // If we haven't already seen this transaction ID in the list, add it
@@ -287,7 +287,7 @@ export default class Transaction extends Executable {
                 const nodeAccountId = AccountId._fromProtobuf(
                     /** @type {HashgraphProto.proto.IAccountID} */ (
                         body.nodeAccountID
-                    )
+                    ),
                 );
 
                 // If we haven't already seen this node account ID in the list, add it
@@ -304,7 +304,7 @@ export default class Transaction extends Executable {
         // We should have at least more than one body
         if (body == null || body.data == null) {
             throw new Error(
-                "No transaction found in bytes or failed to decode TransactionBody"
+                "No transaction found in bytes or failed to decode TransactionBody",
             );
         }
 
@@ -315,7 +315,7 @@ export default class Transaction extends Executable {
         // If we forgot to update the registry we should error
         if (fromProtobuf == null) {
             throw new Error(
-                `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`
+                `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`,
             );
         }
 
@@ -326,7 +326,7 @@ export default class Transaction extends Executable {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -340,7 +340,7 @@ export default class Transaction extends Executable {
 
         if (SCHEDULE_CREATE_TRANSACTION.length != 1) {
             throw new Error(
-                "ScheduleCreateTransaction has not been loaded yet"
+                "ScheduleCreateTransaction has not been loaded yet",
             );
         }
 
@@ -366,7 +366,7 @@ export default class Transaction extends Executable {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
 
@@ -378,7 +378,7 @@ export default class Transaction extends Executable {
                         bodies[i * nodeIds.length + j],
                         bodies[i * nodeIds.length + j + 1],
                         // eslint-disable-next-line ie11/no-collection-args
-                        new Set(["nodeAccountID"])
+                        new Set(["nodeAccountID"]),
                     )
                 ) {
                     throw new Error("failed to validate transaction bodies");
@@ -437,14 +437,14 @@ export default class Transaction extends Executable {
                 for (const sigPair of signedTransaction.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
-                            /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
-                        )
+                            /** @type {Uint8Array} */ (sigPair.pubKeyPrefix),
+                        ),
                     );
 
                     transaction._publicKeys.push(
                         PublicKey.fromBytes(
-                            /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
-                        )
+                            /** @type {Uint8Array} */ (sigPair.pubKeyPrefix),
+                        ),
                     );
                     transaction._transactionSigners.push(null);
                 }
@@ -617,7 +617,7 @@ export default class Transaction extends Executable {
      */
     sign(privateKey) {
         return this.signWith(privateKey.publicKey, (message) =>
-            Promise.resolve(privateKey.sign(message))
+            Promise.resolve(privateKey.sign(message)),
         );
     }
 
@@ -691,7 +691,7 @@ export default class Transaction extends Executable {
             }
 
             signedTransaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signature)
+                publicKey._toProtobufSignature(signature),
             );
         }
 
@@ -712,7 +712,7 @@ export default class Transaction extends Executable {
 
         if (operator == null) {
             throw new Error(
-                "`client` must have an operator to sign with the operator"
+                "`client` must have an operator to sign with the operator",
             );
         }
 
@@ -777,7 +777,7 @@ export default class Transaction extends Executable {
             }
 
             transaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signature)
+                publicKey._toProtobufSignature(signature),
             );
         }
 
@@ -850,7 +850,7 @@ export default class Transaction extends Executable {
     _setTransactionId() {
         if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
             throw new Error(
-                "`transactionId` must be set or `client` must be provided with `freezeWith`"
+                "`transactionId` must be set or `client` must be provided with `freezeWith`",
             );
         }
     }
@@ -867,12 +867,12 @@ export default class Transaction extends Executable {
 
         if (client == null) {
             throw new Error(
-                "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
+                "`nodeAccountId` must be set or `client` must be provided with `freezeWith`",
             );
         }
 
         this._nodeAccountIds.setList(
-            client._network.getNodeAccountIdsForExecute()
+            client._network.getNodeAccountIdsForExecute(),
         );
     }
 
@@ -888,8 +888,8 @@ export default class Transaction extends Executable {
 
         this._signedTransactions.setList(
             this._nodeAccountIds.list.map((nodeId) =>
-                this._makeSignedTransaction(nodeId)
-            )
+                this._makeSignedTransaction(nodeId),
+            ),
         );
     }
 
@@ -929,7 +929,7 @@ export default class Transaction extends Executable {
         // Save the operator
         this._operator = client != null ? client._operator : null;
         this._freezeWithAccountId(
-            client != null ? client.operatorAccountId : null
+            client != null ? client.operatorAccountId : null,
         );
 
         // Set max transaction fee to either `this._maxTransactionFee`,
@@ -1094,7 +1094,7 @@ export default class Transaction extends Executable {
                 /** @type {HashgraphProto.proto.ITransaction} */ (
                     this._transactions.get(0)
                 ).signedTransactionBytes
-            )
+            ),
         );
     }
 
@@ -1135,7 +1135,7 @@ export default class Transaction extends Executable {
         const transactionId = this.transactionId;
         if (transactionId == null) {
             throw new Error(
-                "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
+                "transaction must have been frozen before getting the transaction ID, try calling `freeze`",
             );
         }
         return transactionId;
@@ -1160,7 +1160,7 @@ export default class Transaction extends Executable {
     async _beforeExecute(client) {
         if (this._logger) {
             this._logger.info(
-                `Network used: ${client._network.networkName}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+                `Network used: ${client._network.networkName}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
             );
         }
 
@@ -1193,7 +1193,7 @@ export default class Transaction extends Executable {
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,
-                this._operator.transactionSigner
+                this._operator.transactionSigner,
             );
         }
     }
@@ -1232,7 +1232,7 @@ export default class Transaction extends Executable {
      */
     async _signTransaction() {
         const signedTransaction = this._makeSignedTransaction(
-            this._nodeAccountIds.next
+            this._nodeAccountIds.next,
         );
 
         const bodyBytes = /** @type {Uint8Array} */ (
@@ -1258,7 +1258,7 @@ export default class Transaction extends Executable {
             }
 
             signedTransaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signature)
+                publicKey._toProtobufSignature(signature),
             );
         }
 
@@ -1277,7 +1277,7 @@ export default class Transaction extends Executable {
 
         const transactionId = TransactionId.withValidStart(
             this._operatorAccountId,
-            Timestamp.generate()
+            Timestamp.generate(),
         );
 
         this._transactionIds.set(this._transactionIds.index, transactionId);
@@ -1336,7 +1336,7 @@ export default class Transaction extends Executable {
             return {
                 signedTransactionBytes:
                     HashgraphProto.proto.SignedTransaction.encode(
-                        this._signedTransactions.get(index)
+                        this._signedTransactions.get(index),
                     ).finish(),
             };
         });
@@ -1354,7 +1354,7 @@ export default class Transaction extends Executable {
         return {
             signedTransactionBytes:
                 HashgraphProto.proto.SignedTransaction.encode(
-                    await this._signTransaction()
+                    await this._signTransaction(),
                 ).finish(),
         };
     }
@@ -1376,15 +1376,15 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK,
         );
 
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received status ${status.toString()}`
+                `[${this._getLogId()}] received status ${status.toString()}`,
             );
             this._logger.info(
-                `SDK Transaction Status Response: ${status.toString()}`
+                `SDK Transaction Status Response: ${status.toString()}`,
             );
         }
 
@@ -1429,12 +1429,12 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK,
         );
         if (this._logger) {
             this._logger.info(
                 // @ts-ignore
-                `Transaction Error Info: ${status.toString()}, ${this.transactionId.toString()}` // eslint-disable-line @typescript-eslint/restrict-template-expressions
+                `Transaction Error Info: ${status.toString()}, ${this.transactionId.toString()}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
             );
         }
 
@@ -1457,7 +1457,7 @@ export default class Transaction extends Executable {
      */
     async _mapResponse(response, nodeId, request) {
         const transactionHash = await sha384.digest(
-            /** @type {Uint8Array} */ (request.signedTransactionBytes)
+            /** @type {Uint8Array} */ (request.signedTransactionBytes),
         );
         const transactionId = this._getTransactionId();
 
@@ -1469,8 +1469,8 @@ export default class Transaction extends Executable {
                         nodeId,
                         transactionHash,
                         transactionId,
-                    }).toJSON()
-                )}`
+                    }).toJSON(),
+                )}`,
             );
         }
 
@@ -1591,7 +1591,7 @@ export default class Transaction extends Executable {
     _requireNotFrozen() {
         if (this._isFrozen()) {
             throw new Error(
-                "transaction is immutable; it has at least one signature or has been explicitly frozen"
+                "transaction is immutable; it has at least one signature or has been explicitly frozen",
             );
         }
     }
@@ -1604,7 +1604,7 @@ export default class Transaction extends Executable {
     _requireNotSignOnDemand() {
         if (this._signOnDemand) {
             throw new Error(
-                "Please use `toBytesAsync()` if `signOnDemand` is enabled"
+                "Please use `toBytesAsync()` if `signOnDemand` is enabled",
             );
         }
     }
@@ -1617,7 +1617,7 @@ export default class Transaction extends Executable {
     _requireFrozen() {
         if (!this._isFrozen()) {
             throw new Error(
-                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
+                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`",
             );
         }
     }
@@ -1648,7 +1648,7 @@ export default class Transaction extends Executable {
      */
     _responseToBytes(response) {
         return HashgraphProto.proto.TransactionResponse.encode(
-            response
+            response,
         ).finish();
     }
 }

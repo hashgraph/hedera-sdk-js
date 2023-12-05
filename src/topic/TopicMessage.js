@@ -70,7 +70,7 @@ export default class TopicMessage {
         return new TopicMessage({
             consensusTimestamp: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */
-                (response.consensusTimestamp)
+                (response.consensusTimestamp),
             ),
             contents:
                 response.message != null ? response.message : new Uint8Array(),
@@ -88,7 +88,7 @@ export default class TopicMessage {
                 response.chunkInfo != null &&
                 response.chunkInfo.initialTransactionID != null
                     ? TransactionId._fromProtobuf(
-                          response.chunkInfo.initialTransactionID
+                          response.chunkInfo.initialTransactionID,
                       )
                     : null,
             chunks: [TopicMessageChunk._fromProtobuf(response)],
@@ -110,7 +110,7 @@ export default class TopicMessage {
 
         const consensusTimestamp = Timestamp._fromProtobuf(
             /** @type {HashgraphProto.proto.ITimestamp} */
-            (last.consensusTimestamp)
+            (last.consensusTimestamp),
         );
 
         const runningHash = /** @type {Uint8Array} */ (last.runningHash);
@@ -141,7 +141,7 @@ export default class TopicMessage {
                     : 0
                 : 0)
                 ? -1
-                : 1
+                : 1,
         );
 
         /**
@@ -150,7 +150,7 @@ export default class TopicMessage {
         const chunks = responses.map(
             /**
              * @type {com.hedera.mirror.api.proto.IConsensusTopicResponse}
-             */ (m) => TopicMessageChunk._fromProtobuf(m)
+             */ (m) => TopicMessageChunk._fromProtobuf(m),
         );
 
         const size = chunks
@@ -172,7 +172,7 @@ export default class TopicMessage {
             responses[0].chunkInfo.initialTransactionID != null
         ) {
             initialTransactionId = TransactionId._fromProtobuf(
-                responses[0].chunkInfo.initialTransactionID
+                responses[0].chunkInfo.initialTransactionID,
             );
         }
 

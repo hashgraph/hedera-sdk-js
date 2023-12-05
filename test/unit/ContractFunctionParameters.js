@@ -87,56 +87,56 @@ describe("ContractFunctionParameters", function () {
         const forthParam = hex.encode(finished.slice(32 * 3 + 4, 32 * 4 + 4));
         const fifthParam = hex.encode(finished.slice(32 * 4 + 4, 32 * 5 + 4));
         const secondParamDataLength = hex.encode(
-            finished.slice(32 * 5 + 4, 32 * 6 + 4)
+            finished.slice(32 * 5 + 4, 32 * 6 + 4),
         );
         const secondParamData = hex.encode(
-            finished.slice(32 * 6 + 4, 32 * 7 + 4)
+            finished.slice(32 * 6 + 4, 32 * 7 + 4),
         );
         const fourthParamDataLength = hex.encode(
-            finished.slice(32 * 7 + 4, 32 * 8 + 4)
+            finished.slice(32 * 7 + 4, 32 * 8 + 4),
         );
         const fourthParamData = hex.encode(
-            finished.slice(32 * 8 + 4, 32 * 9 + 4)
+            finished.slice(32 * 8 + 4, 32 * 9 + 4),
         );
         const fifthParamDataLength = hex.encode(
-            finished.slice(32 * 9 + 4, 32 * 10 + 4)
+            finished.slice(32 * 9 + 4, 32 * 10 + 4),
         );
         const fifthParamData = hex.encode(
-            finished.slice(32 * 10 + 4, 32 * 11 + 4)
+            finished.slice(32 * 10 + 4, 32 * 11 + 4),
         );
         expect(funcHash).to.be.equal("b54f97cf");
         expect(firstParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000001020304"
+            "0000000000000000000000000000000000000000000000000000000001020304",
         );
         expect(secondParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000a0"
+            "00000000000000000000000000000000000000000000000000000000000000a0",
         );
         expect(thirdParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000007fffffffffffffff"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff",
         );
         expect(forthParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000e0"
+            "00000000000000000000000000000000000000000000000000000000000000e0",
         );
         expect(fifthParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000120"
+            "0000000000000000000000000000000000000000000000000000000000000120",
         );
         expect(secondParamDataLength).to.be.equal(
-            "000000000000000000000000000000000000000000000000000000000000000a"
+            "000000000000000000000000000000000000000000000000000000000000000a",
         );
         expect(secondParamData).to.be.equal(
-            "0001000004000000000800000000000000000000000000000000000000000000"
+            "0001000004000000000800000000000000000000000000000000000000000000",
         );
         expect(fourthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000020"
+            "0000000000000000000000000000000000000000000000000000000000000020",
         );
         expect(fourthParamData).to.be.equal(
-            "ff000000000000000000000000000000000000000000000000000000000000ff"
+            "ff000000000000000000000000000000000000000000000000000000000000ff",
         );
         expect(fifthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000014"
+            "0000000000000000000000000000000000000000000000000000000000000014",
         );
         expect(fifthParamData).to.be.equal(
-            "746869732069732061206772696e3a20f09f9881000000000000000000000000"
+            "746869732069732061206772696e3a20f09f9881000000000000000000000000",
         );
         expect(finished.length).to.be.equal(356);
     });
@@ -159,77 +159,77 @@ describe("ContractFunctionParameters", function () {
         const fifthParam = hex.encode(finished.slice(32 * 4 + 4, 32 * 5 + 4));
         const sixthParam = hex.encode(finished.slice(32 * 5 + 4, 32 * 6 + 4));
         const fourthParamDataLength = hex.encode(
-            finished.slice(32 * 6 + 4, 32 * 7 + 4)
+            finished.slice(32 * 6 + 4, 32 * 7 + 4),
         );
         const fourthParamData = hex.encode(
-            finished.slice(32 * 7 + 4, 32 * 8 + 4)
+            finished.slice(32 * 7 + 4, 32 * 8 + 4),
         );
         const sixthParamDataLength = hex.encode(
-            finished.slice(32 * 8 + 4, 32 * 9 + 4)
+            finished.slice(32 * 8 + 4, 32 * 9 + 4),
         );
         const sixthParamFirstElOff = hex.encode(
-            finished.slice(32 * 9 + 4, 32 * 10 + 4)
+            finished.slice(32 * 9 + 4, 32 * 10 + 4),
         );
         const sixthParamSecondElOff = hex.encode(
-            finished.slice(32 * 10 + 4, 32 * 11 + 4)
+            finished.slice(32 * 10 + 4, 32 * 11 + 4),
         );
         const sixthParamFirstElLen = hex.encode(
-            finished.slice(32 * 11 + 4, 32 * 12 + 4)
+            finished.slice(32 * 11 + 4, 32 * 12 + 4),
         );
         const sixthParamFirstEl = hex.encode(
-            finished.slice(32 * 12 + 4, 32 * 13 + 4)
+            finished.slice(32 * 12 + 4, 32 * 13 + 4),
         );
         const sixthParamSecondElLen = hex.encode(
-            finished.slice(32 * 13 + 4, 32 * 14 + 4)
+            finished.slice(32 * 13 + 4, 32 * 14 + 4),
         );
         const sixthParamSecondEl = hex.encode(
-            finished.slice(32 * 14 + 4, 32 * 15 + 4)
+            finished.slice(32 * 14 + 4, 32 * 15 + 4),
         );
         expect(funcHash).to.be.equal("a27fc6f6");
         expect(firstParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000001020304"
+            "0000000000000000000000000000000000000000000000000000000001020304",
         );
         expect(secondParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000001020304"
+            "0000000000000000000000000000000000000000000000000000000001020304",
         );
         expect(thirdParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000007fffffffffffffff"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff",
         );
         expect(forthParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000c0"
+            "00000000000000000000000000000000000000000000000000000000000000c0",
         );
         expect(fifthParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000005eb"
+            "00000000000000000000000000000000000000000000000000000000000005eb",
         );
         expect(sixthParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000100"
+            "0000000000000000000000000000000000000000000000000000000000000100",
         );
         expect(fourthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000014"
+            "0000000000000000000000000000000000000000000000000000000000000014",
         );
         expect(fourthParamData).to.be.equal(
-            "746869732069732061206772696e3a20f09f9881000000000000000000000000"
+            "746869732069732061206772696e3a20f09f9881000000000000000000000000",
         );
         expect(sixthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(sixthParamFirstElOff).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000040"
+            "0000000000000000000000000000000000000000000000000000000000000040",
         );
         expect(sixthParamSecondElOff).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000080"
+            "0000000000000000000000000000000000000000000000000000000000000080",
         );
         expect(sixthParamFirstElLen).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000003"
+            "0000000000000000000000000000000000000000000000000000000000000003",
         );
         expect(sixthParamFirstEl).to.be.equal(
-            "6f6e650000000000000000000000000000000000000000000000000000000000"
+            "6f6e650000000000000000000000000000000000000000000000000000000000",
         );
         expect(sixthParamSecondElLen).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000003"
+            "0000000000000000000000000000000000000000000000000000000000000003",
         );
         expect(sixthParamSecondEl).to.be.equal(
-            "74776f0000000000000000000000000000000000000000000000000000000000"
+            "74776f0000000000000000000000000000000000000000000000000000000000",
         );
         expect(finished.length).to.be.equal(484);
     });
@@ -251,94 +251,94 @@ describe("ContractFunctionParameters", function () {
         const fifthParam = hex.encode(finished.slice(32 * 4, 32 * 5));
         const sixthParam = hex.encode(finished.slice(32 * 5, 32 * 6));
         const fourthParamDataLength = hex.encode(
-            finished.slice(32 * 6, 32 * 7)
+            finished.slice(32 * 6, 32 * 7),
         );
         const fourthParamData = hex.encode(finished.slice(32 * 7, 32 * 8));
         const sixthParamDataLength = hex.encode(finished.slice(32 * 8, 32 * 9));
         const sixthParamFirstElOff = hex.encode(
-            finished.slice(32 * 9, 32 * 10)
+            finished.slice(32 * 9, 32 * 10),
         );
         const sixthParamSecondElOff = hex.encode(
-            finished.slice(32 * 10, 32 * 11)
+            finished.slice(32 * 10, 32 * 11),
         );
         const sixthParamFirstElLen = hex.encode(
-            finished.slice(32 * 11, 32 * 12)
+            finished.slice(32 * 11, 32 * 12),
         );
         const sixthParamFirstEl = hex.encode(finished.slice(32 * 12, 32 * 13));
         const sixthParamSecondElLen = hex.encode(
-            finished.slice(32 * 13, 32 * 14)
+            finished.slice(32 * 13, 32 * 14),
         );
         const sixthParamSecondEl = hex.encode(finished.slice(32 * 14, 32 * 15));
         expect(firstParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000001020304"
+            "0000000000000000000000000000000000000000000000000000000001020304",
         );
         expect(secondParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000001020304"
+            "0000000000000000000000000000000000000000000000000000000001020304",
         );
         expect(thirdParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000007fffffffffffffff"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff",
         );
         expect(forthParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000c0"
+            "00000000000000000000000000000000000000000000000000000000000000c0",
         );
         expect(fifthParam).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000005eb"
+            "00000000000000000000000000000000000000000000000000000000000005eb",
         );
         expect(sixthParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000100"
+            "0000000000000000000000000000000000000000000000000000000000000100",
         );
         expect(fourthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000014"
+            "0000000000000000000000000000000000000000000000000000000000000014",
         );
         expect(fourthParamData).to.be.equal(
-            "746869732069732061206772696e3a20f09f9881000000000000000000000000"
+            "746869732069732061206772696e3a20f09f9881000000000000000000000000",
         );
         expect(sixthParamDataLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(sixthParamFirstElOff).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000040"
+            "0000000000000000000000000000000000000000000000000000000000000040",
         );
         expect(sixthParamSecondElOff).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000080"
+            "0000000000000000000000000000000000000000000000000000000000000080",
         );
         expect(sixthParamFirstElLen).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000003"
+            "0000000000000000000000000000000000000000000000000000000000000003",
         );
         expect(sixthParamFirstEl).to.be.equal(
-            "6f6e650000000000000000000000000000000000000000000000000000000000"
+            "6f6e650000000000000000000000000000000000000000000000000000000000",
         );
         expect(sixthParamSecondElLen).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000003"
+            "0000000000000000000000000000000000000000000000000000000000000003",
         );
         expect(sixthParamSecondEl).to.be.equal(
-            "74776f0000000000000000000000000000000000000000000000000000000000"
+            "74776f0000000000000000000000000000000000000000000000000000000000",
         );
         expect(finished.length).to.be.equal(480);
     });
 
     it("encodes address", function () {
         const params = new ContractFunctionParameters().addAddress(
-            "888937961a6E3D313e481a2c5BAd9791fD11ea5b"
+            "888937961a6E3D313e481a2c5BAd9791fD11ea5b",
         );
 
         const finished = params._build(null);
         const firstParam = hex.encode(finished.slice(32 * 0, 32 * 1));
         expect(firstParam).to.be.equal(
-            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b"
+            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b",
         );
         expect(finished.length).to.be.equal(32);
     });
 
     it("encodes address with 0x prefix", function () {
         const params = new ContractFunctionParameters().addAddress(
-            "0x888937961a6E3D313e481a2c5BAd9791fD11ea5b"
+            "0x888937961a6E3D313e481a2c5BAd9791fD11ea5b",
         );
 
         const finished = params._build(null);
         const firstParam = hex.encode(finished.slice(32 * 0, 32 * 1));
         expect(firstParam).to.be.equal(
-            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b"
+            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b",
         );
         expect(finished.length).to.be.equal(32);
     });
@@ -378,67 +378,67 @@ describe("ContractFunctionParameters", function () {
         const sixthFirstValue = hex.encode(finished.slice(32 * 19, 32 * 20));
         const sixthSecondValue = hex.encode(finished.slice(32 * 20, 32 * 21));
         expect(firstParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000007fffffffffffffff"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff",
         );
         expect(secondOffset).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000c0"
+            "00000000000000000000000000000000000000000000000000000000000000c0",
         );
         expect(thirdOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000120"
+            "0000000000000000000000000000000000000000000000000000000000000120",
         );
         expect(forthOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000180"
+            "0000000000000000000000000000000000000000000000000000000000000180",
         );
         expect(fifthOffset).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000001e0"
+            "00000000000000000000000000000000000000000000000000000000000001e0",
         );
         expect(sixthOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000240"
+            "0000000000000000000000000000000000000000000000000000000000000240",
         );
         expect(secondLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(secondFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000457"
+            "0000000000000000000000000000000000000000000000000000000000000457",
         );
         expect(secondSecondValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000008ae"
+            "00000000000000000000000000000000000000000000000000000000000008ae",
         );
         expect(thirdLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(thirdFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000d05"
+            "0000000000000000000000000000000000000000000000000000000000000d05",
         );
         expect(thirdSecondValue).to.be.equal(
-            "000000000000000000000000000000000000000000000000000000000000115c"
+            "000000000000000000000000000000000000000000000000000000000000115c",
         );
         expect(forthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(forthFirstValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000015b3"
+            "00000000000000000000000000000000000000000000000000000000000015b3",
         );
         expect(forthSecondValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000001a0a"
+            "0000000000000000000000000000000000000000000000000000000000001a0a",
         );
         expect(fifthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(fifthFirstValue).to.be.equal(
-            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b"
+            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b",
         );
         expect(fifthSecondValue).to.be.equal(
-            "000000000000000000000000ffffffffffffffffffffffffffffffffffffffff"
+            "000000000000000000000000ffffffffffffffffffffffffffffffffffffffff",
         );
         expect(sixthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(sixthFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000001e61"
+            "0000000000000000000000000000000000000000000000000000000000001e61",
         );
         expect(sixthSecondValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000022b8"
+            "00000000000000000000000000000000000000000000000000000000000022b8",
         );
         expect(finished.length).to.be.equal(672);
     });
@@ -478,67 +478,67 @@ describe("ContractFunctionParameters", function () {
         const sixthFirstValue = hex.encode(finished.slice(32 * 19, 32 * 20));
         const sixthSecondValue = hex.encode(finished.slice(32 * 20, 32 * 21));
         expect(firstParam).to.be.equal(
-            "0000000000000000000000000000000000000000000000007fffffffffffffff"
+            "0000000000000000000000000000000000000000000000007fffffffffffffff",
         );
         expect(secondOffset).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000000c0"
+            "00000000000000000000000000000000000000000000000000000000000000c0",
         );
         expect(thirdOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000120"
+            "0000000000000000000000000000000000000000000000000000000000000120",
         );
         expect(forthOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000180"
+            "0000000000000000000000000000000000000000000000000000000000000180",
         );
         expect(fifthOffset).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000001e0"
+            "00000000000000000000000000000000000000000000000000000000000001e0",
         );
         expect(sixthOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000240"
+            "0000000000000000000000000000000000000000000000000000000000000240",
         );
         expect(secondLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(secondFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000457"
+            "0000000000000000000000000000000000000000000000000000000000000457",
         );
         expect(secondSecondValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000008ae"
+            "00000000000000000000000000000000000000000000000000000000000008ae",
         );
         expect(thirdLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(thirdFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000d05"
+            "0000000000000000000000000000000000000000000000000000000000000d05",
         );
         expect(thirdSecondValue).to.be.equal(
-            "000000000000000000000000000000000000000000000000000000000000115c"
+            "000000000000000000000000000000000000000000000000000000000000115c",
         );
         expect(forthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(forthFirstValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000015b3"
+            "00000000000000000000000000000000000000000000000000000000000015b3",
         );
         expect(forthSecondValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000001a0a"
+            "0000000000000000000000000000000000000000000000000000000000001a0a",
         );
         expect(fifthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(fifthFirstValue).to.be.equal(
-            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b"
+            "000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b",
         );
         expect(fifthSecondValue).to.be.equal(
-            "000000000000000000000000ffffffffffffffffffffffffffffffffffffffff"
+            "000000000000000000000000ffffffffffffffffffffffffffffffffffffffff",
         );
         expect(sixthLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000002"
+            "0000000000000000000000000000000000000000000000000000000000000002",
         );
         expect(sixthFirstValue).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000001e61"
+            "0000000000000000000000000000000000000000000000000000000000001e61",
         );
         expect(sixthSecondValue).to.be.equal(
-            "00000000000000000000000000000000000000000000000000000000000022b8"
+            "00000000000000000000000000000000000000000000000000000000000022b8",
         );
         expect(finished.length).to.be.equal(672);
     });
@@ -552,7 +552,7 @@ describe("ContractFunctionParameters", function () {
         const finished = params._build(null);
         const firstParam = hex.encode(finished.slice(32 * 0, 32 * 1));
         expect(firstParam).to.be.equal(
-            "00000000000000000000ffff0000000000000000000000000000000000000000"
+            "00000000000000000000ffff0000000000000000000000000000000000000000",
         );
         expect(finished.length).to.be.equal(32);
     });
@@ -569,16 +569,16 @@ describe("ContractFunctionParameters", function () {
         const firstValuePart1 = hex.encode(finished.slice(32 * 2, 32 * 3));
         const firstValuePart2 = hex.encode(finished.slice(32 * 3, 32 * 4));
         expect(firstOffset).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000020"
+            "0000000000000000000000000000000000000000000000000000000000000020",
         );
         expect(firstLength).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000040"
+            "0000000000000000000000000000000000000000000000000000000000000040",
         );
         expect(firstValuePart1).to.be.equal(
-            "00000000000000000000ffff0000000000000000000000000000000000000000"
+            "00000000000000000000ffff0000000000000000000000000000000000000000",
         );
         expect(firstValuePart2).to.be.equal(
-            "0000000000000000000000000000000000000000000000000000000000000000"
+            "0000000000000000000000000000000000000000000000000000000000000000",
         );
         expect(finished.length).to.be.equal(128);
     });

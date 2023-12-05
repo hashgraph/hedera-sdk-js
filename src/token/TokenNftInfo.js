@@ -87,15 +87,15 @@ export default class TokenNftInfo {
     static _fromProtobuf(info) {
         return new TokenNftInfo({
             nftId: NftId._fromProtobuf(
-                /** @type {HashgraphProto.proto.INftID} */ (info.nftID)
+                /** @type {HashgraphProto.proto.INftID} */ (info.nftID),
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID),
             ),
             creationTime: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.creationTime
-                )
+                ),
             ),
             metadata: info.metadata !== undefined ? info.metadata : null,
             ledgerId:

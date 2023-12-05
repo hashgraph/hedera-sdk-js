@@ -56,7 +56,7 @@ export default class NativeChannel extends Channel {
         return async (method, requestData, callback) => {
             try {
                 const data = base64.encode(
-                    new Uint8Array(encodeRequest(requestData))
+                    new Uint8Array(encodeRequest(requestData)),
                 );
 
                 const response = await fetch(
@@ -70,12 +70,12 @@ export default class NativeChannel extends Channel {
                             "x-grpc-web": "1",
                         },
                         body: data,
-                    }
+                    },
                 );
 
                 if (!response.ok) {
                     const error = new HttpError(
-                        HttpStatus._fromValue(response.status)
+                        HttpStatus._fromValue(response.status),
                     );
                     callback(error, null);
                 }
@@ -95,34 +95,34 @@ export default class NativeChannel extends Channel {
                 let responseBuffer;
                 if (
                     responseData.startsWith(
-                        "data:application/octet-stream;base64,"
+                        "data:application/octet-stream;base64,",
                     )
                 ) {
                     responseBuffer = base64.decode(
                         responseData.split(
-                            "data:application/octet-stream;base64,"
-                        )[1]
+                            "data:application/octet-stream;base64,",
+                        )[1],
                     );
                 } else if (
                     responseData.startsWith(
-                        "data:application/grpc-web+proto;base64,"
+                        "data:application/grpc-web+proto;base64,",
                     )
                 ) {
                     responseBuffer = base64.decode(
                         responseData.split(
-                            "data:application/grpc-web+proto;base64,"
-                        )[1]
+                            "data:application/grpc-web+proto;base64,",
+                        )[1],
                     );
                 } else {
                     throw new Error(
-                        `Expected response data to be base64 encode with a 'data:application/octet-stream;base64,' or 'data:application/grpc-web+proto;base64,' prefix, but found: ${responseData}`
+                        `Expected response data to be base64 encode with a 'data:application/octet-stream;base64,' or 'data:application/grpc-web+proto;base64,' prefix, but found: ${responseData}`,
                     );
                 }
 
                 const unaryResponse = decodeUnaryResponse(
                     responseBuffer.buffer,
                     responseBuffer.byteOffset,
-                    responseBuffer.byteLength
+                    responseBuffer.byteLength,
                 );
 
                 callback(null, unaryResponse);

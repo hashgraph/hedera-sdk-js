@@ -72,7 +72,7 @@ export default class ContractNonceInfo {
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     contractNonceInfo.contractId
-                )
+                ),
             ),
             nonce:
                 contractNonceInfo.nonce != null
@@ -102,7 +102,7 @@ export default class ContractNonceInfo {
      */
     static fromBytes(bytes) {
         return ContractNonceInfo._fromProtobuf(
-            proto.ContractNonceInfo.decode(bytes)
+            proto.ContractNonceInfo.decode(bytes),
         );
     }
 

@@ -66,7 +66,7 @@ export default class FeeData {
      */
     static fromBytes(bytes) {
         return FeeData._fromProtobuf(
-            HashgraphProto.proto.FeeData.decode(bytes)
+            HashgraphProto.proto.FeeData.decode(bytes),
         );
     }
 

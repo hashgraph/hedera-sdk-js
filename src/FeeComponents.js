@@ -120,7 +120,7 @@ export default class FeeComponents {
      */
     static fromBytes(bytes) {
         return FeeComponents._fromProtobuf(
-            HashgraphProto.proto.FeeComponents.decode(bytes)
+            HashgraphProto.proto.FeeComponents.decode(bytes),
         );
     }
 
@@ -205,7 +205,7 @@ export default class FeeComponents {
      */
     toBytes() {
         return HashgraphProto.proto.FeeComponents.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

@@ -343,13 +343,13 @@ export default class TransactionRecord {
             (record) =>
                 /** @type {HashgraphProto.proto.ITransactionRecord} */ (
                     record._toProtobuf().transactionRecord
-                )
+                ),
         );
         const children = this.children.map(
             (record) =>
                 /** @type {HashgraphProto.proto.ITransactionRecord} */ (
                     record._toProtobuf().transactionRecord
-                )
+                ),
         );
 
         return {
@@ -392,7 +392,7 @@ export default class TransactionRecord {
                     this.transfers != null
                         ? {
                               accountAmounts: this.transfers.map((transfer) =>
-                                  transfer._toProtobuf()
+                                  transfer._toProtobuf(),
                               ),
                           }
                         : null,
@@ -402,10 +402,10 @@ export default class TransactionRecord {
                         ? this.scheduleRef._toProtobuf()
                         : null,
                 assessedCustomFees: this.assessedCustomFees.map((fee) =>
-                    fee._toProtobuf()
+                    fee._toProtobuf(),
                 ),
                 automaticTokenAssociations: this.automaticTokenAssociations.map(
-                    (association) => association._toProtobuf()
+                    (association) => association._toProtobuf(),
                 ),
                 parentConsensusTimestamp:
                     this.parentConsensusTimestamp != null
@@ -414,13 +414,13 @@ export default class TransactionRecord {
                 alias:
                     this.aliasKey != null
                         ? HashgraphProto.proto.Key.encode(
-                              this.aliasKey._toProtobufKey()
+                              this.aliasKey._toProtobufKey(),
                           ).finish()
                         : null,
                 ethereumHash: this.ethereumHash,
 
                 paidStakingRewards: this.paidStakingRewards.map((transfer) =>
-                    transfer._toProtobuf()
+                    transfer._toProtobuf(),
                 ),
 
                 prngBytes: this.prngBytes,
@@ -444,7 +444,7 @@ export default class TransactionRecord {
         let aliasKey =
             record.alias != null && record.alias.length > 0
                 ? Key._fromProtobufKey(
-                      HashgraphProto.proto.Key.decode(record.alias)
+                      HashgraphProto.proto.Key.decode(record.alias),
                   )
                 : null;
 
@@ -457,7 +457,7 @@ export default class TransactionRecord {
                 ? response.childTransactionRecords.map((child) =>
                       TransactionRecord._fromProtobuf({
                           transactionRecord: child,
-                      })
+                      }),
                   )
                 : [];
 
@@ -466,7 +466,7 @@ export default class TransactionRecord {
                 ? response.duplicateTransactionRecords.map((duplicate) =>
                       TransactionRecord._fromProtobuf({
                           transactionRecord: duplicate,
-                      })
+                      }),
                   )
                 : [];
 
@@ -474,14 +474,14 @@ export default class TransactionRecord {
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
                       record.contractCallResult,
-                      false
+                      false,
                   )
                 : record.contractCreateResult != null
-                ? ContractFunctionResult._fromProtobuf(
-                      record.contractCreateResult,
-                      true
-                  )
-                : undefined;
+                  ? ContractFunctionResult._fromProtobuf(
+                        record.contractCreateResult,
+                        true,
+                    )
+                  : undefined;
 
         return new TransactionRecord({
             receipt: TransactionReceipt._fromProtobuf({
@@ -496,34 +496,34 @@ export default class TransactionRecord {
                     : new Uint8Array(),
             consensusTimestamp: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */
-                (record.consensusTimestamp)
+                (record.consensusTimestamp),
             ),
             transactionId: TransactionId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITransactionID} */ (
                     record.transactionID
-                )
+                ),
             ),
             transactionMemo: record.memo != null ? record.memo : "",
             transactionFee: Hbar.fromTinybars(
-                record.transactionFee != null ? record.transactionFee : 0
+                record.transactionFee != null ? record.transactionFee : 0,
             ),
             transfers: Transfer._fromProtobuf(
                 record.transferList != null
                     ? record.transferList.accountAmounts != null
                         ? record.transferList.accountAmounts
                         : []
-                    : []
+                    : [],
             ),
             contractFunctionResult,
             tokenTransfers: TokenTransferMap._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : []
+                    : [],
             ),
             tokenTransfersList: TokenTransfer._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : []
+                    : [],
             ),
             scheduleRef:
                 record.scheduleRef != null
@@ -532,18 +532,18 @@ export default class TransactionRecord {
             assessedCustomFees:
                 record.assessedCustomFees != null
                     ? record.assessedCustomFees.map((fee) =>
-                          AssessedCustomFee._fromProtobuf(fee)
+                          AssessedCustomFee._fromProtobuf(fee),
                       )
                     : [],
             nftTransfers: TokenNftTransferMap._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : []
+                    : [],
             ),
             automaticTokenAssociations:
                 record.automaticTokenAssociations != null
                     ? record.automaticTokenAssociations.map((association) =>
-                          TokenAssocation._fromProtobuf(association)
+                          TokenAssocation._fromProtobuf(association),
                       )
                     : [],
             parentConsensusTimestamp:
@@ -577,7 +577,7 @@ export default class TransactionRecord {
      */
     static fromBytes(bytes) {
         return TransactionRecord._fromProtobuf(
-            HashgraphProto.proto.TransactionGetRecordResponse.decode(bytes)
+            HashgraphProto.proto.TransactionGetRecordResponse.decode(bytes),
         );
     }
 
@@ -586,7 +586,7 @@ export default class TransactionRecord {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionGetRecordResponse.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 
@@ -604,7 +604,7 @@ export default class TransactionRecord {
             transfers: this.transfers.map((transfer) => transfer.toJSON()),
             tokenTransfers: this.tokenTransfers,
             tokenTransfersList: this.tokenTransfersList.map((transfer) =>
-                transfer.toJSON()
+                transfer.toJSON(),
             ),
             scheduleRef: this.scheduleRef?.toString() || null,
             assessedCustomFees: this.assessedCustomFees,

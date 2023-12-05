@@ -161,8 +161,8 @@ export default class AccountRecordsQuery extends Query {
 
         return Promise.resolve(
             records.map((record) =>
-                TransactionRecord._fromProtobuf({ transactionRecord: record })
-            )
+                TransactionRecord._fromProtobuf({ transactionRecord: record }),
+            ),
         );
     }
 
@@ -201,5 +201,5 @@ export default class AccountRecordsQuery extends Query {
 QUERY_REGISTRY.set(
     "cryptoGetAccountRecords",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountRecordsQuery._fromProtobuf
+    AccountRecordsQuery._fromProtobuf,
 );

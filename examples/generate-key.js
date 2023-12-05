@@ -15,7 +15,7 @@ async function main() {
         // recover your key from the mnemonic
         // this takes space-separated or comma-separated words
         const recoveredMnemonic = await Mnemonic.fromString(
-            mnemonic.toString()
+            mnemonic.toString(),
         );
         const recoveredRootKey =
             await recoveredMnemonic.toStandardEd25519PrivateKey("", 0);

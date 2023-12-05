@@ -151,12 +151,12 @@ export default class ContractHelper {
 
         return (/** @type {hashgraph.ContractFunctionResult} */ result) => {
             const responseStatus = hashgraph.Status._fromCode(
-                result.getInt32(0)
+                result.getInt32(0),
             );
             const isValid = responseStatus == hashgraph.Status.Success;
             if (!isValid) {
                 console.log(
-                    `Encountered invalid response status ${responseStatus.toString()}`
+                    `Encountered invalid response status ${responseStatus.toString()}`,
                 );
             }
             return isValid;
@@ -232,7 +232,7 @@ export default class ContractHelper {
             const feePayerAccountId = this.stepFeePayers.get(stepIndex);
             if (feePayerAccountId != null) {
                 transaction.setTransactionId(
-                    hashgraph.TransactionId.generate(feePayerAccountId)
+                    hashgraph.TransactionId.generate(feePayerAccountId),
                 );
             }
 
@@ -257,11 +257,11 @@ export default class ContractHelper {
 
             if (this.getResultValidator(stepIndex)(functionResult)) {
                 console.log(
-                    `step ${stepIndex} completed, and returned valid result. (TransactionId "${record.transactionId.toString()}")`
+                    `step ${stepIndex} completed, and returned valid result. (TransactionId "${record.transactionId.toString()}")`,
                 );
             } else {
                 console.log(
-                    `Transaction record: ${JSON.stringify(record, null, 2)}`
+                    `Transaction record: ${JSON.stringify(record, null, 2)}`,
                 );
                 throw new Error(`step ${stepIndex} returned invalid result`);
             }

@@ -108,7 +108,7 @@ async function main() {
             console.log(
                 `Created NFT ${tokenId.toString()} with serial: ${nftLeaf[
                     i
-                ].serials[0].toString()}`
+                ].serials[0].toString()}`,
             );
         }
 
@@ -123,7 +123,7 @@ async function main() {
         console.log(
             `\nBurn NFT with serial ${
                 CID.length
-            }: ${tokenBurnRx.status.toString()}`
+            }: ${tokenBurnRx.status.toString()}`,
         );
 
         tokenInfo = await tQueryFcn();
@@ -138,7 +138,7 @@ async function main() {
         let associateAliceTxSubmit = await associateAliceTx.execute(client);
         let associateAliceRx = await associateAliceTxSubmit.getReceipt(client);
         console.log(
-            `\n- Alice NFT manual association: ${associateAliceRx.status.toString()}`
+            `\n- Alice NFT manual association: ${associateAliceRx.status.toString()}`,
         );
 
         // MANUAL ASSOCIATION FOR BOB'S ACCOUNT
@@ -150,27 +150,27 @@ async function main() {
         let associateBobTxSubmit = await associateBobTx.execute(client);
         let associateBobRx = await associateBobTxSubmit.getReceipt(client);
         console.log(
-            `- Bob NFT manual association: ${associateBobRx.status.toString()}`
+            `- Bob NFT manual association: ${associateBobRx.status.toString()}`,
         );
 
         // PART 2.1 STARTS ============================================================
         console.log(
-            `\nPART 2.1 STARTS ============================================================\n`
+            `\nPART 2.1 STARTS ============================================================\n`,
         );
         // ENABLE TOKEN KYC FOR ALICE AND BOB
         let aliceKyc = await kycEnableFcn(aliceId);
         let bobKyc = await kycEnableFcn(bobId);
         console.log(
-            `- Enabling token KYC for Alice's account: ${aliceKyc.status.toString()}`
+            `- Enabling token KYC for Alice's account: ${aliceKyc.status.toString()}`,
         );
         console.log(
-            `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`
+            `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`,
         );
 
         // QUERY TO CHECK INTIAL KYC KEY
         tokenInfo = await tQueryFcn();
         console.log(
-            `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()} \n`
+            `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()} \n`,
         );
 
         // UPDATE TOKEN PROPERTIES: NEW KYC KEY
@@ -182,18 +182,18 @@ async function main() {
         let tokenUpdateSubmitTx = await tokenUpdateTx.execute(client);
         let tokenUpdateRx = await tokenUpdateSubmitTx.getReceipt(client);
         console.log(
-            `- Token update transaction (new KYC key): ${tokenUpdateRx.status.toString()} \n`
+            `- Token update transaction (new KYC key): ${tokenUpdateRx.status.toString()} \n`,
         );
 
         // QUERY TO CHECK CHANGE IN KYC KEY
         tokenInfo = await tQueryFcn();
         console.log(
-            `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()}`
+            `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()}`,
         );
 
         // PART 2.1 ENDS ============================================================
         console.log(
-            `\nPART 2.1 ENDS ============================================================\n`
+            `\nPART 2.1 ENDS ============================================================\n`,
         );
 
         // BALANCE CHECK 1
@@ -201,13 +201,13 @@ async function main() {
         let aB = await bCheckerFcn(aliceId);
         let bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         // 1st TRANSFER NFT TREASURY -> ALICE
@@ -218,7 +218,7 @@ async function main() {
         let tokenTransferSubmit = await tokenTransferTx.execute(client);
         let tokenTransferRx = await tokenTransferSubmit.getReceipt(client);
         console.log(
-            `\n NFT transfer Treasury -> Alice status: ${tokenTransferRx.status.toString()} \n`
+            `\n NFT transfer Treasury -> Alice status: ${tokenTransferRx.status.toString()} \n`,
         );
 
         // BALANCE CHECK 2
@@ -226,13 +226,13 @@ async function main() {
         aB = await bCheckerFcn(aliceId);
         bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         // 2nd NFT TRANSFER NFT ALICE -> BOB
@@ -246,7 +246,7 @@ async function main() {
         let tokenTransferSubmit2 = await tokenTransferTx2Sign.execute(client);
         let tokenTransferRx2 = await tokenTransferSubmit2.getReceipt(client);
         console.log(
-            `\n NFT transfer Alice -> Bob status: ${tokenTransferRx2.status.toString()} \n`
+            `\n NFT transfer Alice -> Bob status: ${tokenTransferRx2.status.toString()} \n`,
         );
 
         // BALANCE CHECK 3
@@ -254,18 +254,18 @@ async function main() {
         aB = await bCheckerFcn(aliceId);
         bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         // PART 2.2 STARTS ============================================================
         console.log(
-            `\nPART 2.2 STARTS ============================================================\n`
+            `\nPART 2.2 STARTS ============================================================\n`,
         );
 
         // CREATE THE NFT TRANSFER FROM BOB->ALICE TO BE SCHEDULED
@@ -284,7 +284,7 @@ async function main() {
         let scheduledTxId = scheduleRx.scheduledTransactionId;
         console.log(`- The schedule ID is: ${scheduleId.toString()}`);
         console.log(
-            `- The scheduled transaction ID is: ${scheduledTxId.toString()} \n`
+            `- The scheduled transaction ID is: ${scheduledTxId.toString()} \n`,
         );
 
         // SUBMIT ALICE'S SIGNATURE FOR THE TRANSFER TRANSACTION
@@ -295,7 +295,7 @@ async function main() {
         let aliceSignSubmit = await aliceSignTx.execute(client);
         let aliceSignRx = await aliceSignSubmit.getReceipt(client);
         console.log(
-            `- Status of Alice's signature submission: ${aliceSignRx.status.toString()}`
+            `- Status of Alice's signature submission: ${aliceSignRx.status.toString()}`,
         );
 
         // QUERY TO CONFIRM IF THE SCHEDULE WAS TRIGGERED (SIGNATURES HAVE BEEN ADDED)
@@ -305,7 +305,7 @@ async function main() {
         console.log(
             `- Schedule triggered (all required signatures received): ${(
                 scheduleQuery.executed !== null
-            ).toString()}`
+            ).toString()}`,
         );
 
         // SUBMIT BOB'S SIGNATURE FOR THE TRANSFER TRANSACTION
@@ -316,7 +316,7 @@ async function main() {
         let bobSignSubmit = await bobSignTx.execute(client);
         let bobSignRx = await bobSignSubmit.getReceipt(client);
         console.log(
-            `- Status of Bob's signature submission: ${bobSignRx.status.toString()}`
+            `- Status of Bob's signature submission: ${bobSignRx.status.toString()}`,
         );
 
         // QUERY TO CONFIRM IF THE SCHEDULE WAS TRIGGERED (SIGNATURES HAVE BEEN ADDED)
@@ -326,7 +326,7 @@ async function main() {
         console.log(
             `- Schedule triggered (all required signatures received): ${(
                 scheduleQuery.executed !== null
-            ).toString()} \n`
+            ).toString()} \n`,
         );
 
         // VERIFY THAT THE SCHEDULED TRANSACTION (TOKEN TRANSFER) EXECUTED
@@ -334,13 +334,13 @@ async function main() {
         aB = await bCheckerFcn(aliceId);
         bB = await bCheckerFcn(bobId);
         console.log(
-            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`
+            `- Treasury balance: ID:${tokenId.toString()} and ${oB.toString()}`,
         );
         console.log(
-            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`
+            `- Alice balance: ID:${tokenId.toString()} and ${aB.toString()}`,
         );
         console.log(
-            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`
+            `- Bob balance: ID:${tokenId.toString()} and ${bB.toString()}`,
         );
 
         /**

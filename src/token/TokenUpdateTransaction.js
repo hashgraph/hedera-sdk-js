@@ -235,7 +235,7 @@ export default class TokenUpdateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const update =
@@ -302,7 +302,7 @@ export default class TokenUpdateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -713,5 +713,5 @@ export default class TokenUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenUpdate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenUpdateTransaction._fromProtobuf
+    TokenUpdateTransaction._fromProtobuf,
 );

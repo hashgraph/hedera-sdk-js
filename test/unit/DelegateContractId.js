@@ -8,7 +8,7 @@ describe("DelegateContractId", function () {
         expect(() => new DelegateContractId(3)).to.not.throw();
         expect(() => new DelegateContractId(0, 0, 3)).to.not.throw();
         expect(
-            () => new DelegateContractId({ shard: 0, realm: 0, num: 3 })
+            () => new DelegateContractId({ shard: 0, realm: 0, num: 3 }),
         ).to.not.throw();
     });
 
@@ -30,7 +30,7 @@ describe("DelegateContractId", function () {
         expect(id._toProtobuf()).to.deep.equal(idProto);
         expect(id._toProtobufKey()).to.deep.equal(idProtoKey);
         expect(
-            DelegateContractId._fromProtobuf(idProto).toString()
+            DelegateContractId._fromProtobuf(idProto).toString(),
         ).to.deep.equal("1.2.3");
         expect(keyToId.toString()).to.deep.equal("1.2.3");
         expect(keyToId instanceof DelegateContractId).to.be.true;

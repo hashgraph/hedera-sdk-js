@@ -219,7 +219,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0'/2147483647', passphrase: "some pass"
         const key4 = await mnemonic.toStandardEd25519PrivateKey(
             passphrase,
-            2147483647
+            2147483647,
         );
         expect(hex.encode(key4.chainCode)).to.be.equal(CHAIN_CODE4);
         expect(key4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
@@ -280,7 +280,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0'/2147483647', passphrase: "some pass"
         const key4 = await mnemonic.toStandardEd25519PrivateKey(
             passphrase,
-            2147483647
+            2147483647,
         );
         expect(hex.encode(key4.chainCode)).to.be.equal(CHAIN_CODE4);
         expect(key4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
@@ -355,7 +355,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0'
         const key2 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             "",
-            bip32.toHardenedIndex(0)
+            bip32.toHardenedIndex(0),
         );
         expect(hex.encode(key2.chainCode)).to.be.equal(CHAIN_CODE2);
         expect(key2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
@@ -364,7 +364,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0, passphrase "some pass"
         const key3 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            0
+            0,
         );
         expect(hex.encode(key3.chainCode)).to.be.equal(CHAIN_CODE3);
         expect(key3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
@@ -373,7 +373,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0', passphrase "some pass"
         const key4 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            bip32.toHardenedIndex(0)
+            bip32.toHardenedIndex(0),
         );
         expect(hex.encode(key4.chainCode)).to.be.equal(CHAIN_CODE4);
         expect(key4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
@@ -382,7 +382,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/2147483647, passphrase "some pass"
         const key5 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            2147483647
+            2147483647,
         );
         expect(hex.encode(key5.chainCode)).to.be.equal(CHAIN_CODE5);
         expect(key5.toStringRaw()).to.be.equal(PRIVATE_KEY5);
@@ -391,7 +391,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/2147483647', passphrase "some pass"
         const key6 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            bip32.toHardenedIndex(2147483647)
+            bip32.toHardenedIndex(2147483647),
         );
         expect(hex.encode(key6.chainCode)).to.be.equal(CHAIN_CODE6);
         expect(key6.toStringRaw()).to.be.equal(PRIVATE_KEY6);
@@ -454,7 +454,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0'
         const key2 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             "",
-            bip32.toHardenedIndex(0)
+            bip32.toHardenedIndex(0),
         );
         expect(hex.encode(key2.chainCode)).to.be.equal(CHAIN_CODE2);
         expect(key2.toStringRaw()).to.be.equal(PRIVATE_KEY2);
@@ -463,7 +463,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0, passphrase "some pass"
         const key3 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            0
+            0,
         );
         expect(hex.encode(key3.chainCode)).to.be.equal(CHAIN_CODE3);
         expect(key3.toStringRaw()).to.be.equal(PRIVATE_KEY3);
@@ -472,7 +472,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/0', passphrase "some pass"
         const key4 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            bip32.toHardenedIndex(0)
+            bip32.toHardenedIndex(0),
         );
         expect(hex.encode(key4.chainCode)).to.be.equal(CHAIN_CODE4);
         expect(key4.toStringRaw()).to.be.equal(PRIVATE_KEY4);
@@ -481,7 +481,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/2147483647, passphrase "some pass"
         const key5 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            2147483647
+            2147483647,
         );
         expect(hex.encode(key5.chainCode)).to.be.equal(CHAIN_CODE5);
         expect(key5.toStringRaw()).to.be.equal(PRIVATE_KEY5);
@@ -490,7 +490,7 @@ describe("Mnemonic", function () {
         // Chain m/44'/3030'/0'/0/2147483647', passphrase "some pass"
         const key6 = await mnemonic.toStandardECDSAsecp256k1PrivateKey(
             passphrase,
-            bip32.toHardenedIndex(2147483647)
+            bip32.toHardenedIndex(2147483647),
         );
         expect(hex.encode(key6.chainCode)).to.be.equal(CHAIN_CODE6);
         expect(key6.toStringRaw()).to.be.equal(PRIVATE_KEY6);

@@ -98,7 +98,7 @@ export default class SystemDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const systemDelete =
@@ -113,7 +113,7 @@ export default class SystemDeleteTransaction extends Transaction {
                         ? FileId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   systemDelete.fileID
-                              )
+                              ),
                           )
                         : undefined,
                 contractId:
@@ -121,7 +121,7 @@ export default class SystemDeleteTransaction extends Transaction {
                         ? ContractId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   systemDelete.contractID
-                              )
+                              ),
                           )
                         : undefined,
                 expirationTime:
@@ -133,7 +133,7 @@ export default class SystemDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 

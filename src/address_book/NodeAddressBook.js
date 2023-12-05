@@ -68,7 +68,7 @@ export default class NodeAddressBook {
      */
     static fromBytes(bytes) {
         return NodeAddressBook._fromProtobuf(
-            HashgraphProto.proto.NodeAddressBook.decode(bytes)
+            HashgraphProto.proto.NodeAddressBook.decode(bytes),
         );
     }
 
@@ -82,7 +82,7 @@ export default class NodeAddressBook {
             nodeAddresses:
                 nodeAddressBook.nodeAddress != null
                     ? nodeAddressBook.nodeAddress.map((nodeAddress) =>
-                          NodeAddress._fromProtobuf(nodeAddress)
+                          NodeAddress._fromProtobuf(nodeAddress),
                       )
                     : undefined,
         });
@@ -94,7 +94,7 @@ export default class NodeAddressBook {
     _toProtobuf() {
         return {
             nodeAddress: this._nodeAddresses.map((nodeAddress) =>
-                nodeAddress._toProtobuf()
+                nodeAddress._toProtobuf(),
             ),
         };
     }
@@ -112,14 +112,14 @@ export default class NodeAddressBook {
     toJSON() {
         return {
             nodeAddresses: this._nodeAddresses.map((nodeAddress) =>
-                nodeAddress.toJSON()
+                nodeAddress.toJSON(),
             ),
         };
     }
 
     toBytes() {
         return HashgraphProto.proto.NodeAddressBook.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

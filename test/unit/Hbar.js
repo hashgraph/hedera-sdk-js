@@ -65,7 +65,7 @@ describe("Hbar", function () {
                     throw new Error(
                         "Expected Hbar.fromString(" +
                             element +
-                            ") to throw an error."
+                            ") to throw an error.",
                     );
                 }
                 expect(result).to.be.true;
@@ -82,7 +82,7 @@ describe("Hbar", function () {
 
         check.forEach((element) => {
             expect(element.replace("+", "") + " " + unit).to.equal(
-                Hbar.fromString(element).toString()
+                Hbar.fromString(element).toString(),
             );
         });
     });
@@ -97,7 +97,7 @@ describe("Hbar", function () {
                 expect(
                     error
                         .toString()
-                        .includes("Hbar in tinybars contains decimals")
+                        .includes("Hbar in tinybars contains decimals"),
                 ).to.equal(true);
             }
         });

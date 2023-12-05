@@ -57,7 +57,7 @@ describe("TokenUpdate", function () {
         expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
@@ -69,7 +69,7 @@ describe("TokenUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
@@ -91,7 +91,7 @@ describe("TokenUpdate", function () {
         expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
@@ -103,7 +103,7 @@ describe("TokenUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
@@ -158,7 +158,7 @@ describe("TokenUpdate", function () {
         expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
@@ -170,7 +170,7 @@ describe("TokenUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
@@ -206,7 +206,7 @@ describe("TokenUpdate", function () {
         expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
-            treasuryAccountId.toString()
+            treasuryAccountId.toString(),
         );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
@@ -218,7 +218,7 @@ describe("TokenUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString()
+            operatorId.toString(),
         );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);

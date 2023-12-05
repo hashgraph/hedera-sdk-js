@@ -166,8 +166,8 @@ export default class ScheduleInfoQuery extends Query {
             ScheduleInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.IScheduleInfo} */ (
                     info.scheduleInfo
-                )
-            )
+                ),
+            ),
         );
     }
 

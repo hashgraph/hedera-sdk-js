@@ -247,7 +247,7 @@ export default class ContractCreateFlow {
      */
     setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociation) {
         this._contractCreate.setMaxAutomaticTokenAssociations(
-            maxAutomaticTokenAssociation
+            maxAutomaticTokenAssociation,
         );
 
         return this;
@@ -326,7 +326,7 @@ export default class ContractCreateFlow {
      */
     sign(privateKey) {
         return this.signWith(privateKey.publicKey, (message) =>
-            Promise.resolve(privateKey.sign(message))
+            Promise.resolve(privateKey.sign(message)),
         );
     }
 
@@ -376,19 +376,19 @@ export default class ContractCreateFlow {
             .setContents(
                 this._bytecode.subarray(
                     0,
-                    Math.min(this._bytecode.length, 2048)
-                )
+                    Math.min(this._bytecode.length, 2048),
+                ),
             )
             .freezeWith(client);
         await addSignersToTransaction(
             fileCreateTransaction,
             this._publicKeys,
-            this._transactionSigners
+            this._transactionSigners,
         );
 
         let response = await fileCreateTransaction.execute(
             client,
-            requestTimeout
+            requestTimeout,
         );
         const receipt = await response.getReceipt(client);
 
@@ -402,7 +402,7 @@ export default class ContractCreateFlow {
             await addSignersToTransaction(
                 fileAppendTransaction,
                 this._publicKeys,
-                this._transactionSigners
+                this._transactionSigners,
             );
             await fileAppendTransaction.execute(client, requestTimeout);
         }
@@ -412,7 +412,7 @@ export default class ContractCreateFlow {
         await addSignersToTransaction(
             this._contractCreate,
             this._publicKeys,
-            this._transactionSigners
+            this._transactionSigners,
         );
 
         response = await this._contractCreate.execute(client, requestTimeout);
@@ -425,7 +425,7 @@ export default class ContractCreateFlow {
             await addSignersToTransaction(
                 fileDeleteTransaction,
                 this._publicKeys,
-                this._transactionSigners
+                this._transactionSigners,
             );
             await (
                 await fileDeleteTransaction.execute(client, requestTimeout)
@@ -446,7 +446,7 @@ export default class ContractCreateFlow {
 
         if (signer.getAccountKey == null) {
             throw new Error(
-                "`Signer.getAccountKey()` is not implemented, but is required for `ContractCreateFlow`"
+                "`Signer.getAccountKey()` is not implemented, but is required for `ContractCreateFlow`",
             );
         }
         // eslint-disable-next-line @typescript-eslint/await-thenable
@@ -459,7 +459,7 @@ export default class ContractCreateFlow {
             const propertyValues = Object.values(
                 // @ts-ignore
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                key._key._key._keyData
+                key._key._key._keyData,
             );
             const keyArray = new Uint8Array(propertyValues);
 
@@ -471,15 +471,15 @@ export default class ContractCreateFlow {
             .setContents(
                 this._bytecode.subarray(
                     0,
-                    Math.min(this._bytecode.length, 2048)
-                )
+                    Math.min(this._bytecode.length, 2048),
+                ),
             )
             .freezeWithSigner(signer);
         await fileCreateTransaction.signWithSigner(signer);
         await addSignersToTransaction(
             fileCreateTransaction,
             this._publicKeys,
-            this._transactionSigners
+            this._transactionSigners,
         );
 
         let response = await fileCreateTransaction.executeWithSigner(signer);
@@ -500,7 +500,7 @@ export default class ContractCreateFlow {
             await addSignersToTransaction(
                 fileAppendTransaction,
                 this._publicKeys,
-                this._transactionSigners
+                this._transactionSigners,
             );
             await fileAppendTransaction.executeWithSigner(signer);
         }
@@ -508,13 +508,12 @@ export default class ContractCreateFlow {
         this._contractCreate = await this._contractCreate
             .setBytecodeFileId(fileId)
             .freezeWithSigner(signer);
-        this._contractCreate = await this._contractCreate.signWithSigner(
-            signer
-        );
+        this._contractCreate =
+            await this._contractCreate.signWithSigner(signer);
         await addSignersToTransaction(
             this._contractCreate,
             this._publicKeys,
-            this._transactionSigners
+            this._transactionSigners,
         );
 
         response = await this._contractCreate.executeWithSigner(signer);
@@ -529,7 +528,7 @@ export default class ContractCreateFlow {
             await addSignersToTransaction(
                 fileDeleteTransaction,
                 this._publicKeys,
-                this._transactionSigners
+                this._transactionSigners,
             );
             await (
                 await fileDeleteTransaction.executeWithSigner(signer)
@@ -550,7 +549,7 @@ export default class ContractCreateFlow {
 async function addSignersToTransaction(
     transaction,
     publicKeys,
-    transactionSigners
+    transactionSigners,
 ) {
     for (let i = 0; i < publicKeys.length; i++) {
         await transaction.signWith(publicKeys[i], transactionSigners[i]);

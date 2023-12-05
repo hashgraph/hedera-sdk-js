@@ -32,7 +32,7 @@ describe("TransactionReceipt", function () {
         const keyList = KeyList.of(
             key1.publicKey,
             key2.publicKey,
-            key3.publicKey
+            key3.publicKey,
         );
 
         const response = await new AccountCreateTransaction()
@@ -77,13 +77,13 @@ describe("TransactionReceipt", function () {
         } catch (error) {
             const expected = TransactionId.withValidStart(
                 new AccountId(scheduled1.transactionId.accountId),
-                scheduled1.transactionId.validStart
+                scheduled1.transactionId.validStart,
             );
             const actual = TransactionId.withValidStart(
                 new AccountId(
-                    error.transactionReceipt.scheduledTransactionId.accountId
+                    error.transactionReceipt.scheduledTransactionId.accountId,
                 ),
-                error.transactionReceipt.scheduledTransactionId.validStart
+                error.transactionReceipt.scheduledTransactionId.validStart,
             );
             expect(expected.toString()).to.be.equal(actual.toString());
         }

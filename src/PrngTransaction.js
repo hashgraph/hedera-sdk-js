@@ -111,7 +111,7 @@ export default class PrngTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = /** @type {HashgraphProto.proto.ITransactionBody} */ (
             bodies[0]
@@ -128,7 +128,7 @@ export default class PrngTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -166,5 +166,5 @@ export default class PrngTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "utilPrng",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    PrngTransaction._fromProtobuf
+    PrngTransaction._fromProtobuf,
 );

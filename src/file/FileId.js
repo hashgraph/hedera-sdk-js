@@ -68,7 +68,7 @@ export default class FileId {
         const fileId = new FileId(
             id.shardNum != null ? Long.fromString(id.shardNum.toString()) : 0,
             id.realmNum != null ? Long.fromString(id.realmNum.toString()) : 0,
-            id.fileNum != null ? Long.fromString(id.fileNum.toString()) : 0
+            id.fileNum != null ? Long.fromString(id.fileNum.toString()) : 0,
         );
 
         return fileId;
@@ -99,7 +99,7 @@ export default class FileId {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -177,7 +177,7 @@ export default class FileId {
     compare(other) {
         return entity_id.compare(
             [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
+            [other.shard, other.realm, other.num],
         );
     }
 }

@@ -169,7 +169,7 @@ export default class AccountUpdateTransaction extends Transaction {
 
         if (props.maxAutomaticTokenAssociations != null) {
             this.setMaxAutomaticTokenAssociations(
-                props.maxAutomaticTokenAssociations
+                props.maxAutomaticTokenAssociations,
             );
         }
 
@@ -200,7 +200,7 @@ export default class AccountUpdateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const update =
@@ -215,7 +215,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.accountIDToUpdate
-                              )
+                              ),
                           )
                         : undefined,
                 key:
@@ -231,7 +231,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.proxyAccountID
-                              )
+                              ),
                           )
                         : undefined,
                 autoRenewPeriod:
@@ -254,7 +254,7 @@ export default class AccountUpdateTransaction extends Transaction {
                     update.maxAutomaticTokenAssociations != null &&
                     update.maxAutomaticTokenAssociations.value != null
                         ? Long.fromNumber(
-                              update.maxAutomaticTokenAssociations.value
+                              update.maxAutomaticTokenAssociations.value,
                           )
                         : undefined,
                 stakedAccountId:
@@ -273,7 +273,7 @@ export default class AccountUpdateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -639,5 +639,5 @@ export default class AccountUpdateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoUpdateAccount",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountUpdateTransaction._fromProtobuf
+    AccountUpdateTransaction._fromProtobuf,
 );

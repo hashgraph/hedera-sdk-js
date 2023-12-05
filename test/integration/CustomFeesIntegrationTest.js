@@ -711,7 +711,7 @@ describe("CustomFees", function () {
             .setFallbackFee(
                 new CustomFixedFee()
                     .setFeeCollectorAccountId(env.operatorId)
-                    .setAmount(1)
+                    .setAmount(1),
             );
 
         const token = (
@@ -748,7 +748,7 @@ describe("CustomFees", function () {
             .setFallbackFee(
                 new CustomFixedFee()
                     .setFeeCollectorAccountId(env.operatorId)
-                    .setAmount(1)
+                    .setAmount(1),
             );
 
         let err = false;
@@ -774,7 +774,7 @@ describe("CustomFees", function () {
             err = error
                 .toString()
                 .includes(
-                    Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique
+                    Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique,
                 );
         }
 

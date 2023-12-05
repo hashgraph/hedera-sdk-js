@@ -59,8 +59,8 @@ export default class ManagedNodeAddress {
         } else {
             throw new Error(
                 `failed to create a managed node address: ${JSON.stringify(
-                    props
-                )}`
+                    props,
+                )}`,
             );
         }
 

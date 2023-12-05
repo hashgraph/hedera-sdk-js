@@ -22,7 +22,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -31,7 +31,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     try {
@@ -47,14 +47,12 @@ async function main() {
             .freezeWithSigner(wallet);
         transaction = await transaction.signWithSigner(wallet);
 
-        let fileTransactionResponse = await transaction.executeWithSigner(
-            wallet
-        );
+        let fileTransactionResponse =
+            await transaction.executeWithSigner(wallet);
 
         // Fetch the receipt for transaction that created the file
-        const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
-            wallet
-        );
+        const fileReceipt =
+            await fileTransactionResponse.getReceiptWithSigner(wallet);
 
         // The file ID is located on the transaction receipt
         const fileId = fileReceipt.fileId;
@@ -62,7 +60,7 @@ async function main() {
         console.log(`contract bytecode file: ${fileId.toString()}`);
 
         // Create the contract
-        transaction = await new ContractCreateTransaction()
+        let contractCreateTransaction = await new ContractCreateTransaction()
             // Set gas to create the contract
             .setGas(100000)
             // The contract bytecode must be set to the file ID containing the contract bytecode
@@ -71,11 +69,11 @@ async function main() {
             // updated in the future
             .setAdminKey(wallet.getAccountKey())
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
+        contractCreateTransaction =
+            await contractCreateTransaction.signWithSigner(wallet);
 
-        const contractTransactionResponse = await transaction.executeWithSigner(
-            wallet
-        );
+        const contractTransactionResponse =
+            await contractCreateTransaction.executeWithSigner(wallet);
 
         // Fetch the receipt for the transaction that created the contract
         const contractReceipt =
@@ -104,7 +102,7 @@ async function main() {
             contractCallResult.errorMessage != ""
         ) {
             console.log(
-                `error calling contract: ${contractCallResult.errorMessage}`
+                `error calling contract: ${contractCallResult.errorMessage}`,
             );
         }
 
@@ -120,14 +118,14 @@ async function main() {
         const message = contractCallResult.getString(0);
         console.log(`contract message: ${message}`);
 
-        transaction = await new ContractDeleteTransaction()
+        let contractDeleteTransaction = await new ContractDeleteTransaction()
             .setContractId(contractId)
             .setTransferAccountId(wallet.accountId)
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
-        const contractDeleteResult = await transaction.executeWithSigner(
-            wallet
-        );
+        contractDeleteTransaction =
+            await contractDeleteTransaction.signWithSigner(wallet);
+        const contractDeleteResult =
+            await contractDeleteTransaction.executeWithSigner(wallet);
 
         // Delete the contract
         // Note: The admin key of the contract needs to sign the transaction

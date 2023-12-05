@@ -30,7 +30,7 @@ fs.readdir(examplesDirectory, (err, files) => {
 
     const isPathStartsWith = (
         /** @type {string} */ file,
-        /** @type {string} */ directory
+        /** @type {string} */ directory,
     ) => path.join(examplesDirectory, file).startsWith(directory);
 
     const examples = files.filter(
@@ -38,8 +38,8 @@ fs.readdir(examplesDirectory, (err, files) => {
             file.endsWith(".js") &&
             file !== excludedJSFile &&
             excludedDirectories.some(
-                (directory) => !isPathStartsWith(directory, file)
-            )
+                (directory) => !isPathStartsWith(directory, file),
+            ),
     );
 
     const total = examples.length;
@@ -64,6 +64,6 @@ fs.readdir(examplesDirectory, (err, files) => {
     console.log(
         `\nTotal: [${total}] \n✅ Completed: [${completed}] \n❌ Failed: [${failed}] ${
             failed === 0 ? " \nGreat job! 🎉" : ""
-        } `
+        } `,
     );
 });

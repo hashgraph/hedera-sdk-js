@@ -54,12 +54,12 @@ export default class HbarTransferMap extends ObjectMap {
             const account = AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     transfer.accountID
-                )
+                ),
             );
 
             accountTransfers._set(
                 account,
-                Hbar.fromTinybars(/** @type {Long} */ (transfer.amount))
+                Hbar.fromTinybars(/** @type {Long} */ (transfer.amount)),
             );
         }
 

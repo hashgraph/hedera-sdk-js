@@ -257,7 +257,7 @@ export default class NodeAddress {
             addresses:
                 nodeAddress.serviceEndpoint != null
                     ? nodeAddress.serviceEndpoint.map((address) =>
-                          Endpoint._fromProtobuf(address)
+                          Endpoint._fromProtobuf(address),
                       )
                     : undefined,
             description:
@@ -279,7 +279,7 @@ export default class NodeAddress {
                 this._accountId != null ? this._accountId._toProtobuf() : null,
             nodeCertHash: this._certHash,
             serviceEndpoint: this._addresses.map((address) =>
-                address._toProtobuf()
+                address._toProtobuf(),
             ),
             description: this._description,
             stake: this._stake,

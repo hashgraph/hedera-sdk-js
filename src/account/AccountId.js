@@ -148,7 +148,7 @@ export default class AccountId {
                 evmAddress = EvmAddress.fromBytes(id.alias);
             } else {
                 aliasKey = Key._fromProtobufKey(
-                    HashgraphProto.proto.Key.decode(id.alias)
+                    HashgraphProto.proto.Key.decode(id.alias),
                 );
             }
         }
@@ -162,7 +162,7 @@ export default class AccountId {
             id.realmNum != null ? id.realmNum : 0,
             id.accountNum != null ? id.accountNum : 0,
             aliasKey,
-            evmAddress
+            evmAddress,
         );
     }
 
@@ -193,7 +193,7 @@ export default class AccountId {
         }
         const mirrorUrl = client.mirrorNetwork[0].slice(
             0,
-            client.mirrorNetwork[0].indexOf(":")
+            client.mirrorNetwork[0].indexOf(":"),
         );
 
         await new Promise((resolve) => {
@@ -205,7 +205,7 @@ export default class AccountId {
         const mirrorAccountId = (await axios.get(url)).data.account;
 
         this.num = Long.fromString(
-            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1)
+            mirrorAccountId.slice(mirrorAccountId.lastIndexOf(".") + 1),
         );
         /* eslint-enable */
 
@@ -223,7 +223,7 @@ export default class AccountId {
         }
         const mirrorUrl = client.mirrorNetwork[0].slice(
             0,
-            client.mirrorNetwork[0].indexOf(":")
+            client.mirrorNetwork[0].indexOf(":"),
         );
 
         await new Promise((resolve) => {
@@ -255,7 +255,7 @@ export default class AccountId {
     validateChecksum(client) {
         if (this.aliasKey != null) {
             throw new Error(
-                "cannot calculate checksum with an account ID that has a aliasKey"
+                "cannot calculate checksum with an account ID that has a aliasKey",
             );
         }
 
@@ -264,7 +264,7 @@ export default class AccountId {
             this.realm,
             this.num,
             this._checksum,
-            client
+            client,
         );
     }
 
@@ -274,7 +274,7 @@ export default class AccountId {
      */
     static fromBytes(bytes) {
         return AccountId._fromProtobuf(
-            HashgraphProto.proto.AccountID.decode(bytes)
+            HashgraphProto.proto.AccountID.decode(bytes),
         );
     }
 
@@ -323,7 +323,7 @@ export default class AccountId {
 
         if (this.aliasKey != null) {
             alias = HashgraphProto.proto.Key.encode(
-                this.aliasKey._toProtobufKey()
+                this.aliasKey._toProtobufKey(),
             ).finish();
         } else if (this.evmAddress != null) {
             alias = this.evmAddress._bytes;
@@ -347,7 +347,7 @@ export default class AccountId {
      */
     toBytes() {
         return HashgraphProto.proto.AccountID.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 
@@ -373,7 +373,7 @@ export default class AccountId {
     toStringWithChecksum(client) {
         if (this.aliasKey != null) {
             throw new Error(
-                "cannot calculate checksum with an account ID that has a aliasKey"
+                "cannot calculate checksum with an account ID that has a aliasKey",
             );
         }
 
@@ -467,5 +467,5 @@ export default class AccountId {
 }
 
 CACHE.setAccountIdConstructor(
-    (shard, realm, key) => new AccountId(shard, realm, Long.ZERO, key)
+    (shard, realm, key) => new AccountId(shard, realm, Long.ZERO, key),
 );

@@ -107,7 +107,7 @@ export default class TransactionId {
             typeof id === "string"
                 ? AccountId.fromString(id)
                 : new AccountId(id),
-            Timestamp.generate()
+            Timestamp.generate(),
         );
     }
 
@@ -141,7 +141,7 @@ export default class TransactionId {
             AccountId.fromString(account),
             new Timestamp(Long.fromValue(seconds), Long.fromValue(nanos)),
             isScheduled,
-            nonce != null ? Long.fromString(nonce) : null
+            nonce != null ? Long.fromString(nonce) : null,
         );
     }
 
@@ -161,7 +161,7 @@ export default class TransactionId {
         if (this.accountId != null && this.validStart != null) {
             const zeroPaddedNanos = String(this.validStart.nanos).padStart(
                 9,
-                "0"
+                "0",
             );
             const nonce =
                 this.nonce != null ? "/".concat(this.nonce.toString()) : "";
@@ -183,11 +183,11 @@ export default class TransactionId {
                 AccountId._fromProtobuf(id.accountID),
                 Timestamp._fromProtobuf(id.transactionValidStart),
                 id.scheduled != null ? id.scheduled : undefined,
-                id.nonce != null ? id.nonce : undefined
+                id.nonce != null ? id.nonce : undefined,
             );
         } else {
             throw new Error(
-                "Neither `nonce` or `accountID` and `transactionValidStart` are set"
+                "Neither `nonce` or `accountID` and `transactionValidStart` are set",
             );
         }
     }
@@ -213,7 +213,7 @@ export default class TransactionId {
      */
     static fromBytes(bytes) {
         return TransactionId._fromProtobuf(
-            HashgraphProto.proto.TransactionID.decode(bytes)
+            HashgraphProto.proto.TransactionID.decode(bytes),
         );
     }
 
@@ -222,7 +222,7 @@ export default class TransactionId {
      */
     toBytes() {
         return HashgraphProto.proto.TransactionID.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 
@@ -234,7 +234,7 @@ export default class TransactionId {
             this.accountId,
             this.validStart,
             this.scheduled,
-            this.nonce
+            this.nonce,
         );
     }
 
@@ -244,7 +244,7 @@ export default class TransactionId {
      */
     compare(other) {
         const comparison = /** @type {AccountId} */ (this.accountId).compare(
-            /** @type {AccountId} */ (other.accountId)
+            /** @type {AccountId} */ (other.accountId),
         );
 
         if (comparison != 0) {
@@ -252,7 +252,7 @@ export default class TransactionId {
         }
 
         return /** @type {Timestamp} */ (this.validStart).compare(
-            /** @type {Timestamp} */ (other.validStart)
+            /** @type {Timestamp} */ (other.validStart),
         );
     }
 

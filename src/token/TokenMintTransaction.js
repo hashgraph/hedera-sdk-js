@@ -101,7 +101,7 @@ export default class TokenMintTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const mintToken =
@@ -123,7 +123,7 @@ export default class TokenMintTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -191,12 +191,12 @@ export default class TokenMintTransaction extends Transaction {
 
         if (typeof metadata === "string") {
             console.warn(
-                "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead."
+                "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead.",
             );
         }
 
         this._metadata.push(
-            typeof metadata === "string" ? hex.decode(metadata) : metadata
+            typeof metadata === "string" ? hex.decode(metadata) : metadata,
         );
 
         return this;
@@ -212,14 +212,14 @@ export default class TokenMintTransaction extends Transaction {
         for (const data of metadata) {
             if (typeof data === "string") {
                 console.warn(
-                    "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead."
+                    "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead.",
                 );
                 break;
             }
         }
 
         this._metadata = metadata.map((data) =>
-            typeof data === "string" ? hex.decode(data) : data
+            typeof data === "string" ? hex.decode(data) : data,
         );
 
         return this;
@@ -272,5 +272,5 @@ export default class TokenMintTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenMint",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenMintTransaction._fromProtobuf
+    TokenMintTransaction._fromProtobuf,
 );

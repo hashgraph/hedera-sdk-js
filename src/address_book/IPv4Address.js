@@ -104,7 +104,7 @@ export default class IPv4Address {
             this._host != null && this._host.left != null ? this._host.left : 0,
             this._host != null && this._host.right != null
                 ? this._host.right
-                : 0
+                : 0,
         );
     }
 

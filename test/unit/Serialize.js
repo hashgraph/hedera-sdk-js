@@ -45,7 +45,7 @@ function sign(tx, privateKeyHex) {
 function buildTx(params) {
     const transactionId = TransactionId.withValidStart(
         params.operatorId,
-        params.validStart
+        params.validStart,
     );
     const unbuiltTx = new TransferTransaction()
         .setMaxTransactionFee(params.fee)

@@ -169,7 +169,7 @@ export default class AssessedCustomFee {
             payerAccountIds:
                 fee.effectivePayerAccountId != null
                     ? fee.effectivePayerAccountId.map((id) =>
-                          AccountId._fromProtobuf(id)
+                          AccountId._fromProtobuf(id),
                       )
                     : undefined,
         });

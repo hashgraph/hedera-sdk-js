@@ -94,7 +94,7 @@ describe("TokenNftAllowances", function () {
                         .addApprovedNftTransfer(
                             nft1,
                             env.operatorId,
-                            receiverAccountId
+                            receiverAccountId,
                         )
                         .setTransactionId(onBehalfOfTransactionId)
                         .freezeWith(env.client)
@@ -199,7 +199,7 @@ describe("TokenNftAllowances", function () {
                     .addApprovedNftTransfer(
                         nft1,
                         env.operatorId,
-                        receiverAccountId
+                        receiverAccountId,
                     )
                     .setTransactionId(onBehalfOfTransactionId)
                     .freezeWith(env.client)
@@ -212,7 +212,7 @@ describe("TokenNftAllowances", function () {
             .execute(env.client);
 
         expect(info[0].accountId.toString()).to.be.equal(
-            receiverAccountId.toString()
+            receiverAccountId.toString(),
         );
 
         let err = false;
@@ -225,7 +225,7 @@ describe("TokenNftAllowances", function () {
                         .addApprovedNftTransfer(
                             nft2,
                             env.operatorId,
-                            receiverAccountId
+                            receiverAccountId,
                         )
                         .setTransactionId(onBehalfOfTransactionId2)
                         .freezeWith(env.client)
@@ -315,7 +315,7 @@ describe("TokenNftAllowances", function () {
             .approveTokenNftAllowanceAllSerials(
                 nftTokenId,
                 env.operatorId,
-                spenderAccountId
+                spenderAccountId,
             )
             .execute(env.client);
 
@@ -327,7 +327,7 @@ describe("TokenNftAllowances", function () {
                     .addApprovedNftTransfer(
                         nft1,
                         env.operatorId,
-                        receiverAccountId
+                        receiverAccountId,
                     )
                     .setTransactionId(onBehalfOfTransactionId)
                     .freezeWith(env.client)
@@ -350,7 +350,7 @@ describe("TokenNftAllowances", function () {
                     .addApprovedNftTransfer(
                         nft2,
                         env.operatorId,
-                        receiverAccountId
+                        receiverAccountId,
                     )
                     .setTransactionId(onBehalfOfTransactionId2)
                     .freezeWith(env.client)
@@ -367,11 +367,11 @@ describe("TokenNftAllowances", function () {
             .execute(env.client);
 
         expect(infoNft1[0].accountId.toString()).to.be.equal(
-            receiverAccountId.toString()
+            receiverAccountId.toString(),
         );
 
         expect(infoNft2[0].accountId.toString()).to.be.equal(
-            receiverAccountId.toString()
+            receiverAccountId.toString(),
         );
     });
 
@@ -462,14 +462,14 @@ describe("TokenNftAllowances", function () {
                 .approveTokenNftAllowanceAllSerials(
                     nftTokenId,
                     env.operatorId,
-                    delegatingSpenderAccountId
+                    delegatingSpenderAccountId,
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
 
         env.client.setOperator(
             delegatingSpenderAccountId,
-            delegatingSpenderKey
+            delegatingSpenderKey,
         );
 
         await (
@@ -478,7 +478,7 @@ describe("TokenNftAllowances", function () {
                     nft1,
                     env.operatorId,
                     spenderAccountId,
-                    delegatingSpenderAccountId
+                    delegatingSpenderAccountId,
                 )
                 .freezeWith(env.client)
                 .execute(env.client)
@@ -494,7 +494,7 @@ describe("TokenNftAllowances", function () {
                     .addApprovedNftTransfer(
                         nft1,
                         env.operatorId,
-                        receiverAccountId
+                        receiverAccountId,
                     )
                     .setTransactionId(onBehalfOfTransactionId)
                     .freezeWith(env.client)
@@ -512,7 +512,7 @@ describe("TokenNftAllowances", function () {
                         .addApprovedNftTransfer(
                             nft2,
                             env.operatorId,
-                            receiverAccountId
+                            receiverAccountId,
                         )
                         .setTransactionId(onBehalfOfTransactionId2)
                         .freezeWith(env.client)
@@ -534,10 +534,10 @@ describe("TokenNftAllowances", function () {
             .execute(env.client);
 
         expect(infoNft1[0].accountId.toString()).to.be.equal(
-            receiverAccountId.toString()
+            receiverAccountId.toString(),
         );
         expect(infoNft2[0].accountId.toString()).to.be.equal(
-            env.operatorId.toString()
+            env.operatorId.toString(),
         );
     });
 

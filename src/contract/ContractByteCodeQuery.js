@@ -150,7 +150,7 @@ export default class ContractByteCodeQuery extends Query {
         return Promise.resolve(
             contractGetBytecodeResponse.bytecode != null
                 ? contractGetBytecodeResponse.bytecode
-                : new Uint8Array()
+                : new Uint8Array(),
         );
     }
 

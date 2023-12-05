@@ -101,7 +101,7 @@ export default class TopicMessageQuery extends Query {
             console.error(
                 `Error attempting to subscribe to topic: ${
                     this._topicId != null ? this._topicId.toString() : ""
-                }`
+                }`,
             );
         };
 
@@ -124,7 +124,7 @@ export default class TopicMessageQuery extends Query {
                 this._logger.info(
                     `Subscription to topic ${
                         this._topicId != null ? this._topicId.toString() : ""
-                    } complete`
+                    } complete`,
                 );
             }
         };
@@ -230,8 +230,8 @@ export default class TopicMessageQuery extends Query {
             startTime instanceof Timestamp
                 ? startTime
                 : startTime instanceof Date
-                ? Timestamp.fromDate(startTime)
-                : new Timestamp(startTime, 0);
+                  ? Timestamp.fromDate(startTime)
+                  : new Timestamp(startTime, 0);
         return this;
     }
 
@@ -253,8 +253,8 @@ export default class TopicMessageQuery extends Query {
             endTime instanceof Timestamp
                 ? endTime
                 : endTime instanceof Date
-                ? Timestamp.fromDate(endTime)
-                : new Timestamp(endTime, 0);
+                  ? Timestamp.fromDate(endTime)
+                  : new Timestamp(endTime, 0);
         return this;
     }
 
@@ -365,7 +365,7 @@ export default class TopicMessageQuery extends Query {
                             ? this._endTime._toProtobuf()
                             : null,
                     limit: this._limit,
-                }
+                },
             ).finish();
 
         const cancel = client._mirrorNetwork
@@ -378,7 +378,7 @@ export default class TopicMessageQuery extends Query {
                 (data) => {
                     const message =
                         HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
-                            data
+                            data,
                         );
 
                     if (this._limit != null && this._limit.gt(0)) {
@@ -388,7 +388,7 @@ export default class TopicMessageQuery extends Query {
                     this._startTime = Timestamp._fromProtobuf(
                         /** @type {HashgraphProto.proto.ITimestamp} */ (
                             message.consensusTimestamp
-                        )
+                        ),
                     ).plusNanos(1);
 
                     if (
@@ -409,7 +409,7 @@ export default class TopicMessageQuery extends Query {
                         const total = /** @type {number} */ (chunkInfo.total);
                         const transactionId =
                             TransactionId._fromProtobuf(
-                                initialTransactionID
+                                initialTransactionID,
                             ).toString();
 
                         /** @type {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]} */
@@ -444,7 +444,7 @@ export default class TopicMessageQuery extends Query {
                     ) {
                         const delay = Math.min(
                             250 * 2 ** this._attempt,
-                            this._maxBackoff
+                            this._maxBackoff,
                         );
                         console.warn(
                             `Error subscribing to topic ${
@@ -453,7 +453,7 @@ export default class TopicMessageQuery extends Query {
                                     : "UNKNOWN"
                             } during attempt ${
                                 this._attempt
-                            }. Waiting ${delay} ms before next attempt: ${message}`
+                            }. Waiting ${delay} ms before next attempt: ${message}`,
                         );
 
                         this._attempt += 1;
@@ -465,7 +465,7 @@ export default class TopicMessageQuery extends Query {
                         this._errorHandler(null, new Error(message));
                     }
                 },
-                this._completionHandler
+                this._completionHandler,
             );
 
         if (this._handle != null) {
@@ -476,7 +476,7 @@ export default class TopicMessageQuery extends Query {
     requireNotSubscribed() {
         if (this._handle != null) {
             throw new Error(
-                "Cannot change fields on an already subscribed query"
+                "Cannot change fields on an already subscribed query",
             );
         }
     }

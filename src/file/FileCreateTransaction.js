@@ -72,7 +72,7 @@ export default class FileCreateTransaction extends Transaction {
         this._expirationTime = new Timestamp(0, 0).plusNanos(
             Long.fromNumber(Date.now())
                 .mul(1000000)
-                .add(DEFAULT_AUTO_RENEW_PERIOD.mul(1000000000))
+                .add(DEFAULT_AUTO_RENEW_PERIOD.mul(1000000000)),
         );
 
         /**
@@ -120,7 +120,7 @@ export default class FileCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -134,7 +134,7 @@ export default class FileCreateTransaction extends Transaction {
                     create.keys != null
                         ? create.keys.keys != null
                             ? create.keys.keys.map((key) =>
-                                  Key._fromProtobufKey(key)
+                                  Key._fromProtobufKey(key),
                               )
                             : undefined
                         : undefined,
@@ -149,7 +149,7 @@ export default class FileCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 

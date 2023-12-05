@@ -79,18 +79,18 @@ export default class HbarAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
-                )
+                ),
             ),
             ownerAccountId:
                 allowance.owner != null
                     ? AccountId._fromProtobuf(
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
                               allowance.owner
-                          )
+                          ),
                       )
                     : null,
             amount: Hbar.fromTinybars(
-                allowance.amount != null ? allowance.amount : 0
+                allowance.amount != null ? allowance.amount : 0,
             ),
         });
     }
@@ -106,11 +106,11 @@ export default class HbarAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     allowance.spender
-                )
+                ),
             ),
             ownerAccountId,
             amount: Hbar.fromTinybars(
-                allowance.amount != null ? allowance.amount : 0
+                allowance.amount != null ? allowance.amount : 0,
             ),
         });
     }

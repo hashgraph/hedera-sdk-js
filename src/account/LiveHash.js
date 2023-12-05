@@ -71,7 +71,7 @@ export default class LiveHash {
             accountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     liveHash_.accountId
-                )
+                ),
             ),
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:
@@ -81,7 +81,7 @@ export default class LiveHash {
             duration: Duration._fromProtobuf(
                 /** @type {HashgraphProto.proto.IDuration} */ (
                     liveHash_.duration
-                )
+                ),
             ),
         });
     }

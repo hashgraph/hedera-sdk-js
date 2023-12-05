@@ -16,7 +16,7 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(0);
 
         expect(accountId.toStringWithChecksum(client)).to.be.eql(
-            "0.0.123-vfmkw"
+            "0.0.123-vfmkw",
         );
     });
 
@@ -35,7 +35,7 @@ describe("AccountId", function () {
 
         try {
             AccountId.fromString("0.0.123-ghaha").validateChecksum(
-                IntegrationTestEnv.forMainnet()
+                IntegrationTestEnv.forMainnet(),
             );
         } catch {
             err = true;

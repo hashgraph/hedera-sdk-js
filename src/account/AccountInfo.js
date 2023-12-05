@@ -245,7 +245,7 @@ export default class AccountInfo {
         let aliasKey =
             info.alias != null && info.alias.length > 0
                 ? Key._fromProtobufKey(
-                      HashgraphProto.proto.Key.decode(info.alias)
+                      HashgraphProto.proto.Key.decode(info.alias),
                   )
                 : null;
 
@@ -254,7 +254,7 @@ export default class AccountInfo {
         }
 
         const accountId = AccountId._fromProtobuf(
-            /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
+            /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID),
         );
 
         return new AccountInfo({
@@ -263,18 +263,18 @@ export default class AccountInfo {
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
             key: Key._fromProtobufKey(
-                /** @type {HashgraphProto.proto.IKey} */ (info.key)
+                /** @type {HashgraphProto.proto.IKey} */ (info.key),
             ),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
                     ? info.generateSendRecordThreshold
-                    : 0
+                    : 0,
             ),
             receiveRecordThreshold: Hbar.fromTinybars(
                 info.generateReceiveRecordThreshold != null
                     ? info.generateReceiveRecordThreshold
-                    : 0
+                    : 0,
             ),
             isReceiverSignatureRequired:
                 info.receiverSigRequired != null
@@ -283,37 +283,37 @@ export default class AccountInfo {
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */ (
                     info.expirationTime
-                )
+                ),
             ),
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? new Duration(
-                          /** @type {Long} */ (info.autoRenewPeriod.seconds)
+                          /** @type {Long} */ (info.autoRenewPeriod.seconds),
                       )
                     : new Duration(0),
             proxyAccountId:
                 info.proxyAccountID != null &&
                 Long.fromValue(
-                    /** @type {Long | number} */ (info.proxyAccountID.shardNum)
+                    /** @type {Long | number} */ (info.proxyAccountID.shardNum),
                 ).toInt() !== 0 &&
                 Long.fromValue(
-                    /** @type {Long | number} */ (info.proxyAccountID.realmNum)
+                    /** @type {Long | number} */ (info.proxyAccountID.realmNum),
                 ).toInt() !== 0 &&
                 Long.fromValue(
                     /** @type {Long | number} */ (
                         info.proxyAccountID.accountNum
-                    )
+                    ),
                 ).toInt() !== 0
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(
-                info.proxyReceived != null ? info.proxyReceived : 0
+                info.proxyReceived != null ? info.proxyReceived : 0,
             ),
             liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(
-                (hash) => LiveHash._fromProtobuf(hash)
+                (hash) => LiveHash._fromProtobuf(hash),
             ),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
-                info.tokenRelationships != null ? info.tokenRelationships : []
+                info.tokenRelationships != null ? info.tokenRelationships : [],
             ),
             accountMemo: info.memo != null ? info.memo : "",
             ownedNfts: info.ownedNfts ? info.ownedNfts : Long.ZERO,
@@ -372,7 +372,7 @@ export default class AccountInfo {
             alias:
                 this.aliasKey != null
                     ? HashgraphProto.proto.Key.encode(
-                          this.aliasKey._toProtobufKey()
+                          this.aliasKey._toProtobufKey(),
                       ).finish()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
@@ -390,7 +390,9 @@ export default class AccountInfo {
      */
     static fromBytes(bytes) {
         return AccountInfo._fromProtobuf(
-            HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.decode(bytes)
+            HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.decode(
+                bytes,
+            ),
         );
     }
 
@@ -399,7 +401,7 @@ export default class AccountInfo {
      */
     toBytes() {
         return HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 

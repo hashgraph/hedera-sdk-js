@@ -46,8 +46,8 @@ describe("ContractBytecode", function () {
                 .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
-                        "Hello from Hedera."
-                    )
+                        "Hello from Hedera.",
+                    ),
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")

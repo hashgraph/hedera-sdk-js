@@ -97,7 +97,7 @@ export default class ContractDeleteTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const contractDelete =
@@ -112,7 +112,7 @@ export default class ContractDeleteTransaction extends Transaction {
                         ? ContractId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   contractDelete.contractID
-                              )
+                              ),
                           )
                         : undefined,
                 transferAccountId:
@@ -120,7 +120,7 @@ export default class ContractDeleteTransaction extends Transaction {
                         ? AccountId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IAccountID} */ (
                                   contractDelete.transferAccountID
-                              )
+                              ),
                           )
                         : undefined,
                 transferContractId:
@@ -128,7 +128,7 @@ export default class ContractDeleteTransaction extends Transaction {
                         ? ContractId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IContractID} */ (
                                   contractDelete.transferContractID
-                              )
+                              ),
                           )
                         : undefined,
             }),
@@ -136,7 +136,7 @@ export default class ContractDeleteTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -281,5 +281,5 @@ export default class ContractDeleteTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "contractDeleteInstance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractDeleteTransaction._fromProtobuf
+    ContractDeleteTransaction._fromProtobuf,
 );

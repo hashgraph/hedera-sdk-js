@@ -24,7 +24,7 @@ describe("EthereumTransaction", function () {
 
         let transaction = new EthereumTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(accountId1, timestamp1)
+                TransactionId.withValidStart(accountId1, timestamp1),
             )
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)
@@ -52,7 +52,7 @@ describe("EthereumTransaction", function () {
 
         let transaction = new EthereumTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(accountId1, timestamp1)
+                TransactionId.withValidStart(accountId1, timestamp1),
             )
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)

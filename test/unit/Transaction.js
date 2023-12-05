@@ -16,7 +16,7 @@ import Long from "long";
 describe("Transaction", function () {
     it("toBytes", async function () {
         const key = PrivateKey.fromStringDer(
-            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
+            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c",
         );
         const account = AccountId.fromString("0.0.1004");
         const validStart = new Timestamp(1451, 590);
@@ -36,10 +36,10 @@ describe("Transaction", function () {
         expect(transactionBytesHex).to.eql(hexBytes);
 
         const transactionFromBytes = Transaction.fromBytes(
-            transaction.toBytes()
+            transaction.toBytes(),
         );
         const transactionFromBytesToBytes = hex.encode(
-            transactionFromBytes.toBytes()
+            transactionFromBytes.toBytes(),
         );
 
         expect(transactionFromBytesToBytes).to.eql(hexBytes);
@@ -69,13 +69,13 @@ describe("Transaction", function () {
             transaction.hbarTransfers
                 .get(new AccountId(476260))
                 .toTinybars()
-                .toString()
+                .toString(),
         ).to.be.equal(new Hbar(1).negated().toTinybars().toString());
         expect(
             transaction.hbarTransfers
                 .get(new AccountId(476267))
                 .toTinybars()
-                .toString()
+                .toString(),
         ).to.be.equal(new Hbar(1).toTinybars().toString());
     });
 
@@ -120,21 +120,21 @@ describe("Transaction", function () {
             .freezeWith(client);
 
         expect(transaction.maxTransactionFee.toTinybars().toInt()).to.be.equal(
-            1
+            1,
         );
     });
 
     it("fromBytes fails when bodies differ", function () {
         const key1 = PrivateKey.fromStringDer(
-            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
+            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c",
         );
         const key2 = PrivateKey.fromStringDer(
-            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511d"
+            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511d",
         );
 
         const transactionID = TransactionId.withValidStart(
             new AccountId(9),
-            new Timestamp(10, 11)
+            new Timestamp(10, 11),
         );
         const nodeAccountID1 = new AccountId(3);
         const nodeAccountID2 = new AccountId(4);
@@ -194,7 +194,7 @@ describe("Transaction", function () {
 
         if (!err) {
             throw new Error(
-                "transaction successfully built from invalid bytes"
+                "transaction successfully built from invalid bytes",
             );
         }
     });

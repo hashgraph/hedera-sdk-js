@@ -83,7 +83,7 @@ export default class ContractCallQuery extends Query {
             } else {
                 this.setFunction(
                     props.functionParameters.name,
-                    props.functionParameters.parameters
+                    props.functionParameters.parameters,
                 );
             }
         }
@@ -252,7 +252,7 @@ export default class ContractCallQuery extends Query {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK,
         );
 
         const call =
@@ -323,8 +323,8 @@ export default class ContractCallQuery extends Query {
                  * @type {HashgraphProto.proto.IContractFunctionResult}
                  */
                 (call.functionResult),
-                false
-            )
+                false,
+            ),
         );
     }
 
@@ -345,7 +345,7 @@ export default class ContractCallQuery extends Query {
              * @type {HashgraphProto.proto.IContractFunctionResult}
              */
             (call.functionResult),
-            false
+            false,
         );
     }
 

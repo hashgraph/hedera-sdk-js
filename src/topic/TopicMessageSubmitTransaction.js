@@ -115,7 +115,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const message =
@@ -135,7 +135,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -255,12 +255,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         }
 
         const chunks = Math.floor(
-            (this._message.length + (this._chunkSize - 1)) / this._chunkSize
+            (this._message.length + (this._chunkSize - 1)) / this._chunkSize,
         );
 
         if (chunks > this._maxChunks) {
             throw new Error(
-                `Message with size ${this._message.length} too long for ${this._maxChunks} chunks`
+                `Message with size ${this._message.length} too long for ${this._maxChunks} chunks`,
             );
         }
 
@@ -286,7 +286,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
-                    this._makeSignedTransaction(nodeAccountId)
+                    this._makeSignedTransaction(nodeAccountId),
                 );
             }
 
@@ -298,8 +298,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                     ).seconds,
                     /** @type {Timestamp} */ (
                         nextTransactionId.validStart
-                    ).nanos.add(1)
-                )
+                    ).nanos.add(1),
+                ),
             );
         }
 
@@ -317,7 +317,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
         if (this._message != null && this._message.length > this._chunkSize) {
             throw new Error(
-                `cannot schedule \`TopicMessageSubmitTransaction\` with message over ${this._chunkSize} bytes`
+                `cannot schedule \`TopicMessageSubmitTransaction\` with message over ${this._chunkSize} bytes`,
             );
         }
 
@@ -352,7 +352,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         if (
             operatorAccountId != null &&
             operatorAccountId.equals(
-                /** @type {AccountId} */ (transactionId.accountId)
+                /** @type {AccountId} */ (transactionId.accountId),
             )
         ) {
             await super.signWithOperator(client);
@@ -436,5 +436,5 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusSubmitMessage",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicMessageSubmitTransaction._fromProtobuf
+    TopicMessageSubmitTransaction._fromProtobuf,
 );

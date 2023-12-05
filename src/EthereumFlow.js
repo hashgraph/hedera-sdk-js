@@ -177,7 +177,7 @@ export default class EthereumFlow {
     async execute(client) {
         if (this._ethereumData == null) {
             throw new Error(
-                "cannot submit ethereum transaction with no ethereum data"
+                "cannot submit ethereum transaction with no ethereum data",
             );
         }
 
@@ -191,7 +191,7 @@ export default class EthereumFlow {
         if (this._callDataFileId != null) {
             if (this._ethereumData.callData.length === 0) {
                 throw new Error(
-                    "call data file ID provided, but ethereum data already contains call data"
+                    "call data file ID provided, but ethereum data already contains call data",
                 );
             }
 
@@ -204,7 +204,7 @@ export default class EthereumFlow {
             const fileId = await createFile(
                 this._ethereumData.callData,
                 client,
-                this._maxChunks
+                this._maxChunks,
             );
 
             this._ethereumData.callData = new Uint8Array();
@@ -237,7 +237,7 @@ async function createFile(callData, client, maxChunks) {
                     .setKeys(
                         client.operatorPublicKey
                             ? [client.operatorPublicKey]
-                            : []
+                            : [],
                     )
                     .execute(client)
             ).getReceipt(client)

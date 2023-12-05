@@ -123,7 +123,7 @@ export default class FileAppendTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const append =
@@ -143,7 +143,7 @@ export default class FileAppendTransaction extends Transaction {
 
             if (contents == null) {
                 contents = new Uint8Array(
-                    /** @type {Uint8Array} */ (fileAppend.contents)
+                    /** @type {Uint8Array} */ (fileAppend.contents),
                 );
                 continue;
             }
@@ -151,12 +151,12 @@ export default class FileAppendTransaction extends Transaction {
             /** @type {Uint8Array} */
             const concat = new Uint8Array(
                 contents.length +
-                    /** @type {Uint8Array} */ (fileAppend.contents).length
+                    /** @type {Uint8Array} */ (fileAppend.contents).length,
             );
             concat.set(contents, 0);
             concat.set(
                 /** @type {Uint8Array} */ (fileAppend.contents),
-                contents.length
+                contents.length,
             );
             contents = concat;
         }
@@ -168,7 +168,7 @@ export default class FileAppendTransaction extends Transaction {
                         ? FileId._fromProtobuf(
                               /** @type {HashgraphProto.proto.IFileID} */ (
                                   append.fileID
-                              )
+                              ),
                           )
                         : undefined,
                 contents: contents,
@@ -177,7 +177,7 @@ export default class FileAppendTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -296,12 +296,12 @@ export default class FileAppendTransaction extends Transaction {
         }
 
         const chunks = Math.floor(
-            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize
+            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
         );
 
         if (chunks > this._maxChunks) {
             throw new Error(
-                `Contents with size ${this._contents.length} too long for ${this._maxChunks} chunks`
+                `Contents with size ${this._contents.length} too long for ${this._maxChunks} chunks`,
             );
         }
 
@@ -320,7 +320,7 @@ export default class FileAppendTransaction extends Transaction {
 
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
-                    this._makeSignedTransaction(nodeAccountId)
+                    this._makeSignedTransaction(nodeAccountId),
                 );
             }
 
@@ -332,8 +332,8 @@ export default class FileAppendTransaction extends Transaction {
                     ).seconds,
                     /** @type {Timestamp} */ (
                         nextTransactionId.validStart
-                    ).nanos.add(1)
-                )
+                    ).nanos.add(1),
+                ),
             );
         }
 
@@ -351,7 +351,7 @@ export default class FileAppendTransaction extends Transaction {
 
         if (this._contents != null && this._contents.length > this._chunkSize) {
             throw new Error(
-                `cannot schedule \`FileAppendTransaction\` with message over ${this._chunkSize} bytes`
+                `cannot schedule \`FileAppendTransaction\` with message over ${this._chunkSize} bytes`,
             );
         }
 
@@ -386,7 +386,7 @@ export default class FileAppendTransaction extends Transaction {
         if (
             operatorAccountId != null &&
             operatorAccountId.equals(
-                /** @type {AccountId} */ (transactionId.accountId)
+                /** @type {AccountId} */ (transactionId.accountId),
             )
         ) {
             await super.signWithOperator(client);

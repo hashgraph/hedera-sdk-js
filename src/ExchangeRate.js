@@ -88,7 +88,7 @@ export default class ExchangeRate {
                             ? rate.expirationTime.seconds.toInt() * 1000
                             : rate.expirationTime.seconds
                         : 0
-                    : 0
+                    : 0,
             ),
         });
     }
@@ -103,7 +103,7 @@ export default class ExchangeRate {
             centEquiv: this.cents,
             expirationTime: {
                 seconds: Long.fromNumber(
-                    Math.trunc(this.expirationTime.getTime() / 1000)
+                    Math.trunc(this.expirationTime.getTime() / 1000),
                 ),
             },
         };

@@ -43,7 +43,7 @@ export default class SignatureMap extends ObjectMap {
             if (sigMap != null) {
                 signatures._set(
                     transaction._nodeAccountIds.list[i],
-                    NodeAccountIdSignatureMap._fromTransactionSigMap(sigMap)
+                    NodeAccountIdSignatureMap._fromTransactionSigMap(sigMap),
                 );
             }
         }

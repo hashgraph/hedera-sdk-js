@@ -191,7 +191,7 @@ class Cache {
     get publicKeyED25519() {
         if (this._publicKeyED25519 == null) {
             throw new Error(
-                "Cache.publicKeyED25519 was used before it was set"
+                "Cache.publicKeyED25519 was used before it was set",
             );
         }
 
@@ -229,7 +229,7 @@ class Cache {
     get privateKeyConstructor() {
         if (this._privateKeyConstructor == null) {
             throw new Error(
-                "Cache.privateKeyConstructor was used before it was set"
+                "Cache.privateKeyConstructor was used before it was set",
             );
         }
 
@@ -249,7 +249,7 @@ class Cache {
     get mnemonicFromString() {
         if (this._mnemonicFromString == null) {
             throw new Error(
-                "Cache.mnemonicFromString was used before it was set"
+                "Cache.mnemonicFromString was used before it was set",
             );
         }
 
@@ -269,7 +269,7 @@ class Cache {
     get accountIdConstructor() {
         if (this._accountIdConstructor == null) {
             throw new Error(
-                "Cache.accountIdConstructor was used before it was set"
+                "Cache.accountIdConstructor was used before it was set",
             );
         }
 
@@ -289,7 +289,7 @@ class Cache {
     get delegateContractId() {
         if (this._delegateContractId == null) {
             throw new Error(
-                "Cache.delegateContractId was used before it was set"
+                "Cache.delegateContractId was used before it was set",
             );
         }
 
@@ -318,7 +318,7 @@ class Cache {
      * @param {((bytes: Uint8Array) => EthereumTransactionData)} ethereumTransactionDataLegacyFromBytes
      */
     setEthereumTransactionDataLegacyFromBytes(
-        ethereumTransactionDataLegacyFromBytes
+        ethereumTransactionDataLegacyFromBytes,
     ) {
         this._ethereumTransactionDataLegacyFromBytes =
             ethereumTransactionDataLegacyFromBytes;
@@ -330,7 +330,7 @@ class Cache {
     get ethereumTransactionDataLegacyFromBytes() {
         if (this._ethereumTransactionDataLegacyFromBytes == null) {
             throw new Error(
-                "Cache.ethereumTransactionDataLegacyFromBytes was used before it was set"
+                "Cache.ethereumTransactionDataLegacyFromBytes was used before it was set",
             );
         }
 
@@ -341,7 +341,7 @@ class Cache {
      * @param {((bytes: Uint8Array) => EthereumTransactionData)} ethereumTransactionDataEip1559FromBytes
      */
     setEthereumTransactionDataEip1559FromBytes(
-        ethereumTransactionDataEip1559FromBytes
+        ethereumTransactionDataEip1559FromBytes,
     ) {
         this._ethereumTransactionDataEip1559FromBytes =
             ethereumTransactionDataEip1559FromBytes;
@@ -353,7 +353,7 @@ class Cache {
     get ethereumTransactionDataEip1559FromBytes() {
         if (this._ethereumTransactionDataEip1559FromBytes == null) {
             throw new Error(
-                "Cache.ethereumTransactionDataEip1559FromBytes was used before it was set"
+                "Cache.ethereumTransactionDataEip1559FromBytes was used before it was set",
             );
         }
 
@@ -364,7 +364,7 @@ class Cache {
      * @param {((bytes: Uint8Array) => EthereumTransactionData)} ethereumTransactionDataEip2930FromBytes
      */
     setEthereumTransactionDataEip2930FromBytes(
-        ethereumTransactionDataEip2930FromBytes
+        ethereumTransactionDataEip2930FromBytes,
     ) {
         this._ethereumTransactionDataEip2930FromBytes =
             ethereumTransactionDataEip2930FromBytes;
@@ -376,7 +376,7 @@ class Cache {
     get ethereumTransactionDataEip2930FromBytes() {
         if (this._ethereumTransactionDataEip2930FromBytes == null) {
             throw new Error(
-                "Cache.ethereumTransactionDataEip2930FromBytes was used before it was set"
+                "Cache.ethereumTransactionDataEip2930FromBytes was used before it was set",
             );
         }
 
@@ -397,7 +397,7 @@ class Cache {
     get transactionReceiptQueryConstructor() {
         if (this._transactionReceiptQueryConstructor == null) {
             throw new Error(
-                "Cache.transactionReceiptQueryConstructor was used before it was set"
+                "Cache.transactionReceiptQueryConstructor was used before it was set",
             );
         }
 
@@ -418,7 +418,7 @@ class Cache {
     get transactionRecordQueryConstructor() {
         if (this._transactionRecordQueryConstructor == null) {
             throw new Error(
-                "Cache.transactionRecordQueryConstructor was used before it was set"
+                "Cache.transactionRecordQueryConstructor was used before it was set",
             );
         }
 
@@ -438,7 +438,7 @@ class Cache {
     get addressBookQueryConstructor() {
         if (this._addressBookQueryConstructor == null) {
             throw new Error(
-                "Cache.addressBookQueryConstructor was used before it was set"
+                "Cache.addressBookQueryConstructor was used before it was set",
             );
         }
 

@@ -102,7 +102,7 @@ export default class ScheduleSignTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const sign =
@@ -121,7 +121,7 @@ export default class ScheduleSignTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -203,5 +203,5 @@ export default class ScheduleSignTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "scheduleSign",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleSignTransaction._fromProtobuf
+    ScheduleSignTransaction._fromProtobuf,
 );

@@ -66,8 +66,8 @@ export default class Network extends ManagedNetwork {
                             ? AccountId.fromString(value)
                             : value,
                     ];
-                })
-            )
+                }),
+            ),
         );
     }
 
@@ -273,7 +273,7 @@ export default class Network extends ManagedNetwork {
                           .setCert(
                               this._ledgerId != null
                                   ? this._ledgerId.toString()
-                                  : ""
+                                  : "",
                           )
                     : node.toInsecure()
             );
@@ -316,7 +316,7 @@ export default class Network extends ManagedNetwork {
      */
     getNodeAccountIdsForExecute() {
         return this._getNumberOfMostHealthyNodes(
-            this.getNumberOfNodesForTransaction()
+            this.getNumberOfNodesForTransaction(),
         ).map((node) => node.accountId);
     }
 }

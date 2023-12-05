@@ -80,7 +80,7 @@ export default class EthereumTransactionDataEip2930 extends EthereumTransactionD
             callData: hex.decode(/** @type {string} */ (decoded[6])),
             // @ts-ignore
             accessList: /** @type {string[]} */ (decoded[7]).map((v) =>
-                hex.decode(v)
+                hex.decode(v),
             ),
             recId: hex.decode(/** @type {string} */ (decoded[8])),
             r: hex.decode(/** @type {string} */ (decoded[9])),
@@ -136,5 +136,5 @@ export default class EthereumTransactionDataEip2930 extends EthereumTransactionD
 }
 
 CACHE.setEthereumTransactionDataEip2930FromBytes((bytes) =>
-    EthereumTransactionDataEip2930.fromBytes(bytes)
+    EthereumTransactionDataEip2930.fromBytes(bytes),
 );

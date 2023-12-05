@@ -208,12 +208,12 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK,
         );
 
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received node precheck status ${status.toString()}`
+                `[${this._getLogId()}] received node precheck status ${status.toString()}`,
             );
         }
 
@@ -245,7 +245,7 @@ export default class TransactionReceiptQuery extends Query {
 
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received receipt status ${status.toString()}`
+                `[${this._getLogId()}] received receipt status ${status.toString()}`,
             );
         }
 
@@ -292,7 +292,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK,
         );
 
         switch (status) {
@@ -325,7 +325,7 @@ export default class TransactionReceiptQuery extends Query {
 
         if (this._transactionId == null) {
             throw new Error(
-                "Failed to construct `ReceiptStatusError` because `transactionId` is `null`"
+                "Failed to construct `ReceiptStatusError` because `transactionId` is `null`",
             );
         }
 
@@ -333,7 +333,7 @@ export default class TransactionReceiptQuery extends Query {
             status,
             transactionId: this._transactionId,
             transactionReceipt: TransactionReceipt._fromProtobuf(
-                transactionGetReceipt
+                transactionGetReceipt,
             ),
         });
     }
@@ -393,7 +393,7 @@ export default class TransactionReceiptQuery extends Query {
             );
 
         return Promise.resolve(
-            TransactionReceipt._fromProtobuf(transactionGetReceipt)
+            TransactionReceipt._fromProtobuf(transactionGetReceipt),
         );
     }
 
@@ -428,5 +428,5 @@ export default class TransactionReceiptQuery extends Query {
 QUERY_REGISTRY.set(
     "transactionGetReceipt",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransactionReceiptQuery._fromProtobuf
+    TransactionReceiptQuery._fromProtobuf,
 );

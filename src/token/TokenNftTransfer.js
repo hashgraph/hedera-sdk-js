@@ -89,7 +89,7 @@ export default class TokenNftTransfer {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     tokenTransfer.token
-                )
+                ),
             );
 
             for (const transfer of tokenTransfer.nftTransfers != null
@@ -101,19 +101,19 @@ export default class TokenNftTransfer {
                         senderAccountId: AccountId._fromProtobuf(
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.senderAccountID
-                            )
+                            ),
                         ),
                         receiverAccountId: AccountId._fromProtobuf(
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.receiverAccountID
-                            )
+                            ),
                         ),
                         serialNumber:
                             transfer.serialNumber != null
                                 ? transfer.serialNumber
                                 : Long.ZERO,
                         isApproved: transfer.isApproval == true,
-                    })
+                    }),
                 );
             }
         }

@@ -78,7 +78,7 @@ export default class GrpcStatus {
                 return GrpcStatus.GrpcWeb;
             default:
                 throw new Error(
-                    "(BUG) non-exhaustive GrpcStatus switch statement"
+                    "(BUG) non-exhaustive GrpcStatus switch statement",
                 );
         }
     }

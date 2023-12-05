@@ -36,7 +36,7 @@ describe("TransferTransaction", function () {
         transfer.addHbarTransfer("0.0.1", 1);
 
         expect(
-            transfer.hbarTransfers.get(accountId).to(HbarUnit.Hbar).toNumber()
+            transfer.hbarTransfers.get(accountId).to(HbarUnit.Hbar).toNumber(),
         ).to.be.equal(new Hbar(expectedHbar).to(HbarUnit.Hbar).toNumber());
     });
 
@@ -60,10 +60,10 @@ describe("TransferTransaction", function () {
         transferTransaction.addNftTransfer(nftId, sender, recipient);
 
         expect(
-            transferTransaction.nftTransfers.values().next().value[0]
+            transferTransaction.nftTransfers.values().next().value[0],
         ).to.eql(check);
         expect(transferTransaction.nftTransfers.keys().next().value).to.eql(
-            tokenId
+            tokenId,
         );
     });
 
@@ -86,10 +86,10 @@ describe("TransferTransaction", function () {
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
 
         expect(
-            transferTransaction.nftTransfers.values().next().value[0]
+            transferTransaction.nftTransfers.values().next().value[0],
         ).to.eql(check);
         expect(transferTransaction.nftTransfers.keys().next().value).to.eql(
-            tokenId
+            tokenId,
         );
     });
 
@@ -112,10 +112,10 @@ describe("TransferTransaction", function () {
         transferTransaction.addNftTransfer(tokenId, sender, recipient);
 
         expect(
-            transferTransaction.nftTransfers.values().next().value[0]
+            transferTransaction.nftTransfers.values().next().value[0],
         ).to.eql(check);
         expect(transferTransaction.nftTransfers.keys().next().value).to.eql(
-            TokenId.fromString("1.2.3")
+            TokenId.fromString("1.2.3"),
         );
     });
 
@@ -138,10 +138,10 @@ describe("TransferTransaction", function () {
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
 
         expect(
-            transferTransaction.nftTransfers.values().next().value[0]
+            transferTransaction.nftTransfers.values().next().value[0],
         ).to.eql(check);
         expect(transferTransaction.nftTransfers.keys().next().value).to.eql(
-            TokenId.fromString("1.2.3")
+            TokenId.fromString("1.2.3"),
         );
     });
 
@@ -168,19 +168,19 @@ describe("TransferTransaction", function () {
             .addNftTransfer(
                 new NftId(tokenId4, serialNum1),
                 accountId2,
-                accountId4
+                accountId4,
             )
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
             .addNftTransfer(tokenId4, serialNum2, accountId3, accountId1)
             .addNftTransfer(
                 new NftId(tokenId3, serialNum1),
                 accountId1,
-                accountId2
+                accountId2,
             )
             .addNftTransfer(
                 new NftId(tokenId3, serialNum2),
                 accountId2,
-                accountId1
+                accountId1,
             )
             .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
             .addTokenTransferWithDecimals(tokenId2, accountId3, 2, 10)
@@ -196,7 +196,7 @@ describe("TransferTransaction", function () {
             .freeze();
 
         const transferTransaction = Transaction.fromBytes(
-            transaction.toBytes()
+            transaction.toBytes(),
         );
 
         const data = transferTransaction._makeTransactionData();

@@ -48,7 +48,7 @@ export default class TransactionHashMap extends ObjectMap {
                 transaction._transactions.get(i)
             );
             const hash = await sha384.digest(
-                /** @type {Uint8Array} */ (tx.signedTransactionBytes)
+                /** @type {Uint8Array} */ (tx.signedTransactionBytes),
             );
 
             hashes._set(nodeAccountId, hash);

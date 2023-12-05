@@ -586,7 +586,7 @@ export default class Executable {
 
             if (node == null) {
                 throw new Error(
-                    `NodeAccountId not recognized: ${nodeAccountId.toString()}`
+                    `NodeAccountId not recognized: ${nodeAccountId.toString()}`,
                 );
             }
 
@@ -594,7 +594,7 @@ export default class Executable {
             const logId = this._getLogId();
             if (this._logger) {
                 this._logger.debug(
-                    `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
+                    `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`,
                 );
             }
 
@@ -616,7 +616,7 @@ export default class Executable {
             if (!node.isHealthy()) {
                 if (this._logger) {
                     this._logger.debug(
-                        `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`
+                        `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`,
                     );
                 }
 
@@ -639,16 +639,16 @@ export default class Executable {
                                 // eslint-disable-next-line ie11/no-loop-func
                                 () =>
                                     reject(new Error("grpc deadline exceeded")),
-                                /** @type {number=} */ (this._grpcDeadline)
-                            )
-                        )
+                                /** @type {number=} */ (this._grpcDeadline),
+                            ),
+                        ),
                     );
                 }
                 if (this._logger) {
                     this._logger.trace(
                         `[${this._getLogId()}] sending protobuf ${hex.encode(
-                            this._requestToBytes(request)
-                        )}`
+                            this._requestToBytes(request),
+                        )}`,
                     );
                 }
 
@@ -661,14 +661,14 @@ export default class Executable {
                 // If we received a grpc status error we need to determine if
                 // we should retry on this error, or err from the request entirely.
                 const error = GrpcServiceError._fromResponse(
-                    /** @type {Error} */ (err)
+                    /** @type {Error} */ (err),
                 );
 
                 // Save the error in case we retry
                 persistentError = error;
                 if (this._logger) {
                     this._logger.debug(
-                        `[${logId}] received error ${JSON.stringify(error)}`
+                        `[${logId}] received error ${JSON.stringify(error)}`,
                     );
                 }
 
@@ -682,7 +682,7 @@ export default class Executable {
                     // the healthy node list
                     if (this._logger) {
                         this._logger.debug(
-                            `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`
+                            `[${this._getLogId()}] node with accountId: ${node.accountId.toString()} and proxy IP: ${node.address.toString()} is unhealthy`,
                         );
                     }
 
@@ -695,8 +695,8 @@ export default class Executable {
             if (this._logger) {
                 this._logger.trace(
                     `[${this._getLogId()}] sending protobuf ${hex.encode(
-                        this._responseToBytes(response)
-                    )}`
+                        this._responseToBytes(response),
+                    )}`,
                 );
             }
 
@@ -719,7 +719,7 @@ export default class Executable {
                     await delayForAttempt(
                         attempt,
                         this._minBackoff,
-                        this._maxBackoff
+                        this._maxBackoff,
                     );
                     continue;
                 case ExecutionState.Finished:
@@ -728,7 +728,7 @@ export default class Executable {
                     throw this._mapStatusError(request, response);
                 default:
                     throw new Error(
-                        "(BUG) non-exhuastive switch statement for `ExecutionState`"
+                        "(BUG) non-exhuastive switch statement for `ExecutionState`",
                     );
             }
         }
@@ -738,7 +738,7 @@ export default class Executable {
         throw new Error(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
-            }`
+            }`,
         );
     }
 
@@ -787,7 +787,7 @@ function delayForAttempt(attempt, minBackoff, maxBackoff) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
     const ms = Math.min(
         Math.floor(minBackoff * Math.pow(2, attempt)),
-        maxBackoff
+        maxBackoff,
     );
     return new Promise((resolve) => setTimeout(resolve, ms));
 }

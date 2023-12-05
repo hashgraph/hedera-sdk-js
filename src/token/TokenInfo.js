@@ -266,7 +266,7 @@ export default class TokenInfo {
 
         return new TokenInfo({
             tokenId: TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (info.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (info.tokenId),
             ),
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
@@ -277,7 +277,7 @@ export default class TokenInfo {
                     ? AccountId._fromProtobuf(
                           /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.treasury
-                          )
+                          ),
                       )
                     : null,
             adminKey:
@@ -324,7 +324,7 @@ export default class TokenInfo {
                     ? Duration._fromProtobuf(
                           /** @type {HashgraphProto.proto.IDuration} */ (
                               info.autoRenewPeriod
-                          )
+                          ),
                       )
                     : null,
             expirationTime:
@@ -332,7 +332,7 @@ export default class TokenInfo {
                     ? Timestamp._fromProtobuf(
                           /** @type {HashgraphProto.proto.ITimestamp} */ (
                               info.expiry
-                          )
+                          ),
                       )
                     : null,
             tokenMemo: info.memo != null ? info.memo : "",
@@ -397,14 +397,14 @@ export default class TokenInfo {
                 this.defaultFreezeStatus == null
                     ? 0
                     : this.defaultFreezeStatus
-                    ? 1
-                    : 2,
+                      ? 1
+                      : 2,
             defaultKycStatus:
                 this.defaultKycStatus == null
                     ? 0
                     : this.defaultKycStatus
-                    ? 1
-                    : 2,
+                      ? 1
+                      : 2,
             pauseStatus:
                 this.pauseStatus == null ? 0 : this.pauseStatus ? 1 : 2,
             deleted: this.isDeleted,
@@ -435,7 +435,7 @@ export default class TokenInfo {
      */
     static fromBytes(bytes) {
         return TokenInfo._fromProtobuf(
-            HashgraphProto.proto.TokenInfo.decode(bytes)
+            HashgraphProto.proto.TokenInfo.decode(bytes),
         );
     }
 
@@ -444,7 +444,7 @@ export default class TokenInfo {
      */
     toBytes() {
         return HashgraphProto.proto.TokenInfo.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

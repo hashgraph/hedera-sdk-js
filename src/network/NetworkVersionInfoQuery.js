@@ -124,5 +124,5 @@ export default class NetworkVersionInfoQuery extends Query {
 QUERY_REGISTRY.set(
     "networkGetVersionInfo",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    NetworkVersionInfoQuery._fromProtobuf
+    NetworkVersionInfoQuery._fromProtobuf,
 );

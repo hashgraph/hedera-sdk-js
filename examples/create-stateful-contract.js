@@ -23,7 +23,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -32,7 +32,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     // The contract bytecode is located on the `object` field
@@ -47,14 +47,12 @@ async function main() {
             .setContents(contractByteCode)
             .freezeWithSigner(wallet);
         transaction = await transaction.signWithSigner(wallet);
-        const fileTransactionResponse = await transaction.executeWithSigner(
-            wallet
-        );
+        const fileTransactionResponse =
+            await transaction.executeWithSigner(wallet);
 
         // Fetch the receipt for transaction that created the file
-        const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
-            wallet
-        );
+        const fileReceipt =
+            await fileTransactionResponse.getReceiptWithSigner(wallet);
 
         // The file ID is located on the transaction receipt
         const fileId = fileReceipt.fileId;
@@ -62,12 +60,14 @@ async function main() {
         console.log(`contract bytecode file: ${fileId.toString()}`);
 
         // Create the contract
-        transaction = await new ContractCreateTransaction()
+        let contractCreateTransaction = await new ContractCreateTransaction()
             // Set the parameters that should be passed to the contract constructor
             // In this case we are passing in a string with the value "hello from hedera!"
             // as the only parameter that is passed to the contract
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("hello from hedera!")
+                new ContractFunctionParameters().addString(
+                    "hello from hedera!",
+                ),
             )
             // Set gas to create the contract
             .setGas(100000)
@@ -77,10 +77,10 @@ async function main() {
             // updated in the future
             .setAdminKey(wallet.getAccountKey())
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
-        const contractTransactionResponse = await transaction.executeWithSigner(
-            wallet
-        );
+        contractCreateTransaction =
+            await contractCreateTransaction.signWithSigner(wallet);
+        const contractTransactionResponse =
+            await contractCreateTransaction.executeWithSigner(wallet);
 
         // Fetch the receipt for the transaction that created the contract
         const contractReceipt =
@@ -110,7 +110,7 @@ async function main() {
             contractCallResult.errorMessage != ""
         ) {
             console.log(
-                `error calling contract: ${contractCallResult.errorMessage}`
+                `error calling contract: ${contractCallResult.errorMessage}`,
             );
         }
 
@@ -127,7 +127,7 @@ async function main() {
         console.log(`contract message: ${message}`);
 
         // Call a method on a contract exists on Hedera, but is allowed to mutate the contract state
-        transaction = await new ContractExecuteTransaction()
+        let contractExecuteTransaction = await new ContractExecuteTransaction()
             // Set which contract
             .setContractId(contractId)
             // Set the gas to execute the contract call
@@ -144,11 +144,11 @@ async function main() {
             .setFunction(
                 "set_message",
                 new ContractFunctionParameters().addString(
-                    "hello from hedera again!"
-                )
+                    "hello from hedera again!",
+                ),
             )
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
+        await contractExecuteTransaction.signWithSigner(wallet);
         const contractExecTransactionResponse =
             await transaction.executeWithSigner(wallet);
 
@@ -172,7 +172,7 @@ async function main() {
             contractUpdateResult.errorMessage != ""
         ) {
             console.log(
-                `error calling contract: ${contractUpdateResult.errorMessage}`
+                `error calling contract: ${contractUpdateResult.errorMessage}`,
             );
             return;
         }

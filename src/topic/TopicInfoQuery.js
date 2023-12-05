@@ -169,8 +169,8 @@ export default class TopicInfoQuery extends Query {
             TopicInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.IConsensusGetTopicInfoResponse} */ (
                     response.consensusGetTopicInfo
-                )
-            )
+                ),
+            ),
         );
     }
 

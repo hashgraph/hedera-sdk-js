@@ -28,7 +28,7 @@ describe("TransactionResponse", function () {
         const record = await transaction.getRecord(env.client);
 
         expect(hex.encode(record.transactionHash)).to.be.equal(
-            hex.encode(transaction.transactionHash)
+            hex.encode(transaction.transactionHash),
         );
 
         const account = record.receipt.accountId;

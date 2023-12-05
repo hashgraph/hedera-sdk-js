@@ -94,7 +94,7 @@ export default class TokenTransfer {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (
                     tokenTransfer.token
-                )
+                ),
             );
             const expectedDecimals =
                 tokenTransfer.expectedDecimals != null
@@ -112,7 +112,7 @@ export default class TokenTransfer {
                         accountId: AccountId._fromProtobuf(
                             /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.accountID
-                            )
+                            ),
                         ),
                         expectedDecimals,
                         amount:
@@ -120,7 +120,7 @@ export default class TokenTransfer {
                                 ? transfer.amount
                                 : Long.ZERO,
                         isApproved: transfer.isApproval == true,
-                    })
+                    }),
                 );
             }
         }

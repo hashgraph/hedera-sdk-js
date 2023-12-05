@@ -23,7 +23,9 @@ describe("ContractCreateFlow", function () {
             .setAdminKey(operatorKey)
             .setGas(100000)
             .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
+                new ContractFunctionParameters().addString(
+                    "Hello from Hedera.",
+                ),
             )
             .setContractMemo("[e2e::ContractCreateTransaction]")
             .execute(env.client);

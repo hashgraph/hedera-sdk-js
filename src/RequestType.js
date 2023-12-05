@@ -348,7 +348,7 @@ export default class RequestType {
         }
 
         throw new Error(
-            `(BUG) RequestType.fromCode() does not handle code: ${code}`
+            `(BUG) RequestType.fromCode() does not handle code: ${code}`,
         );
     }
 

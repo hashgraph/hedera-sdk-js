@@ -21,7 +21,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -30,7 +30,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     const key1 = PrivateKey.generate();
@@ -57,22 +57,22 @@ async function main() {
 
         console.log(`account id = ${newAccountId.toString()}`);
 
-        transaction = await new TransferTransaction()
+        let transferTransaction = await new TransferTransaction()
             .addHbarTransfer(newAccountId, -1)
             .addHbarTransfer(wallet.getAccountId(), 1)
             .schedule()
             // Set expiration time to be now + 24 hours
             .setExpirationTime(
-                Timestamp.generate().plusNanos(24 * 60 * 60 * 1000000000)
+                Timestamp.generate().plusNanos(24 * 60 * 60 * 1000000000),
             )
             // Set wait for expiry to true
             .setWaitForExpiry(true)
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
-        const response = await transaction.executeWithSigner(wallet);
+        transferTransaction = await transferTransaction.signWithSigner(wallet);
+        const response = await transferTransaction.executeWithSigner(wallet);
 
         console.log(
-            `scheduled transaction ID = ${response.transactionId.toString()}`
+            `scheduled transaction ID = ${response.transactionId.toString()}`,
         );
 
         const scheduleId = (await response.getReceiptWithSigner(wallet))
@@ -120,7 +120,7 @@ async function main() {
         const validMirrorTransactionId = `${transactionId.accountId.toString()}-${transactionId.validStart.seconds.toString()}-${transactionId.validStart.nanos.toString()}`;
 
         console.log(
-            "The following link should query the mirror node for the scheduled transaction"
+            "The following link should query the mirror node for the scheduled transaction",
         );
 
         const link = `https://${process.env.HEDERA_NETWORK}.mirrornode.hedera.com/api/v1/transactions/${validMirrorTransactionId}`;

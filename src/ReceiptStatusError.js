@@ -36,7 +36,7 @@ export default class ReceiptStatusError extends StatusError {
     constructor(props) {
         super(
             props,
-            `receipt for transaction ${props.transactionId.toString()} contained error status ${props.status.toString()}`
+            `receipt for transaction ${props.transactionId.toString()} contained error status ${props.status.toString()}`,
         );
 
         /**

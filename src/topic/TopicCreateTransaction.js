@@ -122,7 +122,7 @@ export default class TopicCreateTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const create =
@@ -156,7 +156,7 @@ export default class TopicCreateTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -363,5 +363,5 @@ export default class TopicCreateTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "consensusCreateTopic",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TopicCreateTransaction._fromProtobuf
+    TopicCreateTransaction._fromProtobuf,
 );

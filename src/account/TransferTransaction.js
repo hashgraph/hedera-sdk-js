@@ -127,7 +127,7 @@ export default class TransferTransaction extends Transaction {
             this.addTokenTransfer(
                 transfer.tokenId,
                 transfer.accountId,
-                transfer.amount
+                transfer.amount,
             );
         }
 
@@ -144,7 +144,7 @@ export default class TransferTransaction extends Transaction {
                 transfer.tokenId,
                 transfer.serial,
                 transfer.sender,
-                transfer.recipient
+                transfer.recipient,
             );
         }
     }
@@ -163,7 +163,7 @@ export default class TransferTransaction extends Transaction {
         signedTransactions,
         transactionIds,
         nodeIds,
-        bodies
+        bodies,
     ) {
         const body = bodies[0];
         const cryptoTransfer =
@@ -176,7 +176,7 @@ export default class TransferTransaction extends Transaction {
         transfers._tokenTransfers = TokenTransfer._fromProtobuf(
             cryptoTransfer.tokenTransfers != null
                 ? cryptoTransfer.tokenTransfers
-                : []
+                : [],
         );
 
         transfers._hbarTransfers = Transfer._fromProtobuf(
@@ -184,13 +184,13 @@ export default class TransferTransaction extends Transaction {
                 ? cryptoTransfer.transfers.accountAmounts != null
                     ? cryptoTransfer.transfers.accountAmounts
                     : []
-                : []
+                : [],
         );
 
         transfers._nftTransfers = TokenNftTransfer._fromProtobuf(
             cryptoTransfer.tokenTransfers != null
                 ? cryptoTransfer.tokenTransfers
-                : []
+                : [],
         );
 
         return Transaction._fromProtobufTransactions(
@@ -199,7 +199,7 @@ export default class TransferTransaction extends Transaction {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
     }
 
@@ -260,7 +260,7 @@ export default class TransferTransaction extends Transaction {
                 expectedDecimals: null,
                 amount,
                 isApproved,
-            })
+            }),
         );
 
         return this;
@@ -336,7 +336,7 @@ export default class TransferTransaction extends Transaction {
                 expectedDecimals: decimals,
                 amount,
                 isApproved: false,
-            })
+            }),
         );
 
         return this;
@@ -387,7 +387,7 @@ export default class TransferTransaction extends Transaction {
         for (const transfer of this._hbarTransfers) {
             if (transfer.accountId.compare(account) === 0) {
                 transfer.amount = Hbar.fromTinybars(
-                    transfer.amount.toTinybars().add(hbars.toTinybars())
+                    transfer.amount.toTinybars().add(hbars.toTinybars()),
                 );
                 return this;
             }
@@ -398,7 +398,7 @@ export default class TransferTransaction extends Transaction {
                 accountId: account,
                 amount: hbars,
                 isApproved,
-            })
+            }),
         );
 
         return this;
@@ -484,7 +484,7 @@ export default class TransferTransaction extends Transaction {
         tokenIdOrNftId,
         senderAccountIdOrSerialNumber,
         receiverAccountIdOrSenderAccountId,
-        receiver
+        receiver,
     ) {
         this._requireNotFrozen();
 
@@ -507,7 +507,7 @@ export default class TransferTransaction extends Transaction {
         } else if (tokenIdOrNftId instanceof TokenId) {
             nftId = new NftId(
                 tokenIdOrNftId,
-                /** @type {Long} */ (senderAccountIdOrSerialNumber)
+                /** @type {Long} */ (senderAccountIdOrSerialNumber),
             );
             senderAccountId =
                 typeof receiverAccountIdOrSenderAccountId === "string"
@@ -531,7 +531,7 @@ export default class TransferTransaction extends Transaction {
                 receiverAccountId =
                     typeof receiverAccountIdOrSenderAccountId === "string"
                         ? AccountId.fromString(
-                              receiverAccountIdOrSenderAccountId
+                              receiverAccountIdOrSenderAccountId,
                           )
                         : /** @type {AccountId} */ (
                               receiverAccountIdOrSenderAccountId
@@ -540,12 +540,12 @@ export default class TransferTransaction extends Transaction {
                 const tokenId = TokenId.fromString(tokenIdOrNftId);
                 nftId = new NftId(
                     tokenId,
-                    /** @type {Long} */ (senderAccountIdOrSerialNumber)
+                    /** @type {Long} */ (senderAccountIdOrSerialNumber),
                 );
                 senderAccountId =
                     typeof receiverAccountIdOrSenderAccountId === "string"
                         ? AccountId.fromString(
-                              receiverAccountIdOrSenderAccountId
+                              receiverAccountIdOrSenderAccountId,
                           )
                         : /** @type {AccountId} */ (
                               receiverAccountIdOrSenderAccountId
@@ -575,7 +575,7 @@ export default class TransferTransaction extends Transaction {
                 senderAccountId,
                 receiverAccountId,
                 isApproved,
-            })
+            }),
         );
 
         return this;
@@ -592,14 +592,14 @@ export default class TransferTransaction extends Transaction {
         tokenIdOrNftId,
         senderAccountIdOrSerialNumber,
         receiverAccountIdOrSenderAccountId,
-        receiver
+        receiver,
     ) {
         return this._addNftTransfer(
             false,
             tokenIdOrNftId,
             senderAccountIdOrSerialNumber,
             receiverAccountIdOrSenderAccountId,
-            receiver
+            receiver,
         );
     }
 
@@ -614,14 +614,14 @@ export default class TransferTransaction extends Transaction {
         tokenIdOrNftId,
         senderAccountIdOrSerialNumber,
         receiverAccountIdOrSenderAccountId,
-        receiver
+        receiver,
     ) {
         return this._addNftTransfer(
             true,
             tokenIdOrNftId,
             senderAccountIdOrSerialNumber,
             receiverAccountIdOrSenderAccountId,
-            receiver
+            receiver,
         );
     }
 
@@ -735,14 +735,14 @@ export default class TransferTransaction extends Transaction {
 
         this._nftTransfers.sort((a, b) => {
             const senderComparision = a.senderAccountId.compare(
-                b.senderAccountId
+                b.senderAccountId,
             );
             if (senderComparision != 0) {
                 return senderComparision;
             }
 
             const recipientComparision = a.receiverAccountId.compare(
-                b.receiverAccountId
+                b.receiverAccountId,
             );
             if (recipientComparision != 0) {
                 return recipientComparision;
@@ -889,10 +889,10 @@ export default class TransferTransaction extends Transaction {
                             ? { value: tokenTransfer.expectedDecimals }
                             : null,
                     transfers: tokenTransfer.transfers.map((transfer) =>
-                        transfer._toProtobuf()
+                        transfer._toProtobuf(),
                     ),
                     nftTransfers: tokenTransfer.nftTransfers.map((transfer) =>
-                        transfer._toProtobuf()
+                        transfer._toProtobuf(),
                     ),
                 };
             }),
@@ -913,5 +913,5 @@ export default class TransferTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoTransfer",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransferTransaction._fromProtobuf
+    TransferTransaction._fromProtobuf,
 );

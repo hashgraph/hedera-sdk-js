@@ -17,13 +17,13 @@ describe("ContractNonceInfo", function () {
         };
 
         expect(info.contractId.shard.toNumber()).to.be.equal(
-            contractId.shardNum
+            contractId.shardNum,
         );
         expect(info.contractId.realm.toNumber()).to.be.equal(
-            contractId.realmNum
+            contractId.realmNum,
         );
         expect(info.contractId.num.toNumber()).to.be.equal(
-            contractId.contractNum
+            contractId.contractNum,
         );
         expect(info.contractId.evmAddress).to.be.equal(contractId.evmAddress);
         expect(info.nonce).to.be.equal(2);

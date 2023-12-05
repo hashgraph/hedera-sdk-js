@@ -165,8 +165,8 @@ export default class AccountInfoQuery extends Query {
             AccountInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
                     info.accountInfo
-                )
-            )
+                ),
+            ),
         );
     }
 

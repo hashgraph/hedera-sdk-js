@@ -25,7 +25,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -34,7 +34,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     const newKey = PrivateKey.generate();
@@ -55,7 +55,7 @@ async function main() {
 
         console.log(`account id = ${newAccountId.toString()}`);
 
-        transaction = await new TokenCreateTransaction()
+        let tokenCreateTransaction = await new TokenCreateTransaction()
             .setNodeAccountIds([resp.nodeId])
             .setTokenName("ffff")
             .setTokenSymbol("F")
@@ -69,8 +69,9 @@ async function main() {
             .setSupplyKey(wallet.getAccountKey())
             .setFreezeDefault(false)
             .freezeWithSigner(wallet);
-        transaction = await transaction.signWithSigner(wallet);
-        resp = await transaction.executeWithSigner(wallet);
+        tokenCreateTransaction =
+            await tokenCreateTransaction.signWithSigner(wallet);
+        resp = await tokenCreateTransaction.executeWithSigner(wallet);
 
         const tokenId = (await resp.getReceiptWithSigner(wallet)).tokenId;
         console.log(`token id = ${tokenId.toString()}`);
@@ -90,7 +91,7 @@ async function main() {
         ).getReceiptWithSigner(wallet);
 
         console.log(
-            `Associated account ${newAccountId.toString()} with token ${tokenId.toString()}`
+            `Associated account ${newAccountId.toString()} with token ${tokenId.toString()}`,
         );
 
         await (
@@ -106,7 +107,7 @@ async function main() {
         ).getReceiptWithSigner(wallet);
 
         console.log(
-            `Granted KYC for account ${newAccountId.toString()} on token ${tokenId.toString()}`
+            `Granted KYC for account ${newAccountId.toString()} on token ${tokenId.toString()}`,
         );
 
         await (
@@ -124,7 +125,7 @@ async function main() {
         console.log(
             `Sent 10 tokens from account ${wallet
                 .getAccountId()
-                .toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
+                .toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`,
         );
 
         await (
@@ -164,7 +165,7 @@ async function main() {
                             .setAccountId(newAccountId)
                             .setTransferAccountId(wallet.getAccountId())
                             .setTransactionId(
-                                TransactionId.generate(newAccountId)
+                                TransactionId.generate(newAccountId),
                             )
                             .setMaxTransactionFee(new Hbar(1))
                             .freezeWithSigner(wallet)

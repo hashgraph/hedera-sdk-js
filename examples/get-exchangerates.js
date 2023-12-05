@@ -16,7 +16,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -25,7 +25,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
     let resp;
     try {
@@ -41,19 +41,19 @@ async function main() {
     console.log(`Current numerator ${exchangeRates.currentRate.cents}`);
     console.log(`Current denominator ${exchangeRates.currentRate.hbars}`);
     console.log(
-        `Current expiration time ${exchangeRates.currentRate.expirationTime.toString()}`
+        `Current expiration time ${exchangeRates.currentRate.expirationTime.toString()}`,
     );
     console.log(
-        `Current Exchange Rate ${exchangeRates.currentRate.exchangeRateInCents}`
+        `Current Exchange Rate ${exchangeRates.currentRate.exchangeRateInCents}`,
     );
 
     console.log(`Next numerator ${exchangeRates.nextRate.cents}`);
     console.log(`Next denominator ${exchangeRates.nextRate.hbars}`);
     console.log(
-        `Next expiration time ${exchangeRates.nextRate.expirationTime.toString()}`
+        `Next expiration time ${exchangeRates.nextRate.expirationTime.toString()}`,
     );
     console.log(
-        `Next Exchange Rate ${exchangeRates.nextRate.exchangeRateInCents}`
+        `Next Exchange Rate ${exchangeRates.nextRate.exchangeRateInCents}`,
     );
 
     provider.close();

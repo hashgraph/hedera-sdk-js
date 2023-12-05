@@ -33,7 +33,7 @@ describe("TopicMessageSubmitTransaction", function () {
             topicMessageSubmitTransaction.setMessage(message);
         } catch (error) {
             expect(error.message).to.eql(
-                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR
+                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR,
             );
         }
     });
@@ -47,7 +47,7 @@ describe("TopicMessageSubmitTransaction", function () {
         topicMessageSubmitTransaction.setMessage(message);
 
         expect(utf8.decode(topicMessageSubmitTransaction.message)).to.eql(
-            message
+            message,
         );
     });
 
@@ -70,7 +70,7 @@ describe("TopicMessageSubmitTransaction", function () {
 
         let transaction = new TopicMessageSubmitTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(spenderAccountId1, timestamp1)
+                TransactionId.withValidStart(spenderAccountId1, timestamp1),
             )
             .setNodeAccountIds([nodeAccountId])
             .setTopicId(topicId)

@@ -198,12 +198,12 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK,
         );
 
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received node precheck status ${status.toString()}`
+                `[${this._getLogId()}] received node precheck status ${status.toString()}`,
             );
         }
 
@@ -251,7 +251,7 @@ export default class TransactionRecordQuery extends Query {
 
         if (this._logger) {
             this._logger.debug(
-                `[${this._getLogId()}] received record's receipt ${status.toString()}`
+                `[${this._getLogId()}] received record's receipt ${status.toString()}`,
             );
         }
 
@@ -291,7 +291,7 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK,
         );
         switch (status) {
             case Status.Ok:
@@ -453,5 +453,5 @@ export default class TransactionRecordQuery extends Query {
 QUERY_REGISTRY.set(
     "transactionGetRecord",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TransactionRecordQuery._fromProtobuf
+    TransactionRecordQuery._fromProtobuf,
 );

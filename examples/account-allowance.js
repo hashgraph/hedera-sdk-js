@@ -26,7 +26,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -35,7 +35,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     console.log("Generating accounts for example...");
@@ -85,7 +85,7 @@ async function main() {
         await printBalances(wallet, aliceId, bobId, charlieId);
 
         console.log(
-            "Approving an allowance of 2 Hbar with owner Alice and spender Bob"
+            "Approving an allowance of 2 Hbar with owner Alice and spender Bob",
         );
 
         await (
@@ -103,7 +103,7 @@ async function main() {
         await printBalances(wallet, aliceId, bobId, charlieId);
 
         console.log(
-            "Transferring 1 Hbar from Alice to Charlie, but the transaction is signed _only_ by Bob (Bob is dipping into his allowance from Alice)"
+            "Transferring 1 Hbar from Alice to Charlie, but the transaction is signed _only_ by Bob (Bob is dipping into his allowance from Alice)",
         );
 
         await (
@@ -114,7 +114,7 @@ async function main() {
                             // "addApproved*Transfer()" means that the transfer has been approved by an allowance
                             .addApprovedHbarTransfer(
                                 aliceId,
-                                new Hbar(1).negated()
+                                new Hbar(1).negated(),
                             )
                             .addHbarTransfer(charlieId, new Hbar(1))
                             // The allowance spender must pay the fee for the transaction.
@@ -127,17 +127,17 @@ async function main() {
         ).getReceiptWithSigner(wallet);
 
         console.log(
-            "Transfer succeeded.  Bob should now have 1 Hbar left in his allowance."
+            "Transfer succeeded.  Bob should now have 1 Hbar left in his allowance.",
         );
 
         await printBalances(wallet, aliceId, bobId, charlieId);
 
         try {
             console.log(
-                "Attempting to transfer 2 Hbar from Alice to Charlie using Bob's allowance."
+                "Attempting to transfer 2 Hbar from Alice to Charlie using Bob's allowance.",
             );
             console.log(
-                "This should fail, because there is only 1 Hbar left in Bob's allowance."
+                "This should fail, because there is only 1 Hbar left in Bob's allowance.",
             );
 
             await (
@@ -147,7 +147,7 @@ async function main() {
                             await new TransferTransaction()
                                 .addApprovedHbarTransfer(
                                     aliceId,
-                                    new Hbar(2).negated()
+                                    new Hbar(2).negated(),
                                 )
                                 .addHbarTransfer(charlieId, new Hbar(2))
                                 .setTransactionId(TransactionId.generate(bobId))
@@ -178,7 +178,7 @@ async function main() {
         ).getReceiptWithSigner(wallet);
 
         console.log(
-            "Attempting to transfer 2 Hbar from Alice to Charlie using Bob's allowance again."
+            "Attempting to transfer 2 Hbar from Alice to Charlie using Bob's allowance again.",
         );
         console.log("This time it should succeed.");
 
@@ -189,7 +189,7 @@ async function main() {
                         await new TransferTransaction()
                             .addApprovedHbarTransfer(
                                 aliceId,
-                                new Hbar(2).negated()
+                                new Hbar(2).negated(),
                             )
                             .addHbarTransfer(charlieId, new Hbar(2))
                             .setTransactionId(TransactionId.generate(bobId))
@@ -213,7 +213,7 @@ async function main() {
                             .approveHbarAllowance(
                                 aliceId,
                                 bobId,
-                                Hbar.fromTinybars(0)
+                                Hbar.fromTinybars(0),
                             )
                             .freezeWithSigner(wallet)
                     ).sign(aliceKey)
@@ -280,21 +280,21 @@ async function printBalances(wallet, aliceId, bobId, charlieId) {
             await new AccountBalanceQuery()
                 .setAccountId(aliceId)
                 .executeWithSigner(wallet)
-        ).hbars.toString()}`
+        ).hbars.toString()}`,
     );
     console.log(
         `Bob's balance: ${(
             await new AccountBalanceQuery()
                 .setAccountId(bobId)
                 .executeWithSigner(wallet)
-        ).hbars.toString()}`
+        ).hbars.toString()}`,
     );
     console.log(
         `Charlie's balance: ${(
             await new AccountBalanceQuery()
                 .setAccountId(charlieId)
                 .executeWithSigner(wallet)
-        ).hbars.toString()}`
+        ).hbars.toString()}`,
     );
 }
 

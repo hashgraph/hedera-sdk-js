@@ -68,7 +68,7 @@ describe("TransactionRecord", function () {
             .setGas(750000)
             .setFunction(
                 "setDataRequire",
-                new ContractFunctionParameters().addUint256(10)
+                new ContractFunctionParameters().addUint256(10),
             )
             .freezeWith(env.client);
 

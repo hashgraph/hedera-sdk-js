@@ -66,7 +66,7 @@ export default class LocalProvider {
 
         if (process.env.HEDERA_NETWORK == null) {
             throw new Error(
-                "LocalProvider requires the `HEDERA_NETWORK` environment variable to be set"
+                "LocalProvider requires the `HEDERA_NETWORK` environment variable to be set",
             );
         }
 

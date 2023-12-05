@@ -97,7 +97,7 @@ export default class TokenRelationship {
      */
     static _fromProtobuf(relationship) {
         const tokenId = TokenId._fromProtobuf(
-            /** @type {HashgraphProto.proto.ITokenID} */ (relationship.tokenId)
+            /** @type {HashgraphProto.proto.ITokenID} */ (relationship.tokenId),
         );
         const isKycGranted =
             relationship.kycStatus == null || relationship.kycStatus === 0

@@ -5,7 +5,7 @@ describe("AccountInfo", function () {
         const accountId = new AccountId(10);
 
         const query = Query.fromBytes(
-            new AccountInfoQuery().setAccountId(accountId).toBytes()
+            new AccountInfoQuery().setAccountId(accountId).toBytes(),
         );
 
         expect(query instanceof AccountInfoQuery).to.be.true;

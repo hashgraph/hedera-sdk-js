@@ -25,7 +25,7 @@ async function main() {
         await fs.writeFile(
             `./src/client/addressbooks/${network.name}.js`,
             `export const addressBook =
-    "${Buffer.from(addressBook.toBytes()).toString("hex")}";\n`
+    "${Buffer.from(addressBook.toBytes()).toString("hex")}";\n`,
         );
     }
 }

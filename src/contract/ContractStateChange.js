@@ -50,7 +50,7 @@ export default class ContractStateChange {
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     change.contractId
-                )
+                ),
             ),
             storageChanges: (change.storageChanges != null
                 ? change.storageChanges
@@ -68,7 +68,7 @@ export default class ContractStateChange {
     static fromBytes(bytes) {
         // eslint-disable-next-line deprecation/deprecation
         return ContractStateChange._fromProtobuf(
-            HashgraphProto.proto.ContractStateChange.decode(bytes)
+            HashgraphProto.proto.ContractStateChange.decode(bytes),
         );
     }
 
@@ -80,7 +80,7 @@ export default class ContractStateChange {
         return {
             contractId: this.contractId._toProtobuf(),
             storageChanges: this.storageChanges.map((storageChange) =>
-                storageChange._toProtobuf()
+                storageChange._toProtobuf(),
             ),
         };
     }
@@ -91,7 +91,7 @@ export default class ContractStateChange {
     toBytes() {
         // eslint-disable-next-line deprecation/deprecation
         return HashgraphProto.proto.ContractStateChange.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

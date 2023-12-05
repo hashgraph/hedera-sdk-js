@@ -50,7 +50,7 @@ export default class FeeSchedule {
      */
     static fromBytes(bytes) {
         return FeeSchedule._fromProtobuf(
-            HashgraphProto.proto.FeeSchedule.decode(bytes)
+            HashgraphProto.proto.FeeSchedule.decode(bytes),
         );
     }
 
@@ -64,7 +64,7 @@ export default class FeeSchedule {
             transactionFeeSchedule:
                 feeSchedule.transactionFeeSchedule != null
                     ? feeSchedule.transactionFeeSchedule.map((schedule) =>
-                          TransactionFeeSchedule._fromProtobuf(schedule)
+                          TransactionFeeSchedule._fromProtobuf(schedule),
                       )
                     : undefined,
             expirationTime:
@@ -83,7 +83,7 @@ export default class FeeSchedule {
             transactionFeeSchedule:
                 this.transactionFeeSchedule != null
                     ? this.transactionFeeSchedule.map((transaction) =>
-                          transaction._toProtobuf()
+                          transaction._toProtobuf(),
                       )
                     : undefined,
             expiryTime:
@@ -98,7 +98,7 @@ export default class FeeSchedule {
      */
     toBytes() {
         return HashgraphProto.proto.FeeSchedule.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 }

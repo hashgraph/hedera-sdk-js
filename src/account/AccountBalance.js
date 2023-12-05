@@ -77,7 +77,7 @@ export default class AccountBalance {
      */
     static fromBytes(bytes) {
         return AccountBalance._fromProtobuf(
-            HashgraphProto.proto.CryptoGetAccountBalanceResponse.decode(bytes)
+            HashgraphProto.proto.CryptoGetAccountBalanceResponse.decode(bytes),
         );
     }
 
@@ -95,23 +95,23 @@ export default class AccountBalance {
                 const tokenId = TokenId._fromProtobuf(
                     /** @type {HashgraphProto.proto.ITokenID} */ (
                         balance.tokenId
-                    )
+                    ),
                 );
 
                 tokenDecimals._set(
                     tokenId,
-                    balance.decimals != null ? balance.decimals : 0
+                    balance.decimals != null ? balance.decimals : 0,
                 );
                 tokenBalances._set(
                     tokenId,
-                    Long.fromValue(/** @type {Long} */ (balance.balance))
+                    Long.fromValue(/** @type {Long} */ (balance.balance)),
                 );
             }
         }
 
         return new AccountBalance({
             hbars: Hbar.fromTinybars(
-                /** @type {Long} */ (accountBalance.balance)
+                /** @type {Long} */ (accountBalance.balance),
             ),
             tokens: tokenBalances,
             tokenDecimals,
@@ -150,7 +150,7 @@ export default class AccountBalance {
      */
     toBytes() {
         return HashgraphProto.proto.CryptoGetAccountBalanceResponse.encode(
-            this._toProtobuf()
+            this._toProtobuf(),
         ).finish();
     }
 

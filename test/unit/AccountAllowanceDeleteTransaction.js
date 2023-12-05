@@ -15,7 +15,7 @@ describe("AccountAllowanceDeleteTransaction", function () {
         const operatorId = AccountId.fromString("5.6.7");
         const nftId = new NftId(tokenId, serialNumber);
         const transactionId = TransactionId.fromString(
-            `${operatorId.toString()}@8.9`
+            `${operatorId.toString()}@8.9`,
         );
         const nodeAccountId = AccountId.fromString("10.11.12");
         const transaction = new AccountAllowanceDeleteTransaction()

@@ -17,7 +17,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -26,7 +26,7 @@ async function main() {
     const wallet = new Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     const newKey = PrivateKey.generate();
@@ -61,10 +61,10 @@ async function main() {
         // stake the accounts hbar i.e. the fee payer key and key to authorize
         // changes to the account should be different
         console.log(
-            `key required to update staking information: ${newKey.publicKey.toString()}`
+            `key required to update staking information: ${newKey.publicKey.toString()}`,
         );
         console.log(
-            `fee payer aka operator key: ${wallet.getAccountKey().toString()}`
+            `fee payer aka operator key: ${wallet.getAccountKey().toString()}`,
         );
 
         // Query the account info, it should show the staked account ID

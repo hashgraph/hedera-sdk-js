@@ -12,7 +12,7 @@ async function main() {
         process.env.HEDERA_NETWORK == null
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
 
@@ -21,16 +21,16 @@ async function main() {
     const wallet = new hashgraph.Wallet(
         process.env.OPERATOR_ID,
         process.env.OPERATOR_KEY,
-        provider
+        provider,
     );
 
     const operatorPrivateKey = hashgraph.PrivateKey.fromStringDer(
-        process.env.OPERATOR_KEY
+        process.env.OPERATOR_KEY,
     );
     const operatorPublicKey = operatorPrivateKey.publicKey;
 
     const operatorAccountId = hashgraph.AccountId.fromString(
-        process.env.OPERATOR_ID
+        process.env.OPERATOR_ID,
     );
 
     const alicePrivateKey = hashgraph.PrivateKey.generateED25519();
@@ -50,7 +50,7 @@ async function main() {
         const walletWithAlice = new hashgraph.Wallet(
             aliceAccountId,
             alicePrivateKey,
-            new hashgraph.LocalProvider()
+            new hashgraph.LocalProvider(),
         );
 
         // Instantiate ContractHelper
@@ -65,7 +65,7 @@ async function main() {
             new hashgraph.ContractFunctionParameters()
                 .addAddress(wallet.getAccountId().toSolidityAddress())
                 .addAddress(aliceAccountId.toSolidityAddress()),
-            wallet
+            wallet,
         );
 
         // Update the signer to have contractId KeyList (this is by security requirement)
@@ -75,8 +75,8 @@ async function main() {
                 .setKey(
                     new hashgraph.KeyList(
                         [operatorPublicKey, contractHelper.contractId],
-                        1
-                    )
+                        1,
+                    ),
                 )
                 .freezeWithSigner(wallet);
         accountUpdateOpratorTransaction =
@@ -90,8 +90,8 @@ async function main() {
                 .setKey(
                     new hashgraph.KeyList(
                         [alicePublicKey, contractHelper.contractId],
-                        1
-                    )
+                        1,
+                    ),
                 )
                 .freezeWithSigner(walletWithAlice);
         accountUpdateAliceTransaction =
@@ -107,37 +107,37 @@ async function main() {
             let accountUpdateOpratorTransaction =
                 await new hashgraph.TokenUpdateTransaction()
                     .setTokenId(
-                        hashgraph.TokenId.fromSolidityAddress(tokenAddress)
+                        hashgraph.TokenId.fromSolidityAddress(tokenAddress),
                     )
                     .setAdminKey(
                         new hashgraph.KeyList(
                             [alicePublicKey, contractHelper.contractId],
-                            1
-                        )
+                            1,
+                        ),
                     )
                     .setSupplyKey(
                         new hashgraph.KeyList(
                             [alicePublicKey, contractHelper.contractId],
-                            1
-                        )
+                            1,
+                        ),
                     )
                     .freezeWithSigner(walletWithAlice);
             accountUpdateOpratorTransaction =
                 await accountUpdateOpratorTransaction.signWithSigner(
-                    walletWithAlice
+                    walletWithAlice,
                 );
             let accountUpdateOpratorTransactionResponce =
                 await accountUpdateOpratorTransaction.executeWithSigner(
-                    walletWithAlice
+                    walletWithAlice,
                 );
 
             console.log(
                 "Status of Token Update Transactio:",
                 (
                     await accountUpdateOpratorTransactionResponce.getReceiptWithSigner(
-                        walletWithAlice
+                        walletWithAlice,
                     )
-                ).status.toString()
+                ).status.toString(),
             );
         };
 
@@ -147,7 +147,7 @@ async function main() {
             .setResultValidatorForStep(0, (contractFunctionResult) => {
                 const bytes = Buffer.from(contractFunctionResult.getBytes32(0));
                 console.log(
-                    `getPseudoRandomSeed() returned ${bytes.toString("hex")}`
+                    `getPseudoRandomSeed() returned ${bytes.toString("hex")}`,
                 );
                 return true;
             })
@@ -201,7 +201,7 @@ async function main() {
         await contractHelper.executeSteps(
             /* from step */ 0,
             /* to step */ 16,
-            wallet
+            wallet,
         );
 
         console.log("All steps completed with valid results.");

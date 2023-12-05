@@ -80,7 +80,7 @@ export default class ContractLogInfo {
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
                     info.contractID
-                )
+                ),
             ),
             bloom: info.bloom != null ? info.bloom : new Uint8Array(),
             topics: info.topic != null ? info.topic : [],

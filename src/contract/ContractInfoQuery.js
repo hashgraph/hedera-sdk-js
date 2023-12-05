@@ -166,8 +166,8 @@ export default class ContractInfoQuery extends Query {
             ContractInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} */ (
                     info.contractInfo
-                )
-            )
+                ),
+            ),
         );
     }
 
