@@ -145,15 +145,22 @@ jobs:
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
           node-version: 18
+          cache: pnpm
+
+      - name: Install NPM Dependencies
+        run: task install
+
+      - name: Install Playwright Dependencies
+        run: sudo npx playwright install-deps
 
       - name: Calculate Publish Arguments
         id: publish
         run: |
-          PUBLISH_ARGS="--access public"
+          PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >>".npmrc"
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
 
       - name: Publish Release
         env:
