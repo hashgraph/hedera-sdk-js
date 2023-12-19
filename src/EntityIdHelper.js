@@ -25,6 +25,7 @@ import * as util from "./util.js";
 import base32 from "./base32.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import PublicKey from "./PublicKey.js";
+import { arrayify } from "@ethersproject/bytes";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -413,6 +414,19 @@ export function toStringWithChecksum(string, client) {
 }
 
 /**
+ * Append Buffers.
+ * @param {Uint8Array} buffer1
+ * @param {Uint8Array} buffer2
+ * @returns {Uint8Array}
+ */
+function appendBuffer(buffer1, buffer2) {
+    var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+    tmp.set(new Uint8Array(buffer1), 0);
+    tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+    return tmp;
+}
+
+/**
  * Convert bytes to hex string.
  * @param {Uint8Array} bytes
  * @returns {string}
@@ -494,8 +508,11 @@ export function publicKeyToAlias(publicKey) {
         ((publicKey.startsWith("0x") && publicKey.length == 42) ||
             publicKey.length == 40)
     ) {
-        publicKey = publicKey.replace("0x", "");
-        const bytes = Buffer.from(publicKey, "hex");
+        if (!publicKey.startsWith("0x")) {
+            publicKey = `0x${publicKey}`;
+        }
+
+        const bytes = arrayify(publicKey);
         if (!bytes) {
             return null;
         }
@@ -506,20 +523,24 @@ export function publicKeyToAlias(publicKey) {
         typeof publicKey === "string"
             ? PublicKey.fromString(publicKey)
             : publicKey;
-    const publicKeyHex = publicKeyRaw.toStringRaw();
+    let publicKeyHex = publicKeyRaw.toStringRaw();
     let leadingHex = "";
 
     if (publicKeyRaw._key._type === "secp256k1") {
-        leadingHex = "3A21"; // LEADING BYTES FROM PROTOBUFS
+        leadingHex = "0x3A21"; // LEADING BYTES FROM PROTOBUFS
     }
 
     if (publicKeyRaw._key._type === "ED25519") {
-        leadingHex = "1220"; // LEADING BYTES FROM PROTOBUFS
+        leadingHex = "0x1220"; // LEADING BYTES FROM PROTOBUFS
     }
 
-    const leadingBytes = Buffer.from(leadingHex, "hex");
-    const publicKeyBytes = Buffer.from(publicKeyHex, "hex");
-    const publicKeyInBytes = [leadingBytes, publicKeyBytes];
-    const alias = base32.encode(Buffer.concat(publicKeyInBytes));
+    if (!publicKeyHex.startsWith("0x")) {
+        publicKeyHex = `0x${publicKeyHex}`;
+    }
+
+    const leadingBytes = arrayify(leadingHex);
+    const publicKeyBytes = arrayify(publicKeyHex);
+    const publicKeyInBytes = appendBuffer(leadingBytes, publicKeyBytes);
+    const alias = base32.encode(publicKeyInBytes);
     return alias;
 }
