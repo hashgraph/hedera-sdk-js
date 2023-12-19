@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.39.0
+
+## What's Changed
+
+* Release new cryptography package version by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2041
+* Release new proto package beta version by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2040
+* New web proxy for nodeAccountId 3 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2051
+* Update dependencies and apply new linter rules by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2043
+
 ## v2.38.0
 
 ## What's Changed
