@@ -277,7 +277,7 @@ describe("Ed25519PrivateKey", function () {
 
     it("should return private key from bytes", async function () {
         const privateKeyFromBytes = PrivateKey.fromBytesED25519(
-            DER_PRIVATE_KEY_BYTES
+            DER_PRIVATE_KEY_BYTES,
         );
         const publicKeyDer = privateKeyFromBytes.toStringDer();
         expect(publicKeyDer).to.be.equal(DER_PRIVATE_KEY);
@@ -290,7 +290,7 @@ describe("Ed25519PrivateKey", function () {
         const aliasAccountId = publicKey.toAccountId(0, 0);
 
         expect(aliasAccountId.toString()).to.be.equal(
-            `0.0.${publicKey.toString()}`
+            `0.0.${publicKey.toString()}`,
         );
     });
 
