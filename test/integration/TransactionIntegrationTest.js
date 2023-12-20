@@ -7,6 +7,8 @@ import {
     PrivateKey,
     TokenCreateTransaction,
     TransferTransaction,
+    TransactionReceipt,
+    TransactionResponse
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -150,4 +152,179 @@ describe("TransactionIntegration", function () {
 
         await env.close();
     });
+
+    it("[HIP-745] should serialize and deserialize an incomplete transaction", async function() {
+        this.timeout(120000);
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId
+
+        // Generate a new account
+        const recipientPrivateKey = PrivateKey.generateECDSA();
+
+        // Create account transaction
+        const accountCreateTx = await new AccountCreateTransaction()
+            .setKey(recipientPrivateKey.publicKey)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
+
+        // Get a receipt for create account transaction
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+
+        // Get an account id and make sure the account id exists
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
+        expect(recepinetAccountId).to.not.equal(undefined)
+
+        // Create transfer transaction
+        const transaction = new TransferTransaction()
+            .addHbarTransfer(operatorId, new Hbar(-1))
+            .addHbarTransfer(recepinetAccountId, new Hbar(1))
+
+        // Serialize transaction into bytes
+        const transactionBytes = transaction.toBytes();
+
+        // Deserialize transaction from bytes
+        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
+
+        // Compare transaction before and after serialization/deserialization
+        expect(transaction.toString()).to.be.equal(transactionFromBytes.toString())
+
+        await env.close();
+    })
+
+    it("[HIP-745] should serialize and deserialize an incomplete transaction and execute it", async function() {
+        this.timeout(120000);
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId
+
+        // Generate a new account
+        const recipientPrivateKey = PrivateKey.generateECDSA();
+
+        // Create account transaction
+        const accountCreateTx = await new AccountCreateTransaction()
+            .setKey(recipientPrivateKey.publicKey)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
+
+        // Get a receipt for create account transaction
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+
+        // Get an account id and make sure the account id exists
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
+        expect(recepinetAccountId).to.not.equal(undefined)
+
+        // Create transfer transaction
+        const transaction = new TransferTransaction()
+            .addHbarTransfer(operatorId, new Hbar(-1))
+            .addHbarTransfer(recepinetAccountId, new Hbar(1))
+
+        // Serialize transaction into bytes
+        const transactionBytes = transaction.toBytes();
+
+        // Deserialize transaction from bytes
+        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes).freezeWith(env.client)
+
+        // Sign transaction
+        const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);
+
+        // Execute transaction
+        const executedTransaction = await signedTransaction.execute(env.client);
+        expect(executedTransaction).to.be.an('object')
+        expect(executedTransaction instanceof TransactionResponse).to.be.equal(true)
+
+        // Get a receipt and make sure the transaction was executed successfully
+        const executedTransactionReceipt = await executedTransaction.getReceipt(env.client);
+        expect(executedTransactionReceipt).to.be.an('object')
+        expect(executedTransactionReceipt instanceof TransactionReceipt).to.be.equal(true)
+        expect(executedTransactionReceipt.status._code).to.be.equal(22)
+
+        await env.close();
+    })
+
+    it("[HIP-745] should serialize and deserialize a signed transaction", async function() {
+        this.timeout(120000);
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId
+
+        // Generate a new account
+        const recipientPrivateKey = PrivateKey.generateECDSA();
+
+        // Create account transaction
+        const accountCreateTx = await new AccountCreateTransaction()
+            .setKey(recipientPrivateKey.publicKey)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
+
+        // Get a receipt for create account transaction
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+
+        // Get an account id and make sure the account id exists
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
+        expect(recepinetAccountId).to.not.equal(undefined)
+
+        // Create transfer transaction
+        const transaction = new TransferTransaction()
+            .addHbarTransfer(operatorId, new Hbar(-1))
+            .addHbarTransfer(recepinetAccountId, new Hbar(1))
+            .freezeWith(env.client)
+
+        // Serialize transaction into bytes
+        const transactionBytes = transaction.toBytes();
+
+        // Deserialize transaction from bytes
+        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
+
+        expect(transaction.toString()).to.be.equal(transactionFromBytes.toString())
+
+        await env.close();
+    })
+
+    it("[HIP-745] should serialize and deserialize a signed transaction and execute it", async function() {
+        this.timeout(120000);
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId
+
+        // Generate a new account
+        const recipientPrivateKey = PrivateKey.generateECDSA();
+
+        // Create account transaction
+        const accountCreateTx = await new AccountCreateTransaction()
+            .setKey(recipientPrivateKey.publicKey)
+            .setInitialBalance(new Hbar(2))
+            .execute(env.client);
+
+        // Get a receipt for create account transaction
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+
+        // Get an account id and make sure the account id exists
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
+        expect(recepinetAccountId).to.not.equal(undefined)
+
+        // Create transfer transaction
+        const transaction = new TransferTransaction()
+            .addHbarTransfer(operatorId, new Hbar(-1))
+            .addHbarTransfer(recepinetAccountId, new Hbar(1))
+            .freezeWith(env.client)
+
+        // Serialize transaction into bytes
+        const transactionBytes = transaction.toBytes();
+
+        // Deserialize transaction from bytes
+        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
+
+        // Sign transaction
+        const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);
+
+        // Execute transaction
+        const executedTransaction = await signedTransaction.execute(env.client);
+        expect(executedTransaction).to.be.an('object')
+        expect(executedTransaction instanceof TransactionResponse).to.be.equal(true)
+
+        // Get a receipt and make sure the transaction was executed successfully
+        const executedTransactionReceipt = await executedTransaction.getReceipt(env.client);
+        expect(executedTransactionReceipt).to.be.an('object')
+        expect(executedTransactionReceipt instanceof TransactionReceipt).to.be.equal(true)
+        expect(executedTransactionReceipt.status._code).to.be.equal(22)
+
+        await env.close();
+    })
 });
