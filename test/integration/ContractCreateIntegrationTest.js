@@ -39,7 +39,7 @@ describe("ContractCreate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(100000)
+            .setGas(200000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString(
                     "Hello from Hedera.",
@@ -109,7 +109,7 @@ describe("ContractCreate", function () {
         const file = receipt.fileId;
 
         response = await new ContractCreateTransaction()
-            .setGas(100000)
+            .setGas(200000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString(
                     "Hello from Hedera.",

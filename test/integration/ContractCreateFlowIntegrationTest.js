@@ -21,7 +21,7 @@ describe("ContractCreateFlow", function () {
         await new ContractCreateFlow()
             .setBytecode(smartContractBytecode)
             .setAdminKey(operatorKey)
-            .setGas(100000)
+            .setGas(200000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString(
                     "Hello from Hedera.",
