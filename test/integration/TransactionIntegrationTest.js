@@ -13,7 +13,7 @@ import {
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TransactionIntegration", function () {
+describe("TransactionIntegration", function () {
     it("should be executable", async function () {
         this.timeout(120000);
 
@@ -184,6 +184,7 @@ describe.only("TransactionIntegration", function () {
 
         // Deserialize transaction from bytes
         const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes).freezeWith(env.client)
+        expect(JSON.parse(JSON.stringify(transaction._transactions.list[0]))).to.deep.equal(JSON.parse(JSON.stringify(transactionFromBytes._transactions.list[0])))
 
         // Sign transaction
         const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);
@@ -234,6 +235,7 @@ describe.only("TransactionIntegration", function () {
 
         // Deserialize transaction from bytes
         const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
+        expect(JSON.parse(JSON.stringify(transaction._transactions.list[0]))).to.deep.equal(JSON.parse(JSON.stringify(transactionFromBytes._transactions.list[0])))
 
         // Sign transaction
         const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);

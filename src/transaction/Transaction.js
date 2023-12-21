@@ -234,7 +234,7 @@ export default class Transaction extends Executable {
             // `Transaction.bodyBytes` + `Transaction.sigMap`. If the bytes represent the
             // latter, convert them into `signedTransactionBytes`
 
-            if (transaction.signedTransactionBytes.length === 0) {
+            if (transaction.signedTransactionBytes.length == 0) {
                 list.push({
                     signedTransactionBytes:
                         HashgraphProto.proto.SignedTransaction.encode({
@@ -244,7 +244,7 @@ export default class Transaction extends Executable {
                 });
             }
 
-            if (transaction.bodyBytes.length === 0) {
+            if (transaction.bodyBytes.length == 0) {
                 list.push({
                     bodyBytes: HashgraphProto.proto.Transaction.encode({
                         bodyBytes: transaction.bodyBytes,
@@ -262,17 +262,13 @@ export default class Transaction extends Executable {
         // `nodeIds`, and `bodies` variables.
         for (const transaction of list) {
 
-            // The `bodyBytes` should not be null
-            if (transaction.bodyBytes == null) {
-                throw new Error("Transaction.bodyBytes are null");
+            // The `bodyBytes` or `signedTransactionBytes` should not be null
+            if (transaction.bodyBytes == null && transaction.signedTransactionBytes == null) {
+                throw new Error("bodyBytes and signedTransactionBytes are null");
             }
 
-            // The `signedTransactionBytes` should not be null
-            if (transaction.signedTransactionBytes == null) {
-                throw new Error("Transaction.signedTransactionBytes are null");
-            }
 
-            if (transaction.bodyBytes.length != 0) {
+            if (transaction.bodyBytes && transaction.bodyBytes.length != 0) {
                 // Decode a transaction
                 const body = HashgraphProto.proto.TransactionBody.decode(
                     transaction.bodyBytes
@@ -286,7 +282,7 @@ export default class Transaction extends Executable {
                 bodies.push(body);
             }
 
-            if (transaction.signedTransactionBytes.length != 0) {
+            if (transaction.signedTransactionBytes && transaction.signedTransactionBytes.length != 0) {
                 // Decode a signed transaction
                 const signedTransaction =
                     HashgraphProto.proto.SignedTransaction.decode(
