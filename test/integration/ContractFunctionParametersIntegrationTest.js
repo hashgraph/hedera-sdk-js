@@ -122,7 +122,7 @@ describe("ContractFunctionParameters", function () {
     let newContractId;
 
     before(async function () {
-        env = await IntegrationTestEnv.new({ balance: 100000 });
+        env = await IntegrationTestEnv.new({ balance: 10000 });
         // Create a file on Hedera and store the bytecode
         const fileCreateTx = new FileCreateTransaction()
             .setKeys([env.operatorKey])
@@ -152,7 +152,7 @@ describe("ContractFunctionParameters", function () {
             //Set the file ID of the Hedera file storing the bytecode
             .setBytecodeFileId(bytecodeFileId)
             //Set the gas to instantiate the contract
-            .setGas(100000)
+            .setGas(500000)
             //Provide the constructor parameters for the contract
             .setConstructorParameters();
 

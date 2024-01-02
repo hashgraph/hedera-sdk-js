@@ -40,7 +40,7 @@ describe("ContractUpdate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(100000)
+            .setGas(200000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString(
                     "Hello from Hedera.",
@@ -137,7 +137,7 @@ describe("ContractUpdate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(100000)
+            .setGas(200000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString(
                     "Hello from Hedera.",

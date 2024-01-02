@@ -22,6 +22,10 @@ import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
 import * as util from "./util.js";
+import base32 from "./base32.js";
+import * as HashgraphProto from "@hashgraph/proto";
+import PublicKey from "./PublicKey.js";
+import { arrayify } from "@ethersproject/bytes";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -407,4 +411,136 @@ export function toStringWithChecksum(string, client) {
     const checksum = _checksum(client._network._ledgerId._ledgerId, string);
 
     return `${string}-${checksum}`;
+}
+
+/**
+ * Append Buffers.
+ * @param {Uint8Array} buffer1
+ * @param {Uint8Array} buffer2
+ * @returns {Uint8Array}
+ */
+function appendBuffer(buffer1, buffer2) {
+    var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+    tmp.set(new Uint8Array(buffer1), 0);
+    tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+    return tmp;
+}
+
+/**
+ * Convert bytes to hex string.
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
+function toHexString(bytes) {
+    var s = "0x";
+    bytes.forEach(function (byte) {
+        s += ("0" + (byte & 0xff).toString(16)).slice(-2);
+    });
+    return s;
+}
+
+/**
+ * Deserialize the alias to public key.
+ * Alias is created from ed25519 or ECDSASecp256k1 types of accounts. If hollow account is used, the alias is created from evm address.
+ * For hollow accounts, please use aliasToEvmAddress.
+ *
+ * @param {string} alias
+ * @returns {PublicKey | null}
+ */
+export function aliasToPublicKey(alias) {
+    const bytes = base32.decode(alias);
+    if (!bytes) {
+        return null;
+    }
+    let key;
+    try {
+        key = HashgraphProto.proto.Key.decode(bytes);
+    } catch (e) {
+        throw new Error(
+            "The alias is created with hollow account. Please use aliasToEvmAddress!",
+        );
+    }
+
+    if (key.ed25519 != null && key.ed25519.byteLength > 0) {
+        return PublicKey.fromBytes(key.ed25519);
+    }
+
+    if (key.ECDSASecp256k1 != null && key.ECDSASecp256k1.byteLength > 0) {
+        return PublicKey.fromBytes(key.ECDSASecp256k1);
+    }
+
+    return null;
+}
+
+/**
+ * Deserialize the alias to evm address.
+ * Alias is created from hollow account.
+ * For ed25519 or ECDSASecp256k1 accounts, please use aliasToPublicKey.
+ *
+ * @param {string} alias
+ * @returns {string | null}
+ */
+export function aliasToEvmAddress(alias) {
+    const bytes = base32.decode(alias);
+    if (!bytes) {
+        return null;
+    }
+    try {
+        HashgraphProto.proto.Key.decode(bytes);
+        throw new Error(
+            "The alias is created with ed25519 or ECDSASecp256k1 account. Please use aliasToPublicKey!",
+        );
+    } catch (e) {
+        return toHexString(bytes);
+    }
+}
+
+/**
+ * Serialize the public key to alias.
+ * Alias is created from ed25519 or ECDSASecp256k1 types of accounts. If hollow account is used, the alias is created from evm address.
+ *
+ * @param {string | PublicKey} publicKey
+ * @returns {string | null}
+ */
+export function publicKeyToAlias(publicKey) {
+    if (
+        typeof publicKey === "string" &&
+        ((publicKey.startsWith("0x") && publicKey.length == 42) ||
+            publicKey.length == 40)
+    ) {
+        if (!publicKey.startsWith("0x")) {
+            publicKey = `0x${publicKey}`;
+        }
+
+        const bytes = arrayify(publicKey);
+        if (!bytes) {
+            return null;
+        }
+        return base32.encode(bytes);
+    }
+
+    const publicKeyRaw =
+        typeof publicKey === "string"
+            ? PublicKey.fromString(publicKey)
+            : publicKey;
+    let publicKeyHex = publicKeyRaw.toStringRaw();
+    let leadingHex = "";
+
+    if (publicKeyRaw._key._type === "secp256k1") {
+        leadingHex = "0x3A21"; // LEADING BYTES FROM PROTOBUFS
+    }
+
+    if (publicKeyRaw._key._type === "ED25519") {
+        leadingHex = "0x1220"; // LEADING BYTES FROM PROTOBUFS
+    }
+
+    if (!publicKeyHex.startsWith("0x")) {
+        publicKeyHex = `0x${publicKeyHex}`;
+    }
+
+    const leadingBytes = arrayify(leadingHex);
+    const publicKeyBytes = arrayify(publicKeyHex);
+    const publicKeyInBytes = appendBuffer(leadingBytes, publicKeyBytes);
+    const alias = base32.encode(publicKeyInBytes);
+    return alias;
 }
