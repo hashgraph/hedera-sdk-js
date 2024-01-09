@@ -59,18 +59,17 @@
         "@grpc/grpc-js": "1.8.2",
         "@hashgraph/cryptography": "1.4.8-beta.5",
         "@hashgraph/proto": "2.14.0-beta.3",
-        "axios": "^1.6.4",
+        "axios": "^1.6.0",
         "bignumber.js": "^9.1.1",
         "bn.js": "^5.1.1",
         "crypto-js": "^4.2.0",
-        "follow-redirects": "^1.15.4",
         "js-base64": "^3.7.4",
         "long": "^4.0.0",
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.0",
         "protobufjs": "^7.2.5",
-        "rfc4648": "^1.5.3",
-        "utf8": "^3.0.0"
+        "utf8": "^3.0.0",
+        "rfc4648": "^1.5.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.23.4",
