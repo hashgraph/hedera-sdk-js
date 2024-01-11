@@ -297,6 +297,10 @@ export default class TokenUpdateTransaction extends Transaction {
                     update.feeScheduleKey != null
                         ? Key._fromProtobufKey(update.feeScheduleKey)
                         : undefined,
+                pauseKey:
+                    update.pauseKey != null
+                        ? Key._fromProtobufKey(update.pauseKey)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
