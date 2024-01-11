@@ -7,7 +7,7 @@ import {
 } from "../../src/index.js";
 import Long from "long";
 
-describe("TokenUpdateTransaction", function () {
+describe.only("TokenUpdateTransaction", function () {
     it("encodes to correct protobuf", function () {
         const key1 = PrivateKey.fromStringDer(
             "302e020100300506032b6570042204205fc37fbd55631722b7ab5ec8e31696f6d3f818a15c5258a1529de7d4a1def6e2",
@@ -118,5 +118,67 @@ describe("TokenUpdateTransaction", function () {
                 seconds: Long.fromNumber(120),
             },
         });
+    });
+
+    it("should set only pauseKey prop", function () {
+        const key4 = PrivateKey.fromStringDer(
+            "302e020100300506032b6570042204205a8571fe4badbc6bd76f03170f5ec4bdc69f2edb93f133477d0ef8f9e17a0f3a",
+        );
+
+        const transaction = new TokenUpdateTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(
+                    new AccountId(1),
+                    new Timestamp(2, 3),
+                ),
+            )
+            .setNodeAccountIds([new AccountId(4)])
+            .setTransactionMemo("random memo")
+            .setPauseKey(key4)
+            .freeze();
+
+        const protobuf = transaction._makeTransactionBody();
+
+        expect(protobuf).to.deep.include({
+            tokenUpdate: {
+                token: null,
+                name: null,
+                symbol: null,
+                memo: null,
+                autoRenewAccount: null,
+                autoRenewPeriod: null,
+                expiry: null,
+                treasury: null,
+                adminKey: null,
+                kycKey: null,
+                freezeKey: null,
+                pauseKey: {
+                    ed25519: key4.publicKey.toBytesRaw(),
+                },
+                wipeKey: null,
+                supplyKey: null,
+                feeScheduleKey: null,
+            },
+            transactionFee: Long.fromNumber(200000000),
+            memo: "random memo",
+            transactionID: {
+                accountID: {
+                    accountNum: Long.fromNumber(1),
+                    shardNum: Long.fromNumber(0),
+                    realmNum: Long.fromNumber(0),
+                    alias: null,
+                },
+                transactionValidStart: {
+                    seconds: Long.fromNumber(2),
+                    nanos: 3,
+                },
+                scheduled: false,
+                nonce: null,
+            },
+            nodeAccountID: null,
+            transactionValidDuration: {
+                seconds: Long.fromNumber(120),
+            },
+        })
     });
 });
