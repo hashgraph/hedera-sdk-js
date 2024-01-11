@@ -30,6 +30,7 @@ describe("TokenUpdate", function () {
         const key2 = PrivateKey.generateED25519();
         const key3 = PrivateKey.generateED25519();
         const key4 = PrivateKey.generateED25519();
+        const key5 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -41,6 +42,7 @@ describe("TokenUpdate", function () {
             .setKycKey(key1)
             .setFreezeKey(key2)
             .setWipeKey(key3)
+            .setPauseKey(key5)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
             .execute(env.client);
@@ -64,6 +66,7 @@ describe("TokenUpdate", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.pauseKey.toString()).to.eql(key5.pauseKey.toString());
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
