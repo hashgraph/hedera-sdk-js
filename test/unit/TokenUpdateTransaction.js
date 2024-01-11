@@ -7,7 +7,7 @@ import {
 } from "../../src/index.js";
 import Long from "long";
 
-describe.only("TokenUpdateTransaction", function () {
+describe("TokenUpdateTransaction", function () {
     it("encodes to correct protobuf", function () {
         const key1 = PrivateKey.fromStringDer(
             "302e020100300506032b6570042204205fc37fbd55631722b7ab5ec8e31696f6d3f818a15c5258a1529de7d4a1def6e2",
