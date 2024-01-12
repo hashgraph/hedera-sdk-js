@@ -238,8 +238,8 @@ export default class Transaction extends Executable {
                 list.push({
                     signedTransactionBytes:
                         HashgraphProto.proto.SignedTransaction.encode({
-                            bodyBytes: transaction.bodyBytes,
                             sigMap: transaction.sigMap,
+                            bodyBytes: transaction.bodyBytes,
                         }).finish(),
                 });
             }
@@ -252,48 +252,58 @@ export default class Transaction extends Executable {
                 });
             }
 
-            if (transaction.bodyBytes.length !== 0 || transaction.signedTransactionBytes.length !== 0) {
+            if (
+                transaction.bodyBytes.length !== 0 ||
+                transaction.signedTransactionBytes.length !== 0
+            ) {
                 list.push(transaction);
             }
-
         }
 
         // This loop is responsible for fill out the `signedTransactions`, `transactionIds`,
         // `nodeIds`, and `bodies` variables.
         for (const transaction of list) {
-
             // The `bodyBytes` or `signedTransactionBytes` should not be null
-            if (transaction.bodyBytes == null && transaction.signedTransactionBytes == null) {
-                throw new Error("bodyBytes and signedTransactionBytes are null");
+            if (
+                transaction.bodyBytes == null &&
+                transaction.signedTransactionBytes == null
+            ) {
+                throw new Error(
+                    "bodyBytes and signedTransactionBytes are null",
+                );
             }
-
 
             if (transaction.bodyBytes && transaction.bodyBytes.length != 0) {
                 // Decode a transaction
                 const body = HashgraphProto.proto.TransactionBody.decode(
-                    transaction.bodyBytes
+                    transaction.bodyBytes,
                 );
 
                 // Make sure the body is set
                 if (body.data == null) {
-                    throw new Error("(BUG) body.data was not set in the protobuf");
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
                 }
 
                 bodies.push(body);
             }
 
-            if (transaction.signedTransactionBytes && transaction.signedTransactionBytes.length != 0) {
+            if (
+                transaction.signedTransactionBytes &&
+                transaction.signedTransactionBytes.length != 0
+            ) {
                 // Decode a signed transaction
                 const signedTransaction =
                     HashgraphProto.proto.SignedTransaction.decode(
-                        transaction.signedTransactionBytes
+                        transaction.signedTransactionBytes,
                     );
 
                 signedTransactions.push(signedTransaction);
 
                 // Decode a transaction body
                 const body = HashgraphProto.proto.TransactionBody.decode(
-                    signedTransaction.bodyBytes
+                    signedTransaction.bodyBytes,
                 );
 
                 // Make sure the transaction ID within the body is set
@@ -301,11 +311,13 @@ export default class Transaction extends Executable {
                     const transactionId = TransactionId._fromProtobuf(
                         /** @type {HashgraphProto.proto.ITransactionID} */ (
                             body.transactionID
-                        )
+                        ),
                     );
 
                     // If we haven't already seen this transaction ID in the list, add it
-                    if (!transactionIdStrings.includes(transactionId.toString())) {
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
                         transactionIds.push(transactionId);
                         transactionIdStrings.push(transactionId.toString());
                     }
@@ -316,7 +328,7 @@ export default class Transaction extends Executable {
                     const nodeAccountId = AccountId._fromProtobuf(
                         /** @type {HashgraphProto.proto.IAccountID} */ (
                             body.nodeAccountID
-                        )
+                        ),
                     );
 
                     // If we haven't already seen this node account ID in the list, add it
@@ -328,7 +340,9 @@ export default class Transaction extends Executable {
 
                 // Make sure the body is set
                 if (body.data == null) {
-                    throw new Error("(BUG) body.data was not set in the protobuf");
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
                 }
 
                 bodies.push(body);
@@ -459,7 +473,7 @@ export default class Transaction extends Executable {
         transaction._maxTransactionFee =
             body.transactionFee != null && body.transactionFee.gt(new Long(0))
                 ? Hbar.fromTinybars(body.transactionFee)
-                : null
+                : null;
         transaction._transactionMemo = body.memo != null ? body.memo : "";
 
         // Loop over a single row of `signedTransactions` and add all the public
@@ -1065,7 +1079,6 @@ export default class Transaction extends Executable {
 
             // Build all the transactions withot signing
             this._buildAllTransactions();
-
         } else {
             this._buildUnsignedTransactions();
 
@@ -1413,7 +1426,7 @@ export default class Transaction extends Executable {
         this._transactions.setIfAbsent(index, () => {
             return {
                 bodyBytes: HashgraphProto.proto.Transaction.encode(
-                    this._signedTransactions.get(index)
+                    this._signedTransactions.get(index),
                 ).finish(),
             };
         });
@@ -1574,10 +1587,10 @@ export default class Transaction extends Executable {
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
         return {
-            bodyBytes,
             sigMap: {
                 sigPair: [],
             },
+            bodyBytes,
         };
     }
 

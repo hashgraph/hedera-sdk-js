@@ -8,7 +8,7 @@ import {
     TokenCreateTransaction,
     TransferTransaction,
     TransactionReceipt,
-    TransactionResponse
+    TransactionResponse,
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -153,10 +153,10 @@ describe("TransactionIntegration", function () {
         await env.close();
     });
 
-    it("[HIP-745] should serialize and deserialize an incomplete transaction and execute it", async function() {
+    it("[HIP-745] should serialize and deserialize an incomplete transaction and execute it", async function () {
         this.timeout(120000);
         const env = await IntegrationTestEnv.new();
-        const operatorId = env.operatorId
+        const operatorId = env.operatorId;
 
         // Generate a new account
         const recipientPrivateKey = PrivateKey.generateECDSA();
@@ -168,45 +168,60 @@ describe("TransactionIntegration", function () {
             .execute(env.client);
 
         // Get a receipt for create account transaction
-        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(
+            env.client,
+        );
 
         // Get an account id and make sure the account id exists
-        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
-        expect(recepinetAccountId).to.not.equal(undefined)
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
+        expect(recepinetAccountId).to.not.equal(undefined);
 
         // Create transfer transaction
         const transaction = new TransferTransaction()
             .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(recepinetAccountId, new Hbar(1))
+            .addHbarTransfer(recepinetAccountId, new Hbar(1));
 
         // Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
         // Deserialize transaction from bytes
-        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes).freezeWith(env.client)
-        expect(JSON.parse(JSON.stringify(transaction._transactions.list[0]))).to.deep.equal(JSON.parse(JSON.stringify(transactionFromBytes._transactions.list[0])))
+        const transactionFromBytes = TransferTransaction.fromBytes(
+            transactionBytes,
+        ).freezeWith(env.client);
+        expect(
+            JSON.parse(JSON.stringify(transaction._transactions.list[0])),
+        ).to.deep.equal(
+            JSON.parse(
+                JSON.stringify(transactionFromBytes._transactions.list[0]),
+            ),
+        );
 
         // Sign transaction
-        const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);
+        const signedTransaction =
+            await transactionFromBytes.sign(recipientPrivateKey);
 
         // Execute transaction
         const transactionResponse = await signedTransaction.execute(env.client);
-        expect(transactionResponse).to.not.equal(null)
-        expect(transactionResponse).to.be.an.instanceof(TransactionResponse)
+        expect(transactionResponse).to.not.equal(null);
+        expect(transactionResponse).to.be.an.instanceof(TransactionResponse);
 
         // Get a receipt and make sure the transaction was executed successfully
-        const executedTransactionReceipt = await transactionResponse.getReceipt(env.client);
-        expect(executedTransactionReceipt).to.not.equal(null)
-        expect(executedTransactionReceipt).to.be.an.instanceof(TransactionReceipt)
-        expect(executedTransactionReceipt.status._code).to.be.equal(22)
+        const executedTransactionReceipt = await transactionResponse.getReceipt(
+            env.client,
+        );
+        expect(executedTransactionReceipt).to.not.equal(null);
+        expect(executedTransactionReceipt).to.be.an.instanceof(
+            TransactionReceipt,
+        );
+        expect(executedTransactionReceipt.status._code).to.be.equal(22);
 
         await env.close();
-    })
+    });
 
-    it("[HIP-745] should serialize and deserialize a signed transaction and execute it", async function() {
+    it("[HIP-745] should serialize and deserialize a signed transaction and execute it", async function () {
         this.timeout(120000);
         const env = await IntegrationTestEnv.new();
-        const operatorId = env.operatorId
+        const operatorId = env.operatorId;
 
         // Generate a new account
         const recipientPrivateKey = PrivateKey.generateECDSA();
@@ -218,39 +233,53 @@ describe("TransactionIntegration", function () {
             .execute(env.client);
 
         // Get a receipt for create account transaction
-        const accountCreateTxReceipt = await accountCreateTx.getReceipt(env.client);
+        const accountCreateTxReceipt = await accountCreateTx.getReceipt(
+            env.client,
+        );
 
         // Get an account id and make sure the account id exists
-        const recepinetAccountId = accountCreateTxReceipt.accountId.toString()
-        expect(recepinetAccountId).to.not.equal(undefined)
+        const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
+        expect(recepinetAccountId).to.not.equal(undefined);
 
         // Create transfer transaction
         const transaction = new TransferTransaction()
             .addHbarTransfer(operatorId, new Hbar(-1))
             .addHbarTransfer(recepinetAccountId, new Hbar(1))
-            .freezeWith(env.client)
+            .freezeWith(env.client);
 
         // Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
         // Deserialize transaction from bytes
-        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
-        expect(JSON.parse(JSON.stringify(transaction._transactions.list[0]))).to.deep.equal(JSON.parse(JSON.stringify(transactionFromBytes._transactions.list[0])))
+        const transactionFromBytes =
+            TransferTransaction.fromBytes(transactionBytes);
+        expect(
+            JSON.parse(JSON.stringify(transaction._transactions.list[0])),
+        ).to.deep.equal(
+            JSON.parse(
+                JSON.stringify(transactionFromBytes._transactions.list[0]),
+            ),
+        );
 
         // Sign transaction
-        const signedTransaction = await transactionFromBytes.sign(recipientPrivateKey);
+        const signedTransaction =
+            await transactionFromBytes.sign(recipientPrivateKey);
 
         // Execute transaction
         const transactionResponse = await signedTransaction.execute(env.client);
-        expect(transactionResponse).to.not.equal(null)
-        expect(transactionResponse).to.be.an.instanceof(TransactionResponse)
+        expect(transactionResponse).to.not.equal(null);
+        expect(transactionResponse).to.be.an.instanceof(TransactionResponse);
 
         // Get a receipt and make sure the transaction was executed successfully
-        const executedTransactionReceipt = await transactionResponse.getReceipt(env.client);
-        expect(executedTransactionReceipt).to.not.equal(null)
-        expect(executedTransactionReceipt).to.be.an.instanceof(TransactionReceipt)
-        expect(executedTransactionReceipt.status._code).to.be.equal(22)
+        const executedTransactionReceipt = await transactionResponse.getReceipt(
+            env.client,
+        );
+        expect(executedTransactionReceipt).to.not.equal(null);
+        expect(executedTransactionReceipt).to.be.an.instanceof(
+            TransactionReceipt,
+        );
+        expect(executedTransactionReceipt.status._code).to.be.equal(22);
 
         await env.close();
-    })
+    });
 });
