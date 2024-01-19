@@ -11,6 +11,7 @@ import {
     TokenType,
     TokenUpdateTransaction,
     TransferTransaction,
+    Transaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -458,6 +459,29 @@ describe("TokenUpdate", function () {
         if (!err) {
             throw new Error("token update did not error");
         }
+    });
+
+    it("all properties should be equal to their initial values", async function () {
+        const tx = new TokenUpdateTransaction().freezeWith(env.client);
+
+        const bytes = tx.toBytes();
+        const txFromBytes = Transaction.fromBytes(bytes);
+
+        expect(txFromBytes.tokenId).to.be.null;
+        expect(txFromBytes.tokenName).equal("");
+        expect(txFromBytes.tokenSymbol).equal("");
+        expect(txFromBytes.treasuryAccountId).to.be.null;
+        expect(txFromBytes.adminKey).to.be.null;
+        expect(txFromBytes.kycKey).to.be.null;
+        expect(txFromBytes.freezeKey).to.be.null;
+        expect(txFromBytes.wipeKey).to.be.null;
+        expect(txFromBytes.supplyKey).to.be.null;
+        expect(txFromBytes.autoRenewAccountId).to.be.null;
+        expect(txFromBytes.expirationTime).to.be.null;
+        expect(txFromBytes.autoRenewPeriod).to.be.null;
+        expect(txFromBytes.tokenMemo).to.be.null;
+        expect(txFromBytes.feeScheduleKey).to.be.null;
+        expect(txFromBytes.pauseKey).to.be.null;
     });
 
     after(async function () {
