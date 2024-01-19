@@ -11,7 +11,8 @@ import {
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction after being freezed
+ * Serialize and deserialize the transaction without
+ * being freezed and update it after that.
 */
 
 async function main() {
@@ -42,17 +43,21 @@ async function main() {
     client.setLogger(infoLogger);
 
     try {
-        // 1. Create transaction and freeze it
+        // 1. Create transaction
         const transaction = new TransferTransaction()
-            .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(aliceId, new Hbar(1))
-            .freezeWith(client)
+            .addHbarTransfer(operatorId, new Hbar(1).negated())
 
         // 2. Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
         const transactionFromBytes = Transaction.fromBytes(transactionBytes)
+
+        // 4. Check what is a type of the transaction and
+        // use the correct method ot update transaction
+        if (transactionFromBytes instanceof TransferTransaction) {
+            transactionFromBytes.addHbarTransfer(aliceId, new Hbar(1))
+        }
 
         // 4. Compare before and after serialization/deserialization
         let arr = []

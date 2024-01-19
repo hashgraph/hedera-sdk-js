@@ -6,11 +6,12 @@ import {
     PrivateKey,
     Logger,
     LogLevel,
+    Transaction,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction after being freezed and signed
+ * Serialize and deserialize the transaction without being freezed
 */
 
 async function main() {
@@ -41,22 +42,18 @@ async function main() {
     client.setLogger(infoLogger);
 
     try {
-        // 1. Create transaction and freeze it
-        let transaction = new TransferTransaction()
+        // 1. Create transaction
+        const transaction = new TransferTransaction()
             .addHbarTransfer(operatorId, new Hbar(-1))
             .addHbarTransfer(aliceId, new Hbar(1))
-            .freezeWith(client)
 
-        // 2. Sign transaction
-        await transaction.sign(aliceKey);
-
-        // 3. Serialize transaction into bytes
+        // 2. Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
-        // 4. Deserialize transaction from bytes
-        const transactionFromBytes = TransferTransaction.fromBytes(transactionBytes)
+        // 3. Deserialize transaction from bytes
+        const transactionFromBytes = Transaction.fromBytes(transactionBytes)
 
-        // 5. Compare before and after serialization/deserialization
+        // 4. Compare before and after serialization/deserialization
         let arr = []
         Object.keys(transaction).map((field) => {
             arr.push({
@@ -67,8 +64,11 @@ async function main() {
         })
         console.table(arr);
 
+        // 5. Sign transaction
+        const signedTransaction = await transactionFromBytes.freezeWith(client).sign(aliceKey);
+
         // 6. Execute transaction
-        await transaction.execute(client);
+        await signedTransaction.execute(client);
     } catch (error) {
         console.log(error);
     }

@@ -11,7 +11,8 @@ import {
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction after being freezed
+ * Serialize and deserialize the transaction without
+ * being freezed and node account ids are set
 */
 
 async function main() {
@@ -42,11 +43,11 @@ async function main() {
     client.setLogger(infoLogger);
 
     try {
-        // 1. Create transaction and freeze it
+        // 1. Create transaction
         const transaction = new TransferTransaction()
             .addHbarTransfer(operatorId, new Hbar(-1))
             .addHbarTransfer(aliceId, new Hbar(1))
-            .freezeWith(client)
+            .setNodeAccountIds([new AccountId(3)])
 
         // 2. Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
