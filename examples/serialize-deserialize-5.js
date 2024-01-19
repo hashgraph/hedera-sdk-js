@@ -53,8 +53,8 @@ async function main() {
         // 3. Deserialize transaction from bytes
         const transactionFromBytes = Transaction.fromBytes(transactionBytes)
 
-        // 4. Check what is a type of the transaction and
-        // use the correct method ot update transaction
+        // 4. Check the transaction type and use particular method of
+        // the corresponding class in order to update the transaction
         if (transactionFromBytes instanceof TransferTransaction) {
             transactionFromBytes.addHbarTransfer(aliceId, new Hbar(1))
         }
