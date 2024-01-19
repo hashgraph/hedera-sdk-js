@@ -944,7 +944,16 @@ export default class Transaction extends Executable {
      * @private
      */
     _buildUnsignedTransactions() {
-        this._transactions.setList([this._makeSignedTransaction(null)]);
+        if (this._nodeAccountIds.length == 0) {
+            this._transactions.setList([this._makeSignedTransaction(null)]);
+        } else {
+            // In case the node account ids are set
+            this._transactions.setList(
+                this._nodeAccountIds.list.map((nodeId) =>
+                    this._makeSignedTransaction(nodeId),
+                ),
+            );
+        }
     }
 
     /**
