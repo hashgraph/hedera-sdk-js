@@ -44,6 +44,7 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
+            .setPauseKey(key5)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -65,6 +66,7 @@ describe("TokenUpdate", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.pauseKey.toString()).to.eql(key5.publicKey.toString());
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
@@ -80,7 +82,6 @@ describe("TokenUpdate", function () {
             await new TokenUpdateTransaction()
                 .setTokenId(token)
                 .setTokenName("aaaa")
-                .setPauseKey(key5)
                 .setTokenSymbol("A")
                 .execute(env.client)
         ).getReceipt(env.client);
@@ -100,7 +101,6 @@ describe("TokenUpdate", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
-        expect(info.pauseKey.toString()).to.eql(key5.pauseKey.toString());
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
