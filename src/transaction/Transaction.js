@@ -280,6 +280,38 @@ export default class Transaction extends Executable {
                     transaction.bodyBytes,
                 );
 
+                // Make sure the transaction ID within the body is set
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.ITransactionID} */ (
+                            body.transactionID
+                        ),
+                    );
+
+                    // If we haven't already seen this transaction ID in the list, add it
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
+                        transactionIds.push(transactionId);
+                        transactionIdStrings.push(transactionId.toString());
+                    }
+                }
+
+                // Make sure the node account ID within the body is set
+                if (body.nodeAccountID != null) {
+                    const nodeAccountId = AccountId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            body.nodeAccountID
+                        ),
+                    );
+
+                    // If we haven't already seen this node account ID in the list, add it
+                    if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                        nodeIds.push(nodeAccountId);
+                        nodeIdStrings.push(nodeAccountId.toString());
+                    }
+                }
+
                 // Make sure the body is set
                 if (body.data == null) {
                     throw new Error(
@@ -481,12 +513,12 @@ export default class Transaction extends Executable {
         // keys to the `signerPublicKeys` set, and `publicKeys` list with
         // `null` in the `transactionSigners` at the same index.
         for (let i = 0; i < nodeIds.length; i++) {
-            const signedTransaction = signedTransactions[i];
+            const tx = signedTransactions[i] || transactions[i];
             if (
-                signedTransaction.sigMap != null &&
-                signedTransaction.sigMap.sigPair != null
+                tx.sigMap != null &&
+                tx.sigMap.sigPair != null
             ) {
-                for (const sigPair of signedTransaction.sigMap.sigPair) {
+                for (const sigPair of tx.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
                             /** @type {Uint8Array} */ (sigPair.pubKeyPrefix),

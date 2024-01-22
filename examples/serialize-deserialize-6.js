@@ -6,17 +6,13 @@ import {
     PrivateKey,
     Logger,
     LogLevel,
-    Timestamp,
     Transaction,
-    TransactionId,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
-
 /**
- * @description
  * Serialize and deserialize the transaction without
- * being freezed and transaction id is set
+ * being freezed and update it after that.
 */
 
 async function main() {
@@ -48,19 +44,20 @@ async function main() {
 
     try {
         // 1. Create transaction
-        const validStart = new Timestamp(1451, 590);
-        const transactionId = new TransactionId(operatorId, validStart);
-
         const transaction = new TransferTransaction()
-            .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(aliceId, new Hbar(1))
-            .setTransactionId(transactionId)
+            .addHbarTransfer(operatorId, new Hbar(1).negated())
 
         // 2. Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
         const transactionFromBytes = Transaction.fromBytes(transactionBytes)
+
+        // 4. Check the transaction type and use particular method of
+        // the corresponding class in order to update the transaction
+        if (transactionFromBytes instanceof TransferTransaction) {
+            transactionFromBytes.addHbarTransfer(aliceId, new Hbar(1))
+        }
 
         // 4. Compare before and after serialization/deserialization
         let arr = []
