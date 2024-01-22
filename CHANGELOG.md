@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.40.0
+
+## What's Changed
+
+* Added alias utils for parsing from/to public address by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2066
+* Update axios by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2090
+* Update react yarn by @ochikov in https://github.com/hashgraph/hedera-sdk-js/pull/2093
+* Add a Pause Key to TokenUpdateTransaction's fromProtobuf method by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2095
+
 ## v2.39.0
 
 ## What's Changed

@@ -119,4 +119,24 @@ describe("TokenUpdateTransaction", function () {
             },
         });
     });
+
+    it("all properties should be equal to their initial values", async function () {
+        const tx = new TokenUpdateTransaction();
+
+        expect(tx.tokenId).to.be.null;
+        expect(tx.tokenName).to.be.null;
+        expect(tx.tokenSymbol).to.be.null;
+        expect(tx.treasuryAccountId).to.be.null;
+        expect(tx.adminKey).to.be.null;
+        expect(tx.kycKey).to.be.null;
+        expect(tx.freezeKey).to.be.null;
+        expect(tx.wipeKey).to.be.null;
+        expect(tx.supplyKey).to.be.null;
+        expect(tx.autoRenewAccountId).to.be.null;
+        expect(tx.expirationTime).to.be.null;
+        expect(tx.autoRenewPeriod).to.be.null;
+        expect(tx.tokenMemo).to.be.null;
+        expect(tx.feeScheduleKey).to.be.null;
+        expect(tx.pauseKey).to.be.null;
+    });
 });
