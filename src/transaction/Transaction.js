@@ -504,7 +504,7 @@ export default class Transaction extends Executable {
                 ? Long.fromValue(body.transactionValidDuration.seconds).toInt()
                 : DEFAULT_TRANSACTION_VALID_DURATION;
         transaction._maxTransactionFee =
-            body.transactionFee != null && body.transactionFee.gt(new Long(0))
+            body.transactionFee != null && body.transactionFee > new Long(0)
                 ? Hbar.fromTinybars(body.transactionFee)
                 : null;
         transaction._transactionMemo = body.memo != null ? body.memo : "";
@@ -976,7 +976,7 @@ export default class Transaction extends Executable {
      *
      * @private
      */
-    _buildUnsignedTransactions() {
+    _buildIncompletedTransactions() {
         if (this._nodeAccountIds.length == 0) {
             this._transactions.setList([this._makeSignedTransaction(null)]);
         } else {
@@ -1119,13 +1119,10 @@ export default class Transaction extends Executable {
             this._transactionIds.setLocked();
             this._nodeAccountIds.setLocked();
 
-            // Build all the transactions withot signing
+            // Build all the transactions without signing
             this._buildAllTransactions();
         } else {
-            this._buildUnsignedTransactions();
-
-            // Build all the transactions withot signing
-            this._buildAllUnsignedTransactions();
+            this._buildIncompletedTransactions();
         }
 
         // Construct and encode the transaction list
@@ -1394,17 +1391,6 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Build each transaction in a loop
-     *
-     * @private
-     */
-    _buildAllUnsignedTransactions() {
-        for (let i = 0; i < this._transactions.length; i++) {
-            this._buildUnsignedTransaction(i);
-        }
-    }
-
-    /**
      * Build and and sign each transaction in a loop
      *
      * This method is primary used in the exist condition methods
@@ -1448,28 +1434,6 @@ export default class Transaction extends Executable {
                     HashgraphProto.proto.SignedTransaction.encode(
                         this._signedTransactions.get(index),
                     ).finish(),
-            };
-        });
-    }
-
-    /**
-     * Build a transaction at a particular index
-     *
-     * @private
-     * @param {number} index
-     */
-    _buildUnsignedTransaction(index) {
-        if (this._transactions.length < index) {
-            for (let i = this._transactions.length; i < index; i++) {
-                this._transactions.push(null);
-            }
-        }
-
-        this._transactions.setIfAbsent(index, () => {
-            return {
-                bodyBytes: HashgraphProto.proto.Transaction.encode(
-                    this._signedTransactions.get(index),
-                ).finish(),
             };
         });
     }
