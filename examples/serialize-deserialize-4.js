@@ -55,21 +55,10 @@ async function main() {
         // 3. Deserialize transaction from bytes
         const transactionFromBytes = Transaction.fromBytes(transactionBytes)
 
-        // 4. Compare before and after serialization/deserialization
-        let arr = []
-        Object.keys(transaction).map((field) => {
-            arr.push({
-                field,
-                before: transaction[field],
-                after: transactionFromBytes[field]
-            })
-        })
-        console.table(arr);
-
-        // 5. Sign transaction
+        // 4. Sign transaction
         const signedTransaction = await transactionFromBytes.freezeWith(client).sign(aliceKey);
 
-        // 6. Execute transaction
+        // 5. Execute transaction
         await signedTransaction.execute(client);
     } catch (error) {
         console.log(error);

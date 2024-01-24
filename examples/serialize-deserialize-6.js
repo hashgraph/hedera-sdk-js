@@ -59,17 +59,6 @@ async function main() {
             transactionFromBytes.addHbarTransfer(aliceId, new Hbar(1))
         }
 
-        // 4. Compare before and after serialization/deserialization
-        let arr = []
-        Object.keys(transaction).map((field) => {
-            arr.push({
-                field,
-                before: transaction[field],
-                after: transactionFromBytes[field]
-            })
-        })
-        console.table(arr);
-
         // 5. Sign transaction
         const signedTransaction = await transactionFromBytes.freezeWith(client).sign(aliceKey);
 

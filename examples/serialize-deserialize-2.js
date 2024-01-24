@@ -55,21 +55,10 @@ async function main() {
         const transactionBytes = transaction.toBytes();
 
         // 4. Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(transactionBytes)
+        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
-        // 5. Compare before and after serialization/deserialization
-        let arr = []
-        Object.keys(transaction).map((field) => {
-            arr.push({
-                field,
-                before: transaction[field],
-                after: transactionFromBytes[field]
-            })
-        })
-        console.table(arr);
-
-        // 6. Execute transaction
-        await transaction.execute(client);
+        // 5. Execute transaction
+        await transactionFromBytes.execute(client);
     } catch (error) {
         console.log(error);
     }

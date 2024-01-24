@@ -9,6 +9,7 @@ import {
     TransferTransaction,
     TransactionReceipt,
     TransactionResponse,
+    Transaction,
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -165,12 +166,16 @@ describe("TransactionIntegration", function () {
         const accountCreateTx = await new AccountCreateTransaction()
             .setKey(recipientPrivateKey.publicKey)
             .setInitialBalance(new Hbar(2))
+            .freezeWith(env.client)
             .execute(env.client);
 
         // Get a receipt for create account transaction
         const accountCreateTxReceipt = await accountCreateTx.getReceipt(
             env.client,
         );
+        expect(accountCreateTxReceipt).to.not.equal(null);
+        expect(accountCreateTxReceipt).to.be.an.instanceof(TransactionReceipt);
+        expect(accountCreateTxReceipt.status._code).to.be.equal(22);
 
         // Get an account id and make sure the account id exists
         const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
@@ -188,12 +193,9 @@ describe("TransactionIntegration", function () {
         const transactionFromBytes = TransferTransaction.fromBytes(
             transactionBytes,
         ).freezeWith(env.client);
-        expect(
-            JSON.parse(JSON.stringify(transaction._transactions.list[0])),
-        ).to.deep.equal(
-            JSON.parse(
-                JSON.stringify(transactionFromBytes._transactions.list[0]),
-            ),
+
+        expect(hex.encode(transactionBytes)).to.be.equal(
+            hex.encode(transactionFromBytes.toBytes()),
         );
 
         // Sign transaction
@@ -230,15 +232,20 @@ describe("TransactionIntegration", function () {
         const accountCreateTx = await new AccountCreateTransaction()
             .setKey(recipientPrivateKey.publicKey)
             .setInitialBalance(new Hbar(2))
+            .freezeWith(env.client)
             .execute(env.client);
 
         // Get a receipt for create account transaction
         const accountCreateTxReceipt = await accountCreateTx.getReceipt(
             env.client,
         );
+        expect(accountCreateTxReceipt).to.not.equal(null);
+        expect(accountCreateTxReceipt).to.be.an.instanceof(TransactionReceipt);
+        expect(accountCreateTxReceipt.status._code).to.be.equal(22);
 
         // Get an account id and make sure the account id exists
         const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
+
         expect(recepinetAccountId).to.not.equal(undefined);
 
         // Create transfer transaction
@@ -251,14 +258,10 @@ describe("TransactionIntegration", function () {
         const transactionBytes = transaction.toBytes();
 
         // Deserialize transaction from bytes
-        const transactionFromBytes =
-            TransferTransaction.fromBytes(transactionBytes);
-        expect(
-            JSON.parse(JSON.stringify(transaction._transactions.list[0])),
-        ).to.deep.equal(
-            JSON.parse(
-                JSON.stringify(transactionFromBytes._transactions.list[0]),
-            ),
+        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
+
+        expect(hex.encode(transactionBytes)).to.be.equal(
+            hex.encode(transactionFromBytes.toBytes()),
         );
 
         // Sign transaction

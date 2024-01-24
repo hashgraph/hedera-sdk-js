@@ -504,7 +504,8 @@ export default class Transaction extends Executable {
                 ? Long.fromValue(body.transactionValidDuration.seconds).toInt()
                 : DEFAULT_TRANSACTION_VALID_DURATION;
         transaction._maxTransactionFee =
-            body.transactionFee != null && body.transactionFee > new Long(0)
+            body.transactionFee != null &&
+            body.transactionFee > new Long(0, 0, true)
                 ? Hbar.fromTinybars(body.transactionFee)
                 : null;
         transaction._transactionMemo = body.memo != null ? body.memo : "";
@@ -514,10 +515,7 @@ export default class Transaction extends Executable {
         // `null` in the `transactionSigners` at the same index.
         for (let i = 0; i < nodeIds.length; i++) {
             const tx = signedTransactions[i] || transactions[i];
-            if (
-                tx.sigMap != null &&
-                tx.sigMap.sigPair != null
-            ) {
+            if (tx.sigMap != null && tx.sigMap.sigPair != null) {
                 for (const sigPair of tx.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
