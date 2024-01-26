@@ -212,9 +212,7 @@ export default class ManagedNetwork {
             const nodeIndex = Math.floor(Math.random() * this._healthyNodes.length);
             const selectedNode = this._healthyNodes[nodeIndex];
 
-            const hasAlreadyExist = nodes.some((node) => node.getKey() == selectedNode.getKey());
-
-            if (!hasAlreadyExist) {
+            if (!nodes.some((node) => node.getKey() == selectedNode.getKey())) {
                 nodes.push(selectedNode);
             }
         }
