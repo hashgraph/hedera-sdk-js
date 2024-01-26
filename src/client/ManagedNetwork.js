@@ -208,11 +208,17 @@ export default class ManagedNetwork {
 
         /** @type {NetworkNodeT[]} */
         const nodes = [];
+        /** @type {string[]} */
+        let nodesIds = [];
         for (let i = 0; i < count; i++) {
-            const nodeIndex = Math.floor(Math.random() * this._healthyNodes.length);
+            const nodeIndex = Math.floor(
+                Math.random() * this._healthyNodes.length,
+            );
+
             const selectedNode = this._healthyNodes[nodeIndex];
 
-            if (!nodes.some((node) => node.getKey() == selectedNode.getKey())) {
+            if (!nodesIds.includes(selectedNode.getKey())) {
+                nodesIds.push(selectedNode.getKey());
                 nodes.push(selectedNode);
             }
         }
