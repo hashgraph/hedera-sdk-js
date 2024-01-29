@@ -206,21 +206,26 @@ export default class ManagedNetwork {
         this._removeDeadNodes();
         this._readmitNodes();
 
-        /** @type {NetworkNodeT[]} */
         const nodes = [];
-        /** @type {string[]} */
-        let nodesIds = [];
+        // Create a shallow for safe iteration
+        let healthyNodes = this._healthyNodes.slice();
+        count = Math.min(count, healthyNodes.length);
+
         for (let i = 0; i < count; i++) {
-            const nodeIndex = Math.floor(
-                Math.random() * this._healthyNodes.length,
-            );
+            // Select a random index
+            const nodeIndex = Math.floor(Math.random() * healthyNodes.length);
+            const selectedNode = healthyNodes[nodeIndex];
 
-            const selectedNode = this._healthyNodes[nodeIndex];
-
-            if (!nodesIds.includes(selectedNode.getKey())) {
-                nodesIds.push(selectedNode.getKey());
-                nodes.push(selectedNode);
+            // Check if the node exists
+            if (!selectedNode) {
+                console.error("Selected an undefined node. Index:", nodeIndex);
+                break; // Break out of the loop if undefined node is selected
             }
+
+            // Add the selected node in array for execution
+            nodes.push(selectedNode);
+            // Remove the selected node from array
+            healthyNodes.splice(nodeIndex, 1);
         }
 
         return nodes;
