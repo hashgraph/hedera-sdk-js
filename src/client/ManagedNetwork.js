@@ -95,7 +95,7 @@ export default class ManagedNetwork {
          * @external
          * @type {Logger | null}
          */
-         this._logger = null;
+        this._logger = null;
     }
 
     /**
@@ -216,7 +216,7 @@ export default class ManagedNetwork {
         this._removeDeadNodes();
         this._readmitNodes();
 
-        this.setLogger(new Logger(LogLevel.Debug))
+        this.setLogger(new Logger(LogLevel.Debug));
 
         const nodes = [];
         // Create a shallow for safe iteration
@@ -501,7 +501,7 @@ export default class ManagedNetwork {
      * @param {Logger} logger
      * @returns {this}
      */
-     setLogger(logger) {
+    setLogger(logger) {
         this._logger = logger;
         return this;
     }
