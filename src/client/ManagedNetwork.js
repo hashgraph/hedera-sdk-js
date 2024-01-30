@@ -20,6 +20,8 @@
 
 import LedgerId from "../LedgerId.js";
 import * as util from "../util.js";
+import Logger from "../logger/Logger.js"; // eslint-disable-line
+import { LogLevel } from "../exports.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -86,6 +88,14 @@ export default class ManagedNetwork {
         this._nodeMaxReadmitPeriod = this._maxBackoff;
 
         this._earliestReadmitTime = Date.now() + this._nodeMinReadmitPeriod;
+
+        /**
+         * Logger
+         *
+         * @external
+         * @type {Logger | null}
+         */
+         this._logger = null;
     }
 
     /**
@@ -206,6 +216,8 @@ export default class ManagedNetwork {
         this._removeDeadNodes();
         this._readmitNodes();
 
+        this.setLogger(new Logger(LogLevel.Debug))
+
         const nodes = [];
         // Create a shallow for safe iteration
         let healthyNodes = this._healthyNodes.slice();
@@ -218,7 +230,11 @@ export default class ManagedNetwork {
 
             // Check if the node exists
             if (!selectedNode) {
-                console.error("Selected an undefined node. Index:", nodeIndex);
+                if (this._logger) {
+                    this._logger.debug(
+                        `Selected an undefined node at index ${nodeIndex}`,
+                    );
+                }
                 break; // Break out of the loop if undefined node is selected
             }
 
@@ -477,6 +493,17 @@ export default class ManagedNetwork {
      */
     decreaseBackoff(node) {
         node.decreaseBackoff();
+    }
+
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     * @returns {this}
+     */
+     setLogger(logger) {
+        this._logger = logger;
+        return this;
     }
 
     close() {
