@@ -1,10 +1,10 @@
 import {
     AccountCreateTransaction,
-    AccountInfoQuery,
+    // AccountInfoQuery,
     Hbar,
     PrivateKey,
     Status,
-    TokenAssociateTransaction,
+    // TokenAssociateTransaction,
     TokenCreateTransaction,
     TokenFreezeTransaction,
 } from "../../src/exports.js";

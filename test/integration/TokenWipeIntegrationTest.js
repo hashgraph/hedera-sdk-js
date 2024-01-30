@@ -1,6 +1,6 @@
 import {
     AccountCreateTransaction,
-    AccountInfoQuery,
+    // AccountInfoQuery,
     Hbar,
     PrivateKey,
     Status,
@@ -8,7 +8,7 @@ import {
     TokenCreateTransaction,
     TokenGrantKycTransaction,
     TokenWipeTransaction,
-    TransferTransaction,
+    // TransferTransaction,
     Transaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";

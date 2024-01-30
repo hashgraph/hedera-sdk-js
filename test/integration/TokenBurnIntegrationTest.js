@@ -1,11 +1,10 @@
-import { expect } from "chai";
 import {
     Status,
     TokenBurnTransaction,
     TokenCreateTransaction,
     TokenSupplyType,
     TokenType,
-    AccountBalanceQuery,
+    // AccountBalanceQuery,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 

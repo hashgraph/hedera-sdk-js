@@ -1,12 +1,12 @@
 import {
     AccountCreateTransaction,
-    AccountInfoQuery,
+    // AccountInfoQuery,
     Hbar,
     PrivateKey,
     Status,
-    TokenAssociateTransaction,
+    // TokenAssociateTransaction,
     TokenCreateTransaction,
-    TokenFreezeTransaction,
+    // TokenFreezeTransaction,
     TokenUnfreezeTransaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
