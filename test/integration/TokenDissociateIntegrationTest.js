@@ -23,7 +23,11 @@ describe("TokenDissociate", function () {
         env = await IntegrationTestEnv.new();
     });
 
-    // REVERT AFTER THE QUERY IS FIXED
+    /**
+     *
+     * @description The test is temporarily commented because AccountBalanceQuery does a query to the consensus node which was deprecated.
+     * @todo Uncomment a test when the new query to the mirror node is implemented as it described here https://github.com/hashgraph/hedera-sdk-reference/issues/144
+     */
     // it("should be executable", async function () {
     //     this.timeout(120000);
 
