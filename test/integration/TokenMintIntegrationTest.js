@@ -5,7 +5,10 @@ import {
     TokenSupplyType,
     TokenType,
     Transaction,
+    TokenInfoQuery,
+    Long,
 } from "../../src/exports.js";
+import { wait } from "../../src/util.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenMint", function () {
@@ -219,6 +222,41 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
+    });
+
+    it("should retrieve the correct token balance", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        const tokenCreateTransaction = await new TokenCreateTransaction()
+            .setTokenName("Token")
+            .setTokenSymbol("T")
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(8)
+            .setTreasuryAccountId(operatorId)
+            .setSupplyKey(operatorKey)
+            .execute(env.client);
+
+        const tokenCreateTransactionReceipt =
+            await tokenCreateTransaction.getReceipt(env.client);
+        const tokenId = tokenCreateTransactionReceipt.tokenId;
+
+        const amount = Long.fromValue("25817858423044461");
+
+        await new TokenMintTransaction()
+            .setTokenId(tokenId)
+            .setAmount(amount)
+            .execute(env.client);
+
+        await wait(5000);
+
+        const tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.totalSupply.toString()).to.be.equal(amount.toString());
     });
 
     after(async function () {

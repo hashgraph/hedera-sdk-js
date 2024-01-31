@@ -472,3 +472,12 @@ export function arrayEqual(array1, array2) {
 
     return true;
 }
+
+/**
+ * @description Function that delays an execution for a given time (in milliseconds)
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
+export function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
