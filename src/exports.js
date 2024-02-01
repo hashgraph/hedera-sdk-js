@@ -173,6 +173,7 @@ export { default as Wallet } from "./Wallet.js";
 export { default as Logger } from "./logger/Logger.js";
 export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
+export { default as Long } from "long";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
