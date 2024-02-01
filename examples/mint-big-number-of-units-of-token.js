@@ -49,7 +49,7 @@ async function main() {
     if (tokenMintReciept.status === Status.Success) {
         console.log("Token has been minted!");
     } else {
-        console.error('Token mint transaction failed.');
+        console.error("Token mint transaction failed.");
     }
 
     let tokenInfo = await new TokenInfoQuery()
@@ -59,7 +59,7 @@ async function main() {
     if (tokenInfo) {
         console.log(`Token Balance = ${tokenInfo.totalSupply.toString()}`);
     } else {
-        console.error('Token query failed.');
+        console.error("Token query failed.");
     }
 
     client.close();
