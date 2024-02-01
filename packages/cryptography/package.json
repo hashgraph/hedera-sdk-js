@@ -105,7 +105,7 @@
         "babel-plugin-module-rewrite": "^0.2.0",
         "c8": "^8.0.1",
         "chai": "^4.3.7",
-        "chromedriver": "^119.0.1",
+        "chromedriver": "^121.0.0",
         "codecov": "^3.8.3",
         "dpdm": "^3.11.0",
         "eslint": "^8.52.0",
