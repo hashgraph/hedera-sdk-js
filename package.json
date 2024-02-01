@@ -94,7 +94,7 @@
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-rewrite": "^0.2.0",
         "c8": "^8.0.1",
-        "chai": "^4.3.7",
+        "chai": "^5.0.3",
         "chromedriver": "^119.0.1",
         "codecov": "^3.8.3",
         "dotenv": "^16.0.3",
