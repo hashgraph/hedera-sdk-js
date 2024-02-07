@@ -234,8 +234,9 @@ export default class Transaction extends Executable {
             // We support `Transaction.signedTransactionBytes` and
             // `Transaction.bodyBytes` + `Transaction.sigMap`. If the bytes represent the
             // latter, convert them into `signedTransactionBytes`
-
-            if (transaction.signedTransactionBytes.length == 0) {
+            if (transaction.signedTransactionBytes.length !== 0) {
+                list.push(transaction);
+            } else {
                 list.push({
                     signedTransactionBytes:
                         HashgraphProto.proto.SignedTransaction.encode({
@@ -243,21 +244,6 @@ export default class Transaction extends Executable {
                             bodyBytes: transaction.bodyBytes,
                         }).finish(),
                 });
-            }
-
-            if (transaction.bodyBytes.length == 0) {
-                list.push({
-                    bodyBytes: HashgraphProto.proto.Transaction.encode({
-                        bodyBytes: transaction.bodyBytes,
-                    }).finish(),
-                });
-            }
-
-            if (
-                transaction.bodyBytes.length !== 0 ||
-                transaction.signedTransactionBytes.length !== 0
-            ) {
-                list.push(transaction);
             }
         }
 
