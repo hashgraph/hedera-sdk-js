@@ -11,7 +11,7 @@ import {
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction after being freezed and signed
+ * @description Serialize and deserialize the so-called signed transaction after being signed, and execute it
 */
 
 async function main() {
@@ -25,8 +25,6 @@ async function main() {
     ) {
         throw new Error("Please set required keys in .env file.");
     }
-    // Create logger with info level of logging to the `Client`
-    let infoLogger = new Logger(LogLevel.Info);
 
     const network = process.env.HEDERA_NETWORK
 
@@ -39,6 +37,7 @@ async function main() {
     const client = Client.forName(network).setOperator(operatorId, operatorKey)
 
     // Set logger
+    const infoLogger = new Logger(LogLevel.Info);
     client.setLogger(infoLogger);
 
     try {
@@ -58,7 +57,11 @@ async function main() {
         const transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
         // 5. Execute transaction
-        await transactionFromBytes.execute(client);
+        const executedTransaction = await transactionFromBytes.execute(client);
+
+        // 6. Get a receipt
+        const receipt = await executedTransaction.getReceipt(client)
+        console.log(`Transaction status: ${receipt.status.toString()}!`);
     } catch (error) {
         console.log(error);
     }

@@ -11,8 +11,7 @@ import {
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction without
- * being freezed and node account ids are set
+ * @description Serialize and deserialize so-called incompleted transaction, set node account ids and execute it
 */
 
 async function main() {
@@ -26,8 +25,6 @@ async function main() {
     ) {
         throw new Error("Please set required keys in .env file.");
     }
-    // Create logger with info level of logging to the `Client`
-    let infoLogger = new Logger(LogLevel.Info);
 
     const network = process.env.HEDERA_NETWORK
 
@@ -40,26 +37,30 @@ async function main() {
     const client = Client.forName(network).setOperator(operatorId, operatorKey)
 
     // Set logger
+    const infoLogger = new Logger(LogLevel.Info);
     client.setLogger(infoLogger);
 
     try {
         // 1. Create transaction
         const transaction = new TransferTransaction()
             .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(aliceId, new Hbar(1))
-            .setNodeAccountIds([new AccountId(3)])
+            .addHbarTransfer(aliceId, new Hbar(1));
 
         // 2. Serialize transaction into bytes
         const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(transactionBytes)
+        let transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
-        // 4. Sign transaction
-        const signedTransaction = await transactionFromBytes.freezeWith(client).sign(aliceKey);
+        // 4. Set node account ids
+        transactionFromBytes.setNodeAccountIds([new AccountId(3)]);
 
-        // 5. Execute transaction
-        await signedTransaction.execute(client);
+        // 5. Freeze, sign and execute transaction
+        const executedTransaction = await (await transactionFromBytes.freezeWith(client).sign(aliceKey)).execute(client);
+
+        // 6. Get a receipt
+        const receipt = await executedTransaction.getReceipt(client);
+        console.log(`Transaction status: ${receipt.status.toString()}!`);
     } catch (error) {
         console.log(error);
     }

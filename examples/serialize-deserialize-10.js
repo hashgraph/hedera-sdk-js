@@ -1,20 +1,19 @@
 import {
     AccountId,
-    TransferTransaction,
-    Hbar,
-    Client,
+    Wallet,
     PrivateKey,
-    Logger,
-    LogLevel,
-    Timestamp,
+    LocalProvider,
     Transaction,
+    FileCreateTransaction,
+    LogLevel,
+    Logger,
     TransactionId,
+    Timestamp,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
-
 /**
- * @description Serialize and deserialize so-called incompleted transaction, set transaction id and execute it
+ * @description Serialize and deserialize so-called incompleted transaction (chunked), set transaction id and execute it
 */
 
 async function main() {
@@ -22,38 +21,33 @@ async function main() {
     dotenv.config();
     if (!process.env.OPERATOR_KEY ||
         !process.env.OPERATOR_ID ||
-        !process.env.ALICE_KEY ||
-        !process.env.ALICE_ID ||
         !process.env.HEDERA_NETWORK
     ) {
         throw new Error("Please set required keys in .env file.");
     }
 
-    const network = process.env.HEDERA_NETWORK
-
     // Configure client using environment variables
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
-    const aliceId = AccountId.fromString(process.env.ALICE_ID);
-    const aliceKey = PrivateKey.fromStringED25519(process.env.ALICE_KEY);
 
-    const client = Client.forName(network).setOperator(operatorId, operatorKey)
-
-    // Set logger
+    const provider = new LocalProvider()
     const infoLogger = new Logger(LogLevel.Info);
-    client.setLogger(infoLogger);
+    provider.setLogger(infoLogger)
+    const wallet = new Wallet(
+        operatorId, operatorKey, provider
+    )
 
     try {
         // 1. Create transaction
-        const transaction = new TransferTransaction()
-            .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(aliceId, new Hbar(1));
+        const transaction = new FileCreateTransaction()
+            .setKeys([wallet.getAccountKey()])
+            .setContents("[e2e::FileCreateTransaction]");
 
         // 2. Serialize transaction into bytes
-        const transactionBytes = transaction.toBytes();
+        const bytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
-        let transactionFromBytes = Transaction.fromBytes(transactionBytes);
+        let transactionFromBytes = Transaction.fromBytes(bytes);
 
         // 4. Set transaction id
         const validStart = new Timestamp(Math.floor(Date.now() / 1000), 0);
@@ -61,16 +55,16 @@ async function main() {
         transactionFromBytes.setTransactionId(transactionId);
 
         // 5. Freeze, sign and execute transaction
-        const executedTransaction = await (await transactionFromBytes.freezeWith(client).sign(aliceKey)).execute(client);
+        const response = await (await (await transactionFromBytes.freezeWithSigner(wallet)).signWithSigner(wallet)).executeWithSigner(wallet);
 
         // 6. Get a receipt
-        const receipt = await executedTransaction.getReceipt(client)
+        const receipt = await response.getReceiptWithSigner(wallet);
         console.log(`Transaction status: ${receipt.status.toString()}!`);
     } catch (error) {
         console.log(error);
     }
 
-    client.close();
+    provider.close();
 }
 
 main();

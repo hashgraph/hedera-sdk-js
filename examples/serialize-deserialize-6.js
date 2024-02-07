@@ -11,8 +11,7 @@ import {
 import dotenv from "dotenv";
 
 /**
- * Serialize and deserialize the transaction without
- * being freezed and update it after that.
+ * @description Serialize and deserialize so-called incompleted transaction, update and execute it
 */
 
 async function main() {
@@ -26,8 +25,6 @@ async function main() {
     ) {
         throw new Error("Please set required keys in .env file.");
     }
-    // Create logger with info level of logging to the `Client`
-    let infoLogger = new Logger(LogLevel.Info);
 
     const network = process.env.HEDERA_NETWORK
 
@@ -40,6 +37,7 @@ async function main() {
     const client = Client.forName(network).setOperator(operatorId, operatorKey)
 
     // Set logger
+    const infoLogger = new Logger(LogLevel.Info);
     client.setLogger(infoLogger);
 
     try {
@@ -59,11 +57,12 @@ async function main() {
             transactionFromBytes.addHbarTransfer(aliceId, new Hbar(1))
         }
 
-        // 5. Sign transaction
-        const signedTransaction = await transactionFromBytes.freezeWith(client).sign(aliceKey);
+        // 4. Freeze, sign and execute transaction
+        const executedTransaction = await (await transactionFromBytes.freezeWith(client).sign(aliceKey)).execute(client);
 
-        // 6. Execute transaction
-        await signedTransaction.execute(client);
+        // 5. Get a receipt
+        const receipt = await executedTransaction.getReceipt(client)
+        console.log(`Transaction status: ${receipt.status.toString()}!`);
     } catch (error) {
         console.log(error);
     }
