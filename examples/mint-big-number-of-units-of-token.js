@@ -7,19 +7,19 @@ import {
     TokenMintTransaction,
     TokenInfoQuery,
     Long,
-    Status
+    Status,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 async function main() {
-    const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY)
-    const operatorId = AccountId.fromString(process.env.OPERATOR_ID)
+    const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
+    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 
     const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
         operatorId,
-        operatorKey
+        operatorKey,
     );
 
     let tokenCreate = await new TokenCreateTransaction()
@@ -38,7 +38,7 @@ async function main() {
     // If the number of tokens that should be minted is bigger
     // than Number.MAX_SAFE_INTEGER it should be passed as a Long number
     const amount = Long.fromValue("25817858423044461");
-    console.log(`Token balance will be set to ${amount}.`);
+    console.log(`Token balance will be set to ${amount.toString()}.`);
 
     let tokenMint = await new TokenMintTransaction()
         .setTokenId(tokenId)
