@@ -157,12 +157,11 @@ describe("TransactionIntegration", function () {
     });
 
     describe("HIP-745 - create incompleted transaction", function () {
-        let env, operatorId, operatorKey, recipientKey, recipientId, client, wallet;
+        let env, operatorId, recipientKey, recipientId, client, wallet;
 
         beforeEach(async function () {
             env = await IntegrationTestEnv.new();
             operatorId = env.operatorId;
-            operatorKey = env.operatorKey;
             recipientKey = PrivateKey.generateECDSA();
             recipientId = recipientKey.publicKey.toAccountId(0, 0);
             client = env.client;
@@ -477,7 +476,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction and freeze it
                 const transaction = await new FileCreateTransaction()
-                    .setKeys([operatorKey.publicKey])
+                    .setKeys([wallet.getAccountKey()])
                     .setContents("[e2e::FileCreateTransaction]")
                     .freezeWithSigner(wallet);
 
@@ -513,7 +512,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([operatorKey.publicKey])
+                    .setKeys([wallet.getAccountKey()])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -555,7 +554,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([operatorKey.publicKey])
+                    .setKeys([wallet.getAccountKey()])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -604,7 +603,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([operatorKey.publicKey])
+                    .setKeys([wallet.getAccountKey()])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -654,11 +653,10 @@ describe("TransactionIntegration", function () {
         // Example: serialize-deserialize-11
         it("should serialize and deserialize so-called incompleted transaction (chunked), set node account ids and execute it", async function () {
             this.timeout(120000);
-            console.log("WALLET", wallet);
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([operatorKey.publicKey])
+                    .setKeys([wallet.getAccountKey()])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes

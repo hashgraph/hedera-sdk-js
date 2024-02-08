@@ -22,6 +22,7 @@ export default class BaseIntegrationTestEnv {
      * @property {PrivateKey} options.originalOperatorKey
      * @property {AccountId} options.newOperatorKey
      * @property {AccountId[]} options.newOperatorId
+     * @property {Wallet} options.wallet
      */
     constructor(options) {
         /** @type {Client} */
@@ -40,6 +41,9 @@ export default class BaseIntegrationTestEnv {
         this.originalOperatorId = options.originalOperatorId;
 
         this.throwaway = options.throwaway;
+
+        /** @type {Wallet} */
+        this.wallet = options.wallet;
 
         Object.freeze(this);
     }
