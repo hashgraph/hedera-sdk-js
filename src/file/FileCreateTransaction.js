@@ -101,7 +101,7 @@ export default class FileCreateTransaction extends Transaction {
             this.setContents(props.contents);
         }
 
-        if (props.fileMemo != null) {
+        if (props.fileMemo && props.fileMemo != null) {
             this.setFileMemo(props.fileMemo);
         }
     }
