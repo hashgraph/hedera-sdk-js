@@ -157,7 +157,7 @@ describe("TransactionIntegration", function () {
     });
 
     describe("HIP-745 - create incompleted transaction", function () {
-        let env, operatorId, recipientKey, recipientId, client, wallet;
+        let env, operatorId, operatorKey, recipientKey, recipientId, client, wallet;
 
         beforeEach(async function () {
             env = await IntegrationTestEnv.new();
