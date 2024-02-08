@@ -44,10 +44,10 @@ async function main() {
             .setContents("[e2e::FileCreateTransaction]");
 
         // 2. Serialize transaction into bytes
-        const bytes = transaction.toBytes();
+        const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
-        let transactionFromBytes = Transaction.fromBytes(bytes);
+        let transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
         // 4. Set transaction id
         const validStart = new Timestamp(Math.floor(Date.now() / 1000), 0);

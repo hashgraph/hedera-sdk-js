@@ -42,10 +42,10 @@ async function main() {
             .setContents("[e2e::FileCreateTransaction]");
 
         // 2. Serialize transaction into bytes
-        const bytes = transaction.toBytes();
+        const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(bytes);
+        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
         // 4. Check the transaction type and use particular method of
         // the corresponding class in order to update the transaction

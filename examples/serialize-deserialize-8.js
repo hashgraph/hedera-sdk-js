@@ -42,10 +42,10 @@ async function main() {
             .setContents("[e2e::FileCreateTransaction]");
 
         // 2. Serialize transaction into bytes
-        const bytes = transaction.toBytes();
+        const transactionBytes = transaction.toBytes();
 
         // 3. Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(bytes);
+        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
         // 4. Freeze, sign and execute transaction
         const response = await (await (await transactionFromBytes.freezeWithSigner(wallet)).signWithSigner(wallet)).executeWithSigner(wallet);
