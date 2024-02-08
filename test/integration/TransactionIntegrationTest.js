@@ -10,6 +10,8 @@ import {
     TransactionReceipt,
     TransactionResponse,
     Transaction,
+    TransactionId,
+    Timestamp,
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -154,135 +156,548 @@ describe("TransactionIntegration", function () {
         await env.close();
     });
 
-    it("[HIP-745] should serialize and deserialize an incomplete transaction and execute it", async function () {
-        this.timeout(120000);
-        const env = await IntegrationTestEnv.new();
-        const operatorId = env.operatorId;
+    describe("HIP-745 - create incompleted transaction", function () {
+        let env, operatorId, recipientKey, recipientId, client, wallet;
 
-        // Generate a new account
-        const recipientPrivateKey = PrivateKey.generateECDSA();
+        beforeEach(async function () {
+            env = await IntegrationTestEnv.new();
+            operatorId = env.operatorId;
+            recipientKey = PrivateKey.generateECDSA();
+            recipientId = recipientKey.publicKey.toAccountId(0, 0);
+            client = env.client;
+            wallet = env.wallet;
+        });
 
-        // Create account transaction
-        const accountCreateTx = await new AccountCreateTransaction()
-            .setKey(recipientPrivateKey.publicKey)
-            .setInitialBalance(new Hbar(2))
-            .freezeWith(env.client)
-            .execute(env.client);
+        afterEach(function () {
+            client.close();
+        });
 
-        // Get a receipt for create account transaction
-        const accountCreateTxReceipt = await accountCreateTx.getReceipt(
-            env.client,
-        );
-        expect(accountCreateTxReceipt).to.not.equal(null);
-        expect(accountCreateTxReceipt).to.be.an.instanceof(TransactionReceipt);
-        expect(accountCreateTxReceipt.status._code).to.be.equal(22);
+        // Example: serialize-deserialize-1
+        it("should serialize and deserialize the so-called signed transaction, and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction and freeze it
+                const transaction = new TransferTransaction()
+                    .addHbarTransfer(operatorId, new Hbar(-1))
+                    .addHbarTransfer(recipientId, new Hbar(1))
+                    .freezeWith(client);
 
-        // Get an account id and make sure the account id exists
-        const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
-        expect(recepinetAccountId).to.not.equal(undefined);
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
 
-        // Create transfer transaction
-        const transaction = new TransferTransaction()
-            .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(recepinetAccountId, new Hbar(1));
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
 
-        // Serialize transaction into bytes
-        const transactionBytes = transaction.toBytes();
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
 
-        // Deserialize transaction from bytes
-        const transactionFromBytes = TransferTransaction.fromBytes(
-            transactionBytes,
-        ).freezeWith(env.client);
+                // 4. Sign and execute transaction
+                const response = await (
+                    await transactionFromBytes.sign(recipientKey)
+                ).execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(false);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(false);
 
-        expect(hex.encode(transactionBytes)).to.be.equal(
-            hex.encode(transactionFromBytes.toBytes()),
-        );
+                // 5. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
-        // Sign transaction
-        const signedTransaction =
-            await transactionFromBytes.sign(recipientPrivateKey);
+        // Example: serialize-deserialize-2
+        it("should serialize and deserialize the so-called signed transaction after being signed, and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction and freeze it
+                let transaction = new TransferTransaction()
+                    .addHbarTransfer(operatorId, new Hbar(-1))
+                    .addHbarTransfer(recipientId, new Hbar(1))
+                    .freezeWith(client);
 
-        // Execute transaction
-        const transactionResponse = await signedTransaction.execute(env.client);
-        expect(transactionResponse).to.not.equal(null);
-        expect(transactionResponse).to.be.an.instanceof(TransactionResponse);
+                // 2. Sign transaction
+                await transaction.sign(recipientKey);
 
-        // Get a receipt and make sure the transaction was executed successfully
-        const executedTransactionReceipt = await transactionResponse.getReceipt(
-            env.client,
-        );
-        expect(executedTransactionReceipt).to.not.equal(null);
-        expect(executedTransactionReceipt).to.be.an.instanceof(
-            TransactionReceipt,
-        );
-        expect(executedTransactionReceipt.status._code).to.be.equal(22);
+                // 3. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
 
-        await env.close();
-    });
+                // 4. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
 
-    it("[HIP-745] should serialize and deserialize a signed transaction and execute it", async function () {
-        this.timeout(120000);
-        const env = await IntegrationTestEnv.new();
-        const operatorId = env.operatorId;
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(false);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(false);
 
-        // Generate a new account
-        const recipientPrivateKey = PrivateKey.generateECDSA();
+                // 5. Execute transaction
+                const response = await transactionFromBytes.execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
 
-        // Create account transaction
-        const accountCreateTx = await new AccountCreateTransaction()
-            .setKey(recipientPrivateKey.publicKey)
-            .setInitialBalance(new Hbar(2))
-            .freezeWith(env.client)
-            .execute(env.client);
+                // 6. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
-        // Get a receipt for create account transaction
-        const accountCreateTxReceipt = await accountCreateTx.getReceipt(
-            env.client,
-        );
-        expect(accountCreateTxReceipt).to.not.equal(null);
-        expect(accountCreateTxReceipt).to.be.an.instanceof(TransactionReceipt);
-        expect(accountCreateTxReceipt.status._code).to.be.equal(22);
+        // Example: serialize-deserialize-3
+        it("should serialize and deserialize so-called incompleted transaction, and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new TransferTransaction()
+                    .addHbarTransfer(operatorId, new Hbar(-1))
+                    .addHbarTransfer(recipientId, new Hbar(1));
 
-        // Get an account id and make sure the account id exists
-        const recepinetAccountId = accountCreateTxReceipt.accountId.toString();
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
 
-        expect(recepinetAccountId).to.not.equal(undefined);
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
 
-        // Create transfer transaction
-        const transaction = new TransferTransaction()
-            .addHbarTransfer(operatorId, new Hbar(-1))
-            .addHbarTransfer(recepinetAccountId, new Hbar(1))
-            .freezeWith(env.client);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
 
-        // Serialize transaction into bytes
-        const transactionBytes = transaction.toBytes();
+                // 4. Freeze, sign and execute transaction
+                const response = await (
+                    await transactionFromBytes
+                        .freezeWith(client)
+                        .sign(recipientKey)
+                ).execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
 
-        // Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
+                // 5. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
 
-        expect(hex.encode(transactionBytes)).to.be.equal(
-            hex.encode(transactionFromBytes.toBytes()),
-        );
+        // Example: serialize-deserialize-4
+        it("should serialize and deserialize so-called incompleted transaction, set node account ids and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new TransferTransaction()
+                    .addHbarTransfer(operatorId, new Hbar(-1))
+                    .addHbarTransfer(recipientId, new Hbar(1));
 
-        // Sign transaction
-        const signedTransaction =
-            await transactionFromBytes.sign(recipientPrivateKey);
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
 
-        // Execute transaction
-        const transactionResponse = await signedTransaction.execute(env.client);
-        expect(transactionResponse).to.not.equal(null);
-        expect(transactionResponse).to.be.an.instanceof(TransactionResponse);
+                // 3. Deserialize transaction from bytes
+                let transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
 
-        // Get a receipt and make sure the transaction was executed successfully
-        const executedTransactionReceipt = await transactionResponse.getReceipt(
-            env.client,
-        );
-        expect(executedTransactionReceipt).to.not.equal(null);
-        expect(executedTransactionReceipt).to.be.an.instanceof(
-            TransactionReceipt,
-        );
-        expect(executedTransactionReceipt.status._code).to.be.equal(22);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
 
-        await env.close();
+                // 4. Set node account ids
+                const nodeAccountId = new AccountId(3);
+                transactionFromBytes.setNodeAccountIds([nodeAccountId]);
+
+                expect(
+                    transactionFromBytes._nodeAccountIds.get(0).toString(),
+                ).to.be.equal(nodeAccountId.toString());
+
+                // 5. Freeze, sign and execute transaction
+                const response = await (
+                    await transactionFromBytes
+                        .freezeWith(client)
+                        .sign(recipientKey)
+                ).execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 6. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-5
+        it("should serialize and deserialize so-called incompleted transaction, set transaction id and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new TransferTransaction()
+                    .addHbarTransfer(operatorId, new Hbar(-1))
+                    .addHbarTransfer(recipientId, new Hbar(1));
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                let transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+
+                // 4. Set transaction id
+                const validStart = new Timestamp(
+                    Math.floor(Date.now() / 1000),
+                    0,
+                );
+                const transactionId = new TransactionId(operatorId, validStart);
+                transactionFromBytes.setTransactionId(transactionId);
+
+                expect(
+                    transactionFromBytes._transactionIds.get(0).toString(),
+                ).to.be.equal(transactionId.toString());
+
+                // 5. Freeze, sign and execute transaction
+                const response = await (
+                    await transactionFromBytes
+                        .freezeWith(client)
+                        .sign(recipientKey)
+                ).execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 6. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-6
+        it("should serialize and deserialize so-called incompleted transaction, update and execute it", async function () {
+            this.timeout(120000);
+            const amount = new Hbar(1);
+            try {
+                // 1. Create transaction
+                const transaction = new TransferTransaction().addHbarTransfer(
+                    operatorId,
+                    amount.negated(),
+                );
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+                expect(transactionFromBytes._hbarTransfers.length).to.be.equal(
+                    1,
+                );
+
+                // 4. Check the transaction type and use particular method of
+                // the corresponding class in order to update the transaction
+                if (transactionFromBytes instanceof TransferTransaction) {
+                    transactionFromBytes.addHbarTransfer(recipientId, amount);
+                }
+
+                expect(transactionFromBytes._hbarTransfers.length).to.be.equal(
+                    2,
+                );
+                expect(
+                    transactionFromBytes._hbarTransfers[1].accountId.toString(),
+                ).to.be.equal(recipientId.toString());
+                expect(
+                    transactionFromBytes._hbarTransfers[1].amount.toString(),
+                ).to.be.equal(amount.toString());
+
+                // 4. Freeze, sign and execute transaction
+                const response = await (
+                    await transactionFromBytes
+                        .freezeWith(client)
+                        .sign(recipientKey)
+                ).execute(client);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 5. Get a receipt
+                const receipt = await response.getReceipt(client);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-7
+        it("should serialize and deserialize so-called signed transaction (chunked), and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction and freeze it
+                const transaction = await new FileCreateTransaction()
+                    .setKeys([wallet.getAccountKey()])
+                    .setContents("[e2e::FileCreateTransaction]")
+                    .freezeWithSigner(wallet);
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+
+                // 4. Sign and execute transaction
+                const response = await (
+                    await transactionFromBytes.signWithSigner(wallet)
+                ).executeWithSigner(wallet);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 5. Get a receipt
+                const receipt = await response.getReceiptWithSigner(wallet);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-8
+        it("should serialize and deserialize so-called incompleted transaction (chunked), and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new FileCreateTransaction()
+                    .setKeys([wallet.getAccountKey()])
+                    .setContents("[e2e::FileCreateTransaction]");
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+
+                // 4. Freeze, sign and execute transaction
+                const response = await (
+                    await (
+                        await transactionFromBytes.freezeWithSigner(wallet)
+                    ).signWithSigner(wallet)
+                ).executeWithSigner(wallet);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 5. Get a receipt
+                const receipt = await response.getReceiptWithSigner(wallet);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-9
+        it("should serialize and deserialize so-called incompleted transaction (chunked), update and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new FileCreateTransaction()
+                    .setKeys([wallet.getAccountKey()])
+                    .setContents("[e2e::FileCreateTransaction]");
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                const transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+
+                // 4. Check the transaction type and use particular method of
+                // the corresponding class in order to update the transaction
+                if (transactionFromBytes instanceof FileCreateTransaction) {
+                    transactionFromBytes.setFileMemo("Test");
+                }
+                expect(transactionFromBytes.fileMemo).to.be.equal("Test");
+
+                // 5. Freeze, sign and execute transaction
+                const response = await (
+                    await (
+                        await transactionFromBytes.freezeWithSigner(wallet)
+                    ).signWithSigner(wallet)
+                ).executeWithSigner(wallet);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 6. Get a receipt
+                const receipt = await response.getReceiptWithSigner(wallet);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-10
+        it("should serialize and deserialize so-called incompleted transaction (chunked), set transaction id and execute it", async function () {
+            this.timeout(120000);
+            try {
+                // 1. Create transaction
+                const transaction = new FileCreateTransaction()
+                    .setKeys([wallet.getAccountKey()])
+                    .setContents("[e2e::FileCreateTransaction]");
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                let transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+
+                // 4. Set transaction id
+                const validStart = new Timestamp(
+                    Math.floor(Date.now() / 1000),
+                    0,
+                );
+                const transactionId = new TransactionId(operatorId, validStart);
+                transactionFromBytes.setTransactionId(transactionId);
+                expect(
+                    transactionFromBytes._transactionIds.get(0).toString(),
+                ).to.be.equal(transactionId.toString());
+
+                // 5. Freeze, sign and execute transaction
+                const response = await (
+                    await (
+                        await transactionFromBytes.freezeWithSigner(wallet)
+                    ).signWithSigner(wallet)
+                ).executeWithSigner(wallet);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 6. Get a receipt
+                const receipt = await response.getReceiptWithSigner(wallet);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        // Example: serialize-deserialize-11
+        it("should serialize and deserialize so-called incompleted transaction (chunked), set node account ids and execute it", async function () {
+            this.timeout(120000);
+            console.log("WALLET", wallet);
+            try {
+                // 1. Create transaction
+                const transaction = new FileCreateTransaction()
+                    .setKeys([wallet.getAccountKey()])
+                    .setContents("[e2e::FileCreateTransaction]");
+
+                // 2. Serialize transaction into bytes
+                const transactionBytes = transaction.toBytes();
+
+                // 3. Deserialize transaction from bytes
+                let transactionFromBytes =
+                    Transaction.fromBytes(transactionBytes);
+                expect(hex.encode(transactionBytes)).to.be.equal(
+                    hex.encode(transactionFromBytes.toBytes()),
+                );
+                expect(
+                    transactionFromBytes._nodeAccountIds.isEmpty,
+                ).to.be.equal(true);
+                expect(
+                    transactionFromBytes._transactionIds.isEmpty,
+                ).to.be.equal(true);
+
+                // 4. Set node accoutn ids
+                const nodeAccountId = new AccountId(3);
+                transactionFromBytes.setNodeAccountIds([nodeAccountId]);
+                expect(
+                    transactionFromBytes._nodeAccountIds.get(0).toString(),
+                ).to.be.equal(nodeAccountId.toString());
+
+                // 5. Freeze, sign and execute transaction
+                const response = await (
+                    await (
+                        await transactionFromBytes.freezeWithSigner(wallet)
+                    ).signWithSigner(wallet)
+                ).executeWithSigner(wallet);
+                expect(response).to.be.instanceof(TransactionResponse);
+
+                // 6. Get a receipt
+                const receipt = await response.getReceiptWithSigner(wallet);
+                expect(receipt).to.be.an.instanceof(TransactionReceipt);
+                expect(receipt.status.toString()).to.be.equal("SUCCESS");
+            } catch (error) {
+                console.log(error);
+            }
+        });
     });
 });
