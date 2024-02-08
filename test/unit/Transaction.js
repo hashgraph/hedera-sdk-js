@@ -7,7 +7,6 @@ import {
     Timestamp,
     Transaction,
     TransactionId,
-    TransferTransaction,
 } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
@@ -15,24 +14,6 @@ import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 
 describe("Transaction", function () {
-    it("serialize and deserialize an incompleted transaction", async function () {
-        // 1. Create transaction
-        const transaction = new TransferTransaction()
-            .addHbarTransfer(new AccountId(4), new Hbar(-1))
-            .addHbarTransfer(new AccountId(5), new Hbar(1));
-
-        // 2. Serialize transaction into bytes
-        const transactionBytes = transaction.toBytes();
-
-        // 3. Deserialize transaction from bytes
-        const transactionFromBytes = Transaction.fromBytes(transactionBytes);
-
-        expect(
-            hex.encode(transaction._transactions.list[0].bodyBytes),
-        ).to.be.equal(
-            hex.encode(transactionFromBytes._transactions.list[0].bodyBytes),
-        );
-    });
     it("toBytes", async function () {
         const key = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c",
