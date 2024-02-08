@@ -162,6 +162,7 @@ describe("TransactionIntegration", function () {
         beforeEach(async function () {
             env = await IntegrationTestEnv.new();
             operatorId = env.operatorId;
+            operatorKey = env.operatorKey;
             recipientKey = PrivateKey.generateECDSA();
             recipientId = recipientKey.publicKey.toAccountId(0, 0);
             client = env.client;
@@ -476,7 +477,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction and freeze it
                 const transaction = await new FileCreateTransaction()
-                    .setKeys([wallet.getAccountKey()])
+                    .setKeys([operatorKey.publicKey])
                     .setContents("[e2e::FileCreateTransaction]")
                     .freezeWithSigner(wallet);
 
@@ -512,7 +513,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([wallet.getAccountKey()])
+                    .setKeys([operatorKey.publicKey])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -554,7 +555,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([wallet.getAccountKey()])
+                    .setKeys([operatorKey.publicKey])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -603,7 +604,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([wallet.getAccountKey()])
+                    .setKeys([operatorKey.publicKey])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
@@ -657,7 +658,7 @@ describe("TransactionIntegration", function () {
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
-                    .setKeys([wallet.getAccountKey()])
+                    .setKeys([operatorKey.publicKey])
                     .setContents("[e2e::FileCreateTransaction]");
 
                 // 2. Serialize transaction into bytes
