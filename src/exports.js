@@ -187,49 +187,6 @@ export { default as LedgerId } from "./LedgerId.js";
  * @typedef {import("./account/AccountBalance.js").AccountBalanceJson} AccountBalanceJson
  * @typedef {import("./account/AccountBalance.js").TokenBalanceJson} TokenBalanceJson
  * @typedef {import("./transaction/TransactionResponse.js").TransactionResponseJSON} TransactionResponseJSON
- * @typedef {import("./account/TransferTransaction.js").default} TransferTransactionType
- * @typedef {import("./account/AccountAllowanceApproveTransaction.js").default} AccountAllowanceApproveTransactionType
- * @typedef {import("./account/AccountAllowanceDeleteTransaction.js").default} AccountAllowanceDeleteTransactionType
- * @typedef {import("./account/AccountCreateTransaction.js").default} AccountCreateTransactionType
- * @typedef {import("./account/AccountDeleteTransaction.js").default} AccountDeleteTransactionType
- * @typedef {import("./account/AccountUpdateTransaction.js").default} AccountUpdateTransactionType
- * @typedef {import("./account/LiveHashAddTransaction.js").default} LiveHashAddTransactionType
- * @typedef {import("./account/LiveHashDeleteTransaction.js").default} LiveHashDeleteTransactionType
- * @typedef {import("./contract/ContractCreateTransaction.js").default} ContractCreateTransactionType
- * @typedef {import("./contract/ContractDeleteTransaction.js").default} ContractDeleteTransactionType
- * @typedef {import("./contract/ContractExecuteTransaction.js").default} ContractExecuteTransactionType
- * @typedef {import("./contract/ContractUpdateTransaction.js").default} ContractUpdateTransactionType
- * @typedef {import("./EthereumTransaction.js").default} EthereumTransactionType
- * @typedef {import("./file/FileAppendTransaction.js").default} FileAppendTransactionType
- * @typedef {import("./file/FileCreateTransaction.js").default} FileCreateTransactionType
- * @typedef {import("./file/FileDeleteTransaction.js").default} FileDeleteTransactionType
- * @typedef {import("./file/FileUpdateTransaction.js").default} FileUpdateTransactionType
- * @typedef {import("./PrngTransaction.js").default} PrngTransactionType
- * @typedef {import("./schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransactionType
- * @typedef {import("./schedule/ScheduleDeleteTransaction.js").default} ScheduleDeleteTransactionType
- * @typedef {import("./schedule/ScheduleSignTransaction.js").default} ScheduleSignTransactionType
- * @typedef {import("./system/FreezeTransaction.js").default} FreezeTransactionType
- * @typedef {import("./system/SystemDeleteTransaction.js").default} SystemDeleteTransactionType
- * @typedef {import("./system/SystemUndeleteTransaction.js").default} SystemUndeleteTransactionType
- * @typedef {import("./token/TokenAssociateTransaction.js").default} TokenAssociateTransactionType
- * @typedef {import("./token/TokenBurnTransaction.js").default} TokenBurnTransactionType
- * @typedef {import("./token/TokenCreateTransaction.js").default} TokenCreateTransactionType
- * @typedef {import("./token/TokenDeleteTransaction.js").default} TokenDeleteTransactionType
- * @typedef {import("./token/TokenDissociateTransaction.js").default} TokenDissociateTransactionType
- * @typedef {import("./token/TokenFeeScheduleUpdateTransaction.js").default} TokenFeeScheduleUpdateTransactionType
- * @typedef {import("./token/TokenFreezeTransaction.js").default} TokenFreezeTransactionType
- * @typedef {import("./token/TokenGrantKycTransaction.js").default} TokenGrantKycTransactionType
- * @typedef {import("./token/TokenMintTransaction.js").default} TokenMintTransactionType
- * @typedef {import("./token/TokenPauseTransaction.js").default} TokenPauseTransactionType
- * @typedef {import("./token/TokenRevokeKycTransaction.js").default} TokenRevokeKycTransactionType
- * @typedef {import("./token/TokenUnfreezeTransaction.js").default} TokenUnfreezeTransactionType
- * @typedef {import("./token/TokenUnpauseTransaction.js").default} TokenUnpauseTransactionType
- * @typedef {import("./token/TokenUpdateTransaction.js").default} TokenUpdateTransactionType
- * @typedef {import("./token/TokenWipeTransaction.js").default} TokenWipeTransactionType
- * @typedef {import("./topic/TopicCreateTransaction.js").default} TopicCreateTransactionType
- * @typedef {import("./topic/TopicDeleteTransaction.js").default} TopicDeleteTransactionType
- * @typedef {import("./topic/TopicMessageSubmitTransaction.js").default} TopicMessageSubmitTransactionType
- * @typedef {import("./topic/TopicUpdateTransaction.js").default} TopicUpdateTransactionType
  */
 
 /**
@@ -248,7 +205,3 @@ export const NetworkName = {
 };
 
 import "./query/CostQuery.js";
-
-/**
- * @typedef {TransferTransactionType | AccountAllowanceApproveTransactionType | AccountAllowanceDeleteTransactionType | AccountCreateTransactionType | AccountDeleteTransactionType | AccountUpdateTransactionType | LiveHashAddTransactionType | LiveHashDeleteTransactionType | ContractCreateTransactionType | ContractDeleteTransactionType |ContractExecuteTransactionType | ContractUpdateTransactionType | EthereumTransactionType | FileAppendTransactionType | FileCreateTransactionType | FileDeleteTransactionType | FileUpdateTransactionType | PrngTransactionType | ScheduleCreateTransactionType | ScheduleDeleteTransactionType | ScheduleSignTransactionType | FreezeTransactionType | SystemDeleteTransactionType | SystemUndeleteTransactionType | TokenAssociateTransactionType | TokenBurnTransactionType | TokenCreateTransactionType | TokenDeleteTransactionType | TokenDissociateTransactionType | TokenFeeScheduleUpdateTransactionType | TokenFreezeTransactionType | TokenGrantKycTransactionType | TokenMintTransactionType | TokenPauseTransactionType | TokenRevokeKycTransactionType | TokenUnfreezeTransactionType | TokenUnpauseTransactionType | TokenUpdateTransactionType | TokenWipeTransactionType | TopicCreateTransactionType | TopicDeleteTransactionType | TopicMessageSubmitTransactionType | TopicUpdateTransactionType} TransactionType
- */

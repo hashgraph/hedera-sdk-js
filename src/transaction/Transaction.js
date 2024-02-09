@@ -46,7 +46,6 @@ import * as util from "../util.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Signer.js").Signer} Signer
- * @typedef {import("../exports.js").TransactionType} TransactionType
  */
 
 // 90 days (in seconds)
@@ -63,7 +62,7 @@ const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 export const CHUNK_SIZE = 1024;
 
 /**
- * @type {Map<NonNullable<HashgraphProto.proto.TransactionBody["data"]>, (transactions: HashgraphProto.proto.ITransaction[], signedTransactions: HashgraphProto.proto.ISignedTransaction[], transactionIds: TransactionId[], nodeIds: AccountId[], bodies: HashgraphProto.proto.TransactionBody[]) => TransactionType>}
+ * @type {Map<NonNullable<HashgraphProto.proto.TransactionBody["data"]>, (transactions: HashgraphProto.proto.ITransaction[], signedTransactions: HashgraphProto.proto.ISignedTransaction[], transactionIds: TransactionId[], nodeIds: AccountId[], bodies: HashgraphProto.proto.TransactionBody[]) => Transaction>}
  */
 export const TRANSACTION_REGISTRY = new Map();
 
@@ -199,7 +198,7 @@ export default class Transaction extends Executable {
      * `proto.TransactionList`.
      *
      * @param {Uint8Array} bytes
-     * @returns {TransactionType}
+     * @returns {Transaction}
      */
     static fromBytes(bytes) {
         /** @type {HashgraphProto.proto.ISignedTransaction[]} */
