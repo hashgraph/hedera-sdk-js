@@ -172,7 +172,7 @@ describe("TransactionIntegration", function () {
             client.close();
         });
 
-        // Example: serialize-deserialize-1
+        /** @description: example serialize-deserialize-1.js */
         it("should serialize and deserialize the so-called signed transaction, and execute it", async function () {
             this.timeout(120000);
             try {
@@ -214,7 +214,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-2
+        /** @description: example serialize-deserialize-2.js */
         it("should serialize and deserialize the so-called signed transaction after being signed, and execute it", async function () {
             this.timeout(120000);
             try {
@@ -257,7 +257,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-3
+        /** @description: example serialize-deserialize-3.js */
         it("should serialize and deserialize so-called incompleted transaction, and execute it", async function () {
             this.timeout(120000);
             try {
@@ -300,7 +300,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-4
+        /** @description: example serialize-deserialize-4.js */
         it("should serialize and deserialize so-called incompleted transaction, set node account ids and execute it", async function () {
             this.timeout(120000);
             try {
@@ -351,7 +351,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-5
+        /** @description: example serialize-deserialize-5.js */
         it("should serialize and deserialize so-called incompleted transaction, set transaction id and execute it", async function () {
             this.timeout(120000);
             try {
@@ -406,7 +406,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-6
+        /** @description: example serialize-deserialize-6.js */
         it("should serialize and deserialize so-called incompleted transaction, update and execute it", async function () {
             this.timeout(120000);
             const amount = new Hbar(1);
@@ -470,7 +470,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-7
+        /** @description: example serialize-deserialize-7.js */
         it("should serialize and deserialize so-called signed transaction (chunked), and execute it", async function () {
             this.timeout(120000);
             try {
@@ -506,7 +506,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-8
+        /** @description: example serialize-deserialize-8.js */
         it("should serialize and deserialize so-called incompleted transaction (chunked), and execute it", async function () {
             this.timeout(120000);
             try {
@@ -548,7 +548,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-9
+        /** @description: example serialize-deserialize-9.js */
         it("should serialize and deserialize so-called incompleted transaction (chunked), update and execute it", async function () {
             this.timeout(120000);
             try {
@@ -597,7 +597,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-10
+        /** @description: example serialize-deserialize-10.js */
         it("should serialize and deserialize so-called incompleted transaction (chunked), set transaction id and execute it", async function () {
             this.timeout(120000);
             try {
@@ -650,7 +650,7 @@ describe("TransactionIntegration", function () {
             }
         });
 
-        // Example: serialize-deserialize-11
+        /** @description: example serialize-deserialize-11.js */
         it("should serialize and deserialize so-called incompleted transaction (chunked), set node account ids and execute it", async function () {
             this.timeout(120000);
             try {
