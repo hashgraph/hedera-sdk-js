@@ -14,12 +14,13 @@ import dotenv from "dotenv";
 
 /**
  * @description Serialize and deserialize so-called incompleted transaction (chunked), set transaction id and execute it
-*/
+ */
 
 async function main() {
     // Ensure required environment variables are available
     dotenv.config();
-    if (!process.env.OPERATOR_KEY ||
+    if (
+        !process.env.OPERATOR_KEY ||
         !process.env.OPERATOR_ID ||
         !process.env.HEDERA_NETWORK
     ) {
@@ -30,12 +31,10 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
-    const provider = new LocalProvider()
+    const provider = new LocalProvider();
     const infoLogger = new Logger(LogLevel.Info);
-    provider.setLogger(infoLogger)
-    const wallet = new Wallet(
-        operatorId, operatorKey, provider
-    )
+    provider.setLogger(infoLogger);
+    const wallet = new Wallet(operatorId, operatorKey, provider);
 
     try {
         // 1. Create transaction
@@ -55,7 +54,11 @@ async function main() {
         transactionFromBytes.setTransactionId(transactionId);
 
         // 5. Freeze, sign and execute transaction
-        const response = await (await (await transactionFromBytes.freezeWithSigner(wallet)).signWithSigner(wallet)).executeWithSigner(wallet);
+        const response = await (
+            await (
+                await transactionFromBytes.freezeWithSigner(wallet)
+            ).signWithSigner(wallet)
+        ).executeWithSigner(wallet);
 
         // 6. Get a receipt
         const receipt = await response.getReceiptWithSigner(wallet);
@@ -67,4 +70,4 @@ async function main() {
     provider.close();
 }
 
-main();
+void main();

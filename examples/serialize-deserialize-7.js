@@ -12,12 +12,13 @@ import dotenv from "dotenv";
 
 /**
  * @description Serialize and deserialize so-called signed transaction (chunked), and execute it
-*/
+ */
 
 async function main() {
     // Ensure required environment variables are available
     dotenv.config();
-    if (!process.env.OPERATOR_KEY ||
+    if (
+        !process.env.OPERATOR_KEY ||
         !process.env.OPERATOR_ID ||
         !process.env.HEDERA_NETWORK
     ) {
@@ -30,10 +31,8 @@ async function main() {
 
     const provider = new LocalProvider();
     const infoLogger = new Logger(LogLevel.Info);
-    provider.setLogger(infoLogger)
-    const wallet = new Wallet(
-        operatorId, operatorKey, provider
-    );
+    provider.setLogger(infoLogger);
+    const wallet = new Wallet(operatorId, operatorKey, provider);
 
     try {
         // 1. Create transaction and freeze it
@@ -49,7 +48,9 @@ async function main() {
         const transactionFromBytes = Transaction.fromBytes(transactionBytes);
 
         // 4. Sign and execute transaction
-        const response = await (await transactionFromBytes.signWithSigner(wallet)).executeWithSigner(wallet);
+        const response = await (
+            await transactionFromBytes.signWithSigner(wallet)
+        ).executeWithSigner(wallet);
 
         // 5. Get a receipt
         const receipt = await response.getReceiptWithSigner(wallet);
@@ -61,4 +62,4 @@ async function main() {
     provider.close();
 }
 
-main();
+void main();

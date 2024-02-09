@@ -12,15 +12,15 @@ import {
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
-
 /**
  * @description Serialize and deserialize so-called incompleted transaction, set transaction id and execute it
-*/
+ */
 
 async function main() {
     // Ensure required environment variables are available
     dotenv.config();
-    if (!process.env.OPERATOR_KEY ||
+    if (
+        !process.env.OPERATOR_KEY ||
         !process.env.OPERATOR_ID ||
         !process.env.ALICE_KEY ||
         !process.env.ALICE_ID ||
@@ -29,7 +29,7 @@ async function main() {
         throw new Error("Please set required keys in .env file.");
     }
 
-    const network = process.env.HEDERA_NETWORK
+    const network = process.env.HEDERA_NETWORK;
 
     // Configure client using environment variables
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
@@ -37,7 +37,7 @@ async function main() {
     const aliceId = AccountId.fromString(process.env.ALICE_ID);
     const aliceKey = PrivateKey.fromStringED25519(process.env.ALICE_KEY);
 
-    const client = Client.forName(network).setOperator(operatorId, operatorKey)
+    const client = Client.forName(network).setOperator(operatorId, operatorKey);
 
     // Set logger
     const infoLogger = new Logger(LogLevel.Info);
@@ -61,10 +61,12 @@ async function main() {
         transactionFromBytes.setTransactionId(transactionId);
 
         // 5. Freeze, sign and execute transaction
-        const executedTransaction = await (await transactionFromBytes.freezeWith(client).sign(aliceKey)).execute(client);
+        const executedTransaction = await (
+            await transactionFromBytes.freezeWith(client).sign(aliceKey)
+        ).execute(client);
 
         // 6. Get a receipt
-        const receipt = await executedTransaction.getReceipt(client)
+        const receipt = await executedTransaction.getReceipt(client);
         console.log(`Transaction status: ${receipt.status.toString()}!`);
     } catch (error) {
         console.log(error);
@@ -73,4 +75,4 @@ async function main() {
     client.close();
 }
 
-main();
+void main();
