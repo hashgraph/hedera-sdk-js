@@ -66,6 +66,7 @@ export default class ContractFunctionResult {
      * @param {?AccountId} result.senderAccountId
      * @param {ContractStateChange[]} result.stateChanges
      * @param {ContractNonceInfo[]} result.contractNonces
+     * @param {Long | null} result.signerNonce
      */
     constructor(result) {
         /**
@@ -149,6 +150,12 @@ export default class ContractFunctionResult {
          * This is always empty in a ContractCallLocalResponse#ContractFunctionResult message, since no internal creations can happen in a static EVM call.
          */
         this.contractNonces = result.contractNonces;
+
+        /**
+         * If not null this field specifies what the value of the signer account nonce is post transaction execution.
+         * For transactions that don't update the signer nonce (like HAPI ContractCall and ContractCreate transactions) this field should be null.
+         */
+        this.signerNonce = result.signerNonce;
     }
 
     /**
@@ -204,6 +211,7 @@ export default class ContractFunctionResult {
             ).map((contractNonce) =>
                 ContractNonceInfo._fromProtobuf(contractNonce),
             ),
+            signerNonce: result.signerNonce != null ? result.signerNonce : null,
         });
     }
 
@@ -1053,6 +1061,7 @@ export default class ContractFunctionResult {
             contractNonces: this.contractNonces.map((contractNonce) =>
                 contractNonce._toProtobuf(),
             ),
+            signerNonce: this.signerNonce,
         };
     }
 }
