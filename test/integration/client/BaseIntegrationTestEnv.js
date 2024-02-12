@@ -4,7 +4,9 @@ import {
     TokenDeleteTransaction,
     Hbar,
     AccountId,
+    Wallet
 } from "../../../src/exports.js";
+import LocalProvider from '../../../src/LocalProvider.js'
 
 /**
  * @typedef {import("../../../src/exports.js").TokenId} TokenId
@@ -20,6 +22,7 @@ export default class BaseIntegrationTestEnv {
      * @property {PrivateKey} options.originalOperatorKey
      * @property {AccountId} options.newOperatorKey
      * @property {AccountId[]} options.newOperatorId
+     * @property {Wallet} options.wallet
      */
     constructor(options) {
         /** @type {Client} */
@@ -39,6 +42,9 @@ export default class BaseIntegrationTestEnv {
 
         this.throwaway = options.throwaway;
 
+        /** @type {Wallet} */
+        this.wallet = options.wallet;
+
         Object.freeze(this);
     }
 
@@ -51,7 +57,7 @@ export default class BaseIntegrationTestEnv {
      * @property {boolean} [options.throwaway]
      */
     static async new(options = {}) {
-        let client;
+        let client, wallet;
 
         if (
             options.env.HEDERA_NETWORK != null &&
@@ -129,8 +135,15 @@ export default class BaseIntegrationTestEnv {
 
         client.setOperator(newOperatorId, newOperatorKey);
 
+        wallet = new Wallet(
+            newOperatorId,
+            newOperatorKey,
+            new LocalProvider()
+        )
+
         return new BaseIntegrationTestEnv({
             client: client,
+            wallet: wallet,
             originalOperatorKey: originalOperatorKey,
             originalOperatorId: originalOperatorId,
             newOperatorKey: newOperatorKey,

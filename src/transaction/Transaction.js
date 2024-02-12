@@ -201,8 +201,13 @@ export default class Transaction extends Executable {
      * @returns {Transaction}
      */
     static fromBytes(bytes) {
+        /** @type {HashgraphProto.proto.ISignedTransaction[]} */
         const signedTransactions = [];
+
+        /** @type {TransactionId[]} */
         const transactionIds = [];
+
+        /** @type {AccountId[]} */
         const nodeIds = [];
 
         /** @type {string[]} */
@@ -211,6 +216,7 @@ export default class Transaction extends Executable {
         /** @type {string[]} */
         const nodeIdStrings = [];
 
+        /** @type {HashgraphProto.proto.TransactionBody[]} */
         const bodies = [];
 
         const list =
@@ -233,8 +239,8 @@ export default class Transaction extends Executable {
                 list.push({
                     signedTransactionBytes:
                         HashgraphProto.proto.SignedTransaction.encode({
-                            bodyBytes: transaction.bodyBytes,
                             sigMap: transaction.sigMap,
+                            bodyBytes: transaction.bodyBytes,
                         }).finish(),
                 });
             }
@@ -243,58 +249,121 @@ export default class Transaction extends Executable {
         // This loop is responsible for fill out the `signedTransactions`, `transactionIds`,
         // `nodeIds`, and `bodies` variables.
         for (const transaction of list) {
-            // The `signedTransactionBytes` should not be null
-            if (transaction.signedTransactionBytes == null) {
-                throw new Error("Transaction.signedTransactionBytes are null");
+            // The `bodyBytes` or `signedTransactionBytes` should not be null
+            if (
+                transaction.bodyBytes == null &&
+                transaction.signedTransactionBytes == null
+            ) {
+                throw new Error(
+                    "bodyBytes and signedTransactionBytes are null",
+                );
             }
 
-            // Decode a signed transaction
-            const signedTransaction =
-                HashgraphProto.proto.SignedTransaction.decode(
-                    transaction.signedTransactionBytes,
-                );
-            signedTransactions.push(signedTransaction);
-
-            // Decode a transaction body
-            const body = HashgraphProto.proto.TransactionBody.decode(
-                signedTransaction.bodyBytes,
-            );
-
-            // Make sure the body is set
-            if (body.data == null) {
-                throw new Error("(BUG) body.data was not set in the protobuf");
-            }
-
-            bodies.push(body);
-
-            // Make sure the transaction ID within the body is set
-            if (body.transactionID != null) {
-                const transactionId = TransactionId._fromProtobuf(
-                    /** @type {HashgraphProto.proto.ITransactionID} */ (
-                        body.transactionID
-                    ),
+            if (transaction.bodyBytes && transaction.bodyBytes.length != 0) {
+                // Decode a transaction
+                const body = HashgraphProto.proto.TransactionBody.decode(
+                    transaction.bodyBytes,
                 );
 
-                // If we haven't already seen this transaction ID in the list, add it
-                if (!transactionIdStrings.includes(transactionId.toString())) {
-                    transactionIds.push(transactionId);
-                    transactionIdStrings.push(transactionId.toString());
+                // Make sure the transaction ID within the body is set
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.ITransactionID} */ (
+                            body.transactionID
+                        ),
+                    );
+
+                    // If we haven't already seen this transaction ID in the list, add it
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
+                        transactionIds.push(transactionId);
+                        transactionIdStrings.push(transactionId.toString());
+                    }
                 }
+
+                // Make sure the node account ID within the body is set
+                if (body.nodeAccountID != null) {
+                    const nodeAccountId = AccountId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            body.nodeAccountID
+                        ),
+                    );
+
+                    // If we haven't already seen this node account ID in the list, add it
+                    if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                        nodeIds.push(nodeAccountId);
+                        nodeIdStrings.push(nodeAccountId.toString());
+                    }
+                }
+
+                // Make sure the body is set
+                if (body.data == null) {
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
+                }
+
+                bodies.push(body);
             }
 
-            // Make sure the node account ID within the body is set
-            if (body.nodeAccountID != null) {
-                const nodeAccountId = AccountId._fromProtobuf(
-                    /** @type {HashgraphProto.proto.IAccountID} */ (
-                        body.nodeAccountID
-                    ),
+            if (
+                transaction.signedTransactionBytes &&
+                transaction.signedTransactionBytes.length != 0
+            ) {
+                // Decode a signed transaction
+                const signedTransaction =
+                    HashgraphProto.proto.SignedTransaction.decode(
+                        transaction.signedTransactionBytes,
+                    );
+
+                signedTransactions.push(signedTransaction);
+
+                // Decode a transaction body
+                const body = HashgraphProto.proto.TransactionBody.decode(
+                    signedTransaction.bodyBytes,
                 );
 
-                // If we haven't already seen this node account ID in the list, add it
-                if (!nodeIdStrings.includes(nodeAccountId.toString())) {
-                    nodeIds.push(nodeAccountId);
-                    nodeIdStrings.push(nodeAccountId.toString());
+                // Make sure the transaction ID within the body is set
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.ITransactionID} */ (
+                            body.transactionID
+                        ),
+                    );
+
+                    // If we haven't already seen this transaction ID in the list, add it
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
+                        transactionIds.push(transactionId);
+                        transactionIdStrings.push(transactionId.toString());
+                    }
                 }
+
+                // Make sure the node account ID within the body is set
+                if (body.nodeAccountID != null) {
+                    const nodeAccountId = AccountId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            body.nodeAccountID
+                        ),
+                    );
+
+                    // If we haven't already seen this node account ID in the list, add it
+                    if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                        nodeIds.push(nodeAccountId);
+                        nodeIdStrings.push(nodeAccountId.toString());
+                    }
+                }
+
+                // Make sure the body is set
+                if (body.data == null) {
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
+                }
+
+                bodies.push(body);
             }
         }
 
@@ -403,15 +472,15 @@ export default class Transaction extends Executable {
         // Set the signed transactions accordingly, and lock the list since signed transaction
         // will not be regenerated. Although, they can be manipulated if for instance more
         // signatures are added
-        transaction._signedTransactions.setList(signedTransactions).setLocked();
+        transaction._signedTransactions.setList(signedTransactions);
 
         // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
         // be regenerated if we're deserializing a request from bytes
-        transaction._transactionIds.setList(transactionIds).setLocked();
+        transaction._transactionIds.setList(transactionIds);
 
         // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
-        transaction._nodeAccountIds.setList(nodeIds).setLocked();
+        transaction._nodeAccountIds.setList(nodeIds);
 
         // Make sure to update the rest of the fields
         transaction._transactionValidDuration =
@@ -420,21 +489,19 @@ export default class Transaction extends Executable {
                 ? Long.fromValue(body.transactionValidDuration.seconds).toInt()
                 : DEFAULT_TRANSACTION_VALID_DURATION;
         transaction._maxTransactionFee =
-            body.transactionFee != null
+            body.transactionFee != null &&
+            body.transactionFee > new Long(0, 0, true)
                 ? Hbar.fromTinybars(body.transactionFee)
-                : new Hbar(0);
+                : null;
         transaction._transactionMemo = body.memo != null ? body.memo : "";
 
         // Loop over a single row of `signedTransactions` and add all the public
         // keys to the `signerPublicKeys` set, and `publicKeys` list with
         // `null` in the `transactionSigners` at the same index.
         for (let i = 0; i < nodeIds.length; i++) {
-            const signedTransaction = signedTransactions[i];
-            if (
-                signedTransaction.sigMap != null &&
-                signedTransaction.sigMap.sigPair != null
-            ) {
-                for (const sigPair of signedTransaction.sigMap.sigPair) {
+            const tx = signedTransactions[i] || transactions[i];
+            if (tx.sigMap != null && tx.sigMap.sigPair != null) {
+                for (const sigPair of tx.sigMap.sigPair) {
                     transaction._signerPublicKeys.add(
                         hex.encode(
                             /** @type {Uint8Array} */ (sigPair.pubKeyPrefix),
@@ -634,12 +701,6 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
-        // If signing on demand is disabled, we need to make sure
-        // the request is frozen
-        if (!this._signOnDemand) {
-            this._requireFrozen();
-        }
-
         const publicKeyData = publicKey.toBytesRaw();
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
@@ -894,6 +955,24 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * Build all the signed transactions from the node account IDs
+     *
+     * @private
+     */
+    _buildIncompletedTransactions() {
+        if (this._nodeAccountIds.length == 0) {
+            this._transactions.setList([this._makeSignedTransaction(null)]);
+        } else {
+            // In case the node account ids are set
+            this._transactions.setList(
+                this._nodeAccountIds.list.map((nodeId) =>
+                    this._makeSignedTransaction(nodeId),
+                ),
+            );
+        }
+    }
+
+    /**
      * Freeze this transaction from future modification to prepare for
      * signing or serialization.
      *
@@ -1013,21 +1092,21 @@ export default class Transaction extends Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        // If a user is attempting to serialize a transaction into bytes, then the
-        // transaction must be frozen.
-        this._requireFrozen();
-
         // Sign on demand must be disabled because this is the non-async version and
         // signing requires awaiting callbacks.
         this._requireNotSignOnDemand();
 
-        // Locking the transaction IDs and node account IDs is necessary for consistency
-        // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        if (this._isFrozen()) {
+            // Locking the transaction IDs and node account IDs is necessary for consistency
+            // between before and after execution
+            this._transactionIds.setLocked();
+            this._nodeAccountIds.setLocked();
 
-        // Build all the transactions withot signing
-        this._buildAllTransactions();
+            // Build all the transactions without signing
+            this._buildAllTransactions();
+        } else {
+            this._buildIncompletedTransactions();
+        }
 
         // Construct and encode the transaction list
         return HashgraphProto.proto.TransactionList.encode({
@@ -1284,7 +1363,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Build each transaction in a loop
+     * Build each signed transaction in a loop
      *
      * @private
      */
@@ -1497,10 +1576,10 @@ export default class Transaction extends Executable {
             HashgraphProto.proto.TransactionBody.encode(body).finish();
 
         return {
-            bodyBytes,
             sigMap: {
                 sigPair: [],
             },
+            bodyBytes,
         };
     }
 
@@ -1519,7 +1598,10 @@ export default class Transaction extends Executable {
                     ? this._maxTransactionFee.toTinybars()
                     : null,
             memo: this._transactionMemo,
-            transactionID: this._transactionIds.current._toProtobuf(),
+            transactionID:
+                this._transactionIds.current != null
+                    ? this._transactionIds.current._toProtobuf()
+                    : null,
             nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),
@@ -1576,11 +1658,7 @@ export default class Transaction extends Executable {
      * @returns {boolean}
      */
     _isFrozen() {
-        return (
-            this._signOnDemand ||
-            this._signedTransactions.length > 0 ||
-            this._transactions.length > 0
-        );
+        return this._signOnDemand || this._signedTransactions.length > 0;
     }
 
     /**
