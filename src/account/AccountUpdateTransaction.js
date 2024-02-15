@@ -266,8 +266,11 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? update.stakedNodeId
                         : undefined,
                 declineStakingReward:
-                    update.declineReward != null &&
-                    Boolean(update.declineReward) == true,
+                    update.declineReward != null
+                        ? update.declineReward.value != null
+                            ? update.declineReward.value
+                            : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,
