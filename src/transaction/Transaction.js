@@ -1414,10 +1414,7 @@ export default class Transaction extends Executable {
         // In case when an incompleted transaction is created, serialized and
         // deserialized,and then the transaction being frozen, the copy of the
         // incompleted transaction must be updated in order to be prepared for execution
-        if (
-            index == this._transactions.length ||
-            this._transactions.list[index]
-        ) {
+        if (this._transactions.list[index] != null) {
             this._transactions.set(index, {
                 signedTransactionBytes:
                     HashgraphProto.proto.SignedTransaction.encode(
