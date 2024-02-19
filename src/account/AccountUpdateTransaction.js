@@ -223,8 +223,10 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? Key._fromProtobufKey(update.key)
                         : undefined,
                 receiverSignatureRequired:
-                    update.receiverSigRequired != null
-                        ? update.receiverSigRequired
+                    update.receiverSigRequiredWrapper != null
+                        ? update.receiverSigRequiredWrapper.value != null
+                            ? update.receiverSigRequiredWrapper.value
+                            : undefined
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null
