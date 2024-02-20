@@ -223,8 +223,10 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? Key._fromProtobufKey(update.key)
                         : undefined,
                 receiverSignatureRequired:
-                    update.receiverSigRequired != null
-                        ? update.receiverSigRequired
+                    update.receiverSigRequiredWrapper != null
+                        ? update.receiverSigRequiredWrapper.value != null
+                            ? update.receiverSigRequiredWrapper.value
+                            : undefined
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null
@@ -266,8 +268,11 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? update.stakedNodeId
                         : undefined,
                 declineStakingReward:
-                    update.declineReward != null &&
-                    Boolean(update.declineReward) == true,
+                    update.declineReward != null
+                        ? update.declineReward.value != null
+                            ? update.declineReward.value
+                            : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,
