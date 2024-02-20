@@ -136,7 +136,7 @@ export default class FileAppendTransaction extends Transaction {
         // The increment value depends on whether the node IDs list is empty or not.
         // The node IDs list is not empty if the transaction has been frozen
         // before serialization and deserialization, otherwise, it's empty.
-        const incrementValue = nodeIds.length > 0 ? nodeIds.length : 1
+        const incrementValue = nodeIds.length > 0 ? nodeIds.length : 1;
 
         for (let i = 0; i < bodies.length; i += incrementValue) {
             const fileAppend =
