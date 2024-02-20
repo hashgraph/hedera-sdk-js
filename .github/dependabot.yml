@@ -10,6 +10,7 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 10
+      versioning-strategy: increase
       ignore:
           # For all packages, ignore all minor & patch updates
           - dependency-name: "*"
@@ -20,6 +21,7 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 10
+      versioning-strategy: increase
       ignore:
           # For all packages, ignore all minor & patch updates
           - dependency-name: "*"
@@ -30,6 +32,7 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 10
+      versioning-strategy: increase
       ignore:
           # For all packages, ignore all minor & patch updates
           - dependency-name: "*"
@@ -40,6 +43,7 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 5
+      versioning-strategy: increase
       ignore:
           # For all packages, ignore all minor & patch updates
           - dependency-name: "*"
@@ -50,6 +54,7 @@ updates:
       schedule:
           interval: monthly
       open-pull-requests-limit: 5
+      versioning-strategy: increase
       ignore:
           # For all packages, ignore all minor & patch updates
           - dependency-name: "*"

@@ -20,7 +20,7 @@ defaults:
     shell: bash
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-release:
