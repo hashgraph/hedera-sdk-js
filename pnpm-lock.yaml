@@ -131,8 +131,8 @@ devDependencies:
     specifier: ^4.3.7
     version: 4.3.7
   chromedriver:
-    specifier: ^119.0.1
-    version: 119.0.1
+    specifier: ^121.0.2
+    version: 121.0.2
   codecov:
     specifier: ^3.8.3
     version: 3.8.3
@@ -3918,8 +3918,8 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
-  /chromedriver@119.0.1:
-    resolution: {integrity: sha512-lpCFFLaXPpvElTaUOWKdP74pFb/sJhWtWqMjn7Ju1YriWn8dT5JBk84BGXMPvZQs70WfCYWecxdMmwfIu1Mupg==}
+  /chromedriver@121.0.2:
+    resolution: {integrity: sha512-58MUSCEE3oB3G3Y/Jo3URJ2Oa1VLHcVBufyYt7vNfGrABSJm7ienQLF9IQ8LPDlPVgLUXt2OBfggK3p2/SlEBg==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
