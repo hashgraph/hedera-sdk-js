@@ -469,17 +469,14 @@ export default class Transaction extends Executable {
         // be regenerated if more signatures are added
         transaction._transactions.setList(transactions);
 
-        // Set the signed transactions accordingly, and lock the list since signed transaction
-        // will not be regenerated. Although, they can be manipulated if for instance more
-        // signatures are added
+        // Set the signed transactions accordingly. Although, they
+        // can be manipulated if for instance more signatures are added
         transaction._signedTransactions.setList(signedTransactions);
 
-        // Set the transaction IDs accordingly, and lock the list. Transaction IDs should not
-        // be regenerated if we're deserializing a request from bytes
+        // Set the transaction IDs accordingly
         transaction._transactionIds.setList(transactionIds);
 
-        // Set the node account IDs accordingly, and lock the list. Node account IDs should
-        // never be changed if we're deserializing a request from bytes
+        // Set the node account IDs accordingly
         transaction._nodeAccountIds.setList(nodeIds);
 
         // Make sure to update the rest of the fields
@@ -701,6 +698,11 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
+        // If signing on demand is disabled, we need to make sure
+        // the request is frozen
+        if (!this._signOnDemand) {
+            this._requireFrozen();
+        }
         const publicKeyData = publicKey.toBytesRaw();
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
