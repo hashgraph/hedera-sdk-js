@@ -240,8 +240,12 @@ export default class ManagedNetwork {
 
             // Add the selected node in array for execution
             nodes.push(selectedNode);
-            // Remove the selected node from array
-            healthyNodes.splice(nodeIndex, 1);
+            // Remove all nodes with the same account id as
+            // the selected node account id from the array
+            healthyNodes = healthyNodes.filter(
+                // eslint-disable-next-line ie11/no-loop-func
+                (node) => node.getKey() !== selectedNode.getKey(),
+            );
         }
 
         return nodes;

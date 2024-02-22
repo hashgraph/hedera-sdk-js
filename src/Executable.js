@@ -572,16 +572,13 @@ export default class Executable {
             let nodeAccountId;
             let node;
 
-            // If node account IDs is locked then use the node account IDs
-            // from the list, otherwise build a new list of one node account ID
-            // using the entire network
-            if (this._nodeAccountIds.locked) {
-                nodeAccountId = this._nodeAccountIds.current;
-                node = client._network.getNode(nodeAccountId);
-            } else {
+            if (this._nodeAccountIds.isEmpty) {
                 node = client._network.getNode();
                 nodeAccountId = node.accountId;
                 this._nodeAccountIds.setList([nodeAccountId]);
+            } else {
+                nodeAccountId = this._nodeAccountIds.current;
+                node = client._network.getNode(nodeAccountId);
             }
 
             if (node == null) {
