@@ -122,7 +122,7 @@ export default class BaseIntegrationTestEnv {
         }
         client.setNetwork(network);
 
-        const newOperatorKey = PrivateKey.generateED25519();
+        const newOperatorKey = PrivateKey.generateECDSA();
 
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)

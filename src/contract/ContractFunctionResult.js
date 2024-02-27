@@ -68,6 +68,7 @@ export default class ContractFunctionResult {
      * @param {ContractNonceInfo[]} result.contractNonces
      * @param {Long | null} result.signerNonce
      */
+
     constructor(result) {
         /**
          * Determines if this result came from `record.contractCreateResult` if true
@@ -211,7 +212,12 @@ export default class ContractFunctionResult {
             ).map((contractNonce) =>
                 ContractNonceInfo._fromProtobuf(contractNonce),
             ),
-            signerNonce: result.signerNonce != null ? result.signerNonce : null,
+            signerNonce:
+                result.signerNonce != null
+                    ? result.signerNonce.value
+                        ? result.signerNonce.value
+                        : null
+                    : null,
         });
     }
 
@@ -1061,7 +1067,12 @@ export default class ContractFunctionResult {
             contractNonces: this.contractNonces.map((contractNonce) =>
                 contractNonce._toProtobuf(),
             ),
-            signerNonce: this.signerNonce,
+            signerNonce:
+                this.signerNonce != null
+                    ? {
+                          value: this.signerNonce,
+                      }
+                    : null,
         };
     }
 }

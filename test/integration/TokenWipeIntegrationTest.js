@@ -300,11 +300,13 @@ describe("TokenWipe", function () {
             .toBytes();
 
         const restoredTransaction = Transaction.fromBytes(transaction);
-        expect(restoredTransaction._serials).to.deep.equal([
+        const array1Values = restoredTransaction.serials.map(long => long.toNumber());
+        const array2Values = [
             Long.fromNumber(1),
             Long.fromNumber(2),
             Long.fromNumber(3),
-        ]);
+        ].map(long => long.toNumber());
+        expect(array1Values).to.deep.equal(array2Values);
     });
 
     after(async function () {
