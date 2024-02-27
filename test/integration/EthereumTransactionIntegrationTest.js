@@ -28,7 +28,7 @@ describe("EthereumTransactionIntegrationTest", function () {
         operatorId = wallet.getAccountId();
     });
 
-    it.only("Signer nonce changed on Ethereum transaction", async function () {
+    it("Signer nonce changed on Ethereum transaction", async function () {
         this.timeout(120000);
 
         try {

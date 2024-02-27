@@ -24,8 +24,8 @@ dependencies:
     specifier: 1.4.8-beta.5
     version: 1.4.8-beta.5(expo@49.0.20)
   '@hashgraph/proto':
-    specifier: link:packages/proto
-    version: link:packages/proto
+    specifier: 2.14.0-beta.3
+    version: 2.14.0-beta.3
   axios:
     specifier: ^1.6.4
     version: 1.6.5
@@ -2673,6 +2673,14 @@ packages:
       spark-md5: 3.0.2
       tweetnacl: 1.0.3
       utf8: 3.0.0
+    dev: false
+
+  /@hashgraph/proto@2.14.0-beta.3:
+    resolution: {integrity: sha512-y2DYFXpXZN0ywULaPycRmmryaUBzSDQ2+UAAYdE1jQr8NPcIL2gv8wB5GKBBQqz1HihRNXiyJgYSGoNSeq9qsg==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      long: 4.0.0
+      protobufjs: 7.2.5
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
