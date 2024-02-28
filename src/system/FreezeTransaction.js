@@ -382,6 +382,17 @@ export default class FreezeTransaction extends Transaction {
         );
         return `FreezeTransaction:${timestamp.toString()}`;
     }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
+     */
+    _execute(channel, request) {
+        return channel.freeze.freeze(request);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
