@@ -30,7 +30,7 @@ jobs:
       tag: ${{ steps.tag.outputs.name }}
       version: ${{ steps.tag.outputs.version }}
       prerelease: ${{ steps.tag.outputs.prerelease }}
-    type: ${{ steps.tag.outputs.type }}
+      type: ${{ steps.tag.outputs.type }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
