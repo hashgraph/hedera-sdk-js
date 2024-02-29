@@ -18,7 +18,7 @@ import * as rlp from "@ethersproject/rlp";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import * as hex from "../../src/encoding/hex.js";
 
-describe.only("EthereumTransactionIntegrationTest", function () {
+describe("EthereumTransactionIntegrationTest", function () {
     let env, operatorKey, wallet, contractAddress, operatorId;
 
     before(async function () {
