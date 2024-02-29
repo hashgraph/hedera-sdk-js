@@ -132,7 +132,13 @@ export default class FileAppendTransaction extends Transaction {
             );
 
         let contents;
-        for (let i = 0; i < bodies.length; i += nodeIds.length) {
+
+        // The increment value depends on whether the node IDs list is empty or not.
+        // The node IDs list is not empty if the transaction has been frozen
+        // before serialization and deserialization, otherwise, it's empty.
+        const incrementValue = nodeIds.length > 0 ? nodeIds.length : 1;
+
+        for (let i = 0; i < bodies.length; i += incrementValue) {
             const fileAppend =
                 /** @type {HashgraphProto.proto.IFileAppendTransactionBody} */ (
                     bodies[i].fileAppend
