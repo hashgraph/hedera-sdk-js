@@ -1,5 +1,6 @@
 import Client from "../../../src/client/NodeClient.js";
 import BaseIntegrationTestEnv from "./BaseIntegrationTestEnv.js";
+import Wallet from "../../../src/Wallet.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -31,6 +32,7 @@ export default class IntegrationTestEnv extends BaseIntegrationTestEnv {
     static async new(options = {}) {
         return BaseIntegrationTestEnv.new({
             client: Client,
+            wallet: Wallet,
             env: process.env,
             nodeAccountIds: options.nodeAccountIds,
             balance: options.balance,

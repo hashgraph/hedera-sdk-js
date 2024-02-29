@@ -192,3 +192,11 @@ tasks:
         cmds:
             - task: "test:release"
             - pnpm publish {{.CLI_ARGS}}
+
+    "publish:proto":
+         cmds:
+            - task: "proto:publish"
+
+    "publish:cryptography":
+         cmds:
+            - task: "cryptography:publish"
