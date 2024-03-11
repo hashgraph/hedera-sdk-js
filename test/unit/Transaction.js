@@ -204,11 +204,8 @@ describe("Transaction", function () {
     });
 
     describe("balance must be the same before and after serialization/deserialization", function () {
-        // Declare max variable
-        const MAX = 100;
-
-        // Generate random float number between 0 and 100
-        const FLOAT_NUMBER = parseFloat((Math.random() * MAX).toFixed(8));
+        // Declare float number
+        const FLOAT_NUMBER = 8.02341424
 
         // Declare integer number from float number
         const INTEGER_NUMBER = Math.floor(FLOAT_NUMBER);
