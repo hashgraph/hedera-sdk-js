@@ -17,7 +17,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 import BigNumber from "bignumber.js";
 
-describe.only("Transaction", function () {
+describe("Transaction", function () {
     it("toBytes", async function () {
         const key = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c",
@@ -203,7 +203,7 @@ describe.only("Transaction", function () {
         }
     });
 
-    describe.only("balance must be the same before and after serialization/deserialization", function () {
+    describe("balance must be the same before and after serialization/deserialization", function () {
         // Declare max variable
         const MAX = 100;
 
