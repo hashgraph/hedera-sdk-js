@@ -208,7 +208,7 @@ describe("Transaction", function () {
         const MAX = 100;
 
         // Generate random float number between 0 and 100
-        const FLOAT_NUMBER = Number((Math.random() * MAX).toFixed(8));
+        const FLOAT_NUMBER = parseFloat((Math.random() * MAX).toFixed(8));
 
         // Declare integer number from float number
         const INTEGER_NUMBER = Math.floor(FLOAT_NUMBER);
