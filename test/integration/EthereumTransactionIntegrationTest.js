@@ -25,7 +25,7 @@ import * as hex from "../../src/encoding/hex.js";
  * @description
  * At the moment the ethereum transaction behavior is not stable.
  * Occasionally the test fails with the following error INVALID_ACCOUNT_ID.
- * The test suit will be skipped until the problem is investigated and fixed.
+ * The test suite will be skipped until the problem is investigated and fixed.
  */
 
 // eslint-disable-next-line mocha/no-skipped-tests
