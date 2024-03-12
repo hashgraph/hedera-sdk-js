@@ -92,7 +92,7 @@ export default class BaseIntegrationTestEnv {
             options.env.OPERATOR_KEY != null
         ) {
             const operatorId = AccountId.fromString(options.env.OPERATOR_ID);
-            const operatorKey = PrivateKey.fromString(options.env.OPERATOR_KEY);
+            const operatorKey = PrivateKey.fromStringDer(options.env.OPERATOR_KEY);
 
             client.setOperator(operatorId, operatorKey);
         }
@@ -122,7 +122,7 @@ export default class BaseIntegrationTestEnv {
         }
         client.setNetwork(network);
 
-        const newOperatorKey = PrivateKey.generateED25519();
+        const newOperatorKey = PrivateKey.generateECDSA();
 
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)
