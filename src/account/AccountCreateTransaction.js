@@ -223,7 +223,7 @@ export default class AccountCreateTransaction extends Transaction {
                         : undefined,
                 initialBalance:
                     create.initialBalance != null
-                        ? create.initialBalance
+                        ? Hbar.fromTinybars(create.initialBalance)
                         : undefined,
                 receiverSignatureRequired:
                     create.receiverSigRequired != null
