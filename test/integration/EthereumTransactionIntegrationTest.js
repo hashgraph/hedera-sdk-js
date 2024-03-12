@@ -18,7 +18,15 @@ import * as rlp from "@ethersproject/rlp";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import * as hex from "../../src/encoding/hex.js";
 
-describe("EthereumTransactionIntegrationTest", function () {
+/**
+ * @description
+ * At the moment the ethereum transaction behavior is not stable.
+ * Occasionally the test fails with the following error INVALID_ACCOUNT_ID.
+ * The test suit will be skipped until the problem is investigated and fixed.
+ */
+
+// eslint-disable-next-line mocha/no-skipped-tests
+describe.skip("EthereumTransactionIntegrationTest", function () {
     let env, operatorKey, wallet, contractAddress, operatorId;
 
     before(async function () {
