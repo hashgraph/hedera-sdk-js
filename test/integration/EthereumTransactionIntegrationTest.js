@@ -19,6 +19,9 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import * as hex from "../../src/encoding/hex.js";
 
 /**
+ * @summary E2E-HIP-844
+ * @url https://hips.hedera.com/hip/hip-844
+ *
  * @description
  * At the moment the ethereum transaction behavior is not stable.
  * Occasionally the test fails with the following error INVALID_ACCOUNT_ID.
