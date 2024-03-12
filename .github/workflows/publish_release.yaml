@@ -105,6 +105,11 @@ jobs:
             echo "::error title=Version Mismatch::The version in package.json (${{ steps.npm-package.outputs.version }}) does not match the version in the tag (${{ steps.tag.outputs.version }})."
             exit 1
           fi
+          
+          if [[ "${{ steps.tag.outputs.type }}" != "production" && "${{ steps.tag.outputs.type }}" != "beta" ]]; then
+            echo "::error title=Unsupported PreRelease::The tag '${{ steps.tag.outputs.name }}' is an unsupported prerelease tag. Only 'beta' prereleases are supported."
+            exit 2
+          fi
 
           if [[ "${{ steps.tag.outputs.type }}" != "production" && "${{ steps.tag.outputs.type }}" != "beta" ]]; then
             echo "::error title=Unsupported PreRelease::The tag '${{ steps.tag.outputs.name }}' is an unsupported prerelease tag. Only 'beta' prereleases are supported."
@@ -121,17 +126,17 @@ jobs:
           ref: ${{ github.event.inputs.tag || '' }}
 
       - name: Install Task
-        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
         with:
           version: 3.7.0
 
       - name: Install PNPM
-        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
           version: 8.10.0
 
       - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 18
 
@@ -151,17 +156,17 @@ jobs:
           ref: ${{ github.event.inputs.tag || '' }}
 
       - name: Install Task
-        uses: arduino/setup-task@e26d8975574116b0097a1161e0fe16ba75d84c1c # v1.0.3
+        uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
         with:
           version: 3.7.0
 
       - name: Install PNPM
-        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598 # v2.4.0
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
           version: 8.10.0
 
       - name: Setup Node
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: 18
           cache: pnpm
@@ -189,7 +194,7 @@ jobs:
         run: task publish -- ${{ steps.publish.outputs.args }}
 
       - name: Generate Github Release
-        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         if: ${{ github.event.inputs.dry-run-enabled != 'true' }}
         with:
           tag: ${{ steps.validate-release.outputs.tag }}

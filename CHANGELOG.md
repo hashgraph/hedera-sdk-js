@@ -37,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Add HIP-745: Optionally send transaction data without required transaction fields by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2067
 
-
 ## v2.41.0
 
 ## What's Changed
