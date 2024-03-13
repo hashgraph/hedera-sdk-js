@@ -21,7 +21,6 @@
 import LedgerId from "../LedgerId.js";
 import * as util from "../util.js";
 import Logger from "../logger/Logger.js"; // eslint-disable-line
-import { LogLevel } from "../exports.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -215,8 +214,6 @@ export default class ManagedNetwork {
     _getNumberOfMostHealthyNodes(count) {
         this._removeDeadNodes();
         this._readmitNodes();
-
-        this.setLogger(new Logger(LogLevel.Debug));
 
         const nodes = [];
         // Create a shallow for safe iteration
