@@ -623,6 +623,14 @@ export default class Status {
                 return "ACCOUNT_IS_IMMUTABLE";
             case Status.AliasAlreadyAssigned:
                 return "ALIAS_ALREADY_ASSIGNED";
+            case Status.InvalidMetadataKey:
+                return "INVALID_METADATA_KEY";
+            case Status.TokenHasNoMetadataKey:
+                return "TOKEN_HAS_NO_METADATA_KEY";
+            case Status.MissingTokenMetadata:
+                return "MISSING_TOKEN_METADATA";
+            case Status.MissingSerialNumbers:
+                return "MISSING_SERIAL_NUMBERS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1217,6 +1225,14 @@ export default class Status {
                 return Status.AccountIsImmutable;
             case 332:
                 return Status.AliasAlreadyAssigned;
+            case 333:
+                return Status.InvalidMetadataKey;
+            case 334:
+                return Status.TokenHasNoMetadataKey;
+            case 335:
+                return Status.MissingTokenMetadata;
+            case 336:
+                return Status.MissingSerialNumbers;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2728,3 +2744,23 @@ Status.AccountIsImmutable = new Status(331);
  * An alias that is assigned to an account or contract cannot be assigned to another account or contract.
  */
 Status.AliasAlreadyAssigned = new Status(332);
+
+/**
+ * A provided metadata key was invalid. Verification includes, for example, checking the size of Ed25519 and ECDSA(secp256k1) public keys.
+ */
+Status.InvalidMetadataKey = new Status(333);
+
+/**
+ * Metadata key is not set on token
+ */
+Status.TokenHasNoMetadataKey = new Status(334);
+
+/**
+ * Token Metadata is not provided
+ */
+Status.MissingTokenMetadata = new Status(335);
+
+/**
+ * NFT serial numbers are missing in the TokenUpdateNftsTransactionBody
+ */
+Status.MissingSerialNumbers = new Status(336);
