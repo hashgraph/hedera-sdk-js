@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * release: proto beta version 2.14.0-beta.5 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2196
 * fix: hbar presentation after serialization/deserialization by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2189
 * fix: inability to create and execute freeze transaction by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2171
+* update: update steps for release process in REALEASE.md file by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2201
+* update: add section in README.md file on how to start the tests by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2201
 
 ## v2.42.0
 
