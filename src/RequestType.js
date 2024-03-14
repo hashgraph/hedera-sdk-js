@@ -187,6 +187,10 @@ export default class RequestType {
                 return "NodeStakeUpdate";
             case RequestType.Prng:
                 return "UtilPrng";
+            case RequestType.TransactionGetFastRecord:
+                return "TransactionGetFastRecord";
+            case RequestType.TokenUpdateNfts:
+                return "TokenUpdateNfts";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -345,6 +349,10 @@ export default class RequestType {
                 return RequestType.NodeStakeUpdate;
             case 86:
                 return RequestType.Prng;
+            case 87:
+                return RequestType.TransactionGetFastRecord;
+            case 88:
+                return RequestType.TokenUpdateNfts;
         }
 
         throw new Error(
@@ -722,3 +730,13 @@ RequestType.NodeStakeUpdate = new RequestType(85);
  * Generates a pseudorandom number.
  */
 RequestType.Prng = new RequestType(86);
+
+/**
+ * Get a record for a transaction (lasts 180 seconds)
+ */
+RequestType.TransactionGetFastRecord = new RequestType(87);
+
+/**
+ * Update the metadata of one or more NFT's of a specific token type.
+ */
+RequestType.TokenUpdateNfts = new RequestType(88);
