@@ -20,7 +20,6 @@
 
 import LedgerId from "../LedgerId.js";
 import * as util from "../util.js";
-import Logger from "../logger/Logger.js"; // eslint-disable-line
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -87,14 +86,6 @@ export default class ManagedNetwork {
         this._nodeMaxReadmitPeriod = this._maxBackoff;
 
         this._earliestReadmitTime = Date.now() + this._nodeMinReadmitPeriod;
-
-        /**
-         * Logger
-         *
-         * @external
-         * @type {Logger | null}
-         */
-        this._logger = null;
     }
 
     /**
@@ -227,11 +218,6 @@ export default class ManagedNetwork {
 
             // Check if the node exists
             if (!selectedNode) {
-                if (this._logger) {
-                    this._logger.debug(
-                        `Selected an undefined node at index ${nodeIndex}`,
-                    );
-                }
                 break; // Break out of the loop if undefined node is selected
             }
 
@@ -494,17 +480,6 @@ export default class ManagedNetwork {
      */
     decreaseBackoff(node) {
         node.decreaseBackoff();
-    }
-
-    /**
-     * Set logger
-     *
-     * @param {Logger} logger
-     * @returns {this}
-     */
-    setLogger(logger) {
-        this._logger = logger;
-        return this;
     }
 
     close() {
