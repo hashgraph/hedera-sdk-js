@@ -1,15 +1,18 @@
 ## Release process of JS SDK
 
--   **Run** the [local node](https://github.com/hashgraph/hedera-local-node)
--   Run `task test:integration:node`
--   **Stop** the local node
--   Run `task test:unit:node`
--   Run `task test:publish` (if the local node is not stopped, those tests will fail)
--   Run `pnpm publish` (Be careful, you need to update `package.json` version as well as `subpackage` versions if needed!)
--   Create a PR to merge release/vX.Y.Z to DEVELOP and then to MAIN
--   Go to the [SDK PAGE](https://github.com/hashgraph/hedera-sdk-js/releases) and press the “Draft a new release” button
--   Create a new tag from the branch that you are releasing (release/vX.Y.Z) with the same version of the branch
--   Generate the release notes automatically.
--   Copy the latest changes from the release notes to the CHANGELOG.md
--   Push with the message: the release version
--   Publish Release
+- **Create** a new release branch following the naming convention for:
+    - stable release - `release/v*.*.*`
+    - beta release - `release/v*.*.*-beta.*`
+- **Run** the [local node](https://github.com/hashgraph/hedera-local-node)
+- **Run** `task test:integration:node`
+- **Stop** the [local node](https://github.com/hashgraph/hedera-local-node)
+- **Run** `task test:release` (Note: the local node should not be running)
+- **Update** the SDK version in `package.json` file
+- **Update** the CHANGELOG file
+- **Create** a new tag from the branch that you are releasing (release/vX.Y.Z) with the same version of the branch as running following command for:
+    - stable release - `git tag -a "v*.*.*" -m "[message]"`
+    - bet release - `git tag -a "v*.*.*-beta.*" -m "[message]"`
+- **Run** the following command for:
+    - stable release - `git push origin v*.*.*`
+    - beta release - `git push origin v*.*.*-beta.*`
+- **Monitor** the [status](https://github.com/hashgraph/hedera-sdk-js/actions/workflows/publish_release.yaml) of this CI pipeline
