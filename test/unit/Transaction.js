@@ -205,7 +205,7 @@ describe("Transaction", function () {
 
     describe("balance must be the same before and after serialization/deserialization", function () {
         // Declare float number
-        const FLOAT_NUMBER = 8.02341424
+        const FLOAT_NUMBER = 8.02341424;
 
         // Declare integer number from float number
         const INTEGER_NUMBER = Math.floor(FLOAT_NUMBER);
@@ -213,7 +213,7 @@ describe("Transaction", function () {
         // Declare diffrent number types
         const NUMBERS = {
             INTEGER: INTEGER_NUMBER,
-            FLOAT: FLOAT_NUMBER
+            FLOAT: FLOAT_NUMBER,
         };
         const NUMBER_TYPES = Object.keys(NUMBERS);
 
