@@ -42,7 +42,7 @@ import LedgerId from "../LedgerId.js";
 export default class TokenInfo {
     /**
      * @private
-     * @param {object} props;
+     * @param {object} props
      * @param {TokenId} props.tokenId;
      * @param {string} props.name;
      * @param {string} props.symbol;
