@@ -81,6 +81,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {TokenSupplyType} [props.supplyType]
      * @param {Long | number} [props.maxSupply]
      * @param {Key} [props.metadataKey]
+     * @param {Uint8Array} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -224,6 +225,13 @@ export default class TokenCreateTransaction extends Transaction {
          */
         this._metadataKey = null;
 
+        /**
+         * @private
+         * @description Metadata of the created token definition.
+         * @type {?Uint8Array}
+         */
+        this._metadata = null;
+
         if (props.tokenName != null) {
             this.setTokenName(props.tokenName);
         }
@@ -310,6 +318,10 @@ export default class TokenCreateTransaction extends Transaction {
 
         if (props.metadataKey != null) {
             this.setMetadataKey(props.metadataKey);
+        }
+
+        if (props.metadata != null) {
+            this.setMetadata(props.metadata);
         }
     }
 
@@ -418,6 +430,10 @@ export default class TokenCreateTransaction extends Transaction {
                 metadataKey:
                     create.metadataKey != null
                         ? Key._fromProtobufKey(create.metadataKey)
+                        : undefined,
+                metadata:
+                    create.metadata != null
+                        ? create.metadata
                         : undefined,
             }),
             transactions,
@@ -828,6 +844,24 @@ export default class TokenCreateTransaction extends Transaction {
         return this;
     }
 
+     /**
+     * @returns {?Uint8Array}
+     */
+     get metadata() {
+        return this._metadata;
+    }
+
+    /**
+     * @param {Uint8Array} metadata
+     * @returns {this}
+     */
+    setMetadata(metadata) {
+        this._requireNotFrozen();
+        this._metadata = metadata;
+
+        return this;
+    }
+
     /**
      * @param {Client} client
      */
@@ -918,6 +952,10 @@ export default class TokenCreateTransaction extends Transaction {
                 this._metadataKey != null
                     ? this._metadataKey._toProtobufKey()
                     : null,
+            metadata:
+                this._metadata != null
+                    ? this._metadata
+                    : undefined,
         };
     }
 
