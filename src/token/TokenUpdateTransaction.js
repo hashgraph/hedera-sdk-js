@@ -66,6 +66,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {string} [props.tokenMemo]
      * @param {Key} [props.feeScheduleKey]
      * @param {Key} [props.pauseKey]
+     * @param {Key} [props.metadataKey]
      */
     constructor(props = {}) {
         super();
@@ -160,6 +161,12 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._pauseKey = null;
 
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._metadataKey = null;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -218,6 +225,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.pauseKey != null) {
             this.setPauseKey(props.pauseKey);
+        }
+
+        if (props.metadataKey != null) {
+            this.setMetadataKey(props.metadataKey);
         }
     }
 
@@ -300,6 +311,10 @@ export default class TokenUpdateTransaction extends Transaction {
                 pauseKey:
                     update.pauseKey != null
                         ? Key._fromProtobufKey(update.pauseKey)
+                        : undefined,
+                metadataKey:
+                    update.metadataKey != null
+                        ? Key._fromProtobufKey(update.metadataKey)
                         : undefined,
             }),
             transactions,
@@ -603,6 +618,24 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get metadataKey() {
+        return this._metadataKey;
+    }
+
+    /**
+     * @param {Key} metadataKey
+     * @returns {this}
+     */
+    setMetadataKey(metadataKey) {
+        this._requireNotFrozen();
+        this._metadataKey = metadataKey;
+
+        return this;
+    }
+
+    /**
      * @returns {this}
      */
     clearTokenMemo() {
@@ -699,6 +732,10 @@ export default class TokenUpdateTransaction extends Transaction {
             feeScheduleKey:
                 this._feeScheduleKey != null
                     ? this._feeScheduleKey._toProtobufKey()
+                    : null,
+            metadataKey:
+                this._metadataKey != null
+                    ? this._metadataKey._toProtobufKey()
                     : null,
         };
     }
