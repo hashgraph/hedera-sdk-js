@@ -67,6 +67,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Key} [props.feeScheduleKey]
      * @param {Key} [props.pauseKey]
      * @param {Key} [props.metadataKey]
+     * @param {Uint8Array} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -167,6 +168,12 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._metadataKey = null;
 
+        /**
+         * @private
+         * @type {?Uint8Array}
+         */
+        this._metadata = null;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -229,6 +236,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.metadataKey != null) {
             this.setMetadataKey(props.metadataKey);
+        }
+
+        if (props.metadata != null) {
+            this.setMetadata(props.metadata);
         }
     }
 
@@ -316,6 +327,12 @@ export default class TokenUpdateTransaction extends Transaction {
                     update.metadataKey != null
                         ? Key._fromProtobufKey(update.metadataKey)
                         : undefined,
+                metadata:
+                    update.metadata != null
+                        ? update.metadata.value != null
+                            ? update.metadata.value
+                            : undefined
+                        : undefined
             }),
             transactions,
             signedTransactions,
@@ -636,6 +653,24 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Uint8Array}
+     */
+    get metadata() {
+        return this._metadata;
+    }
+
+    /**
+     * @param {Uint8Array} metadata
+     * @returns {this}
+     */
+    setMetadata(metadata) {
+        this._requireNotFrozen();
+        this._metadata = metadata;
+
+        return this;
+    }
+
+    /**
      * @returns {this}
      */
     clearTokenMemo() {
@@ -737,6 +772,12 @@ export default class TokenUpdateTransaction extends Transaction {
                 this._metadataKey != null
                     ? this._metadataKey._toProtobufKey()
                     : null,
+            metadata:
+                this._metadata != null
+                      ? {
+                            value: this._metadata
+                        }
+                      : null
         };
     }
 

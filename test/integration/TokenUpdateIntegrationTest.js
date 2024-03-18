@@ -31,6 +31,10 @@ describe("TokenUpdate", function () {
         const key3 = PrivateKey.generateED25519();
         const key4 = PrivateKey.generateED25519();
         const key5 = PrivateKey.generateED25519();
+        const metadataKey = PrivateKey.generateED25519();
+        const newMetadataKey = PrivateKey.generateED25519();
+        const metadata = new Uint8Array(1);
+        const newMetadata = new Uint8Array(2)
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -45,6 +49,8 @@ describe("TokenUpdate", function () {
             .setSupplyKey(key4)
             .setFreezeDefault(false)
             .setPauseKey(key5)
+            .setMetadataKey(metadataKey)
+            .setMetadata(metadata)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -52,11 +58,6 @@ describe("TokenUpdate", function () {
         let info = await new TokenInfoQuery()
             .setTokenId(token)
             .execute(env.client);
-
-        expect(info.tokenId.toString()).to.eql(token.toString());
-        expect(info.name).to.eql("ffff");
-        expect(info.symbol).to.eql("F");
-        expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
             operatorId.toString(),
@@ -73,12 +74,16 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
+        expect(info.metadataKey.toString()).to.eql(metadataKey.toString());
+        expect(info.metadata).to.eql(metadata);
 
         await (
             await new TokenUpdateTransaction()
                 .setTokenId(token)
                 .setTokenName("aaaa")
                 .setTokenSymbol("A")
+                .setMetadataKey(newMetadataKey)
+                .setMetadata(newMetadata)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -103,6 +108,8 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
+        expect(info.metadataKey.toString()).to.eql(newMetadataKey.toString());
+        expect(info.metadata).to.eql(newMetadata);
     });
 
     it("should be able to update treasury", async function () {

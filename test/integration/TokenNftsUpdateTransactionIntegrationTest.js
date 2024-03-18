@@ -12,7 +12,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TokenNftsUpdateTransaction", function () {
+describe("TokenNftsUpdateTransaction", function () {
     let client, operatorId, operatorKey;
 
     before(async function () {
