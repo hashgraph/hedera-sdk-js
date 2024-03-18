@@ -42,7 +42,7 @@ import LedgerId from "../LedgerId.js";
 export default class TokenInfo {
     /**
      * @private
-     * @param {object} props
+     * @param {object} props;
      * @param {TokenId} props.tokenId;
      * @param {string} props.name;
      * @param {string} props.symbol;
@@ -68,8 +68,9 @@ export default class TokenInfo {
      * @param {TokenType | null} props.tokenType;
      * @param {TokenSupplyType | null} props.supplyType;
      * @param {Long | null} props.maxSupply;
-     * @param {LedgerId|null} props.ledgerId
-     * @param {Key | null} props.metadataKey
+     * @param {LedgerId|null} props.ledgerId;
+     * @param {Key | null} props.metadataKey;
+     * @param {Uint8Array} props.metadata;
      */
     constructor(props) {
         /**
@@ -241,11 +242,17 @@ export default class TokenInfo {
         this.ledgerId = props.ledgerId;
 
         /**
-         * The key which can change the metadata of a token (token definition and individual NFTs).
+         * @description The key which can change the metadata of a token (token definition and individual NFTs).
          *
          * @readonly
          */
         this.metadataKey = props.metadataKey;
+
+        /**
+         * @description Metadata of the created token definition.
+         * @readonly
+         */
+        this.metadata = props.metadata;
     }
 
     /**
@@ -373,6 +380,10 @@ export default class TokenInfo {
                 info.metadataKey != null
                     ? Key._fromProtobufKey(info.metadataKey)
                     : null,
+            metadata:
+                info.metadata != null
+                    ? info.metadata
+                    : new Uint8Array(),
         });
     }
 
@@ -442,6 +453,10 @@ export default class TokenInfo {
                 this.metadataKey != null
                     ? this.metadataKey._toProtobufKey()
                     : null,
+            metadata:
+                this.metadata != null
+                    ? this.metadata
+                    : null
         };
     }
 
