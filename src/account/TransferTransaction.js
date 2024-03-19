@@ -369,6 +369,13 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @returns {Transfer[]}
+     */
+    get hbarTransfersList() {
+        return this._hbarTransfers;
+    }
+
+    /**
      * @internal
      * @param {AccountId | string} accountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
