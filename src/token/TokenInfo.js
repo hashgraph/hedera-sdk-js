@@ -70,7 +70,7 @@ export default class TokenInfo {
      * @param {Long | null} props.maxSupply;
      * @param {LedgerId|null} props.ledgerId;
      * @param {Key | null} props.metadataKey;
-     * @param {Uint8Array} props.metadata;
+     * @param {Uint8Array | null} props.metadata;
      */
     constructor(props) {
         /**
@@ -380,10 +380,7 @@ export default class TokenInfo {
                 info.metadataKey != null
                     ? Key._fromProtobufKey(info.metadataKey)
                     : null,
-            metadata:
-                info.metadata != null
-                    ? info.metadata
-                    : new Uint8Array(),
+            metadata: info.metadata != null ? info.metadata : new Uint8Array(),
         });
     }
 
@@ -453,10 +450,7 @@ export default class TokenInfo {
                 this.metadataKey != null
                     ? this.metadataKey._toProtobufKey()
                     : null,
-            metadata:
-                this.metadata != null
-                    ? this.metadata
-                    : null
+            metadata: this.metadata != null ? this.metadata : null,
         };
     }
 

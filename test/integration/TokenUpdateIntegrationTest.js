@@ -34,7 +34,7 @@ describe("TokenUpdate", function () {
         const metadataKey = PrivateKey.generateED25519();
         const newMetadataKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array(1);
-        const newMetadata = new Uint8Array(2)
+        const newMetadata = new Uint8Array(2);
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")

@@ -24,9 +24,9 @@ async function main() {
     console.log(`Generated metadata key: ${metadataKey.toString()}`);
 
     // Set initial metadate
-    const metadata = new Uint8Array(1)
+    const metadata = new Uint8Array([1])
     // Set updated metadate
-    const updatedMetadata = new Uint8Array(2)
+    const updatedMetadata = new Uint8Array([1, 2])
 
     try {
         // Create token
@@ -53,7 +53,7 @@ async function main() {
         const tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(client);
-        console.log(`Token metadata key: ${tokenInfo.metadataKey.toString()}`);
+        console.log(`Token metadata key: ${tokenInfo.metadataKey?.toString()}`);
 
         // Mint token
         const tokenMintTx = new TokenMintTransaction()
@@ -72,7 +72,7 @@ async function main() {
             .setSerialNumbers(tokenMintReceipt.serials)
             .setMetadata(updatedMetadata)
             .freezeWith(client)
-        console.log(`Updatetd metadata: ${tokenUpdateNftsTx.metadata}`);
+        console.log(`Updateted metadata: ${tokenUpdateNftsTx.metadata}`);
 
         const tokenUpdateNftsResponse = await(await tokenUpdateNftsTx.sign(metadataKey)).execute(client)
         // Get receipt for update nfts metadata transaction

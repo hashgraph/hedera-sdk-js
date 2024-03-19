@@ -332,7 +332,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         ? update.metadata.value != null
                             ? update.metadata.value
                             : undefined
-                        : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -774,10 +774,10 @@ export default class TokenUpdateTransaction extends Transaction {
                     : null,
             metadata:
                 this._metadata != null
-                      ? {
-                            value: this._metadata
-                        }
-                      : null
+                    ? {
+                          value: this._metadata,
+                      }
+                    : null,
         };
     }
 

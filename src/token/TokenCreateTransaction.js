@@ -431,10 +431,7 @@ export default class TokenCreateTransaction extends Transaction {
                     create.metadataKey != null
                         ? Key._fromProtobufKey(create.metadataKey)
                         : undefined,
-                metadata:
-                    create.metadata != null
-                        ? create.metadata
-                        : undefined,
+                metadata: create.metadata != null ? create.metadata : undefined,
             }),
             transactions,
             signedTransactions,
@@ -844,10 +841,10 @@ export default class TokenCreateTransaction extends Transaction {
         return this;
     }
 
-     /**
+    /**
      * @returns {?Uint8Array}
      */
-     get metadata() {
+    get metadata() {
         return this._metadata;
     }
 
@@ -952,10 +949,7 @@ export default class TokenCreateTransaction extends Transaction {
                 this._metadataKey != null
                     ? this._metadataKey._toProtobufKey()
                     : null,
-            metadata:
-                this._metadata != null
-                    ? this._metadata
-                    : undefined,
+            metadata: this._metadata != null ? this._metadata : undefined,
         };
     }
 
