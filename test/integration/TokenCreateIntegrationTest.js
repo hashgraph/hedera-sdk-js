@@ -1,6 +1,8 @@
 import {
+    AccountId,
     PrivateKey,
     Status,
+    Timestamp,
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenInfoQuery,
@@ -124,6 +126,174 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token deletion did not error");
         }
+    });
+
+    it("should set autoRenewAccountId", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const autoRenewAccountId = AccountId.fromString(process.env.ALICE_ID);
+        const autoRenewAccountKey = PrivateKey.fromStringED25519(
+            process.env.ALICE_KEY,
+        );
+        const DAYS_90_IN_SECONDS = 7776000;
+        const expirationTime = new Timestamp(
+            Math.floor(Date.now() / 1000 + DAYS_90_IN_SECONDS),
+            0,
+        );
+
+        const response = await (
+            await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .setAutoRenewAccountId(autoRenewAccountId)
+                .freezeWith(env.client)
+                .sign(autoRenewAccountKey)
+        ).execute(env.client);
+
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
+
+        const info = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(info.tokenId.toString()).to.eql(tokenId.toString());
+        expect(info.name).to.eql("ffff");
+        expect(info.symbol).to.eql("F");
+        expect(info.decimals).to.eql(0);
+        expect(info.totalSupply.toInt()).to.eql(0);
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            operatorId.toString(),
+        );
+        expect(info.adminKey).to.be.null;
+        expect(info.kycKey).to.be.null;
+        expect(info.freezeKey).to.be.null;
+        expect(info.wipeKey).to.be.null;
+        expect(info.supplyKey).to.be.null;
+        expect(info.defaultFreezeStatus).to.be.null;
+        expect(info.defaultKycStatus).to.be.null;
+        expect(info.isDeleted).to.be.false;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            autoRenewAccountId.toString(),
+        );
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.expirationTime).to.be.not.null;
+        expect(info.expirationTime.toString()).to.be.eql(
+            expirationTime.toString(),
+        );
+    });
+
+    it("should set expirationTime", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const DAYS_45_IN_SECONDS = 3888000;
+        const expirationTime = new Timestamp(
+            Math.floor(Date.now() / 1000 + DAYS_45_IN_SECONDS),
+            0,
+        );
+
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setExpirationTime(expirationTime)
+            .execute(env.client);
+
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
+
+        const info = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(info.tokenId.toString()).to.eql(tokenId.toString());
+        expect(info.name).to.eql("ffff");
+        expect(info.symbol).to.eql("F");
+        expect(info.decimals).to.eql(0);
+        expect(info.totalSupply.toInt()).to.eql(0);
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            operatorId.toString(),
+        );
+        expect(info.adminKey).to.be.null;
+        expect(info.kycKey).to.be.null;
+        expect(info.freezeKey).to.be.null;
+        expect(info.wipeKey).to.be.null;
+        expect(info.supplyKey).to.be.null;
+        expect(info.defaultFreezeStatus).to.be.null;
+        expect(info.defaultKycStatus).to.be.null;
+        expect(info.isDeleted).to.be.false;
+        expect(info.autoRenewAccountId).to.be.null;
+        // expect(info.autoRenewAccountId.toString()).to.be.eql(
+        //     operatorId.toString(),
+        // );
+        expect(info.autoRenewPeriod).to.be.null;
+        // expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.expirationTime).to.be.not.null;
+        expect(info.expirationTime.toString()).to.be.eql(
+            expirationTime.toString(),
+        );
+    });
+
+    it("should set autoRenewAccountId and expirationTime", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const autoRenewAccountId = AccountId.fromString(process.env.ALICE_ID);
+        const autoRenewAccountKey = PrivateKey.fromStringED25519(
+            process.env.ALICE_KEY,
+        );
+        const DAYS_90_IN_SECONDS = 7776000;
+        const expirationTime = new Timestamp(
+            Math.floor(Date.now() / 1000 + DAYS_90_IN_SECONDS),
+            0,
+        );
+
+        const response = await (
+            await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .setExpirationTime(expirationTime)
+                .setAutoRenewAccountId(autoRenewAccountId)
+                .freezeWith(env.client)
+                .sign(autoRenewAccountKey)
+        ).execute(env.client);
+
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
+
+        const info = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(info.tokenId.toString()).to.eql(tokenId.toString());
+        expect(info.name).to.eql("ffff");
+        expect(info.symbol).to.eql("F");
+        expect(info.decimals).to.eql(0);
+        expect(info.totalSupply.toInt()).to.eql(0);
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            operatorId.toString(),
+        );
+        expect(info.adminKey).to.be.null;
+        expect(info.kycKey).to.be.null;
+        expect(info.freezeKey).to.be.null;
+        expect(info.wipeKey).to.be.null;
+        expect(info.supplyKey).to.be.null;
+        expect(info.defaultFreezeStatus).to.be.null;
+        expect(info.defaultKycStatus).to.be.null;
+        expect(info.isDeleted).to.be.false;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            autoRenewAccountId.toString(),
+        );
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.expirationTime).to.be.not.null;
+        expect(info.expirationTime.toString()).to.be.eql(
+            expirationTime.toString(),
+        );
     });
 
     it("should error when token name is not set", async function () {
