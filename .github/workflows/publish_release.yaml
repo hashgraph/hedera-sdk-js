@@ -177,6 +177,32 @@ jobs:
       - name: Install Playwright Dependencies
         run: sudo npx playwright install-deps
 
+      - name: Check Proto Subpackage Publish Status
+        id: proto
+        working-directory: packages/proto
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${PACKAGE_VERSION}" >/dev/null 2>&1; then
+            PUBLISH_REQUIRED="true"
+          fi
+
+          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
+
+      - name: Check Cryptography Subpackage Publish Status
+        id: cryptography
+        working-directory: packages/cryptography
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${PACKAGE_VERSION}" >/dev/null 2>&1; then
+            PUBLISH_REQUIRED="true"
+          fi
+          
+          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
+
       - name: Calculate Publish Arguments
         id: publish
         run: |
@@ -188,14 +214,28 @@ jobs:
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
 
-      - name: Publish Release
+      - name: Publish Proto Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/proto
+        if: ${{ steps.proto.outputs.publish-required == 'true' && !cancelled() && !failure() }}
+        run: task publish -- ${{ steps.publish.outputs.args }}
+
+      - name: Publish Cryptography Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/cryptography
+        if: ${{ steps.cryptography.outputs.publish-required == 'true' && !cancelled() && !failure() }}
+        run: task publish -- ${{ steps.publish.outputs.args }}
+
+      - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: task publish -- ${{ steps.publish.outputs.args }}
 
       - name: Generate Github Release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
-        if: ${{ github.event.inputs.dry-run-enabled != 'true' }}
+        if: ${{ github.event.inputs.dry-run-enabled != 'true' && !cancelled() && !failure() }}
         with:
           tag: ${{ steps.validate-release.outputs.tag }}
           prerelease: ${{ needs.validate-release.outputs.prerelease == 'true' }}
