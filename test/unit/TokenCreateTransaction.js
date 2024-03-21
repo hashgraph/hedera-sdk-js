@@ -7,6 +7,7 @@ import {
     Timestamp,
 } from "../../src/index.js";
 import Long from "long";
+import { DEFAULT_AUTO_RENEW_PERIOD } from "../../src/transaction/Transaction.js";
 
 describe("TokenCreateTransaction", function () {
     it("encodes to correct protobuf", function () {
@@ -34,6 +35,13 @@ describe("TokenCreateTransaction", function () {
         const autoRenewAccountId = new AccountId(10);
         const treasuryAccountId = new AccountId(11);
 
+        const expirationTime = new Timestamp(
+            Math.floor(
+                Date.now() / 1000 + DEFAULT_AUTO_RENEW_PERIOD.toNumber(),
+            ),
+            0,
+        )
+
         const transaction = new TokenCreateTransaction()
             .setMaxTransactionFee(new Hbar(30))
             .setTransactionId(
@@ -48,6 +56,7 @@ describe("TokenCreateTransaction", function () {
             .setDecimals(7)
             .setTreasuryAccountId(treasuryAccountId)
             .setAutoRenewAccountId(autoRenewAccountId)
+            .setExpirationTime(expirationTime)
             .setAdminKey(key1)
             .setKycKey(key2)
             .setFreezeKey(key3)
@@ -77,7 +86,7 @@ describe("TokenCreateTransaction", function () {
                 autoRenewPeriod: {
                     seconds: Long.fromValue(7776000),
                 },
-                expiry: null,
+                expiry: expirationTime._toProtobuf(),
                 treasury: treasuryAccountId._toProtobuf(),
                 adminKey: {
                     ed25519: key1.publicKey.toBytesRaw(),
