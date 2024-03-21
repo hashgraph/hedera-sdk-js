@@ -172,7 +172,12 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?Timestamp}
          */
-        this._expirationTime = null;
+        this._expirationTime = new Timestamp(
+            Math.floor(
+                Date.now() / 1000 + DEFAULT_AUTO_RENEW_PERIOD.toNumber(),
+            ),
+            0,
+        );
 
         /**
          * @private
@@ -657,7 +662,6 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setExpirationTime(time) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = null;
         this._expirationTime =
             time instanceof Timestamp ? time : Timestamp.fromDate(time);
 
@@ -789,30 +793,6 @@ export default class TokenCreateTransaction extends Transaction {
                 ? Long.fromNumber(maxSupply)
                 : maxSupply;
         return this;
-    }
-
-    /**
-     * @override
-     * @param {AccountId} accountId
-     */
-    _freezeWithAccountId(accountId) {
-        super._freezeWithAccountId(accountId);
-
-        if (this._autoRenewPeriod != null && accountId != null) {
-            this._autoRenewAccountId = accountId;
-        }
-    }
-
-    /**
-     * @param {?import("../client/Client.js").default<Channel, *>} client
-     * @returns {this}
-     */
-    freezeWith(client) {
-        if (client != null && client.operatorAccountId != null) {
-            this._freezeWithAccountId(client.operatorAccountId);
-        }
-
-        return super.freezeWith(client);
     }
 
     /**
