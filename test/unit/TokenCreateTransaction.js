@@ -40,7 +40,7 @@ describe("TokenCreateTransaction", function () {
                 Date.now() / 1000 + DEFAULT_AUTO_RENEW_PERIOD.toNumber(),
             ),
             0,
-        )
+        );
 
         const transaction = new TokenCreateTransaction()
             .setMaxTransactionFee(new Hbar(30))
