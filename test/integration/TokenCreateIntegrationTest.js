@@ -1,5 +1,4 @@
 import {
-    AccountId,
     PrivateKey,
     Status,
     Timestamp,
@@ -124,20 +123,13 @@ describe("TokenCreate", function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const autoRenewAccountId = AccountId.fromString(process.env.ALICE_ID);
-        const autoRenewAccountKey = PrivateKey.fromStringED25519(
-            process.env.ALICE_KEY,
-        );
 
-        const response = await (
-            await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setAutoRenewAccountId(autoRenewAccountId)
-                .freezeWith(env.client)
-                .sign(autoRenewAccountKey)
-        ).execute(env.client);
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setAutoRenewAccountId(operatorId)
+            .execute(env.client);
 
         const tokenId = (await response.getReceipt(env.client)).tokenId;
 
@@ -147,7 +139,7 @@ describe("TokenCreate", function () {
 
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            autoRenewAccountId.toString(),
+            operatorId.toString(),
         );
     });
 
@@ -184,26 +176,19 @@ describe("TokenCreate", function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const autoRenewAccountId = AccountId.fromString(process.env.ALICE_ID);
-        const autoRenewAccountKey = PrivateKey.fromStringED25519(
-            process.env.ALICE_KEY,
-        );
         const DAYS_90_IN_SECONDS = 7776000;
         const expirationTime = new Timestamp(
             Math.floor(Date.now() / 1000 + DAYS_90_IN_SECONDS),
             0,
         );
 
-        const response = await (
-            await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setExpirationTime(expirationTime)
-                .setAutoRenewAccountId(autoRenewAccountId)
-                .freezeWith(env.client)
-                .sign(autoRenewAccountKey)
-        ).execute(env.client);
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setExpirationTime(expirationTime)
+            .setAutoRenewAccountId(operatorId)
+            .execute(env.client);
 
         const tokenId = (await response.getReceipt(env.client)).tokenId;
 
@@ -213,7 +198,7 @@ describe("TokenCreate", function () {
 
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
-            autoRenewAccountId.toString(),
+            operatorId.toString(),
         );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
