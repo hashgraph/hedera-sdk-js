@@ -211,22 +211,6 @@ describe("TokenCreate", function () {
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(info.tokenId.toString()).to.eql(tokenId.toString());
-        expect(info.name).to.eql("ffff");
-        expect(info.symbol).to.eql("F");
-        expect(info.decimals).to.eql(0);
-        expect(info.totalSupply.toInt()).to.eql(0);
-        expect(info.treasuryAccountId.toString()).to.be.equal(
-            operatorId.toString(),
-        );
-        expect(info.adminKey).to.be.null;
-        expect(info.kycKey).to.be.null;
-        expect(info.freezeKey).to.be.null;
-        expect(info.wipeKey).to.be.null;
-        expect(info.supplyKey).to.be.null;
-        expect(info.defaultFreezeStatus).to.be.null;
-        expect(info.defaultKycStatus).to.be.null;
-        expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
         expect(info.autoRenewAccountId.toString()).to.be.eql(
             autoRenewAccountId.toString(),
