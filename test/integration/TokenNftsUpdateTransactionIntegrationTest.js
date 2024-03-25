@@ -7,85 +7,112 @@ import {
     TransactionResponse,
     TokenMintTransaction,
     TokenNftsUpdateTransaction,
-    TokenId,
-    TokenInfo,
+    Status,
+    TokenNftInfoQuery,
+    NftId,
+    TokenNftInfo,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenNftsUpdateTransaction", function () {
-    let client, operatorId, operatorKey;
+    let client,
+        operatorId,
+        operatorKey,
+        metadata,
+        newMetadata,
+        metadataKey,
+        tokenName,
+        tokenSymbol,
+        supplyKey,
+        tokenNftsInfo,
+        nftInfo,
+        wrongMetadataKey;
 
     before(async function () {
         const env = await IntegrationTestEnv.new();
         client = env.client;
         operatorId = env.operatorId;
         operatorKey = env.operatorKey;
+        metadata = new Uint8Array([1]);
+        newMetadata = new Uint8Array([1, 2]);
+        metadataKey = PrivateKey.generateECDSA();
+        supplyKey = PrivateKey.generateECDSA();
+        tokenName = "Test";
+        tokenSymbol = "T";
+        wrongMetadataKey = PrivateKey.generateECDSA();
     });
 
-    it("should update the inital metadata of nfts", async function () {
-        const metadataKey = PrivateKey.generateECDSA();
-        const metadata = new Uint8Array(1);
-        const newMetadata = new Uint8Array(2);
-
+    it("should update the NFT metadata", async function () {
+        this.timeout(120000);
         try {
-            let createTokenTx = new TokenCreateTransaction()
-                .setTokenName("Test")
-                .setTokenSymbol("T")
-                .setTokenType(TokenType.NonFungibleUnique)
-                .setTreasuryAccountId(operatorId)
+            const createTokenTx = new TokenCreateTransaction()
+                .setTokenName(tokenName)
+                .setTokenSymbol(tokenSymbol)
+                .setMetadata(metadata)
                 .setAdminKey(operatorKey)
-                .setTreasuryAccountId(operatorId)
-                .setSupplyKey(operatorKey)
+                .setSupplyKey(supplyKey)
                 .setMetadataKey(metadataKey)
-                .freezeWith(client);
-            expect(createTokenTx.tokenName).to.be.equal("Test");
-            expect(createTokenTx.tokenSymbol).to.be.equal("T");
-            expect(createTokenTx.tokenType).to.be.equal(
-                TokenType.NonFungibleUnique,
-            );
-            expect(createTokenTx.treasuryAccountId.toString()).to.be.equal(
-                operatorId.toString(),
-            );
-            expect(createTokenTx.adminKey.toString()).to.be.equal(
-                operatorKey.toString(),
-            );
-            expect(createTokenTx.supplyKey.toString()).to.be.equal(
-                operatorKey.toString(),
-            );
-            expect(createTokenTx.metadataKey.toString()).to.be.equal(
+                .setTreasuryAccountId(operatorId)
+                .setTokenType(TokenType.NonFungibleUnique);
+            expect(createTokenTx.tokenName).to.be.eql(tokenName);
+            expect(createTokenTx.tokenSymbol).to.be.eql(tokenSymbol);
+            expect(createTokenTx.metadata).to.be.eql(metadata);
+            expect(createTokenTx.metadataKey.toString()).to.be.eql(
                 metadataKey.toString(),
             );
+            expect(createTokenTx.treasuryAccountId.toString()).to.be.eql(
+                operatorId.toString(),
+            );
+            expect(createTokenTx.tokenType).to.be.eql(
+                TokenType.NonFungibleUnique,
+            );
+            expect(createTokenTx.adminKey.toString()).to.be.eql(
+                operatorKey.toString(),
+            );
+            expect(createTokenTx.supplyKey.toString()).to.be.eql(
+                supplyKey.toString(),
+            );
 
-            const createTokenResponse = await (
-                await createTokenTx.sign(operatorKey)
-            ).execute(client);
-            expect(createTokenResponse).to.be.instanceof(TransactionResponse);
-
-            const createTokenReceipt =
-                await createTokenResponse.getReceipt(client);
-            expect(createTokenReceipt).to.be.instanceof(TransactionReceipt);
-
-            const tokenId = createTokenReceipt.tokenId;
-            expect(tokenId).to.be.instanceof(TokenId);
+            const createTokenTxResponse = await createTokenTx.execute(client);
+            expect(createTokenTxResponse).to.be.instanceof(TransactionResponse);
+            const createTokenTxReceipt =
+                await createTokenTxResponse.getReceipt(client);
+            expect(createTokenTxReceipt).to.be.instanceof(TransactionReceipt);
+            expect(createTokenTxReceipt.status).to.be.eql(Status.Success);
+            const tokenId = createTokenTxReceipt.tokenId;
+            expect(tokenId).to.not.be.null;
 
             const tokenInfo = await new TokenInfoQuery()
                 .setTokenId(tokenId)
                 .execute(client);
-            expect(tokenInfo).to.be.instanceof(TokenInfo);
+            expect(tokenInfo.metadata).to.be.eql(metadata);
 
             const tokenMintTx = new TokenMintTransaction()
                 .setMetadata([metadata])
-                .setTokenId(tokenId);
+                .setTokenId(tokenId)
+                .freezeWith(client);
 
-            const tokenMintResponse = await tokenMintTx.execute(client);
+            const tokenMintResponse = await (
+                await tokenMintTx.sign(supplyKey)
+            ).execute(client);
             expect(tokenMintResponse).to.be.instanceof(TransactionResponse);
-
             const tokenMintReceipt = await tokenMintResponse.getReceipt(client);
             expect(tokenMintReceipt).to.be.instanceof(TransactionReceipt);
+            expect(tokenMintReceipt.status).to.be.eql(Status.Success);
+
+            const nftSerial = tokenMintReceipt.serials[0];
+            const nftId = new NftId(tokenId, nftSerial);
+
+            tokenNftsInfo = await new TokenNftInfoQuery()
+                .setNftId(nftId)
+                .execute(client);
+            nftInfo = tokenNftsInfo[0];
+            expect(nftInfo).to.be.instanceof(TokenNftInfo);
+            expect(nftInfo.metadata).to.be.eql(metadata);
 
             const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
                 .setTokenId(tokenId)
-                .setSerialNumbers(tokenMintReceipt.serials)
+                .setSerialNumbers([nftSerial])
                 .setMetadata(newMetadata)
                 .freezeWith(client);
 
@@ -95,17 +122,114 @@ describe("TokenNftsUpdateTransaction", function () {
             expect(tokenUpdateNftsResponse).to.be.instanceof(
                 TransactionResponse,
             );
-
             const tokenUpdateNftsReceipt =
                 await tokenUpdateNftsResponse.getReceipt(client);
             expect(tokenUpdateNftsReceipt).to.be.instanceof(TransactionReceipt);
+            expect(tokenUpdateNftsReceipt.status).to.be.eql(Status.Success);
+
+            tokenNftsInfo = await new TokenNftInfoQuery()
+                .setNftId(new NftId(tokenId, nftSerial))
+                .execute(client);
+            nftInfo = tokenNftsInfo[0];
+            expect(nftInfo.metadata).to.be.eql(newMetadata);
         } catch (error) {
-            console.log(error);
+            console.warn(error);
         }
     });
 
-    it("should return INVALID_METADATA_KEY error", async function () {});
-    it("should return TOKEN_HAS_NO_METADATA_KEY error", async function () {});
-    it("should return MISSING_TOKEN_METADATA error", async function () {});
-    it("should return MISSING_SERIAL_NUMBERS error", async function () {});
+    it("cannot update the NFT metadata if the metadataKey is missing", async function () {
+        this.timeout(120000);
+        try {
+            const createTokenTx = new TokenCreateTransaction()
+                .setTokenName(tokenName)
+                .setTokenSymbol(tokenSymbol)
+                .setMetadata(metadata)
+                .setAdminKey(operatorKey)
+                .setSupplyKey(supplyKey)
+                .setTreasuryAccountId(operatorId)
+                .setTokenType(TokenType.NonFungibleUnique);
+
+            const createTokenTxResponse = await createTokenTx.execute(client);
+            const createTokenTxReceipt =
+                await createTokenTxResponse.getReceipt(client);
+            const tokenId = createTokenTxReceipt.tokenId;
+
+            const tokenMintTx = new TokenMintTransaction()
+                .setMetadata([metadata])
+                .setTokenId(tokenId)
+                .freezeWith(client);
+
+            const tokenMintResponse = await (
+                await tokenMintTx.sign(supplyKey)
+            ).execute(client);
+            const tokenMintReceipt = await tokenMintResponse.getReceipt(client);
+
+            const nftSerial = tokenMintReceipt.serials[0];
+            const nftId = new NftId(tokenId, nftSerial);
+
+            tokenNftsInfo = await new TokenNftInfoQuery()
+                .setNftId(nftId)
+                .execute(client);
+            nftInfo = tokenNftsInfo[0];
+
+            const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
+                .setTokenId(tokenId)
+                .setSerialNumbers([nftSerial])
+                .setMetadata(newMetadata)
+                .freezeWith(client);
+
+            const tokenUpdateTxResponse = await (
+                await tokenUpdateNftsTx.sign(metadataKey)
+            ).execute(client);
+            await tokenUpdateTxResponse.getReceipt(client);
+        } catch (error) {
+            expect(error.status).to.be.eql(Status.TokenHasNoMetadataKey);
+        }
+    });
+
+    it("cannot update the NFT metadata when the transaction is not signed with metadataKey", async function () {
+        this.timeout(120000);
+        try {
+            const createTokenTx = new TokenCreateTransaction()
+                .setTokenName(tokenName)
+                .setTokenSymbol(tokenSymbol)
+                .setMetadata(metadata)
+                .setAdminKey(operatorKey)
+                .setMetadataKey(metadataKey)
+                .setSupplyKey(supplyKey)
+                .setTreasuryAccountId(operatorId)
+                .setTokenType(TokenType.NonFungibleUnique);
+
+            const createTokenTxResponse = await createTokenTx.execute(client);
+            const createTokenTxReceipt =
+                await createTokenTxResponse.getReceipt(client);
+            const tokenId = createTokenTxReceipt.tokenId;
+
+            const tokenMintTx = new TokenMintTransaction()
+                .setMetadata([metadata])
+                .setTokenId(tokenId)
+                .freezeWith(client);
+
+            const tokenMintResponse = await (
+                await tokenMintTx.sign(supplyKey)
+            ).execute(client);
+            const tokenMintReceipt = await tokenMintResponse.getReceipt(client);
+
+            const nftSerial = tokenMintReceipt.serials[0];
+
+            const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
+                .setTokenId(tokenId)
+                .setSerialNumbers([nftSerial])
+                .setMetadata(newMetadata)
+                .freezeWith(client);
+
+            await (
+                await (
+                    await tokenUpdateNftsTx.sign(wrongMetadataKey)
+                ).execute(client)
+            ).getReceipt(client);
+        } catch (error) {
+            expect(error.status).to.be.eql(Status.InvalidSignature);
+        }
+    });
 });
