@@ -1,4 +1,4 @@
-import { TokenCreateTransaction, TokenInfoQuery, TokenType, PrivateKey, Client, AccountId, TokenMintTransaction, TokenNftsUpdateTransaction } from "@hashgraph/sdk";
+import { TokenCreateTransaction, TokenInfoQuery, TokenType, PrivateKey, Client, AccountId, TokenMintTransaction, TokenNftsUpdateTransaction, TokenNftInfoQuery, NftId, AccountCreateTransaction, Hbar, TransferTransaction, TokenAssociateTransaction } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,34 +18,40 @@ async function main() {
 
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringDer(process.env.OPERATOR_KEY);
-    const network = process.env.HEDERA_NETWORK
+    const network = process.env.HEDERA_NETWORK;
     const client = Client.forName(network).setOperator(operatorId, operatorKey);
-    const metadataKey = PrivateKey.generateECDSA()
-    console.log(`Generated metadata key: ${metadataKey.toString()}`);
 
-    // Set initial metadate
-    const metadata = new Uint8Array([1])
-    // Set updated metadate
-    const updatedMetadata = new Uint8Array([1, 2])
+    // Generate a metadata key
+    const metadataKey = PrivateKey.generateECDSA();
+    // Initial metadata
+    const metadata = new Uint8Array([1]);
+    // New metadata
+    const newMetadata = new Uint8Array([1, 2]);
+
+    let tokenNftsInfo, nftInfo;
 
     try {
-        // Create token
+        // Create a non fungible token collection with a metadata key set
         let createTokenTx = new TokenCreateTransaction()
             .setTokenName("Test")
             .setTokenSymbol("T")
+            .setMetadata(metadata)
             .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
             .setAdminKey(operatorKey)
             .setTreasuryAccountId(operatorId)
             .setSupplyKey(operatorKey)
             .setMetadataKey(metadataKey)
-            .freezeWith(client)
+            .freezeWith(client);
 
-        const tokenCreateResponse = await (await createTokenTx.sign(operatorKey)).execute(client)
+        // Sign and execute create token transaction
+        const tokenCreateResponse = await (await createTokenTx.sign(operatorKey)).execute(client);
+
         // Get receipt for create token transaction
         const tokenCreateReceipt = await tokenCreateResponse.getReceipt(client);
         console.log(`Status of token create transction: ${tokenCreateReceipt.status.toString()}`);
 
+        // Get token id
         const tokenId = tokenCreateReceipt.tokenId;
         console.log(`Token id: ${tokenId.toString()}`);
 
@@ -59,25 +65,68 @@ async function main() {
         const tokenMintTx = new TokenMintTransaction()
             .setMetadata([metadata])
             .setTokenId(tokenId)
-        console.log(`Set metadata: ${tokenMintTx.metadata}`);
+            .freezeWith(client);
 
-        const tokenMintResponse = await tokenMintTx.execute(client);
-        // Get receipt for mint token transaction
+        const tokenMintResponse = await(await tokenMintTx.sign(operatorKey)).execute(client);
         const tokenMintReceipt = await tokenMintResponse.getReceipt(client);
         console.log(`Status of token mint transction: ${tokenMintReceipt.status.toString()}`);
+
+        const nftSerial = tokenMintReceipt.serials[0];
+
+        // Get TokenNftInfo to show the metadata on the NFT created
+        tokenNftsInfo = await new TokenNftInfoQuery()
+            .setNftId(new NftId(tokenId, nftSerial))
+            .execute(client);
+        nftInfo = tokenNftsInfo[0];
+        console.log(`Set token NFT metadata:`, nftInfo.metadata);
+
+        // Create an account to transfer the NFT to
+        const accountCreateTx = new AccountCreateTransaction()
+            .setKey(operatorKey)
+            .setMaxAutomaticTokenAssociations(10)
+            .setInitialBalance(new Hbar(100))
+            .freezeWith(client);
+
+        const accountCreateTxResponse = await(await accountCreateTx.sign(operatorKey)).execute(client);
+        const accountCreateTxReceipt = await accountCreateTxResponse.getReceipt(client);
+        const newAccountId = accountCreateTxReceipt.accountId;
+        console.log(`New account id: ${newAccountId.toString()}`);
+
+        const tokenAssociateTx = new TokenAssociateTransaction()
+            .setAccountId(newAccountId)
+            .setTokenIds([tokenId])
+            .freezeWith(client)
+
+        const tokenAssociateTxResponse = await(await tokenAssociateTx.sign(operatorKey)).execute(client);
+        const tokenAssociateTxReceipt = await tokenAssociateTxResponse.getReceipt(client);
+        console.log(`Status of token associate transaction: ${tokenAssociateTxReceipt.status.toString()}`);
+
+        // Transfer nft to the new account
+        const transferNftTx = new TransferTransaction()
+            .addNftTransfer(tokenId, nftSerial, operatorId, newAccountId)
+            .freezeWith(client);
+
+        const transferNftTxResponse = await(await transferNftTx.sign(operatorKey)).execute(client);
+        const transferNftTxReceipt = await transferNftTxResponse.getReceipt(client);
+        console.log(`Status of transfer NFT transaction: ${transferNftTxReceipt.status.toString()}`);
 
         // Update nfts metadata
         const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
             .setTokenId(tokenId)
-            .setSerialNumbers(tokenMintReceipt.serials)
-            .setMetadata(updatedMetadata)
-            .freezeWith(client)
-        console.log(`Updateted metadata: ${tokenUpdateNftsTx.metadata}`);
+            .setSerialNumbers([nftSerial])
+            .setMetadata(newMetadata)
+            .freezeWith(client);
 
-        const tokenUpdateNftsResponse = await(await tokenUpdateNftsTx.sign(metadataKey)).execute(client)
-        // Get receipt for update nfts metadata transaction
+        const tokenUpdateNftsResponse = await(await tokenUpdateNftsTx.sign(metadataKey)).execute(client);
         const tokenUpdateNftsReceipt = await tokenUpdateNftsResponse.getReceipt(client);
-        console.log(`Status of token update bfts metadata transction: ${tokenUpdateNftsReceipt.status.toString()}`);
+        console.log(`Status of token update nfts transction: ${tokenUpdateNftsReceipt.status.toString()}`);
+
+        // Get token nfts info in order to show the metadata on the NFT created
+        tokenNftsInfo = await new TokenNftInfoQuery()
+            .setNftId(new NftId(tokenId, nftSerial))
+            .execute(client);
+        nftInfo = tokenNftsInfo[0];
+        console.log(`Updated token NFT metadata:`, nftInfo.metadata);
     } catch(error){
         console.log(error);
     }
