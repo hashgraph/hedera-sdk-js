@@ -133,14 +133,6 @@ export default class TokenNftsUpdateTransaction extends Transaction {
     }
 
     /**
-     * @description Extract the token id. Returns the token id.
-     * @returns {?TokenId}
-     */
-    get tokenId() {
-        return this._tokenId;
-    }
-
-    /**
      * @description Assign the token id.
      * @param {TokenId | string} tokenId
      * @returns {this}
@@ -156,14 +148,6 @@ export default class TokenNftsUpdateTransaction extends Transaction {
     }
 
     /**
-     * @description Extract the list of serial numbers. Returns the list of serial numbers.
-     * @returns {?Long[]}
-     */
-    get serialNumbers() {
-        return this._serialNumbers;
-    }
-
-    /**
      * @description Assign the list of serial numbers.
      * @param {Long[]} serialNumbers
      * @returns {this}
@@ -173,13 +157,6 @@ export default class TokenNftsUpdateTransaction extends Transaction {
         this._serialNumbers = serialNumbers;
 
         return this;
-    }
-
-    /**
-     * @returns {?Uint8Array}
-     */
-    get metadata() {
-        return this._metadata;
     }
 
     /**
@@ -232,9 +209,13 @@ export default class TokenNftsUpdateTransaction extends Transaction {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
             serialNumbers:
                 this._serialNumbers != null ? this._serialNumbers : [],
-            metadata: {
-                value: this._metadata != null ? this._metadata : null,
-            },
+            ...(this._metadata != null
+                ? {
+                      metadata: {
+                          value: this._metadata,
+                      },
+                  }
+                : null),
         };
     }
 
