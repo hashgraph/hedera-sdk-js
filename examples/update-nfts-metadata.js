@@ -31,11 +31,10 @@ async function main() {
     let tokenNftsInfo, nftInfo;
 
     try {
-        // Create a non fungible token collection with a metadata key set
+        // Create a non fungible token
         let createTokenTx = new TokenCreateTransaction()
             .setTokenName("Test")
             .setTokenSymbol("T")
-            .setMetadata(metadata)
             .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
             .setAdminKey(operatorKey)
@@ -45,14 +44,14 @@ async function main() {
             .freezeWith(client);
 
         // Sign and execute create token transaction
-        const tokenCreateResponse = await (await createTokenTx.sign(operatorKey)).execute(client);
+        const tokenCreateTxResponse = await (await createTokenTx.sign(operatorKey)).execute(client);
 
         // Get receipt for create token transaction
-        const tokenCreateReceipt = await tokenCreateResponse.getReceipt(client);
-        console.log(`Status of token create transction: ${tokenCreateReceipt.status.toString()}`);
+        const tokenCreateTxReceipt = await tokenCreateTxResponse.getReceipt(client);
+        console.log(`Status of token create transction: ${tokenCreateTxReceipt.status.toString()}`);
 
         // Get token id
-        const tokenId = tokenCreateReceipt.tokenId;
+        const tokenId = tokenCreateTxReceipt.tokenId;
         console.log(`Token id: ${tokenId.toString()}`);
 
         // Get token info
@@ -67,11 +66,11 @@ async function main() {
             .setTokenId(tokenId)
             .freezeWith(client);
 
-        const tokenMintResponse = await(await tokenMintTx.sign(operatorKey)).execute(client);
-        const tokenMintReceipt = await tokenMintResponse.getReceipt(client);
-        console.log(`Status of token mint transction: ${tokenMintReceipt.status.toString()}`);
+        const tokenMintTxResponse = await(await tokenMintTx.sign(operatorKey)).execute(client);
+        const tokenMintTxReceipt = await tokenMintTxResponse.getReceipt(client);
+        console.log(`Status of token mint transction: ${tokenMintTxReceipt.status.toString()}`);
 
-        const nftSerial = tokenMintReceipt.serials[0];
+        const nftSerial = tokenMintTxReceipt.serials[0];
 
         // Get TokenNftInfo to show the metadata on the NFT created
         tokenNftsInfo = await new TokenNftInfoQuery()
@@ -117,9 +116,9 @@ async function main() {
             .setMetadata(newMetadata)
             .freezeWith(client);
 
-        const tokenUpdateNftsResponse = await(await tokenUpdateNftsTx.sign(metadataKey)).execute(client);
-        const tokenUpdateNftsReceipt = await tokenUpdateNftsResponse.getReceipt(client);
-        console.log(`Status of token update nfts transction: ${tokenUpdateNftsReceipt.status.toString()}`);
+        const tokenUpdateNftsTxResponse = await(await tokenUpdateNftsTx.sign(metadataKey)).execute(client);
+        const tokenUpdateNftsTxReceipt = await tokenUpdateNftsTxResponse.getReceipt(client);
+        console.log(`Status of token update nfts transction: ${tokenUpdateNftsTxReceipt.status.toString()}`);
 
         // Get token nfts info in order to show the metadata on the NFT created
         tokenNftsInfo = await new TokenNftInfoQuery()
