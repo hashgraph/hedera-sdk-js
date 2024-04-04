@@ -102,7 +102,7 @@ jobs:
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: |
-          npx @hashgraph/hedera-local start -d --network local --balance=100000
+          npx @hashgraph/hedera-local start -d --network-tag=0.48.0-alpha.8 --balance=100000
           # Wait for the network to fully start
           sleep 30 
 
