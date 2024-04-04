@@ -102,7 +102,7 @@ describe("TokenNftAllowances", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.SpenderDoesNotHaveAllowance);
+            err = error.toString().includes(Status.TokenNotAssociatedToAccount);
         }
 
         expect(err).to.be.true;

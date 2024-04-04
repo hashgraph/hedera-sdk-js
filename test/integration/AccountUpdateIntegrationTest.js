@@ -190,8 +190,6 @@ describe("AccountUpdate", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(120000);
 
-        let err = false;
-
         try {
             await (
                 await new AccountUpdateTransaction()
@@ -199,13 +197,7 @@ describe("AccountUpdate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.AccountIdDoesNotExist.toString());
-        }
-
-        if (!err) {
-            throw new Error("account update did not error");
+            expect(error.status).to.be.eql(Status.InvalidAccountId)
         }
     });
 

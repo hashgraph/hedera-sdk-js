@@ -295,7 +295,7 @@ describe("TokenUpdate", function () {
         }
     });
 
-    it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
+    it("should return error when updating immutable token", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
@@ -304,15 +304,20 @@ describe("TokenUpdate", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
+            .setAdminKey(env.operatorKey)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await new TokenUpdateTransaction()
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        try {
+            await (
+                await new TokenUpdateTransaction()
+                    .setTokenId(token)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            expect(error.status).to.be.eql(Status.TokenIsImmutable);
+        }
     });
 
     it("should error when admin key does not sign transaction", async function () {

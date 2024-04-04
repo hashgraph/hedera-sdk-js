@@ -142,8 +142,6 @@ describe("AccountCreate", function () {
     it("should error when key is not set", async function () {
         this.timeout(15000);
 
-        let err = false;
-
         try {
             const response = await new AccountCreateTransaction()
                 .setInitialBalance(new Hbar(2))
@@ -151,11 +149,7 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.KeyRequired.toString());
-        }
-
-        if (!err) {
-            throw new Error("account creation did not error");
+            expect(error.status).to.be.eql(Status.InvalidAliasKey)
         }
     });
 

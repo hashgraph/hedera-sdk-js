@@ -96,8 +96,6 @@ describe("AccountDelete", function () {
     it("should error with no account ID set", async function () {
         this.timeout(120000);
 
-        let err = false;
-
         try {
             await (
                 await new AccountDeleteTransaction()
@@ -106,13 +104,7 @@ describe("AccountDelete", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.AccountIdDoesNotExist.toString());
-        }
-
-        if (!err) {
-            throw new Error("account deletion did not error");
+            expect(error.status).to.be.eql(Status.InvalidAccountId);
         }
     });
 

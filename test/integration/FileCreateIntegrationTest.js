@@ -92,24 +92,19 @@ describe("FileCreate", function () {
     it("should error with too large expiration time", async function () {
         this.timeout(120000);
 
+        const timestamp = new Timestamp((Date.now() / 1000) + 9999999999, 0)
         const operatorKey = env.operatorKey.publicKey;
-
-        let err = false;
 
         try {
             await (
                 await new FileCreateTransaction()
                     .setKeys([operatorKey])
                     .setContents("[e2e::FileCreateTransaction]")
-                    .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
+                    .setExpirationTime(timestamp)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.AutorenewDurationNotInRange);
-        }
-
-        if (!err) {
-            throw new Error("file creation did not error");
+            expect(error.status).to.be.eql(Status.AutorenewDurationNotInRange);
         }
     });
 
