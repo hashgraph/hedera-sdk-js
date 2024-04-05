@@ -27,6 +27,7 @@ import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
+import { wait } from "../util.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -341,6 +342,9 @@ export default class Query extends Executable {
         // really not be executing the same query multiple times meaning this is
         // typically not needed.
         this._queryPayment = cost;
+
+        // To avoid duplicate transaction fix
+        await wait(1500);
 
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
