@@ -149,7 +149,7 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidAliasKey)
+            expect(error.status).to.be.eql(Status.InvalidAliasKey);
         }
     });
 

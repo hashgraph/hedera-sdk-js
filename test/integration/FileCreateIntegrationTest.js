@@ -92,7 +92,7 @@ describe("FileCreate", function () {
     it("should error with too large expiration time", async function () {
         this.timeout(120000);
 
-        const timestamp = new Timestamp((Date.now() / 1000) + 9999999999, 0)
+        const timestamp = new Timestamp(Date.now() / 1000 + 9999999999, 0);
         const operatorKey = env.operatorKey.publicKey;
 
         try {

@@ -43,7 +43,7 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-    })
+    });
 
     it("should be executable when file id and expiratiion time are not set", async function () {
         this.timeout(120000);
@@ -58,7 +58,7 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-    })
+    });
 
     it("should be executable when contract id and expiration time are not set", async function () {
         this.timeout(120000);
@@ -73,7 +73,7 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-    })
+    });
 
     after(async function () {
         await env.close();
