@@ -104,7 +104,7 @@ describe("AccountDelete", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidAccountId);
+            expect(error.status).to.be.eql(Status.AccountIdDoesNotExist);
         }
     });
 

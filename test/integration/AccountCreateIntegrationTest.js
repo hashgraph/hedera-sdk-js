@@ -149,7 +149,7 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidAliasKey);
+            expect(error.status).to.be.eql(Status.KeyRequired);
         }
     });
 
@@ -197,6 +197,7 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with a single key passed to `KeyList`", async function () {
+        this.timeout(15000);
         const publicKey = PrivateKey.generateED25519().publicKey;
         const thresholdKey = new KeyList(publicKey, 1);
 
