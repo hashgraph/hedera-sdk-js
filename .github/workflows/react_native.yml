@@ -13,12 +13,17 @@ on:
       - develop
       - release/*
 
+defaults:
+    run:
+        shell: bash
+
 permissions:
   contents: read
 
 jobs:
   android:
     name: Android
+    # runs-on: [ self-hosted, Linux, medium, ephemeral ]  # this will be enabled once we configure a self-hosted runner
     runs-on: macos-latest
     steps:
       - name: Checkout Code
@@ -75,6 +80,7 @@ jobs:
 
   ios:
     name: iOS
+    # runs-on: [ self-hosted, Linux, medium, ephemeral ]  # this will be enabled once we configure a self-hosted runner
     runs-on: macos-latest
     steps:
       - name: Checkout Code

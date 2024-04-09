@@ -1,2 +1,29 @@
 # Default code owners for entire repository
-*   @SimiHunjan @ochikov @petreze
+*   @SimiHunjan @ochikov @petreze @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+#########################
+#####  Core Files  ######
+#########################
+
+# NOTE: Must be placed last to ensure enforcement over all other rules
+
+# Protection Rules for Github Configuration Files and Actions Workflows
+/.github/                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+# Codacy Tool Configurations
+/config/                                        @hashgraph/release-engineering @hashgraph/release-engineering-managers
+.remarkrc                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+# Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
+/CODEOWNERS                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+# Protect the repository root files
+/README.md                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers
+**/LICENSE                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+# CodeCov configuration
+**/codecov.yml                                  @hashgraph/release-engineering @hashgraph/release-engineering-managers
+
+# Git Ignore definitions
+**/.gitignore                                   @hashgraph/release-engineering @hashgraph/release-engineering-managers
+**/.gitignore.*                                 @hashgraph/release-engineering @hashgraph/release-engineering-managers

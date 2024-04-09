@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   renovate:
+    # runs-on: [ self-hosted, Linux, medium, ephemeral ]  # this will be enabled once we configure a self-hosted runner
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
