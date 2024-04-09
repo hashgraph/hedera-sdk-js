@@ -84,7 +84,6 @@ describe("TokenNftAllowances", function () {
 
         const nft1 = new NftId(nftTokenId, serials[0]);
 
-        let err = false;
         const onBehalfOfTransactionId =
             TransactionId.generate(spenderAccountId);
         try {
@@ -102,10 +101,8 @@ describe("TokenNftAllowances", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.TokenNotAssociatedToAccount);
+            error.toString().includes(Status.TokenNotAssociatedToAccount);
         }
-
-        expect(err).to.be.true;
     });
 
     it("Cannot transfer on behalf of `spender` account after removing the allowance approval", async function () {

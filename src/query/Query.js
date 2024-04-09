@@ -27,7 +27,6 @@ import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
-import { wait } from "../util.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -343,9 +342,6 @@ export default class Query extends Executable {
         // typically not needed.
         this._queryPayment = cost;
 
-        // To avoid duplicate transaction fix
-        await wait(1500);
-
         // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
 
@@ -446,33 +442,23 @@ export default class Query extends Executable {
             responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
         };
 
-        if (this._isPaymentRequired() && this._paymentTransactions != null) {
-            if (this._nodeAccountIds.locked) {
-                header.payment =
-                    this._paymentTransactions[this._nodeAccountIds.index];
-            } else {
-                const logId = this._getLogId();
-                const nodeId = this._nodeAccountIds.current;
-                const paymentTransactionId =
-                    /** @type {import("../transaction/TransactionId.js").default} */ (
-                        this._paymentTransactionId
-                    );
-                const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
+        const logId = this._getLogId();
+        const nodeId = this._nodeAccountIds.current;
+        const paymentTransactionId = TransactionId.generate(this._operator ? this._operator.accountId : new AccountId(0));
+        const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
 
-                if (this._logger) {
-                    this._logger.debug(
-                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
-                    );
-                }
-
-                header.payment = await _makePaymentTransaction(
-                    paymentTransactionId,
-                    nodeId,
-                    this._isPaymentRequired() ? this._operator : null,
-                    paymentAmount,
-                );
-            }
+        if (this._logger) {
+            this._logger.debug(
+                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
+            );
         }
+
+        header.payment = await _makePaymentTransaction(
+            paymentTransactionId,
+            nodeId,
+            this._isPaymentRequired() ? this._operator : null,
+            paymentAmount,
+        );
 
         return this._onMakeRequest(header);
     }

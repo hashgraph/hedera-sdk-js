@@ -127,7 +127,7 @@ export default class BaseIntegrationTestEnv {
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)
             .setInitialBalance(
-                new Hbar(options.balance != null ? options.balance : 100)
+                new Hbar(options.balance != null ? options.balance : 10000)
             )
             .execute(client);
 

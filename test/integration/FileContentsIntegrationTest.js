@@ -86,7 +86,6 @@ describe("FileContents", function () {
 
         try {
             await new FileContentsQuery()
-                .setQueryPayment(new Hbar(1))
                 .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
