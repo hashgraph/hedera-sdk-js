@@ -85,8 +85,7 @@ describe("FileContents", function () {
         let err = false;
 
         try {
-            await new FileContentsQuery()
-                .execute(env.client);
+            await new FileContentsQuery().execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }

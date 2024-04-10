@@ -544,7 +544,6 @@ describe("ContractFunctionParameters", async function () {
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
                         .setQueryPayment(new Hbar(10));
-
                 } catch (error) {
                     expect(error).to.be.instanceOf(Error);
                     expect(error.message).to.be.equal(REQUIRE_ARRAY_ERROR);
@@ -820,7 +819,6 @@ describe("ContractFunctionParameters", async function () {
                         //Set the query payment for the node returning the request
                         //This value must cover the cost of the request otherwise will fail
                         .setQueryPayment(new Hbar(10));
-
                 } catch (error) {
                     expect(error).to.be.instanceOf(Error);
                     expect(error.message).to.be.equal(REQUIRE_ARRAY_ERROR);
@@ -844,7 +842,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -867,7 +864,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -889,7 +885,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -914,7 +909,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -940,7 +934,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -968,7 +961,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 
@@ -996,7 +988,6 @@ describe("ContractFunctionParameters", async function () {
             //This value must cover the cost of the request otherwise will fail
             .setQueryPayment(new Hbar(10));
 
-        
         //Submit to a Hedera network
         const txResponse = await contractQuery.execute(env.client);
 

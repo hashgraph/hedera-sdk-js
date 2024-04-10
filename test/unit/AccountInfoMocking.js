@@ -132,7 +132,7 @@ describe("AccountInfoMocking", function () {
                 .setAccountId("0.0.3")
                 .execute(client, 1);
         } catch (error) {
-            expect(error.name).to.be.eql('MaxQueryPaymentExceededError')
+            expect(error.name).to.be.eql("MaxQueryPaymentExceededError");
         }
     });
 

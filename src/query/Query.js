@@ -444,7 +444,9 @@ export default class Query extends Executable {
 
         const logId = this._getLogId();
         const nodeId = this._nodeAccountIds.current;
-        const paymentTransactionId = TransactionId.generate(this._operator ? this._operator.accountId : new AccountId(0));
+        const paymentTransactionId = TransactionId.generate(
+            this._operator ? this._operator.accountId : new AccountId(0),
+        );
         const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
 
         if (this._logger) {
