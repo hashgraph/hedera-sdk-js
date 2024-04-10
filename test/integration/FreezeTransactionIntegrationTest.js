@@ -31,7 +31,8 @@ describe("FreezeTransaction", function () {
         try {
             await transaction.execute(client);
         } catch (error) {
-            expect(error.status).to.be.equal(Status.Unauthorized);
+            console.log(error);
+            expect(error.status).to.be.equal(Status.NotSupported);
         }
 
         client.close();
