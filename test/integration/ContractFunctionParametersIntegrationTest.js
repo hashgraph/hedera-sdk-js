@@ -116,7 +116,7 @@ const bitSizes = [
     152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256,
 ];
 
-describe("ContractFunctionParameters", async function () {
+describe("ContractFunctionParameters", function () {
     this.timeout(120000);
     let env;
     let newContractId;
@@ -171,7 +171,7 @@ describe("ContractFunctionParameters", async function () {
     });
 
     bitSizes.forEach((bitSize) => {
-        describe(`Tests for addInt${bitSize} method`, async function () {
+        describe(`Tests for addInt${bitSize} method`, function () {
             this.timeout(120000);
             it(
                 getDescription(
@@ -387,7 +387,7 @@ describe("ContractFunctionParameters", async function () {
             );
         });
 
-        describe(`Tests for addInt${bitSize}Array method`, async function () {
+        describe(`Tests for addInt${bitSize}Array method`, function () {
             this.timeout(120000);
             it(
                 getDescriptionForArrayMethod(
@@ -551,7 +551,7 @@ describe("ContractFunctionParameters", async function () {
             });
         });
 
-        describe(`Tests for addUint${bitSize} method`, async function () {
+        describe(`Tests for addUint${bitSize} method`, function () {
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -658,7 +658,7 @@ describe("ContractFunctionParameters", async function () {
             );
         });
 
-        describe(`Tests for addUint${bitSize}Array method`, async function () {
+        describe(`Tests for addUint${bitSize}Array method`, function () {
             it(
                 getDescriptionForArrayMethod(
                     bitSize,

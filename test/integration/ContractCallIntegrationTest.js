@@ -350,8 +350,6 @@ describe("ContractCallIntegration", function () {
 
         const contract = receipt.contractId;
 
-        let err = false;
-
         try {
             await new ContractCallQuery()
                 .setContractId(contract)
