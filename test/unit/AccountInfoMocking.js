@@ -127,17 +127,13 @@ describe("AccountInfoMocking", function () {
 
         client.setDefaultMaxQueryPayment(Hbar.fromTinybars(10));
 
-        let err = false;
-
         try {
             await new AccountInfoQuery()
                 .setAccountId("0.0.3")
                 .execute(client, 1);
         } catch (error) {
-            err = error instanceof MaxQueryPaymentExceeded;
+            expect(error.name).to.be.eql('MaxQueryPaymentExceededError')
         }
-
-        expect(err).to.be.true;
     });
 
     it("setQueryPayemnt() avoids querying actual cost", async function () {
