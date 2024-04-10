@@ -316,87 +316,67 @@ describe("ContractCallIntegration", function () {
         }
     });
 
-    it("should mark as busy when network node takes longer than 10s to execute the transaction", async function () {
+    it("should return errro when the gas is not set", async function () {
         this.timeout(120000);
 
-        const myPrivateKey = PrivateKey.generateED25519();
-        const env = await IntegrationTestEnv.new();
-        const client = env.client;
-        // Create a file on Hedera and store the bytecode
-        const fileCreateTx = new FileCreateTransaction()
-            .setKeys([myPrivateKey])
-            .freezeWith(client);
-        const fileCreateSign = await fileCreateTx.sign(myPrivateKey);
-        const fileCreateSubmit = await fileCreateSign.execute(client);
-        const fileCreateRx = await fileCreateSubmit.getReceipt(client);
-        const bytecodeFileId = fileCreateRx.fileId;
-        console.log(`The bytecode file ID is: ${bytecodeFileId} \n`);
+        const operatorKey = env.operatorKey.publicKey;
 
-        //Append contents to the file
-        const fileAppendTx = new FileAppendTransaction()
-            .setFileId(bytecodeFileId)
-            .setContents(readDataBytecode)
-            .setMaxChunks(10)
-            .freezeWith(client);
-        const fileAppendSign = await fileAppendTx.sign(myPrivateKey);
-        const fileAppendSubmit = await fileAppendSign.execute(client);
-        const fileAppendRx = await fileAppendSubmit.getReceipt(client);
-        console.log("Status of file append is", fileAppendRx.status.toString());
+        const response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(smartContractBytecode)
+            .execute(env.client);
 
-        // Instantiate the contract instance
-        const contractTx = await new ContractCreateTransaction()
-            //Set the file ID of the Hedera file storing the bytecode
-            .setBytecodeFileId(bytecodeFileId)
-            //Set the gas to instantiate the contract
-            .setGas(100000)
-            //Provide the constructor parameters for the contract
-            .setConstructorParameters();
+        let receipt = await response.getReceipt(env.client);
 
-        //Submit the transaction to the Hedera test network
-        const contractResponse = await contractTx.execute(client);
+        expect(receipt.fileId).to.not.be.null;
+        expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
+            .true;
 
-        //Get the receipt of the file create transaction
-        const contractReceipt = await contractResponse.getReceipt(client);
+        const file = receipt.fileId;
 
-        expect(contractReceipt.contractId).to.not.be.null;
-        expect(
-            contractReceipt.contractId != null
-                ? contractReceipt.contractId.num > 0
-                : false,
-        ).to.be.true;
+        receipt = await (
+            await new ContractCreateTransaction()
+                .setAdminKey(operatorKey)
+                .setGas(200000)
+                .setConstructorParameters(
+                    new ContractFunctionParameters().addString(
+                        "Hello from Hedera.",
+                    ),
+                )
+                .setBytecodeFileId(file)
+                .setContractMemo("[e2e::ContractCreateTransaction]")
+                .execute(env.client)
+        ).getReceipt(env.client);
 
-        const contractId = contractReceipt.contractId;
+        expect(receipt.contractId).to.not.be.null;
+        expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
+            .to.be.true;
+
+        const contract = receipt.contractId;
 
         let err = false;
+
         try {
-            const contractQuery = await new ContractCallQuery()
-                //Set the gas for the query
-                .setGas(16000000)
-                //Set the contract ID to return the request for
-                .setContractId(contractId)
-                //Set the contract function to call
-                .setFunction(
-                    "getLotsOfData",
-                    new ContractFunctionParameters().addUint24(17000),
-                )
-                //Set the query payment for the node returning the request
-                //This value must cover the cost of the request otherwise will fail
-                .setQueryPayment(new Hbar(35));
-
-            //Submit to a Hedera network
-            //   const txResponse = await contractQuery.execute(client);
-            //   const txResponse2 = await contractQuery2.execute(client);
-            const txResponse = await contractQuery.execute(client);
-            console.log("Res:", txResponse.getUint32(1));
+            await new ContractCallQuery()
+                .setContractId(contract)
+                .setFunction("getMessage")
+                .execute(env.client);
         } catch (error) {
-            err = error;
+            expect(error.status).to.be.eql(Status.InsufficientGas)
         }
-        expect(err.toString()).to.includes("BUSY");
 
-        if (!err) {
-            throw new Error("query did not error");
-        }
-        await client.close();
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     after(async function () {
