@@ -91,7 +91,7 @@ describe("FileCreate", function () {
 
     it("should error with too large expiration time", async function () {
         this.timeout(120000);
-
+        let status;
         const timestamp = new Timestamp(Date.now() / 1000 + 9999999999, 0);
         const operatorKey = env.operatorKey.publicKey;
 
@@ -104,8 +104,10 @@ describe("FileCreate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.AutorenewDurationNotInRange);
+            status = error.status;
         }
+
+        expect(status).to.be.eql(Status.AutorenewDurationNotInRange);
     });
 
     after(async function () {

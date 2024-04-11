@@ -141,6 +141,7 @@ describe("AccountCreate", function () {
 
     it("should error when key is not set", async function () {
         this.timeout(15000);
+        let status;
 
         try {
             const response = await new AccountCreateTransaction()
@@ -149,8 +150,10 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.KeyRequired);
+            status = error.status;
         }
+
+        expect(status).to.be.eql(Status.KeyRequired);
     });
 
     it("should be able to sign transaction and verify transaction signtatures", async function () {

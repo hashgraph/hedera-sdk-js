@@ -25,7 +25,7 @@ describe("TokenNftAllowances", function () {
 
     it("Cannot transfer on behalf of `spender` account without allowance approval", async function () {
         this.timeout(120000);
-
+        let status;
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
             await (
@@ -101,8 +101,10 @@ describe("TokenNftAllowances", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            error.toString().includes(Status.TokenNotAssociatedToAccount);
+            status = error.status;
         }
+
+        expect(status).to.be.eql(Status.TokenNotAssociatedToAccount);
     });
 
     it("Cannot transfer on behalf of `spender` account after removing the allowance approval", async function () {

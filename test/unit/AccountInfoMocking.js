@@ -118,6 +118,8 @@ describe("AccountInfoMocking", function () {
     it("should error when cost is greater than max cost set on client", async function () {
         this.timeout(10000);
 
+        let errorName;
+
         ({ client, servers } = await Mocker.withResponses([
             [
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -132,8 +134,10 @@ describe("AccountInfoMocking", function () {
                 .setAccountId("0.0.3")
                 .execute(client, 1);
         } catch (error) {
-            expect(error.name).to.be.eql("MaxQueryPaymentExceededError");
+            errorName = error.name;
         }
+
+        expect(errorName).to.be.eql("MaxQueryPaymentExceededError");
     });
 
     it("setQueryPayemnt() avoids querying actual cost", async function () {

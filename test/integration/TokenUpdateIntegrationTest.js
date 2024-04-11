@@ -297,7 +297,7 @@ describe("TokenUpdate", function () {
 
     it("should return error when updating immutable token", async function () {
         this.timeout(120000);
-
+        let status;
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -316,8 +316,10 @@ describe("TokenUpdate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.TokenIsImmutable);
+            status = error.status;
         }
+
+        expect(status).to.be.eql(Status.TokenIsImmutable);
     });
 
     it("should error when admin key does not sign transaction", async function () {
