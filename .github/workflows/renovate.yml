@@ -22,7 +22,7 @@ jobs:
           submodules: recursive
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@2d90417499f45ff78a09586f7b9874b19817dba3 # v40.1.0
+        uses: renovatebot/github-action@74811c93da74bf38cb37f41489065619930fba44 # v40.1.9
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.RENOVATE_TOKEN }}
