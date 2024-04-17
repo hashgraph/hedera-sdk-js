@@ -18,7 +18,7 @@ describe("TokenUpdate", function () {
     let env;
 
     before(async function () {
-        env = await IntegrationTestEnv.new();
+        env = await IntegrationTestEnv.new({ balance: 10000 });
     });
 
     it("should be executable", async function () {
@@ -298,21 +298,28 @@ describe("TokenUpdate", function () {
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(120000);
 
+        let status;
         const operatorId = env.operatorId;
 
-        const response = await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
-            .setTreasuryAccountId(operatorId)
-            .execute(env.client);
+        try {
+            const response = await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .execute(env.client);
 
-        const token = (await response.getReceipt(env.client)).tokenId;
+            const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await new TokenUpdateTransaction()
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+            await (
+                await new TokenUpdateTransaction()
+                    .setTokenId(token)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            status = error.status;
+        }
+
+        expect(status).to.eql(Status.TokenIsImmutable);
     });
 
     it("should error when admin key does not sign transaction", async function () {
@@ -433,7 +440,6 @@ describe("TokenUpdate", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            console.log(error);
             err = error
                 .toString()
                 .includes(Status.CurrentTreasuryStillOwnsNfts);
@@ -444,16 +450,15 @@ describe("TokenUpdate", function () {
         }
     });
 
-    it("should update the metadata of non-fungible token", async function () {
+    it("should update the metadata of non-fungible token after signing the transaction with metadata key", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const metadataKey = PrivateKey.generateED25519();
+        const supplyKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
-        let tokeInfo;
+        let tokenInfo;
 
         const tokenCreateTx = new TokenCreateTransaction()
             .setTokenName("Test")
@@ -461,7 +466,6 @@ describe("TokenUpdate", function () {
             .setSupplyKey(supplyKey)
             .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
             .setMetadata(metadata)
             .setMetadataKey(metadataKey);
 
@@ -471,10 +475,10 @@ describe("TokenUpdate", function () {
         );
         const tokenId = tokenCreateTxReceipt.tokenId;
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
@@ -485,72 +489,22 @@ describe("TokenUpdate", function () {
             await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
         ).getReceipt(env.client);
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(tokeInfo.metadata).to.eql(newMetadata);
+        expect(tokenInfo.metadata).to.eql(newMetadata);
     });
 
-    it("should update the metadata of fungible token", async function () {
+    it("should update the metadata of non-fungible token after signing the transaction with admin key", async function () {
         this.timeout(120000);
 
+        let tokenInfo;
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const adminKey = env.operatorKey;
+        const supplyKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
-        let tokeInfo;
-
-        const tokenCreateTx = new TokenCreateTransaction()
-            .setTokenName("Test")
-            .setTokenSymbol("T")
-            .setSupplyKey(supplyKey)
-            .setTokenType(TokenType.FungibleCommon)
-            .setDecimals(3)
-            .setInitialSupply(1000000)
-            .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setMetadata(metadata)
-            .setMetadataKey(metadataKey);
-
-        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
-        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
-            env.client,
-        );
-        const tokenId = tokenCreateTxReceipt.tokenId;
-
-        tokeInfo = await new TokenInfoQuery()
-            .setTokenId(tokenId)
-            .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
-
-        const tokenUpdateTx = new TokenUpdateTransaction()
-            .setTokenId(tokenId)
-            .setMetadata(newMetadata)
-            .freezeWith(env.client);
-
-        await (
-            await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
-        ).getReceipt(env.client);
-
-        tokeInfo = await new TokenInfoQuery()
-            .setTokenId(tokenId)
-            .execute(env.client);
-
-        expect(tokeInfo.metadata).to.eql(newMetadata);
-    });
-
-    it("should NOT update the metadata of non-fungible token", async function () {
-        this.timeout(120000);
-
-        const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
-        const metadata = new Uint8Array([1]);
-        let tokeInfo;
 
         const tokenCreateTx = new TokenCreateTransaction()
             .setTokenName("Test")
@@ -558,9 +512,8 @@ describe("TokenUpdate", function () {
             .setSupplyKey(supplyKey)
             .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setMetadata(metadata)
-            .setMetadataKey(metadataKey);
+            .setAdminKey(adminKey)
+            .setMetadata(metadata);
 
         const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
         const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
@@ -568,45 +521,43 @@ describe("TokenUpdate", function () {
         );
         const tokenId = tokenCreateTxReceipt.tokenId;
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
+            .setMetadata(newMetadata)
             .freezeWith(env.client);
 
         await (
-            await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
         ).getReceipt(env.client);
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(newMetadata);
     });
 
-    it("should NOT update the metadata of fungible token", async function () {
+    it("should update the metadata of fungible token after signing the transaction with metadata key", async function () {
         this.timeout(120000);
 
+        let tokenInfo;
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const metadataKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
-        let tokeInfo;
+        const newMetadata = new Uint8Array([1, 2]);
 
         const tokenCreateTx = new TokenCreateTransaction()
             .setTokenName("Test")
             .setTokenSymbol("T")
-            .setSupplyKey(supplyKey)
             .setTokenType(TokenType.FungibleCommon)
             .setDecimals(3)
             .setInitialSupply(1000000)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
             .setMetadata(metadata)
             .setMetadataKey(metadataKey);
 
@@ -616,36 +567,81 @@ describe("TokenUpdate", function () {
         );
         const tokenId = tokenCreateTxReceipt.tokenId;
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
+            .setMetadata(newMetadata)
             .freezeWith(env.client);
 
         await (
             await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
         ).getReceipt(env.client);
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(newMetadata);
     });
 
-    it("should earse the metadata of non-fungible token", async function () {
+    it("should update the metadata of fungible token after signing the transaction with admin key", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const adminKey = env.operatorKey;
         const metadata = new Uint8Array([1]);
-        const newMetadata = new Uint8Array();
-        let tokeInfo;
+        const newMetadata = new Uint8Array([1, 2]);
+        let tokenInfo;
+
+        const tokenCreateTx = new TokenCreateTransaction()
+            .setTokenName("Test")
+            .setTokenSymbol("T")
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(adminKey)
+            .setMetadata(metadata);
+
+        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
+        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
+            env.client,
+        );
+        const tokenId = tokenCreateTxReceipt.tokenId;
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+        expect(tokenInfo.metadata).to.eql(metadata);
+
+        const tokenUpdateTx = new TokenUpdateTransaction()
+            .setTokenId(tokenId)
+            .setMetadata(newMetadata)
+            .freezeWith(env.client);
+
+        await (
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
+        ).getReceipt(env.client);
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.metadata).to.eql(newMetadata);
+    });
+
+    it("should NOT update the metadata of non-fungible token when the new metadata is NOT set", async function () {
+        this.timeout(120000);
+
+        let tokenInfo;
+        const operatorId = env.operatorId;
+        const adminKey = env.operatorKey;
+        const supplyKey = PrivateKey.generateED25519();
+        const metadata = new Uint8Array([1]);
 
         const tokenCreateTx = new TokenCreateTransaction()
             .setTokenName("Test")
@@ -653,9 +649,8 @@ describe("TokenUpdate", function () {
             .setSupplyKey(supplyKey)
             .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setMetadata(metadata)
-            .setMetadataKey(metadataKey);
+            .setAdminKey(adminKey)
+            .setMetadata(metadata);
 
         const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
         const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
@@ -663,47 +658,86 @@ describe("TokenUpdate", function () {
         );
         const tokenId = tokenCreateTxReceipt.tokenId;
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
-            .setMetadata(newMetadata)
             .freezeWith(env.client);
 
         await (
-            await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
         ).getReceipt(env.client);
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(tokeInfo.metadata).to.eql(newMetadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
     });
 
-    it("should earse the metadata of fungible token", async function () {
+    it("should NOT update the metadata of fungible token when the new metadata is NOT set", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const adminKey = env.operatorKey;
+        const metadata = new Uint8Array([1]);
+        let tokenInfo;
+
+        const tokenCreateTx = new TokenCreateTransaction()
+            .setTokenName("Test")
+            .setTokenSymbol("T")
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(adminKey)
+            .setMetadata(metadata);
+
+        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
+        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
+            env.client,
+        );
+        const tokenId = tokenCreateTxReceipt.tokenId;
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+        expect(tokenInfo.metadata).to.eql(metadata);
+
+        const tokenUpdateTx = new TokenUpdateTransaction()
+            .setTokenId(tokenId)
+            .freezeWith(env.client);
+
+        await (
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
+        ).getReceipt(env.client);
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.metadata).to.eql(metadata);
+    });
+
+    it("should earse the metadata of non-fungible token after signing the transaction with metadata key", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const metadataKey = PrivateKey.generateED25519();
+        const supplyKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array();
-        let tokeInfo;
+        let tokenInfo;
 
         const tokenCreateTx = new TokenCreateTransaction()
             .setTokenName("Test")
             .setTokenSymbol("T")
             .setSupplyKey(supplyKey)
-            .setTokenType(TokenType.FungibleCommon)
-            .setDecimals(3)
-            .setInitialSupply(1000000)
+            .setTokenType(TokenType.NonFungibleUnique)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
             .setMetadata(metadata)
             .setMetadataKey(metadataKey);
 
@@ -713,10 +747,10 @@ describe("TokenUpdate", function () {
         );
         const tokenId = tokenCreateTxReceipt.tokenId;
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
-        expect(tokeInfo.metadata).to.eql(metadata);
+        expect(tokenInfo.metadata).to.eql(metadata);
 
         const tokenUpdateTx = new TokenUpdateTransaction()
             .setTokenId(tokenId)
@@ -727,22 +761,160 @@ describe("TokenUpdate", function () {
             await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
         ).getReceipt(env.client);
 
-        tokeInfo = await new TokenInfoQuery()
+        tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(env.client);
 
-        expect(tokeInfo.metadata).to.eql(newMetadata);
+        expect(tokenInfo.metadata).to.eql(newMetadata);
     });
 
-    /** @summary Currently the transaction passing even when the transaction is signed with wrong metadata key */
-    it("should NOT update the metadata of non-fungible token if the transaction is not signed with metadata key", async function () {
+    it("should earse the metadata of non-fungible token after signing the transaction with admin key", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const wrongMetadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const adminKey = env.operatorKey;
+        const suppyKey = PrivateKey.generateED25519();
+        const metadata = new Uint8Array([1]);
+        const newMetadata = new Uint8Array();
+        let tokenInfo;
+
+        const tokenCreateTx = new TokenCreateTransaction()
+            .setTokenName("Test")
+            .setTokenSymbol("T")
+            .setSupplyKey(suppyKey)
+            .setTokenType(TokenType.NonFungibleUnique)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(adminKey)
+            .setMetadata(metadata);
+
+        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
+        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
+            env.client,
+        );
+        const tokenId = tokenCreateTxReceipt.tokenId;
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+        expect(tokenInfo.metadata).to.eql(metadata);
+
+        const tokenUpdateTx = new TokenUpdateTransaction()
+            .setTokenId(tokenId)
+            .setMetadata(newMetadata)
+            .freezeWith(env.client);
+
+        await (
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
+        ).getReceipt(env.client);
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.metadata).to.eql(newMetadata);
+    });
+
+    it("should earse the metadata of fungible token after signing the transaction with metadata key", async function () {
+        this.timeout(120000);
+
+        let tokenInfo;
+        const operatorId = env.operatorId;
+        const metadataKey = PrivateKey.generateED25519();
+        const metadata = new Uint8Array([1]);
+        const newMetadata = new Uint8Array();
+
+        const tokenCreateTx = new TokenCreateTransaction()
+            .setTokenName("Test")
+            .setTokenSymbol("T")
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setMetadata(metadata)
+            .setMetadataKey(metadataKey);
+
+        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
+        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
+            env.client,
+        );
+        const tokenId = tokenCreateTxReceipt.tokenId;
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+        expect(tokenInfo.metadata).to.eql(metadata);
+
+        const tokenUpdateTx = new TokenUpdateTransaction()
+            .setTokenId(tokenId)
+            .setMetadata(newMetadata)
+            .freezeWith(env.client);
+
+        await (
+            await (await tokenUpdateTx.sign(metadataKey)).execute(env.client)
+        ).getReceipt(env.client);
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.metadata).to.eql(newMetadata);
+    });
+
+    it("should earse the metadata of fungible token after signing the transaction with admin key", async function () {
+        this.timeout(120000);
+
+        const operatorId = env.operatorId;
+        const adminKey = env.operatorKey;
+        const metadata = new Uint8Array([1]);
+        const newMetadata = new Uint8Array();
+        let tokenInfo;
+
+        const tokenCreateTx = new TokenCreateTransaction()
+            .setTokenName("Test")
+            .setTokenSymbol("T")
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setMetadata(metadata)
+            .setAdminKey(adminKey);
+
+        const tokenCreateTxresponse = await tokenCreateTx.execute(env.client);
+        const tokenCreateTxReceipt = await tokenCreateTxresponse.getReceipt(
+            env.client,
+        );
+        const tokenId = tokenCreateTxReceipt.tokenId;
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+        expect(tokenInfo.metadata).to.eql(metadata);
+
+        const tokenUpdateTx = new TokenUpdateTransaction()
+            .setTokenId(tokenId)
+            .setMetadata(newMetadata)
+            .freezeWith(env.client);
+
+        await (
+            await (await tokenUpdateTx.sign(adminKey)).execute(env.client)
+        ).getReceipt(env.client);
+
+        tokenInfo = await new TokenInfoQuery()
+            .setTokenId(tokenId)
+            .execute(env.client);
+
+        expect(tokenInfo.metadata).to.eql(newMetadata);
+    });
+
+    it("should NOT update the metadata of non-fungible token when the transaction is not signed with metadata or admin key", async function () {
+        this.timeout(120000);
+
+        let status;
+        const operatorId = env.operatorId;
+        const adminKey = PrivateKey.generateED25519();
+        const metadataKey = PrivateKey.generateED25519();
+        const wrongKey = PrivateKey.generateED25519();
+        const supplyKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
 
@@ -753,7 +925,7 @@ describe("TokenUpdate", function () {
                 .setSupplyKey(supplyKey)
                 .setTokenType(TokenType.NonFungibleUnique)
                 .setTreasuryAccountId(operatorId)
-                .setAdminKey(operatorKey)
+                .setAdminKey(adminKey)
                 .setMetadata(metadata)
                 .setMetadataKey(metadataKey);
 
@@ -771,24 +943,22 @@ describe("TokenUpdate", function () {
                 .freezeWith(env.client);
 
             await (
-                await (
-                    await tokenUpdateTx.sign(wrongMetadataKey)
-                ).execute(env.client)
+                await (await tokenUpdateTx.sign(wrongKey)).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidSignature);
+            status = error.status;
         }
+        expect(status).to.be.eql(Status.InvalidSignature);
     });
 
-    /** @summary Currently the transaction passing even when the transaction is signed with wrong metadata key */
-    it("should NOT update the metadata of fungible token if the transaction is not signed with metadata key", async function () {
+    it("should NOT update the metadata of fungible token when the transaction is not signed with metadata or admin key", async function () {
         this.timeout(120000);
 
+        let status;
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const wrongMetadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const adminKey = PrivateKey.generateED25519();
+        const metadataKey = PrivateKey.generateED25519();
+        const wrongKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
 
@@ -796,12 +966,11 @@ describe("TokenUpdate", function () {
             const tokenCreateTx = new TokenCreateTransaction()
                 .setTokenName("Test")
                 .setTokenSymbol("T")
-                .setSupplyKey(supplyKey)
                 .setTokenType(TokenType.FungibleCommon)
                 .setDecimals(3)
                 .setInitialSupply(1000000)
                 .setTreasuryAccountId(operatorId)
-                .setAdminKey(operatorKey)
+                .setAdminKey(adminKey)
                 .setMetadata(metadata)
                 .setMetadataKey(metadataKey);
 
@@ -819,23 +988,20 @@ describe("TokenUpdate", function () {
                 .freezeWith(env.client);
 
             await (
-                await (
-                    await tokenUpdateTx.sign(wrongMetadataKey)
-                ).execute(env.client)
+                await (await tokenUpdateTx.sign(wrongKey)).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidSignature);
+            status = error.status;
         }
+        expect(status).to.be.eql(Status.InvalidSignature);
     });
 
-    /** @summary Currently the transaction passing even when the metadata key is NOT set */
-    it("should NOT update the metadata of non-fungible token if the metadata key is NOT set", async function () {
+    it("should NOT update the metadata of non-fungible token if the metadata or admin keys are NOT set", async function () {
         this.timeout(120000);
 
+        let status;
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
+        const supplyKey = PrivateKey.generateED25519();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
 
@@ -846,9 +1012,7 @@ describe("TokenUpdate", function () {
                 .setSupplyKey(supplyKey)
                 .setTokenType(TokenType.NonFungibleUnique)
                 .setTreasuryAccountId(operatorId)
-                .setAdminKey(operatorKey)
-                .setMetadata(metadata)
-                .setMetadataKey(metadataKey);
+                .setMetadata(metadata);
 
             const tokenCreateTxresponse = await tokenCreateTx.execute(
                 env.client,
@@ -864,23 +1028,19 @@ describe("TokenUpdate", function () {
                 .freezeWith(env.client);
 
             await (
-                await (
-                    await tokenUpdateTx.sign(metadataKey)
-                ).execute(env.client)
+                await tokenUpdateTx.execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidSignature);
+            status = error.status;
         }
+        expect(status).to.be.eql(Status.TokenIsImmutable);
     });
 
-    /** @summary Currently the transaction passing even when the metadata key is NOT set */
-    it("should NOT update the metadata of fungible token if the metadata key is NOT set", async function () {
+    it("should NOT update the metadata of fungible token if the metadata or admin keys are NOT set", async function () {
         this.timeout(120000);
 
+        let status;
         const operatorId = env.operatorId;
-        const operatorKey = env.operatorKey;
-        const metadataKey = PrivateKey.generateECDSA();
-        const supplyKey = PrivateKey.generateECDSA();
         const metadata = new Uint8Array([1]);
         const newMetadata = new Uint8Array([1, 2]);
 
@@ -888,14 +1048,11 @@ describe("TokenUpdate", function () {
             const tokenCreateTx = new TokenCreateTransaction()
                 .setTokenName("Test")
                 .setTokenSymbol("T")
-                .setSupplyKey(supplyKey)
                 .setTokenType(TokenType.FungibleCommon)
                 .setDecimals(3)
                 .setInitialSupply(1000000)
                 .setTreasuryAccountId(operatorId)
-                .setAdminKey(operatorKey)
-                .setMetadata(metadata)
-                .setMetadataKey(metadataKey);
+                .setMetadata(metadata);
 
             const tokenCreateTxresponse = await tokenCreateTx.execute(
                 env.client,
@@ -911,13 +1068,12 @@ describe("TokenUpdate", function () {
                 .freezeWith(env.client);
 
             await (
-                await (
-                    await tokenUpdateTx.sign(metadataKey)
-                ).execute(env.client)
+                await tokenUpdateTx.execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.InvalidSignature);
+            status = error.status;
         }
+        expect(status).to.be.eql(Status.TokenIsImmutable);
     });
 
     after(async function () {
