@@ -1,11 +1,19 @@
-import { TokenCreateTransaction, TokenInfoQuery, TokenType, PrivateKey, Client, AccountId, TokenUpdateTransaction } from "@hashgraph/sdk";
+import {
+    TokenCreateTransaction,
+    TokenInfoQuery,
+    TokenType,
+    PrivateKey,
+    Client,
+    AccountId,
+    TokenUpdateTransaction,
+} from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 /**
- * @notice E2E-HIP-657
- * @url https://hips.hedera.com/hip/hip-657
+ * @notice E2E-HIP-646
+ * @url https://hips.hedera.com/hip/hip-646
  */
 async function main() {
     if (
@@ -22,7 +30,7 @@ async function main() {
     const client = Client.forName(network).setOperator(operatorId, operatorKey);
 
     // Generate a metadata key
-    const metadataKey = PrivateKey.generateECDSA();
+    const metadataKey = PrivateKey.generateED25519();
     // Initial metadata
     const metadata = new Uint8Array([1]);
     // New metadata
@@ -36,20 +44,24 @@ async function main() {
             .setTokenName("Test")
             .setTokenSymbol("T")
             .setMetadata(metadata)
-            .setTokenType(TokenType.NonFungibleUnique)
+            .setTokenType(TokenType.FungibleCommon)
+            .setDecimals(3)
+            .setInitialSupply(10000)
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setTreasuryAccountId(operatorId)
-            .setSupplyKey(operatorKey)
             .setMetadataKey(metadataKey)
             .freezeWith(client);
 
         // Sign and execute create token transaction
-        const tokenCreateTxResponse = await (await createTokenTx.sign(operatorKey)).execute(client);
+        const tokenCreateTxResponse = await (
+            await createTokenTx.sign(operatorKey)
+        ).execute(client);
 
         // Get receipt for create token transaction
-        const tokenCreateTxReceipt = await tokenCreateTxResponse.getReceipt(client);
-        console.log(`Status of token create transction: ${tokenCreateTxReceipt.status.toString()}`);
+        const tokenCreateTxReceipt =
+            await tokenCreateTxResponse.getReceipt(client);
+        console.log(
+            `Status of token create transction: ${tokenCreateTxReceipt.status.toString()}`,
+        );
 
         // Get token id
         const tokenId = tokenCreateTxReceipt.tokenId;
@@ -67,21 +79,26 @@ async function main() {
             .freezeWith(client);
 
         // Sign transactions with metadata key and execute it
-        const tokenUpdateTxResponse = await (await tokenUpdateTx.sign(metadataKey)).execute(client);
+        const tokenUpdateTxResponse = await (
+            await tokenUpdateTx.sign(metadataKey)
+        ).execute(client);
 
         // Get receipt for token update transaction
-        const tokenUpdateTxReceipt = await tokenUpdateTxResponse.getReceipt(client);
-        console.log(`Status of token update transction: ${tokenUpdateTxReceipt.status.toString()}`);
+        const tokenUpdateTxReceipt =
+            await tokenUpdateTxResponse.getReceipt(client);
+        console.log(
+            `Status of token update transction: ${tokenUpdateTxReceipt.status.toString()}`,
+        );
 
         tokenInfo = await new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(client);
         console.log(`Token updated metadata:`, tokenInfo.metadata);
-    } catch(error){
+    } catch (error) {
         console.log(error);
     }
 
-    client.close()
+    client.close();
 }
 
 void main();
