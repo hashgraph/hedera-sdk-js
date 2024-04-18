@@ -304,7 +304,6 @@ describe("TokenUpdate", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setAdminKey(env.operatorKey)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
