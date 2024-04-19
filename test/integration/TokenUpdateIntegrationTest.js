@@ -31,6 +31,9 @@ describe("TokenUpdate", function () {
         const key3 = PrivateKey.generateED25519();
         const key4 = PrivateKey.generateED25519();
         const key5 = PrivateKey.generateED25519();
+        const metadataKey = PrivateKey.generateED25519();
+        const newMetadataKey = PrivateKey.generateED25519();
+        const metadata = new Uint8Array([1]);
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -45,6 +48,8 @@ describe("TokenUpdate", function () {
             .setSupplyKey(key4)
             .setFreezeDefault(false)
             .setPauseKey(key5)
+            .setMetadata(metadata)
+            .setMetadataKey(metadataKey)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -67,6 +72,8 @@ describe("TokenUpdate", function () {
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
         expect(info.pauseKey.toString()).to.eql(key5.publicKey.toString());
+        expect(info.metadataKey.toString()).to.eql(metadataKey.publicKey.toString());
+        expect(info.metadata).to.eql(metadata);
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
@@ -79,6 +86,7 @@ describe("TokenUpdate", function () {
                 .setTokenId(token)
                 .setTokenName("aaaa")
                 .setTokenSymbol("A")
+                .setMetadataKey(newMetadataKey)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -97,6 +105,8 @@ describe("TokenUpdate", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.metadataKey.toString()).to.eql(newMetadataKey.publicKey.toString());
+        expect(info.metadata).to.eql(metadata);
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
@@ -258,7 +268,7 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        let err = false;
+        let status;
 
         try {
             await (
@@ -269,12 +279,10 @@ describe("TokenUpdate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.TokenIsImmutable);
+            status = error.status;
         }
 
-        if (!err) {
-            throw new Error("token update did not error");
-        }
+        expect(status).to.be.eql(Status.TokenIsImmutable);
     });
 
     it("should error when token ID is not set", async function () {
