@@ -104,7 +104,7 @@ describe("TokenNftAllowances", function () {
             status = error.status;
         }
 
-        expect(status).to.be.eql(Status.TokenNotAssociatedToAccount);
+        expect(status).to.be.eql(Status.SpenderDoesNotHaveAllowance);
     });
 
     it("Cannot transfer on behalf of `spender` account after removing the allowance approval", async function () {
