@@ -72,7 +72,9 @@ describe("TokenUpdate", function () {
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
         expect(info.pauseKey.toString()).to.eql(key5.publicKey.toString());
-        expect(info.metadataKey.toString()).to.eql(metadataKey.publicKey.toString());
+        expect(info.metadataKey.toString()).to.eql(
+            metadataKey.publicKey.toString(),
+        );
         expect(info.metadata).to.eql(metadata);
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
@@ -105,7 +107,9 @@ describe("TokenUpdate", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
-        expect(info.metadataKey.toString()).to.eql(newMetadataKey.publicKey.toString());
+        expect(info.metadataKey.toString()).to.eql(
+            newMetadataKey.publicKey.toString(),
+        );
         expect(info.metadata).to.eql(metadata);
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
