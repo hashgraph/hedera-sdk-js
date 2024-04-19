@@ -14,6 +14,7 @@ dotenv.config();
 /**
  * @notice E2E-HIP-646
  * @url https://hips.hedera.com/hip/hip-646
+ * @description Update fungible token metadata with admin key
  */
 async function main() {
     if (
@@ -44,7 +45,7 @@ async function main() {
             .setTokenName("Test")
             .setTokenSymbol("T")
             .setMetadata(metadata)
-            .setTokenType(TokenType.FungibleCommon)
+            .setTokenType(TokenType.FungibleCommon) // Can be TokenType.NonFungibleUnique as well [HIP-765]
             .setDecimals(3)
             .setInitialSupply(10000)
             .setTreasuryAccountId(operatorId)
@@ -78,7 +79,7 @@ async function main() {
             .setMetadata(newMetadata)
             .freezeWith(client);
 
-        // Sign transactions with metadata key and execute it
+        // Sign transactions with admin key and execute it
         const tokenUpdateTxResponse = await (
             await tokenUpdateTx.sign(adminKey)
         ).execute(client);
