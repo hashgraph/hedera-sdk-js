@@ -105,7 +105,7 @@ async function main() {
         // Create an account with 10 automatic token association slots to transfer the NFT to
         const accountCreateTx = new AccountCreateTransaction()
             .setKey(operatorKey)
-            .setMaxAutomaticTokenAssociations(10) // If the account does not have any automatic token association slots open ONLY then associate the NFT to the account
+            .setMaxAutomaticTokenAssociations(10) // If the account does not have any automatic token association slots opened ONLY then associate the NFT to the account
             .setInitialBalance(new Hbar(100))
             .freezeWith(client);
 
