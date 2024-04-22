@@ -12,7 +12,6 @@ import {
     AccountCreateTransaction,
     Hbar,
     TransferTransaction,
-    TokenAssociateTransaction,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
@@ -103,10 +102,10 @@ async function main() {
         nftInfo = tokenNftsInfo[0];
         console.log(`Set token NFT metadata:`, nftInfo.metadata);
 
-        // Create an account to transfer the NFT to with 10 automatic token association slots
+        // Create an account with 10 automatic token association slots to transfer the NFT to
         const accountCreateTx = new AccountCreateTransaction()
             .setKey(operatorKey)
-            .setMaxAutomaticTokenAssociations(10) 
+            .setMaxAutomaticTokenAssociations(10) // If the account does not have any automatic token association slots open ONLY then associate the NFT to the account
             .setInitialBalance(new Hbar(100))
             .freezeWith(client);
 
@@ -117,21 +116,6 @@ async function main() {
             await accountCreateTxResponse.getReceipt(client);
         const newAccountId = accountCreateTxReceipt.accountId;
         console.log(`New account id: ${newAccountId.toString()}`);
-
-        //Associating a token to an account is only required if the account does not have any automatic token association slots. The account we created in this example has 10
-        //const tokenAssociateTx = new TokenAssociateTransaction()
-            //.setAccountId(newAccountId)
-            //.setTokenIds([tokenId])
-            //.freezeWith(client);
-
-        //const tokenAssociateTxResponse = await (
-           // await tokenAssociateTx.sign(operatorKey)
-        //).execute(client);
-        //const tokenAssociateTxReceipt =
-            //await tokenAssociateTxResponse.getReceipt(client);
-        //console.log(
-            //`Status of token associate transaction: ${tokenAssociateTxReceipt.status.toString()}`,
-        //);
 
         // Transfer nft to the new account
         const transferNftTx = new TransferTransaction()
