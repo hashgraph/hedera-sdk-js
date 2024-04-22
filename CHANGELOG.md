@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.44.0
+
+## What's Changed
+
+* fix: set correct autoRenrewAccountId by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2217
+* update: add a new getter to the TransferTransaction class by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2214
+* fix: integer overflow isuue for defaultMaxQueryPayment field by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2213
+* chore(ci): update the publish workflow to release the cryptography and proto artifacts if needed by @nathanklick in https://github.com/hashgraph/hedera-sdk-js/pull/2198
+
 ## v2.43.0
 
 ## What's Changed
