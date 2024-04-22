@@ -30,8 +30,8 @@ async function main() {
     const network = process.env.HEDERA_NETWORK;
     const client = Client.forName(network).setOperator(operatorId, operatorKey);
 
-    // Generate a supply key
-    const adminKey = PrivateKey.fromStringDer(process.env.OPERATOR_KEY);
+    // Generate a admin key
+    const adminKey = PrivateKey.generateED25519();
     // Initial metadata
     const metadata = new Uint8Array([1]);
     // New metadata
@@ -45,7 +45,7 @@ async function main() {
             .setTokenName("Test")
             .setTokenSymbol("T")
             .setMetadata(metadata)
-            .setTokenType(TokenType.FungibleCommon) // Can be TokenType.NonFungibleUnique as well [HIP-765]
+            .setTokenType(TokenType.FungibleCommon) // The same flow can be executed with a TokenType.NON_FUNGIBLE_UNIQUE (i.e. HIP-765)
             .setDecimals(3)
             .setInitialSupply(10000)
             .setTreasuryAccountId(operatorId)
@@ -54,7 +54,7 @@ async function main() {
 
         // Sign and execute create token transaction
         const tokenCreateTxResponse = await (
-            await createTokenTx.sign(operatorKey)
+            await createTokenTx.sign(adminKey)
         ).execute(client);
 
         // Get receipt for create token transaction

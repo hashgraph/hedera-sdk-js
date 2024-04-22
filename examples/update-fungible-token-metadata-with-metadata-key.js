@@ -45,7 +45,7 @@ async function main() {
             .setTokenName("Test")
             .setTokenSymbol("T")
             .setMetadata(metadata)
-            .setTokenType(TokenType.FungibleCommon) // Can be TokenType.NonFungibleUnique as well [HIP-765]
+            .setTokenType(TokenType.FungibleCommon) // The same flow can be executed with a TokenType.NON_FUNGIBLE_UNIQUE (i.e. HIP-765)
             .setDecimals(3)
             .setInitialSupply(10000)
             .setTreasuryAccountId(operatorId)
