@@ -38,7 +38,7 @@ async function main() {
 
     // Generate a metadata key
     const metadataKey = PrivateKey.generateED25519();
-    // Generate a metadata key
+    // Generate a supply key
     const supplyKey = PrivateKey.generateED25519();
     // Initial metadata
     const metadata = new Uint8Array([1]);
