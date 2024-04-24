@@ -29,7 +29,7 @@ describe("TokenAllowances", function () {
 
     it("Cannot transfer on behalf of `spender` account without allowance approval", async function () {
         this.timeout(120000);
-
+        let status;
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
             await (
@@ -76,7 +76,6 @@ describe("TokenAllowances", function () {
             ).execute(env.client)
         ).getReceipt(env.client);
 
-        let err = false;
         const onBehalfOfTransactionId =
             TransactionId.generate(spenderAccountId);
         try {
@@ -91,10 +90,10 @@ describe("TokenAllowances", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.SpenderDoesNotHaveAllowance);
+            status = error.status;
         }
 
-        expect(err).to.be.true;
+        expect(status).to.be.eql(Status.SpenderDoesNotHaveAllowance);
     });
 
     it("Can transfer on behalf of `spender` account with allowance approval", async function () {
