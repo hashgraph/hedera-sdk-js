@@ -322,7 +322,6 @@ describe("TokenUpdate", function () {
 
             const token = (await response.getReceipt(env.client)).tokenId;
 
-        try {
             await (
                 await new TokenUpdateTransaction()
                     .setTokenId(token)
@@ -333,7 +332,6 @@ describe("TokenUpdate", function () {
         }
 
         expect(status).to.be.eql(Status.TokenIsImmutable);
-
     });
 
     it("should error when admin key does not sign transaction", async function () {
