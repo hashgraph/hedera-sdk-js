@@ -312,7 +312,7 @@ describe("ContractCallIntegration", function () {
         }
     });
 
-    it("should return errro when the gas is not set", async function () {
+    it("should return error when the gas is not set", async function () {
         this.timeout(120000);
 
         const operatorKey = env.operatorKey.publicKey;
