@@ -12,8 +12,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 /**
- * @notice E2E-HIP-646
- * @url https://hips.hedera.com/hip/hip-646
+ * @summary E2E-HIP-646 https://hips.hedera.com/hip/hip-646
  * @description Update fungible token metadata with admin key
  */
 async function main() {

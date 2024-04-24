@@ -19,8 +19,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 /**
- * @notice E2E-HIP-657
- * @url https://hips.hedera.com/hip/hip-657
+ * @summary E2E-HIP-657 https://hips.hedera.com/hip/hip-657
+ * @description Update nfts metadata of fungible token with metadata key
  */
 async function main() {
     if (
