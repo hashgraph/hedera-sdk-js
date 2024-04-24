@@ -51,17 +51,13 @@ tasks:
         cmds:
             - task: "install:deps"
             - task: "cryptography:build"
-            - npx yalc add @hashgraph/cryptography > /dev/null
-        status:
-            - ./check_yalc_dep.sh @hashgraph/cryptography
+            - pnpm link ./packages/cryptography
 
     "install:proto:local":
         cmds:
             - task: "install:deps"
             - task: "proto:build"
-            - npx yalc add @hashgraph/proto > /dev/null
-        status:
-            - ./check_yalc_dep.sh @hashgraph/proto
+            - pnpm link ./packages/proto
 
     "build:proto":
         cmds:
