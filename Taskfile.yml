@@ -45,21 +45,21 @@ tasks:
     "install:deps":
         run: once
         cmds:
-            - pnpm link ./packages/cryptography
-            - pnpm link ./packages/proto
+            - pnpm link ./packages/cryptography > /dev/null
+            - pnpm link ./packages/proto > /dev/null
             - pnpm i --dev > /dev/null
 
     "install:cryptography:local":
         cmds:
             - task: "install:deps"
             - task: "cryptography:build"
-            - pnpm link ./packages/cryptography
+            - pnpm link ./packages/cryptography > /dev/null
 
     "install:proto:local":
         cmds:
             - task: "install:deps"
             - task: "proto:build"
-            - pnpm link ./packages/proto
+            - pnpm link ./packages/proto > /dev/null
 
     "build:proto":
         cmds:
