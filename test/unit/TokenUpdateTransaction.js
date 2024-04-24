@@ -30,6 +30,10 @@ describe("TokenUpdateTransaction", function () {
         const key7 = PrivateKey.fromStringDer(
             "302e020100300506032b657004220420542b4d4a318a1ae5f91071f34c8d900b1150e83d15fe71d22b8581e1203f99ad",
         );
+        const key8 = PrivateKey.fromStringDer(
+            "302e020100300506032b6570042204205447805ce906170817e2bd4e26f4ea1fd5bbc38a2532c7f66b7d7a24f60ee9d5",
+        );
+        const metadata = new Uint8Array([1, 2, 3, 4, 5]);
         const autoRenewAccountId = new AccountId(10);
         const treasuryAccountId = new AccountId(11);
 
@@ -52,6 +56,8 @@ describe("TokenUpdateTransaction", function () {
             .setWipeKey(key5)
             .setSupplyKey(key6)
             .setFeeScheduleKey(key7)
+            .setMetadata(metadata)
+            .setMetadataKey(key8)
             .setNodeAccountIds([new AccountId(4)])
             .setTokenId("0.0.5")
             .setTransactionMemo("random memo")
@@ -95,6 +101,12 @@ describe("TokenUpdateTransaction", function () {
                 },
                 feeScheduleKey: {
                     ed25519: key7.publicKey.toBytesRaw(),
+                },
+                metadata: {
+                    value: metadata,
+                },
+                metadataKey: {
+                    ed25519: key8.publicKey.toBytesRaw(),
                 },
             },
             transactionFee: Long.fromNumber(200000000),
