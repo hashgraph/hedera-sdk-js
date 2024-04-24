@@ -307,7 +307,7 @@ describe("TokenUpdate", function () {
         }
     });
 
-    it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
+    it("should return error when updating immutable token", async function () {
         this.timeout(120000);
 
         let status;
@@ -322,6 +322,7 @@ describe("TokenUpdate", function () {
 
             const token = (await response.getReceipt(env.client)).tokenId;
 
+        try {
             await (
                 await new TokenUpdateTransaction()
                     .setTokenId(token)
@@ -331,7 +332,8 @@ describe("TokenUpdate", function () {
             status = error.status;
         }
 
-        expect(status).to.eql(Status.TokenIsImmutable);
+        expect(status).to.be.eql(Status.TokenIsImmutable);
+
     });
 
     it("should error when admin key does not sign transaction", async function () {

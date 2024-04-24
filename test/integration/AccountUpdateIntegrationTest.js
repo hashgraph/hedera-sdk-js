@@ -16,6 +16,7 @@ describe("AccountUpdate", function () {
     let env;
 
     before(async function () {
+        this.timeout(120000);
         env = await IntegrationTestEnv.new();
     });
 
@@ -189,8 +190,7 @@ describe("AccountUpdate", function () {
 
     it("should error when account ID is not set", async function () {
         this.timeout(120000);
-
-        let err = false;
+        let status;
 
         try {
             await (
@@ -199,14 +199,10 @@ describe("AccountUpdate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.AccountIdDoesNotExist.toString());
+            status = error.status;
         }
 
-        if (!err) {
-            throw new Error("account update did not error");
-        }
+        expect(status).to.be.eql(Status.AccountIdDoesNotExist);
     });
 
     it("should execute with only account ID", async function () {
