@@ -301,8 +301,9 @@ describe("TokenWipe", function () {
             .toBytes();
 
         const restoredTransaction = Transaction.fromBytes(transaction);
-
-        expect(restoredTransaction.serials).to.deep.include.members(serials.map(number => Long.fromNumber(number)));
+        expect(restoredTransaction.serials).to.be.an('array');
+        expect(restoredTransaction.serials).to.have.length(3);
+        expect(restoredTransaction.serials.toString()).to.be.eql(serials.toString());
     });
 
     after(async function () {
