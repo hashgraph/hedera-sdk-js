@@ -42,35 +42,22 @@ tasks:
               --validation.invalidLink
               --entryPoints src/index.js src/browser.js src/native.js
 
-    "install:deps":
-        run: once
+    "yalc:add":
         cmds:
-            - pnpm link ./packages/cryptography > /dev/null
-            - pnpm link ./packages/proto > /dev/null
-            - pnpm i --dev > /dev/null
+            - npx yalc add @hashgraph/proto
+            - npx yalc add @hashgraph/cryptography
 
-    "install:cryptography:local":
+    "yalc:remove":
         cmds:
-            - task: "install:deps"
-            - task: "cryptography:build"
-            - pnpm link ./packages/cryptography > /dev/null
-
-    "install:proto:local":
-        cmds:
-            - task: "install:deps"
-            - task: "proto:build"
-            - pnpm link ./packages/proto > /dev/null
-
-    "build:proto":
-        cmds:
-            - task: "proto:build"
+            - npx yalc remove @hashgraph/proto
+            - npx yalc remove @hashgraph/cryptography
 
     install:
         deps:
-            - "build:proto"
-            - "install:cryptography:local"
-            - "install:proto:local"
+            - "proto:build"
+            - "cryptography:build"
         cmds:
+            - task: "yalc:add"
             - pnpm i > /dev/null
 
     build:
@@ -185,8 +172,14 @@ tasks:
             - task: build
 
     publish:
+        deps:
+            - "test:release"
+        cmds:
+            - task: "yalc:remove"
+            - task: "publish:release"
+
+    "publish:release":
         preconditions:
             - "! grep '\".*\": \"\\(link\\|file\\):.*\"' package.json > /dev/null"
         cmds:
-            - task: "test:release"
             - pnpm publish {{.CLI_ARGS}}
