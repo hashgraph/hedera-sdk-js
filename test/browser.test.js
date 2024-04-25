@@ -21,6 +21,9 @@ test("can execute @hashgraph/sdk within browser", async function ({ page }) {
 
     expect(tests.length).toBeGreaterThan(0);
     for (const t of tests) {
+        if (t.error) {
+            console.error(`${t.name}:`, t.error);
+        }
         expect(t.error).toBeNull();
     }
 });
