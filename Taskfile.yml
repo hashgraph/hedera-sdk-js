@@ -140,7 +140,7 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - npx mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx mocha --inline-diffs --exit -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
     "test:unit:codecov":
         cmds:
