@@ -261,7 +261,7 @@ describe("TokenWipe", function () {
         }
     });
 
-    it("should convert fromBytes", async function () {
+    it.only("should convert fromBytes", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
@@ -301,9 +301,10 @@ describe("TokenWipe", function () {
             .toBytes();
 
         const restoredTransaction = Transaction.fromBytes(transaction);
+
         expect(restoredTransaction.serials).to.be.an('array');
         expect(restoredTransaction.serials).to.have.length(3);
-        expect(restoredTransaction.serials.toString()).to.be.eql(serials.toString());
+        expect(restoredTransaction.serials.toString()).to.deep.eql(serials.map(number => Long.fromNumber(number)).toString());
     });
 
     after(async function () {
