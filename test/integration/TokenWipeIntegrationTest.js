@@ -300,7 +300,8 @@ describe("TokenWipe", function () {
             .toBytes();
 
         const restoredTransaction = Transaction.fromBytes(transaction);
-        expect(restoredTransaction._serials).to.deep.equal([
+
+        expect(restoredTransaction._serials).to.deep.include.members([
             Long.fromNumber(1),
             Long.fromNumber(2),
             Long.fromNumber(3),

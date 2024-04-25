@@ -631,6 +631,8 @@ export default class Status {
                 return "MISSING_TOKEN_METADATA";
             case Status.MissingSerialNumbers:
                 return "MISSING_SERIAL_NUMBERS";
+            case Status.TokenHasNoAdminKey:
+                return "TOKEN_HAS_NO_ADMIN_KEY";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1233,6 +1235,8 @@ export default class Status {
                 return Status.MissingTokenMetadata;
             case 336:
                 return Status.MissingSerialNumbers;
+            case 337:
+                return Status.TokenHasNoAdminKey;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2764,3 +2768,8 @@ Status.MissingTokenMetadata = new Status(335);
  * NFT serial numbers are missing in the TokenUpdateNftsTransactionBody
  */
 Status.MissingSerialNumbers = new Status(336);
+
+/**
+ * Admin key is not set on token
+ */
+Status.TokenHasNoAdminKey = new Status(337);
