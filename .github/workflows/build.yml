@@ -123,7 +123,9 @@ jobs:
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task build
+        run: |
+          pnpm install
+          task build
 
       - name: Unit Test @hashgraph/cryptography
         working-directory: packages/cryptography
