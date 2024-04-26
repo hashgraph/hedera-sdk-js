@@ -65,9 +65,15 @@ tasks:
         cmds:
             - task: "proto:build"
 
+     "build:cryptography":
+        cmds:
+            - task: "cryptography:build"
+
     install:
         deps:
             - "build:proto"
+            - "build:cryptography"
+            - "build"
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
