@@ -49,13 +49,11 @@ tasks:
 
     "install:cryptography:local":
         cmds:
-            - task: "install:deps"
             - task: "cryptography:build"
             - pnpm link ./packages/cryptography > /dev/null
 
     "install:proto:local":
         cmds:
-            - task: "install:deps"
             - task: "proto:build"
             - pnpm link ./packages/proto > /dev/null
 
@@ -69,7 +67,6 @@ tasks:
 
     install:
         deps:
-            - "build:proto"
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
