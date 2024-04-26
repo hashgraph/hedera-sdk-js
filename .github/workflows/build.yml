@@ -123,7 +123,9 @@ jobs:
       - name: Unit Test @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task install && task test:unit
+        run: |
+          task install
+          task test:unit
 
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
