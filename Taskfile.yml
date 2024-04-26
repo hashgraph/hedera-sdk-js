@@ -63,7 +63,7 @@ tasks:
             - "cryptography:build"
         cmds:
             - task: "yalc:add"
-            - pnpm i
+            - pnpm i --no-frozen-lockfile > /dev/null
 
     build:
         cmds:
