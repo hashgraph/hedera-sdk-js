@@ -69,7 +69,6 @@ tasks:
 
     install:
         deps:
-            - "build:proto"
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
