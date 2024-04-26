@@ -45,15 +45,19 @@ tasks:
     "install:deps":
         run: once
         cmds:
+            - pnpm link ./packages/cryptography > /dev/null
+            - pnpm link ./packages/proto > /dev/null
             - pnpm i --dev > /dev/null
 
     "install:cryptography:local":
         cmds:
+            - task: "install:deps"
             - task: "cryptography:build"
             - pnpm link ./packages/cryptography > /dev/null
 
     "install:proto:local":
         cmds:
+            - task: "install:deps"
             - task: "proto:build"
             - pnpm link ./packages/proto > /dev/null
 
@@ -61,12 +65,9 @@ tasks:
         cmds:
             - task: "proto:build"
 
-    "build:cryptography":
-        cmds:
-            - task: "cryptography:build"
-
     install:
         deps:
+            - "build:proto"
             - "install:cryptography:local"
             - "install:proto:local"
         cmds:
@@ -169,7 +170,7 @@ tasks:
         deps:
             - "proto:update"
         cmds:
-            - pnpm link ./packages/proto > /dev/null
+            - npx yalc add @hashgraph/proto
             # Remove proto so on `task build` we fix the link
             - rm -rf ./node_modules/@hashgraph/proto
 
