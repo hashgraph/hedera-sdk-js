@@ -59,7 +59,7 @@ tasks:
         cmds:
             - task: "install:deps"
             - task: "proto:build"
-             - npx yalc add @hashgraph/proto > /dev/null
+            - npx yalc add @hashgraph/proto > /dev/null
         status:
             - ./check_yalc_dep.sh @hashgraph/proto
 
