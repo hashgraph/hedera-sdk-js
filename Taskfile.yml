@@ -169,7 +169,7 @@ tasks:
         deps:
             - "proto:update"
         cmds:
-            - npx yalc add @hashgraph/proto
+            - pnpm link ./packages/proto > /dev/null
             # Remove proto so on `task build` we fix the link
             - rm -rf ./node_modules/@hashgraph/proto
 
