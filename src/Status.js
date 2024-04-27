@@ -633,6 +633,22 @@ export default class Status {
                 return "MISSING_SERIAL_NUMBERS";
             case Status.TokenHasNoAdminKey:
                 return "TOKEN_HAS_NO_ADMIN_KEY";
+            case Status.NodeDeleted:
+                return "NODE_DELETED";
+            case Status.InvalidNodeId:
+                return "INVALID_NODE_ID";
+            case Status.InvalidGossipEndpoint:
+                return "INVALID_GOSSIP_ENDPOINT";
+            case Status.InvalidNodeAccountId:
+                return "INVALID_NODE_ACCOUNT_ID";
+            case Status.InvalidNodeDescription:
+                return "INVALID_NODE_DESCRIPTION";
+            case Status.InvalidServiceEndpoint:
+                return "INVALID_SERVICE_ENDPOINT";
+            case Status.InvalidGossipCaeCertificate:
+                return "INVALID_GOSSIP_CAE_CERTIFICATE";
+            case Status.InvalidGrpcCertificate:
+                return "INVALID_GRPC_CERTIFICATE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1237,6 +1253,22 @@ export default class Status {
                 return Status.MissingSerialNumbers;
             case 337:
                 return Status.TokenHasNoAdminKey;
+            case 338:
+                return Status.NodeDeleted;
+            case 339:
+                return Status.InvalidNodeId;
+            case 340:
+                return Status.InvalidGossipEndpoint;
+            case 341:
+                return Status.InvalidNodeAccountId;
+            case 342:
+                return Status.InvalidNodeDescription;
+            case 343:
+                return Status.InvalidServiceEndpoint;
+            case 344:
+                return Status.InvalidGossipCaeCertificate;
+            case 345:
+                return Status.InvalidGrpcCertificate;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2773,3 +2805,43 @@ Status.MissingSerialNumbers = new Status(336);
  * Admin key is not set on token
  */
 Status.TokenHasNoAdminKey = new Status(337);
+
+/**
+   * The node has been marked as deleted
+   */
+Status.NodeDeleted = new Status(338);
+
+/**
+ * A node is not found during update and delete node transaction
+ */
+Status.InvalidNodeId = new Status(339);
+
+/**
+ * gossip_endpoint has a fully qualified domain name instead of ip
+ */
+Status.InvalidGossipEndpoint = new Status(340);
+
+/**
+ * The node account_id is invalid
+ */
+Status.InvalidNodeAccountId = new Status(341);
+
+/**
+ * The node description is invalid
+ */
+Status.InvalidNodeDescription = new Status(342);
+
+/**
+ * service_endpoint is invalid
+ */
+Status.InvalidServiceEndpoint = new Status(343);
+
+/**
+ * gossip_ca_certificate is invalid
+ */
+Status.InvalidGossipCaeCertificate = new Status(344);
+
+/**
+ * grpc_certificate_hash is invalid
+ */
+Status.InvalidGrpcCertificate = new Status(345);
