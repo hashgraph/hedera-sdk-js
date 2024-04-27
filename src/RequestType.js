@@ -753,18 +753,17 @@ RequestType.TransactionGetFastRecord = new RequestType(87);
  */
 RequestType.TokenUpdateNfts = new RequestType(88);
 
-
 /**
  * A transaction body for a `createNode` request.
  */
-RequestType.NodeCreate = new RequestType(89)
+RequestType.NodeCreate = new RequestType(89);
 
 /**
  * A transaction body for an `updateNode` request.
  */
-RequestType.NodeUpdate = new RequestType(90)
+RequestType.NodeUpdate = new RequestType(90);
 
 /**
  * A transaction body for a `deleteNode` request.
  */
-RequestType.NodeDelete = new RequestType(91)
+RequestType.NodeDelete = new RequestType(91);

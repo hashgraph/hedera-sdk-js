@@ -2807,8 +2807,8 @@ Status.MissingSerialNumbers = new Status(336);
 Status.TokenHasNoAdminKey = new Status(337);
 
 /**
-   * The node has been marked as deleted
-   */
+ * The node has been marked as deleted
+ */
 Status.NodeDeleted = new Status(338);
 
 /**
