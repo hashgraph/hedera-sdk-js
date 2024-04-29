@@ -191,6 +191,12 @@ export default class RequestType {
                 return "TransactionGetFastRecord";
             case RequestType.TokenUpdateNfts:
                 return "TokenUpdateNfts";
+            case RequestType.NodeCreate:
+                return "NodeCreate";
+            case RequestType.NodeUpdate:
+                return "NodeUpdate";
+            case RequestType.NodeDelete:
+                return "NodeDelete";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -353,6 +359,12 @@ export default class RequestType {
                 return RequestType.TransactionGetFastRecord;
             case 88:
                 return RequestType.TokenUpdateNfts;
+            case 89:
+                return RequestType.NodeCreate;
+            case 90:
+                return RequestType.NodeUpdate;
+            case 91:
+                return RequestType.NodeDelete;
         }
 
         throw new Error(
@@ -740,3 +752,18 @@ RequestType.TransactionGetFastRecord = new RequestType(87);
  * Update the metadata of one or more NFT's of a specific token type.
  */
 RequestType.TokenUpdateNfts = new RequestType(88);
+
+/**
+ * A transaction body for a `createNode` request.
+ */
+RequestType.NodeCreate = new RequestType(89);
+
+/**
+ * A transaction body for an `updateNode` request.
+ */
+RequestType.NodeUpdate = new RequestType(90);
+
+/**
+ * A transaction body for a `deleteNode` request.
+ */
+RequestType.NodeDelete = new RequestType(91);
