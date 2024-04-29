@@ -219,14 +219,18 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
         if: ${{ steps.proto.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: task -v publish -- ${{ steps.publish.outputs.args }}
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+          task -v publish -- ${{ steps.publish.outputs.args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
         if: ${{ steps.cryptography.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: task -v publish -- ${{ steps.publish.outputs.args }}
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+          task -v publish -- ${{ steps.publish.outputs.args }}
 
       - name: Publish SDK Release
         env:
