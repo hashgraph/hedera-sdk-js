@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 
 test("can execute @hashgraph/sdk within browser", async function ({ page }) {
     page.on("pageerror", async (message) => {
-        console.log("pageerror:", message);
         throw new Error(message);
     });
 
