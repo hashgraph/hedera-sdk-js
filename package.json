@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.44.0",
+    "version": "2.45.0-beta.1",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -58,7 +58,7 @@
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "1.8.2",
         "@hashgraph/cryptography": "1.4.8-beta.5",
-        "@hashgraph/proto": "2.14.0-beta.5",
+        "@hashgraph/proto": "2.14.0-beta.6",
         "axios": "^1.6.4",
         "bignumber.js": "^9.1.1",
         "bn.js": "^5.1.1",
@@ -68,8 +68,8 @@
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.0",
         "protobufjs": "^7.2.5",
-        "utf8": "^3.0.0",
-        "rfc4648": "^1.5.3"
+        "rfc4648": "^1.5.3",
+        "utf8": "^3.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.23.4",

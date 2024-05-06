@@ -138,12 +138,12 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
         with:
-          version: 3.7.0
+          version: 3.35.1
 
       - name: Install PNPM
         uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
-          version: 8.10.0
+          version: 8.15.4
 
       - name: Setup Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
@@ -151,7 +151,7 @@ jobs:
           node-version: 18
 
       - name: Compile Code
-        run: task build
+        run: task -v build
 
   publish-release:
     name: Publish Release
@@ -173,12 +173,12 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
         with:
-          version: 3.7.0
+          version: 3.35.1
 
       - name: Install PNPM
         uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
         with:
-          version: 8.10.0
+          version: 8.15.4
 
       - name: Setup Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
@@ -187,7 +187,7 @@ jobs:
           cache: pnpm
 
       - name: Install NPM Dependencies
-        run: task install
+        run: task -v install
 
       - name: Install Playwright Dependencies
         run: sudo npx playwright install-deps
@@ -234,19 +234,23 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
         if: ${{ steps.proto.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: task publish -- ${{ steps.publish.outputs.args }}
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+          task -v publish -- ${{ steps.publish.outputs.args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
         if: ${{ steps.cryptography.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: task publish -- ${{ steps.publish.outputs.args }}
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+          task -v publish -- ${{ steps.publish.outputs.args }}
 
       - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: task publish -- ${{ steps.publish.outputs.args }}
+        run: task -v publish -- ${{ steps.publish.outputs.args }}
 
       - name: Generate Github Release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0

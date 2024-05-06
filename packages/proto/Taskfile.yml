@@ -46,7 +46,7 @@ tasks:
             - npx babel src -d lib
             - npx copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/ > /dev/null
             # This is necessary to correctly run browser tests with an unpublished proto package
-            # - ../../node_modules/.bin/yalc publish > /dev/null
+            - npx yalc publish > /dev/null
 
     clean:
         cmds:

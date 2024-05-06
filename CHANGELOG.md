@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.45.0-beta.1
+
+## What's Changed
+
+* fix: solve backward compatibility issues between the SDK and hedera-services v0.49 (modularized code) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2240
+* feature: update metadata field of fungible and non-fungible tokens, and dynamic NFTs (HIP-646, HIP-765 and HIP-657) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2210
+
 ## v2.44.0
 
 ## What's Changed

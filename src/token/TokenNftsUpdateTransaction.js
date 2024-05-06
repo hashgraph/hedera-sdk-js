@@ -19,11 +19,9 @@
  */
 
 import TokenId from "./TokenId.js";
-import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import Long from "long";
 
 /**
  * @namespace proto
@@ -32,7 +30,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.ITokenWipeAccountTransactionBody} HashgraphProto.proto.ITokenWipeAccountTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITokenUpdateNftsTransactionBody} HashgraphProto.proto.ITokenUpdateNftsTransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
@@ -40,18 +38,18 @@ import Long from "long";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
- * Wipe a new Hedera™ crypto-currency token.
+ * Pause a new Hedera™ crypto-currency token.
  */
-export default class TokenWipeTransaction extends Transaction {
+export default class TokenNftsUpdateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
-     * @param {AccountId | string} [props.accountId]
-     * @param {Long | number} [props.amount]
-     * @param {(Long | number)[]} [props.serials]
+     * @param {Long[]} [props.serialNumbers]
+     * @param {Uint8Array} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -64,36 +62,26 @@ export default class TokenWipeTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?AccountId}
-         */
-        this._accountId = null;
-
-        /**
-         * @private
          * @type {?Long[]}
          */
-        this._serials = [];
+        this._serialNumbers = [];
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Uint8Array}
          */
-        this._amount = null;
+        this._metadata = null;
 
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
 
-        if (props.accountId != null) {
-            this.setAccountId(props.accountId);
+        if (props.serialNumbers != null) {
+            this.setSerialNumbers(props.serialNumbers);
         }
 
-        if (props.amount != null) {
-            this.setAmount(props.amount);
-        }
-
-        if (props.serials != null) {
-            this.setSerials(props.serials);
+        if (props.metadata != null) {
+            this.setMetadata(props.metadata);
         }
     }
 
@@ -104,7 +92,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {TokenWipeTransaction}
+     * @returns {TokenNftsUpdateTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -114,25 +102,26 @@ export default class TokenWipeTransaction extends Transaction {
         bodies,
     ) {
         const body = bodies[0];
-        const wipeToken =
-            /** @type {HashgraphProto.proto.ITokenWipeAccountTransactionBody} */ (
-                body.tokenWipe
+        const tokenUpdate =
+            /** @type {HashgraphProto.proto.ITokenUpdateNftsTransactionBody} */ (
+                body.tokenUpdate
             );
 
         return Transaction._fromProtobufTransactions(
-            new TokenWipeTransaction({
+            new TokenNftsUpdateTransaction({
                 tokenId:
-                    wipeToken.token != null
-                        ? TokenId._fromProtobuf(wipeToken.token)
+                    tokenUpdate.token != null
+                        ? TokenId._fromProtobuf(tokenUpdate.token)
                         : undefined,
-                accountId:
-                    wipeToken.account != null
-                        ? AccountId._fromProtobuf(wipeToken.account)
-                        : undefined,
-                amount: wipeToken.amount != null ? wipeToken.amount : undefined,
-                serials:
-                    wipeToken.serialNumbers != null
-                        ? wipeToken.serialNumbers
+                serialNumbers:
+                    tokenUpdate.serialNumbers != null
+                        ? tokenUpdate.serialNumbers
+                        : [],
+                metadata:
+                    tokenUpdate.metadata != null
+                        ? tokenUpdate.metadata.value != null
+                            ? tokenUpdate.metadata.value
+                            : undefined
                         : undefined,
             }),
             transactions,
@@ -144,13 +133,7 @@ export default class TokenWipeTransaction extends Transaction {
     }
 
     /**
-     * @returns {?TokenId}
-     */
-    get tokenId() {
-        return this._tokenId;
-    }
-
-    /**
+     * @description Assign the token id.
      * @param {TokenId | string} tokenId
      * @returns {this}
      */
@@ -165,40 +148,24 @@ export default class TokenWipeTransaction extends Transaction {
     }
 
     /**
-     * @returns {?AccountId}
-     */
-    get accountId() {
-        return this._accountId;
-    }
-
-    /**
-     * @param {AccountId | string} accountId
+     * @description Assign the list of serial numbers.
+     * @param {Long[]} serialNumbers
      * @returns {this}
      */
-    setAccountId(accountId) {
+    setSerialNumbers(serialNumbers) {
         this._requireNotFrozen();
-        this._accountId =
-            typeof accountId === "string"
-                ? AccountId.fromString(accountId)
-                : accountId.clone();
+        this._serialNumbers = serialNumbers;
 
         return this;
     }
 
     /**
-     * @returns {?Long}
-     */
-    get amount() {
-        return this._amount;
-    }
-
-    /**
-     * @param {Long | number} amount
+     * @param {Uint8Array} metadata
      * @returns {this}
      */
-    setAmount(amount) {
+    setMetadata(metadata) {
         this._requireNotFrozen();
-        this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
+        this._metadata = metadata;
 
         return this;
     }
@@ -210,30 +177,6 @@ export default class TokenWipeTransaction extends Transaction {
         if (this._tokenId != null) {
             this._tokenId.validateChecksum(client);
         }
-
-        if (this._accountId != null) {
-            this._accountId.validateChecksum(client);
-        }
-    }
-
-    /**
-     * @returns {?Long[]}
-     */
-    get serials() {
-        return this._serials;
-    }
-
-    /**
-     * @param {(Long | number)[]} serials
-     * @returns {this}
-     */
-    setSerials(serials) {
-        this._requireNotFrozen();
-        this._serials = serials.map((serial) =>
-            typeof serial === "number" ? Long.fromNumber(serial) : serial,
-        );
-
-        return this;
     }
 
     /**
@@ -244,7 +187,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.token.wipeTokenAccount(request);
+        return channel.token.pauseToken(request);
     }
 
     /**
@@ -253,21 +196,26 @@ export default class TokenWipeTransaction extends Transaction {
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "tokenWipe";
+        return "tokenUpdateNfts";
     }
 
     /**
      * @override
      * @protected
-     * @returns {HashgraphProto.proto.ITokenWipeAccountTransactionBody}
+     * @returns {HashgraphProto.proto.ITokenUpdateNftsTransactionBody}
      */
     _makeTransactionData() {
         return {
-            amount: this._amount,
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-            account:
-                this._accountId != null ? this._accountId._toProtobuf() : null,
-            serialNumbers: this.serials,
+            serialNumbers:
+                this._serialNumbers != null ? this._serialNumbers : [],
+            ...(this._metadata != null
+                ? {
+                      metadata: {
+                          value: this._metadata,
+                      },
+                  }
+                : null),
         };
     }
 
@@ -278,12 +226,12 @@ export default class TokenWipeTransaction extends Transaction {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );
-        return `TokenWipeTransaction:${timestamp.toString()}`;
+        return `TokenNftsUpdateTransaction:${timestamp.toString()}`;
     }
 }
 
 TRANSACTION_REGISTRY.set(
-    "tokenWipe",
+    "tokenUpdateNfts",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenWipeTransaction._fromProtobuf,
+    TokenNftsUpdateTransaction._fromProtobuf,
 );
