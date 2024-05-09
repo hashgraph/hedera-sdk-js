@@ -1,5 +1,5 @@
 # Default code owners for entire repository
-*   @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+*   @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 
 #########################
 #####  Core Files  ######
@@ -9,22 +9,22 @@
 
 # Protection Rules for Github Configuration Files and Actions Workflows
 /.github/                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers
-/.github/workflows/                             @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+/.github/workflows/                             @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 
 # Codacy Tool Configurations
-/config/                                        @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
-.remarkrc                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+/config/                                        @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
+.remarkrc                                       @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
-/CODEOWNERS                                     @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+/CODEOWNERS                                     @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 
 # Protect the repository root files
-/README.md                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+/README.md                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 **/LICENSE                                      @hashgraph/release-engineering @hashgraph/release-engineering-managers
 
 # CodeCov configuration
-**/codecov.yml                                  @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+**/codecov.yml                                  @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
-**/.gitignore.*                                 @hashgraph/release-engineering @hashgraph/release-engineering-managers @SimiHunjan @ochikov @petreze @svetoslav-nikol0v @agadzhalov
+**/.gitignore                                   @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
+**/.gitignore.*                                 @hashgraph/release-engineering @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-contributors @SimiHunjan
