@@ -23,6 +23,8 @@ import ContractId from "./ContractId.js";
 import ContractInfo from "./ContractInfo.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
+import MirrorNodeGateway from "../network/MirrorNodeGateway.js";
+import MirrorNodeService from "../network/MirrorNodeService.js";
 
 /**
  * @namespace proto
@@ -57,6 +59,14 @@ export default class ContractInfoQuery extends Query {
          * @private
          */
         this._contractId = null;
+
+        /**
+         * @private
+         * @description Delay in ms if is necessary to wait for the mirror node to update the contract info
+         * @type {number}
+         */
+        this._timeout = 0;
+
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
@@ -99,6 +109,16 @@ export default class ContractInfoQuery extends Query {
                 ? ContractId.fromString(contractId)
                 : contractId.clone();
 
+        return this;
+    }
+
+    /**
+     *
+     * @param {number} timeout
+     * @returns {this}
+     */
+    setTimeout(timeout) {
+        this._timeout = timeout;
         return this;
     }
 
@@ -157,18 +177,59 @@ export default class ContractInfoQuery extends Query {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const info =
-            /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
-                response.contractGetInfo
+        return new Promise((resolve, reject) => {
+            const mirrorNodeGateway = MirrorNodeGateway.forNetwork(
+                this._mirrorNetwork,
+                this._ledgerId,
             );
+            const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
 
-        return Promise.resolve(
-            ContractInfo._fromProtobuf(
-                /** @type {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} */ (
-                    info.contractInfo
-                ),
-            ),
-        );
+            const info =
+                /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
+                    response.contractGetInfo
+                );
+
+            if (info.contractInfo && info.contractInfo.contractID) {
+                const contractIdFromConsensusNode = ContractId._fromProtobuf(
+                    info.contractInfo.contractID,
+                );
+
+                mirrorNodeService
+                    .setTimeout(this._timeout)
+                    .getTokenRelationshipsForAccount(
+                        contractIdFromConsensusNode.num.toString(),
+                    )
+                    .then((tokensRelationships) => {
+                        if (
+                            info.contractInfo &&
+                            info.contractInfo.tokenRelationships &&
+                            tokensRelationships &&
+                            tokensRelationships.length > 0
+                        ) {
+                            info.contractInfo.tokenRelationships.splice(
+                                0,
+                                info.contractInfo.tokenRelationships.length,
+                            );
+                            for (const tokenRelationship of tokensRelationships) {
+                                info.contractInfo.tokenRelationships.push(
+                                    tokenRelationship,
+                                );
+                            }
+                        }
+
+                        resolve(
+                            ContractInfo._fromProtobuf(
+                                /** @type {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} */ (
+                                    info.contractInfo
+                                ),
+                            ),
+                        );
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
     }
 
     /**

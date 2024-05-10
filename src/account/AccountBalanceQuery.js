@@ -22,6 +22,8 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ContractId from "../contract/ContractId.js";
 import AccountBalance from "./AccountBalance.js";
+import MirrorNodeService from "../network/MirrorNodeService.js";
+import MirrorNodeGateway from "../network/MirrorNodeGateway.js";
 
 /**
  * @namespace proto
@@ -31,6 +33,7 @@ import AccountBalance from "./AccountBalance.js";
  * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
  * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceQuery} HashgraphProto.proto.ICryptoGetAccountBalanceQuery
  * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceResponse} HashgraphProto.proto.ICryptoGetAccountBalanceResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenBalance} HashgraphProto.proto.ITokenBalance
  */
 
 /**
@@ -68,6 +71,19 @@ export default class AccountBalanceQuery extends Query {
          * @private
          */
         this._contractId = null;
+
+        /**
+         * @type {?ContractId}
+         * @private
+         */
+        this._contractId = null;
+
+        /**
+         * @private
+         * @description Delay in ms if is necessary to wait for the mirror node to update the account balance
+         * @type {number}
+         */
+        this._timeout = 0;
 
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
@@ -150,6 +166,16 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
+     *
+     * @param {number} timeout
+     * @returns {this}
+     */
+    setTimeout(timeout) {
+        this._timeout = timeout;
+        return this;
+    }
+
+    /**
      * @protected
      * @override
      * @returns {boolean}
@@ -210,13 +236,63 @@ export default class AccountBalanceQuery extends Query {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const cryptogetAccountBalance =
-            /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
-                response.cryptogetAccountBalance
+        return new Promise((resolve, reject) => {
+            const mirrorNodeGateway = MirrorNodeGateway.forNetwork(
+                this._mirrorNetwork,
+                this._ledgerId,
             );
-        return Promise.resolve(
-            AccountBalance._fromProtobuf(cryptogetAccountBalance),
-        );
+            const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
+
+            const cryptogetAccountBalance =
+                /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
+                    response.cryptogetAccountBalance
+                );
+
+            if (cryptogetAccountBalance.accountID) {
+                const accountIdFromConsensusNode = AccountId._fromProtobuf(
+                    cryptogetAccountBalance.accountID,
+                );
+
+                mirrorNodeService
+                    .setTimeout(this._timeout)
+                    .getTokenBalancesForAccount(
+                        accountIdFromConsensusNode.num.toString(),
+                    )
+                    .then(
+                        (
+                            /** @type {HashgraphProto.proto.ITokenBalance[]} */ tokenBalances,
+                        ) => {
+                            if (
+                                cryptogetAccountBalance &&
+                                cryptogetAccountBalance.tokenBalances &&
+                                tokenBalances &&
+                                tokenBalances.length > 0
+                            ) {
+                                cryptogetAccountBalance.tokenBalances.splice(
+                                    0,
+                                    cryptogetAccountBalance.tokenBalances
+                                        .length,
+                                );
+
+                                for (const tokenBalance of tokenBalances) {
+                                    cryptogetAccountBalance.tokenBalances.push(
+                                        tokenBalance,
+                                    );
+                                }
+
+                                resolve(
+                                    AccountBalance._fromProtobuf(
+                                        cryptogetAccountBalance,
+                                    ),
+                                );
+                            }
+                        },
+                    )
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
     }
 
     /**
