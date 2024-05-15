@@ -531,7 +531,7 @@ export default class Executable {
         this._mirrorNetwork = client.mirrorNetwork;
         // Set current LedgerId of the network with
         // which execution will be attempted
-        this._ledgerId = client.ledgerId;
+        this._ledgerId = this._ledgerId != null ? this._ledgerId : client.ledgerId;
 
         // If the logger on the request is not set, use the logger in client
         // (if set, otherwise do not use logger)

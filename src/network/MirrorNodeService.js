@@ -87,9 +87,7 @@ export default class MirrorNodeService {
                                     decimals: token.decimals,
                                 }),
                             );
-                            tokenBalances.map((t) => {
-                                console.log(t.tokenId, t.balance, t.decimals);
-                            });
+
                             resolve(tokenBalances);
                         },
                     )
@@ -133,7 +131,7 @@ export default class MirrorNodeService {
                                         token.automatic_association,
                                 }),
                             );
-                            console.log(tokenRelationships);
+
                             resolve(tokenRelationships);
                         },
                     )
