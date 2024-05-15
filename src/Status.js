@@ -650,7 +650,7 @@ export default class Status {
             case Status.InvalidGrpcCertificate:
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
-                return "INVALID_MAX_AUTO_ASSOCIATIONS"
+                return "INVALID_MAX_AUTO_ASSOCIATIONS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
