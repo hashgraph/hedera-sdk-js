@@ -649,6 +649,8 @@ export default class Status {
                 return "INVALID_GOSSIP_CAE_CERTIFICATE";
             case Status.InvalidGrpcCertificate:
                 return "INVALID_GRPC_CERTIFICATE";
+            case Status.InvalidMaxAutoAssociations:
+                return "INVALID_MAX_AUTO_ASSOCIATIONS"
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1269,6 +1271,8 @@ export default class Status {
                 return Status.InvalidGossipCaeCertificate;
             case 345:
                 return Status.InvalidGrpcCertificate;
+            case 346:
+                return Status.InvalidMaxAutoAssociations;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2845,3 +2849,9 @@ Status.InvalidGossipCaeCertificate = new Status(344);
  * grpc_certificate_hash is invalid
  */
 Status.InvalidGrpcCertificate = new Status(345);
+
+/**
+ * The maximum automatic associations value is not valid.
+ * The most common cause for this error is a value less than `-1`.
+ */
+Status.InvalidMaxAutoAssociations = new Status(346);
