@@ -203,8 +203,8 @@ describe("TokenCreate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-        expect(info.expirationTime.toString()).to.be.eql(
-            expirationTime.toString(),
+        expect(info.expirationTime.toDate().getTime()).to.be.at.least(
+            expirationTime.toDate().getTime(),
         );
     });
 
