@@ -55,10 +55,11 @@ export default class MirrorNodeRouter {
             throw new Error("Mirror address not found!");
         }
 
-        if (ledgerId?.isLocalNode()) {
-            path = HTTP + mirrorNodeAddress.toString() + ":" + LOCAL_NODE_PORT;
-        } else {
+        if (ledgerId != null && !ledgerId.isLocalNode()) {
             path = HTTPS + mirrorNodeAddress.toString();
+        } else {
+            // local node case
+            path = HTTP + mirrorNodeAddress.toString() + ":" + LOCAL_NODE_PORT;
         }
 
         return path;

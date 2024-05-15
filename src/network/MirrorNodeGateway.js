@@ -94,24 +94,6 @@ export default class MirrorNodeGateway {
         });
     }
 
-    // /**
-    //  * @internal
-    //  * @param {string} id
-    //  */
-    // static async getAccountInfo(id) {
-    //     var apiUrl = MirrorNodeRouter.buildApiUrl(
-    //         this._mirrorNodeUrl,
-    //         ACCOUNTS_ROUTE,
-    //         id,
-    //     );
-
-    //     try {
-    //         return MirrorNodeGateway.executeRequest(apiUrl);
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
-
     /**
      * @internal
      * @param {string} idOrAliasOrEvmAddress
