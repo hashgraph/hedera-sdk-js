@@ -203,8 +203,7 @@ export default class ContractInfoQuery extends Query {
                         if (
                             info.contractInfo &&
                             info.contractInfo.tokenRelationships &&
-                            tokensRelationships &&
-                            tokensRelationships.length > 0
+                            tokensRelationships
                         ) {
                             info.contractInfo.tokenRelationships.splice(
                                 0,
