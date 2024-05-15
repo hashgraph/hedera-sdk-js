@@ -2,7 +2,7 @@ const { Client, AccountBalanceQuery } = require("@hashgraph/sdk");
 
 describe("CommonJS", function () {
     it("it should query each node's balance", async function () {
-        this.timeout(15000);
+        this.timeout(30000);
 
         const client = Client.forTestnet();
 
