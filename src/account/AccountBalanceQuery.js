@@ -265,8 +265,7 @@ export default class AccountBalanceQuery extends Query {
                             if (
                                 cryptogetAccountBalance &&
                                 cryptogetAccountBalance.tokenBalances &&
-                                tokenBalances &&
-                                tokenBalances.length > 0
+                                tokenBalances
                             ) {
                                 cryptogetAccountBalance.tokenBalances.splice(
                                     0,

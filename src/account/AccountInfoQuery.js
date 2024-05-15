@@ -204,8 +204,7 @@ export default class AccountInfoQuery extends Query {
                         if (
                             info.accountInfo &&
                             info.accountInfo.tokenRelationships &&
-                            tokensRelationships &&
-                            tokensRelationships.length > 0
+                            tokensRelationships
                         ) {
                             info.accountInfo.tokenRelationships.splice(
                                 0,
@@ -219,11 +218,9 @@ export default class AccountInfoQuery extends Query {
                         }
 
                         resolve(
-                            Promise.resolve(
-                                AccountInfo._fromProtobuf(
-                                    /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
-                                        info.accountInfo
-                                    ),
+                            AccountInfo._fromProtobuf(
+                                /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
+                                    info.accountInfo
                                 ),
                             ),
                         );
