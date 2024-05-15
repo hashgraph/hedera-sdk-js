@@ -197,6 +197,8 @@ export default class RequestType {
                 return "NodeUpdate";
             case RequestType.NodeDelete:
                 return "NodeDelete";
+            case RequestType.NodeGetInfo:
+                return "NodeGetInfo";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -365,6 +367,8 @@ export default class RequestType {
                 return RequestType.NodeUpdate;
             case 91:
                 return RequestType.NodeDelete;
+            case 92:
+                return RequestType.NodeGetInfo;
         }
 
         throw new Error(
@@ -767,3 +771,8 @@ RequestType.NodeUpdate = new RequestType(90);
  * A transaction body for a `deleteNode` request.
  */
 RequestType.NodeDelete = new RequestType(91);
+
+/**
+ * Get Node information
+ */
+RequestType.NodeGetInfo = new RequestType(92);
