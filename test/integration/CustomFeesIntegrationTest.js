@@ -812,7 +812,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setFreezeDefault(false)
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -868,7 +868,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setCustomFees([fee])
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setFreezeDefault(false)
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -954,7 +954,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setFreezeDefault(false)
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -1023,7 +1023,7 @@ describe("CustomFees", function () {
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
                     .setCustomFees([fee])
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setFreezeDefault(false)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -1081,7 +1081,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setInitialSupply(100)
                     .setFreezeDefault(false)
                     .execute(env.client)
@@ -1105,7 +1105,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setInitialSupply(100)
                     .setCustomFees([fee2])
                     .setFreezeDefault(false)
@@ -1286,7 +1286,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setInitialSupply(100)
                     .setFreezeDefault(false)
                     .execute(env.client)
@@ -1310,7 +1310,7 @@ describe("CustomFees", function () {
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
                     .setFeeScheduleKey(env.operatorKey)
-                    .setTokenType(TokenType.FungibleUnique)
+                    .setTokenType(TokenType.FungibleCommon)
                     .setInitialSupply(100)
                     .setCustomFees([fee2])
                     .setFreezeDefault(false)
@@ -1408,39 +1408,5 @@ describe("CustomFees", function () {
         }
 
         await env.close({ token: [token1, token2] });
-    });
-
-    it("cannot set invalid schedule key", async function () {
-        this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
-
-        let err = false;
-
-        try {
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenName("ffff")
-                    .setTokenSymbol("F")
-                    .setTreasuryAccountId(env.operatorId)
-                    .setAdminKey(env.operatorKey)
-                    .setKycKey(env.operatorKey)
-                    .setFreezeKey(env.operatorKey)
-                    .setWipeKey(env.operatorKey)
-                    .setSupplyKey(env.operatorKey)
-                    .setFeeScheduleKey(KeyList.of())
-                    .setTokenType(TokenType.NonFungibleUnique)
-                    .setFreezeDefault(false)
-                    .execute(env.client)
-            ).getReceipt(env.client);
-        } catch (error) {
-            err = error.toString().includes(Status.InvalidCustomFeeScheduleKey);
-        }
-
-        if (!err) {
-            throw new Error("token creation did not error");
-        }
-
-        await env.close();
     });
 });

@@ -325,6 +325,7 @@ describe("TokenUpdate", function () {
             await (
                 await new TokenUpdateTransaction()
                     .setTokenId(token)
+                    .setTokenName("FFFF")
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
