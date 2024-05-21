@@ -91,9 +91,7 @@ export default class MirrorNodeService {
                             resolve(tokenBalances);
                         },
                     )
-                    .catch((error) => {
-                        reject(error);
-                    });
+                    .catch((error) => reject(error));
             }, this._timeout);
         });
     }

@@ -1,6 +1,7 @@
 import {
     AccountBalanceQuery,
     Status,
+    TokenCreateTransaction,
     // TokenCreateTransaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv, {
@@ -42,6 +43,7 @@ describe("AccountBalanceQuery", function () {
             expect(address.endsWith(":50212")).to.be.true;
 
             await new AccountBalanceQuery()
+                .setTimeout(1000)
                 .setAccountId(nodeAccountId)
                 .setMaxAttempts(10)
                 .execute(clientPreviewNet);
@@ -61,9 +63,10 @@ describe("AccountBalanceQuery", function () {
             expect(address.endsWith(":50212")).to.be.true;
 
             await new AccountBalanceQuery()
-                .setAccountId(nodeAccountId)
-                .setMaxAttempts(10)
-                .execute(clientTestnet);
+                    .setTimeout(1000)
+                    .setAccountId(nodeAccountId)
+                    .setMaxAttempts(10)
+                    .execute(clientTestnet);
         }
     });
 
@@ -85,32 +88,28 @@ describe("AccountBalanceQuery", function () {
         }
     });
 
-    /**
-     *
-     * @description The test is temporarily commented because AccountBalanceQuery does a query to the consensus node which was deprecated.
-     * @todo Uncomment a test when the new query to the mirror node is implemented as it described here https://github.com/hashgraph/hedera-sdk-reference/issues/144
-     */
-    // it("should reflect token with no keys", async function () {
-    //     this.timeout(120000);
+    it("should reflect token with no keys", async function () {
+        this.timeout(120000);
 
-    //     const operatorId = env.operatorId;
+        const operatorId = env.operatorId;
 
-    //     const token = (
-    //         await (
-    //             await new TokenCreateTransaction()
-    //                 .setTokenName("ffff")
-    //                 .setTokenSymbol("F")
-    //                 .setTreasuryAccountId(operatorId)
-    //                 .execute(env.client)
-    //         ).getReceipt(env.client)
-    //     ).tokenId;
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(operatorId)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
 
-    //     const balances = await new AccountBalanceQuery()
-    //         .setAccountId(env.operatorId)
-    //         .execute(env.client);
+        const balances = await new AccountBalanceQuery()
+            .setTimeout(2000)
+            .setAccountId(env.operatorId)
+            .execute(env.client);
 
-    //     expect(balances.tokens.get(token).toInt()).to.be.equal(0);
-    // });
+        expect(balances.tokens.get(token).toInt()).to.be.equal(0);
+    });
 
     after(async function () {
         clientPreviewNet.close();
