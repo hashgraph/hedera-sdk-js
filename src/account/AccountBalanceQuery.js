@@ -73,12 +73,6 @@ export default class AccountBalanceQuery extends Query {
         this._contractId = null;
 
         /**
-         * @type {?ContractId}
-         * @private
-         */
-        this._contractId = null;
-
-        /**
          * @private
          * @description Delay in ms if is necessary to wait for the mirror node to update the account balance
          * @type {number}

@@ -57,6 +57,7 @@ describe("ContractInfo", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
+            .setTimeout(1000)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -126,6 +127,7 @@ describe("ContractInfo", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
+            .setTimeout(1000)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);

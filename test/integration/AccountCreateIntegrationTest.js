@@ -35,6 +35,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(account)
             .execute(env.client);
 
@@ -76,6 +77,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(2000)
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
@@ -117,6 +119,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(account)
             .execute(env.client);
 
@@ -173,6 +176,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
@@ -218,6 +222,7 @@ describe("AccountCreate", function () {
         expect(accountId).to.not.be.null;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setNodeAccountIds([txAccountCreate.nodeId])
             .setAccountId(accountId)
             .execute(env.client);
@@ -255,6 +260,7 @@ describe("AccountCreate", function () {
         expect(accountId).to.not.be.null;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(2000)
             .setAccountId(accountId)
             .execute(env.client);
 
@@ -296,6 +302,7 @@ describe("AccountCreate", function () {
         expect(accountId).to.not.be.null;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(accountId)
             .execute(env.client);
 
@@ -369,6 +376,7 @@ describe("AccountCreate", function () {
         expect(accountId).to.not.be.null;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(accountId)
             .execute(env.client);
 
@@ -447,6 +455,7 @@ describe("AccountCreate", function () {
         expect(accountId).to.not.be.null;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(accountId)
             .execute(env.client);
 

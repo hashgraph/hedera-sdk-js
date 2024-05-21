@@ -81,6 +81,7 @@ describe("ClientIntegration", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setTimeout(1000)
             .setAccountId(account)
             .execute(env.client);
 
@@ -156,15 +157,16 @@ describe("ClientIntegration", function () {
     });
 
     it("can use same proxies of one node", async function () {
-        this.timeout(100000);
+        this.timeout(300000);
         let nodes = {
             "0.testnet.hedera.com:50211": new AccountId(3),
             "34.94.106.61:50211": new AccountId(3),
             "50.18.132.211:50211": new AccountId(3),
-            "138.91.142.219:50211": new AccountId(3),
         };
 
-        const clientForNetwork = Client.forNetwork(nodes);
+        const clientForNetwork = Client.forNetwork(nodes)
+            .setLedgerId(LedgerId.TESTNET)
+            .setMirrorNetwork("testnet.mirrornode.hedera.com:443");
         await clientForNetwork.pingAll();
     });
 
