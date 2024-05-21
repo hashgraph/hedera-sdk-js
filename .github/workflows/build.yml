@@ -28,6 +28,11 @@ jobs:
         node: [ "16", "18" ]
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -60,6 +65,11 @@ jobs:
         node: [ "16" ]
 
     steps:
+      -  name: Harden Runner
+         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+         with:
+           egress-policy: audit
+
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -104,7 +114,7 @@ jobs:
         run: |
           npx @hashgraph/hedera-local start -d --network-tag=0.49.7 --balance=100000
           # Wait for the network to fully start
-          sleep 30 
+          sleep 30
 
       - name: Run Hedera SDK Integration Tests Codecov
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}

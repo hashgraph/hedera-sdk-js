@@ -32,6 +32,11 @@ jobs:
       prerelease: ${{ steps.tag.outputs.prerelease }}
       type: ${{ steps.tag.outputs.type }}
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -64,19 +69,19 @@ jobs:
         run: |
           REF_NAME="$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))"
           IS_VALID_SEMVER="$(semver validate "${REF_NAME}")"
-          
+
           if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
             echo "::error title=Invalid Tag::The tag '${REF_NAME}' is not a valid SemVer tag."
             exit 1
           fi
-          
+
           RELEASE_VERSION="$(semver get release "${REF_NAME}")"
           PREREL_VERSION="$(semver get prerel "${REF_NAME}")"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
 
           IS_PRERELEASE="false"
           [[ -n "${PREREL_VERSION}" ]] && IS_PRERELEASE="true"
-          
+
           PREREL_TYPE="unknown"
           if [[ "${IS_PRERELEASE}" == "true" ]]; then
             if [[ "${PREREL_VERSION_LC}" =~ "beta" ]]; then
@@ -87,12 +92,12 @@ jobs:
           else
             PREREL_TYPE="production"
           fi
-          
+
           FINAL_VERSION="${RELEASE_VERSION}"
           [[ -n "${PREREL_VERSION}" ]] && FINAL_VERSION="${RELEASE_VERSION}-${PREREL_VERSION}"
-          
+
           TAG_NAME="v${FINAL_VERSION}"
-          
+
           echo "name=${TAG_NAME}" >>"${GITHUB_OUTPUT}"
           echo "version=${FINAL_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
@@ -105,7 +110,7 @@ jobs:
             echo "::error title=Version Mismatch::The version in package.json (${{ steps.npm-package.outputs.version }}) does not match the version in the tag (${{ steps.tag.outputs.version }})."
             exit 1
           fi
-          
+
           if [[ "${{ steps.tag.outputs.type }}" != "production" && "${{ steps.tag.outputs.type }}" != "beta" ]]; then
             echo "::error title=Unsupported PreRelease::The tag '${{ steps.tag.outputs.name }}' is an unsupported prerelease tag. Only 'beta' prereleases are supported."
             exit 2
@@ -120,6 +125,11 @@ jobs:
     name: Safety Checks
     runs-on: [self-hosted, Linux, medium, ephemeral]
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -150,6 +160,11 @@ jobs:
       - validate-release
       - run-safety-checks
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Checkout Code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
@@ -209,7 +224,7 @@ jobs:
           PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           [[ "${{ needs.validate-release.outputs.prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.type }}"
-          
+
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
