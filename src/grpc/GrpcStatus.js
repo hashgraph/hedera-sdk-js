@@ -132,6 +132,13 @@ export default class GrpcStatus {
     }
 
     /**
+     * @returns {string}
+     */
+    toJSON() {
+        return `{"toString":"${this.toString()}","code":"${this._code}"}`;
+    }
+
+    /**
      * @returns {number}
      */
     valueOf() {

@@ -725,7 +725,7 @@ export default class Executable {
                     throw this._mapStatusError(request, response);
                 default:
                     throw new Error(
-                        "(BUG) non-exhuastive switch statement for `ExecutionState`",
+                        "(BUG) non-exhaustive switch statement for `ExecutionState`",
                     );
             }
         }
@@ -742,7 +742,7 @@ export default class Executable {
     /**
      * The current purpose of this method is to easily support signature providers since
      * signature providers need to serialize _any_ request into bytes. `Query` and `Transaction`
-     * already implement `toBytes()` so it only made sense to make it avaiable here too.
+     * already implement `toBytes()` so it only made sense to make it available here too.
      *
      * @abstract
      * @returns {Uint8Array}

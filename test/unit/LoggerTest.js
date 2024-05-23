@@ -1,5 +1,7 @@
 import { Logger, LogLevel, Transaction } from "../../src/exports.js";
 import { Client } from "../../src/index.js";
+import { tmpdir } from "node:os";
+import fs from "fs";
 
 describe("Logger", function () {
     this.timeout(50000);
@@ -67,5 +69,24 @@ describe("Logger", function () {
         expect(levels).to.include("warn");
         expect(levels).to.include("error");
         expect(levels).to.include("fatal");
+    });
+
+    it("check that it can write to a log file", async function () {
+        const logFile = tmpdir() + "/test.log";
+        const logger = new Logger(LogLevel.Info, logFile);
+        logger.info("This is a test log message");
+        logger.warn("This is a test warning message");
+        logger.error("This is a test error message");
+        logger.fatal("This is a test fatal message");
+        // read the log file and check if the messages are there and check that the levels are correct
+        const logContent = fs.readFileSync(logFile, "utf8");
+        expect(logContent).to.contain("This is a test log message");
+        expect(logContent).to.contain(LogLevel.Info.toString().toUpperCase());
+        expect(logContent).to.contain("This is a test warning message");
+        expect(logContent).to.contain(LogLevel.Warn.toString().toUpperCase());
+        expect(logContent).to.contain("This is a test error message");
+        expect(logContent).to.contain(LogLevel.Error.toString().toUpperCase());
+        expect(logContent).to.contain("This is a test fatal message");
+        expect(logContent).to.contain(LogLevel.Fatal.toString().toUpperCase());
     });
 });

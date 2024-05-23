@@ -61,4 +61,11 @@ export default class GrpcServiceError extends Error {
             return /** @type {Error} */ (obj);
         }
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return `${this.name}: ${this.message} (${this.status.toString()})`;
+    }
 }
