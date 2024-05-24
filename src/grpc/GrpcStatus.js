@@ -89,53 +89,46 @@ export default class GrpcStatus {
     toString() {
         switch (this) {
             case GrpcStatus.Ok:
-                return "OK";
+                return `OK (${this._code})`;
             case GrpcStatus.Cancelled:
-                return "CANCELLED";
+                return `CANCELLED (${this._code})`;
             case GrpcStatus.Unknown:
-                return "UNKNOWN";
+                return `UNKNOWN (${this._code})`;
             case GrpcStatus.InvalidArgument:
-                return "INVALID_ARGUMENT";
+                return `INVALID_ARGUMENT (${this._code})`;
             case GrpcStatus.DeadlineExceeded:
-                return "DEADLINE_EXCEEDED";
+                return `DEADLINE_EXCEEDED (${this._code})`;
             case GrpcStatus.NotFound:
-                return "NOT_FOUND";
+                return `NOT_FOUND (${this._code})`;
             case GrpcStatus.AlreadyExists:
-                return "ALREADY_EXISTS";
+                return `ALREADY_EXISTS (${this._code})`;
             case GrpcStatus.PermissionDenied:
-                return "PERMISSION_DENIED";
+                return `PERMISSION_DENIED (${this._code})`;
             case GrpcStatus.Unauthenticated:
-                return "UNAUTHENTICATED";
+                return `UNAUTHENTICATED (${this._code})`;
             case GrpcStatus.ResourceExhausted:
-                return "RESOURCE_EXHAUSTED";
+                return `RESOURCE_EXHAUSTED (${this._code})`;
             case GrpcStatus.FailedPrecondition:
-                return "FAILED_PRECONDITION";
+                return `FAILED_PRECONDITION (${this._code})`;
             case GrpcStatus.Aborted:
-                return "ABORTED";
+                return `ABORTED (${this._code})`;
             case GrpcStatus.OutOfRange:
-                return "OUT_OF_RANGE";
+                return `OUT_OF_RANGE (${this._code})`;
             case GrpcStatus.Unimplemented:
-                return "UNIMPLEMENTED";
+                return `UNIMPLEMENTED (${this._code})`;
             case GrpcStatus.Internal:
-                return "INTERNAL";
+                return `INTERNAL (${this._code})`;
             case GrpcStatus.Unavailable:
-                return "UNAVAILABLE";
+                return `UNAVAILABLE (${this._code})`;
             case GrpcStatus.DataLoss:
-                return "DATA_LOSS";
+                return `DATA_LOSS (${this._code})`;
             case GrpcStatus.Timeout:
-                return "TIMEOUT";
+                return `TIMEOUT (${this._code})`;
             case GrpcStatus.GrpcWeb:
-                return "GRPC_WEB";
+                return `GRPC_WEB (${this._code})`;
             default:
                 return `UNKNOWN (${this._code})`;
         }
-    }
-
-    /**
-     * @returns {string}
-     */
-    toJSON() {
-        return `{"toString":"${this.toString()}","code":"${this._code}"}`;
     }
 
     /**
