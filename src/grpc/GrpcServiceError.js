@@ -57,6 +57,7 @@ export default class GrpcServiceError extends Error {
             const err = new GrpcServiceError(status);
             err.stack +=
                 "\nCaused by: " + (obj.stack ? obj.stack.toString() : "");
+            err.message += `: ${obj.details}`;
             return err;
         } else {
             return /** @type {Error} */ (obj);
