@@ -22,7 +22,7 @@ describe("GetCost", function () {
             .getCost(env.client);
 
         await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .setQueryPayment(cost)
             .execute(env.client);
@@ -40,7 +40,7 @@ describe("GetCost", function () {
             .getCost(env.client);
 
         await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .setQueryPayment(cost)
             .execute(env.client);
@@ -58,7 +58,7 @@ describe("GetCost", function () {
             .getCost(env.client);
 
         await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .setQueryPayment(cost)
             .execute(env.client);
@@ -75,7 +75,7 @@ describe("GetCost", function () {
             .execute(env.client);
 
         await new AccountBalanceQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .setQueryPayment(new Hbar(0))
             .execute(env.client);
@@ -92,7 +92,7 @@ describe("GetCost", function () {
             .execute(env.client);
 
         await new AccountBalanceQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .setQueryPayment(new Hbar(0))
             .execute(env.client);

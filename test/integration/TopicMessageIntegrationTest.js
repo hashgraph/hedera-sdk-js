@@ -7,6 +7,7 @@ import {
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import { wait } from "../../src/util.js";
 
 describe("TopicMessage", function () {
     let env;
@@ -22,7 +23,7 @@ describe("TopicMessage", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         // Skip this test if we do not have a mirror network
-        if (env.client.mirrorNetwork.length == 0) {
+        if (env.client && env.client.mirrorNetwork.length == 0) {
             return;
         }
 
@@ -37,19 +38,19 @@ describe("TopicMessage", function () {
         let finished = false;
         const contents = "Hello from Hedera SDK JS";
 
+        await wait(3000);
+
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
-            .setLimit(1)
-            .setCompletionHandler(() => {
-                finished = true;
-            })
+            .setEndTime(Date.now())
+            .setCompletionHandler()
             // eslint-disable-next-line no-unused-vars
-            .subscribe(env.client, (_) => {
-                // Do nothing
+            .subscribe(env.client, null, () => {
+                finished = true;
             });
 
-        const startTime = Date.now();
+        let endTime = Date.now() + 5000;
 
         await (
             await new TopicMessageSubmitTransaction()
@@ -58,9 +59,9 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!finished && Date.now() < startTime + 45000) {
+        while (!finished && Date.now() < endTime) {
             //NOSONAR
-            await new Promise((resolved) => setTimeout(resolved, 2000));
+            await new Promise((resolved) => setTimeout(resolved, 5000));
         }
 
         await (

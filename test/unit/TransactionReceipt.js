@@ -152,7 +152,6 @@ describe("TransactionReceipt", function () {
         const receipt = new TransactionReceipt({
             status,
         });
-        console.log(JSON.stringify(receipt));
 
         const expectedJSON = `{"status":"OK","accountId":null,"filedId":null,"contractId":null,"topicId":null,"tokenId":null,"scheduleId":null,"exchangeRate":null,"topicSequenceNumber":null,"topicRunningHash":null,"totalSupply":null,"scheduledTransactionId":null,"serials":[],"duplicates":[],"children":[]}`;
         const expectedJSONParsed = JSON.parse(expectedJSON);

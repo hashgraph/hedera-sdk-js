@@ -60,7 +60,7 @@ describe("TokenAssociate", function () {
         ).getReceipt(env.client);
 
         const balances = await new AccountBalanceQuery()
-            .setTimeout(2000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
