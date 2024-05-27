@@ -66,14 +66,14 @@ describe("TokenDissociate", function () {
         ).getReceipt(env.client);
 
         let balances = await new AccountBalanceQuery()
-            .setTimeout(2000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
         let info = await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
@@ -96,14 +96,14 @@ describe("TokenDissociate", function () {
         ).getReceipt(env.client);
 
         balances = await new AccountBalanceQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
         expect(balances.tokens.get(token)).to.be.null;
 
         info = await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 

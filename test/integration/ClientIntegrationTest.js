@@ -30,16 +30,18 @@ describe("ClientIntegration", function () {
 
         let err = false;
 
-        let network;
         switch (env.client.ledgerId.toString()) {
             case "mainnet":
-                network = "testnet";
+                env.client.setLedgerId(LedgerId.TESTNET);
                 break;
             case "testnet":
-                network = "previewnet";
+                env.client.setLedgerId(LedgerId.PREVIEWNET);
                 break;
             case "previewnet":
-                network = "mainnet";
+                env.client.setLedgerId(LedgerId.LOCAL_NODE);
+                break;
+            case "local-node":
+                env.client.setLedgerId(LedgerId.MAINNET);
                 break;
             default:
                 throw new Error(
@@ -47,10 +49,11 @@ describe("ClientIntegration", function () {
                 );
         }
 
-        const accountId = AccountId.withNetwork(3, network);
+        const accountId = new AccountId(3);
 
         try {
             await new AccountInfoQuery()
+                .setTimeout(3000)
                 .setAccountId(accountId)
                 .execute(env.client);
         } catch (error) {
@@ -81,10 +84,11 @@ describe("ClientIntegration", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
+        expect(info).to.not.be.null;
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());

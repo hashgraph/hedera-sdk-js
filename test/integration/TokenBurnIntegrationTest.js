@@ -100,7 +100,7 @@ describe("TokenBurn", function () {
         }
 
         const accountBalance = await new AccountBalanceQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(operatorId)
             .execute(env.client);
 

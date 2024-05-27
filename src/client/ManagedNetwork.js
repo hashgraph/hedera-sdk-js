@@ -329,7 +329,6 @@ export default class ManagedNetwork {
         this._nodes = newNodes;
         this._healthyNodes = newHealthyNodes;
         this._network = newNetwork;
-        this._ledgerId = null;
 
         return this;
     }

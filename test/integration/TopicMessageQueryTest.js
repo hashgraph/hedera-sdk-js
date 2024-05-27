@@ -3,6 +3,7 @@ import {
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
 } from "../../src/exports.js";
+import { wait } from "../../src/util.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessageQuery", function () {
@@ -42,26 +43,28 @@ describe("TopicMessageQuery", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        let finished = false;
+        let listener;
         let endTime = Date.now() + 50000;
+
+        await wait(3000);
 
         new TopicMessageQuery()
             .setTopicId(topic)
-            // .setStartTime(0)
-            // .setLimit(1)
-            // eslint-disable-next-line no-unused-vars
-            .subscribe(env, (_) => {
-                finished = true;
+            .setStartTime(0)
+            .setEndTime(Date.now())
+            .subscribe(env.client, null, (res) => {
+                listener = res;
             });
 
-        while (!finished && Date.now() < endTime) {
+        while (!listener && Date.now() < endTime) {
             //NOSONAR
             await new Promise((resolved) => setTimeout(resolved, 5000));
         }
 
-        if (!finished) {
-            throw new Error("Did not receive message from query");
-        }
+        expect(listener).to.not.be.null;
+        expect(Buffer.from(listener.contents).toString("utf8")).to.be.eql(
+            contents,
+        );
     });
 
     after(async function () {

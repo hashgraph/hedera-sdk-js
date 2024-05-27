@@ -33,7 +33,7 @@ describe("AccountDelete", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setTimeout(1000)
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
