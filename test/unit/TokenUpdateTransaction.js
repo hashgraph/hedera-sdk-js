@@ -4,6 +4,7 @@ import {
     TransactionId,
     AccountId,
     Timestamp,
+    TokenKeyValidation,
 } from "../../src/index.js";
 import Long from "long";
 
@@ -81,6 +82,7 @@ describe("TokenUpdateTransaction", function () {
                 autoRenewPeriod: null,
                 expiry: null,
                 treasury: treasuryAccountId._toProtobuf(),
+                keyVerificationMode: TokenKeyValidation.FullValidation.valueOf(),
                 adminKey: {
                     ed25519: key1.publicKey.toBytesRaw(),
                 },
