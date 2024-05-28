@@ -43,7 +43,8 @@ describe("TopicMessageQuery", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        let listener;
+        let finished = false;
+        let listener = null;
         let endTime = Date.now() + 50000;
 
         await wait(3000);
@@ -53,10 +54,11 @@ describe("TopicMessageQuery", function () {
             .setStartTime(0)
             .setEndTime(Date.now())
             .subscribe(env.client, null, (res) => {
+                finished = true;
                 listener = res;
             });
 
-        while (!listener && Date.now() < endTime) {
+        while (!finished && Date.now() < endTime) {
             //NOSONAR
             await new Promise((resolved) => setTimeout(resolved, 5000));
         }
