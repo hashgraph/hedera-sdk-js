@@ -49,13 +49,13 @@ export default class MirrorNodeRouter {
 
         mirrorNodeAddress = mirrorNetwork.map((a) =>
             a.substring(0, a.indexOf(":")),
-        );
+        )[0];
 
         if (mirrorNodeAddress.length == 0) {
             throw new Error("Mirror address not found!");
         }
 
-        if (ledgerId != null && !ledgerId.isLocalNode()) {
+        if (ledgerId != null) {
             path = HTTPS + mirrorNodeAddress.toString();
         } else {
             // local node case
