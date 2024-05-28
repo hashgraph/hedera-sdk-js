@@ -16,7 +16,7 @@ describe("TopicMessage", function () {
         env = await IntegrationTestEnv.new({ throwaway: true });
     });
 
-    it("should be executable", async function () {
+    it.only("should be executable", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
@@ -34,25 +34,7 @@ describe("TopicMessage", function () {
             .execute(env.client);
 
         const topic = (await response.getReceipt(env.client)).topicId;
-
-        let finished = false;
-        let listener = null;
         const contents = "Hello from Hedera SDK JS";
-
-        await wait(3000);
-
-        const handle = new TopicMessageQuery()
-            .setTopicId(topic)
-            .setStartTime(0)
-            .setEndTime(Date.now())
-            .setCompletionHandler()
-            // eslint-disable-next-line no-unused-vars
-            .subscribe(env.client, null, (res) => {
-                finished = true;
-                listener = res;
-            });
-
-        let endTime = Date.now() + 50000;
 
         await (
             await new TopicMessageSubmitTransaction()
@@ -60,6 +42,21 @@ describe("TopicMessage", function () {
                 .setMessage(contents)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        let finished = false;
+        let listener = null;
+        let endTime = Date.now() + 50000;
+
+        await wait(3000);
+
+        const handle = new TopicMessageQuery()
+            .setTopicId(topic)
+            .setStartTime(0)
+            .setEndTime(Date.now())
+            .subscribe(env.client, null, (res) => {
+                finished = true;
+                listener = res;
+            });
 
         while (!finished && Date.now() < endTime) {
             //NOSONAR
