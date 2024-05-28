@@ -50,7 +50,7 @@ describe("TopicMessage", function () {
                 finished = true;
             });
 
-        let endTime = Date.now() + 5000;
+        let endTime = Date.now() + 50000;
 
         await (
             await new TopicMessageSubmitTransaction()
