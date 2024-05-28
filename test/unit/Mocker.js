@@ -424,7 +424,7 @@ class GrpcServers {
      * @returns {this}
      */
     addServer(responses) {
-        const address = `0.0.0.0:${50213 + this._index}`;
+        const address = `127.0.0.1:${50213 + this._index}`;
         const nodeAccountId = `0.0.${3 + this._index}`;
         const server = new GrpcServer(PROTOS).addResponses(responses);
 
