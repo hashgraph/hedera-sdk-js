@@ -36,6 +36,7 @@ describe("TopicMessage", function () {
         const topic = (await response.getReceipt(env.client)).topicId;
 
         let finished = false;
+        let listener = null;
         const contents = "Hello from Hedera SDK JS";
 
         await wait(3000);
@@ -46,8 +47,9 @@ describe("TopicMessage", function () {
             .setEndTime(Date.now())
             .setCompletionHandler()
             // eslint-disable-next-line no-unused-vars
-            .subscribe(env.client, null, () => {
+            .subscribe(env.client, null, (res) => {
                 finished = true;
+                listener = res;
             });
 
         let endTime = Date.now() + 50000;
@@ -72,9 +74,10 @@ describe("TopicMessage", function () {
 
         handle.unsubscribe();
 
-        if (!finished) {
-            throw new Error("Failed to receive message in 30s");
-        }
+        expect(listener).to.not.be.null;
+        expect(Buffer.from(listener.contents).toString("utf8")).to.be.eql(
+            contents,
+        );
     });
 
     it("should be executable with large message", async function () {
