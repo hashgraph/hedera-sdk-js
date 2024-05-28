@@ -124,6 +124,10 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit
 
+      - name: Codecov @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:codecov
+
       - name: Stop the local node
         id: stop-local-node
         if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
@@ -141,9 +145,5 @@ jobs:
 
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:unit:codecov
-
-      - name: Codecov @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit:codecov
