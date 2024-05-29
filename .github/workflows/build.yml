@@ -131,15 +131,15 @@ jobs:
 
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task build
 
       - name: Unit Test @hashgraph/cryptography
         working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit
 
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit:codecov
