@@ -74,7 +74,7 @@ describe("Logger", function () {
 
     it("check that it can write to a log file", function () {
         const logFile = `${tmpdir()}/test.log`;
-        fs.rmSync(logFile);
+        fs.rmSync(logFile, { force: true });
         const logger = new Logger(LogLevel.Trace, logFile);
         let assertionCount = 0;
         for (const level of Object.values(LogLevel)) {
@@ -111,7 +111,7 @@ describe("Logger", function () {
 
     it("check that silent blocks output", function () {
         const logFile = `${tmpdir()}/test2.log`;
-        fs.rmSync(logFile);
+        fs.rmSync(logFile, { force: true });
         const logger = new Logger(LogLevel.Trace, logFile);
         expect(logger.silent).to.be.equal(false);
         logger.warn("This is a test warn message");
