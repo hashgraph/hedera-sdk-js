@@ -38,7 +38,7 @@ describe("TransactionReceiptMocking", function () {
     let client;
     let servers;
 
-    afterAll(function () {
+    afterEach(function () {
         client.close();
         servers.close();
     });
