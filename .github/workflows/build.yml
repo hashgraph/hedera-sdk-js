@@ -120,10 +120,6 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:integration:codecov
 
-      - name: Codecov @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:unit:codecov
-
       - name: Stop the local node
         id: stop-local-node
         if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
@@ -141,5 +137,9 @@ jobs:
 
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:codecov
+
+      - name: Run Hedera SDK Unit Tests Codecov
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit:codecov
