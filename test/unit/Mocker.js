@@ -452,13 +452,17 @@ class GrpcServers {
             await server.listen(address);
         }
 
-        return new Client({ network, scheduleNetworkUpdate: false })
+        const client = new Client({ network, scheduleNetworkUpdate: false })
             .setMirrorNetwork(Object.keys(network))
             .setLedgerId(LedgerId.LOCAL_NODE)
             .setNodeMinBackoff(0)
             .setNodeMaxBackoff(0)
             .setNodeMinReadmitPeriod(0)
             .setNodeMaxReadmitPeriod(0);
+
+
+            console.log(client);
+        return client
     }
 
     close() {
