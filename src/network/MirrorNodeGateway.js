@@ -90,7 +90,10 @@ export default class MirrorNodeGateway {
             axios
                 .get(url)
                 .then((response) => resolve(response))
-                .catch((error) => reject(error));
+                .catch((error) => {
+                    console.log('ERROR', error);
+                    reject(error)
+                });
         });
     }
 
