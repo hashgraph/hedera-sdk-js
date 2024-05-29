@@ -121,11 +121,11 @@ jobs:
         run: task test:integration:codecov
 
       - name: Unit Test @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit
 
       - name: Codecov @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit:codecov
 
       - name: Stop the local node
