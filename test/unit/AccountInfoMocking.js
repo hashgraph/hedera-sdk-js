@@ -142,6 +142,8 @@ describe("AccountInfoMocking", function () {
             errorName = error.name;
         }
 
+        console.log(errorName);
+
         expect(errorName).to.be.eql("MaxQueryPaymentExceededError");
     });
 
