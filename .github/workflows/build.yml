@@ -120,7 +120,11 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:integration:codecov
 
-      - name: Run Hedera SDK Unit Tests Codecov
+      - name: Unit Test @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:node
+
+      - name: Codecov @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit:codecov
 
