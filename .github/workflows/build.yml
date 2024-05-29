@@ -145,18 +145,18 @@ jobs:
 
       - name: Build @hashgraph/sdk
         id: build-sdk
-        run: ${{ env.CG_EXEC }} task build
+        run: task build
 
       - name: Install Playwright Dependencies
         id: playwright-deps
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} sudo npx playwright install-deps
+        run: sudo npx playwright install-deps
 
       - name: Start the local node
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: |
-            ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d --network-tag=0.49.7 --balance=100000
+          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d --network-tag=0.49.7 --balance=100000
           # Wait for the network to fully start
           sleep 30
 
