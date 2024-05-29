@@ -122,7 +122,7 @@ jobs:
 
       - name: Unit Test @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:unit:node
+        run: task test:unit
 
       - name: Codecov @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
