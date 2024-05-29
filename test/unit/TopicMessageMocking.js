@@ -31,7 +31,7 @@ describe("TopicMessageMocking", function () {
         if (client != null) {
             client.close();
         }
-        
+
         if (servers != null) {
             servers.close();
         }
