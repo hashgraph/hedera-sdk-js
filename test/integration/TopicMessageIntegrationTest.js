@@ -16,7 +16,7 @@ describe("TopicMessage", function () {
         env = await IntegrationTestEnv.new({ throwaway: true });
     });
 
-    it.only("should be executable", async function () {
+    it("should be executable", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;

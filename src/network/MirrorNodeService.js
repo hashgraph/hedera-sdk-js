@@ -26,7 +26,7 @@
  */
 import TokenId from "../token/TokenId.js";
 import Long from "long";
-import hashgraph from "@hashgraph/proto/lib/proto.js";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef MirrorNodeTokenResponse
@@ -147,11 +147,11 @@ export default class MirrorNodeService {
     getTokenKycStatusFrom(status) {
         switch (status) {
             case "NOT_APPLICABLE":
-                return hashgraph.proto.TokenKycStatus.KycNotApplicable;
+                return HashgraphProto.proto.TokenKycStatus.KycNotApplicable;
             case "GRANTED":
-                return hashgraph.proto.TokenKycStatus.Granted;
+                return HashgraphProto.proto.TokenKycStatus.Granted;
             case "REVOKED":
-                return hashgraph.proto.TokenKycStatus.Revoked;
+                return HashgraphProto.proto.TokenKycStatus.Revoked;
             default:
                 throw new Error(`Invalid token KYC status: ${status}`);
         }
@@ -165,11 +165,11 @@ export default class MirrorNodeService {
     getTokenFreezeStatusFrom(status) {
         switch (status) {
             case "NOT_APPLICABLE":
-                return hashgraph.proto.TokenFreezeStatus.FreezeNotApplicable;
+                return HashgraphProto.proto.TokenFreezeStatus.FreezeNotApplicable;
             case "FROZEN":
-                return hashgraph.proto.TokenFreezeStatus.Frozen;
+                return HashgraphProto.proto.TokenFreezeStatus.Frozen;
             case "UNFROZEN":
-                return hashgraph.proto.TokenFreezeStatus.Unfrozen;
+                return HashgraphProto.proto.TokenFreezeStatus.Unfrozen;
             default:
                 throw new Error(`Invalid token freeze status: ${status}`);
         }
