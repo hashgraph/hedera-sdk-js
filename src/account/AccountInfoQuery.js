@@ -184,8 +184,6 @@ export default class AccountInfoQuery extends Query {
                 this._ledgerId,
             );
 
-            console.log('mirrorNetwork', this._mirrorNetwork);
-            console.log('ledgerId', this._ledgerId);
             const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
 
             const info =
