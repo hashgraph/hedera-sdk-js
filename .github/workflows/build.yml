@@ -120,7 +120,22 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: task test:integration:codecov
 
-      - name: Unit Test @hashgraph/sdk
+      - name: Build @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task build
+
+      - name: Unit Test @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit
+
+      - name: Codecov @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: task test:unit:codecov
+
+        - name: Unit Test @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
         run: task test:unit
 
@@ -132,18 +147,3 @@ jobs:
         id: stop-local-node
         if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: npx @hashgraph/hedera-local stop
-
-      - name: Build @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task build
-
-      - name: Unit Test @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:unit
-
-      - name: Codecov @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:unit:codecov
