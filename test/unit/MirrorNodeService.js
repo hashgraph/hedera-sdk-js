@@ -1,4 +1,3 @@
-import { log } from "util";
 import MirrorNodeService, {
     TokenKeyStatusEnum,
     TokenFreezeStatusEnum,
