@@ -43,6 +43,23 @@ import * as hashgraphProto from "@hashgraph/proto";
  * @typedef {import("./MirrorNodeGateway.js").default} MirrorNodeGateway
  */
 
+/**
+ * @enum {string}
+ */
+export const TokenFreezeStatusEnum = {
+    NOT_APPLICABLE: "NOT_APPLICABLE",
+    FROZEN: "FROZEN",
+    UNFROZEN: "UNFROZEN",
+};
+/**
+ * @enum {string}
+ */
+export const TokenKeyStatusEnum = {
+    NOT_APPLICABLE: "NOT_APPLICABLE",
+    GRANTED: "GRANTED",
+    REVOKED: "REVOKED",
+};
+
 export default class MirrorNodeService {
     /**
      * @param {MirrorNodeGateway} mirrorNodeGateway
@@ -146,11 +163,11 @@ export default class MirrorNodeService {
      */
     getTokenKycStatusFrom(status) {
         switch (status) {
-            case "NOT_APPLICABLE":
+            case TokenKeyStatusEnum.NOT_APPLICABLE:
                 return hashgraphProto.proto.TokenKycStatus.KycNotApplicable;
-            case "GRANTED":
+            case TokenKeyStatusEnum.GRANTED:
                 return hashgraphProto.proto.TokenKycStatus.Granted;
-            case "REVOKED":
+            case TokenKeyStatusEnum.REVOKED:
                 return hashgraphProto.proto.TokenKycStatus.Revoked;
             default:
                 throw new Error(`Invalid token KYC status: ${status}`);
@@ -164,11 +181,12 @@ export default class MirrorNodeService {
      */
     getTokenFreezeStatusFrom(status) {
         switch (status) {
-            case "NOT_APPLICABLE":
-                return hashgraphProto.proto.TokenFreezeStatus.FreezeNotApplicable;
-            case "FROZEN":
+            case TokenFreezeStatusEnum.NOT_APPLICABLE:
+                return hashgraphProto.proto.TokenFreezeStatus
+                    .FreezeNotApplicable;
+            case TokenFreezeStatusEnum.FROZEN:
                 return hashgraphProto.proto.TokenFreezeStatus.Frozen;
-            case "UNFROZEN":
+            case TokenFreezeStatusEnum.UNFROZEN:
                 return hashgraphProto.proto.TokenFreezeStatus.Unfrozen;
             default:
                 throw new Error(`Invalid token freeze status: ${status}`);
