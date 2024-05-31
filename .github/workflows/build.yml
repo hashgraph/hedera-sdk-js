@@ -116,10 +116,6 @@ jobs:
           # Wait for the network to fully start
           sleep 30
 
-      - name: Run Hedera SDK Integration Tests Codecov
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: task test:integration:codecov
-
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
