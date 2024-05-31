@@ -30,13 +30,14 @@ describe("TokenAssociate", function () {
             .execute(env.client);
 
         const account = (await response.getReceipt(env.client)).accountId;
+        const tokenDecimal = 3;
 
         const token = (
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
-                    .setDecimals(3)
+                    .setDecimals(tokenDecimal)
                     .setInitialSupply(1000000)
                     .setTreasuryAccountId(operatorId)
                     .setAdminKey(operatorKey)
@@ -67,11 +68,13 @@ describe("TokenAssociate", function () {
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
         const info = await new AccountInfoQuery()
+            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
         const relationship = info.tokenRelationships.get(token);
 
+        expect(relationship.decimals).to.be.equal(tokenDecimal);
         expect(relationship).to.be.not.null;
         expect(relationship.tokenId.toString()).to.be.equal(token.toString());
         expect(relationship.balance.toInt()).to.be.equal(0);
