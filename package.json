@@ -5,6 +5,7 @@
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
     "module": "./src/index.js",
+    "packageManager": "pnpm@8.15.7",
     "react-native": {
         "./lib/index.cjs": "./src/native.js",
         "./src/encoding/hex.js": "./src/encoding/hex.native.js",
