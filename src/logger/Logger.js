@@ -23,22 +23,63 @@ import LogLevel from "./LogLevel.js";
 export default class Logger {
     /**
      * @param {LogLevel} level
+     * @param {string} logFile the file to log to, if empty, logs to console
+     * @param {boolean} sync perform writes synchronously (similar to console.log)
+     * @param {boolean} fsync perform a fsyncSync every time a write is completed
+     * @param {boolean} mkdir ensure directory for dest file exists when true (default false)
+     * @param {number} minLength the minimum length of the internal buffer that is required to be full before flushing
      */
-    constructor(level) {
+    constructor(
+        level,
+        logFile = "",
+        sync = true,
+        fsync = true,
+        mkdir = true,
+        minLength = 0,
+    ) {
+        const fileTransport = logFile
+            ? pino.destination({
+                  dest: logFile,
+                  sync,
+                  fsync,
+                  mkdir,
+                  minLength,
+              })
+            : null;
+
+        const loggerOptions = fileTransport
+            ? {
+                  level: level.toString(),
+                  timestamp: pino.stdTimeFunctions.isoTime,
+                  formatters: {
+                      bindings: () => {
+                          return {};
+                      },
+                      // @ts-ignore
+                      level: (label) => {
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+                          return { level: label.toUpperCase() };
+                      },
+                  },
+              }
+            : {
+                  level: level.toString(),
+                  transport: {
+                      target: "pino-pretty",
+                      options: {
+                          translateTime: "SYS:dd-mm-yyyy HH:MM:ss",
+                          ignore: "pid,hostname",
+                      },
+                  },
+              };
+
         /**
          * @private
          * @type {import("pino").Logger}
          */
-        this._logger = pino({
-            level: level.toString(),
-            transport: {
-                target: "pino-pretty",
-                options: {
-                    translateTime: "SYS:dd-mm-yyyy HH:MM:ss",
-                    ignore: "pid,hostname",
-                },
-            },
-        });
+        this._logger = fileTransport
+            ? pino(loggerOptions, fileTransport)
+            : pino(loggerOptions);
 
         /**
          * @private
