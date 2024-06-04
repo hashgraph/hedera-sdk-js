@@ -39,15 +39,15 @@ const LOCAL_NODE_PORT = "5551";
 export default class MirrorNodeRouter {
     /**
      * Set mirror node url
-     * @param {string[]} mirrorNetwork
+     * @param {string[]} mirrorNetworkNodes
      * @param {LedgerId | null} ledgerId
      * @returns {string}
      */
-    static getMirrorNodeUrl(mirrorNetwork, ledgerId) {
+    static getMirrorNodeUrl(mirrorNetworkNodes, ledgerId) {
         let path;
         let mirrorNodeAddress;
 
-        mirrorNodeAddress = mirrorNetwork.map((a) =>
+        mirrorNodeAddress = mirrorNetworkNodes.map((a) =>
             a.substring(0, a.indexOf(":")),
         )[0];
 

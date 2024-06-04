@@ -67,13 +67,13 @@ export default class MirrorNodeGateway {
     }
 
     /**
-     * @param {string[]} mirrorNetwork
+     * @param {string[]} mirrorNetworkNodes
      * @param {?LedgerId} ledgerId
      * @returns {MirrorNodeGateway}
      */
-    static forNetwork(mirrorNetwork, ledgerId) {
+    static forNetwork(mirrorNetworkNodes, ledgerId) {
         const mirrorNodeUrl = MirrorNodeRouter.getMirrorNodeUrl(
-            mirrorNetwork,
+            mirrorNetworkNodes,
             ledgerId,
         );
 
