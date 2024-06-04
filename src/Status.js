@@ -2886,7 +2886,6 @@ Status.MaxNodeHaveBeenCreated = new Status(347);
  */
 Status.IpFqdnCannotBeSetForSameEndpoint = new Status(348);
 
-
 /**
  * Fully qualified domain name is not allowed in gossip_endpoint
  */

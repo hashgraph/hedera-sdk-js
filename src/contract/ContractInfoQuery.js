@@ -179,7 +179,7 @@ export default class ContractInfoQuery extends Query {
     _mapResponse(response, nodeAccountId, request) {
         return new Promise((resolve, reject) => {
             const mirrorNodeGateway = MirrorNodeGateway.forNetwork(
-                this._mirrorNetwork,
+                this._mirrorNetworkNodes,
                 this._ledgerId,
             );
             const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
