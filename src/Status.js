@@ -651,6 +651,16 @@ export default class Status {
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
                 return "INVALID_MAX_AUTO_ASSOCIATIONS";
+            case Status.MaxNodeHaveBeenCreated:
+                return "MAX_NODE_HAVE_BEEN_CREATED";
+            case Status.IpFqdnCannotBeSetForSameEndpoint:
+                return "IP_FQDN_CANNOT_BE_SET_FOR_SAME_ENDPOINT";
+            case Status.GossipEndpointCannotHaveFqdn:
+                return "GOSSIP_ENDPOINT_CANNOT_HAVE_FQDN";
+            case Status.FqdnSizeTooLarge:
+                return "FQDN_SIZE_TOO_LARGE";
+            case Status.InvalidEndpoint:
+                return "INVALID_ENDPOINT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1273,6 +1283,16 @@ export default class Status {
                 return Status.InvalidGrpcCertificate;
             case 346:
                 return Status.InvalidMaxAutoAssociations;
+            case 347:
+                return Status.MaxNodeHaveBeenCreated;
+            case 348:
+                return Status.IpFqdnCannotBeSetForSameEndpoint;
+            case 349:
+                return Status.GossipEndpointCannotHaveFqdn;
+            case 350:
+                return Status.FqdnSizeTooLarge;
+            case 351:
+                return Status.InvalidEndpoint;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2855,3 +2875,29 @@ Status.InvalidGrpcCertificate = new Status(345);
  * The most common cause for this error is a value less than `-1`.
  */
 Status.InvalidMaxAutoAssociations = new Status(346);
+
+/**
+ * The maximum number of nodes allowed in the address book have been created.
+ */
+Status.MaxNodeHaveBeenCreated = new Status(347);
+
+/**
+ * In ServiceEndpoint, domain_name and ipAddressV4 are mutually exclusive
+ */
+Status.IpFqdnCannotBeSetForSameEndpoint = new Status(348);
+
+
+/**
+ * Fully qualified domain name is not allowed in gossip_endpoint
+ */
+Status.GossipEndpointCannotHaveFqdn = new Status(349);
+
+/**
+ * In ServiceEndpoint, domain_name size too large
+ */
+Status.FqdnSizeTooLarge = new Status(350);
+
+/**
+ * ServiceEndpoint is invalid
+ */
+Status.InvalidEndpoint = new Status(351);
