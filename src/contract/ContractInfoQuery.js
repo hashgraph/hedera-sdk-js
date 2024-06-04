@@ -201,19 +201,16 @@ export default class ContractInfoQuery extends Query {
                     )
                     .then((tokensRelationships) => {
                         if (
-                            info.contractInfo &&
-                            info.contractInfo.tokenRelationships &&
+                            info.contractInfo?.tokenRelationships &&
                             tokensRelationships
                         ) {
-                            info.contractInfo.tokenRelationships.splice(
-                                0,
-                                info.contractInfo.tokenRelationships.length,
+                            // Reset the array to avoid duplicates
+                            info.contractInfo.tokenRelationships.length = 0;
+
+                            // Add the token relationships from the mirror node to the response fromn the consensus node
+                            info.contractInfo.tokenRelationships.push(
+                                ...tokensRelationships,
                             );
-                            for (const tokenRelationship of tokensRelationships) {
-                                info.contractInfo.tokenRelationships.push(
-                                    tokenRelationship,
-                                );
-                            }
                         }
 
                         resolve(

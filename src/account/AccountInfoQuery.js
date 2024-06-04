@@ -186,14 +186,17 @@ export default class AccountInfoQuery extends Query {
 
             const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
 
-            const info =
+            const accountInfoFromConsensusNode =
                 /** @type {HashgraphProto.proto.ICryptoGetInfoResponse} */ (
                     response.cryptoGetInfo
                 );
 
-            if (info.accountInfo && info.accountInfo.accountID) {
+            if (
+                accountInfoFromConsensusNode.accountInfo &&
+                accountInfoFromConsensusNode.accountInfo.accountID
+            ) {
                 const accountIdFromConsensusNode = AccountId._fromProtobuf(
-                    info.accountInfo.accountID,
+                    accountInfoFromConsensusNode.accountInfo.accountID,
                 );
 
                 mirrorNodeService
@@ -203,25 +206,23 @@ export default class AccountInfoQuery extends Query {
                     )
                     .then((tokensRelationships) => {
                         if (
-                            info.accountInfo &&
-                            info.accountInfo.tokenRelationships &&
+                            accountInfoFromConsensusNode.accountInfo
+                                ?.tokenRelationships &&
                             tokensRelationships
                         ) {
-                            info.accountInfo.tokenRelationships.splice(
-                                0,
-                                info.accountInfo.tokenRelationships.length,
+                            // Reset the array to avoid duplicates
+                            accountInfoFromConsensusNode.accountInfo.tokenRelationships.length = 0;
+
+                            // Add the token relationships from the mirror node to the response fromn the consensus node
+                            accountInfoFromConsensusNode.accountInfo.tokenRelationships.push(
+                                ...tokensRelationships,
                             );
-                            for (const tokenRelationship of tokensRelationships) {
-                                info.accountInfo.tokenRelationships.push(
-                                    tokenRelationship,
-                                );
-                            }
                         }
 
                         resolve(
                             AccountInfo._fromProtobuf(
                                 /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
-                                    info.accountInfo
+                                    accountInfoFromConsensusNode.accountInfo
                                 ),
                             ),
                         );

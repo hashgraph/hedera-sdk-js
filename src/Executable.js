@@ -529,6 +529,7 @@ export default class Executable {
         // Set list of mirror network nodes with
         // which execution will be attempted
         this._mirrorNetwork = client.mirrorNetwork;
+
         // Set current LedgerId of the network with
         // which execution will be attempted
         this._ledgerId = client.ledgerId;

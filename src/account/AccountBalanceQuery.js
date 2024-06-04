@@ -237,14 +237,14 @@ export default class AccountBalanceQuery extends Query {
             );
             const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
 
-            const cryptogetAccountBalance =
+            const cryptogetAccountBalanceFromConsensusNode =
                 /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
                     response.cryptogetAccountBalance
                 );
 
-            if (cryptogetAccountBalance.accountID) {
+            if (cryptogetAccountBalanceFromConsensusNode.accountID) {
                 const accountIdFromConsensusNode = AccountId._fromProtobuf(
-                    cryptogetAccountBalance.accountID,
+                    cryptogetAccountBalanceFromConsensusNode.accountID,
                 );
 
                 mirrorNodeService
@@ -257,25 +257,19 @@ export default class AccountBalanceQuery extends Query {
                             /** @type {HashgraphProto.proto.ITokenBalance[]} */ tokenBalances,
                         ) => {
                             if (
-                                cryptogetAccountBalance &&
-                                cryptogetAccountBalance.tokenBalances &&
+                                cryptogetAccountBalanceFromConsensusNode?.tokenBalances &&
                                 tokenBalances
                             ) {
-                                cryptogetAccountBalance.tokenBalances.splice(
-                                    0,
-                                    cryptogetAccountBalance.tokenBalances
-                                        .length,
+                                // Reset the array to avoid duplicates
+                                cryptogetAccountBalanceFromConsensusNode.tokenBalances.length = 0;
+                                // Add the token balances from the mirror node to the response fromn the consensus node
+                                cryptogetAccountBalanceFromConsensusNode.tokenBalances.push(
+                                    ...tokenBalances,
                                 );
-
-                                for (const tokenBalance of tokenBalances) {
-                                    cryptogetAccountBalance.tokenBalances.push(
-                                        tokenBalance,
-                                    );
-                                }
 
                                 resolve(
                                     AccountBalance._fromProtobuf(
-                                        cryptogetAccountBalance,
+                                        cryptogetAccountBalanceFromConsensusNode,
                                     ),
                                 );
                             }
