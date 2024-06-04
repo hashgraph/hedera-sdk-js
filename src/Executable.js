@@ -141,7 +141,7 @@ export default class Executable {
          * @protected
          * @type {string[]}
          */
-        this._mirrorNetwork = [];
+        this._mirrorNetworkNodes = [];
 
         /**
          * Current LedgerId of the network with which execution will be attempted.
@@ -528,7 +528,7 @@ export default class Executable {
     async execute(client, requestTimeout) {
         // Set list of mirror network nodes with
         // which execution will be attempted
-        this._mirrorNetwork = client.mirrorNetwork;
+        this._mirrorNetworkNodes = client.mirrorNetwork;
 
         // Set current LedgerId of the network with
         // which execution will be attempted
