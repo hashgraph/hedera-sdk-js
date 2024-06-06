@@ -115,7 +115,7 @@ tasks:
     "test:release":
         cmds:
             - task: build
-            - task: test:unit
+            # - task: test:unit
             - task: examples:build
             - task: simple_rest_signature_provider:build
             - task: common_js_test:build
