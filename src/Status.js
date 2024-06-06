@@ -651,8 +651,8 @@ export default class Status {
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
                 return "INVALID_MAX_AUTO_ASSOCIATIONS";
-            case Status.MaxNodeHaveBeenCreated:
-                return "MAX_NODE_HAVE_BEEN_CREATED";
+            case Status.MaxNodesCreated:
+                return "MAX_NODES_CREATED";
             case Status.IpFqdnCannotBeSetForSameEndpoint:
                 return "IP_FQDN_CANNOT_BE_SET_FOR_SAME_ENDPOINT";
             case Status.GossipEndpointCannotHaveFqdn:
@@ -661,6 +661,8 @@ export default class Status {
                 return "FQDN_SIZE_TOO_LARGE";
             case Status.InvalidEndpoint:
                 return "INVALID_ENDPOINT";
+            case Status.GossipEndpointsExceededLimit:
+                return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1284,7 +1286,7 @@ export default class Status {
             case 346:
                 return Status.InvalidMaxAutoAssociations;
             case 347:
-                return Status.MaxNodeHaveBeenCreated;
+                return Status.MaxNodesCreated;
             case 348:
                 return Status.IpFqdnCannotBeSetForSameEndpoint;
             case 349:
@@ -1293,6 +1295,8 @@ export default class Status {
                 return Status.FqdnSizeTooLarge;
             case 351:
                 return Status.InvalidEndpoint;
+            case 352:
+                return Status.GossipEndpointsExceededLimit;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2879,7 +2883,7 @@ Status.InvalidMaxAutoAssociations = new Status(346);
 /**
  * The maximum number of nodes allowed in the address book have been created.
  */
-Status.MaxNodeHaveBeenCreated = new Status(347);
+Status.MaxNodesCreated = new Status(347);
 
 /**
  * In ServiceEndpoint, domain_name and ipAddressV4 are mutually exclusive
@@ -2900,3 +2904,8 @@ Status.FqdnSizeTooLarge = new Status(350);
  * ServiceEndpoint is invalid
  */
 Status.InvalidEndpoint = new Status(351);
+
+/**
+ * The number of gossip endpoints exceeds the limit
+ */
+Status.GossipEndpointsExceededLimit = new Status(352);
