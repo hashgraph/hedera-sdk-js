@@ -262,7 +262,7 @@ export default class AccountBalanceQuery extends Query {
                             ) {
                                 // Reset the array to avoid duplicates
                                 cryptogetAccountBalanceFromConsensusNode.tokenBalances.length = 0;
-                                // Add the token balances from the mirror node to the response fromn the consensus node
+                                // Add the token balances from the mirror node to the response from the consensus node
                                 cryptogetAccountBalanceFromConsensusNode.tokenBalances.push(
                                     ...tokenBalances,
                                 );

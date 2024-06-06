@@ -207,7 +207,7 @@ export default class ContractInfoQuery extends Query {
                             // Reset the array to avoid duplicates
                             info.contractInfo.tokenRelationships.length = 0;
 
-                            // Add the token relationships from the mirror node to the response fromn the consensus node
+                            // Add the token relationships from the mirror node to the response from the consensus node
                             info.contractInfo.tokenRelationships.push(
                                 ...tokensRelationships,
                             );
