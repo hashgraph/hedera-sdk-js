@@ -1397,7 +1397,6 @@ describe("CustomFees", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            console.log(error);
             err = error
                 .toString()
                 .includes(Status.CustomFeeChargingExceededMaxAccountAmounts);

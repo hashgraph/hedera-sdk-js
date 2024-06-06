@@ -23,6 +23,8 @@ import AccountId from "./AccountId.js";
 import AccountInfo from "./AccountInfo.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Hbar from "../Hbar.js";
+import MirrorNodeService from "../network/MirrorNodeService.js";
+import MirrorNodeGateway from "../network/MirrorNodeGateway.js";
 
 /**
  * @namespace proto
@@ -33,11 +35,13 @@ import Hbar from "../Hbar.js";
  * @typedef {import("@hashgraph/proto").proto.CryptoGetInfoResponse.IAccountInfo} HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo
  * @typedef {import("@hashgraph/proto").proto.ICryptoGetInfoQuery} HashgraphProto.proto.ICryptoGetInfoQuery
  * @typedef {import("@hashgraph/proto").proto.ICryptoGetInfoResponse} HashgraphProto.proto.ICryptoGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenRelationship} HashgraphProto.proto.ITokenRelationship
  */
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/TokenRelationship.js").default} TokenRelationship
  */
 
 /**
@@ -56,9 +60,17 @@ export default class AccountInfoQuery extends Query {
          * @type {?AccountId}
          */
         this._accountId = null;
+
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
         }
+
+        /**
+         * @private
+         * @description Delay in ms if is necessary to wait for the mirror node to update the account info
+         * @type {number}
+         */
+        this._timeout = 0;
     }
 
     /**
@@ -111,6 +123,16 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
+     *
+     * @param {number} timeout
+     * @returns {this}
+     */
+    setTimeout(timeout) {
+        this._timeout = timeout;
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -156,18 +178,60 @@ export default class AccountInfoQuery extends Query {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const info =
-            /** @type {HashgraphProto.proto.ICryptoGetInfoResponse} */ (
-                response.cryptoGetInfo
+        return new Promise((resolve, reject) => {
+            const mirrorNodeGateway = MirrorNodeGateway.forNetwork(
+                this._mirrorNetworkNodes,
+                this._ledgerId,
             );
 
-        return Promise.resolve(
-            AccountInfo._fromProtobuf(
-                /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
-                    info.accountInfo
-                ),
-            ),
-        );
+            const mirrorNodeService = new MirrorNodeService(mirrorNodeGateway);
+
+            const accountInfoFromConsensusNode =
+                /** @type {HashgraphProto.proto.ICryptoGetInfoResponse} */ (
+                    response.cryptoGetInfo
+                );
+
+            if (
+                accountInfoFromConsensusNode.accountInfo &&
+                accountInfoFromConsensusNode.accountInfo.accountID
+            ) {
+                const accountIdFromConsensusNode = AccountId._fromProtobuf(
+                    accountInfoFromConsensusNode.accountInfo.accountID,
+                );
+
+                mirrorNodeService
+                    .setTimeout(this._timeout)
+                    .getTokenRelationshipsForAccount(
+                        accountIdFromConsensusNode.num.toString(),
+                    )
+                    .then((tokensRelationships) => {
+                        if (
+                            accountInfoFromConsensusNode.accountInfo
+                                ?.tokenRelationships &&
+                            tokensRelationships
+                        ) {
+                            // Reset the array to avoid duplicates
+                            accountInfoFromConsensusNode.accountInfo.tokenRelationships.length = 0;
+
+                            // Add the token relationships from the mirror node to the response from the consensus node
+                            accountInfoFromConsensusNode.accountInfo.tokenRelationships.push(
+                                ...tokensRelationships,
+                            );
+                        }
+
+                        resolve(
+                            AccountInfo._fromProtobuf(
+                                /** @type {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} */ (
+                                    accountInfoFromConsensusNode.accountInfo
+                                ),
+                            ),
+                        );
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
     }
 
     /**
