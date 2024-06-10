@@ -49,13 +49,8 @@ describe("AccountInfoMocking", function () {
     let servers;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
     });
 
     it("payment transaction is correctly constructed", async function () {
@@ -141,8 +136,6 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             errorName = error.name;
         }
-
-        console.log(errorName);
 
         expect(errorName).to.be.eql("MaxQueryPaymentExceededError");
     });

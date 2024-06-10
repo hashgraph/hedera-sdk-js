@@ -156,7 +156,10 @@ describe("TokenAllowances", function () {
 
         const approveRx = await receiverApproveTx.execute(env.client);
 
-        await approveRx.getReceipt(env.client);
+        const approveReceipt = await approveRx.getReceipt(env.client);
+        console.log(
+            `Approve spender allowance - status: ${approveReceipt.status}`,
+        );
 
         let err = false;
         const onBehalfOfTransactionId =
@@ -224,7 +227,8 @@ describe("TokenAllowances", function () {
             .freezeWith(env.client);
         const fileAppendSign = await fileAppendTx.sign(env.operatorKey);
         const fileAppendSubmit = await fileAppendSign.execute(env.client);
-        await fileAppendSubmit.getReceipt(env.client);
+        const fileAppendRx = await fileAppendSubmit.getReceipt(env.client);
+        console.log("Status of file append is", fileAppendRx.status.toString());
 
         // Instantiate the contract instance
         const contractTx = await new ContractCreateTransaction()
@@ -245,6 +249,8 @@ describe("TokenAllowances", function () {
         //Get the smart contract ID
         const contractId = contractReceipt.contractId;
 
+        console.log("Contract ID is:", contractId.toString());
+
         //Associate Token with Contract
         const tokenAssociateTransactionWithContract =
             await new TokenAssociateTransaction()
@@ -256,7 +262,12 @@ describe("TokenAllowances", function () {
             await tokenAssociateTransactionWithContract.sign(env.operatorKey);
         const txResponseAssociatedTokenWithContract =
             await signedTxForAssociateTokenWithContract.execute(env.client);
-        await txResponseAssociatedTokenWithContract.getReceipt(env.client);
+        const txReceipt2 =
+            await txResponseAssociatedTokenWithContract.getReceipt(env.client);
+        console.log(
+            "The associate token to contract transaction consensus is",
+            txReceipt2.status.toString(),
+        );
 
         //Associate Token with Receiver
         const tokenAssociateTransactionWithContract1 =
@@ -269,7 +280,12 @@ describe("TokenAllowances", function () {
             await tokenAssociateTransactionWithContract1.sign(receiverKey);
         const txResponseAssociatedTokenWithContract1 =
             await signedTxForAssociateTokenWithContract1.execute(env.client);
-        await txResponseAssociatedTokenWithContract1.getReceipt(env.client);
+        const txReceipt21 =
+            await txResponseAssociatedTokenWithContract1.getReceipt(env.client);
+        console.log(
+            "The associate token to receiver transaction consensus is",
+            txReceipt21.status.toString(),
+        );
 
         // Give `spender` allowance for Token
         const receiverApproveTx =
@@ -282,7 +298,10 @@ describe("TokenAllowances", function () {
 
         const approveRx = await receiverApproveTx.execute(env.client);
 
-        await approveRx.getReceipt(env.client);
+        const approveReceipt = await approveRx.getReceipt(env.client);
+        console.log(
+            `Approve spender allowance - status: ${approveReceipt.status}`,
+        );
 
         // Get Allowances
         const checkAllowance = new ContractExecuteTransaction()
@@ -304,6 +323,8 @@ describe("TokenAllowances", function () {
             .setIncludeChildren(true)
             .execute(env.client);
         const allowanceSize = recQuery.contractFunctionResult.getUint256(0);
+
+        console.log(`Contract has an allowance of ${allowanceSize}`);
 
         expect(allowanceSize.toNumber()).to.equal(100);
     });

@@ -39,7 +39,6 @@ describe("AccountUpdate", function () {
         const account = receipt.accountId;
 
         let info = await new AccountInfoQuery()
-            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 

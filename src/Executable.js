@@ -34,7 +34,6 @@ import HttpError from "./http/HttpError.js";
  * @typedef {import("./Signer.js").Signer} Signer
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./logger/Logger.js").default} Logger
- * @typedef {import("./LedgerId.js").default} LedgerId
  */
 
 /**
@@ -135,20 +134,6 @@ export default class Executable {
          * @type {Logger | null}
          */
         this._logger = null;
-
-        /**
-         * List of mirror network nodes with which execution will be attempted.
-         * @protected
-         * @type {string[]}
-         */
-        this._mirrorNetworkNodes = [];
-
-        /**
-         * Current LedgerId of the network with which execution will be attempted.
-         * @protected
-         * @type {LedgerId | null}
-         */
-        this._ledgerId = null;
     }
 
     /**
@@ -526,14 +511,6 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        // Set list of mirror network nodes with
-        // which execution will be attempted
-        this._mirrorNetworkNodes = client.mirrorNetwork;
-
-        // Set current LedgerId of the network with
-        // which execution will be attempted
-        this._ledgerId = client.ledgerId;
-
         // If the logger on the request is not set, use the logger in client
         // (if set, otherwise do not use logger)
         this._logger =

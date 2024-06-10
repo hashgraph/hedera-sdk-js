@@ -123,9 +123,11 @@ describe("ScheduleCreate", function () {
             key3.publicKey,
         );
 
-        await new AccountBalanceQuery()
+        const balance = await new AccountBalanceQuery()
             .setAccountId(operatorId)
             .execute(env.client);
+
+        console.log(`Balances of the new account: ${balance.toString()}`);
 
         const response = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(10))

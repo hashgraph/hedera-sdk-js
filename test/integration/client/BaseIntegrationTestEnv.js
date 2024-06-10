@@ -74,7 +74,9 @@ export default class BaseIntegrationTestEnv {
                 options.env.HEDERA_NETWORK == "localhost") ||
             options.env.HEDERA_NETWORK == "local-node"
         ) {
-            client = options.client.forLocalNode();
+            client = options.client.forNetwork({
+                "127.0.0.1:50211": new AccountId(3),
+            });
         } else if (options.env.CONFIG_FILE != null) {
             client = await options.client.fromConfigFile(
                 options.env.CONFIG_FILE
