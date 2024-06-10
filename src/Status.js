@@ -651,18 +651,6 @@ export default class Status {
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
                 return "INVALID_MAX_AUTO_ASSOCIATIONS";
-            case Status.MaxNodesCreated:
-                return "MAX_NODES_CREATED";
-            case Status.IpFqdnCannotBeSetForSameEndpoint:
-                return "IP_FQDN_CANNOT_BE_SET_FOR_SAME_ENDPOINT";
-            case Status.GossipEndpointCannotHaveFqdn:
-                return "GOSSIP_ENDPOINT_CANNOT_HAVE_FQDN";
-            case Status.FqdnSizeTooLarge:
-                return "FQDN_SIZE_TOO_LARGE";
-            case Status.InvalidEndpoint:
-                return "INVALID_ENDPOINT";
-            case Status.GossipEndpointsExceededLimit:
-                return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1285,18 +1273,6 @@ export default class Status {
                 return Status.InvalidGrpcCertificate;
             case 346:
                 return Status.InvalidMaxAutoAssociations;
-            case 347:
-                return Status.MaxNodesCreated;
-            case 348:
-                return Status.IpFqdnCannotBeSetForSameEndpoint;
-            case 349:
-                return Status.GossipEndpointCannotHaveFqdn;
-            case 350:
-                return Status.FqdnSizeTooLarge;
-            case 351:
-                return Status.InvalidEndpoint;
-            case 352:
-                return Status.GossipEndpointsExceededLimit;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,

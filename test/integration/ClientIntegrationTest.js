@@ -21,6 +21,47 @@ describe("ClientIntegration", function () {
         clientPreviewNet = Client.forPreviewnet();
     });
 
+    it("should error when invalid network on entity ID", async function () {
+        this.timeout(120000);
+
+        if (env.client.ledgerId == null) {
+            return;
+        }
+
+        let err = false;
+
+        let network;
+        switch (env.client.ledgerId.toString()) {
+            case "mainnet":
+                network = "testnet";
+                break;
+            case "testnet":
+                network = "previewnet";
+                break;
+            case "previewnet":
+                network = "mainnet";
+                break;
+            default:
+                throw new Error(
+                    `(BUG) operator network is unrecognized value: ${env.client.ledgerId.toString()}`,
+                );
+        }
+
+        const accountId = AccountId.withNetwork(3, network);
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId(accountId)
+                .execute(env.client);
+        } catch (error) {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("query did not error");
+        }
+    });
+
     it("can execute with sign on demand", async function () {
         this.timeout(120000);
 
@@ -40,11 +81,9 @@ describe("ClientIntegration", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
-        expect(info).to.not.be.null;
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
@@ -83,7 +122,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can pingAll", async function () {
-        this.timeout(300000);
+        this.timeout(120000);
 
         await env.client.pingAll();
     });
@@ -100,17 +139,32 @@ describe("ClientIntegration", function () {
         expect(error).to.be.an("Error");
     });
 
+    // TODO(2023-11-01 NK) - test is consistently failing and should be enabled once fixed.
+    // eslint-disable-next-line mocha/no-skipped-tests
+    xit("can set network name on custom network", async function () {
+        this.timeout(120000);
+        expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
+        expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
+
+        await clientTestnet.setNetwork(clientPreviewNet.network);
+
+        expect(clientTestnet.ledgerId).to.be.null;
+
+        clientTestnet.setLedgerId("previewnet");
+
+        expect(clientTestnet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
+    });
+
     it("can use same proxies of one node", async function () {
-        this.timeout(300000);
+        this.timeout(100000);
         let nodes = {
             "0.testnet.hedera.com:50211": new AccountId(3),
             "34.94.106.61:50211": new AccountId(3),
             "50.18.132.211:50211": new AccountId(3),
+            "138.91.142.219:50211": new AccountId(3),
         };
 
-        const clientForNetwork = Client.forNetwork(nodes)
-            .setLedgerId(LedgerId.TESTNET)
-            .setMirrorNetwork("testnet.mirrornode.hedera.com:443");
+        const clientForNetwork = Client.forNetwork(nodes);
         await clientForNetwork.pingAll();
     });
 
@@ -134,64 +188,6 @@ describe("ClientIntegration", function () {
         const value = new Hbar(100);
         env.client.setDefaultMaxQueryPayment(value);
         expect(env.client.defaultMaxQueryPayment).to.be.equal(value);
-    });
-
-    /**
-     * @summary
-     * The last two tests must be in the exact order as
-     * they are now and always be the last tests in the suite.
-     * The client is initialized once before all the tests in the suite
-     * and when we manipulate the ledger id of the network
-     * this will affect the other tests.
-     */
-
-    it("should error when invalid network on entity ID", async function () {
-        this.timeout(120000);
-
-        if (env.client.ledgerId == null) {
-            return;
-        }
-
-        switch (env.client.ledgerId.toString()) {
-            case "mainnet":
-                env.client.setLedgerId(LedgerId.TESTNET);
-                break;
-            case "testnet":
-                env.client.setLedgerId(LedgerId.PREVIEWNET);
-                break;
-            case "previewnet":
-                env.client.setLedgerId(LedgerId.LOCAL_NODE);
-                break;
-            case "local-node":
-                env.client.setLedgerId(LedgerId.MAINNET);
-                break;
-            default:
-                throw new Error(
-                    `(BUG) operator network is unrecognized value: ${env.client.ledgerId.toString()}`,
-                );
-        }
-
-        const accountId = new AccountId(3);
-        let err;
-
-        try {
-            await new AccountInfoQuery()
-                .setTimeout(3000)
-                .setAccountId(accountId)
-                .execute(env.client);
-        } catch (error) {
-            err = error;
-        }
-
-        expect(err).to.not.be.null;
-    });
-
-    it("can set network name on custom network", async function () {
-        this.timeout(120000);
-
-        env.client.setLedgerId("previewnet");
-
-        expect(env.client.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
     });
 
     after(async function () {

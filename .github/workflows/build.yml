@@ -164,30 +164,30 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:integration:codecov
 
-      - name: Build @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task build
-
-      - name: Unit Test @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit
-
-      - name: Codecov @hashgraph/cryptography
-        working-directory: packages/cryptography
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit:codecov
-
-      - name: Unit Test @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit
-
-      - name: Codecov @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit:codecov
-
       - name: Stop the local node
         id: stop-local-node
         if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} npx @hashgraph/hedera-local stop
+
+      - name: Build @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: ${{ env.CG_EXEC }} task build
+
+      - name: Unit Test @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: ${{ env.CG_EXEC }} task test:unit
+
+      - name: Codecov @hashgraph/cryptography
+        working-directory: packages/cryptography
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: ${{ env.CG_EXEC }} task test:unit:codecov
+
+      - name: Unit Test @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
+        run: ${{ env.CG_EXEC }} task test:unit
+
+      - name: Codecov @hashgraph/sdk
+        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
+        run: ${{ env.CG_EXEC }} task test:unit:codecov

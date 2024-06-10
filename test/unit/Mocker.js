@@ -5,7 +5,6 @@ import {
     Client,
     Wallet,
     LocalProvider,
-    LedgerId,
 } from "../../src/index.js";
 import * as grpc from "@grpc/grpc-js";
 import * as loader from "@grpc/proto-loader";
@@ -425,7 +424,7 @@ class GrpcServers {
      * @returns {this}
      */
     addServer(responses) {
-        const address = `127.0.0.1:${1111 + this._index}`;
+        const address = `0.0.0.0:${50213 + this._index}`;
         const nodeAccountId = `0.0.${3 + this._index}`;
         const server = new GrpcServer(PROTOS).addResponses(responses);
 
@@ -454,7 +453,6 @@ class GrpcServers {
 
         return new Client({ network, scheduleNetworkUpdate: false })
             .setMirrorNetwork(Object.keys(network))
-            .setLedgerId(LedgerId.LOCAL_NODE)
             .setNodeMinBackoff(0)
             .setNodeMaxBackoff(0)
             .setNodeMinReadmitPeriod(0)

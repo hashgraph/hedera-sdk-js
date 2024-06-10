@@ -32,13 +32,8 @@ describe("EthereumFlowMocking", function () {
     let servers;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
     });
 
     it("doesn't truncate ethereum data if it's not long enough", async function () {

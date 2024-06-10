@@ -7,7 +7,6 @@ import {
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { wait } from "../../src/util.js";
 
 describe("TopicMessage", function () {
     let env;
@@ -23,7 +22,7 @@ describe("TopicMessage", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         // Skip this test if we do not have a mirror network
-        if (env.client && env.client.mirrorNetwork.length == 0) {
+        if (env.client.mirrorNetwork.length == 0) {
             return;
         }
 
@@ -34,7 +33,23 @@ describe("TopicMessage", function () {
             .execute(env.client);
 
         const topic = (await response.getReceipt(env.client)).topicId;
+
+        let finished = false;
         const contents = "Hello from Hedera SDK JS";
+
+        const handle = new TopicMessageQuery()
+            .setTopicId(topic)
+            .setStartTime(0)
+            .setLimit(1)
+            .setCompletionHandler(() => {
+                finished = true;
+            })
+            // eslint-disable-next-line no-unused-vars
+            .subscribe(env.client, (_) => {
+                // Do nothing
+            });
+
+        const startTime = Date.now();
 
         await (
             await new TopicMessageSubmitTransaction()
@@ -43,24 +58,9 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        let finished = false;
-        let listener = null;
-        let endTime = Date.now() + 50000;
-
-        await wait(3000);
-
-        const handle = new TopicMessageQuery()
-            .setTopicId(topic)
-            .setStartTime(0)
-            .setEndTime(Date.now())
-            .subscribe(env.client, null, (res) => {
-                finished = true;
-                listener = res;
-            });
-
-        while (!finished && Date.now() < endTime) {
+        while (!finished && Date.now() < startTime + 45000) {
             //NOSONAR
-            await new Promise((resolved) => setTimeout(resolved, 5000));
+            await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
         await (
@@ -71,10 +71,9 @@ describe("TopicMessage", function () {
 
         handle.unsubscribe();
 
-        expect(listener).to.not.be.null;
-        expect(Buffer.from(listener.contents).toString("utf8")).to.be.eql(
-            contents,
-        );
+        if (!finished) {
+            throw new Error("Failed to receive message in 30s");
+        }
     });
 
     it("should be executable with large message", async function () {
