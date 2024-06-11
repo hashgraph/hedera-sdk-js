@@ -663,6 +663,10 @@ export default class Status {
                 return "INVALID_ENDPOINT";
             case Status.GossipEndpointsExceededLimit:
                 return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
+            case Status.ServiceEndpointExceededLimit:
+                return "SERVICE_ENDPOINT_EXCEEDED_LIMIT";
+            case Status.InvalidIpv4Address:
+                return "INVALID_IPV4_ADDRESS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1297,6 +1301,10 @@ export default class Status {
                 return Status.InvalidEndpoint;
             case 352:
                 return Status.GossipEndpointsExceededLimit;
+            case 356:
+                return Status.ServiceEndpointExceededLimit;
+            case 357:
+                return Status.InvalidIpv4Address;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2909,3 +2917,13 @@ Status.InvalidEndpoint = new Status(351);
  * The number of gossip endpoints exceeds the limit
  */
 Status.GossipEndpointsExceededLimit = new Status(352);
+
+/**
+   * The number of service endpoints exceeds the limit
+   */
+Status.ServiceEndpointExceededLimit = new Status(356)
+
+/*
+ * The IPv4 address is invalid
+ */
+Status.InvalidIpv4Address = new Status(357)
