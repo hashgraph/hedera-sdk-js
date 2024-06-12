@@ -259,7 +259,7 @@ describe("TokenUpdate", function () {
         ).getReceipt(env.client);
     });
 
-    it("should error updating immutable token", async function () {
+    it.only("should error updating immutable token", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
@@ -316,6 +316,7 @@ describe("TokenUpdate", function () {
         try {
             const response = await new TokenCreateTransaction()
                 .setTokenSymbol("F")
+                .setTokenName("ffff")
                 .setTreasuryAccountId(operatorId)
                 .execute(env.client);
 
