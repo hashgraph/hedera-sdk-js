@@ -663,8 +663,8 @@ export default class Status {
                 return "INVALID_ENDPOINT";
             case Status.GossipEndpointsExceededLimit:
                 return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
-            case Status.ServiceEndpointExceededLimit:
-                return "SERVICE_ENDPOINT_EXCEEDED_LIMIT";
+            case Status.ServiceEndpointsExceededLimit:
+                return "SERVICE_ENDPOINTS_EXCEEDED_LIMIT";
             case Status.InvalidIpv4Address:
                 return "INVALID_IPV4_ADDRESS";
             default:
@@ -1302,7 +1302,7 @@ export default class Status {
             case 352:
                 return Status.GossipEndpointsExceededLimit;
             case 356:
-                return Status.ServiceEndpointExceededLimit;
+                return Status.ServiceEndpointsExceededLimit;
             case 357:
                 return Status.InvalidIpv4Address;
             default:
@@ -2921,7 +2921,7 @@ Status.GossipEndpointsExceededLimit = new Status(352);
 /**
    * The number of service endpoints exceeds the limit
    */
-Status.ServiceEndpointExceededLimit = new Status(356)
+Status.ServiceEndpointsExceededLimit = new Status(356)
 
 /*
  * The IPv4 address is invalid
