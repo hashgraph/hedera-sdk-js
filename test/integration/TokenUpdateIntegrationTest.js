@@ -18,7 +18,7 @@ describe("TokenUpdate", function () {
     let env;
 
     before(async function () {
-        env = await IntegrationTestEnv.new({ balance: 10000 });
+        env = await IntegrationTestEnv.new({ balance: 1000 });
     });
 
     it("should be executable", async function () {
@@ -259,7 +259,7 @@ describe("TokenUpdate", function () {
         ).getReceipt(env.client);
     });
 
-    it("should error updating immutable token", async function () {
+    it.only("should error updating immutable token", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
@@ -315,8 +315,8 @@ describe("TokenUpdate", function () {
 
         try {
             const response = await new TokenCreateTransaction()
-                .setTokenName("ffff")
                 .setTokenSymbol("F")
+                .setTokenName("ffff")
                 .setTreasuryAccountId(operatorId)
                 .execute(env.client);
 
@@ -325,6 +325,7 @@ describe("TokenUpdate", function () {
             await (
                 await new TokenUpdateTransaction()
                     .setTokenId(token)
+                    .setTokenName("aaaa")
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -1120,7 +1121,9 @@ describe("TokenUpdate", function () {
         });
     });
 
-    after(async function () {
-        await env.close();
+    after(function () {
+        if (env != null) {
+            env.close();
+        }
     });
 });

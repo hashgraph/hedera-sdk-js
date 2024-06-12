@@ -107,10 +107,6 @@ export default class NodeClient extends Client {
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
                         break;
 
-                    case "local-node":
-                        this.setMirrorNetwork(MirrorNetwork.LOCAL_NODE);
-                        break;
-
                     default:
                         this.setMirrorNetwork([props.mirrorNetwork]);
                         break;

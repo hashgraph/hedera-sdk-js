@@ -49,8 +49,6 @@ export { default as AccountRecordsQuery } from "./account/AccountRecordsQuery.js
 export { default as AccountStakersQuery } from "./account/AccountStakersQuery.js";
 export { default as AccountUpdateTransaction } from "./account/AccountUpdateTransaction.js";
 export { default as AddressBookQuery } from "./network/AddressBookQuery.js";
-export { default as MirrorNodeGateway } from "./network/MirrorNodeGateway.js";
-export { default as MirrorNodeRouter } from "./network/MirrorNodeRouter.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
 export { default as ContractByteCodeQuery } from "./contract/ContractByteCodeQuery.js";
 export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";

@@ -19,7 +19,6 @@ describe("ContractInfo", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
-
     it("should be executable", async function () {
         this.timeout(120000);
 
@@ -58,7 +57,6 @@ describe("ContractInfo", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setTimeout(3000)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -128,7 +126,6 @@ describe("ContractInfo", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setTimeout(3000)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);

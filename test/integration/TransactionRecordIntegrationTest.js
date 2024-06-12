@@ -29,6 +29,7 @@ describe("TransactionRecord", function () {
         const fileCreateSubmit = await fileCreateSign.execute(env.client);
         const fileCreateRx = await fileCreateSubmit.getReceipt(env.client);
         const bytecodeFileId = fileCreateRx.fileId;
+        console.log(`- The bytecode file ID is: ${bytecodeFileId} \n`);
 
         //Append contents to the file
         const fileAppendTx = new FileAppendTransaction()
@@ -38,7 +39,8 @@ describe("TransactionRecord", function () {
             .freezeWith(env.client);
         const fileAppendSign = await fileAppendTx.sign(privateKey);
         const fileAppendSubmit = await fileAppendSign.execute(env.client);
-        await fileAppendSubmit.getReceipt(env.client);
+        const fileAppendRx = await fileAppendSubmit.getReceipt(env.client);
+        console.log("Status of file append is", fileAppendRx.status.toString());
 
         // Instantiate the contract instance
         const contractTx = await new ContractCreateTransaction()
@@ -57,6 +59,9 @@ describe("TransactionRecord", function () {
 
         //Get the smart contract ID
         const newContractId = contractReceipt.contractId;
+
+        //Log the smart contract ID
+        console.log("The smart contract ID is " + newContractId);
 
         const contractExecuteTx = new ContractExecuteTransaction()
             .setContractId(newContractId)
