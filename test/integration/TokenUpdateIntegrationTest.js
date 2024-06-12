@@ -18,7 +18,7 @@ describe("TokenUpdate", function () {
     let env;
 
     before(async function () {
-        env = await IntegrationTestEnv.new({ balance: 10000 });
+        env = await IntegrationTestEnv.new({ balance: 1000 });
     });
 
     it("should be executable", async function () {
@@ -315,7 +315,6 @@ describe("TokenUpdate", function () {
 
         try {
             const response = await new TokenCreateTransaction()
-                .setTokenName("ffff")
                 .setTokenSymbol("F")
                 .setTreasuryAccountId(operatorId)
                 .execute(env.client);
@@ -325,6 +324,7 @@ describe("TokenUpdate", function () {
             await (
                 await new TokenUpdateTransaction()
                     .setTokenId(token)
+                    .setTokenName("aaaa")
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -1120,7 +1120,9 @@ describe("TokenUpdate", function () {
         });
     });
 
-    after(async function () {
-        await env.close();
+    after(function () {
+        if (env != null) {
+            env.close();
+        }
     });
 });
