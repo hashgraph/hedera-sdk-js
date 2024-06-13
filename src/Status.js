@@ -2919,11 +2919,11 @@ Status.InvalidEndpoint = new Status(351);
 Status.GossipEndpointsExceededLimit = new Status(352);
 
 /**
-   * The number of service endpoints exceeds the limit
-   */
-Status.ServiceEndpointsExceededLimit = new Status(356)
+ * The number of service endpoints exceeds the limit
+ */
+Status.ServiceEndpointsExceededLimit = new Status(356);
 
 /*
  * The IPv4 address is invalid
  */
-Status.InvalidIpv4Address = new Status(357)
+Status.InvalidIpv4Address = new Status(357);

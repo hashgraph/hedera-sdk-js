@@ -82,7 +82,8 @@ describe("TokenUpdateTransaction", function () {
                 autoRenewPeriod: null,
                 expiry: null,
                 treasury: treasuryAccountId._toProtobuf(),
-                keyVerificationMode: TokenKeyValidation.FullValidation.valueOf(),
+                keyVerificationMode:
+                    TokenKeyValidation.FullValidation.valueOf(),
                 adminKey: {
                     ed25519: key1.publicKey.toBytesRaw(),
                 },

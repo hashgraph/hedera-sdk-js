@@ -1236,7 +1236,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const newKey = KeyList.of();
+            const emptyKeyList = KeyList.of();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -1293,13 +1293,15 @@ describe("TokenUpdate", function () {
                 await (
                     await new TokenUpdateTransaction()
                         .setTokenId(tokenId)
-                        .setKeyVerificationMode(TokenKeyValidation.NoValidation)
-                        .setWipeKey(newKey)
-                        .setFreezeKey(newKey)
-                        .setPauseKey(newKey)
-                        .setSupplyKey(newKey)
-                        .setFeeScheduleKey(newKey)
-                        .setMetadataKey(newKey)
+                        .setKeyVerificationMode(
+                            TokenKeyValidation.FullValidation,
+                        )
+                        .setWipeKey(emptyKeyList)
+                        .setFreezeKey(emptyKeyList)
+                        .setPauseKey(emptyKeyList)
+                        .setSupplyKey(emptyKeyList)
+                        .setFeeScheduleKey(emptyKeyList)
+                        .setMetadataKey(emptyKeyList)
                         .freezeWith(env.client)
                         .sign(adminKey)
                 ).execute(env.client)
@@ -1337,9 +1339,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -1712,9 +1712,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -1800,9 +1798,7 @@ describe("TokenUpdate", function () {
 
             const adminKey = PrivateKey.generateED25519();
             const supplyKey = PrivateKey.generateED25519();
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -1864,9 +1860,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -2048,7 +2042,7 @@ describe("TokenUpdate", function () {
                                                                         tokenId,
                                                                     )
                                                                     .setKeyVerificationMode(
-                                                                        TokenKeyValidation.NoValidation,
+                                                                        TokenKeyValidation.FullValidation,
                                                                     )
                                                                     .setWipeKey(
                                                                         newWipeKey,
@@ -2343,9 +2337,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -2429,9 +2421,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -2612,9 +2602,7 @@ describe("TokenUpdate", function () {
             const newFeeScheduleKey = PrivateKey.generateED25519();
             const newMetadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -2800,9 +2788,7 @@ describe("TokenUpdate", function () {
             const feeScheduleKey = PrivateKey.generateED25519();
             const metadataKey = PrivateKey.generateED25519();
 
-            const unusableKey = PublicKey.fromString(
-                "0000000000000000000000000000000000000000000000000000000000000000",
-            );
+            const unusableKey = PublicKey.unusableKey();
 
             let token = new TokenCreateTransaction()
                 .setTokenName("Token")
@@ -3033,7 +3019,7 @@ describe("TokenUpdate", function () {
                         await new TokenUpdateTransaction()
                             .setTokenId(tokenId)
                             .setKeyVerificationMode(
-                                TokenKeyValidation.FullValidation,
+                                TokenKeyValidation.NoValidation,
                             )
                             .setWipeKey(structurallyInvalidKey)
                             .freezeWith(env.client)
@@ -3052,7 +3038,7 @@ describe("TokenUpdate", function () {
                         await new TokenUpdateTransaction()
                             .setTokenId(tokenId)
                             .setKeyVerificationMode(
-                                TokenKeyValidation.FullValidation,
+                                TokenKeyValidation.NoValidation,
                             )
                             .setFreezeKey(structurallyInvalidKey)
                             .freezeWith(env.client)
@@ -3090,7 +3076,7 @@ describe("TokenUpdate", function () {
                         await new TokenUpdateTransaction()
                             .setTokenId(tokenId)
                             .setKeyVerificationMode(
-                                TokenKeyValidation.FullValidation,
+                                TokenKeyValidation.NoValidation,
                             )
                             .setSupplyKey(structurallyInvalidKey)
                             .freezeWith(env.client)
@@ -3109,7 +3095,7 @@ describe("TokenUpdate", function () {
                         await new TokenUpdateTransaction()
                             .setTokenId(tokenId)
                             .setKeyVerificationMode(
-                                TokenKeyValidation.FullValidation,
+                                TokenKeyValidation.NoValidation,
                             )
                             .setFeeScheduleKey(structurallyInvalidKey)
                             .freezeWith(env.client)
@@ -3128,7 +3114,7 @@ describe("TokenUpdate", function () {
                         await new TokenUpdateTransaction()
                             .setTokenId(tokenId)
                             .setKeyVerificationMode(
-                                TokenKeyValidation.FullValidation,
+                                TokenKeyValidation.NoValidation,
                             )
                             .setMetadataKey(structurallyInvalidKey)
                             .freezeWith(env.client)
