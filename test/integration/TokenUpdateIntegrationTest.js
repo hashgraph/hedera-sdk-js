@@ -262,7 +262,7 @@ describe("TokenUpdate", function () {
         ).getReceipt(env.client);
     });
 
-    it.only("should error updating immutable token", async function () {
+    it("should error updating immutable token", async function () {
         this.timeout(120000);
 
         const operatorId = env.operatorId;
