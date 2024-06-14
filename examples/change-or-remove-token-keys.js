@@ -41,7 +41,6 @@ async function main() {
     const infoLogger = new Logger(LogLevel.Info);
     client.setLogger(infoLogger);
 
-
     const adminKey = PrivateKey.generateED25519();
     const supplyKey = PrivateKey.generateED25519();
     const newSupplyKey = PrivateKey.generateED25519();
@@ -61,14 +60,14 @@ async function main() {
     console.log("=====================================================");
     console.log("Initializing token keys...");
     console.log("-----------------------------------------------------");
-    console.log('Admin key:', adminKey.publicKey.toString());
-    console.log('Supply key:', supplyKey.publicKey.toString());
-    console.log('New supply key:', newSupplyKey.publicKey.toString());
-    console.log('Wipe key:', wipeKey.publicKey.toString());
-    console.log('Freeze key:', freezeKey.publicKey.toString());
-    console.log('Pause key:', pauseKey.publicKey.toString());
-    console.log('Fee schedule key:', feeScheduleKey.publicKey.toString());
-    console.log('Metadata key:', metadataKey.publicKey.toString());
+    console.log("Admin key:", adminKey.publicKey.toString());
+    console.log("Supply key:", supplyKey.publicKey.toString());
+    console.log("New supply key:", newSupplyKey.publicKey.toString());
+    console.log("Wipe key:", wipeKey.publicKey.toString());
+    console.log("Freeze key:", freezeKey.publicKey.toString());
+    console.log("Pause key:", pauseKey.publicKey.toString());
+    console.log("Fee schedule key:", feeScheduleKey.publicKey.toString());
+    console.log("Metadata key:", metadataKey.publicKey.toString());
     console.log("Unusable key:", unusableKey.toString());
     console.log("=====================================================");
     console.log("\n");
@@ -92,31 +91,27 @@ async function main() {
         .setMetadataKey(metadataKey)
         .freezeWith(client);
 
-    response = await (
-        await token.sign(adminKey)
-    ).execute(client);
+    response = await (await token.sign(adminKey)).execute(client);
 
-    receipt = await response.getReceipt(client)
-    console.log('Token create transction status:', receipt.status.toString());
+    receipt = await response.getReceipt(client);
+    console.log("Token create transction status:", receipt.status.toString());
 
     const tokenId = receipt.tokenId;
-    console.log('Token id:', tokenId.toString());
+    console.log("Token id:", tokenId.toString());
     console.log("=====================================================");
     console.log("\n");
     console.log("=====================================================");
     console.log("Token keys:");
     console.log("-----------------------------------------------------");
-    tokenInfo = await new TokenInfoQuery()
-        .setTokenId(tokenId)
-        .execute(client);
+    tokenInfo = await new TokenInfoQuery().setTokenId(tokenId).execute(client);
 
-    console.log('Token admin key:', tokenInfo.adminKey.toString());
-    console.log('Token pause key:', tokenInfo.pauseKey.toString());
-    console.log('Token freeze key:', tokenInfo.freezeKey.toString());
-    console.log('Token wipe key:', tokenInfo.wipeKey.toString());
-    console.log('Token supply key:', tokenInfo.supplyKey.toString());
-    console.log('Token fee schedule key:', tokenInfo.feeScheduleKey.toString());
-    console.log('Token metadata key:', tokenInfo.metadataKey.toString());
+    console.log("Token admin key:", tokenInfo.adminKey.toString());
+    console.log("Token pause key:", tokenInfo.pauseKey.toString());
+    console.log("Token freeze key:", tokenInfo.freezeKey.toString());
+    console.log("Token wipe key:", tokenInfo.wipeKey.toString());
+    console.log("Token supply key:", tokenInfo.supplyKey.toString());
+    console.log("Token fee schedule key:", tokenInfo.feeScheduleKey.toString());
+    console.log("Token metadata key:", tokenInfo.metadataKey.toString());
     console.log("=====================================================");
     console.log("\n");
     console.log("=====================================================");
@@ -126,18 +121,14 @@ async function main() {
         .setTokenId(tokenId)
         .setWipeKey(emptyKeyList)
         .setKeyVerificationMode(TokenKeyValidation.FullValidation)
-        .freezeWith(client)
-    response = await (
-        await update.sign(adminKey)
-    ).execute(client);
+        .freezeWith(client);
+    response = await (await update.sign(adminKey)).execute(client);
 
-    receipt = await response.getReceipt(client)
+    receipt = await response.getReceipt(client);
     console.log("Token update transaction status:", receipt.status.toString());
 
-    tokenInfo = await new TokenInfoQuery()
-        .setTokenId(tokenId)
-        .execute(client);
-    console.log('Token wipeKey is', tokenInfo.wipeKey);
+    tokenInfo = await new TokenInfoQuery().setTokenId(tokenId).execute(client);
+    console.log("Token wipeKey is", tokenInfo.wipeKey);
     console.log("=====================================================");
     console.log("\n");
     console.log("=====================================================");
@@ -147,68 +138,68 @@ async function main() {
         .setTokenId(tokenId)
         .setAdminKey(emptyKeyList)
         .setKeyVerificationMode(TokenKeyValidation.NoValidation)
-        .freezeWith(client)
-    response = await (
-        await update.sign(adminKey)
-    ).execute(client);
+        .freezeWith(client);
+    response = await (await update.sign(adminKey)).execute(client);
 
-    receipt = await response.getReceipt(client)
+    receipt = await response.getReceipt(client);
     console.log("Token update transaction status:", receipt.status.toString());
 
-    tokenInfo = await new TokenInfoQuery()
-        .setTokenId(tokenId)
-        .execute(client);
-    console.log('Token adminKey is', tokenInfo.adminKey);
+    tokenInfo = await new TokenInfoQuery().setTokenId(tokenId).execute(client);
+    console.log("Token adminKey is", tokenInfo.adminKey);
     console.log("=====================================================");
     console.log("\n");
     console.log("=====================================================");
     console.log("Updating Supply Key...");
     console.log("-----------------------------------------------------");
-    console.log('Token supplyKey (before update) is', tokenInfo.supplyKey.toString())
+    console.log(
+        "Token supplyKey (before update) is",
+        tokenInfo.supplyKey.toString(),
+    );
     update = new TokenUpdateTransaction()
         .setTokenId(tokenId)
         .setSupplyKey(newSupplyKey)
         .setKeyVerificationMode(TokenKeyValidation.FullValidation)
-        .freezeWith(client)
+        .freezeWith(client);
     response = await (
-        await(
-            await update.sign(supplyKey)
-        ).sign(newSupplyKey)
+        await (await update.sign(supplyKey)).sign(newSupplyKey)
     ).execute(client);
 
-    receipt = await response.getReceipt(client)
+    receipt = await response.getReceipt(client);
     console.log("Token update transaction status:", receipt.status.toString());
 
-    tokenInfo = await new TokenInfoQuery()
-        .setTokenId(tokenId)
-        .execute(client);
-    console.log('Token suppleyKey (after update) is', tokenInfo.supplyKey.toString());
+    tokenInfo = await new TokenInfoQuery().setTokenId(tokenId).execute(client);
+    console.log(
+        "Token suppleyKey (after update) is",
+        tokenInfo.supplyKey.toString(),
+    );
     console.log("=====================================================");
     console.log("\n");
     console.log("=====================================================");
     console.log("Updating Supply Key to unusable format...");
     console.log("-----------------------------------------------------");
-    console.log('Token supplyKey (before update) is', tokenInfo.supplyKey.toString())
+    console.log(
+        "Token supplyKey (before update) is",
+        tokenInfo.supplyKey.toString(),
+    );
     update = new TokenUpdateTransaction()
         .setTokenId(tokenId)
         .setSupplyKey(unusableKey)
         .setKeyVerificationMode(TokenKeyValidation.NoValidation)
         .freezeWith(client);
-    response = await(
-        await update.sign(newSupplyKey)
-    ).execute(client);
+    response = await (await update.sign(newSupplyKey)).execute(client);
 
-    receipt = await response.getReceipt(client)
+    receipt = await response.getReceipt(client);
     console.log("Token update transaction status:", receipt.status.toString());
 
-    tokenInfo = await new TokenInfoQuery()
-        .setTokenId(tokenId)
-        .execute(client);
+    tokenInfo = await new TokenInfoQuery().setTokenId(tokenId).execute(client);
 
-    console.log('Token suppleyKey (after update) is', tokenInfo.supplyKey.toString());
+    console.log(
+        "Token suppleyKey (after update) is",
+        tokenInfo.supplyKey.toString(),
+    );
     console.log("=====================================================");
 
     client.close();
 }
 
-main();
+void main();
