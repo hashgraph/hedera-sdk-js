@@ -175,6 +175,7 @@ export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
 export { default as Long } from "long";
 export { default as FreezeType } from "./FreezeType.js";
+export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
