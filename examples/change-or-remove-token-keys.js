@@ -56,7 +56,7 @@ async function main() {
     const emptyKeyList = KeyList.of();
     // - updating with an “invalid” key such as an Ed25519 0x0000000000000000000000000000000000000000000000000000000000000000 public key,
     // since it is (presumably) impossible to find the 32-byte string whose SHA-512 hash begins with 32 bytes of zeros.
-    const unusableKey = PublicKey.fromString("0000000000000000000000000000000000000000000000000000000000000000");
+    const unusableKey = PublicKey.unusableKey();
 
     console.log("=====================================================");
     console.log("Initializing token keys...");
