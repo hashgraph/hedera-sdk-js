@@ -67,6 +67,7 @@ jobs:
       - name: Extract Tag Information
         id: tag
         run: |
+          set -x
           REF_NAME="$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))"
           IS_VALID_SEMVER="$(semver validate "${REF_NAME}")"
 
@@ -102,9 +103,13 @@ jobs:
           echo "version=${FINAL_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
+          
+          set +x
 
       - name: Validate Tag and Package Versions
         run: |
+          set -x
+          
           COMPARISON_RESULT="$(semver compare "${{ steps.npm-package.outputs.version }}" "${{ steps.tag.outputs.version }}")"
           if [[ "${COMPARISON_RESULT}" -ne 0 ]]; then
             echo "::error title=Version Mismatch::The version in package.json (${{ steps.npm-package.outputs.version }}) does not match the version in the tag (${{ steps.tag.outputs.version }})."
@@ -120,7 +125,8 @@ jobs:
             echo "::error title=Unsupported PreRelease::The tag '${{ steps.tag.outputs.name }}' is an unsupported prerelease tag. Only 'beta' prereleases are supported."
             exit 2
           fi
-
+          
+          set +x
   run-safety-checks:
     name: Safety Checks
     runs-on: [self-hosted, Linux, medium, ephemeral]
