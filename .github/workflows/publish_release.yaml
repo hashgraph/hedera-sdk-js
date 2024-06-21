@@ -96,6 +96,8 @@ jobs:
 
           FINAL_VERSION="${RELEASE_VERSION}"
           [[ -n "${PREREL_VERSION}" ]] && FINAL_VERSION="${RELEASE_VERSION}-${PREREL_VERSION}"
+          
+          echo "finalVersion="v${FINAL_VERSION}"
 
           TAG_NAME="v${FINAL_VERSION}"
 
