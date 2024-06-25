@@ -269,7 +269,6 @@ jobs:
       - name: Compile Code
         run: |
           set -x
-          ls -alF | grep Taskfile
           task -v build
           set +x
 
