@@ -26,11 +26,24 @@ jobs:
   validate-release:
     name: Validate Release
     runs-on: [self-hosted, Linux, medium, ephemeral]
+
     outputs:
+      # Project tag
       tag: ${{ steps.tag.outputs.name }}
-      version: ${{ steps.tag.outputs.version }}
       prerelease: ${{ steps.tag.outputs.prerelease }}
       type: ${{ steps.tag.outputs.type }}
+
+      # main package
+      version: ${{ steps.tag.outputs.version }}
+
+      # proto sub-package
+      proto-version: ${{ steps.tag.outputs.proto-version }}
+      proto-publish-required: ${{ steps.tag.outputs.proto-publish-required }}
+
+      # crypto sub-package
+      crypto-version: ${{ steps.tag.outputs.crypto-version }}
+      crypto-publish-required: ${{ steps.tag.outputs.crypto-publish-required }}
+
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
@@ -62,7 +75,26 @@ jobs:
 
       - name: Extract NPM Package Information
         id: npm-package
-        run: echo "version=$(jq -r '.version' package.json)" >>"${GITHUB_OUTPUT}"
+        run: |
+          VERSION="$(jq -r '.version' package.json)"
+          PROTO_PACKAGE_VERSION="$(node -p "require('packages/proto/package.json').version")"
+          CRYPTO_PACKAGE_VERSION="$(node -p "require('packages/cryptography/package.json').version")"
+          
+          PROTO_PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${PROTO_PACKAGE_VERSION}" >/dev/null 2>&1; then
+            PROTO_PUBLISH_REQUIRED="true"
+          fi
+          
+          CRYPTO_PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${CRYPTO_PACKAGE_VERSION}" >/dev/null 2>&1; then
+            CRYPTO_PUBLISH_REQUIRED="true"
+          fi
+          
+          echo "version=${VERSION} >>"${GITHUB_OUTPUT}" >>"${GITHUB_OUTPUT}"
+          echo "proto-version=${PROTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "crypto-version=${CRYPTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "proto-publish-required=${PROTO_PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
+          echo "crypto-publish-required=${CRYPTO_PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
 
       - name: Extract Tag Information
         id: tag
@@ -192,40 +224,25 @@ jobs:
       - name: Install Playwright Dependencies
         run: sudo npx playwright install-deps
 
-      - name: Check Proto Subpackage Publish Status
-        id: proto
-        working-directory: packages/proto
-        run: |
-          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-          PUBLISH_REQUIRED="false"
-          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${PACKAGE_VERSION}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
-          fi
-
-          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
-          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
-
-      - name: Check Cryptography Subpackage Publish Status
-        id: cryptography
-        working-directory: packages/cryptography
-        run: |
-          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-          PUBLISH_REQUIRED="false"
-          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${PACKAGE_VERSION}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
-          fi
-          
-          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
-          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
-
       - name: Calculate Publish Arguments
         id: publish
         run: |
           PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           [[ "${{ needs.validate-release.outputs.prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.type }}"
+          
+          CRYPTO_ARGS="--access public --no-git-checks"
+          [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && CRYPTO_ARGS="${CRYPTO_ARGS} --dry-run"
+          [[ "${{ needs.validate-release.outputs.prerelease }}" == "true" ]] && CRYPTO_ARGS="${CRYPTO_ARGS} --tag ${{ needs.validate-release.outputs.type }}"
+          
+          PROTO_ARGS="--access public --no-git-checks"
+          [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PROTO_ARGS="${PROTO_ARGS} --dry-run"
+          [[ "${{ needs.validate-release.outputs.prerelease }}" == "true" ]] && PROTO_ARGS="${PROTO_ARGS} --tag ${{ needs.validate-release.outputs.type }}"
 
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
+          echo "crypto-args=${CRYPTO_ARGS}" >>"${GITHUB_OUTPUT}"
+          echo "proto-args=${PROTO_ARGS}" >>"${GITHUB_OUTPUT}"
+
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
 
@@ -233,19 +250,19 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
-        if: ${{ steps.proto.outputs.publish-required == 'true' && !cancelled() && !failure() }}
+        if: ${{ steps.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
         run: |
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
-          task -v publish -- ${{ steps.publish.outputs.args }}
+          task -v publish -- ${{ steps.publish.outputs.proto-args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
-        if: ${{ steps.cryptography.outputs.publish-required == 'true' && !cancelled() && !failure() }}
+        if: ${{ steps.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
         run: |
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
-          task -v publish -- ${{ steps.publish.outputs.args }}
+          task -v publish -- ${{ steps.publish.outputs.crypto-args }}
 
       - name: Publish SDK Release
         env:
