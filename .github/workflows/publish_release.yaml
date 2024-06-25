@@ -37,13 +37,13 @@ jobs:
       sdk-type: ${{ steps.tag.outputs.type }}
 
       # proto sub-package
-      proto-version: ${{ steps.npm-package.outputs.proto-version }}
+      proto-version: ${{ steps.proto-package.outputs.version }}
       proto-prerelease: ${{ steps.proto-package.outputs.prerelease }}
       proto-type: ${{ steps.proto-package.outputs.type }}
       proto-publish-required: ${{ steps.proto-required.outputs.publish-required }}
 
       # crypto sub-package
-      crypto-version: ${{ steps.npm-package.outputs.crypto-version }}
+      crypto-version: ${{ steps.crypto-package.outputs.version }}
       crypto-prerelease: ${{ steps.crypto-package.output.prerelease }}
       crypto-type: ${{ steps.crypto-package.output.type }}
       crypto-publish-required: ${{ steps.crypto-required.outputs.publish-required }}
@@ -159,6 +159,7 @@ jobs:
             exit 1
           fi
           
+          RELEASE_VERSION=${{ steps.npm-package.outputs.proto-version }}
           PREREL_VERSION="$(semver get prerel "${{ steps.npm-package.outputs.proto-version }}")"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
           
@@ -176,19 +177,24 @@ jobs:
             PREREL_TYPE="production"
           fi
           
+          FINAL_VERSION="${RELEASE_VERSION}"
+          [[ -n "${PREREL_VERSION}" ]] && FINAL_VERSION="${RELEASE_VERSION}-${PREREL_VERSION}"
+          
+          echo "version=${FINAL_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
           
       - name: Extract Crypto Subpackage Information
         id: crypto-package
         run: |
-          IS_VALID_SEMVER="$(semver validate "${{ steps.npm-pacakage.outputs.crypto-version }}")"
+          IS_VALID_SEMVER="$(semver validate "${{ steps.npm-package.outputs.crypto-version }}")"
 
           if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
             echo "::error title=Invalid Tag::The tag '${{ steps.npm-pacakage.outputs.crypto-version }}' is not a valid SemVer tag."
             exit 1
           fi
 
+          RELEASE_VERSION=${{ steps.npm-package.outputs.crypto-version }}
           PREREL_VERSION="$(semver get prerel "${{ steps.npm-pacakage.outputs.crypto-version }}")"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
           
@@ -206,6 +212,10 @@ jobs:
             PREREL_TYPE="production"
           fi
           
+          FINAL_VERSION="${RELEASE_VERSION}"
+          [[ -n "${PREREL_VERSION}" ]] && FINAL_VERSION="${RELEASE_VERSION}-${PREREL_VERSION}"
+          
+          echo "version=${FINAL_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
 
