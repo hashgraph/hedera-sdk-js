@@ -223,7 +223,7 @@ jobs:
           if [[ "${{ steps.tag.outputs.type }}" != "production" && "${{ steps.tag.outputs.type }}" != "beta" ]]; then
             echo "::error title=Unsupported PreRelease::The tag '${{ steps.tag.outputs.name }}' is an unsupported prerelease tag. Only 'beta' prereleases are supported."
             exit 2
-          fi         
+          fi
 
   run-safety-checks:
     name: Safety Checks
