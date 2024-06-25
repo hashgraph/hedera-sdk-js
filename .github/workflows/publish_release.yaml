@@ -267,7 +267,11 @@ jobs:
           node-version: 18
 
       - name: Compile Code
-        run: task -v build
+        run: |
+          set -x
+          ls -alF | grep Taskfile
+          task -v build
+          set +x
 
   publish-release:
     name: Publish Release
