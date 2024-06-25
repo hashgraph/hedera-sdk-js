@@ -340,19 +340,20 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
-        if: ${{ steps.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
+        if: ${{ github.event.inputs.dry-run-enabled != 'true' && steps.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
         run: task -v publish -- ${{ steps.proto-publish.outputs.args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
-        if: ${{ steps.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
+        if: ${{ github.event.inputs.dry-run-enabled != 'true' && steps.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
         run: task -v publish -- ${{ steps.crypto-publish.outputs.args }}
 
       - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ github.event.inputs.dry-run-enabled != 'true' && !cancelled() && !failure() }}
         run: task -v publish -- ${{ steps.sdk-publish.outputs.args }}
 
       - name: Generate Github Release
