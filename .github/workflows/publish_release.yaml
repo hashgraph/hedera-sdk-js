@@ -159,8 +159,8 @@ jobs:
             exit 1
           fi
           
-          RELEASE_VERSION=${{ steps.npm-package.outputs.proto-version }}
-          PREREL_VERSION="$(semver get prerel "${{ steps.npm-package.outputs.proto-version }}")"
+          RELEASE_VERSION="${{ steps.npm-package.outputs.proto-version }}"
+          PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.proto-version }}')"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
           
           IS_PRERELEASE="false"
@@ -187,15 +187,15 @@ jobs:
       - name: Extract Crypto Subpackage Information
         id: crypto-package
         run: |
-          IS_VALID_SEMVER="$(semver validate "${{ steps.npm-package.outputs.crypto-version }}")"
+          IS_VALID_SEMVER="$(semver validate '${{ steps.npm-package.outputs.crypto-version }}')"
 
           if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
-            echo "::error title=Invalid Tag::The tag '${{ steps.npm-pacakage.outputs.crypto-version }}' is not a valid SemVer tag."
+            echo "::error title=Invalid Tag::The tag '${{ steps.npm-package.outputs.crypto-version }}' is not a valid SemVer tag."
             exit 1
           fi
 
-          RELEASE_VERSION=${{ steps.npm-package.outputs.crypto-version }}
-          PREREL_VERSION="$(semver get prerel "${{ steps.npm-pacakage.outputs.crypto-version }}")"
+          RELEASE_VERSION='${{ steps.npm-package.outputs.crypto-version }}'
+          PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.crypto-version }}')"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
           
           IS_PRERELEASE="false"
