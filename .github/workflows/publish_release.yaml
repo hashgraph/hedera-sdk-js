@@ -354,7 +354,6 @@ jobs:
       - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        if: ${{ !cancelled() && !failure() }}
         run: task -v publish -- ${{ steps.sdk-publish.outputs.args }}
 
       - name: Generate Github Release
