@@ -84,11 +84,9 @@ jobs:
           PROTO_PACKAGE_VERSION="$(jq -r '.version' './packages/proto/package.json')"
           CRYPTO_PACKAGE_VERSION="$(jq -r '.version' './packages/cryptography/package.json')"
           
-          set -x
           echo "sdk-version=${SDK_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "proto-version=${PROTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "crypto-version=${CRYPTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
-          set +x
 
       - name: Proto Subpackage Publish Required
         id: proto-required
@@ -258,9 +256,7 @@ jobs:
 
       - name: Compile Code
         run: |
-          set -x
           task -v build
-          set +x
 
   publish-release:
     name: Publish Release
