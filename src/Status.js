@@ -645,8 +645,8 @@ export default class Status {
                 return "INVALID_NODE_DESCRIPTION";
             case Status.InvalidServiceEndpoint:
                 return "INVALID_SERVICE_ENDPOINT";
-            case Status.InvalidGossipCaeCertificate:
-                return "INVALID_GOSSIP_CAE_CERTIFICATE";
+            case Status.InvalidGossipCaCertificate:
+                return "INVALID_GOSSIP_CA_CERTIFICATE";
             case Status.InvalidGrpcCertificate:
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
@@ -1284,7 +1284,7 @@ export default class Status {
             case 343:
                 return Status.InvalidServiceEndpoint;
             case 344:
-                return Status.InvalidGossipCaeCertificate;
+                return Status.InvalidGossipCaCertificate;
             case 345:
                 return Status.InvalidGrpcCertificate;
             case 346:
@@ -2875,7 +2875,7 @@ Status.InvalidServiceEndpoint = new Status(343);
 /**
  * gossip_ca_certificate is invalid
  */
-Status.InvalidGossipCaeCertificate = new Status(344);
+Status.InvalidGossipCaCertificate = new Status(344);
 
 /**
  * grpc_certificate_hash is invalid
