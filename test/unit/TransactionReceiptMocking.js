@@ -39,13 +39,8 @@ describe("TransactionReceiptMocking", function () {
     let servers;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
     });
 
     it("should error with max attempts", async function () {

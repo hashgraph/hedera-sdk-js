@@ -28,13 +28,8 @@ describe("TopicMessageMocking", function () {
     let handle;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
 
         if (handle != null) {
             handle.unsubscribe();

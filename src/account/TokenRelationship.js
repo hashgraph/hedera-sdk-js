@@ -41,7 +41,6 @@ export default class TokenRelationship {
      * @param {boolean | null} props.isKycGranted
      * @param {boolean | null} props.isFrozen
      * @param {boolean | null} props.automaticAssociation
-     * @param {number | null} props.decimals
      */
     constructor(props) {
         /**
@@ -54,12 +53,8 @@ export default class TokenRelationship {
         /**
          * The Symbol of the token
          *
-         * @deprecated - Not supported by consensus nodes (from hedera-services tag v0.50.x).
-         * Although the Mirror Node REST APIs still contain this feature, there is no straightforward way of integration,
-         * leading to this field being deprecated.
-         * Can be extracted from TokenInfo class.
+         * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
         this.symbol = props.symbol;
 
         /**
@@ -78,18 +73,12 @@ export default class TokenRelationship {
         this.isKycGranted = props.isKycGranted;
 
         /**
-         * Tokens divide into 10^decimals pieces
+         * The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token
+         * does not have Freeze key, FreezeNotApplicable is returned
          *
          * @readonly
          */
         this.isFrozen = props.isFrozen;
-
-        /**
-         Tokens divide into 10^decimals pieces
-         *
-         * @readonly
-         */
-        this.decimals = props.decimals;
 
         /**
          * Specifies if the relationship is created implicitly. False : explicitly associated, True :
@@ -130,8 +119,6 @@ export default class TokenRelationship {
                     : Long.ZERO,
             isKycGranted,
             isFrozen,
-            decimals:
-                relationship.decimals != null ? relationship.decimals : null,
             automaticAssociation:
                 relationship.automaticAssociation != null
                     ? relationship.automaticAssociation
@@ -145,14 +132,12 @@ export default class TokenRelationship {
     _toProtobuf() {
         return {
             tokenId: this.tokenId._toProtobuf(),
-            // eslint-disable-next-line deprecation/deprecation
             symbol: this.symbol,
             balance: this.balance,
             kycStatus:
                 this.isKycGranted == null ? 0 : this.isKycGranted ? 1 : 2,
             freezeStatus: this.isFrozen == null ? 0 : this.isFrozen ? 1 : 2,
             automaticAssociation: this.automaticAssociation,
-            decimals: this.decimals,
         };
     }
 }
