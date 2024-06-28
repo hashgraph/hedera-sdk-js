@@ -180,13 +180,13 @@ export default class Mnemonic {
      * @param {Array<number>} derivationPathValues derivation path as an
      *                             integer array,
      *                             see: `calculateDerivationPathValues`
-     * @returns a private key
+     * @returns {Promise<PrivateKey>}  a private key
      */
     async toStandardECDSAsecp256k1PrivateKeyImpl(
         passphrase,
         derivationPathValues,
     ) {
-        return this.toEcdsaPrivateKey(passphrase, derivationPathValues);
+        return await this.toEcdsaPrivateKey(passphrase, derivationPathValues);
     }
 
     /**
