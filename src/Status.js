@@ -667,6 +667,16 @@ export default class Status {
                 return "SERVICE_ENDPOINTS_EXCEEDED_LIMIT";
             case Status.InvalidIpv4Address:
                 return "INVALID_IPV4_ADDRESS";
+            case Status.TokenReferenceRepeated:
+                return "TOKEN_REFERENCE_REPEATED";
+            case Status.InvalidOwnerId:
+                return "INVALID_OWNER_ID";
+            case Status.TokenReferenceListSizeLimitExceeded:
+                return "TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenReferenceList:
+                return "EMPTY_TOKEN_REFERENCE_LIST";
+            case Status.UpdateNodeAccountNotAllowed:
+                return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1301,10 +1311,20 @@ export default class Status {
                 return Status.InvalidEndpoint;
             case 352:
                 return Status.GossipEndpointsExceededLimit;
+            case 353:
+                return Status.TokenReferenceRepeated;
+            case 354:
+                return Status.InvalidOwnerId;
+            case 355:
+                return Status.TokenReferenceListSizeLimitExceeded;
             case 356:
                 return Status.ServiceEndpointsExceededLimit;
             case 357:
                 return Status.InvalidIpv4Address;
+            case 358:
+                return Status.EmptyTokenReferenceList;
+            case 359:
+                return Status.UpdateNodeAccountNotAllowed;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2918,6 +2938,22 @@ Status.InvalidEndpoint = new Status(351);
  */
 Status.GossipEndpointsExceededLimit = new Status(352);
 
+ /**
+ * The transaction attempted to use duplicate `TokenReference`.<br/>
+ * This affects `TokenReject` attempting to reject same token reference more than once.
+ */
+Status.TokenReferenceRepeated = new Status(353);
+
+ /**
+ * The account id specified as the owner in `TokenReject` is invalid or does not exist.
+ */
+Status.InvalidOwnerId = new Status(354);
+
+/**
+ * The transaction attempted to use more than the allowed number of `TokenReference`.
+ */
+Status.TokenReferenceListSizeLimitExceeded = new Status(355);
+
 /**
  * The number of service endpoints exceeds the limit
  */
@@ -2927,3 +2963,13 @@ Status.ServiceEndpointsExceededLimit = new Status(356);
  * The IPv4 address is invalid
  */
 Status.InvalidIpv4Address = new Status(357);
+
+/**
+ * The transaction attempted to use empty `TokenReference` list.
+ */
+Status.EmptyTokenReferenceList = new Status(358);
+
+/*
+* The node account is not allowed to be updated
+*/
+Status.UpdateNodeAccountNotAllowed = new Status(359);
