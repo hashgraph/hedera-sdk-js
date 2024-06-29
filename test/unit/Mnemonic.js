@@ -497,6 +497,19 @@ describe("Mnemonic", function () {
         expect(key6.publicKey.toStringRaw()).to.be.equal(PUBLIC_KEY6);
     });
 
+    it("Mnemonic.calculateDerivationPathValues() test vector", async function () {
+        const DPATH_1 = "m/44'/60'/0'/0/0";
+        const DPATH_2 = "m/44/60/0/2147483647'/2147483646'";
+
+        const mnemonic1 = await Mnemonic.fromString(MNEMONIC_24_WORD_STRING);
+        const result1 = await mnemonic1.calculateDerivationPathValues(DPATH_1);
+        const result2 = await mnemonic1.calculateDerivationPathValues(DPATH_2);
+
+        // NOTE that 0x80000000 == 2147483648
+        expect(result1).to.deep.equal([-2147483604, -2147483588, -2147483648, 0, 0]);
+        expect(result2).to.deep.equal([44, 60, 0, -1, -2]);
+    });
+
     it("Mnemonic.toStandardECDSAsecp256k1PrivateKeyCustomDerivationPath() test vector", async function () {
         const DPATH_1 = "m/44'/60'/0'/0/0";
         const PASSPHRASE_1 = "";
