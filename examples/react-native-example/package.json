@@ -12,7 +12,7 @@
     "dependencies": {
         "@ethersproject/shims": "^5.7.0",
         "@hashgraph/sdk": "file:.yalc/@hashgraph/sdk",
-        "expo": "~49.0.16",
+        "expo": "~51.0.17",
         "expo-crypto": "~12.6.0",
         "expo-random": "~13.4.0",
         "expo-status-bar": "~1.7.1",
