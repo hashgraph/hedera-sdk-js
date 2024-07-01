@@ -91,9 +91,9 @@ jobs:
       - name: Proto Subpackage Publish Required
         id: proto-required
         run: |
-          PUBLISH_REQUIRED="false"
+          PUBLISH_REQUIRED="true"
           if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${{ steps.npm-package.outputs.proto-version }}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
+            PUBLISH_REQUIRED="false"
           fi
           
           echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
@@ -101,9 +101,9 @@ jobs:
       - name: Crypto Subpackage Publish Required
         id: crypto-required
         run: |
-          PUBLISH_REQUIRED="false"
+          PUBLISH_REQUIRED="true"
           if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${{ steps.npm-package.outputs.crypto-version }}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
+            PUBLISH_REQUIRED="false"
           fi
           
           echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
