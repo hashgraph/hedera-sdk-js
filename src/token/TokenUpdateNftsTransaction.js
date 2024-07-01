@@ -41,10 +41,7 @@ import Transaction, {
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
-/**
- * @deprecated - Use TokenUpdateNftsTransaction instead
- */
-export default class TokenNftsUpdateTransaction extends Transaction {
+export default class TokenUpdateNftsTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
@@ -92,7 +89,7 @@ export default class TokenNftsUpdateTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {TokenNftsUpdateTransaction}
+     * @returns {TokenUpdateNftsTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -108,8 +105,7 @@ export default class TokenNftsUpdateTransaction extends Transaction {
             );
 
         return Transaction._fromProtobufTransactions(
-            // eslint-disable-next-line deprecation/deprecation
-            new TokenNftsUpdateTransaction({
+            new TokenUpdateNftsTransaction({
                 tokenId:
                     tokenUpdate.token != null
                         ? TokenId._fromProtobuf(tokenUpdate.token)
@@ -227,12 +223,12 @@ export default class TokenNftsUpdateTransaction extends Transaction {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );
-        return `TokenNftsUpdateTransaction:${timestamp.toString()}`;
+        return `TokenUpdateNftsTransaction:${timestamp.toString()}`;
     }
 }
 
 TRANSACTION_REGISTRY.set(
     "tokenUpdateNfts",
-    // eslint-disable-next-line deprecation/deprecation, @typescript-eslint/unbound-method
-    TokenNftsUpdateTransaction._fromProtobuf,
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TokenUpdateNftsTransaction._fromProtobuf,
 );

@@ -175,12 +175,13 @@ export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
 export { default as Long } from "long";
 export { default as FreezeType } from "./FreezeType.js";
+export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
-export { default as TokenNftsUpdateTransaction } from "./token/TokenNftsUpdateTransaction.js";
+export { default as TokenUpdateNftsTransaction } from "./token/TokenUpdateNftsTransaction.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

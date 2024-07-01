@@ -154,7 +154,7 @@ describe("AccountInfoMocking", function () {
         await query.execute(client, 1);
 
         expect(query._queryPayment.toTinybars().toInt()).to.be.equal(10);
-    });
+    }, 15000);
 
     it("setQueryPayemnt() + setMaxQueryPayment() avoids querying actual cost", async function () {
         this.timeout(10000);

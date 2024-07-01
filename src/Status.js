@@ -645,12 +645,38 @@ export default class Status {
                 return "INVALID_NODE_DESCRIPTION";
             case Status.InvalidServiceEndpoint:
                 return "INVALID_SERVICE_ENDPOINT";
-            case Status.InvalidGossipCaeCertificate:
-                return "INVALID_GOSSIP_CAE_CERTIFICATE";
+            case Status.InvalidGossipCaCertificate:
+                return "INVALID_GOSSIP_CA_CERTIFICATE";
             case Status.InvalidGrpcCertificate:
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
                 return "INVALID_MAX_AUTO_ASSOCIATIONS";
+            case Status.MaxNodesCreated:
+                return "MAX_NODES_CREATED";
+            case Status.IpFqdnCannotBeSetForSameEndpoint:
+                return "IP_FQDN_CANNOT_BE_SET_FOR_SAME_ENDPOINT";
+            case Status.GossipEndpointCannotHaveFqdn:
+                return "GOSSIP_ENDPOINT_CANNOT_HAVE_FQDN";
+            case Status.FqdnSizeTooLarge:
+                return "FQDN_SIZE_TOO_LARGE";
+            case Status.InvalidEndpoint:
+                return "INVALID_ENDPOINT";
+            case Status.GossipEndpointsExceededLimit:
+                return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
+            case Status.ServiceEndpointsExceededLimit:
+                return "SERVICE_ENDPOINTS_EXCEEDED_LIMIT";
+            case Status.InvalidIpv4Address:
+                return "INVALID_IPV4_ADDRESS";
+            case Status.TokenReferenceRepeated:
+                return "TOKEN_REFERENCE_REPEATED";
+            case Status.InvalidOwnerId:
+                return "INVALID_OWNER_ID";
+            case Status.TokenReferenceListSizeLimitExceeded:
+                return "TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenReferenceList:
+                return "EMPTY_TOKEN_REFERENCE_LIST";
+            case Status.UpdateNodeAccountNotAllowed:
+                return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1268,11 +1294,37 @@ export default class Status {
             case 343:
                 return Status.InvalidServiceEndpoint;
             case 344:
-                return Status.InvalidGossipCaeCertificate;
+                return Status.InvalidGossipCaCertificate;
             case 345:
                 return Status.InvalidGrpcCertificate;
             case 346:
                 return Status.InvalidMaxAutoAssociations;
+            case 347:
+                return Status.MaxNodesCreated;
+            case 348:
+                return Status.IpFqdnCannotBeSetForSameEndpoint;
+            case 349:
+                return Status.GossipEndpointCannotHaveFqdn;
+            case 350:
+                return Status.FqdnSizeTooLarge;
+            case 351:
+                return Status.InvalidEndpoint;
+            case 352:
+                return Status.GossipEndpointsExceededLimit;
+            case 353:
+                return Status.TokenReferenceRepeated;
+            case 354:
+                return Status.InvalidOwnerId;
+            case 355:
+                return Status.TokenReferenceListSizeLimitExceeded;
+            case 356:
+                return Status.ServiceEndpointsExceededLimit;
+            case 357:
+                return Status.InvalidIpv4Address;
+            case 358:
+                return Status.EmptyTokenReferenceList;
+            case 359:
+                return Status.UpdateNodeAccountNotAllowed;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2843,7 +2895,7 @@ Status.InvalidServiceEndpoint = new Status(343);
 /**
  * gossip_ca_certificate is invalid
  */
-Status.InvalidGossipCaeCertificate = new Status(344);
+Status.InvalidGossipCaCertificate = new Status(344);
 
 /**
  * grpc_certificate_hash is invalid
@@ -2855,3 +2907,69 @@ Status.InvalidGrpcCertificate = new Status(345);
  * The most common cause for this error is a value less than `-1`.
  */
 Status.InvalidMaxAutoAssociations = new Status(346);
+
+/**
+ * The maximum number of nodes allowed in the address book have been created.
+ */
+Status.MaxNodesCreated = new Status(347);
+
+/**
+ * In ServiceEndpoint, domain_name and ipAddressV4 are mutually exclusive
+ */
+Status.IpFqdnCannotBeSetForSameEndpoint = new Status(348);
+
+/**
+ * Fully qualified domain name is not allowed in gossip_endpoint
+ */
+Status.GossipEndpointCannotHaveFqdn = new Status(349);
+
+/**
+ * In ServiceEndpoint, domain_name size too large
+ */
+Status.FqdnSizeTooLarge = new Status(350);
+
+/**
+ * ServiceEndpoint is invalid
+ */
+Status.InvalidEndpoint = new Status(351);
+
+/**
+ * The number of gossip endpoints exceeds the limit
+ */
+Status.GossipEndpointsExceededLimit = new Status(352);
+
+ /**
+ * The transaction attempted to use duplicate `TokenReference`.<br/>
+ * This affects `TokenReject` attempting to reject same token reference more than once.
+ */
+Status.TokenReferenceRepeated = new Status(353);
+
+ /**
+ * The account id specified as the owner in `TokenReject` is invalid or does not exist.
+ */
+Status.InvalidOwnerId = new Status(354);
+
+/**
+ * The transaction attempted to use more than the allowed number of `TokenReference`.
+ */
+Status.TokenReferenceListSizeLimitExceeded = new Status(355);
+
+/**
+ * The number of service endpoints exceeds the limit
+ */
+Status.ServiceEndpointsExceededLimit = new Status(356);
+
+/*
+ * The IPv4 address is invalid
+ */
+Status.InvalidIpv4Address = new Status(357);
+
+/**
+ * The transaction attempted to use empty `TokenReference` list.
+ */
+Status.EmptyTokenReferenceList = new Status(358);
+
+/*
+* The node account is not allowed to be updated
+*/
+Status.UpdateNodeAccountNotAllowed = new Status(359);

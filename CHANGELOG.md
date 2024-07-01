@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.47.0
+
+## What's Changed
+
+* revert: mirror node queries changes by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2328
+* feature: change or remove existing keys from a token [HIP-540] by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2299
+* release: proto v2.15.0-beta.1 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2351
+
+## v2.46.0
+
+## What's Changed
+
+* fix: naming convention by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2303
+* fix: enhanced Logger to accept a log file location by @jeromy-cannon in https://github.com/hashgraph/hedera-sdk-js/pull/2298
+* fix: typo in SDK query file by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2293
+* feature: solution to query the mirror node for the account balance, account info, and contract info data by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2289
+
 ## v2.45.0
 
 ## What's Changed
