@@ -197,8 +197,8 @@ export default class RequestType {
                 return "NodeUpdate";
             case RequestType.NodeDelete:
                 return "NodeDelete";
-            case RequestType.NodeGetInfo:
-                return "NodeGetInfo";
+            case RequestType.TokenReject:
+                return "TokenReject";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -368,7 +368,7 @@ export default class RequestType {
             case 91:
                 return RequestType.NodeDelete;
             case 92:
-                return RequestType.NodeGetInfo;
+                return RequestType.TokenReject;
         }
 
         throw new Error(
@@ -773,6 +773,6 @@ RequestType.NodeUpdate = new RequestType(90);
 RequestType.NodeDelete = new RequestType(91);
 
 /**
- * Get Node information
+ * Transfer one or more token balances held by the requesting account to the treasury for each token type.
  */
-RequestType.NodeGetInfo = new RequestType(92);
+RequestType.TokenReject = new RequestType(92);
