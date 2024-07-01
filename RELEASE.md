@@ -12,7 +12,7 @@
 - **Merge** release branch into main
 - **Create** a new tag as running following command for:
     - stable release - `git tag -a "v*.*.*" -m "[message]"`
-    - bet release - `git tag -a "v*.*.*-beta.*" -m "[message]"`
+    - beta release - `git tag -a "v*.*.*-beta.*" -m "[message]"`
 - **Run** the following command for:
     - stable release - `git push origin v*.*.*`
     - beta release - `git push origin v*.*.*-beta.*`
