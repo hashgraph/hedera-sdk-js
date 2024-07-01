@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.48.0
+
+## What's Changed
+
+* release: proto v2.15.0-beta.2 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2367
+* ci: update publishing workflow to use appropriate pre release and stable versions by @rbarkerSL in https://github.com/hashgraph/hedera-sdk-js/pull/2364
+* feature: custom derivation paths in Mnemonic ECDSA private key derivation by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/2341
+
 ## v2.47.0
 
 ## What's Changed
