@@ -2938,13 +2938,13 @@ Status.InvalidEndpoint = new Status(351);
  */
 Status.GossipEndpointsExceededLimit = new Status(352);
 
- /**
+/**
  * The transaction attempted to use duplicate `TokenReference`.<br/>
  * This affects `TokenReject` attempting to reject same token reference more than once.
  */
 Status.TokenReferenceRepeated = new Status(353);
 
- /**
+/**
  * The account id specified as the owner in `TokenReject` is invalid or does not exist.
  */
 Status.InvalidOwnerId = new Status(354);
@@ -2970,6 +2970,6 @@ Status.InvalidIpv4Address = new Status(357);
 Status.EmptyTokenReferenceList = new Status(358);
 
 /*
-* The node account is not allowed to be updated
-*/
+ * The node account is not allowed to be updated
+ */
 Status.UpdateNodeAccountNotAllowed = new Status(359);

@@ -506,7 +506,9 @@ describe("Mnemonic", function () {
         const result2 = await mnemonic1.calculateDerivationPathValues(DPATH_2);
 
         // NOTE that 0x80000000 == 2147483648
-        expect(result1).to.deep.equal([-2147483604, -2147483588, -2147483648, 0, 0]);
+        expect(result1).to.deep.equal([
+            -2147483604, -2147483588, -2147483648, 0, 0,
+        ]);
         expect(result2).to.deep.equal([44, 60, 0, -1, -2]);
     });
 
