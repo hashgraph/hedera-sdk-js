@@ -342,19 +342,19 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
         if: ${{ needs.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
-        run: task -v publish -- ${{ needs.proto-publish.outputs.args }}
+        run: task -v publish -- ${{ steps.proto-publish.outputs.args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
         if: ${{ needs.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
-        run: task -v publish -- ${{ needs.crypto-publish.outputs.args }}
+        run: task -v publish -- ${{ steps.crypto-publish.outputs.args }}
 
       - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: task -v publish -- ${{ needs.sdk-publish.outputs.args }}
+        run: task -v publish -- ${{ steps.sdk-publish.outputs.args }}
 
       - name: Generate Github Release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
