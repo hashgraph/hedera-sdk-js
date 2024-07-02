@@ -1,8 +1,8 @@
 ## Release process of JS SDK
 
 - **Create** a new release branch following the naming convention for:
-    - stable release - `release/v*.*.*`
-    - beta release - `release/v*.*.*-beta.*`
+    - stable release - `release-v*.*.*`
+    - beta release - `release-v*.*.*-beta.*`
 - **Run** the [local node](https://github.com/hashgraph/hedera-local-node)
 - **Run** `task test:integration:node`
 - **Stop** the [local node](https://github.com/hashgraph/hedera-local-node)
