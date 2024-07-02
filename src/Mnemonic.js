@@ -186,6 +186,7 @@ export default class Mnemonic {
         passphrase,
         derivationPathValues,
     ) {
+        // eslint-disable-next-line deprecation/deprecation
         return await this.toEcdsaPrivateKey(passphrase, derivationPathValues);
     }
 
