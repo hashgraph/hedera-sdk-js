@@ -138,7 +138,8 @@ describe("TokenAssociate", function () {
 
     describe("Max Auto Associations", function () {
         let receiverKey, receiverId;
-        const TOKEN_SUPPLY = 100;
+        const TOKEN_SUPPLY = 100,
+            TRANSFER_AMOUNT = 10;
 
         beforeEach(async function () {
             receiverKey = PrivateKey.generateECDSA();
@@ -201,15 +202,19 @@ describe("TokenAssociate", function () {
                     await tokenCreateTransaction2.getReceipt(env.client);
 
                 const sendTokenToReceiverTx = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
+                    .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
                     .execute(env.client);
 
                 await sendTokenToReceiverTx.getReceipt(env.client);
 
                 const sendTokenToReceiverTx2 = await new TransferTransaction()
-                    .addTokenTransfer(tokenId2, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId2, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(
+                        tokenId2,
+                        env.operatorId,
+                        -TRANSFER_AMOUNT,
+                    )
+                    .addTokenTransfer(tokenId2, receiverId, TRANSFER_AMOUNT)
                     .freezeWith(env.client)
                     .execute(env.client);
 
@@ -364,8 +369,8 @@ describe("TokenAssociate", function () {
                 ).getReceipt(env.client);
 
                 const sendTokenToReceiverTx = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
+                    .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
                     .execute(env.client);
 
                 await sendTokenToReceiverTx.getReceipt(env.client);
@@ -375,7 +380,7 @@ describe("TokenAssociate", function () {
                     .execute(env.client);
 
                 expect(tokenBalance.tokens.get(tokenId).toInt()).to.be.equal(
-                    TOKEN_SUPPLY,
+                    TRANSFER_AMOUNT,
                 );
             });
 
@@ -478,15 +483,19 @@ describe("TokenAssociate", function () {
                 ).getReceipt(env.client);
 
                 const tokenTransferResponse = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
+                    .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
                     .execute(env.client);
 
                 await tokenTransferResponse.getReceipt(env.client);
 
                 const tokenTransferResponse2 = await new TransferTransaction()
-                    .addTokenTransfer(tokenId2, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId2, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(
+                        tokenId2,
+                        env.operatorId,
+                        -TRANSFER_AMOUNT,
+                    )
+                    .addTokenTransfer(tokenId2, receiverId, TRANSFER_AMOUNT)
                     .execute(env.client);
 
                 await tokenTransferResponse2.getReceipt(env.client);
@@ -503,8 +512,8 @@ describe("TokenAssociate", function () {
                         .execute(env.client)
                 ).tokens.get(tokenId2);
 
-                expect(newTokenBalance.toInt()).to.equal(TOKEN_SUPPLY);
-                expect(newTokenBalance2.toInt()).to.equal(TOKEN_SUPPLY);
+                expect(newTokenBalance.toInt()).to.equal(TRANSFER_AMOUNT);
+                expect(newTokenBalance2.toInt()).to.equal(TRANSFER_AMOUNT);
             });
 
             it("receiver should contain NFTs when transfering to account with unlimited auto associations", async function () {
@@ -628,8 +637,8 @@ describe("TokenAssociate", function () {
                 );
 
                 const tokenTransferHalfSupply = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId, receiverId, TOKEN_SUPPLY)
+                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
+                    .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
                     .execute(env.client);
 
                 await tokenTransferHalfSupply.getReceipt(env.client);
@@ -663,13 +672,13 @@ describe("TokenAssociate", function () {
 
                 expect(
                     tokenBalanceReceiver.tokens.get(tokenId).toInt(),
-                ).to.equal(TOKEN_SUPPLY);
+                ).to.equal(TRANSFER_AMOUNT);
 
                 expect(tokenBalanceSpender.tokens.get(tokenId)).to.equal(null);
 
                 expect(
                     tokenBalanceTreasury.tokens.get(tokenId).toInt(),
-                ).to.equal(0);
+                ).to.equal(TOKEN_SUPPLY - TRANSFER_AMOUNT);
             });
 
             it("receiver should have nft even if it has given allowance to spender", async function () {
@@ -806,8 +815,12 @@ describe("TokenAssociate", function () {
                 ).execute(env.client);
 
                 const tokenTransferResponse = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TOKEN_SUPPLY)
-                    .addTokenTransfer(tokenId, receiverAccountId, TOKEN_SUPPLY)
+                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
+                    .addTokenTransfer(
+                        tokenId,
+                        receiverAccountId,
+                        TRANSFER_AMOUNT,
+                    )
                     .execute(env.client);
 
                 await tokenTransferResponse.getReceipt(env.client);
@@ -820,7 +833,7 @@ describe("TokenAssociate", function () {
                     .get(tokenId)
                     .toInt();
 
-                expect(receiverBalance).to.equal(TOKEN_SUPPLY);
+                expect(receiverBalance).to.equal(TRANSFER_AMOUNT);
             });
 
             it("should revert when auto association is set to <-1", async function () {
