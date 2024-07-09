@@ -368,15 +368,6 @@ describe("TokenAssociate", function () {
                     await tokenAssociateTransaction.execute(env.client)
                 ).getReceipt(env.client);
 
-                const tokenMintTx = await new TokenMintTransaction()
-                    .setTokenId(tokenId)
-                    .freezeWith(env.client)
-                    .sign(env.operatorKey);
-
-                await (
-                    await tokenMintTx.execute(env.client)
-                ).getReceipt(env.client);
-
                 const sendTokenToReceiverTx = await new TransferTransaction()
                     .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
                     .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
@@ -620,8 +611,18 @@ describe("TokenAssociate", function () {
             it("receiver should have token balance even if it has given allowance to spender", async function () {
                 this.timeout(120000);
                 const spenderKey = PrivateKey.generateECDSA();
+                const spenderAccountCreateTx =
+                    await new AccountCreateTransaction()
+                        .setKey(spenderKey)
+                        .setMaxAutomaticTokenAssociations(-1)
+                        .setInitialBalance(new Hbar(1))
+                        .execute(env.client);
 
-                const unlimitedAutoAssociationTx =
+                const spenderId = (
+                    await spenderAccountCreateTx.getReceipt(env.client)
+                ).accountId;
+
+                const unlimitedAutoAssociationReceiverTx =
                     await new AccountUpdateTransaction()
                         .setAccountId(receiverId)
                         .setMaxAutomaticTokenAssociations(-1)
@@ -629,18 +630,8 @@ describe("TokenAssociate", function () {
                         .sign(receiverKey);
 
                 await (
-                    await unlimitedAutoAssociationTx.execute(env.client)
+                    await unlimitedAutoAssociationReceiverTx.execute(env.client)
                 ).getReceipt(env.client);
-
-                const spenderAccountCreateTx =
-                    await new AccountCreateTransaction()
-                        .setKey(spenderKey)
-                        .setInitialBalance(new Hbar(1))
-                        .execute(env.client);
-
-                const spenderId = (
-                    await spenderAccountCreateTx.getReceipt(env.client)
-                ).accountId;
 
                 const tokenCreateResponse = await new TokenCreateTransaction()
                     .setTokenName("ffff")
@@ -655,26 +646,34 @@ describe("TokenAssociate", function () {
                     env.client,
                 );
 
-                const tokenTransferHalfSupply = await new TransferTransaction()
-                    .addTokenTransfer(tokenId, env.operatorId, -TRANSFER_AMOUNT)
-                    .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
-                    .execute(env.client);
-
-                await tokenTransferHalfSupply.getReceipt(env.client);
-
                 const tokenAllowanceTx =
                     await new AccountAllowanceApproveTransaction()
                         .approveTokenAllowance(
                             tokenId,
-                            receiverId,
+                            env.operatorId,
                             spenderId,
-                            1,
+                            TRANSFER_AMOUNT,
                         )
+                        .execute(env.client);
+
+                await tokenAllowanceTx.getReceipt(env.client);
+
+                const onBehalfOfTransactionId =
+                    TransactionId.generate(spenderId);
+                const tokenTransferApprovedSupply =
+                    await new TransferTransaction()
+                        .setTransactionId(onBehalfOfTransactionId)
+                        .addApprovedTokenTransfer(
+                            tokenId,
+                            env.operatorId,
+                            -TRANSFER_AMOUNT,
+                        )
+                        .addTokenTransfer(tokenId, receiverId, TRANSFER_AMOUNT)
                         .freezeWith(env.client)
-                        .sign(receiverKey);
+                        .sign(spenderKey);
 
                 await (
-                    await tokenAllowanceTx.execute(env.client)
+                    await tokenTransferApprovedSupply.execute(env.client)
                 ).getReceipt(env.client);
 
                 const tokenBalanceReceiver = await new AccountBalanceQuery()
@@ -855,7 +854,7 @@ describe("TokenAssociate", function () {
                 expect(receiverBalance).to.equal(TRANSFER_AMOUNT);
             });
 
-            it("should revert when auto association is set to <-1", async function () {
+            it("should revert when auto association is set to less than -1", async function () {
                 let err = false;
 
                 try {
