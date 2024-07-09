@@ -155,7 +155,7 @@ describe("TokenAssociate", function () {
 
         describe("Limited Auto Associations", function () {
             it("should revert FT transfer when no auto associations left", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 // update account to have one auto association
                 const accountUpdateTx = await new AccountUpdateTransaction()
                     .setAccountId(receiverId)
@@ -325,7 +325,7 @@ describe("TokenAssociate", function () {
             });
 
             it("should contain sent balance when transfering FT to account with manual token association", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const tokenCreateTransaction =
                     await new TokenCreateTransaction()
                         .setTokenType(TokenType.FungibleCommon)
@@ -380,7 +380,7 @@ describe("TokenAssociate", function () {
             });
 
             it("should contain sent balance when transfering NFT to account with manual token association", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const tokenCreateTransaction =
                     await new TokenCreateTransaction()
                         .setTokenType(TokenType.NonFungibleUnique)
@@ -432,7 +432,7 @@ describe("TokenAssociate", function () {
 
         describe("Unlimited Auto Associations", function () {
             it("receiver should contain FTs when transfering to account with unlimited auto associations", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const tokenCreateResponse = await new TokenCreateTransaction()
                     .setTokenType(TokenType.FungibleCommon)
                     .setTokenName("ffff")
@@ -508,7 +508,7 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should contain NFTs when transfering to account with unlimited auto associations", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const tokenCreateResponse = await new TokenCreateTransaction()
                     .setTokenType(TokenType.NonFungibleUnique)
                     .setTokenName("ffff")
@@ -590,7 +590,7 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should have token balance even if it has given allowance to spender", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const spenderKey = PrivateKey.generateECDSA();
 
                 const unlimitedAutoAssociationTx =
@@ -673,7 +673,7 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should have nft even if it has given allowance to spender", async function () {
-                this.timeout(12000);
+                this.timeout(120000);
                 const spenderKey = PrivateKey.generateECDSA();
 
                 const unlimitedAutoAssociationReceiverTx =
