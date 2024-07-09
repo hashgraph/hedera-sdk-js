@@ -269,12 +269,19 @@ describe("TokenAssociate", function () {
                         .setMetadata([Buffer.from("-")])
                         .execute(env.client);
 
-                await tokenMintSignedTransaction.getReceipt(env.client);
+                const { serials } = await tokenMintSignedTransaction.getReceipt(
+                    env.client,
+                );
 
                 // transfer the token to receiver
 
                 const transferTxSign = await new TransferTransaction()
-                    .addNftTransfer(tokenId, 1, env.operatorId, receiverId)
+                    .addNftTransfer(
+                        tokenId,
+                        serials[0],
+                        env.operatorId,
+                        receiverId,
+                    )
                     .execute(env.client);
 
                 await transferTxSign.getReceipt(env.client);
@@ -300,7 +307,9 @@ describe("TokenAssociate", function () {
                         .addMetadata(Buffer.from("-"))
                         .execute(env.client);
 
-                await tokenMintSignedTransaction2.getReceipt(env.client);
+                const serials2 = (
+                    await tokenMintSignedTransaction2.getReceipt(env.client)
+                ).serials;
 
                 let err = false;
 
@@ -309,7 +318,7 @@ describe("TokenAssociate", function () {
                         await new TransferTransaction()
                             .addNftTransfer(
                                 tokenId2,
-                                1,
+                                serials2[0],
                                 env.operatorId,
                                 receiverId,
                             )
@@ -417,12 +426,17 @@ describe("TokenAssociate", function () {
                     .freezeWith(env.client)
                     .sign(env.operatorKey);
 
-                await (
+                const { serials } = await (
                     await tokenMintTx.execute(env.client)
                 ).getReceipt(env.client);
 
                 const sendTokenToReceiverTx = await new TransferTransaction()
-                    .addNftTransfer(tokenId, 1, env.operatorId, receiverId)
+                    .addNftTransfer(
+                        tokenId,
+                        serials[0],
+                        env.operatorId,
+                        receiverId,
+                    )
                     .execute(env.client);
 
                 await sendTokenToReceiverTx.getReceipt(env.client);
@@ -548,7 +562,7 @@ describe("TokenAssociate", function () {
                     .setMetadata([Buffer.from("-")])
                     .execute(env.client);
 
-                await mintTokenTx.getReceipt(env.client);
+                const { serials } = await mintTokenTx.getReceipt(env.client);
 
                 const mintTokenTx2 = await new TokenMintTransaction()
                     .setTokenId(tokenId2)
@@ -571,7 +585,12 @@ describe("TokenAssociate", function () {
                 ).getReceipt(env.client);
 
                 const tokenTransferResponse = await new TransferTransaction()
-                    .addNftTransfer(tokenId, 1, env.operatorId, receiverId)
+                    .addNftTransfer(
+                        tokenId,
+                        serials[0],
+                        env.operatorId,
+                        receiverId,
+                    )
                     .execute(env.client);
 
                 await tokenTransferResponse.getReceipt(env.client);
