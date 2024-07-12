@@ -79,8 +79,16 @@ tasks:
             - build
 
     update:
+        dir: src/proto
+        vars:
+            latest_tag:
+                sh: git tag|grep -iE "v[0-9]+\.[0-9]+\.[0-9]+.*"|sort|tail -1
+            proto: '{{.proto | default .latest_tag}}'
         cmds:
-            - cd src/proto && git pull origin main && git checkout main
+            - echo "Protobuf version set to {{.proto}}"
+            - git fetch origin
+            - git checkout {{.proto}}
+            - git show-ref --verify -q refs/heads/{{.proto}} && git pull origin || exit 0
             - task: build
 
     publish:
