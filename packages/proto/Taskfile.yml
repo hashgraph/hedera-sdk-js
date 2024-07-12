@@ -82,7 +82,10 @@ tasks:
         dir: src/proto
         vars:
             latest_tag:
-                sh: git tag|grep -iE "v[0-9]+\.[0-9]+\.[0-9]+.*"|sort|tail -1
+                sh: git -c versionsort.suffix=-alpha 
+                        -c versionsort.suffix=-beta 
+                        -c versionsort.suffix=-rc  
+                        tag -l --sort=version:refname|tail -1
             proto: '{{.proto | default .latest_tag}}'
         cmds:
             - echo "Protobuf version set to {{.proto}}"
