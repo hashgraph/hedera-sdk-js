@@ -93,6 +93,7 @@ tasks:
             - git checkout {{.proto}}
             - git show-ref --verify -q refs/heads/{{.proto}} && git pull origin || exit 0
             - task: build
+            - echo "Sucessfully updated protobufs to {{.proto}}"
 
     publish:
         preconditions:
