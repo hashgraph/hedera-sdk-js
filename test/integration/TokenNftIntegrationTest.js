@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TokenNft", function () {
+describe("TokenNft", function () {
     let env;
 
     before(async function () {
