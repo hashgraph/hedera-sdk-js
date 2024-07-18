@@ -182,6 +182,8 @@ export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
 export { default as TokenUpdateNftsTransaction } from "./token/TokenUpdateNftsTransaction.js";
+export { default as NodeCreateTransaction } from "./node/NodeCreateTransaction.js";
+export { default as ServiceEndpoint } from "./node/ServiceEndpoint.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
