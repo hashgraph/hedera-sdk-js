@@ -79,9 +79,21 @@ tasks:
             - build
 
     update:
+        dir: src/proto
+        vars:
+            latest_tag:
+                sh: git -c versionsort.suffix=-alpha 
+                        -c versionsort.suffix=-beta 
+                        -c versionsort.suffix=-rc  
+                        tag -l --sort=version:refname|tail -1
+            proto: '{{.proto | default .latest_tag}}'
         cmds:
-            - cd src/proto && git pull origin main && git checkout main
+            - echo "Protobuf version set to {{.proto}}"
+            - git fetch origin
+            - git checkout {{.proto}}
+            - git show-ref --verify -q refs/heads/{{.proto}} && git pull origin || exit 0
             - task: build
+            - echo "Sucessfully updated protobufs to {{.proto}}"
 
     publish:
         preconditions:
