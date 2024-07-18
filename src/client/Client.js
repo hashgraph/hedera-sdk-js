@@ -771,24 +771,25 @@ export default class Client {
      * @private
      */
     _initialNetworkUpdate() {
+        // TODO I am buggy
         // This is the automatic network update promise that _eventually_ completes
         // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
-        setTimeout(async () => {
-            try {
-                const addressBook = await CACHE.addressBookQueryConstructor()
-                    .setFileId(FileId.ADDRESS_BOOK)
-                    .execute(this);
-                this.setNetworkFromAddressBook(addressBook);
-            } catch (error) {
-                if (this._logger) {
-                    this._logger.trace(
-                        `failed to update client address book: ${
-                            /** @type {Error} */ (error).toString()
-                        }`,
-                    );
-                }
-            }
-        }, 1000);
+        // setTimeout(async () => {
+        //     try {
+        //         const addressBook = await CACHE.addressBookQueryConstructor()
+        //             .setFileId(FileId.ADDRESS_BOOK)
+        //             .execute(this);
+        //         this.setNetworkFromAddressBook(addressBook);
+        //     } catch (error) {
+        //         if (this._logger) {
+        //             this._logger.trace(
+        //                 `failed to update client address book: ${
+        //                     /** @type {Error} */ (error).toString()
+        //                 }`,
+        //             );
+        //         }
+        //     }
+        // }, 1000);
     }
 
     /**

@@ -23,6 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
+import { Transaction } from "./exports.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -611,7 +612,8 @@ export default class Executable {
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
-            if (!node.isHealthy()) {
+            // TODO VANKO if it's only one node it will "skip" some attempts
+            if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
                 if (this._logger) {
                     this._logger.debug(
                         `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`,
@@ -650,6 +652,12 @@ export default class Executable {
                     );
                 }
 
+                console.log(
+                    "retry number: ",
+                    attempt,
+                    "is transaction: ",
+                    this instanceof Transaction,
+                );
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -706,9 +714,13 @@ export default class Executable {
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
-            const [err, shouldRetry] = this._shouldRetry(request, response);
-            if (err != null) {
-                persistentError = err;
+
+            // TODO VANKO it's a status not an error
+            const [status, shouldRetry] = this._shouldRetry(request, response);
+            // TODO VANKO if the status is an error status, then retry
+            if (status != null && status._code != 0 && status._code != 22) {
+                persistentError = status;
+                console.log("persistent error: ", persistentError);
             }
 
             // Determine by the executing state what we should do
