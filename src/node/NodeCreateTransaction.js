@@ -218,7 +218,9 @@ export default class NodeCreateTransaction extends Transaction {
      */
     setDescription(description) {
         if (description.length > DESCRIPTION_MAX_LENGTH) {
-            throw new Error("Description must be at most 100 characters.");
+            throw new Error(
+                `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
+            );
         }
         this._description = description;
 
@@ -298,7 +300,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {?Array<ServiceEndpoint>}
      */
     get getServiceEndpoints() {
-        return this._gossipEndpoints;
+        return this._serviceEndpoints;
     }
 
     /**

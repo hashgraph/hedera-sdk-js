@@ -42,7 +42,7 @@ export default class ServiceEndpoint {
 
         /**
          * @type {?number}
-         * @description The port of the service endpoint.
+         * @description The port of the service endpoint. It's required.
          */
         this._port = props?.port != null ? props.port : null;
 
