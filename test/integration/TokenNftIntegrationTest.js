@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("TokenNft", function () {
+describe.only("TokenNft", function () {
     let env;
 
     before(async function () {
@@ -815,7 +815,7 @@ describe("TokenNft", function () {
         expect(err).to.be.true;
     });
 
-    after(async function () {
-        await env.close();
+    after(function () {
+        env.client.close();
     });
 });
