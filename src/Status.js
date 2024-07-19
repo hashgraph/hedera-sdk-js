@@ -677,6 +677,8 @@ export default class Status {
                 return "EMPTY_TOKEN_REFERENCE_LIST";
             case Status.UpdateNodeAccountNotAllowed:
                 return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
+            case Status.TokenHasNoMetadataOrSupplyKey:
+                return "TOKEN_HAS_NO_METADATA_OR_SUPPLY_KEY";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1325,6 +1327,8 @@ export default class Status {
                 return Status.EmptyTokenReferenceList;
             case 359:
                 return Status.UpdateNodeAccountNotAllowed;
+            case 360:
+                return Status.TokenHasNoMetadataOrSupplyKey;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2973,3 +2977,8 @@ Status.EmptyTokenReferenceList = new Status(358);
  * The node account is not allowed to be updated
  */
 Status.UpdateNodeAccountNotAllowed = new Status(359);
+
+/*
+* The token has no metadata or supply key
+*/
+Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
