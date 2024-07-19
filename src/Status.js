@@ -2979,6 +2979,6 @@ Status.EmptyTokenReferenceList = new Status(358);
 Status.UpdateNodeAccountNotAllowed = new Status(359);
 
 /*
-* The token has no metadata or supply key
-*/
+ * The token has no metadata or supply key
+ */
 Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
