@@ -612,7 +612,9 @@ export default class Executable {
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
+
             // TODO VANKO if it's only one node it will "skip" some attempts
+            // If it's only one node, we should call delayForAttempt
             if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
                 if (this._logger) {
                     this._logger.debug(
