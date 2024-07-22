@@ -212,6 +212,7 @@ export default class TransactionRecordQuery extends Query {
             case Status.Unknown:
             case Status.ReceiptNotFound:
             case Status.RecordNotFound:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
 
             case Status.Ok:
@@ -412,7 +413,6 @@ export default class TransactionRecordQuery extends Query {
             /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
             );
-
         return Promise.resolve(TransactionRecord._fromProtobuf(record));
     }
 

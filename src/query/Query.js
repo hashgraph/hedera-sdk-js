@@ -492,6 +492,7 @@ export default class Query extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
             case Status.Ok:
                 return [status, ExecutionState.Finished];

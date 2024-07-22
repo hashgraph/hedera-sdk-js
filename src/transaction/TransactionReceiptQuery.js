@@ -221,6 +221,7 @@ export default class TransactionReceiptQuery extends Query {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
             case Status.Ok:
                 break;
