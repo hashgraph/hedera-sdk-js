@@ -282,7 +282,7 @@ export default class TransactionReceiptQuery extends Query {
      * @override
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
-     * @param {HashgraphProto.proto.IResponse} response\
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeId
      * @returns {Error}
      */
