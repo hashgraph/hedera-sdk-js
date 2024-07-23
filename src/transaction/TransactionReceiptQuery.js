@@ -282,11 +282,12 @@ export default class TransactionReceiptQuery extends Query {
      * @override
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
-     * @param {HashgraphProto.proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response\
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -303,6 +304,7 @@ export default class TransactionReceiptQuery extends Query {
 
             default:
                 return new PrecheckStatusError({
+                    nodeId,
                     status,
                     transactionId: this._getTransactionId(),
                     contractFunctionResult: null,
