@@ -129,6 +129,7 @@ export { default as TokenAllowance } from "./account/TokenAllowance.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
 export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
 export { default as TokenRejectTransaction } from "./token/TokenRejectTransaction.js";
+export { default as TokenRejectFlow } from "./token/TokenRejectFlow.js";
 export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";
 export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransaction.js";
 export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
