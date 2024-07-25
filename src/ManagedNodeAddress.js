@@ -36,10 +36,6 @@ export default class ManagedNodeAddress {
      */
     constructor(props = {}) {
         if (props.address != null) {
-            if (props.address === "172.27.0.3:50211") {
-                // TODO VANKO this address does not exist
-                return;
-            }
             const hostAndPortResult = HOST_AND_PORT.exec(props.address);
 
             if (hostAndPortResult == null) {

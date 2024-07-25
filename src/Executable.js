@@ -23,11 +23,10 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
-import { Transaction } from "./exports.js";
+import Status from "./Status.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
- * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
@@ -47,6 +46,7 @@ export const ExecutionState = {
 };
 
 export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/i;
+export const DEFAULT_MAX_ATTEMPTS = 10;
 
 /**
  * @abstract
@@ -63,7 +63,7 @@ export default class Executable {
          * @internal
          * @type {number}
          */
-        this._maxAttempts = 10;
+        this._maxAttempts = DEFAULT_MAX_ATTEMPTS;
 
         /**
          * List of node account IDs for each transaction that has been
@@ -612,9 +612,6 @@ export default class Executable {
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
-
-            // TODO VANKO if it's only one node it will "skip" some attempts
-            // If it's only one node, we should call delayForAttempt
             if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
                 if (this._logger) {
                     this._logger.debug(
@@ -654,12 +651,6 @@ export default class Executable {
                     );
                 }
 
-                console.log(
-                    "retry number: ",
-                    attempt,
-                    "is transaction: ",
-                    this instanceof Transaction,
-                );
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -716,13 +707,12 @@ export default class Executable {
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
-
-            // TODO VANKO it's a status not an error
             const [status, shouldRetry] = this._shouldRetry(request, response);
-            // TODO VANKO if the status is an error status, then retry
-            if (status != null && status._code != 0 && status._code != 22) {
+            if (
+                status.toString() !== Status.Ok.toString() ||
+                status.toString() !== Status.Success.toString()
+            ) {
                 persistentError = status;
-                console.log("persistent error: ", persistentError);
             }
 
             // Determine by the executing state what we should do
