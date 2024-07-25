@@ -11,6 +11,7 @@ defaults:
 permissions:
   pages: write
   contents: read
+  id-token: write
 
 jobs:
   build-and-deploy-docs:
