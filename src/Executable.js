@@ -709,7 +709,7 @@ export default class Executable {
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
             const [status, shouldRetry] = this._shouldRetry(request, response);
             if (
-                status.toString() !== Status.Ok.toString() ||
+                status.toString() !== Status.Ok.toString() &&
                 status.toString() !== Status.Success.toString()
             ) {
                 persistentError = status;
