@@ -17,21 +17,19 @@
  * limitations under the License.
  * ‍
  */
-import {
-    AccountId,
-    NftId,
-    TokenRejectTransaction,
-    TokenDissociateTransaction,
-    TokenId,
-    Transaction,
-    TransactionResponse,
-} from "../exports.js";
+import AccountId from "../account/AccountId.js";
+import NftId from "../token/NftId.js";
+import TokenId from "../token/TokenId.js";
+import TokenRejectTransaction from "../token/TokenRejectTransaction.js";
+import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
 
 /**
  * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Signer.js").Signer} Signer
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../transaction/Transaction.js").default} Transaction
+ * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  *
  */
 

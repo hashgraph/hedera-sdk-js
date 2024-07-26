@@ -18,7 +18,9 @@
  * ‍
  */
 import AccountId from "../account/AccountId.js";
-import { NftId, TokenId, Transaction } from "../exports.js";
+import TokenId from "./TokenId.js";
+import NftId from "../token/NftId.js";
+import Transaction from "../transaction/Transaction.js";
 import { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
 import TokenReference from "../token/TokenReference.js";
 
@@ -30,7 +32,6 @@ import TokenReference from "../token/TokenReference.js";
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITokenRejectTransactionBody} HashgraphProto.proto.ITokenRejectTransactionBody
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  * @typedef {import("@hashgraph/proto").proto.TokenReference} HashgraphProto.proto.TokenReference
  */
 
