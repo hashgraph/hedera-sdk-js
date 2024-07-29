@@ -18,18 +18,18 @@
  * ‍
  */
 import AccountId from "../account/AccountId.js";
-import NftId from "../token/NftId.js";
-import TokenId from "../token/TokenId.js";
 import TokenRejectTransaction from "../token/TokenRejectTransaction.js";
 import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
 
 /**
  * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../Signer.js").Signer} Signer
+ * @typedef {import("../Signer.js").default} Signer
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../transaction/Transaction.js").default} Transaction
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
+ * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../token/NftId.js").default} NftId
  *
  */
 
@@ -41,7 +41,7 @@ export default class TokenRejectFlow {
         /**
          * @private
          * @type {AccountId | string | null}
-         * */
+         */
         this._ownerId = null;
 
         /**
@@ -53,7 +53,7 @@ export default class TokenRejectFlow {
         /**
          * @private
          * @type {NftId[]}
-         * */
+         */
         this._nftIds = [];
 
         /**
@@ -76,7 +76,7 @@ export default class TokenRejectFlow {
 
         /**
          * @private
-         * @type {*}}
+         * @type {((message: Uint8Array) => Promise<Uint8Array>) | null}
          */
         this._transactionSigner = null;
     }
@@ -177,7 +177,7 @@ export default class TokenRejectFlow {
     /**
      *
      * @param {import("../SignerSignature.js").PublicKey} publicKey
-     * @param {import("../Signer.js").Signer} signer
+     * @param {((message: Uint8Array) => Promise<Uint8Array>)} signer
      * @returns {this}
      */
     signWith(publicKey, signer) {
@@ -189,6 +189,7 @@ export default class TokenRejectFlow {
 
     /**
      * @param {Client} client
+     * @returns {this}
      */
     signWithOperator(client) {
         const operator = client.getOperator();
@@ -210,15 +211,18 @@ export default class TokenRejectFlow {
             transaction.freezeWith(this._freezeWithClient);
         }
         if (this._signPrivateKey) {
-            transaction.sign(this._signPrivateKey);
+            void transaction.sign(this._signPrivateKey);
         } else if (this._signPublicKey && this._transactionSigner) {
-            transaction.signWith(this._signPublicKey, this._transactionSigner);
+            void transaction.signWith(
+                this._signPublicKey,
+                this._transactionSigner,
+            );
         }
     }
     /**
      *
      * @param {Client} client
-     * @returns
+     * @returns {this}
      */
     freezeWith(client) {
         this._freezeWithClient = client;
@@ -230,7 +234,7 @@ export default class TokenRejectFlow {
      * @returns {Promise<TransactionResponse>}
      */
     async execute(client) {
-        const tokenRejectTxn = await new TokenRejectTransaction()
+        const tokenRejectTxn = new TokenRejectTransaction()
             .setTokenIds(this.tokenIds)
             .setNftIds(this.nftIds);
 
@@ -240,15 +244,17 @@ export default class TokenRejectFlow {
 
         this.fillOutTransaction(tokenRejectTxn);
 
-        // get token id of nft and remove duplicates
-        const nftTokenIds = [
-            ...new Set(this.nftIds.map((nftId) => nftId.tokenId)),
-        ];
-        const tokenDissociateTxn =
-            await new TokenDissociateTransaction().setTokenIds([
-                ...this.tokenIds,
-                ...nftTokenIds,
-            ]);
+        /* Get all token ids from NFT and remove duplicates as duplicated IDs 
+        will trigger a TOKEN_REFERENCE_REPEATED error. */
+        const nftTokenIds = this.nftIds
+            .map((nftId) => nftId.tokenId)
+            .filter(function (value, index, array) {
+                return array.indexOf(value) === index;
+            });
+
+        const tokenDissociateTxn = new TokenDissociateTransaction().setTokenIds(
+            [...this.tokenIds, ...nftTokenIds],
+        );
 
         if (this.ownerId != null) {
             tokenDissociateTxn.setAccountId(this.ownerId);

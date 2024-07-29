@@ -6,7 +6,6 @@ import {
     PrivateKey,
     TokenAssociateTransaction,
     TokenCreateTransaction,
-    TokenDissociateTransaction,
     TokenMintTransaction,
     TokenRejectFlow,
     TokenType,

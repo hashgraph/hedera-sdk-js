@@ -21,8 +21,6 @@ describe("TokenRejectFlow", function () {
         new NftId(tokenIds[2], 3),
     ];
 
-    const validStart = 1554158542;
-
     let tx;
 
     it("should set owner id", function () {

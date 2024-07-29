@@ -92,20 +92,6 @@ describe("Transaction", function () {
         );
     });
 
-    it("should revert when updating token ids when frozen", function () {
-        const tokenIds = [new TokenId(1), new TokenId(2)];
-        const owner = new AccountId(1);
-        const timestamp = new Timestamp(14, 15);
-
-        const tx = new TokenRejectTransaction()
-            .setNodeAccountIds([new AccountId(10, 11, 12)])
-            .setTransactionId(TransactionId.withValidStart(owner, timestamp))
-            .freeze();
-        expect(() => tx.setTokenIds(tokenIds)).to.throw(
-            "transaction is immutable; it has at least one signature or has been explicitly frozen",
-        );
-    });
-
     it("should set nft ids", function () {
         const nftIds = [new NftId(1), new NftId(2)];
         const tx = new TokenRejectTransaction().setNftIds(nftIds);

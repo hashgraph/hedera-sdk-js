@@ -191,7 +191,7 @@ export default class TokenRejectTransaction extends Transaction {
     /**
      *
      * @param {NftId[] | string[]} nftIds
-     * @returns
+     * @returns {this}
      */
     setNftIds(nftIds) {
         this._requireNotFrozen();
@@ -215,7 +215,7 @@ export default class TokenRejectTransaction extends Transaction {
     }
 
     /**
-     * @returns {?AccountId} }
+     * @returns {?AccountId}
      */
     get ownerId() {
         return this._owner;
@@ -223,6 +223,7 @@ export default class TokenRejectTransaction extends Transaction {
 
     /**
      * @param {AccountId | string} owner
+     * @returns {this}
      */
     setOwnerId(owner) {
         this._requireNotFrozen();
