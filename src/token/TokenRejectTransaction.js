@@ -48,7 +48,7 @@ export default class TokenRejectTransaction extends Transaction {
     /**
      *
      * @param {object} [props]
-     * @param {?AccountId | string} [props.owner]
+     * @param {?AccountId} [props.owner]
      * @param {NftId[]} [props.nftIds]
      * @param {TokenId[]} [props.tokenIds]
      */
@@ -78,11 +78,11 @@ export default class TokenRejectTransaction extends Transaction {
         this._nftIds = [];
 
         if (props.tokenIds != null) {
-            this._tokenIds = props.tokenIds;
+            this.setTokenIds(props.tokenIds);
         }
 
         if (props.nftIds != null) {
-            this._nftIds = props.nftIds;
+            this.setNftIds(props.nftIds);
         }
     }
 
@@ -148,7 +148,7 @@ export default class TokenRejectTransaction extends Transaction {
     }
 
     /**
-     * @returns {TokenId[] | string[]}
+     * @returns {TokenId[]}
      * @readonly
      */
     get tokenIds() {
@@ -156,31 +156,27 @@ export default class TokenRejectTransaction extends Transaction {
     }
 
     /**
-     * @param {TokenId[] | string[]} tokenIds
+     * @param {TokenId[]} tokenIds
      * @returns {this}
      */
     setTokenIds(tokenIds) {
         this._requireNotFrozen();
-        this._tokenIds = tokenIds.map((tokenId) =>
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
-        );
+        this._tokenIds = tokenIds;
         return this;
     }
 
     /**
-     * @param {TokenId | string} tokenId
+     * @param {TokenId} tokenId
      * @returns {this}
      */
     addTokenId(tokenId) {
         this._requireNotFrozen();
-        this._tokenIds?.push(
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
-        );
+        this._tokenIds?.push(tokenId);
         return this;
     }
 
     /**
-     * @returns {NftId[] | string[]}
+     * @returns {NftId[]}
      * @readonly
      *
      */
@@ -190,27 +186,22 @@ export default class TokenRejectTransaction extends Transaction {
 
     /**
      *
-     * @param {NftId[] | string[]} nftIds
+     * @param {NftId[]} nftIds
      * @returns {this}
      */
     setNftIds(nftIds) {
         this._requireNotFrozen();
-        this._nftIds = nftIds.map((nftId) =>
-            nftId instanceof NftId ? nftId : NftId.fromString(nftId),
-        );
+        this._nftIds = nftIds;
         return this;
     }
 
     /**
-     * @param {NftId | string} nftId
+     * @param {NftId} nftId
      * @returns {this}
      */
     addNftId(nftId) {
         this._requireNotFrozen();
-        this._nftIds?.push(
-            nftId instanceof NftId ? nftId : NftId.fromString(nftId),
-        );
-
+        this._nftIds?.push(nftId);
         return this;
     }
 
@@ -222,14 +213,12 @@ export default class TokenRejectTransaction extends Transaction {
     }
 
     /**
-     * @param {AccountId | string} owner
+     * @param {AccountId} owner
      * @returns {this}
      */
     setOwnerId(owner) {
         this._requireNotFrozen();
-        this._owner =
-            owner instanceof AccountId ? owner : AccountId.fromString(owner);
-
+        this._owner = owner;
         return this;
     }
 

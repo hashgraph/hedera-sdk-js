@@ -30,7 +30,7 @@ import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../token/TokenId.js").default} TokenId
  * @typedef {import("../token/NftId.js").default} NftId
- * @typedef {import("../SignerSignature.js").PublicKey} PublicKey
+ * @typedef {import("../account/AccountId.js").default} PublicKey
  */
 
 /**
@@ -40,7 +40,7 @@ export default class TokenRejectFlow {
     constructor() {
         /**
          * @private
-         * @type {?AccountId | string}
+         * @type {?AccountId}
          */
         this._ownerId = null;
 
@@ -83,20 +83,17 @@ export default class TokenRejectFlow {
 
     /**
      *
-     * @param {AccountId | string} ownerId
+     * @param {AccountId} ownerId
      * @returns {this}
      */
     setOwnerId(ownerId) {
         this.requireNotFrozen();
-        this._ownerId =
-            ownerId instanceof AccountId
-                ? ownerId
-                : AccountId.fromString(ownerId);
+        this._ownerId = ownerId;
         return this;
     }
 
     /**
-     * @returns {?AccountId | string}
+     * @returns {?AccountId}
      */
     get ownerId() {
         return this._ownerId;
