@@ -134,6 +134,37 @@ async function main() {
         ).execute(client)
     ).getReceipt(client);
 
+    console.log("=======================");
+    console.log("Before Token Reject");
+    console.log("=======================");
+    const receiverFTBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(receiverAccountId)
+            .execute(client)
+    ).tokens.get(ftId);
+    const treasuryFTBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(treasuryAccountId)
+            .execute(client)
+    ).tokens.get(ftId);
+    const receiverNFTBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(receiverAccountId)
+            .execute(client)
+    ).tokens.get(nftId);
+    const treasuryNFTBalanceBefore = (
+        await new AccountBalanceQuery()
+            .setAccountId(treasuryAccountId)
+            .execute(client)
+    ).tokens.get(nftId);
+    console.log("Receiver FT balance: ", receiverFTBalanceBefore.toInt());
+    console.log("Treasury FT balance: ", treasuryFTBalanceBefore.toInt());
+    console.log(
+        "Receiver NFT balance: ",
+        receiverNFTBalanceBefore ? receiverNFTBalanceBefore.toInt() : 0,
+    );
+    console.log("Treasury NFT balance: ", treasuryNFTBalanceBefore.toInt());
+
     // reject fungible tokens back to treasury
     const tokenRejectResponse = await (
         await (
@@ -159,41 +190,43 @@ async function main() {
     const tokenRejectStatus = tokenRejectResponse.status.toString();
     const tokenRejectFlowStatus = rejectFlowResponse.status.toString();
 
+    console.log("=======================");
+    console.log("After Token Reject Transaction and flow");
+    console.log("=======================");
+
+    const receiverFTBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(receiverAccountId)
+            .execute(client)
+    ).tokens.get(ftId);
+
+    const treasuryFTBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(treasuryAccountId)
+            .execute(client)
+    ).tokens.get(ftId);
+
+    const receiverNFTBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(receiverAccountId)
+            .execute(client)
+    ).tokens.get(nftId);
+
+    const treasuryNFTBalanceAfter = (
+        await new AccountBalanceQuery()
+            .setAccountId(treasuryAccountId)
+            .execute(client)
+    ).tokens.get(nftId);
+
     console.log("TokenReject response:", tokenRejectStatus);
     console.log("TokenRejectFlow response:", tokenRejectFlowStatus);
-
-    const receiverFTBalance = (
-        await new AccountBalanceQuery()
-            .setAccountId(receiverAccountId)
-            .execute(client)
-    ).tokens.get(ftId);
-
-    const treasuryFTBalance = (
-        await new AccountBalanceQuery()
-            .setAccountId(treasuryAccountId)
-            .execute(client)
-    ).tokens.get(ftId);
-
-    const receiverNFTBalance = (
-        await new AccountBalanceQuery()
-            .setAccountId(receiverAccountId)
-            .execute(client)
-    ).tokens.get(nftId);
-
-    const treasuryNFTBalance = (
-        await new AccountBalanceQuery()
-            .setAccountId(treasuryAccountId)
-            .execute(client)
-    ).tokens.get(nftId);
-
-    console.log("Receiver FT balance: ", receiverFTBalance.toInt());
-    console.log("Treasury FT balance: ", treasuryFTBalance.toInt());
-
+    console.log("Receiver FT balance: ", receiverFTBalanceAfter.toInt());
+    console.log("Treasury FT balance: ", treasuryFTBalanceAfter.toInt());
     console.log(
         "Receiver NFT balance: ",
-        receiverNFTBalance ? receiverNFTBalance.toInt() : 0,
+        receiverNFTBalanceAfter ? receiverNFTBalanceAfter.toInt() : 0,
     );
-    console.log("Treasury NFT balance: ", treasuryNFTBalance.toInt());
+    console.log("Treasury NFT balance: ", treasuryNFTBalanceAfter.toInt());
 
     client.close();
 }
