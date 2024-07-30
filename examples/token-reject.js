@@ -1,6 +1,5 @@
 import {
     AccountCreateTransaction,
-    LocalProvider,
     PrivateKey,
     TokenCreateTransaction,
     TransferTransaction,
@@ -28,7 +27,6 @@ async function main() {
         );
     }
 
-    const provider = new LocalProvider();
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
     const network = process.env.HEDERA_NETWORK;
@@ -199,7 +197,7 @@ async function main() {
     );
     console.log("Treasury NFT balance: ", treasuryNFTBalance.toInt());
 
-    provider.close();
+    client.close();
 }
 
 void main();
