@@ -40,7 +40,7 @@ export default class TokenRejectFlow {
     constructor() {
         /**
          * @private
-         * @type {AccountId | string | null}
+         * @type {?AccountId | string}
          */
         this._ownerId = null;
 
@@ -58,25 +58,25 @@ export default class TokenRejectFlow {
 
         /**
          * @private
-         * @type { Client | null }
+         * @type {?Client}
          */
         this._freezeWithClient = null;
 
         /**
          * @private
-         * @type {PrivateKey | null}
+         * @type {?PrivateKey}
          */
         this._signPrivateKey = null;
 
         /**
          * @private
-         * @type {import("../SignerSignature.js").PublicKey | null}
+         * @type {?PublicKey}
          */
         this._signPublicKey = null;
 
         /**
          * @private
-         * @type {((message: Uint8Array) => Promise<Uint8Array>) | null}
+         * @type {?(message: Uint8Array) => Promise<Uint8Array>}
          */
         this._transactionSigner = null;
     }
@@ -96,7 +96,7 @@ export default class TokenRejectFlow {
     }
 
     /**
-     * @returns { AccountId | string | null}
+     * @returns {?AccountId | string}
      */
     get ownerId() {
         return this._ownerId;

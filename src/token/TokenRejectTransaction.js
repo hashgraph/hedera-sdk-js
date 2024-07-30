@@ -48,7 +48,7 @@ export default class TokenRejectTransaction extends Transaction {
     /**
      *
      * @param {object} [props]
-     * @param {AccountId | string | null} [props.owner]
+     * @param {?AccountId | string} [props.owner]
      * @param {NftId[]} [props.nftIds]
      * @param {TokenId[]} [props.tokenIds]
      */
