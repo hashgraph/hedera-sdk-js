@@ -26,11 +26,9 @@ describe("Transaction", function () {
             rejections: [
                 {
                     fungibleToken: tokenIds[0]._toProtobuf(),
-                    tokenIdentifier: "fungibleToken",
                 },
                 {
                     nft: nftId._toProtobuf(),
-                    tokenIdentifier: "nft",
                 },
             ],
         });
