@@ -30,7 +30,7 @@ import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../token/TokenId.js").default} TokenId
  * @typedef {import("../token/NftId.js").default} NftId
- * @typedef {import("../account/AccountId.js").default} PublicKey
+ * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
