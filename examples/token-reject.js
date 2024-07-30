@@ -156,10 +156,8 @@ async function main() {
         ).execute(client)
     ).getReceipt(client);
 
-    const tokenRejectStatus =
-        tokenRejectResponse.status._code == 22 ? "Success" : "Fail";
-    const tokenRejectFlowStatus =
-        rejectFlowResponse.status._code == 22 ? "Success" : "Fail";
+    const tokenRejectStatus = tokenRejectResponse.status.toString();
+    const tokenRejectFlowStatus = rejectFlowResponse.status.toString();
 
     console.log("TokenReject response:", tokenRejectStatus);
     console.log("TokenRejectFlow response:", tokenRejectFlowStatus);
