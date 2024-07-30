@@ -18,11 +18,6 @@ export default class TokenReference {
          * @type {?NftId}
          */
         this.nft = null;
-        /**
-         * @public
-         * @type {?"fungibleToken"|"nft"}
-         */
-        this.tokenIdentifier = null;
     }
 
     /**
@@ -31,16 +26,6 @@ export default class TokenReference {
      * @returns {TokenReference}
      */
     static _fromProtobuf(reference) {
-        /**
-         * @type {"fungibleToken"|"nft"|null}
-         */
-        let tokenIdentifier;
-
-        if (reference.fungibleToken) {
-            tokenIdentifier = "fungibleToken";
-        } else {
-            tokenIdentifier = "nft";
-        }
         return {
             fungibleToken:
                 reference.fungibleToken != undefined
@@ -50,8 +35,6 @@ export default class TokenReference {
                 reference.nft != undefined
                     ? NftId._fromProtobuf(reference.nft)
                     : null,
-
-            tokenIdentifier,
         };
     }
 }

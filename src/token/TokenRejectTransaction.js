@@ -112,7 +112,7 @@ export default class TokenRejectTransaction extends Transaction {
             TokenReference._fromProtobuf(rejection),
         );
         const ftIds = tokenIds
-            ?.filter((token) => token.tokenIdentifier === "fungibleToken")
+            ?.filter((token) => token.fungibleToken)
             .map(({ fungibleToken }) => {
                 if (fungibleToken == null) {
                     throw new Error("Fungible Token cannot be null");
@@ -121,7 +121,7 @@ export default class TokenRejectTransaction extends Transaction {
             });
 
         const nftIds = tokenIds
-            ?.filter((token) => token.tokenIdentifier === "nft")
+            ?.filter((token) => token.nft)
             .map(({ nft }) => {
                 if (nft == null) {
                     throw new Error("Nft cannot be null");
@@ -262,14 +262,12 @@ export default class TokenRejectTransaction extends Transaction {
         for (const tokenId of this._tokenIds) {
             rejections.push({
                 fungibleToken: tokenId._toProtobuf(),
-                tokenIdentifier: "fungibleToken",
             });
         }
 
         for (const nftId of this._nftIds) {
             rejections.push({
                 nft: nftId._toProtobuf(),
-                tokenIdentifier: "nft",
             });
         }
         return {
