@@ -30,7 +30,7 @@ import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../token/TokenId.js").default} TokenId
  * @typedef {import("../token/NftId.js").default} NftId
- *
+ * @typedef {import("../SignerSignature.js").PublicKey} PublicKey
  */
 
 /**
@@ -176,7 +176,7 @@ export default class TokenRejectFlow {
 
     /**
      *
-     * @param {import("../SignerSignature.js").PublicKey} publicKey
+     * @param {PublicKey} publicKey
      * @param {((message: Uint8Array) => Promise<Uint8Array>)} signer
      * @returns {this}
      */
