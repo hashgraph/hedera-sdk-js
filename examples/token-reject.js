@@ -43,7 +43,7 @@ async function main() {
         await (
             await new AccountCreateTransaction()
                 .setKey(treasuryPrivateKey)
-                .setMaxAutomaticTokenAssociations(-1)
+                .setMaxAutomaticTokenAssociations(100)
                 .execute(client)
         ).getReceipt(client)
     ).accountId;
