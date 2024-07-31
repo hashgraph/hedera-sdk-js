@@ -63,8 +63,8 @@ async function main() {
     const nftCreationTx = await (
         await new TokenCreateTransaction()
             .setTokenType(TokenType.NonFungibleUnique)
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
+            .setTokenName("Example Fungible Token")
+            .setTokenSymbol("EFT")
             .setMaxSupply(CID.length)
             .setSupplyType(TokenSupplyType.Finite)
             .setSupplyKey(operatorKey)
@@ -80,8 +80,8 @@ async function main() {
     // create a fungible token
     const ftCreationTx = await (
         await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
+            .setTokenName("Example Fungible Token")
+            .setTokenSymbol("EFT")
             .setInitialSupply(100000000)
             .setSupplyKey(operatorKey)
             .setAdminKey(operatorKey)
