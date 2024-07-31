@@ -18,8 +18,6 @@
  * ‍
  */
 import AccountId from "../account/AccountId.js";
-import TokenId from "./TokenId.js";
-import NftId from "../token/NftId.js";
 import Transaction from "../transaction/Transaction.js";
 import { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
 import TokenReference from "../token/TokenReference.js";
@@ -39,6 +37,8 @@ import TokenReference from "../token/TokenReference.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../token/NftId.js").default} NftId
  */
 
 /**

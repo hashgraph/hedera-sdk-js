@@ -17,7 +17,6 @@
  * limitations under the License.
  * ‍
  */
-import AccountId from "../account/AccountId.js";
 import TokenRejectTransaction from "../token/TokenRejectTransaction.js";
 import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
 
@@ -31,6 +30,7 @@ import TokenDissociateTransaction from "../token/TokenDissociateTransaction.js";
  * @typedef {import("../token/TokenId.js").default} TokenId
  * @typedef {import("../token/NftId.js").default} NftId
  * @typedef {import("../PublicKey.js").default} PublicKey
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
