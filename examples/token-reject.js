@@ -37,7 +37,7 @@ async function main() {
     const network = process.env.HEDERA_NETWORK;
     const client = Client.forName(network).setOperator(operatorId, operatorKey);
 
-    // generate treasury account
+    // create a treasury account
     const treasuryPrivateKey = PrivateKey.generateED25519();
     const treasuryAccountId = (
         await (
@@ -48,7 +48,7 @@ async function main() {
         ).getReceipt(client)
     ).accountId;
 
-    // generate receiver account
+    // create a receiver account with unlimited max auto associations
     const receiverPrivateKey = PrivateKey.generateED25519();
     const receiverAccountId = (
         await (
@@ -59,7 +59,7 @@ async function main() {
         ).getReceipt(client)
     ).accountId;
 
-    // generate nft collection
+    // create a nft collection
     const nftCreationTx = await (
         await new TokenCreateTransaction()
             .setTokenType(TokenType.NonFungibleUnique)
@@ -77,7 +77,7 @@ async function main() {
     const nftId = (await nftCreationTx.getReceipt(client)).tokenId;
     console.log("NFT ID: ", nftId.toString());
 
-    // generate fungible token
+    // create a fungible token
     const ftCreationTx = await (
         await new TokenCreateTransaction()
             .setTokenName("ffff")
