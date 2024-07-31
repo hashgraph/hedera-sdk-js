@@ -11,6 +11,7 @@ import {
     TokenRejectFlow,
     NftId,
     AccountBalanceQuery,
+    TokenSupplyType,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
@@ -26,7 +27,11 @@ async function main() {
             "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
         );
     }
-
+    const CID = [
+        "QmNPCiNA3Dsu3K5FxDPMG5Q3fZRwVTg14EXA92uqEeSRXn",
+        "QmZ4dgAgt8owvnULxnKxNe8YqpavtVCXmc1Lt2XajFpJs9",
+        "QmPzY5GxevjyfMUF5vEAjtyRoigzWp47MiKAtLBduLMC1T",
+    ];
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
     const network = process.env.HEDERA_NETWORK;
@@ -60,6 +65,8 @@ async function main() {
             .setTokenType(TokenType.NonFungibleUnique)
             .setTokenName("ffff")
             .setTokenSymbol("F")
+            .setMaxSupply(CID.length)
+            .setSupplyType(TokenSupplyType.Finite)
             .setSupplyKey(operatorKey)
             .setAdminKey(operatorKey)
             .setTreasuryAccountId(treasuryAccountId)
@@ -88,11 +95,11 @@ async function main() {
 
     // mint 3 NFTs to treasury
     const nftSerialIds = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < CID.length; i++) {
         const { serials } = await (
             await new TokenMintTransaction()
                 .setTokenId(nftId)
-                .addMetadata(Buffer.from("-"))
+                .addMetadata(Buffer.from(CID[i]))
                 .execute(client)
         ).getReceipt(client);
         const [serial] = serials;
