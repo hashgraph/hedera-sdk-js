@@ -210,7 +210,7 @@ describe("TokenRejectIntegrationTest", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
 
-            // Confirm that token reject transactio has returned funds
+            // Confirm that token reject transaction has returned funds
             const balanceReceiverPre = await new AccountBalanceQuery()
                 .setAccountId(receiverId)
                 .execute(env.client);
@@ -224,7 +224,7 @@ describe("TokenRejectIntegrationTest", function () {
                 INITIAL_SUPPLY,
             );
 
-            // after token reject receiver doesn't have balance
+            // after token reject transaction receiver doesn't have balance
             // so we need some tokens back from treasury
             await (
                 await new TransferTransaction()
