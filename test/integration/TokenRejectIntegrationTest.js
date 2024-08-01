@@ -167,6 +167,7 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         // temporary disabled until issue re nfts will be resolved on services side
+        // eslint-disable-next-line mocha/no-skipped-tests
         it.skip("should not return spender allowance to zero after owner rejects FT", async function () {
             this.timeout(120000);
 
@@ -580,6 +581,7 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         // temporary disabled until issue re nfts will be resolved on services side
+        // eslint-disable-next-line mocha/no-skipped-tests
         it.skip("should return spender allowance to 0 after owner rejects NFT", async function () {
             this.timeout(120000);
 
