@@ -166,7 +166,7 @@ describe("TokenRejectIntegrationTest", function () {
             expect(tokenBalanceReceiver).to.equal(0);
         });
 
-        it("should return spender allowance to zero after owner rejects FT", async function () {
+        it("should not return spender allowance to zero after owner rejects FT", async function () {
             this.timeout(120000);
 
             const spenderAccountPrivateKey = PrivateKey.generateED25519();
@@ -210,7 +210,29 @@ describe("TokenRejectIntegrationTest", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
 
-            try {
+            // Confirm that token reject transactio has returned funds
+            const balanceReceiverPre = await new AccountBalanceQuery()
+                .setAccountId(receiverId)
+                .execute(env.client);
+
+            const balanceTreasuryPre = await new AccountBalanceQuery()
+                .setAccountId(env.operatorId)
+                .execute(env.client);
+
+            expect(balanceReceiverPre.tokens.get(tokenId).toInt()).to.eq(0);
+            expect(balanceTreasuryPre.tokens.get(tokenId).toInt()).to.eq(
+                INITIAL_SUPPLY,
+            );
+
+            // after token reject receiver doesn't have balance
+            // so we need some tokens back from treasury
+            await (
+                await new TransferTransaction()
+                    .addTokenTransfer(tokenId, env.operatorId, -1)
+                    .addTokenTransfer(tokenId, receiverId, 1)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+
                 const transactionId = TransactionId.generate(spenderAccountId);
                 await (
                     await (
@@ -222,11 +244,23 @@ describe("TokenRejectIntegrationTest", function () {
                             .sign(spenderAccountPrivateKey)
                     ).execute(env.client)
                 ).getReceipt(env.client);
-            } catch (err) {
-                expect(err.message).to.include(
-                    "SPENDER_DOES_NOT_HAVE_ALLOWANCE",
-                );
-            }
+
+            // Confirm spender has transfered tokens
+            const tokenBalanceReceiverPost = await new AccountBalanceQuery()
+                .setAccountId(receiverId)
+                .execute(env.client);
+
+            expect(tokenBalanceReceiverPost.tokens.get(tokenId).toInt()).to.eq(
+                0,
+            );
+
+            const tokenBalanceSpenderPost = await new AccountBalanceQuery()
+                .setAccountId(spenderAccountId)
+                .execute(env.client);
+
+            expect(tokenBalanceSpenderPost.tokens.get(tokenId).toInt()).to.eq(
+                1,
+            );
         });
 
         describe("should throw an error", function () {
