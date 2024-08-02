@@ -149,7 +149,6 @@ export default class TokenRejectTransaction extends Transaction {
 
     /**
      * @returns {TokenId[]}
-     * @readonly
      */
     get tokenIds() {
         return this._tokenIds;
@@ -177,7 +176,6 @@ export default class TokenRejectTransaction extends Transaction {
 
     /**
      * @returns {NftId[]}
-     * @readonly
      *
      */
     get nftIds() {
