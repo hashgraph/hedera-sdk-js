@@ -679,6 +679,16 @@ export default class Status {
                 return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
             case Status.TokenHasNoMetadataOrSupplyKey:
                 return "TOKEN_HAS_NO_METADATA_OR_SUPPLY_KEY";
+            case Status.EmptyPendingAirdropIdList:
+                return "EMPTY_PENDING_AIRDROP_ID_LIST";
+            case Status.PendingAirdropIdRepeated:
+                return "PENDING_AIRDROP_ID_REPEATED";
+            case Status.MaxPendingAirdropIdExceeded:
+                return "MAX_PENDING_AIRDROP_ID_EXCEEDED";
+            case Status.PendingNftAirdropAlreadyExists:
+                return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
+            case Status.AccountHasPendingAirdrops:
+                return "ACCOUNT_HAS_PENDING_AIRDROPS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1329,6 +1339,16 @@ export default class Status {
                 return Status.UpdateNodeAccountNotAllowed;
             case 360:
                 return Status.TokenHasNoMetadataOrSupplyKey;
+            case 361:
+                return Status.EmptyPendingAirdropIdList;
+            case 362:
+                return Status.PendingAirdropIdRepeated;
+            case 363:
+                return Status.MaxPendingAirdropIdExceeded;
+            case 364:
+                return Status.PendingNftAirdropAlreadyExists;
+            case 365:
+                return Status.AccountHasPendingAirdrops;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2982,3 +3002,31 @@ Status.UpdateNodeAccountNotAllowed = new Status(359);
  * The token has no metadata or supply key
  */
 Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
+
+/**
+ * The transaction attempted to the use an empty List of `PendingAirdropId`.
+ */
+Status.EmptyPendingAirdropIdList = new Status(361);
+
+/**
+ * The transaction attempted to the same `PendingAirdropId` twice.
+ */
+Status.PendingAirdropIdRepeated = new Status(362);
+
+/**
+ * The transaction attempted to use more than the allowed number of `PendingAirdropId`.
+ */
+Status.MaxPendingAirdropIdExceeded = new Status(363);
+
+/*
+ * A pending airdrop already exists for the specified NFT.
+ */
+Status.PendingNftAirdropAlreadyExists = new Status(364);
+
+/*
+ * The identified account is sender for one or more pending airdrop(s)
+ * and cannot be deleted.<br/>
+ * Requester should cancel all pending airdrops before resending
+ * this transaction.
+ */
+Status.AccountHasPendingAirdrops = new Status(365);
