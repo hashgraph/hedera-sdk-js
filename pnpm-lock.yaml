@@ -2378,7 +2378,7 @@ packages:
       send: 0.18.0
       slugify: 1.6.6
       structured-headers: 0.4.1
-      tar: 6.1.15
+      tar: 6.2.1
       tempy: 0.7.1
       terminal-link: 2.1.1
       text-table: 0.2.0
@@ -3810,7 +3810,7 @@ packages:
       promise-inflight: 1.0.1
       rimraf: 3.0.2
       ssri: 8.0.1
-      tar: 6.1.15
+      tar: 6.2.1
       unique-filename: 1.1.1
     transitivePeerDependencies:
       - bluebird
@@ -8226,8 +8226,8 @@ packages:
       streamx: 2.15.5
     dev: true
 
-  /tar@6.1.15:
-    resolution: {integrity: sha512-/zKt9UyngnxIT/EAGYuxaMYgOIJiP81ab9ZfkILq4oNLPFX50qyYmu7jRj9qeXoxmJHjGlbH0+cm2uy1WCs10A==}
+  /tar@6.2.1:
+    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
     dependencies:
       chownr: 2.0.0
