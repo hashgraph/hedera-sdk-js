@@ -186,7 +186,7 @@ async function main() {
     // reject NFTs back to treasury
     const rejectFlowResponse = await (
         await (
-            await new TokenRejectFlow()
+            new TokenRejectFlow()
                 .setOwnerId(receiverAccountId)
                 .setNftIds(nftSerialIds)
                 .freezeWith(client)
