@@ -25,9 +25,9 @@
 
 export default class ServiceEndpoint {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {?Uint8Array} [props.ipAddressV4]
-     * @param {number} [props.port]
+     * @param {?number} [props.port]
      * @param {?string} [props.domainName]
      */
     constructor(props) {
