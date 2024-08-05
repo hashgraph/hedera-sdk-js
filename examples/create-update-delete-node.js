@@ -38,7 +38,12 @@ async function main() {
         .setIpAddressV4(ipAddressV4)
         .setPort(port);
     const gossipEndpoints = [gossipEndpoint];
+    const serviceEndpoint = new ServiceEndpoint()
+        .setIpAddressV4(ipAddressV4)
+        .setPort(port);
+    const serviceEndpoints = [serviceEndpoint];
     const gossipCaCertificate = new Uint8Array();
+    const certificateHash = new Uint8Array();
     const adminKey = PrivateKey.generate();
 
     // 1. Create a new node
@@ -47,7 +52,9 @@ async function main() {
         .setAccountId(accountId)
         .setDescription(description)
         .setGossipEndpoints(gossipEndpoints)
+        .setServiceEndpoints(serviceEndpoints)
         .setGossipCaCertificate(gossipCaCertificate)
+        .setCertificateHash(certificateHash)
         .setAdminKey(adminKey);
     const createTransactionResponse = await createTransaction.execute(client);
     const createTransactionReceipt =
