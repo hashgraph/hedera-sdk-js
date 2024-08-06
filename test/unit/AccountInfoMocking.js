@@ -118,6 +118,8 @@ describe("AccountInfoMocking", function () {
     it("should error when cost is greater than max cost set on client", async function () {
         this.timeout(10000);
 
+        let errorName;
+
         ({ client, servers } = await Mocker.withResponses([
             [
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -127,17 +129,15 @@ describe("AccountInfoMocking", function () {
 
         client.setDefaultMaxQueryPayment(Hbar.fromTinybars(10));
 
-        let err = false;
-
         try {
             await new AccountInfoQuery()
                 .setAccountId("0.0.3")
                 .execute(client, 1);
         } catch (error) {
-            err = error instanceof MaxQueryPaymentExceeded;
+            errorName = error.name;
         }
 
-        expect(err).to.be.true;
+        expect(errorName).to.be.eql("MaxQueryPaymentExceededError");
     });
 
     it("setQueryPayemnt() avoids querying actual cost", async function () {
@@ -154,7 +154,7 @@ describe("AccountInfoMocking", function () {
         await query.execute(client, 1);
 
         expect(query._queryPayment.toTinybars().toInt()).to.be.equal(10);
-    });
+    }, 15000);
 
     it("setQueryPayemnt() + setMaxQueryPayment() avoids querying actual cost", async function () {
         this.timeout(10000);
@@ -399,7 +399,7 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             if (
                 error.message !==
-                "transaction 0.0.1854@1651168054.029348185 failed precheck with status TRANSACTION_EXPIRED"
+                "transaction 0.0.1854@1651168054.029348185 failed precheck with status TRANSACTION_EXPIRED against node account id 0.0.3"
             ) {
                 throw error;
             }
