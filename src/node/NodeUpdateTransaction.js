@@ -253,7 +253,9 @@ export default class NodeUpdateTransaction extends Transaction {
      */
     setDescription(description) {
         if (description.length > DESCRIPTION_MAX_LENGTH) {
-            throw new Error(`Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`);
+            throw new Error(
+                `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
+            );
         }
         this._description = description;
 
