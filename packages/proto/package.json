@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/proto",
-    "version": "2.15.0-beta.2",
+    "version": "2.15.0-beta.3",
     "description": "Protobufs for the Hedera™ Hashgraph SDK",
     "main": "lib/index.js",
     "browser": "src/index.js",
