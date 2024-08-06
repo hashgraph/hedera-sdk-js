@@ -26,7 +26,7 @@ tasks:
             # using tag --remote in order to always apply the newest proto changes
             - git submodule update --init --remote
         status:
-            - test -d packages/proto/src/proto
+            - test -e src/proto/.git
 
     install:
         deps:
