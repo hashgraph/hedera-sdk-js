@@ -5,7 +5,7 @@ import {
     Hbar,
     PrivateKey,
     Status,
-    // TokenCreateTransaction,
+    TokenCreateTransaction,
     TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -154,38 +154,33 @@ describe("AccountInfo", function () {
         }
     });
 
-    /**
-     *
-     * @description The test is temporarily commented because AccountInfoQuery does a query to the consensus node which was deprecated.
-     * @todo Uncomment a test when the new query to the mirror node is implemented as it described here https://github.com/hashgraph/hedera-sdk-reference/issues/144
-     */
-    // it("should reflect token with no keys", async function () {
-    //     this.timeout(120000);
+    it("should reflect token with no keys", async function () {
+        this.timeout(120000);
 
-    //     const operatorId = env.operatorId;
+        const operatorId = env.operatorId;
 
-    //     const token = (
-    //         await (
-    //             await new TokenCreateTransaction()
-    //                 .setTokenName("ffff")
-    //                 .setTokenSymbol("F")
-    //                 .setTreasuryAccountId(operatorId)
-    //                 .execute(env.client)
-    //         ).getReceipt(env.client)
-    //     ).tokenId;
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(operatorId)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
 
-    //     const info = await new AccountInfoQuery()
-    //         .setAccountId(operatorId)
-    //         .execute(env.client);
+        const info = await new AccountInfoQuery()
+            .setAccountId(operatorId)
+            .execute(env.client);
 
-    //     const relationship = info.tokenRelationships.get(token);
+        const relationship = info.tokenRelationships.get(token);
 
-    //     expect(relationship).to.be.not.null;
-    //     expect(relationship.tokenId.toString()).to.be.equal(token.toString());
-    //     expect(relationship.balance.toInt()).to.be.equal(0);
-    //     expect(relationship.isKycGranted).to.be.null;
-    //     expect(relationship.isFrozen).to.be.null;
-    // });
+        expect(relationship).to.be.not.null;
+        expect(relationship.tokenId.toString()).to.be.equal(token.toString());
+        expect(relationship.balance.toInt()).to.be.equal(0);
+        expect(relationship.isKycGranted).to.be.null;
+        expect(relationship.isFrozen).to.be.null;
+    });
 
     it("should be error with no account ID", async function () {
         this.timeout(120000);

@@ -93,7 +93,7 @@ describe("TokenAllowances", function () {
             status = error.status;
         }
 
-        expect(status).to.be.eql(Status.SpenderDoesNotHaveAllowance);
+        expect(status).to.be.eql(Status.TokenNotAssociatedToAccount);
     });
 
     it("Can transfer on behalf of `spender` account with allowance approval", async function () {
