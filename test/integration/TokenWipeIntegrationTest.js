@@ -269,6 +269,7 @@ describe("TokenWipe", function () {
             .execute(env.client);
 
         const account = (await response.getReceipt(env.client)).accountId;
+        const serials = [1, 2, 3];
 
         const token = (
             await (
@@ -290,16 +291,17 @@ describe("TokenWipe", function () {
         const transaction = new TokenWipeTransaction()
             .setTokenId(token)
             .setAccountId(account)
-            .setSerials([1, 2, 3])
+            .setSerials(serials)
             .freezeWith(env.client)
             .toBytes();
 
         const restoredTransaction = Transaction.fromBytes(transaction);
-        expect(restoredTransaction._serials).to.deep.equal([
-            Long.fromNumber(1),
-            Long.fromNumber(2),
-            Long.fromNumber(3),
-        ]);
+
+        expect(restoredTransaction.serials).to.be.an("array");
+        expect(restoredTransaction.serials).to.have.length(3);
+        expect(restoredTransaction.serials.toString()).to.deep.eql(
+            serials.map((number) => Long.fromNumber(number)).toString(),
+        );
     });
 
     after(async function () {

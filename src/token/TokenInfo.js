@@ -68,7 +68,9 @@ export default class TokenInfo {
      * @param {TokenType | null} props.tokenType;
      * @param {TokenSupplyType | null} props.supplyType;
      * @param {Long | null} props.maxSupply;
-     * @param {LedgerId|null} props.ledgerId
+     * @param {LedgerId|null} props.ledgerId;
+     * @param {Key | null} props.metadataKey;
+     * @param {Uint8Array | null} props.metadata;
      */
     constructor(props) {
         /**
@@ -238,6 +240,19 @@ export default class TokenInfo {
         this.maxSupply = props.maxSupply;
 
         this.ledgerId = props.ledgerId;
+
+        /**
+         * @description The key which can change the metadata of a token (token definition and individual NFTs).
+         *
+         * @readonly
+         */
+        this.metadataKey = props.metadataKey;
+
+        /**
+         * @description Metadata of the created token definition.
+         * @readonly
+         */
+        this.metadata = props.metadata;
     }
 
     /**
@@ -361,6 +376,11 @@ export default class TokenInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
+            metadataKey:
+                info.metadataKey != null
+                    ? Key._fromProtobufKey(info.metadataKey)
+                    : null,
+            metadata: info.metadata != null ? info.metadata : new Uint8Array(),
         });
     }
 
@@ -426,6 +446,11 @@ export default class TokenInfo {
             supplyType: this.supplyType != null ? this.supplyType._code : null,
             maxSupply: this.maxSupply,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
+            metadataKey:
+                this.metadataKey != null
+                    ? this.metadataKey._toProtobufKey()
+                    : null,
+            metadata: this.metadata != null ? this.metadata : null,
         };
     }
 

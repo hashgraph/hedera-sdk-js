@@ -11,6 +11,7 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionReceipt", function () {
+    this.timeout(120000);
     let env;
 
     before(async function () {

@@ -172,6 +172,24 @@ describe("ClientIntegration", function () {
         expect(clientTestnet.isTransportSecurity()).to.be.an("boolean");
     });
 
+    it("should return the following error message `defaultMaxQueryPayment must be non-negative` when the user tries to set a negative value to the defaultMaxQueryPayment field", async function () {
+        this.timeout(120000);
+        try {
+            env.client.setDefaultMaxQueryPayment(new Hbar(1).negated());
+        } catch (error) {
+            expect(error.message).to.be.equal(
+                "defaultMaxQueryPayment must be non-negative",
+            );
+        }
+    });
+
+    it("should set defaultMaxQueryPayment field", async function () {
+        this.timeout(120000);
+        const value = new Hbar(100);
+        env.client.setDefaultMaxQueryPayment(value);
+        expect(env.client.defaultMaxQueryPayment).to.be.equal(value);
+    });
+
     after(async function () {
         await env.close();
         clientTestnet.close();

@@ -29,7 +29,7 @@ export default class NetworkVersionInfo {
      * @private
      * @param {object} props
      * @param {SemanticVersion} props.protobufVersion
-     * @param {SemanticVersion} props.servicesVesion
+     * @param {SemanticVersion} props.servicesVersion
      */
     constructor(props) {
         /**
@@ -44,7 +44,7 @@ export default class NetworkVersionInfo {
          *
          * @readonly
          */
-        this.servicesVesion = props.servicesVesion;
+        this.servicesVersion = props.servicesVersion;
 
         Object.freeze(this);
     }
@@ -60,7 +60,7 @@ export default class NetworkVersionInfo {
                 /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hapiProtoVersion),
             ),
-            servicesVesion: SemanticVersion._fromProtobuf(
+            servicesVersion: SemanticVersion._fromProtobuf(
                 /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hederaServicesVersion),
             ),
@@ -74,7 +74,7 @@ export default class NetworkVersionInfo {
     _toProtobuf() {
         return {
             hapiProtoVersion: this.protobufVersion._toProtobuf(),
-            hederaServicesVersion: this.servicesVesion._toProtobuf(),
+            hederaServicesVersion: this.servicesVersion._toProtobuf(),
         };
     }
 

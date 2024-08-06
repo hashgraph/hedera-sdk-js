@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import {
     Status,
     TokenBurnTransaction,
@@ -65,7 +64,6 @@ describe("TokenBurn", function () {
             throw new Error("token Burn did not error");
         }
     });
-
     it("should not error when amount is not set", async function () {
         this.timeout(120000);
 

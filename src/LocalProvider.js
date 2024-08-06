@@ -36,6 +36,7 @@ import TransactionReceiptQuery from "./transaction/TransactionReceiptQuery.js";
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./account/AccountBalance.js").default} AccountBalance
  * @typedef {import("./account/AccountInfo.js").default} AccountInfo
+ * @typedef {import("./logger/Logger.js").default} Logger
  */
 
 /**
@@ -169,5 +170,14 @@ export default class LocalProvider {
      */
     close() {
         this._client.close();
+    }
+
+    /**
+     * Set logger
+     *
+     * @param {Logger} logger
+     */
+    setLogger(logger) {
+        this._client.setLogger(logger);
     }
 }

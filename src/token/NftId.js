@@ -70,7 +70,7 @@ export default class NftId {
     static _fromProtobuf(id) {
         return new NftId(
             TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (id.tokenID),
+                /** @type {HashgraphProto.proto.ITokenID} */ (id.token_ID),
             ),
             id.serialNumber != null ? id.serialNumber : Long.ZERO,
         );
@@ -90,7 +90,7 @@ export default class NftId {
      */
     _toProtobuf() {
         return {
-            tokenID: this.tokenId._toProtobuf(),
+            token_ID: this.tokenId._toProtobuf(),
             serialNumber: Long.fromValue(
                 this.serial !== undefined ? this.serial : 0,
             ),
