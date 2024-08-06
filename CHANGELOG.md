@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.49.2
+
+## What's Changed
+
+* fix: update taskfile status check for submodules task by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2435
+* chore: fix token permissions for deploy to github pages by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2418
+* fix: reconnect to working node by @0xivanov in https://github.com/hashgraph/hedera-sdk-js/pull/2417
+* release: proto v2.15.0-beta.3 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2415
+* update: add node id to the precheck error by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2414
+* feat: Implement TokenRejectTransaction by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2411
+* update: handle PLATFORM_NOT_ACTIVE error gracefully by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2401
+* feat: pull protobuf changes from latest tag by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2435
+* chore: fix token permissions for deploy to github pages by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2389
+* update: release all skipped tests by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2395
+* test: add maxAutomaticTokenAssociations tests by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2390
+
 ## v2.48.1
 
 ## What's Changed
