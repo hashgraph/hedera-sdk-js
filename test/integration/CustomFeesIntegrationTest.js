@@ -1428,7 +1428,7 @@ describe("CustomFees", function () {
                     .setFreezeKey(env.operatorKey)
                     .setWipeKey(env.operatorKey)
                     .setSupplyKey(env.operatorKey)
-                    .setFeeScheduleKey(KeyList.of())
+                    .setFeeScheduleKey(new KeyList(KeyList.of(), 1))
                     .setTokenType(TokenType.NonFungibleUnique)
                     .setFreezeDefault(false)
                     .execute(env.client)

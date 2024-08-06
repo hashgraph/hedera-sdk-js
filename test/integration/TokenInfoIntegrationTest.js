@@ -22,6 +22,7 @@ describe("TokenInfo", function () {
         const key2 = PrivateKey.generateED25519();
         const key3 = PrivateKey.generateED25519();
         const key4 = PrivateKey.generateED25519();
+        const key5 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -34,6 +35,7 @@ describe("TokenInfo", function () {
             .setFreezeKey(key2)
             .setWipeKey(key3)
             .setSupplyKey(key4)
+            .setMetadataKey(key5)
             .setFreezeDefault(false)
             .execute(env.client);
 
@@ -56,15 +58,12 @@ describe("TokenInfo", function () {
         expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
         expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
         expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.metadataKey.toString()).to.eql(key5.publicKey.toString());
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
-        expect(info.autoRenewAccountId).to.be.not.null;
-        expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString(),
-        );
-        expect(info.autoRenewPeriod).to.be.not.null;
-        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.autoRenewAccountId).to.be.null;
+        expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
     });
 
@@ -98,15 +97,12 @@ describe("TokenInfo", function () {
         expect(info.freezeKey).to.be.null;
         expect(info.wipeKey).to.be.null;
         expect(info.supplyKey).to.be.null;
+        expect(info.metadataKey).to.be.null;
         expect(info.defaultFreezeStatus).to.be.null;
         expect(info.defaultKycStatus).to.be.null;
         expect(info.isDeleted).to.be.false;
-        expect(info.autoRenewAccountId).to.be.not.null;
-        expect(info.autoRenewAccountId.toString()).to.be.eql(
-            operatorId.toString(),
-        );
-        expect(info.autoRenewPeriod).to.be.not.null;
-        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.autoRenewAccountId).to.be.null;
+        expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
     });
 

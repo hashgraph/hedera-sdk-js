@@ -1,8 +1,11 @@
+/* eslint-disable mocha/no-setup-in-describe */
+
 import {
     AccountCreateTransaction,
     AccountId,
     FileCreateTransaction,
     Hbar,
+    HbarUnit,
     PrivateKey,
     Timestamp,
     Transaction,
@@ -12,6 +15,7 @@ import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+import BigNumber from "bignumber.js";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -197,5 +201,116 @@ describe("Transaction", function () {
                 "transaction successfully built from invalid bytes",
             );
         }
+    });
+
+    describe("balance must be the same before and after serialization/deserialization", function () {
+        // Declare float number
+        const FLOAT_NUMBER = 8.02341424;
+
+        // Declare integer number from float number
+        const INTEGER_NUMBER = Math.floor(FLOAT_NUMBER);
+
+        // Declare diffrent number types
+        const NUMBERS = {
+            INTEGER: INTEGER_NUMBER,
+            FLOAT: FLOAT_NUMBER,
+        };
+        const NUMBER_TYPES = Object.keys(NUMBERS);
+
+        // Loop through different numbers
+        NUMBER_TYPES.forEach((number_type) => {
+            // Declare number
+            const number = NUMBERS[number_type];
+            const isNumberInteger = Number.isInteger(number);
+
+            describe(`when ${number_type.toLowerCase()} number of ${number} is passed:`, function () {
+                // Declare different types of parameter
+                const PARAMETERS = {
+                    STRING: `${number}`,
+                    NUMBER: number,
+                    LONG_NUMBER: Long.fromValue(number),
+                    BIG_NUMBER: new BigNumber(number),
+                    ...(isNumberInteger && {
+                        HBAR: (unit) => Hbar.fromString(`${number}`, unit),
+                    }),
+                };
+                const PARAMETERS_TYPES = Object.keys(PARAMETERS);
+
+                // Loop through different parameter types
+                PARAMETERS_TYPES.forEach((parameter_type) => {
+                    // Declare parameter
+                    const parameter = PARAMETERS[parameter_type];
+
+                    // If the parameter is instance of Hbar then pass the unit
+                    if (typeof parameter == "function") {
+                        // Declare different units
+                        const UNITS_NAMES = Object.keys(HbarUnit);
+                        // Loop through different units
+                        UNITS_NAMES.forEach((unit) => {
+                            it(`as ${parameter_type
+                                .split("_")
+                                .join(" ")
+                                .toLowerCase()} in ${unit}`, function () {
+                                // Create transaction
+                                const transaction =
+                                    new AccountCreateTransaction();
+
+                                // Set initial balance
+                                transaction.setInitialBalance(
+                                    parameter(HbarUnit[unit]),
+                                );
+
+                                // Serialize transaction
+                                const transactionBytes = transaction.toBytes();
+
+                                // Deserialize transaction
+                                const transactionFromBytes =
+                                    Transaction.fromBytes(transactionBytes);
+
+                                // Compare balance before and after serialization/deserialization
+                                expect(
+                                    transaction.initialBalance.toString(
+                                        HbarUnit[unit],
+                                    ),
+                                ).to.be.equal(
+                                    transactionFromBytes.initialBalance.toString(
+                                        HbarUnit[unit],
+                                    ),
+                                );
+                            });
+                        });
+                    } else {
+                        it(`as ${parameter_type
+                            .split("_")
+                            .join(" ")
+                            .toLowerCase()}`, function () {
+                            // Create transaction
+                            const transaction = new AccountCreateTransaction();
+
+                            // Set initial balance
+                            transaction.setInitialBalance(parameter);
+
+                            // Serialize transaction
+                            const transactionBytes = transaction.toBytes();
+
+                            // Deserialize transaction
+                            const transactionFromBytes =
+                                Transaction.fromBytes(transactionBytes);
+
+                            // Compare balance before and after serialization/deserialization
+                            expect(
+                                transaction.initialBalance.toString(
+                                    HbarUnit.Hbar,
+                                ),
+                            ).to.be.equal(
+                                transactionFromBytes.initialBalance.toString(
+                                    HbarUnit.Hbar,
+                                ),
+                            );
+                        });
+                    }
+                });
+            });
+        });
     });
 });

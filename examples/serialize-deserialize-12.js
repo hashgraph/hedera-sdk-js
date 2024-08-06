@@ -42,14 +42,14 @@ async function main() {
         // Create transaction id
         const transactionId = new TransactionId(
             operatorId,
-        Timestamp.fromDate(new Date())
+            Timestamp.fromDate(new Date()),
         );
 
         // 1. Create a transaction
         const transaction = new AccountUpdateTransaction()
             .setTransactionId(transactionId)
             .setAccountId(operatorId)
-            .setAccountMemo('Hello')
+            .setAccountMemo("Hello");
 
         // 2. Serialize transaction
         const transactionBytes = transaction.toBytes();
@@ -64,10 +64,13 @@ async function main() {
         const transactionBytesAfterBeingFrozen = transactionFromBytes.toBytes();
 
         // 6. Deserialize transaction again
-        const transactionFromBytesAfterBeingFrozen = Transaction.fromBytes(transactionBytesAfterBeingFrozen);
+        const transactionFromBytesAfterBeingFrozen = Transaction.fromBytes(
+            transactionBytesAfterBeingFrozen,
+        );
 
         // 7. Execute transaction
-        const executedTransaction = await transactionFromBytesAfterBeingFrozen.execute(client);
+        const executedTransaction =
+            await transactionFromBytesAfterBeingFrozen.execute(client);
 
         // 8. Get a receipt
         const receipt = await executedTransaction.getReceipt(client);

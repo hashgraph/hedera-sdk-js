@@ -38,11 +38,20 @@ The Hedera JavaScript SDK does not currently support the following:
 
 * React Native Bare
 
-
-
 ## Usage
 
 See [examples](./examples).
+
+Every example can be executed using the following command from the root directory: `node examples/[name-of-example].js`
+
+## Start tests
+
+* To start the integration tests follow the next steps:
+    - Run the [local node](https://github.com/hashgraph/hedera-local-node)
+    - Run `task test:intergration:node`
+    - Stop the [local node](https://github.com/hashgraph/hedera-local-node)
+* To start unit tests follow the next steps:
+    - Run `task test:unit` (Note: the local node should not be running)
 
 ## Contributing to this Project
 

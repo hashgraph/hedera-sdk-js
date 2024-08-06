@@ -623,6 +623,72 @@ export default class Status {
                 return "ACCOUNT_IS_IMMUTABLE";
             case Status.AliasAlreadyAssigned:
                 return "ALIAS_ALREADY_ASSIGNED";
+            case Status.InvalidMetadataKey:
+                return "INVALID_METADATA_KEY";
+            case Status.TokenHasNoMetadataKey:
+                return "TOKEN_HAS_NO_METADATA_KEY";
+            case Status.MissingTokenMetadata:
+                return "MISSING_TOKEN_METADATA";
+            case Status.MissingSerialNumbers:
+                return "MISSING_SERIAL_NUMBERS";
+            case Status.TokenHasNoAdminKey:
+                return "TOKEN_HAS_NO_ADMIN_KEY";
+            case Status.NodeDeleted:
+                return "NODE_DELETED";
+            case Status.InvalidNodeId:
+                return "INVALID_NODE_ID";
+            case Status.InvalidGossipEndpoint:
+                return "INVALID_GOSSIP_ENDPOINT";
+            case Status.InvalidNodeAccountId:
+                return "INVALID_NODE_ACCOUNT_ID";
+            case Status.InvalidNodeDescription:
+                return "INVALID_NODE_DESCRIPTION";
+            case Status.InvalidServiceEndpoint:
+                return "INVALID_SERVICE_ENDPOINT";
+            case Status.InvalidGossipCaCertificate:
+                return "INVALID_GOSSIP_CA_CERTIFICATE";
+            case Status.InvalidGrpcCertificate:
+                return "INVALID_GRPC_CERTIFICATE";
+            case Status.InvalidMaxAutoAssociations:
+                return "INVALID_MAX_AUTO_ASSOCIATIONS";
+            case Status.MaxNodesCreated:
+                return "MAX_NODES_CREATED";
+            case Status.IpFqdnCannotBeSetForSameEndpoint:
+                return "IP_FQDN_CANNOT_BE_SET_FOR_SAME_ENDPOINT";
+            case Status.GossipEndpointCannotHaveFqdn:
+                return "GOSSIP_ENDPOINT_CANNOT_HAVE_FQDN";
+            case Status.FqdnSizeTooLarge:
+                return "FQDN_SIZE_TOO_LARGE";
+            case Status.InvalidEndpoint:
+                return "INVALID_ENDPOINT";
+            case Status.GossipEndpointsExceededLimit:
+                return "GOSSIP_ENDPOINTS_EXCEEDED_LIMIT";
+            case Status.ServiceEndpointsExceededLimit:
+                return "SERVICE_ENDPOINTS_EXCEEDED_LIMIT";
+            case Status.InvalidIpv4Address:
+                return "INVALID_IPV4_ADDRESS";
+            case Status.TokenReferenceRepeated:
+                return "TOKEN_REFERENCE_REPEATED";
+            case Status.InvalidOwnerId:
+                return "INVALID_OWNER_ID";
+            case Status.TokenReferenceListSizeLimitExceeded:
+                return "TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenReferenceList:
+                return "EMPTY_TOKEN_REFERENCE_LIST";
+            case Status.UpdateNodeAccountNotAllowed:
+                return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
+            case Status.TokenHasNoMetadataOrSupplyKey:
+                return "TOKEN_HAS_NO_METADATA_OR_SUPPLY_KEY";
+            case Status.EmptyPendingAirdropIdList:
+                return "EMPTY_PENDING_AIRDROP_ID_LIST";
+            case Status.PendingAirdropIdRepeated:
+                return "PENDING_AIRDROP_ID_REPEATED";
+            case Status.MaxPendingAirdropIdExceeded:
+                return "MAX_PENDING_AIRDROP_ID_EXCEEDED";
+            case Status.PendingNftAirdropAlreadyExists:
+                return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
+            case Status.AccountHasPendingAirdrops:
+                return "ACCOUNT_HAS_PENDING_AIRDROPS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1217,6 +1283,72 @@ export default class Status {
                 return Status.AccountIsImmutable;
             case 332:
                 return Status.AliasAlreadyAssigned;
+            case 333:
+                return Status.InvalidMetadataKey;
+            case 334:
+                return Status.TokenHasNoMetadataKey;
+            case 335:
+                return Status.MissingTokenMetadata;
+            case 336:
+                return Status.MissingSerialNumbers;
+            case 337:
+                return Status.TokenHasNoAdminKey;
+            case 338:
+                return Status.NodeDeleted;
+            case 339:
+                return Status.InvalidNodeId;
+            case 340:
+                return Status.InvalidGossipEndpoint;
+            case 341:
+                return Status.InvalidNodeAccountId;
+            case 342:
+                return Status.InvalidNodeDescription;
+            case 343:
+                return Status.InvalidServiceEndpoint;
+            case 344:
+                return Status.InvalidGossipCaCertificate;
+            case 345:
+                return Status.InvalidGrpcCertificate;
+            case 346:
+                return Status.InvalidMaxAutoAssociations;
+            case 347:
+                return Status.MaxNodesCreated;
+            case 348:
+                return Status.IpFqdnCannotBeSetForSameEndpoint;
+            case 349:
+                return Status.GossipEndpointCannotHaveFqdn;
+            case 350:
+                return Status.FqdnSizeTooLarge;
+            case 351:
+                return Status.InvalidEndpoint;
+            case 352:
+                return Status.GossipEndpointsExceededLimit;
+            case 353:
+                return Status.TokenReferenceRepeated;
+            case 354:
+                return Status.InvalidOwnerId;
+            case 355:
+                return Status.TokenReferenceListSizeLimitExceeded;
+            case 356:
+                return Status.ServiceEndpointsExceededLimit;
+            case 357:
+                return Status.InvalidIpv4Address;
+            case 358:
+                return Status.EmptyTokenReferenceList;
+            case 359:
+                return Status.UpdateNodeAccountNotAllowed;
+            case 360:
+                return Status.TokenHasNoMetadataOrSupplyKey;
+            case 361:
+                return Status.EmptyPendingAirdropIdList;
+            case 362:
+                return Status.PendingAirdropIdRepeated;
+            case 363:
+                return Status.MaxPendingAirdropIdExceeded;
+            case 364:
+                return Status.PendingNftAirdropAlreadyExists;
+            case 365:
+                return Status.AccountHasPendingAirdrops;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2728,3 +2860,173 @@ Status.AccountIsImmutable = new Status(331);
  * An alias that is assigned to an account or contract cannot be assigned to another account or contract.
  */
 Status.AliasAlreadyAssigned = new Status(332);
+
+/**
+ * A provided metadata key was invalid. Verification includes, for example, checking the size of Ed25519 and ECDSA(secp256k1) public keys.
+ */
+Status.InvalidMetadataKey = new Status(333);
+
+/**
+ * Metadata key is not set on token
+ */
+Status.TokenHasNoMetadataKey = new Status(334);
+
+/**
+ * Token Metadata is not provided
+ */
+Status.MissingTokenMetadata = new Status(335);
+
+/**
+ * NFT serial numbers are missing in the TokenUpdateNftsTransactionBody
+ */
+Status.MissingSerialNumbers = new Status(336);
+
+/**
+ * Admin key is not set on token
+ */
+Status.TokenHasNoAdminKey = new Status(337);
+
+/**
+ * The node has been marked as deleted
+ */
+Status.NodeDeleted = new Status(338);
+
+/**
+ * A node is not found during update and delete node transaction
+ */
+Status.InvalidNodeId = new Status(339);
+
+/**
+ * gossip_endpoint has a fully qualified domain name instead of ip
+ */
+Status.InvalidGossipEndpoint = new Status(340);
+
+/**
+ * The node account_id is invalid
+ */
+Status.InvalidNodeAccountId = new Status(341);
+
+/**
+ * The node description is invalid
+ */
+Status.InvalidNodeDescription = new Status(342);
+
+/**
+ * service_endpoint is invalid
+ */
+Status.InvalidServiceEndpoint = new Status(343);
+
+/**
+ * gossip_ca_certificate is invalid
+ */
+Status.InvalidGossipCaCertificate = new Status(344);
+
+/**
+ * grpc_certificate_hash is invalid
+ */
+Status.InvalidGrpcCertificate = new Status(345);
+
+/**
+ * The maximum automatic associations value is not valid.
+ * The most common cause for this error is a value less than `-1`.
+ */
+Status.InvalidMaxAutoAssociations = new Status(346);
+
+/**
+ * The maximum number of nodes allowed in the address book have been created.
+ */
+Status.MaxNodesCreated = new Status(347);
+
+/**
+ * In ServiceEndpoint, domain_name and ipAddressV4 are mutually exclusive
+ */
+Status.IpFqdnCannotBeSetForSameEndpoint = new Status(348);
+
+/**
+ * Fully qualified domain name is not allowed in gossip_endpoint
+ */
+Status.GossipEndpointCannotHaveFqdn = new Status(349);
+
+/**
+ * In ServiceEndpoint, domain_name size too large
+ */
+Status.FqdnSizeTooLarge = new Status(350);
+
+/**
+ * ServiceEndpoint is invalid
+ */
+Status.InvalidEndpoint = new Status(351);
+
+/**
+ * The number of gossip endpoints exceeds the limit
+ */
+Status.GossipEndpointsExceededLimit = new Status(352);
+
+/**
+ * The transaction attempted to use duplicate `TokenReference`.<br/>
+ * This affects `TokenReject` attempting to reject same token reference more than once.
+ */
+Status.TokenReferenceRepeated = new Status(353);
+
+/**
+ * The account id specified as the owner in `TokenReject` is invalid or does not exist.
+ */
+Status.InvalidOwnerId = new Status(354);
+
+/**
+ * The transaction attempted to use more than the allowed number of `TokenReference`.
+ */
+Status.TokenReferenceListSizeLimitExceeded = new Status(355);
+
+/**
+ * The number of service endpoints exceeds the limit
+ */
+Status.ServiceEndpointsExceededLimit = new Status(356);
+
+/*
+ * The IPv4 address is invalid
+ */
+Status.InvalidIpv4Address = new Status(357);
+
+/**
+ * The transaction attempted to use empty `TokenReference` list.
+ */
+Status.EmptyTokenReferenceList = new Status(358);
+
+/*
+ * The node account is not allowed to be updated
+ */
+Status.UpdateNodeAccountNotAllowed = new Status(359);
+
+/*
+ * The token has no metadata or supply key
+ */
+Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
+
+/**
+ * The transaction attempted to the use an empty List of `PendingAirdropId`.
+ */
+Status.EmptyPendingAirdropIdList = new Status(361);
+
+/**
+ * The transaction attempted to the same `PendingAirdropId` twice.
+ */
+Status.PendingAirdropIdRepeated = new Status(362);
+
+/**
+ * The transaction attempted to use more than the allowed number of `PendingAirdropId`.
+ */
+Status.MaxPendingAirdropIdExceeded = new Status(363);
+
+/*
+ * A pending airdrop already exists for the specified NFT.
+ */
+Status.PendingNftAirdropAlreadyExists = new Status(364);
+
+/*
+ * The identified account is sender for one or more pending airdrop(s)
+ * and cannot be deleted.<br/>
+ * Requester should cancel all pending airdrops before resending
+ * this transaction.
+ */
+Status.AccountHasPendingAirdrops = new Status(365);

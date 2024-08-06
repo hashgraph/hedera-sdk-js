@@ -254,7 +254,7 @@ export default class ContractCreateTransaction extends Transaction {
                 gas: create.gas != null ? create.gas : undefined,
                 initialBalance:
                     create.initialBalance != null
-                        ? create.initialBalance
+                        ? Hbar.fromTinybars(create.initialBalance)
                         : undefined,
                 proxyAccountId:
                     create.proxyAccountID != null

@@ -24,6 +24,7 @@ import StatusError from "./StatusError.js";
  * @typedef {import("./Status.js").default} Status
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./contract/ContractFunctionResult.js").default} ContractFunctionResult
+ * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
 /**
@@ -31,6 +32,7 @@ import StatusError from "./StatusError.js";
  * @property {string} name
  * @property {string} status
  * @property {string} transactionId
+ * @property {?string | null} nodeId
  * @property {string} message
  * @property {?ContractFunctionResult} contractFunctionResult
  */
@@ -40,12 +42,13 @@ export default class PrecheckStatusError extends StatusError {
      * @param {object} props
      * @param {Status} props.status
      * @param {TransactionId} props.transactionId
+     * @param {AccountId} props.nodeId
      * @param {?ContractFunctionResult} props.contractFunctionResult
      */
     constructor(props) {
         super(
             props,
-            `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()}`,
+            `transaction ${props.transactionId.toString()} failed precheck with status ${props.status.toString()} against node account id ${props.nodeId.toString()}`,
         );
 
         /**
@@ -53,6 +56,12 @@ export default class PrecheckStatusError extends StatusError {
          * @readonly
          */
         this.contractFunctionResult = props.contractFunctionResult;
+
+        /**
+         * @type {AccountId}
+         * @readonly
+         */
+        this.nodeId = props.nodeId;
     }
 
     /**
@@ -63,6 +72,7 @@ export default class PrecheckStatusError extends StatusError {
             name: this.name,
             status: this.status.toString(),
             transactionId: this.transactionId.toString(),
+            nodeId: this.nodeId.toString(),
             message: this.message,
             contractFunctionResult: this.contractFunctionResult,
         };
