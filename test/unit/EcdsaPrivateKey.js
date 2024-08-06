@@ -370,8 +370,6 @@ describe("EcdsaPrivateKey", function () {
         const privateKey = PrivateKey.generateECDSA();
         const publicKey = privateKey.publicKey;
 
-        console.log(privateKey.type);
-
         const aliasAccountId = publicKey.toAccountId(0, 0);
 
         expect(aliasAccountId.toString()).to.be.equal(

@@ -4,7 +4,7 @@ import {
     TokenCreateTransaction,
     TokenSupplyType,
     TokenType,
-    // AccountBalanceQuery,
+    AccountBalanceQuery,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -64,58 +64,52 @@ describe("TokenBurn", function () {
             throw new Error("token Burn did not error");
         }
     });
+    it("should not error when amount is not set", async function () {
+        this.timeout(120000);
 
-    /**
-     *
-     * @description The test is temporarily commented because AccountBalanceQuery does a query to the consensus node which was deprecated.
-     * @todo Uncomment a test when the new query to the mirror node is implemented as it described here https://github.com/hashgraph/hedera-sdk-reference/issues/144
-     */
-    // it("should not error when amount is not set", async function () {
-    //     this.timeout(120000);
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
-    //     const operatorId = env.operatorId;
-    //     const operatorKey = env.operatorKey.publicKey;
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .execute(env.client);
 
-    //     const response = await new TokenCreateTransaction()
-    //         .setTokenName("ffff")
-    //         .setTokenSymbol("F")
-    //         .setDecimals(3)
-    //         .setInitialSupply(1000000)
-    //         .setTreasuryAccountId(operatorId)
-    //         .setAdminKey(operatorKey)
-    //         .setKycKey(operatorKey)
-    //         .setFreezeKey(operatorKey)
-    //         .setWipeKey(operatorKey)
-    //         .setSupplyKey(operatorKey)
-    //         .setFreezeDefault(false)
-    //         .execute(env.client);
+        const token = (await response.getReceipt(env.client)).tokenId;
 
-    //     const token = (await response.getReceipt(env.client)).tokenId;
+        let err = false;
 
-    //     let err = false;
+        try {
+            await (
+                await new TokenBurnTransaction()
+                    .setTokenId(token)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error;
+        }
 
-    //     try {
-    //         await (
-    //             await new TokenBurnTransaction()
-    //                 .setTokenId(token)
-    //                 .execute(env.client)
-    //         ).getReceipt(env.client);
-    //     } catch (error) {
-    //         err = error;
-    //     }
+        const accountBalance = await new AccountBalanceQuery()
+            .setAccountId(operatorId)
+            .execute(env.client);
 
-    //     const accountBalance = await new AccountBalanceQuery()
-    //         .setAccountId(operatorId)
-    //         .execute(env.client);
+        expect(
+            accountBalance.tokens._map.get(token.toString()).toNumber(),
+        ).to.be.equal(1000000);
 
-    //     expect(
-    //         accountBalance.tokens._map.get(token.toString()).toNumber(),
-    //     ).to.be.equal(1000000);
-
-    //     if (err) {
-    //         throw new Error("token burn did error");
-    //     }
-    // });
+        if (err) {
+            throw new Error("token burn did error");
+        }
+    });
 
     it("cannot burn token with invalid metadata", async function () {
         this.timeout(120000);

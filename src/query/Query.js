@@ -442,33 +442,25 @@ export default class Query extends Executable {
             responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
         };
 
-        if (this._isPaymentRequired() && this._paymentTransactions != null) {
-            if (this._nodeAccountIds.locked) {
-                header.payment =
-                    this._paymentTransactions[this._nodeAccountIds.index];
-            } else {
-                const logId = this._getLogId();
-                const nodeId = this._nodeAccountIds.current;
-                const paymentTransactionId =
-                    /** @type {import("../transaction/TransactionId.js").default} */ (
-                        this._paymentTransactionId
-                    );
-                const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
+        const logId = this._getLogId();
+        const nodeId = this._nodeAccountIds.current;
+        const paymentTransactionId = TransactionId.generate(
+            this._operator ? this._operator.accountId : new AccountId(0),
+        );
+        const paymentAmount = /** @type {Hbar} */ (this._queryPayment);
 
-                if (this._logger) {
-                    this._logger.debug(
-                        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
-                    );
-                }
-
-                header.payment = await _makePaymentTransaction(
-                    paymentTransactionId,
-                    nodeId,
-                    this._isPaymentRequired() ? this._operator : null,
-                    paymentAmount,
-                );
-            }
+        if (this._logger) {
+            this._logger.debug(
+                `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`,
+            );
         }
+
+        header.payment = await _makePaymentTransaction(
+            paymentTransactionId,
+            nodeId,
+            this._isPaymentRequired() ? this._operator : null,
+            paymentAmount,
+        );
 
         return this._onMakeRequest(header);
     }
@@ -500,6 +492,7 @@ export default class Query extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
             case Status.Ok:
                 return [status, ExecutionState.Finished];
@@ -513,10 +506,11 @@ export default class Query extends Executable {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -527,6 +521,7 @@ export default class Query extends Executable {
         );
 
         return new PrecheckStatusError({
+            nodeId,
             status,
             transactionId: this._getTransactionId(),
             contractFunctionResult: null,

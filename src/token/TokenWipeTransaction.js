@@ -70,7 +70,7 @@ export default class TokenWipeTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Long[]}
+         * @type {?Long[]}
          */
         this._serials = [];
 
@@ -217,7 +217,7 @@ export default class TokenWipeTransaction extends Transaction {
     }
 
     /**
-     * @returns {Long[]}
+     * @returns {?Long[]}
      */
     get serials() {
         return this._serials;
