@@ -48,24 +48,14 @@ export default class AccountBalance {
      */
     constructor(props) {
         /**
-         * The account ID for which this balancermation applies.
+         * The Hbar balance of the account
          *
          * @readonly
          */
         this.hbars = props.hbars;
 
-        /**
-         * @deprecated - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
-         * @readonly
-         */
-        // eslint-disable-next-line deprecation/deprecation
         this.tokens = props.tokens;
 
-        /**
-         * @deprecated - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
-         * @readonly
-         */
-        // eslint-disable-next-line deprecation/deprecation
         this.tokenDecimals = props.tokenDecimals;
 
         Object.freeze(this);

@@ -282,6 +282,19 @@ export default class PublicKey extends Key {
     toAccountId(shard, realm) {
         return CACHE.accountIdConstructor(shard, realm, this);
     }
+
+    /**
+     * Returns an "unusable" public key.
+     * “Unusable” refers to a key such as an Ed25519 0x00000... public key,
+     * since it is (presumably) impossible to find the 32-byte string whose SHA-512 hash begins with 32 bytes of zeros.
+     *
+     * @returns {PublicKey}
+     */
+    static unusableKey() {
+        return PublicKey.fromStringED25519(
+            "0000000000000000000000000000000000000000000000000000000000000000",
+        );
+    }
 }
 
 CACHE.setPublicKeyED25519((key) => PublicKey.fromBytesED25519(key));

@@ -128,6 +128,8 @@ export { default as Timestamp } from "./Timestamp.js";
 export { default as TokenAllowance } from "./account/TokenAllowance.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
 export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
+export { default as TokenRejectTransaction } from "./token/TokenRejectTransaction.js";
+export { default as TokenRejectFlow } from "./token/TokenRejectFlow.js";
 export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";
 export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransaction.js";
 export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
@@ -175,11 +177,13 @@ export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
 export { default as Long } from "long";
 export { default as FreezeType } from "./FreezeType.js";
+export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
+export { default as TokenUpdateNftsTransaction } from "./token/TokenUpdateNftsTransaction.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
