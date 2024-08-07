@@ -206,12 +206,11 @@ export default class Ed25519PrivateKey {
      */
     toBytesDer() {
         const bytes = new Uint8Array(derPrefixBytes.length + 32);
+        const privateKey = this._keyPair.secretKey.subarray(0, 32);
+        const leadingZeroes = 32 - privateKey.length;
 
         bytes.set(derPrefixBytes, 0);
-        bytes.set(
-            this._keyPair.secretKey.subarray(0, 32),
-            derPrefixBytes.length,
-        );
+        bytes.set(privateKey, derPrefixBytes.length + leadingZeroes);
 
         return bytes;
     }
