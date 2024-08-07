@@ -91,19 +91,19 @@ export default class NodeUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Array<ServiceEndpoint>}
+         * @type {?Array<ServiceEndpoint>}
          * @description List of service endpoints for gossip.
          */
         this._gossipEndpoints =
-            props?.gossipEndpoints != null ? props.gossipEndpoints : [];
+            props?.gossipEndpoints != null ? props.gossipEndpoints : null;
 
         /**
          * @private
-         * @type {Array<ServiceEndpoint>}
+         * @type {?Array<ServiceEndpoint>}
          * @description List of service endpoints for gRPC calls.
          */
         this._serviceEndpoints =
-            props?.serviceEndpoints != null ? props.serviceEndpoints : [];
+            props?.serviceEndpoints != null ? props.serviceEndpoints : null;
 
         /**
          * @private
@@ -313,7 +313,9 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addGossipEndpoint(endpoint) {
-        this._gossipEndpoints.push(endpoint);
+        if (this._gossipEndpoints != null) {
+            this._gossipEndpoints.push(endpoint);
+        }
         return this;
     }
 
@@ -352,7 +354,9 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addServiceEndpoint(endpoint) {
-        this._serviceEndpoints.push(endpoint);
+        if (this._serviceEndpoints != null) {
+            this._serviceEndpoints.push(endpoint);
+        }
         return this;
     }
 
@@ -449,14 +453,20 @@ export default class NodeUpdateTransaction extends Transaction {
             description: {
                 value: this._description != null ? this._description : null,
             },
-            gossipEndpoint: this._gossipEndpoints.map(
-                (/** @type {ServiceEndpoint} */ endpoint) =>
-                    endpoint._toProtobuf(),
-            ),
-            serviceEndpoint: this._serviceEndpoints.map(
-                (/** @type {ServiceEndpoint} */ endpoint) =>
-                    endpoint._toProtobuf(),
-            ),
+            gossipEndpoint:
+                this._gossipEndpoints != null
+                    ? this._gossipEndpoints.map(
+                          (/** @type {ServiceEndpoint} */ endpoint) =>
+                              endpoint._toProtobuf(),
+                      )
+                    : null,
+            serviceEndpoint:
+                this._serviceEndpoints != null
+                    ? this._serviceEndpoints.map(
+                          (/** @type {ServiceEndpoint} */ endpoint) =>
+                              endpoint._toProtobuf(),
+                      )
+                    : null,
             gossipCaCertificate: {
                 value:
                     this._gossipCaCertificate != null
