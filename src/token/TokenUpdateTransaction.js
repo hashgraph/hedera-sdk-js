@@ -26,6 +26,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import TokenKeyValidation from "./TokenKeyValidation.js";
 
 /**
  * @namespace proto
@@ -66,6 +67,9 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {string} [props.tokenMemo]
      * @param {Key} [props.feeScheduleKey]
      * @param {Key} [props.pauseKey]
+     * @param {Key} [props.metadataKey]
+     * @param {Uint8Array} [props.metadata]
+     * @param {TokenKeyValidation} [props.keyVerificationMode]
      */
     constructor(props = {}) {
         super();
@@ -160,6 +164,26 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._pauseKey = null;
 
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._metadataKey = null;
+
+        /**
+         * @private
+         * @type {?Uint8Array}
+         */
+        this._metadata = null;
+
+        /**
+         * @private
+         * @type {?TokenKeyValidation}
+         * Determines whether the system should check the validity of the passed keys for update.
+         * Defaults to FULL_VALIDATION
+         */
+        this._keyVerificationMode = TokenKeyValidation.FullValidation;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -218,6 +242,18 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.pauseKey != null) {
             this.setPauseKey(props.pauseKey);
+        }
+
+        if (props.metadataKey != null) {
+            this.setMetadataKey(props.metadataKey);
+        }
+
+        if (props.metadata != null) {
+            this.setMetadata(props.metadata);
+        }
+
+        if (props.keyVerificationMode != null) {
+            this.setKeyVerificationMode(props.keyVerificationMode);
         }
     }
 
@@ -300,6 +336,22 @@ export default class TokenUpdateTransaction extends Transaction {
                 pauseKey:
                     update.pauseKey != null
                         ? Key._fromProtobufKey(update.pauseKey)
+                        : undefined,
+                metadataKey:
+                    update.metadataKey != null
+                        ? Key._fromProtobufKey(update.metadataKey)
+                        : undefined,
+                metadata:
+                    update.metadata != null
+                        ? update.metadata.value != null
+                            ? update.metadata.value
+                            : undefined
+                        : undefined,
+                keyVerificationMode:
+                    update.keyVerificationMode != null
+                        ? TokenKeyValidation._fromCode(
+                              update.keyVerificationMode,
+                          )
                         : undefined,
             }),
             transactions,
@@ -603,6 +655,60 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get metadataKey() {
+        return this._metadataKey;
+    }
+
+    /**
+     * @param {Key} metadataKey
+     * @returns {this}
+     */
+    setMetadataKey(metadataKey) {
+        this._requireNotFrozen();
+        this._metadataKey = metadataKey;
+
+        return this;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    get metadata() {
+        return this._metadata;
+    }
+
+    /**
+     * @param {Uint8Array} metadata
+     * @returns {this}
+     */
+    setMetadata(metadata) {
+        this._requireNotFrozen();
+        this._metadata = metadata;
+
+        return this;
+    }
+
+    /**
+     * @returns {?TokenKeyValidation}
+     */
+    get keyVerificationMode() {
+        return this._keyVerificationMode;
+    }
+
+    /**
+     * @param {TokenKeyValidation} keyVerificationMode
+     * @returns {this}
+     */
+    setKeyVerificationMode(keyVerificationMode) {
+        this._requireNotFrozen();
+        this._keyVerificationMode = keyVerificationMode;
+
+        return this;
+    }
+
+    /**
      * @returns {this}
      */
     clearTokenMemo() {
@@ -700,6 +806,20 @@ export default class TokenUpdateTransaction extends Transaction {
                 this._feeScheduleKey != null
                     ? this._feeScheduleKey._toProtobufKey()
                     : null,
+            metadataKey:
+                this._metadataKey != null
+                    ? this._metadataKey._toProtobufKey()
+                    : null,
+            metadata:
+                this._metadata != null
+                    ? {
+                          value: this._metadata,
+                      }
+                    : null,
+            keyVerificationMode:
+                this._keyVerificationMode != null
+                    ? this._keyVerificationMode._code
+                    : undefined,
         };
     }
 

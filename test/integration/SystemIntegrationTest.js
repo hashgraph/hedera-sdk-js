@@ -13,9 +13,8 @@ describe("SystemIntegration", function () {
         env = await IntegrationTestEnv.new();
     });
 
-    it("should be executable", async function () {
+    it("should be executable when file id is not set", async function () {
         this.timeout(120000);
-
         let errorThrown = false;
 
         try {
@@ -28,7 +27,11 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-        errorThrown = false;
+    });
+
+    it("should be executable when contract id is not set", async function () {
+        this.timeout(120000);
+        let errorThrown = false;
 
         try {
             await new SystemDeleteTransaction()
@@ -40,7 +43,11 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-        errorThrown = false;
+    });
+
+    it("should be executable when file id and expiratiion time are not set", async function () {
+        this.timeout(120000);
+        let errorThrown = false;
 
         try {
             await new SystemDeleteTransaction()
@@ -51,7 +58,11 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
-        errorThrown = false;
+    });
+
+    it("should be executable when contract id and expiration time are not set", async function () {
+        this.timeout(120000);
+        let errorThrown = false;
 
         try {
             await new SystemDeleteTransaction()
