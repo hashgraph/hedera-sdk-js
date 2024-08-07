@@ -170,8 +170,9 @@ export default class EcdsaPrivateKey {
         const bytes = new Uint8Array(derPrefixBytes.length + 32);
         const privateKey = this._keyPair.privateKey.subarray(0, 32);
         const leadingZeroes = 32 - privateKey.length;
+        const privateKeyOffset = derPrefixBytes.length + leadingZeroes;
         bytes.set(derPrefixBytes, 0);
-        bytes.set(privateKey, derPrefixBytes.length + leadingZeroes);
+        bytes.set(privateKey, privateKeyOffset);
         return bytes;
     }
 
