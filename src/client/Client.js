@@ -148,7 +148,6 @@ export default class Client {
         this._isShutdown = false;
 
         if (props != null && props.scheduleNetworkUpdate !== false) {
-            this._initialNetworkUpdate();
             this._scheduleNetworkUpdate();
         }
 
@@ -765,30 +764,6 @@ export default class Client {
                 }
             }
         }, this._networkUpdatePeriod);
-    }
-
-    /**
-     * @private
-     */
-    _initialNetworkUpdate() {
-        // This is the automatic network update promise that _eventually_ completes
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises,@typescript-eslint/no-misused-promises
-        setTimeout(async () => {
-            try {
-                const addressBook = await CACHE.addressBookQueryConstructor()
-                    .setFileId(FileId.ADDRESS_BOOK)
-                    .execute(this);
-                this.setNetworkFromAddressBook(addressBook);
-            } catch (error) {
-                if (this._logger) {
-                    this._logger.trace(
-                        `failed to update client address book: ${
-                            /** @type {Error} */ (error).toString()
-                        }`,
-                    );
-                }
-            }
-        }, 1000);
     }
 
     /**
