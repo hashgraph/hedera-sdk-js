@@ -58,7 +58,6 @@ describe("ContractCreate", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setTimeout(3000)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);

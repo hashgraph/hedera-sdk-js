@@ -325,9 +325,11 @@ export default class ManagedNetwork {
             newNetwork.set(node.getKey(), newNetworkNodes);
         }
 
+        // console.log(JSON.stringify(newNodes, null, 2));
         this._nodes = newNodes;
         this._healthyNodes = newHealthyNodes;
         this._network = newNetwork;
+        this._ledgerId = null;
 
         return this;
     }

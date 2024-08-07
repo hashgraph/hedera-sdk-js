@@ -70,7 +70,6 @@ describe("TokenFreeze", function () {
         ).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
-            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 

@@ -48,7 +48,7 @@ export default class AccountBalance {
      */
     constructor(props) {
         /**
-         * The account ID for which this balancermation applies.
+         * The Hbar balance of the account
          *
          * @readonly
          */

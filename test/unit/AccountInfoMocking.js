@@ -49,13 +49,8 @@ describe("AccountInfoMocking", function () {
     let servers;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
     });
 
     it("payment transaction is correctly constructed", async function () {
@@ -141,8 +136,6 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             errorName = error.name;
         }
-
-        console.log(errorName);
 
         expect(errorName).to.be.eql("MaxQueryPaymentExceededError");
     });
@@ -406,7 +399,7 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             if (
                 error.message !==
-                "transaction 0.0.1854@1651168054.029348185 failed precheck with status TRANSACTION_EXPIRED"
+                "transaction 0.0.1854@1651168054.029348185 failed precheck with status TRANSACTION_EXPIRED against node account id 0.0.3"
             ) {
                 throw error;
             }

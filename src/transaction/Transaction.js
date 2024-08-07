@@ -1231,7 +1231,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Before we proceed exeuction, we need to do a couple checks
+     * Before we proceed execution, we need to do a couple checks
      *
      * @override
      * @protected
@@ -1513,10 +1513,11 @@ export default class Transaction extends Executable {
      * @internal
      * @param {HashgraphProto.proto.ITransaction} request
      * @param {HashgraphProto.proto.ITransactionResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(
@@ -1532,6 +1533,7 @@ export default class Transaction extends Executable {
         }
 
         return new PrecheckStatusError({
+            nodeId,
             status,
             transactionId: this._getTransactionId(),
             contractFunctionResult: null,

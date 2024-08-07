@@ -14,13 +14,8 @@ describe("ContractCreateFlowMocking", function () {
     let wallet;
 
     afterEach(function () {
-        if (client != null) {
-            client.close();
-        }
-
-        if (servers != null) {
-            servers.close();
-        }
+        client.close();
+        servers.close();
     });
 
     it("signs all transactions", async function () {

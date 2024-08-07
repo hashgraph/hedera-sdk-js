@@ -49,8 +49,6 @@ export { default as AccountRecordsQuery } from "./account/AccountRecordsQuery.js
 export { default as AccountStakersQuery } from "./account/AccountStakersQuery.js";
 export { default as AccountUpdateTransaction } from "./account/AccountUpdateTransaction.js";
 export { default as AddressBookQuery } from "./network/AddressBookQuery.js";
-export { default as MirrorNodeGateway } from "./network/MirrorNodeGateway.js";
-export { default as MirrorNodeRouter } from "./network/MirrorNodeRouter.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
 export { default as ContractByteCodeQuery } from "./contract/ContractByteCodeQuery.js";
 export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";
@@ -130,6 +128,8 @@ export { default as Timestamp } from "./Timestamp.js";
 export { default as TokenAllowance } from "./account/TokenAllowance.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
 export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
+export { default as TokenRejectTransaction } from "./token/TokenRejectTransaction.js";
+export { default as TokenRejectFlow } from "./token/TokenRejectFlow.js";
 export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";
 export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransaction.js";
 export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
@@ -177,6 +177,7 @@ export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
 export { default as Long } from "long";
 export { default as FreezeType } from "./FreezeType.js";
+export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";

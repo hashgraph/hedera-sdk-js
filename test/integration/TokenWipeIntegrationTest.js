@@ -81,7 +81,6 @@ describe("TokenWipe", function () {
         ).getReceipt(env.client);
 
         let info = await new AccountInfoQuery()
-            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 
@@ -102,7 +101,6 @@ describe("TokenWipe", function () {
         ).getReceipt(env.client);
 
         info = await new AccountInfoQuery()
-            .setTimeout(3000)
             .setAccountId(account)
             .execute(env.client);
 

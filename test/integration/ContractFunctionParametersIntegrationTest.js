@@ -132,6 +132,7 @@ describe("ContractFunctionParameters", function () {
         const fileCreateSubmit = await fileCreateSign.execute(env.client);
         const fileCreateRx = await fileCreateSubmit.getReceipt(env.client);
         const bytecodeFileId = fileCreateRx.fileId;
+        console.log(`- The bytecode file ID is: ${bytecodeFileId} \n`);
 
         //Append contents to the file
         const fileAppendTx = new FileAppendTransaction()
@@ -141,7 +142,11 @@ describe("ContractFunctionParameters", function () {
             .freezeWith(env.client);
         const fileAppendSign = await fileAppendTx.sign(env.operatorKey);
         const fileAppendSubmit = await fileAppendSign.execute(env.client);
-        await fileAppendSubmit.getReceipt(env.client);
+        const fileAppendRx = await fileAppendSubmit.getReceipt(env.client);
+        console.log(
+            "Status of file append is",
+            fileAppendRx.status.toString(10),
+        );
 
         // Instantiate the contract instance
         const contractTx = new ContractCreateTransaction()
@@ -160,6 +165,9 @@ describe("ContractFunctionParameters", function () {
 
         //Get the smart contract ID
         newContractId = contractReceipt.contractId;
+
+        //Log the smart contract ID
+        console.log("The smart contract ID is " + newContractId);
     });
 
     bitSizes.forEach((bitSize) => {
@@ -1010,6 +1018,7 @@ describe("ContractFunctionParameters", function () {
         const contractCreateRecord = await contractCreate.getRecord(env.client);
         const nonces =
             contractCreateRecord.contractFunctionResult.contractNonces;
+        console.log(`contractNonces: ${JSON.stringify(nonces)}`);
 
         const contractId = contractCreateRecord.receipt.contractId;
         const contractAnonce = nonces.find(
@@ -1029,13 +1038,19 @@ describe("ContractFunctionParameters", function () {
             .setContractId(contractId)
             .execute(env.client);
 
-        await contractDeleteTx.getReceipt(env.client);
+        const contractDeleteResult = await contractDeleteTx.getReceipt(
+            env.client,
+        );
+        console.log(
+            `contractDelete status: ${contractDeleteResult.status.toString()}`,
+        );
 
         const fileDeleteTx = await new FileDeleteTransaction()
             .setFileId(fileId)
             .execute(env.client);
 
-        await fileDeleteTx.getReceipt(env.client);
+        const fileDeleteResult = await fileDeleteTx.getReceipt(env.client);
+        console.log(`fileDelete status: ${fileDeleteResult.status.toString()}`);
     });
 
     after(async function () {

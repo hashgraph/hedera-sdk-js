@@ -23,10 +23,10 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
+import Status from "./Status.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
- * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
@@ -34,7 +34,6 @@ import HttpError from "./http/HttpError.js";
  * @typedef {import("./Signer.js").Signer} Signer
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./logger/Logger.js").default} Logger
- * @typedef {import("./LedgerId.js").default} LedgerId
  */
 
 /**
@@ -47,6 +46,7 @@ export const ExecutionState = {
 };
 
 export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/i;
+export const DEFAULT_MAX_ATTEMPTS = 10;
 
 /**
  * @abstract
@@ -63,7 +63,7 @@ export default class Executable {
          * @internal
          * @type {number}
          */
-        this._maxAttempts = 10;
+        this._maxAttempts = DEFAULT_MAX_ATTEMPTS;
 
         /**
          * List of node account IDs for each transaction that has been
@@ -135,20 +135,6 @@ export default class Executable {
          * @type {Logger | null}
          */
         this._logger = null;
-
-        /**
-         * List of mirror network nodes with which execution will be attempted.
-         * @protected
-         * @type {string[]}
-         */
-        this._mirrorNetworkNodes = [];
-
-        /**
-         * Current LedgerId of the network with which execution will be attempted.
-         * @protected
-         * @type {LedgerId | null}
-         */
-        this._ledgerId = null;
     }
 
     /**
@@ -329,10 +315,11 @@ export default class Executable {
      * @internal
      * @param {RequestT} request
      * @param {ResponseT} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         throw new Error("not implemented");
     }
 
@@ -526,14 +513,6 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        // Set list of mirror network nodes with
-        // which execution will be attempted
-        this._mirrorNetworkNodes = client.mirrorNetwork;
-
-        // Set current LedgerId of the network with
-        // which execution will be attempted
-        this._ledgerId = client.ledgerId;
-
         // If the logger on the request is not set, use the logger in client
         // (if set, otherwise do not use logger)
         this._logger =
@@ -633,7 +612,7 @@ export default class Executable {
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
-            if (!node.isHealthy()) {
+            if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
                 if (this._logger) {
                     this._logger.debug(
                         `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`,
@@ -728,9 +707,12 @@ export default class Executable {
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
-            const [err, shouldRetry] = this._shouldRetry(request, response);
-            if (err != null) {
-                persistentError = err;
+            const [status, shouldRetry] = this._shouldRetry(request, response);
+            if (
+                status.toString() !== Status.Ok.toString() &&
+                status.toString() !== Status.Success.toString()
+            ) {
+                persistentError = status;
             }
 
             // Determine by the executing state what we should do
@@ -745,7 +727,11 @@ export default class Executable {
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
                 case ExecutionState.Error:
-                    throw this._mapStatusError(request, response);
+                    throw this._mapStatusError(
+                        request,
+                        response,
+                        nodeAccountId,
+                    );
                 default:
                     throw new Error(
                         "(BUG) non-exhaustive switch statement for `ExecutionState`",
