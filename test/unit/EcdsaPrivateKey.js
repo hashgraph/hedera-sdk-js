@@ -392,7 +392,7 @@ describe("EcdsaPrivateKey", function () {
                 await mnemonic.toStandardECDSAsecp256k1PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromStringECDSA(
+            const privateKeyFromString = PrivateKey.fromStringECDSA(
                 privateKeyFromMnemonic.toStringDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -419,7 +419,7 @@ describe("EcdsaPrivateKey", function () {
                 await mnemonic.toStandardECDSAsecp256k1PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromBytesECDSA(
+            const privateKeyFromString = PrivateKey.fromBytesECDSA(
                 privateKeyFromMnemonic.toBytesDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -446,7 +446,7 @@ describe("EcdsaPrivateKey", function () {
                 await mnemonic.toStandardECDSAsecp256k1PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromStringECDSA(
+            const privateKeyFromString = PrivateKey.fromStringECDSA(
                 privateKeyFromMnemonic.toStringDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -473,7 +473,7 @@ describe("EcdsaPrivateKey", function () {
                 await mnemonic.toStandardECDSAsecp256k1PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromBytesECDSA(
+            const privateKeyFromString = PrivateKey.fromBytesECDSA(
                 privateKeyFromMnemonic.toBytesDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;

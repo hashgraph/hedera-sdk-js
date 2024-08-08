@@ -310,7 +310,7 @@ describe("Ed25519PrivateKey", function () {
                 await mnemonic.toStandardEd25519PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromStringED25519(
+            const privateKeyFromString = PrivateKey.fromStringED25519(
                 privateKeyFromMnemonic.toStringDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -337,7 +337,7 @@ describe("Ed25519PrivateKey", function () {
                 await mnemonic.toStandardEd25519PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromBytesED25519(
+            const privateKeyFromString = PrivateKey.fromBytesED25519(
                 privateKeyFromMnemonic.toBytesDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -364,7 +364,7 @@ describe("Ed25519PrivateKey", function () {
                 await mnemonic.toStandardEd25519PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromStringED25519(
+            const privateKeyFromString = PrivateKey.fromStringED25519(
                 privateKeyFromMnemonic.toStringDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
@@ -391,7 +391,7 @@ describe("Ed25519PrivateKey", function () {
                 await mnemonic.toStandardEd25519PrivateKey();
             const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
 
-            const privateKeyFromString = await PrivateKey.fromBytesED25519(
+            const privateKeyFromString = PrivateKey.fromBytesED25519(
                 privateKeyFromMnemonic.toBytesDer(),
             );
             const publicKeyFromString = privateKeyFromString.publicKey;
