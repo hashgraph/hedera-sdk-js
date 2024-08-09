@@ -52,6 +52,7 @@ import * as hex from "../encoding/hex.js";
  * @property {string[]} serials
  * @property {TransactionReceiptJSON[]} duplicates
  * @property {TransactionReceiptJSON[]} children
+ * @property {?string} nodeId
  */
 
 /**
@@ -77,6 +78,7 @@ export default class TransactionReceipt {
      * @param {Long[]} props.serials
      * @param {TransactionReceipt[]} props.duplicates
      * @param {TransactionReceipt[]} props.children
+     * @param {?Long} props.nodeId
      */
     constructor(props) {
         /**
@@ -170,6 +172,17 @@ export default class TransactionReceipt {
          */
         this.children = props.children ?? [];
 
+        /**
+         * @readonly
+         * @description In the receipt of a NodeCreate, NodeUpdate, NodeDelete, the id of the newly created node.
+         * An affected node identifier.
+         * This value SHALL be set following a `createNode` transaction.
+         * This value SHALL be set following a `updateNode` transaction.
+         * This value SHALL be set following a `deleteNode` transaction.
+         * This value SHALL NOT be set following any other transaction.
+         */
+        this.nodeId = props.nodeId;
+
         Object.freeze(this);
     }
 
@@ -237,6 +250,7 @@ export default class TransactionReceipt {
 
                 serialNumbers: this.serials,
                 newTotalSupply: this.totalSupply,
+                nodeId: this.nodeId,
             },
         };
     }
@@ -343,6 +357,7 @@ export default class TransactionReceipt {
                     : [],
             children,
             duplicates,
+            nodeId: receipt.nodeId != null ? receipt.nodeId : null,
         });
     }
 
@@ -389,6 +404,7 @@ export default class TransactionReceipt {
             serials: this.serials.map((serial) => serial.toString()),
             duplicates: this.duplicates.map((receipt) => receipt.toJSON()),
             children: this.children.map((receipt) => receipt.toJSON()),
+            nodeId: this.nodeId?.toString() || null,
         };
     }
 

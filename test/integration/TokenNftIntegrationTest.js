@@ -815,7 +815,7 @@ describe("TokenNft", function () {
         expect(err).to.be.true;
     });
 
-    after(async function () {
-        await env.close();
+    after(function () {
+        env.client.close();
     });
 });
