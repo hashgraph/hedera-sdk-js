@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.50.0-beta.3
+
+## What's Changed
+
+* chore(deps): bump renovatebot/github-action from 40.2.5 to 40.2.6 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2456
+* feat: dynamic address book \[HIP-869\] by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2403
+
 ## v2.50.0-beta.2
 
 ## What's Changed
