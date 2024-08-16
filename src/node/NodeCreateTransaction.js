@@ -207,7 +207,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get node account identifier.
      * @returns {?AccountId}
      */
-    get getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -231,7 +231,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get description of the node.
      * @returns {?string}
      */
-    get getDescription() {
+    get description() {
         return this._description;
     }
 
@@ -260,7 +260,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get list of service endpoints for gossip.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getGossipEndpoints() {
+    get gossipEndpoints() {
         return this._gossipEndpoints;
     }
 
@@ -301,7 +301,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get list of service endpoints for gRPC calls.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getServiceEndpoints() {
+    get serviceEndpoints() {
         return this._serviceEndpoints;
     }
 
@@ -336,7 +336,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get certificate used to sign gossip events.
      * @returns {?Uint8Array}
      */
-    get getGossipCaCertificate() {
+    get gossipCaCertificate() {
         return this._gossipCaCertificate;
     }
 
@@ -355,7 +355,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get hash of the node gRPC TLS certificate.
      * @returns {?Uint8Array}
      */
-    get getCertificateHash() {
+    get certificateHash() {
         return this._grpcCertificateHash;
     }
 
@@ -374,7 +374,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get administrative key controlled by the node operator.
      * @returns {?Key}
      */
-    get getAdminKey() {
+    get adminKey() {
         return this._adminKey;
     }
 

@@ -111,7 +111,7 @@ export default class NodeDeleteTransaction extends Transaction {
      * @description Get consensus node identifier.
      * @returns {?Long}
      */
-    get getNodeId() {
+    get nodeId() {
         return this._nodeId;
     }
 
