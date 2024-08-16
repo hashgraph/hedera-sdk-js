@@ -491,6 +491,7 @@ export default class NodeUpdateTransaction extends Transaction {
             },
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+            nodeId: this._nodeId != null ? this._nodeId : null,
         };
     }
 
