@@ -211,6 +211,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setNodeId(nodeId) {
+        this._requireNotFrozen();
         this._nodeId = nodeId;
 
         return this;
@@ -230,6 +231,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setAccountId(accountId) {
+        this._requireNotFrozen();
         this._accountId =
             accountId instanceof AccountId
                 ? accountId
@@ -252,6 +254,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setDescription(description) {
+        this._requireNotFrozen();
         if (description.length > DESCRIPTION_MAX_LENGTH) {
             throw new Error(
                 `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
@@ -284,6 +287,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setGossipEndpoints(gossipEndpoints) {
+        this._requireNotFrozen();
         if (gossipEndpoints.length == 0) {
             throw new Error("GossipEndpoints list must not be empty.");
         }
@@ -313,6 +317,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addGossipEndpoint(endpoint) {
+        this._requireNotFrozen();
         if (this._gossipEndpoints != null) {
             this._gossipEndpoints.push(endpoint);
         }
@@ -325,6 +330,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setServiceEndpoints(serviceEndpoints) {
+        this._requireNotFrozen();
         if (serviceEndpoints.length == 0) {
             throw new Error("ServiceEndpoints list must not be empty.");
         }
@@ -354,6 +360,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addServiceEndpoint(endpoint) {
+        this._requireNotFrozen();
         if (this._serviceEndpoints != null) {
             this._serviceEndpoints.push(endpoint);
         }
@@ -366,6 +373,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setGossipCaCertificate(bytes) {
+        this._requireNotFrozen();
         if (bytes.length == 0) {
             throw new Error("GossipCaCertificate must not be empty.");
         }
@@ -389,6 +397,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setCertificateHash(bytes) {
+        this._requireNotFrozen();
         this._grpcCertificateHash = bytes;
 
         return this;
@@ -408,6 +417,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setAdminKey(adminKey) {
+        this._requireNotFrozen();
         this._adminKey = adminKey;
 
         return this;

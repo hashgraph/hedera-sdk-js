@@ -195,6 +195,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setAccountId(accountId) {
+        this._requireNotFrozen();
         this._accountId =
             accountId instanceof AccountId
                 ? accountId
@@ -217,6 +218,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setDescription(description) {
+        this._requireNotFrozen();
         if (description.length > DESCRIPTION_MAX_LENGTH) {
             throw new Error(
                 `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
@@ -241,6 +243,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setGossipEndpoints(gossipEndpoints) {
+        this._requireNotFrozen();
         if (gossipEndpoints.length == 0) {
             throw new Error("GossipEndpoints list must not be empty.");
         }
@@ -282,6 +285,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setServiceEndpoints(serviceEndpoints) {
+        this._requireNotFrozen();
         if (serviceEndpoints.length == 0) {
             throw new Error("ServiceEndpoints list must not be empty.");
         }
@@ -323,6 +327,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setGossipCaCertificate(bytes) {
+        this._requireNotFrozen();
         if (bytes.length == 0) {
             throw new Error("GossipCaCertificate must not be empty.");
         }
@@ -346,6 +351,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setCertificateHash(bytes) {
+        this._requireNotFrozen();
         this._grpcCertificateHash = bytes;
 
         return this;
@@ -365,6 +371,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setAdminKey(adminKey) {
+        this._requireNotFrozen();
         this._adminKey = adminKey;
 
         return this;
