@@ -9,7 +9,7 @@ import {
 } from "../../src/index.js";
 
 describe("NodeCreateTransaction", function () {
-    it("should convert to bytes", function () {
+    it("should convert from and to bytes", function () {
         const TEST_NODE_ACCOUNT_IDS = [
             AccountId.fromString("0.0.5005"),
             AccountId.fromString("0.0.5006"),

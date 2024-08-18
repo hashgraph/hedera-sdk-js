@@ -56,7 +56,7 @@ describe("NodeCreateTransaction", function () {
             .setMaxTransactionFee(new Hbar(1));
     });
 
-    it("should convert to bytes", function () {
+    it("should convert from and to bytes", function () {
         const tx2 = NodeCreateTransaction.fromBytes(tx.toBytes());
 
         tx.nodeAccountIds.forEach((element, index) => {

@@ -29,7 +29,7 @@ describe("NodeCreateTransaction", function () {
             .setMaxTransactionFee(new Hbar(1));
     });
 
-    it("should convert to bytes", async function () {
+    it("should convert from and to bytes", async function () {
         const tx2 = NodeDeleteTransaction.fromBytes(tx.toBytes());
         tx.nodeAccountIds.forEach((element, index) => {
             expect(tx.nodeAccountIds[index].toString()).to.equal(
