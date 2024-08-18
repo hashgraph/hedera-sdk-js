@@ -9,6 +9,9 @@ import {
 } from "../../src/index.js";
 
 describe("NodeCreateTransaction", function () {
+    // setting these variables outside of the beforeEach function to avoid
+    // as there is a lint setting that doesnt allow function calls
+    // in the describe block
     let tx,
         accountId,
         nodeAccountIds,
