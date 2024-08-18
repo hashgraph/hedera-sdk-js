@@ -125,7 +125,7 @@ describe("NodeCreateTransaction", function () {
     });
 
     it("should change admin key", async function () {
-        const NEW_ADMIN_KEY = PrivateKey.fromString(
+        const NEW_ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
         tx.setAdminKey(NEW_ADMIN_KEY);
@@ -133,7 +133,7 @@ describe("NodeCreateTransaction", function () {
     });
 
     it("should not change admin key if frozen", async function () {
-        const NEW_ADMIN_KEY = PrivateKey.fromString(
+        const NEW_ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
         tx.freeze();
