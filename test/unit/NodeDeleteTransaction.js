@@ -9,10 +9,9 @@ import {
 describe("NodeCreateTransaction", function () {
     let tx;
 
-    const TEST_VALID_START = new Timestamp(1596210382, 0);
-
     beforeEach(function () {
-        const TEST_NODE_ID = 420;
+        const NODE_ID = 420,
+            VALID_START = new Timestamp(1596210382, 0);
 
         tx = new NodeDeleteTransaction()
             .setNodeAccountIds([
@@ -22,10 +21,10 @@ describe("NodeCreateTransaction", function () {
             .setTransactionId(
                 TransactionId.withValidStart(
                     AccountId.fromString("0.0.5006"),
-                    TEST_VALID_START,
+                    VALID_START,
                 ),
             )
-            .setNodeId(TEST_NODE_ID)
+            .setNodeId(NODE_ID)
             .setMaxTransactionFee(new Hbar(1));
     });
 

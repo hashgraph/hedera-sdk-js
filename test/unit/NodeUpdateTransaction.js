@@ -10,41 +10,41 @@ import {
 
 describe("NodeCreateTransaction", function () {
     it("should convert from and to bytes", function () {
-        const TEST_NODE_ACCOUNT_IDS = [
+        const NODE_ACCOUNT_IDS = [
             AccountId.fromString("0.0.5005"),
             AccountId.fromString("0.0.5006"),
         ];
         const IP_AddressV4 = Uint8Array.of(127, 0, 0, 1);
-        const TEST_VALID_START = new Timestamp(1596210382, 0);
-        const TEST_NODE_ID = 420;
-        const TEST_DESCRIPTION = "Test Description";
-        const TEST_ACCOUNT_ID = AccountId.fromString("0.6.9");
-        const TEST_ADMIN_KEY = PrivateKey.fromStringED25519(
+        const VALID_START = new Timestamp(1596210382, 0);
+        const NODE_ID = 420;
+        const DESCRIPTION = "Test Description";
+        const ACCOUNT_ID = AccountId.fromString("0.6.9");
+        const ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
 
-        const TEST_GOSSIP_CA_CERTIFICATE = Buffer.from("gossipCaCertificate");
-        const TEST_GRPC_CERTIFICATE_HASH = Buffer.from("grpcCertificateHash");
-        const TEST_GOSSIP_ENDPOINTS = [
+        const GOSSIP_CA_CERTIFICATE = Buffer.from("gossipCaCertificate");
+        const GRPC_CERTIFICATE_HASH = Buffer.from("grpcCertificateHash");
+        const GOSSIP_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(IP_AddressV4),
         ];
-        const TEST_SERVICE_ENDPOINTS = [
+        const SERVICE_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(IP_AddressV4),
         ];
 
         const tx = new NodeUpdateTransaction()
-            .setNodeAccountIds(TEST_NODE_ACCOUNT_IDS)
+            .setNodeAccountIds(NODE_ACCOUNT_IDS)
             .setTransactionId(
-                TransactionId.withValidStart(TEST_ACCOUNT_ID, TEST_VALID_START),
+                TransactionId.withValidStart(ACCOUNT_ID, VALID_START),
             )
-            .setNodeId(TEST_NODE_ID)
-            .setAccountId(TEST_ACCOUNT_ID)
-            .setDescription(TEST_DESCRIPTION)
-            .setGossipEndpoints(TEST_GOSSIP_ENDPOINTS)
-            .setGossipCaCertificate(TEST_GOSSIP_CA_CERTIFICATE)
-            .setServiceEndpoints(TEST_SERVICE_ENDPOINTS)
-            .setCertificateHash(TEST_GRPC_CERTIFICATE_HASH)
-            .setAdminKey(TEST_ADMIN_KEY)
+            .setNodeId(NODE_ID)
+            .setAccountId(ACCOUNT_ID)
+            .setDescription(DESCRIPTION)
+            .setGossipEndpoints(GOSSIP_ENDPOINTS)
+            .setGossipCaCertificate(GOSSIP_CA_CERTIFICATE)
+            .setServiceEndpoints(SERVICE_ENDPOINTS)
+            .setCertificateHash(GRPC_CERTIFICATE_HASH)
+            .setAdminKey(ADMIN_KEY)
             .setMaxTransactionFee(new Hbar(1));
 
         const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
@@ -165,28 +165,25 @@ describe("NodeCreateTransaction", function () {
     describe("frozen transaction", function () {
         let tx;
         before(function () {
-            const TEST_ACCOUNT_ID = AccountId.fromString("0.4.20");
-            const TEST_VALID_START = new Timestamp(1596210382, 0);
+            const ACCOUNT_ID = AccountId.fromString("0.4.20");
+            const VALID_START = new Timestamp(1596210382, 0);
 
             tx = new NodeUpdateTransaction()
                 .setNodeAccountIds([AccountId.fromString("0.0.3")])
                 .setTransactionId(
-                    TransactionId.withValidStart(
-                        TEST_ACCOUNT_ID,
-                        TEST_VALID_START,
-                    ),
+                    TransactionId.withValidStart(ACCOUNT_ID, VALID_START),
                 )
                 .freeze();
         });
 
         it("should not change node account id", function () {
-            const TEST_NODE_ACCOUNT_IDS = [
+            const NODE_ACCOUNT_IDS = [
                 AccountId.fromString("0.0.5007"),
                 AccountId.fromString("0.0.5008"),
             ];
             let err = false;
             try {
-                tx.setNodeAccountIds(TEST_NODE_ACCOUNT_IDS);
+                tx.setNodeAccountIds(NODE_ACCOUNT_IDS);
             } catch (error) {
                 err = error.toString().includes("transaction is immutable");
             }

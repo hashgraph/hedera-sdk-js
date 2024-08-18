@@ -10,49 +10,45 @@ import {
 
 describe("NodeCreateTransaction", function () {
     let tx,
-        TEST_ACCOUNT_ID,
-        TEST_NODE_ACCOUNT_IDS,
-        TEST_GOSSIP_CA_CERTIFICATE,
-        TEST_GOSSIP_ENDPOINTS,
-        TEST_SERVICE_ENDPOINTS;
+        accountId,
+        nodeAccountIds,
+        gossipCaCertificate,
+        gossipEndpoints,
+        serviceEndpoints;
 
     const TEST_VALID_START = new Timestamp(1596210382, 0);
     const TEST_DESCRIPTION = "Test Description";
 
     beforeEach(function () {
         const IP_AddressV4 = Uint8Array.of(127, 0, 0, 1);
-        TEST_ACCOUNT_ID = AccountId.fromString("0.6.9");
-        TEST_NODE_ACCOUNT_IDS = [
+        accountId = AccountId.fromString("0.6.9");
+        nodeAccountIds = [
             AccountId.fromString("0.0.5005"),
             AccountId.fromString("0.0.5006"),
         ];
-        TEST_GOSSIP_CA_CERTIFICATE = Buffer.from("gossipCaCertificate");
-        TEST_GOSSIP_ENDPOINTS = [
-            new ServiceEndpoint().setIpAddressV4(IP_AddressV4),
-        ];
-        TEST_SERVICE_ENDPOINTS = [
-            new ServiceEndpoint().setIpAddressV4(IP_AddressV4),
-        ];
+        gossipCaCertificate = Buffer.from("gossipCaCertificate");
+        gossipEndpoints = [new ServiceEndpoint().setIpAddressV4(IP_AddressV4)];
+        serviceEndpoints = [new ServiceEndpoint().setIpAddressV4(IP_AddressV4)];
 
         const TEST_ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
 
         tx = new NodeCreateTransaction()
-            .setNodeAccountIds(TEST_NODE_ACCOUNT_IDS)
+            .setNodeAccountIds(nodeAccountIds)
             .setTransactionId(
                 TransactionId.withValidStart(
-                    TEST_NODE_ACCOUNT_IDS[0],
+                    nodeAccountIds[0],
                     TEST_VALID_START,
                 ),
             )
-            .setAccountId(TEST_ACCOUNT_ID)
+            .setAccountId(accountId)
             .setDescription(TEST_DESCRIPTION)
-            .setGossipCaCertificate(TEST_GOSSIP_CA_CERTIFICATE)
-            .setCertificateHash(TEST_GOSSIP_CA_CERTIFICATE) // TODO: change this vlaue to a proper one
+            .setGossipCaCertificate(gossipCaCertificate)
+            .setCertificateHash(gossipCaCertificate) // TODO: change this vlaue to a proper one
             .setAdminKey(TEST_ADMIN_KEY)
-            .setServiceEndpoints(TEST_SERVICE_ENDPOINTS)
-            .setGossipEndpoints(TEST_GOSSIP_ENDPOINTS)
+            .setServiceEndpoints(serviceEndpoints)
+            .setGossipEndpoints(gossipEndpoints)
             .setMaxTransactionFee(new Hbar(1));
     });
 
