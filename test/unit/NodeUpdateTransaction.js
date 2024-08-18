@@ -134,9 +134,9 @@ describe("NodeCreateTransaction", function () {
         );
     });
 
-    it("should change certificate hash", async function () {
+    it("should change certificate hash", function () {
         const newCertificateHash = Buffer.from("newCertificateHash");
-        const tx = await new NodeUpdateTransaction().setCertificateHash(
+        const tx = new NodeUpdateTransaction().setCertificateHash(
             newCertificateHash,
         );
         expect(tx.certificateHash.toString()).to.equal(
@@ -144,17 +144,17 @@ describe("NodeCreateTransaction", function () {
         );
     });
 
-    it("should change admin key", async function () {
+    it("should change admin key", function () {
         const newAdminKey = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
-        const tx = await new NodeUpdateTransaction().setAdminKey(newAdminKey);
+        const tx = new NodeUpdateTransaction().setAdminKey(newAdminKey);
         expect(tx.adminKey.toString()).to.equal(newAdminKey.toString());
     });
 
-    it("should change max transaction fee", async function () {
+    it("should change max transaction fee", function () {
         const newMaxTransactionFee = new Hbar(1);
-        const tx = await new NodeUpdateTransaction().setMaxTransactionFee(
+        const tx = new NodeUpdateTransaction().setMaxTransactionFee(
             newMaxTransactionFee,
         );
         expect(tx.maxTransactionFee.toTinybars().toInt()).to.equal(
@@ -194,7 +194,7 @@ describe("NodeCreateTransaction", function () {
             expect(err).to.be.true;
         });
 
-        it("should not change node id", async function () {
+        it("should not change node id", function () {
             let err = false;
             try {
                 tx.setNodeId(421);

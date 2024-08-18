@@ -101,13 +101,13 @@ describe("NodeCreateTransaction", function () {
         }
     });
 
-    it("should change description", async function () {
+    it("should change description", function () {
         const NEW_DESCRIPTION = "New Description";
         tx.setDescription(NEW_DESCRIPTION);
         expect(tx.description).to.equal(NEW_DESCRIPTION);
     });
 
-    it("should not change description if frozen", async function () {
+    it("should not change description if frozen", function () {
         const NEW_DESCRIPTION = "New Description";
         tx.freeze();
         let err = false;
@@ -124,7 +124,7 @@ describe("NodeCreateTransaction", function () {
         }
     });
 
-    it("should change admin key", async function () {
+    it("should change admin key", function () {
         const NEW_ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
@@ -132,7 +132,7 @@ describe("NodeCreateTransaction", function () {
         expect(tx.adminKey.toString()).to.equal(NEW_ADMIN_KEY.toString());
     });
 
-    it("should not change admin key if frozen", async function () {
+    it("should not change admin key if frozen", function () {
         const NEW_ADMIN_KEY = PrivateKey.fromStringED25519(
             "302e020100300506032b65700422042062c4b69e9f45a554e5424fb5a6fe5e6ac1f19ead31dc7718c2d980fd1f998d4b",
         ).publicKey;
@@ -150,13 +150,13 @@ describe("NodeCreateTransaction", function () {
             );
         }
     });
-    it("should change certificate", async function () {
+    it("should change certificate", function () {
         const NEW_CERTIFICATE = Buffer.from("newCertificate");
         tx.setGossipCaCertificate(NEW_CERTIFICATE);
         expect(tx.gossipCaCertificate.equals(NEW_CERTIFICATE)).to.be.true;
     });
 
-    it("should not change certificate if frozen", async function () {
+    it("should not change certificate if frozen", function () {
         const NEW_CERTIFICATE = Buffer.from("newCertificate");
         tx.freeze();
         let err = false;
@@ -173,13 +173,13 @@ describe("NodeCreateTransaction", function () {
         }
     });
 
-    it("should change certificate hash", async function () {
+    it("should change certificate hash", function () {
         const NEW_CERTIFICATE = Buffer.from("certificate_hash");
         tx.setCertificateHash(NEW_CERTIFICATE);
         expect(tx.certificateHash.equals(NEW_CERTIFICATE)).to.be.true;
     });
 
-    it("should not change certificate hash if frozen", async function () {
+    it("should not change certificate hash if frozen", function () {
         const NEW_CERTIFICATE = Buffer.from("certificate_hash");
         tx.freeze();
         let err = false;
@@ -196,7 +196,7 @@ describe("NodeCreateTransaction", function () {
         }
     });
 
-    it("should change gossip endpoints", async function () {
+    it("should change gossip endpoints", function () {
         const NEW_GOSSIP_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
@@ -206,7 +206,7 @@ describe("NodeCreateTransaction", function () {
         );
     });
 
-    it("should not change gossip endpoints if frozen", async function () {
+    it("should not change gossip endpoints if frozen", function () {
         const NEW_GOSSIP_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
@@ -225,7 +225,7 @@ describe("NodeCreateTransaction", function () {
         }
     });
 
-    it("should change service endpoints", async function () {
+    it("should change service endpoints", function () {
         const NEW_SERVICE_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
@@ -235,7 +235,7 @@ describe("NodeCreateTransaction", function () {
         );
     });
 
-    it("should not change service endpoints if frozen", async function () {
+    it("should not change service endpoints if frozen", function () {
         const NEW_SERVICE_ENDPOINTS = [
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
