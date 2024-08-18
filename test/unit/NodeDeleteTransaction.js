@@ -6,7 +6,7 @@ import {
     TransactionId,
 } from "../../src/index.js";
 
-describe("NodeCreateTransaction", function () {
+describe("NodeDeleteTransaction", function () {
     let tx;
 
     beforeEach(function () {

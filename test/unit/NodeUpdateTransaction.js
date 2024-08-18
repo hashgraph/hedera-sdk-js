@@ -8,7 +8,7 @@ import {
     TransactionId,
 } from "../../src/index.js";
 
-describe("NodeCreateTransaction", function () {
+describe("NodeUpdateTransaction", function () {
     it("should convert from and to bytes", function () {
         const NODE_ACCOUNT_IDS = [
             AccountId.fromString("0.0.5005"),
