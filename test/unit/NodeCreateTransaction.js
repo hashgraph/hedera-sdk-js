@@ -19,8 +19,8 @@ describe("NodeCreateTransaction", function () {
         gossipEndpoints,
         serviceEndpoints;
 
-    const TEST_VALID_START = new Timestamp(1596210382, 0);
-    const TEST_DESCRIPTION = "Test Description";
+    const VALID_START = new Timestamp(1596210382, 0);
+    const DESCRIPTION = "Test Description";
 
     beforeEach(function () {
         const IP_AddressV4 = Uint8Array.of(127, 0, 0, 1);
@@ -40,13 +40,10 @@ describe("NodeCreateTransaction", function () {
         tx = new NodeCreateTransaction()
             .setNodeAccountIds(nodeAccountIds)
             .setTransactionId(
-                TransactionId.withValidStart(
-                    nodeAccountIds[0],
-                    TEST_VALID_START,
-                ),
+                TransactionId.withValidStart(nodeAccountIds[0], VALID_START),
             )
             .setAccountId(accountId)
-            .setDescription(TEST_DESCRIPTION)
+            .setDescription(DESCRIPTION)
             .setGossipCaCertificate(gossipCaCertificate)
             .setCertificateHash(gossipCaCertificate) // TODO: change this vlaue to a proper one
             .setAdminKey(TEST_ADMIN_KEY)
