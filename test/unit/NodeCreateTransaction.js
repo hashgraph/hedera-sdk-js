@@ -56,7 +56,7 @@ describe("NodeCreateTransaction", function () {
     it("should convert from and to bytes", function () {
         const tx2 = NodeCreateTransaction.fromBytes(tx.toBytes());
 
-        tx.nodeAccountIds.forEach((element, index) => {
+        tx.nodeAccountIds.forEach((_, index) => {
             expect(tx.nodeAccountIds[index].toString()).to.equal(
                 tx2.nodeAccountIds[index].toString(),
             );
@@ -73,6 +73,20 @@ describe("NodeCreateTransaction", function () {
         expect(tx.maxTransactionFee.toTinybars().toInt()).to.equal(
             tx2.maxTransactionFee.toTinybars().toInt(),
         );
+        tx.serviceEndpoints.forEach((_, index) => {
+            const TX_IPV4_BUFFER = Buffer.from(
+                tx.serviceEndpoints[index]._ipAddressV4,
+            );
+            const TX2_IPV4_BUFFER = tx2.serviceEndpoints[index]._ipAddressV4;
+            expect(TX_IPV4_BUFFER).to.deep.equal(TX2_IPV4_BUFFER);
+        });
+        tx.gossipEndpoints.forEach((_, index) => {
+            const TX_IPV4_BUFFER = Buffer.from(
+                tx.gossipEndpoints[index]._ipAddressV4,
+            );
+            const TX2_IPV4_BUFFER = tx2.gossipEndpoints[index]._ipAddressV4;
+            expect(TX_IPV4_BUFFER).to.deep.equal(TX2_IPV4_BUFFER);
+        });
     });
 
     it("should change account id", function () {
