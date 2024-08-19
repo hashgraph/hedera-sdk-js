@@ -9,6 +9,8 @@ import {
 } from "../../src/index.js";
 
 describe("NodeUpdateTransaction", function () {
+    const IMMUTABLE_ERROR = "transaction is immutable";
+
     it("should convert from and to bytes", function () {
         const NODE_ACCOUNT_IDS = [
             AccountId.fromString("0.0.5005"),
@@ -185,7 +187,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setNodeAccountIds(NODE_ACCOUNT_IDS);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
 
             expect(err).to.be.true;
@@ -196,7 +198,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setNodeId(421);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -207,7 +209,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setAccountId(ACCOUNT_ID);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -218,7 +220,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setDescription(DESCRIPTION);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -232,7 +234,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setGossipEndpoints(newGossipEndpoints);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -246,7 +248,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setServiceEndpoints(newServiceEndpoints);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -259,7 +261,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setGossipCaCertificate(newGossipCaCertificate);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
@@ -270,7 +272,7 @@ describe("NodeUpdateTransaction", function () {
             try {
                 tx.setCertificateHash(newCertificateHash);
             } catch (error) {
-                err = error.toString().includes("transaction is immutable");
+                err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
         });
