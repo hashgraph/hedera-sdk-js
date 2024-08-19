@@ -202,9 +202,7 @@ describe("NodeCreateTransaction", function () {
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
         tx.setGossipEndpoints(NEW_GOSSIP_ENDPOINTS);
-        expect(tx.gossipEndpoints.join("")).to.equal(
-            NEW_GOSSIP_ENDPOINTS.join(""),
-        );
+        expect(tx.gossipEndpoints).to.deep.equal(NEW_GOSSIP_ENDPOINTS);
     });
 
     it("should not change gossip endpoints if frozen", function () {
@@ -229,9 +227,7 @@ describe("NodeCreateTransaction", function () {
             new ServiceEndpoint().setIpAddressV4(Uint8Array.of(127, 0, 0, 2)),
         ];
         tx.setServiceEndpoints(NEW_SERVICE_ENDPOINTS);
-        expect(tx.serviceEndpoints.join("")).to.equal(
-            NEW_SERVICE_ENDPOINTS.join(""),
-        );
+        expect(tx.serviceEndpoints).to.deep.equal(NEW_SERVICE_ENDPOINTS);
     });
 
     it("should not change service endpoints if frozen", function () {
