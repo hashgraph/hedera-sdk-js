@@ -105,9 +105,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 
     it("should change description", function () {
@@ -126,9 +124,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 
     it("should change admin key", function () {
@@ -151,9 +147,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
     it("should change certificate", function () {
         const NEW_CERTIFICATE = Buffer.from("newCertificate");
@@ -171,9 +165,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 
     it("should change certificate hash", function () {
@@ -192,9 +184,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 
     it("should change gossip endpoints", function () {
@@ -217,9 +207,7 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 
     it("should change service endpoints", function () {
@@ -242,8 +230,6 @@ describe("NodeCreateTransaction", function () {
             err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
-        if (!err) {
-            throw new Error();
-        }
+        expect(err).to.be.true;
     });
 });
