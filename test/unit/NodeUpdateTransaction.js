@@ -49,7 +49,7 @@ describe("NodeUpdateTransaction", function () {
 
         const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
 
-        tx.nodeAccountIds.forEach((element, index) => {
+        tx.nodeAccountIds.forEach((_, index) => {
             expect(tx.nodeAccountIds[index].toString()).to.equal(
                 tx2.nodeAccountIds[index].toString(),
             );

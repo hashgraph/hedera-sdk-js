@@ -30,7 +30,7 @@ describe("NodeDeleteTransaction", function () {
 
     it("should convert from and to bytes", function () {
         const tx2 = NodeDeleteTransaction.fromBytes(tx.toBytes());
-        tx.nodeAccountIds.forEach((element, index) => {
+        tx.nodeAccountIds.forEach((_, index) => {
             expect(tx.nodeAccountIds[index].toString()).to.equal(
                 tx2.nodeAccountIds[index].toString(),
             );
