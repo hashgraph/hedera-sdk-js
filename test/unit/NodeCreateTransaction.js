@@ -92,9 +92,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 
@@ -115,9 +113,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 
@@ -142,9 +138,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
     it("should change certificate", function () {
@@ -164,9 +158,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 
@@ -187,9 +179,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 
@@ -216,9 +206,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 
@@ -245,9 +233,7 @@ describe("NodeCreateTransaction", function () {
         }
 
         if (!err) {
-            throw new Error(
-                "transaction successfully built from invalid bytes",
-            );
+            throw new Error();
         }
     });
 });
