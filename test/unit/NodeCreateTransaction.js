@@ -21,6 +21,7 @@ describe("NodeCreateTransaction", function () {
 
     const VALID_START = new Timestamp(1596210382, 0);
     const DESCRIPTION = "Test Description";
+    const IMMUTABLE_ERROR = "transaction is immutable";
 
     beforeEach(function () {
         const IP_AddressV4 = Uint8Array.of(127, 0, 0, 1);
@@ -87,7 +88,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setAccountId(newAccountId);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -110,7 +111,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setDescription(NEW_DESCRIPTION);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -137,7 +138,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setAdminKey(NEW_ADMIN_KEY);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -159,7 +160,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setGossipCaCertificate(NEW_CERTIFICATE);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -182,7 +183,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setCertificateHash(NEW_CERTIFICATE);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -211,7 +212,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setGossipEndpoints(NEW_GOSSIP_ENDPOINTS);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
@@ -240,7 +241,7 @@ describe("NodeCreateTransaction", function () {
         try {
             tx.setServiceEndpoints(NEW_SERVICE_ENDPOINTS);
         } catch (error) {
-            err = error.toString().includes("transaction is immutable");
+            err = error.toString().includes(IMMUTABLE_ERROR);
         }
 
         if (!err) {
