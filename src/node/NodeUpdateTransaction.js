@@ -211,6 +211,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setNodeId(nodeId) {
+        this._requireNotFrozen();
         this._nodeId = nodeId;
 
         return this;
@@ -220,7 +221,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get consensus node identifier in the network state.
      * @returns {?Long}
      */
-    get getNodeId() {
+    get nodeId() {
         return this._nodeId;
     }
 
@@ -230,6 +231,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setAccountId(accountId) {
+        this._requireNotFrozen();
         this._accountId =
             accountId instanceof AccountId
                 ? accountId
@@ -242,7 +244,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get desired new account identifier of the node.
      * @returns {?AccountId}
      */
-    get getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -252,6 +254,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setDescription(description) {
+        this._requireNotFrozen();
         if (description.length > DESCRIPTION_MAX_LENGTH) {
             throw new Error(
                 `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
@@ -274,7 +277,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get description of the node.
      * @returns {?string}
      */
-    get getDescription() {
+    get description() {
         return this._description;
     }
 
@@ -284,6 +287,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setGossipEndpoints(gossipEndpoints) {
+        this._requireNotFrozen();
         if (gossipEndpoints.length == 0) {
             throw new Error("GossipEndpoints list must not be empty.");
         }
@@ -303,7 +307,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get list of service endpoints for gossip.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getGossipEndpoints() {
+    get gossipEndpoints() {
         return this._gossipEndpoints;
     }
 
@@ -313,6 +317,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addGossipEndpoint(endpoint) {
+        this._requireNotFrozen();
         if (this._gossipEndpoints != null) {
             this._gossipEndpoints.push(endpoint);
         }
@@ -325,6 +330,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setServiceEndpoints(serviceEndpoints) {
+        this._requireNotFrozen();
         if (serviceEndpoints.length == 0) {
             throw new Error("ServiceEndpoints list must not be empty.");
         }
@@ -344,7 +350,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get list of service endpoints for gRPC calls.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getServiceEndpoints() {
+    get serviceEndpoints() {
         return this._serviceEndpoints;
     }
 
@@ -354,6 +360,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     addServiceEndpoint(endpoint) {
+        this._requireNotFrozen();
         if (this._serviceEndpoints != null) {
             this._serviceEndpoints.push(endpoint);
         }
@@ -366,6 +373,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setGossipCaCertificate(bytes) {
+        this._requireNotFrozen();
         if (bytes.length == 0) {
             throw new Error("GossipCaCertificate must not be empty.");
         }
@@ -379,7 +387,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get certificate used to sign gossip events.
      * @returns {?Uint8Array}
      */
-    get getGossipCaCertificate() {
+    get gossipCaCertificate() {
         return this._gossipCaCertificate;
     }
 
@@ -389,6 +397,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setCertificateHash(bytes) {
+        this._requireNotFrozen();
         this._grpcCertificateHash = bytes;
 
         return this;
@@ -398,7 +407,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get hash of the node gRPC TLS certificate.
      * @returns {?Uint8Array}
      */
-    get getCertificateHash() {
+    get certificateHash() {
         return this._grpcCertificateHash;
     }
 
@@ -408,6 +417,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @returns {NodeUpdateTransaction}
      */
     setAdminKey(adminKey) {
+        this._requireNotFrozen();
         this._adminKey = adminKey;
 
         return this;
@@ -417,7 +427,7 @@ export default class NodeUpdateTransaction extends Transaction {
      * @description Get administrative key controlled by the node operator.
      * @returns {?Key}
      */
-    get getAdminKey() {
+    get adminKey() {
         return this._adminKey;
     }
 
@@ -481,6 +491,7 @@ export default class NodeUpdateTransaction extends Transaction {
             },
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+            nodeId: this._nodeId != null ? this._nodeId : null,
         };
     }
 

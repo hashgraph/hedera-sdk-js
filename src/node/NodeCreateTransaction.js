@@ -195,6 +195,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setAccountId(accountId) {
+        this._requireNotFrozen();
         this._accountId =
             accountId instanceof AccountId
                 ? accountId
@@ -207,7 +208,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get node account identifier.
      * @returns {?AccountId}
      */
-    get getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -217,6 +218,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setDescription(description) {
+        this._requireNotFrozen();
         if (description.length > DESCRIPTION_MAX_LENGTH) {
             throw new Error(
                 `Description must be at most ${DESCRIPTION_MAX_LENGTH} characters.`,
@@ -231,7 +233,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get description of the node.
      * @returns {?string}
      */
-    get getDescription() {
+    get description() {
         return this._description;
     }
 
@@ -241,6 +243,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setGossipEndpoints(gossipEndpoints) {
+        this._requireNotFrozen();
         if (gossipEndpoints.length == 0) {
             throw new Error("GossipEndpoints list must not be empty.");
         }
@@ -260,7 +263,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get list of service endpoints for gossip.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getGossipEndpoints() {
+    get gossipEndpoints() {
         return this._gossipEndpoints;
     }
 
@@ -282,6 +285,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setServiceEndpoints(serviceEndpoints) {
+        this._requireNotFrozen();
         if (serviceEndpoints.length == 0) {
             throw new Error("ServiceEndpoints list must not be empty.");
         }
@@ -301,7 +305,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get list of service endpoints for gRPC calls.
      * @returns {?Array<ServiceEndpoint>}
      */
-    get getServiceEndpoints() {
+    get serviceEndpoints() {
         return this._serviceEndpoints;
     }
 
@@ -323,6 +327,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setGossipCaCertificate(bytes) {
+        this._requireNotFrozen();
         if (bytes.length == 0) {
             throw new Error("GossipCaCertificate must not be empty.");
         }
@@ -336,7 +341,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get certificate used to sign gossip events.
      * @returns {?Uint8Array}
      */
-    get getGossipCaCertificate() {
+    get gossipCaCertificate() {
         return this._gossipCaCertificate;
     }
 
@@ -346,6 +351,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setCertificateHash(bytes) {
+        this._requireNotFrozen();
         this._grpcCertificateHash = bytes;
 
         return this;
@@ -355,7 +361,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get hash of the node gRPC TLS certificate.
      * @returns {?Uint8Array}
      */
-    get getCertificateHash() {
+    get certificateHash() {
         return this._grpcCertificateHash;
     }
 
@@ -365,6 +371,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @returns {NodeCreateTransaction}
      */
     setAdminKey(adminKey) {
+        this._requireNotFrozen();
         this._adminKey = adminKey;
 
         return this;
@@ -374,7 +381,7 @@ export default class NodeCreateTransaction extends Transaction {
      * @description Get administrative key controlled by the node operator.
      * @returns {?Key}
      */
-    get getAdminKey() {
+    get adminKey() {
         return this._adminKey;
     }
 
