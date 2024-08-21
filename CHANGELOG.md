@@ -5,6 +5,107 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.50.0-beta.3
+
+## What's Changed
+
+* chore(deps): bump renovatebot/github-action from 40.2.5 to 40.2.6 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2456
+* feat: dynamic address book \[HIP-869\] by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2403
+
+## v2.50.0-beta.2
+
+## What's Changed
+
+* fix: ECDSA and ED25519 public key mismatch when you get it from mnemonic by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2451
+* fix: do not reset receiverSignatureRequired in AccountUpdateTransaction by default by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2450
+* chore(deps): bump renovatebot/github-action from 40.1.12 to 40.2.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2447
+* chore(deps): bump step-security/harden-runner from 2.8.0 to 2.9.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2446
+* chore(deps): bump actions/setup-java from 4.2.1 to 4.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2445 
+* chore(deps): bump actions/setup-node from 4.0.2 to 4.0.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2396
+
+## v2.49.2
+
+## What's Changed
+
+* fix: update taskfile status check for submodules task by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2435
+* chore: fix token permissions for deploy to github pages by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2418
+* fix: reconnect to working node by @0xivanov in https://github.com/hashgraph/hedera-sdk-js/pull/2417
+* release: proto v2.15.0-beta.3 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2415
+* update: add node id to the precheck error by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2414
+* feat: Implement TokenRejectTransaction by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2411
+* update: handle PLATFORM_NOT_ACTIVE error gracefully by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2401
+* feat: pull protobuf changes from latest tag by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2435
+* chore: fix token permissions for deploy to github pages by @isavov in https://github.com/hashgraph/hedera-sdk-js/pull/2389
+* update: release all skipped tests by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2395
+* test: add maxAutomaticTokenAssociations tests by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2390
+
+## v2.48.1
+
+## What's Changed
+
+* release: proto v2.15.0-beta.2 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2367
+* ci: update publishing workflow to use appropriate pre release and stable versions by @rbarkerSL in https://github.com/hashgraph/hedera-sdk-js/pull/2364
+* feature: custom derivation paths in Mnemonic ECDSA private key derivation by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/2341
+
+## v2.48.0
+
+## What's Changed
+
+* release: proto v2.15.0-beta.2 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2367
+* ci: update publishing workflow to use appropriate pre release and stable versions by @rbarkerSL in https://github.com/hashgraph/hedera-sdk-js/pull/2364
+* feature: custom derivation paths in Mnemonic ECDSA private key derivation by @bguiz in https://github.com/hashgraph/hedera-sdk-js/pull/2341
+
+## v2.47.0
+
+## What's Changed
+
+* revert: mirror node queries changes by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2328
+* feature: change or remove existing keys from a token [HIP-540] by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2299
+* release: proto v2.15.0-beta.1 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2351
+
+## v2.46.0
+
+## What's Changed
+
+* fix: naming convention by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2303
+* fix: enhanced Logger to accept a log file location by @jeromy-cannon in https://github.com/hashgraph/hedera-sdk-js/pull/2298
+* fix: typo in SDK query file by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2293
+* feature: solution to query the mirror node for the account balance, account info, and contract info data by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2289
+
+## v2.45.0
+
+## What's Changed
+
+* fix: solve backward compatibility issues between the SDK and hedera-services v0.49 (modularized code) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2240
+* feature: update metadata field of fungible and non-fungible tokens, and dynamic NFTs (HIP-646, HIP-765 and HIP-657) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2210
+
+## v2.45.0-beta.1
+
+## What's Changed
+
+* fix: solve backward compatibility issues between the SDK and hedera-services v0.49 (modularized code) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2240
+* feature: update metadata field of fungible and non-fungible tokens, and dynamic NFTs (HIP-646, HIP-765 and HIP-657) by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2210
+
+## v2.44.0
+
+## What's Changed
+
+* fix: set correct autoRenrewAccountId by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2217
+* update: add a new getter to the TransferTransaction class by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2214
+* fix: integer overflow isuue for defaultMaxQueryPayment field by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2213
+* chore(ci): update the publish workflow to release the cryptography and proto artifacts if needed by @nathanklick in https://github.com/hashgraph/hedera-sdk-js/pull/2198
+
+## v2.43.0
+
+## What's Changed
+
+* fix: do not instantiate logger inside a method by @leninmehedy in https://github.com/hashgraph/hedera-sdk-js/pull/2195
+* release: proto beta version 2.14.0-beta.5 by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2196
+* fix: hbar presentation after serialization/deserialization by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2189
+* fix: inability to create and execute freeze transaction by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2171
+* update: update steps for release process in RELEASE.md file by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2201
+* update: add section in README.md file on how to start the tests by @svetoslav-nikol0v in https://github.com/hashgraph/hedera-sdk-js/pull/2201
+
 ## v2.43.0-beta.1
 
 ## What's Changed

@@ -141,8 +141,7 @@ describe("AccountCreate", function () {
 
     it("should error when key is not set", async function () {
         this.timeout(15000);
-
-        let err = false;
+        let status;
 
         try {
             const response = await new AccountCreateTransaction()
@@ -151,12 +150,10 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.KeyRequired.toString());
+            status = error.status;
         }
 
-        if (!err) {
-            throw new Error("account creation did not error");
-        }
+        expect(status).to.be.eql(Status.KeyRequired);
     });
 
     it("should be able to sign transaction and verify transaction signtatures", async function () {
@@ -203,6 +200,7 @@ describe("AccountCreate", function () {
     });
 
     it("should create account with a single key passed to `KeyList`", async function () {
+        this.timeout(15000);
         const publicKey = PrivateKey.generateED25519().publicKey;
         const thresholdKey = new KeyList(publicKey, 1);
 
