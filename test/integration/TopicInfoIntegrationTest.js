@@ -42,6 +42,8 @@ describe("TopicInfo", function () {
         );
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+        expect(info.metadataKey).to.be.not.null;
+        expect(info.metadata).to.be.not.null;
 
         await (
             await new TopicDeleteTransaction()

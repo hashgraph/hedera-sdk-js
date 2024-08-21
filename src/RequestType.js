@@ -191,6 +191,20 @@ export default class RequestType {
                 return "TransactionGetFastRecord";
             case RequestType.TokenUpdateNfts:
                 return "TokenUpdateNfts";
+            case RequestType.NodeCreate:
+                return "NodeCreate";
+            case RequestType.NodeUpdate:
+                return "NodeUpdate";
+            case RequestType.NodeDelete:
+                return "NodeDelete";
+            case RequestType.TokenReject:
+                return "TokenReject";
+            case RequestType.TokenAirdrop:
+                return "TokenAirdrop";
+            case RequestType.TokenCancelAirdrop:
+                return "TokenCancelAirdrop";
+            case RequestType.TokenClaimAirdrop:
+                return "TokenClaimAirdrop";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -353,6 +367,20 @@ export default class RequestType {
                 return RequestType.TransactionGetFastRecord;
             case 88:
                 return RequestType.TokenUpdateNfts;
+            case 89:
+                return RequestType.NodeCreate;
+            case 90:
+                return RequestType.NodeUpdate;
+            case 91:
+                return RequestType.NodeDelete;
+            case 92:
+                return RequestType.TokenReject;
+            case 93:
+                return RequestType.TokenAirdrop;
+            case 94:
+                return RequestType.TokenCancelAirdrop;
+            case 95:
+                return RequestType.TokenClaimAirdrop;
         }
 
         throw new Error(
@@ -740,3 +768,38 @@ RequestType.TransactionGetFastRecord = new RequestType(87);
  * Update the metadata of one or more NFT's of a specific token type.
  */
 RequestType.TokenUpdateNfts = new RequestType(88);
+
+/**
+ * A transaction body for a `createNode` request.
+ */
+RequestType.NodeCreate = new RequestType(89);
+
+/**
+ * A transaction body for an `updateNode` request.
+ */
+RequestType.NodeUpdate = new RequestType(90);
+
+/**
+ * A transaction body for a `deleteNode` request.
+ */
+RequestType.NodeDelete = new RequestType(91);
+
+/**
+ * Transfer one or more token balances held by the requesting account to the treasury for each token type.
+ */
+RequestType.TokenReject = new RequestType(92);
+
+/**
+ * Airdrop one or more tokens to one or more accounts.
+ */
+RequestType.TokenAirdrop = new RequestType(93);
+
+/**
+ * Remove one or more pending airdrops from state on behalf of the sender(s) for each airdrop.
+ */
+RequestType.TokenCancelAirdrop = new RequestType(94);
+
+/**
+ * Claim one or more pending airdrops
+ */
+RequestType.TokenClaimAirdrop = new RequestType(95);
