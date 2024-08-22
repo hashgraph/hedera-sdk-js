@@ -1,11 +1,11 @@
-export interface AccountKeyGenerationParams {
+export interface KeyGenerationParams {
     readonly type: string;
     readonly fromKey?: string;
     readonly threshold?: number;
-    readonly keys?: AccountKeyGenerationParams[];
+    readonly keys?: KeyGenerationParams[];
 }
 
-export interface AccountKeyGenerationResponse {
+export interface KeyGenerationResponse {
     key: string;
     privateKeys: string[];
 }

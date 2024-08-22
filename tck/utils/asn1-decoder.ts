@@ -1,4 +1,4 @@
-import { isHexKeyList } from "../methods/key";
+import { isHexKeyList } from "../utils/key";
 
 /**
  * A class to decode ASN.1 encoded data, typically used for parsing cryptographic key data.

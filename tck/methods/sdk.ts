@@ -1,11 +1,7 @@
 import { Client, AccountId } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
-import {
-    SdkResetResponse,
-    SdkSetupParams,
-    SdkSetupResponse,
-} from "../models/sdk";
+import { SdkSetupParams, SdkResponse } from "../models/sdk";
 
 export default {
     setup: ({
@@ -14,7 +10,7 @@ export default {
         nodeIp,
         nodeAccountId,
         mirrorNetworkIp,
-    }: SdkSetupParams): SdkSetupResponse => {
+    }: SdkSetupParams): SdkResponse => {
         let clientType: string;
         if (nodeIp && nodeAccountId && mirrorNetworkIp) {
             const node = { [nodeIp]: AccountId.fromString(nodeAccountId) };
@@ -31,7 +27,7 @@ export default {
             status: "SUCCESS",
         };
     },
-    reset: (): SdkResetResponse => {
+    reset: (): SdkResponse => {
         sdk.client = null;
         return { status: "SUCCESS" };
     },

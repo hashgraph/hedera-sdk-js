@@ -7,7 +7,7 @@ import {
 } from "@hashgraph/sdk";
 
 import { ApplyCommonTransactionInputParams } from "../models/common-tx-params";
-import { getKeyFromString } from "../methods/key";
+import { getKeyFromString } from "../utils/key";
 
 export const applyCommonTransactionParams = (
     params: ApplyCommonTransactionInputParams,

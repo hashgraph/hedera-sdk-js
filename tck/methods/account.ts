@@ -7,7 +7,7 @@ import {
 } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
-import { getKeyFromString } from "./key";
+import { getKeyFromString } from "../utils/key";
 import { applyCommonTransactionParams } from "../utils/common-tx-params";
 import {
     CreateAccountParams,

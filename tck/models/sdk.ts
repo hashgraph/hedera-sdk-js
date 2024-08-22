@@ -6,13 +6,9 @@ export interface SdkSetupParams {
     readonly mirrorNetworkIp?: string;
 }
 
-export interface SdkSetupResponse {
-    readonly message: string;
+export interface SdkResponse {
     readonly status: string;
-}
-
-export interface SdkResetResponse {
-    readonly status: string;
+    readonly message?: string;
 }
 
 type Method = {
