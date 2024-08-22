@@ -1,0 +1,33 @@
+import { sdk } from "./sdk_data";
+import { Input } from "./models/sdk";
+
+/**
+ * Very primitive catch-all mapping prototype
+ * @returns {Promise<*>}
+ * @param {Input} input
+ */
+export default async function mapMethods({
+    callClass,
+    methods,
+}: Input): Promise<string> {
+    const cl: any = (await import("@hashgraph/sdk"))[callClass];
+
+    let currentObject: any = new cl();
+    for (let { name, param } of methods) {
+        console.log(`.${name}(${param})`);
+        if (param === "client") {
+            param = sdk.getClient();
+        }
+
+        if (typeof currentObject[name] === "function") {
+            currentObject = await currentObject[name](param);
+        } else if (typeof cl[name] === "function") {
+            currentObject = await cl[name](param);
+        } else if (typeof currentObject[name] === "object") {
+            currentObject = await currentObject[name];
+        } else {
+            throw Error(`${callClass}.${name}() isn't a function`);
+        }
+    }
+    return currentObject;
+}
