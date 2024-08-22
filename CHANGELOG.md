@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.50.0
+
+## What's Changed
+
+* Bump follow-redirects from 1.15.2 to 1.15.6 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2205/
+* Bump follow-redirects from 1.15.4 to 1.15.6 in /examples by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2206
+* Bump follow-redirects from 1.15.4 to 1.15.6 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2207
+* Bump follow-redirects from 1.15.4 to 1.15.6 in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2208
+* Bump follow-redirects from 1.15.4 to 1.15.6 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2209
+* feat: add dynamic address book unit tests by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2459
+
 ## v2.50.0-beta.3
 
 ## What's Changed
