@@ -4,8 +4,3 @@ export interface KeyGenerationParams {
     readonly threshold?: number;
     readonly keys?: KeyGenerationParams[];
 }
-
-export interface KeyGenerationResponse {
-    key: string;
-    privateKeys: string[];
-}

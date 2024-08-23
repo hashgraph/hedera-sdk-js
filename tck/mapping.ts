@@ -1,5 +1,5 @@
 import { sdk } from "./sdk_data";
-import { Input } from "./models/sdk";
+import { RpcMethodParams } from "./params/sdk";
 
 /**
  * Very primitive catch-all mapping prototype
@@ -9,7 +9,7 @@ import { Input } from "./models/sdk";
 export default async function mapMethods({
     callClass,
     methods,
-}: Input): Promise<string> {
+}: RpcMethodParams): Promise<string> {
     const cl: any = (await import("@hashgraph/sdk"))[callClass];
 
     let currentObject: any = new cl();

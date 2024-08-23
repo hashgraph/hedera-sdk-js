@@ -6,8 +6,16 @@ import {
     PrivateKey,
 } from "@hashgraph/sdk";
 
-import { ApplyCommonTransactionInputParams } from "../models/common-tx-params";
 import { getKeyFromString } from "../utils/key";
+
+interface ApplyCommonTransactionInputParams {
+    readonly transactionId?: string;
+    readonly maxTransactionFee?: number;
+    readonly validTransactionDuration?: number;
+    readonly memo?: string;
+    readonly regenerateTransactionId?: boolean;
+    readonly signers?: string[];
+}
 
 export const applyCommonTransactionParams = (
     params: ApplyCommonTransactionInputParams,

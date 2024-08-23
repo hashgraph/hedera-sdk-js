@@ -8,11 +8,10 @@ import {
 
 import { sdk } from "../sdk_data";
 import { getKeyFromString } from "../utils/key";
-import { applyCommonTransactionParams } from "../utils/common-tx-params";
-import {
-    CreateAccountParams,
-    CreateAccountResponse,
-} from "../models/account-methods";
+import { CreateAccountResponse } from "../response/account";
+
+import { CreateAccountParams } from "../params/account";
+import { applyCommonTransactionParams } from "../params/common-tx-params";
 
 export const createAccount = async ({
     key,

@@ -1,7 +1,8 @@
 import { Client, AccountId } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
-import { SdkSetupParams, SdkResponse } from "../models/sdk";
+import { SdkResponse } from "../response/sdk";
+import { SdkSetupParams } from "../params/sdk";
 
 export default {
     setup: ({

@@ -1,15 +1,12 @@
 import { PrivateKey, PublicKey, KeyList } from "@hashgraph/sdk";
 
 import { invalidParamError } from "../utils/invalid-param-error";
+import { getKeyFromString, convertToKeyListHex } from "../utils/key";
 
 import { AccountKey } from "../enums/account-key";
 
-import {
-    KeyGenerationParams,
-    KeyGenerationResponse,
-} from "../models/account-key";
-
-import { getKeyFromString, convertToKeyListHex } from "../utils/key";
+import { KeyGenerationParams } from "../params/key";
+import { KeyGenerationResponse } from "../response/key";
 
 const generateKey = async (
     params: KeyGenerationParams,

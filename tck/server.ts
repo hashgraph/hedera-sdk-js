@@ -10,7 +10,7 @@ import {
 
 import * as methods from "./methods";
 import mapping from "./mapping";
-import { Input } from "./models/sdk";
+import { RpcMethodParams } from "./params/sdk";
 
 const server = new JSONRPCServer();
 
@@ -47,7 +47,7 @@ if ("default" in methods) {
 // Create mapping server method
 server.addMethod(
     "mapping",
-    async (...args: [params: Input, serverParams?: void]) => {
+    async (...args: [params: RpcMethodParams, serverParams?: void]) => {
         // Basic mapping for unimplemented functions
         return await mapping(args[0]);
     },

@@ -11,8 +11,3 @@ export interface CreateAccountParams {
     readonly autoRenewPeriod?: number;
     readonly alias?: string;
 }
-
-export interface CreateAccountResponse {
-    readonly accountId: string;
-    readonly status: string;
-}

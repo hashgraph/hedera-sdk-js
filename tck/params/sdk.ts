@@ -6,17 +6,12 @@ export interface SdkSetupParams {
     readonly mirrorNetworkIp?: string;
 }
 
-export interface SdkResponse {
-    readonly status: string;
-    readonly message?: string;
-}
-
-type Method = {
+type RpcMethod = {
     readonly name: string;
     readonly param: any;
 };
 
-export interface Input {
+export interface RpcMethodParams {
     readonly callClass: string;
-    readonly methods: Method[];
+    readonly methods: RpcMethod[];
 }
