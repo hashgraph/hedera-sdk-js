@@ -852,6 +852,107 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * This method removes a signature from the transaction based on the public key or signature provided.
+     *
+     * @param {PublicKey} publicKey The public key associated with the signature to remove.
+     * @param {Uint8Array} signature - The signature to remove. If omitted, all signatures for the given public key will be removed.
+     * @returns {this}
+     */
+    removeSignature(publicKey, signature) {
+        // If the transaction isn't frozen, freeze it.
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        const publicKeyData = publicKey.toBytesRaw();
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (!this._signerPublicKeys.has(publicKeyHex)) {
+            // If the public key hasn't signed the transaction, there's nothing to remove
+            return this;
+        }
+
+        // Iterate over the signed transactions and remove matching signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (transaction.sigMap && transaction.sigMap.sigPair) {
+                transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
+                    (sigPair) => {
+                        let sigPairPublicKeyHex;
+                        if (sigPair.pubKeyPrefix) {
+                            sigPairPublicKeyHex = hex.encode(
+                                sigPair.pubKeyPrefix,
+                            );
+                        }
+
+                        const matchesPublicKey =
+                            sigPairPublicKeyHex === publicKeyHex;
+
+                        if (signature) {
+                            let matchesSignature = false;
+
+                            if (sigPair.ed25519) {
+                                matchesSignature =
+                                    hex.encode(sigPair.ed25519) ===
+                                    hex.encode(signature);
+                            } else if (sigPair.ECDSASecp256k1) {
+                                matchesSignature =
+                                    hex.encode(sigPair.ECDSASecp256k1) ===
+                                    hex.encode(signature);
+                            }
+
+                            // Remove the signature only if both the public key and signature match
+                            return !(matchesPublicKey && matchesSignature);
+                        }
+
+                        return !matchesPublicKey;
+                    },
+                );
+            }
+        }
+
+        // Remove the public key from internal tracking
+        this._signerPublicKeys.delete(publicKeyHex);
+        this._publicKeys = this._publicKeys.filter(
+            (key) => !key.equals(publicKey),
+        );
+
+        // Update transaction signers array
+        this._transactionSigners.pop();
+
+        return this;
+    }
+
+    /**
+     * This method clears all signatures from the transaction.
+     *
+     * It will iterate through all signed transactions, remove all signature pairs from the `sigMap`,
+     * and clear the internal tracking of signer public keys.
+     *
+     * @returns {this}
+     */
+    clearAllSignatures() {
+        // If the transaction isn't frozen, freeze it.
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        // Iterate over the signed transactions and clear all signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (transaction.sigMap && transaction.sigMap.sigPair) {
+                // Clear all signature pairs from the transaction's signature map
+                transaction.sigMap.sigPair = [];
+            }
+        }
+
+        // Clear the internal tracking of signer public keys and other relevant arrays
+        this._signerPublicKeys.clear(); // Clear the map of signer public keys
+        this._publicKeys = []; // Clear the array of public keys
+        this._transactionSigners = []; // Clear the array of transaction signers
+
+        return this;
+    }
+
+    /**
      * Get the current signatures on the request
      *
      * **NOTE**: Does NOT support sign on demand

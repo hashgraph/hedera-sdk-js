@@ -313,4 +313,70 @@ describe("Transaction", function () {
             });
         });
     });
+
+    describe.only("Transaction Signature Management", function () {
+        let key1, key2, key3;
+        let transaction;
+
+        beforeEach(async function () {
+            const nodeAccountId = new AccountId(3);
+            const account = AccountId.fromString("0.0.1004");
+            const validStart = new Timestamp(1451, 590);
+            const transactionId = new TransactionId(account, validStart);
+
+            key1 = PrivateKey.generateED25519();
+            key2 = PrivateKey.generateED25519();
+            key3 = PrivateKey.generateED25519();
+
+            transaction = new AccountCreateTransaction()
+                .setInitialBalance(new Hbar(2))
+                .setTransactionId(transactionId)
+                .setNodeAccountIds([nodeAccountId])
+                .freeze();
+        });
+
+        it("should remove a specific signature", async function () {
+            // Sign the transaction with multiple keys
+            const signature1 = await key1.signTransaction(transaction);
+            const signature2 = await key2.signTransaction(transaction);
+            const signature3 = await key3.signTransaction(transaction);
+
+            transaction.addSignature(key1.publicKey, signature1);
+            transaction.addSignature(key2.publicKey, signature2);
+            transaction.addSignature(key3.publicKey, signature3);
+
+            // Ensure all signatures are present before removal
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+
+            // Remove one signature
+            transaction.removeSignature(key1.publicKey, signature1);
+
+            // Ensure the specific signature has been removed
+            const signaturesAfter = transaction.getSignatures();
+            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(2);
+        });
+
+        it("should clear all signatures", async function () {
+            // Sign the transaction with multiple keys
+            const signature1 = await key1.signTransaction(transaction);
+            const signature2 = await key2.signTransaction(transaction);
+            const signature3 = await key3.signTransaction(transaction);
+
+            transaction.addSignature(key1.publicKey, signature1);
+            transaction.addSignature(key2.publicKey, signature2);
+            transaction.addSignature(key3.publicKey, signature3);
+
+            // Ensure all signatures are present before clearing
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+
+            // Clear all signatures
+            transaction.clearAllSignatures();
+
+            // Ensure all signatures have been cleared
+            const signaturesAfter = transaction.getSignatures();
+            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(0);
+        });
+    });
 });
