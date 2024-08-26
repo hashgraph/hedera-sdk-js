@@ -8,9 +8,7 @@ import { AccountKey } from "../enums/account-key";
 import { KeyGenerationParams } from "../params/key";
 import { KeyGenerationResponse } from "../response/key";
 
-const generateKey = async (
-    params: KeyGenerationParams,
-): Promise<KeyGenerationResponse> => {
+const generateKey = (params: KeyGenerationParams): KeyGenerationResponse => {
     if (
         params.fromKey &&
         ![
@@ -63,7 +61,7 @@ const generateKey = async (
     };
 
     try {
-        const { key, privateKeys } = await processKeyRecursively(
+        const { key, privateKeys } = processKeyRecursively(
             params,
             response,
             false,

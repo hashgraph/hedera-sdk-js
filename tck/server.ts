@@ -64,36 +64,59 @@ const exceptionMiddleware = async (
     try {
         return await next(request, serverParams);
     } catch (error) {
+        const requestMethod = JSON.stringify(request.method);
+        const errorMessage = error.message || error;
+
         if (error.status && error.status._code) {
+            console.error(
+                `Hedera error occurred processing JSON-RPC request: ${requestMethod}, Error: ${errorMessage}`,
+            );
+
             return createJSONRPCErrorResponse(
                 request.id,
                 -32001,
                 "Hedera Error",
                 {
                     status: error.status.toString(),
-                    message: error.message,
-                },
-            );
-        } else {
-            let parsedError: Error;
-
-            // Attempt to retrieve error information if it's in a different format.
-            try {
-                parsedError = JSON.parse(error.toString().substring(7));
-            } catch (error) {
-                return;
-            }
-
-            return createJSONRPCErrorResponse(
-                request.id,
-                -32603,
-                "Internal error",
-                {
-                    ...parsedError,
-                    message: error.message || error,
+                    message: errorMessage,
                 },
             );
         }
+
+        if (error.code === 32602) {
+            console.error(
+                `Params error occurred processing JSON-RPC request: ${requestMethod} \nError: ${errorMessage}`,
+            );
+
+            return createJSONRPCErrorResponse(
+                request.id,
+                -32602,
+                "Internal error",
+                {
+                    message: errorMessage,
+                },
+            );
+        }
+
+        console.error(
+            `Internal error occurred processing JSON-RPC request: ${requestMethod} \nError: ${errorMessage}`,
+        );
+
+        let parsedError: Error;
+
+        try {
+            parsedError = JSON.parse(error.toString().substring(7));
+        } catch (parseError) {}
+
+        return createJSONRPCErrorResponse(
+            request.id,
+            -32603,
+            "Internal error",
+            {
+                ...parsedError,
+                message: errorMessage,
+            },
+        );
     }
 };
 
@@ -126,7 +149,5 @@ if (args.length > 0) {
 }
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`-- JSON-RPC JS server running on localhost port ${port}`);
 });
-
-console.log("-- JSON-RPC JS server running on localhost port " + port);

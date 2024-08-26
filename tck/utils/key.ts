@@ -45,17 +45,14 @@ const getKeyFromKeyListHex = (keyString: string): KeyList => {
         try {
             decodedKeyList = proto.KeyList.decode(byteArray);
         } catch (keyListError) {
-            console.error("Failed to decode as KeyList:", keyListError);
+            // Expected that this may fail if it's not a KeyList
         }
 
         // Attempt to decode as ThresholdKey
         try {
             decodedThresholdKey = proto.ThresholdKey.decode(byteArray);
         } catch (thresholdKeyError) {
-            console.error(
-                "Failed to decode as ThresholdKey:",
-                thresholdKeyError,
-            );
+            // Expected that this may fail if it's not a ThresholdKey
         }
 
         try {

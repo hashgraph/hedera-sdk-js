@@ -1,10 +1,4 @@
-import {
-    AccountCreateTransaction,
-    Hbar,
-    AccountId,
-    TransactionResponse,
-    TransactionReceipt,
-} from "@hashgraph/sdk";
+import { AccountCreateTransaction, Hbar, AccountId } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
 import { getKeyFromString } from "../utils/key";
@@ -79,20 +73,8 @@ export const createAccount = async ({
     }
 
     // Sign the transaction with the client operator private key if not already signed and submit to a Hedera network
-    let txResponse: TransactionResponse;
-    try {
-        txResponse = await transaction.execute(sdk.getClient());
-    } catch (error) {
-        throw new Error(error);
-    }
-
-    // Get the receipt of the transaction
-    let receipt: TransactionReceipt;
-    try {
-        receipt = await txResponse.getReceipt(sdk.getClient());
-    } catch (error) {
-        throw new Error(error);
-    }
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
 
     return {
         accountId: receipt.accountId.toString(),
