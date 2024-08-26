@@ -212,6 +212,7 @@ export default class TransactionRecordQuery extends Query {
             case Status.Unknown:
             case Status.ReceiptNotFound:
             case Status.RecordNotFound:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
 
             case Status.Ok:
@@ -281,10 +282,11 @@ export default class TransactionRecordQuery extends Query {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -311,6 +313,7 @@ export default class TransactionRecordQuery extends Query {
 
             default:
                 return new PrecheckStatusError({
+                    nodeId,
                     status,
                     transactionId: this._getTransactionId(),
                     contractFunctionResult: null,
@@ -412,7 +415,6 @@ export default class TransactionRecordQuery extends Query {
             /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
             );
-
         return Promise.resolve(TransactionRecord._fromProtobuf(record));
     }
 

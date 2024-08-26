@@ -645,8 +645,8 @@ export default class Status {
                 return "INVALID_NODE_DESCRIPTION";
             case Status.InvalidServiceEndpoint:
                 return "INVALID_SERVICE_ENDPOINT";
-            case Status.InvalidGossipCaeCertificate:
-                return "INVALID_GOSSIP_CAE_CERTIFICATE";
+            case Status.InvalidGossipCaCertificate:
+                return "INVALID_GOSSIP_CA_CERTIFICATE";
             case Status.InvalidGrpcCertificate:
                 return "INVALID_GRPC_CERTIFICATE";
             case Status.InvalidMaxAutoAssociations:
@@ -667,6 +667,28 @@ export default class Status {
                 return "SERVICE_ENDPOINTS_EXCEEDED_LIMIT";
             case Status.InvalidIpv4Address:
                 return "INVALID_IPV4_ADDRESS";
+            case Status.TokenReferenceRepeated:
+                return "TOKEN_REFERENCE_REPEATED";
+            case Status.InvalidOwnerId:
+                return "INVALID_OWNER_ID";
+            case Status.TokenReferenceListSizeLimitExceeded:
+                return "TOKEN_REFERENCE_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenReferenceList:
+                return "EMPTY_TOKEN_REFERENCE_LIST";
+            case Status.UpdateNodeAccountNotAllowed:
+                return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
+            case Status.TokenHasNoMetadataOrSupplyKey:
+                return "TOKEN_HAS_NO_METADATA_OR_SUPPLY_KEY";
+            case Status.EmptyPendingAirdropIdList:
+                return "EMPTY_PENDING_AIRDROP_ID_LIST";
+            case Status.PendingAirdropIdRepeated:
+                return "PENDING_AIRDROP_ID_REPEATED";
+            case Status.MaxPendingAirdropIdExceeded:
+                return "MAX_PENDING_AIRDROP_ID_EXCEEDED";
+            case Status.PendingNftAirdropAlreadyExists:
+                return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
+            case Status.AccountHasPendingAirdrops:
+                return "ACCOUNT_HAS_PENDING_AIRDROPS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1284,7 +1306,7 @@ export default class Status {
             case 343:
                 return Status.InvalidServiceEndpoint;
             case 344:
-                return Status.InvalidGossipCaeCertificate;
+                return Status.InvalidGossipCaCertificate;
             case 345:
                 return Status.InvalidGrpcCertificate;
             case 346:
@@ -1301,10 +1323,32 @@ export default class Status {
                 return Status.InvalidEndpoint;
             case 352:
                 return Status.GossipEndpointsExceededLimit;
+            case 353:
+                return Status.TokenReferenceRepeated;
+            case 354:
+                return Status.InvalidOwnerId;
+            case 355:
+                return Status.TokenReferenceListSizeLimitExceeded;
             case 356:
                 return Status.ServiceEndpointsExceededLimit;
             case 357:
                 return Status.InvalidIpv4Address;
+            case 358:
+                return Status.EmptyTokenReferenceList;
+            case 359:
+                return Status.UpdateNodeAccountNotAllowed;
+            case 360:
+                return Status.TokenHasNoMetadataOrSupplyKey;
+            case 361:
+                return Status.EmptyPendingAirdropIdList;
+            case 362:
+                return Status.PendingAirdropIdRepeated;
+            case 363:
+                return Status.MaxPendingAirdropIdExceeded;
+            case 364:
+                return Status.PendingNftAirdropAlreadyExists;
+            case 365:
+                return Status.AccountHasPendingAirdrops;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2875,7 +2919,7 @@ Status.InvalidServiceEndpoint = new Status(343);
 /**
  * gossip_ca_certificate is invalid
  */
-Status.InvalidGossipCaeCertificate = new Status(344);
+Status.InvalidGossipCaCertificate = new Status(344);
 
 /**
  * grpc_certificate_hash is invalid
@@ -2919,11 +2963,70 @@ Status.InvalidEndpoint = new Status(351);
 Status.GossipEndpointsExceededLimit = new Status(352);
 
 /**
-   * The number of service endpoints exceeds the limit
-   */
-Status.ServiceEndpointsExceededLimit = new Status(356)
+ * The transaction attempted to use duplicate `TokenReference`.<br/>
+ * This affects `TokenReject` attempting to reject same token reference more than once.
+ */
+Status.TokenReferenceRepeated = new Status(353);
+
+/**
+ * The account id specified as the owner in `TokenReject` is invalid or does not exist.
+ */
+Status.InvalidOwnerId = new Status(354);
+
+/**
+ * The transaction attempted to use more than the allowed number of `TokenReference`.
+ */
+Status.TokenReferenceListSizeLimitExceeded = new Status(355);
+
+/**
+ * The number of service endpoints exceeds the limit
+ */
+Status.ServiceEndpointsExceededLimit = new Status(356);
 
 /*
  * The IPv4 address is invalid
  */
-Status.InvalidIpv4Address = new Status(357)
+Status.InvalidIpv4Address = new Status(357);
+
+/**
+ * The transaction attempted to use empty `TokenReference` list.
+ */
+Status.EmptyTokenReferenceList = new Status(358);
+
+/*
+ * The node account is not allowed to be updated
+ */
+Status.UpdateNodeAccountNotAllowed = new Status(359);
+
+/*
+ * The token has no metadata or supply key
+ */
+Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
+
+/**
+ * The transaction attempted to the use an empty List of `PendingAirdropId`.
+ */
+Status.EmptyPendingAirdropIdList = new Status(361);
+
+/**
+ * The transaction attempted to the same `PendingAirdropId` twice.
+ */
+Status.PendingAirdropIdRepeated = new Status(362);
+
+/**
+ * The transaction attempted to use more than the allowed number of `PendingAirdropId`.
+ */
+Status.MaxPendingAirdropIdExceeded = new Status(363);
+
+/*
+ * A pending airdrop already exists for the specified NFT.
+ */
+Status.PendingNftAirdropAlreadyExists = new Status(364);
+
+/*
+ * The identified account is sender for one or more pending airdrop(s)
+ * and cannot be deleted.<br/>
+ * Requester should cancel all pending airdrops before resending
+ * this transaction.
+ */
+Status.AccountHasPendingAirdrops = new Status(365);

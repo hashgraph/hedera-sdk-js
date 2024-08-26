@@ -26,22 +26,40 @@ jobs:
   validate-release:
     name: Validate Release
     runs-on: [self-hosted, Linux, medium, ephemeral]
+
     outputs:
+      # Project tag
       tag: ${{ steps.tag.outputs.name }}
-      version: ${{ steps.tag.outputs.version }}
-      prerelease: ${{ steps.tag.outputs.prerelease }}
-      type: ${{ steps.tag.outputs.type }}
+
+      # main package
+      sdk-version: ${{ steps.tag.outputs.version }}
+      sdk-prerelease: ${{ steps.tag.outputs.prerelease }}
+      sdk-type: ${{ steps.tag.outputs.type }}
+
+      # proto sub-package
+      proto-version: ${{ steps.npm-package.outputs.proto-version }}
+      proto-prerelease: ${{ steps.proto-package.outputs.prerelease }}
+      proto-type: ${{ steps.proto-package.outputs.type }}
+      proto-publish-required: ${{ steps.proto-required.outputs.publish-required }}
+
+      # crypto sub-package
+      crypto-version: ${{ steps.npm-package.outputs.crypto-version }}
+      crypto-prerelease: ${{ steps.crypto-package.output.prerelease }}
+      crypto-type: ${{ steps.crypto-package.output.type }}
+      crypto-publish-required: ${{ steps.crypto-required.outputs.publish-required }}
+
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
         with:
           egress-policy: audit
 
       - name: Checkout Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           ref: ${{ github.event.inputs.tag || '' }}
           fetch-depth: 0
+          submodules: recursive
 
       - name: Install Semantic Version Tools
         run: |
@@ -60,11 +78,38 @@ jobs:
         with:
           version: 1.7
 
-      - name: Extract NPM Package Information
+      - name: Extract NPM Package Versions
         id: npm-package
-        run: echo "version=$(jq -r '.version' package.json)" >>"${GITHUB_OUTPUT}"
+        run: |
+          SDK_PACKAGE_VERSION="$(jq -r '.version' package.json)"
+          PROTO_PACKAGE_VERSION="$(jq -r '.version' './packages/proto/package.json')"
+          CRYPTO_PACKAGE_VERSION="$(jq -r '.version' './packages/cryptography/package.json')"
+          
+          echo "sdk-version=${SDK_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "proto-version=${PROTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "crypto-version=${CRYPTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
 
-      - name: Extract Tag Information
+      - name: Proto Subpackage Publish Required
+        id: proto-required
+        run: |
+          PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${{ steps.npm-package.outputs.proto-version }}" >/dev/null 2>&1; then
+            PUBLISH_REQUIRED="true"
+          fi
+          
+          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
+
+      - name: Crypto Subpackage Publish Required
+        id: crypto-required
+        run: |
+          PUBLISH_REQUIRED="false"
+          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${{ steps.npm-package.outputs.crypto-version }}" >/dev/null 2>&1; then
+            PUBLISH_REQUIRED="true"
+          fi
+          
+          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
+
+      - name: Extract SDK Tag Information
         id: tag
         run: |
           REF_NAME="$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))"
@@ -103,11 +148,71 @@ jobs:
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
 
+      - name: Extract Proto Subpackage Information
+        id: proto-package
+        run: |
+          IS_VALID_SEMVER="$(semver validate "${{ steps.npm-package.outputs.proto-version }}")"
+
+          if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
+            echo "::error title=Invalid Tag::The tag '${{ steps.npm-package.outputs.proto-version }}' is not a valid SemVer tag."
+            exit 1
+          fi
+          
+          PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.proto-version }}')"
+          PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
+          
+          IS_PRERELEASE="false"
+          [[ -n "${PREREL_VERSION}" ]] && IS_PRERELEASE="true"
+
+          PREREL_TYPE="unknown"
+          if [[ "${IS_PRERELEASE}" == "true" ]]; then
+            if [[ "${PREREL_VERSION_LC}" =~ "beta" ]]; then
+              PREREL_TYPE="beta"
+            else
+              PREREL_TYPE="unknown"
+            fi
+          else
+            PREREL_TYPE="production"
+          fi
+          
+          echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
+          echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
+          
+      - name: Extract Crypto Subpackage Information
+        id: crypto-package
+        run: |
+          IS_VALID_SEMVER="$(semver validate '${{ steps.npm-package.outputs.crypto-version }}')"
+
+          if [[ "${IS_VALID_SEMVER}" != "valid" ]]; then
+            echo "::error title=Invalid Tag::The tag '${{ steps.npm-package.outputs.crypto-version }}' is not a valid SemVer tag."
+            exit 1
+          fi
+
+          PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.crypto-version }}')"
+          PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
+          
+          IS_PRERELEASE="false"
+          [[ -n "${PREREL_VERSION}" ]] && IS_PRERELEASE="true"
+
+          PREREL_TYPE="unknown"
+          if [[ "${IS_PRERELEASE}" == "true" ]]; then
+            if [[ "${PREREL_VERSION_LC}" =~ "beta" ]]; then
+              PREREL_TYPE="beta"
+            else
+              PREREL_TYPE="unknown"
+            fi
+          else
+            PREREL_TYPE="production"
+          fi
+          
+          echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
+          echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
+
       - name: Validate Tag and Package Versions
         run: |
-          COMPARISON_RESULT="$(semver compare "${{ steps.npm-package.outputs.version }}" "${{ steps.tag.outputs.version }}")"
+          COMPARISON_RESULT="$(semver compare "${{ steps.npm-package.outputs.sdk-version }}" "${{ steps.tag.outputs.version }}")"
           if [[ "${COMPARISON_RESULT}" -ne 0 ]]; then
-            echo "::error title=Version Mismatch::The version in package.json (${{ steps.npm-package.outputs.version }}) does not match the version in the tag (${{ steps.tag.outputs.version }})."
+            echo "::error title=Version Mismatch::The version in package.json (${{ steps.npm-package.outputs.sdk-version }}) does not match the version in the tag (${{ steps.tag.outputs.version }})."
             exit 1
           fi
 
@@ -126,14 +231,15 @@ jobs:
     runs-on: [self-hosted, Linux, medium, ephemeral]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
         with:
           egress-policy: audit
 
       - name: Checkout Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           ref: ${{ github.event.inputs.tag || '' }}
+          submodules: recursive
 
       - name: Install Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
@@ -146,12 +252,13 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 18
 
       - name: Compile Code
-        run: task -v build
+        run: |
+          task -v build
 
   publish-release:
     name: Publish Release
@@ -161,14 +268,15 @@ jobs:
       - run-safety-checks
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
         with:
           egress-policy: audit
 
       - name: Checkout Code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           ref: ${{ github.event.inputs.tag || '' }}
+          submodules: recursive
 
       - name: Install Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
@@ -181,7 +289,7 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
           node-version: 18
           cache: pnpm
@@ -192,40 +300,43 @@ jobs:
       - name: Install Playwright Dependencies
         run: sudo npx playwright install-deps
 
-      - name: Check Proto Subpackage Publish Status
-        id: proto
+      - name: Calculate Proto Subpackage Publish Arguments
+        id: proto-publish
         working-directory: packages/proto
-        run: |
-          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-          PUBLISH_REQUIRED="false"
-          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${PACKAGE_VERSION}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
-          fi
-
-          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
-          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
-
-      - name: Check Cryptography Subpackage Publish Status
-        id: cryptography
-        working-directory: packages/cryptography
-        run: |
-          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
-          PUBLISH_REQUIRED="false"
-          if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${PACKAGE_VERSION}" >/dev/null 2>&1; then
-            PUBLISH_REQUIRED="true"
-          fi
-          
-          echo "version=${PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
-          echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
-
-      - name: Calculate Publish Arguments
-        id: publish
+        if: ${{ needs.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
         run: |
           PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
-          [[ "${{ needs.validate-release.outputs.prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.type }}"
+          [[ "${{ needs.validate-release.outputs.proto-prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.proto-type }}"
 
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
+
+          # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+
+      - name: Calculate Crypto Subpackage Publish Arguments
+        id: crypto-publish
+        working-directory: packages/cryptography
+        if: ${{ needs.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
+        run: |
+          PUBLISH_ARGS="--access public --no-git-checks"
+          [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
+          [[ "${{ needs.validate-release.outputs.crypto-prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.crypto-type }}"
+          
+          echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
+
+          # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
+
+      - name: Calculate SDK Publish Arguments
+        id: sdk-publish
+        run: |
+          PUBLISH_ARGS="--access public --no-git-checks"
+          [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
+          [[ "${{ needs.validate-release.outputs.sdk-prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.sdk-type }}"
+          
+          echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
+          
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
 
@@ -233,30 +344,26 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/proto
-        if: ${{ steps.proto.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: |
-          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
-          task -v publish -- ${{ steps.publish.outputs.args }}
+        if: ${{ needs.validate-release.outputs.proto-publish-required == 'true' && !cancelled() && !failure() }}
+        run: task -v publish -- ${{ steps.proto-publish.outputs.args }}
 
       - name: Publish Cryptography Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cryptography
-        if: ${{ steps.cryptography.outputs.publish-required == 'true' && !cancelled() && !failure() }}
-        run: |
-          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
-          task -v publish -- ${{ steps.publish.outputs.args }}
+        if: ${{ needs.validate-release.outputs.crypto-publish-required == 'true' && !cancelled() && !failure() }}
+        run: task -v publish -- ${{ steps.crypto-publish.outputs.args }}
 
       - name: Publish SDK Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: task -v publish -- ${{ steps.publish.outputs.args }}
+        run: task -v publish -- ${{ steps.sdk-publish.outputs.args }}
 
       - name: Generate Github Release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         if: ${{ github.event.inputs.dry-run-enabled != 'true' && !cancelled() && !failure() }}
         with:
-          tag: ${{ steps.validate-release.outputs.tag }}
+          tag: ${{ needs.validate-release.outputs.tag }}
           prerelease: ${{ needs.validate-release.outputs.prerelease == 'true' }}
           draft: false
           generateReleaseNotes: true
