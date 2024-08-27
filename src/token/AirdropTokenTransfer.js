@@ -1,16 +1,12 @@
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.ITokenTransferList} HashgraphProto.proto.ITokenTransferList
- * @typedef {import("@hashgraph/proto").google.protobuf.IUInt32Value} Google.proto.Uint32Value
  */
-
+import AccountAmount from "./AccountAmount.js";
 import TokenId from "./TokenId.js";
+import TokenNftTransfer from "./TokenNftTransfer.js";
 
-/**
- * @typedef {import("./AccountAmount").default} AccountAmount
- * @typedef {import("./TokenNftTransfer").default} TokenNftTransfer
- */
-export default class TokenTransferList {
+export default class TokenTransfer {
     /**
      * @param {object} props
      * @param {TokenId} [props.tokenId]
@@ -85,7 +81,7 @@ export default class TokenTransferList {
 
     /**
      * @param {AccountAmount[]} accountAmounts
-     * @returns
+     * @returns {this}
      */
     setAccountAmounts(accountAmounts) {
         this._accountAmounts = accountAmounts;
@@ -138,22 +134,29 @@ export default class TokenTransferList {
             nftTransfers: this._tokenNftTransfers.map((tokenNftTransfer) =>
                 tokenNftTransfer._toProtobuf(),
             ),
-            /**
-             * TODO: uint32 value doesn't exist in js
-             */
+            expectedDecimals:
+                this._expectedDecimals != null
+                    ? { value: this._expectedDecimals }
+                    : null,
         };
     }
 
     /**
-     * @param {HashgraphProto.proto.ITokenTransferList} tokenTransferList
-     * @returns {TokenTransferList}
+     * @param {HashgraphProto.proto.ITokenTransferList} tokenTransfer
+     * @returns {TokenTransfer}
      */
-    static _fromProtobuf(tokenTransferList) {
-        return new TokenTransferList({
+    static _fromProtobuf(tokenTransfer) {
+        return new TokenTransfer({
             tokenId:
-                tokenTransferList.token != null
-                    ? TokenId._fromProtobuf(tokenTransferList.token)
+                tokenTransfer.token != null
+                    ? TokenId._fromProtobuf(tokenTransfer.token)
                     : undefined,
+            accountAmounts: tokenTransfer.transfers?.map((transfer) =>
+                AccountAmount._fromProtobuf(transfer),
+            ),
+            tokenNftTransfers: TokenNftTransfer._fromProtobuf([tokenTransfer]),
+            expectedDecimals:
+                tokenTransfer.expectedDecimals?.value || undefined,
         });
     }
 }
