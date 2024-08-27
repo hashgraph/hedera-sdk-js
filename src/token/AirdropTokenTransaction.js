@@ -1,7 +1,7 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import TokenTransferList from "./TokenTransferList.js";
+import TokenTransfer from "./AirdropTokenTransfer.js";
 
 /**
  * @namespace proto
@@ -24,13 +24,13 @@ import TokenTransferList from "./TokenTransferList.js";
 export default class AirdropTokenTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {TokenTransferList[]} [props.tokenTransfer]
+     * @param {TokenTransfer[]} [props.tokenTransfer]
      */
     constructor(props = {}) {
         super();
         /**
          * @private
-         * @type {TokenTransferList[]}
+         * @type {TokenTransfer[]}
          */
         this._tokenTransfers = [];
 
@@ -40,14 +40,14 @@ export default class AirdropTokenTransaction extends Transaction {
     }
 
     /**
-     * @returns {TokenTransferList[]}
+     * @returns {TokenTransfer[]}
      */
     get tokenTransfers() {
         return this._tokenTransfers;
     }
 
     /**
-     * @param {TokenTransferList[]} tokenTransfers
+     * @param {TokenTransfer[]} tokenTransfers
      * @returns {this}
      */
     setTokenTransfers(tokenTransfers) {
@@ -93,7 +93,7 @@ export default class AirdropTokenTransaction extends Transaction {
             new AirdropTokenTransaction({
                 tokenTransfer: tokenAirdrop.tokenTransfers?.map(
                     (tokenTransfer) =>
-                        TokenTransferList._fromProtobuf(tokenTransfer),
+                        TokenTransfer._fromProtobuf(tokenTransfer),
                 ),
             }),
             transactions,
