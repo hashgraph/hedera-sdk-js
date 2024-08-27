@@ -12,19 +12,22 @@ export default {
         nodeAccountId,
         mirrorNetworkIp,
     }: SdkSetupParams): SdkResponse => {
-        let clientType: string;
+        let client: Client;
+
         if (nodeIp && nodeAccountId && mirrorNetworkIp) {
             const node = { [nodeIp]: AccountId.fromString(nodeAccountId) };
-            sdk.client = Client.forNetwork(node);
-            clientType = "custom";
+            client = Client.forNetwork(node);
         } else {
-            sdk.client = Client.forTestnet();
-            clientType = "testnet";
+            client = Client.forTestnet();
         }
-        sdk.getClient().setOperator(operatorAccountId, operatorPrivateKey);
-        sdk.getClient().setRequestTimeout(30000);
+
+        client.setOperator(operatorAccountId, operatorPrivateKey);
+        client.setRequestTimeout(30000);
+
+        sdk.client = client;
+
         return {
-            message: `Successfully setup ${clientType} client.`,
+            message: `Successfully setup ${client} client.`,
             status: "SUCCESS",
         };
     },

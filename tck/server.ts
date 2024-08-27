@@ -11,6 +11,7 @@ import {
 import * as methods from "./methods";
 import mapping from "./mapping";
 import { RpcMethodParams } from "./params/sdk";
+import { JSONRPCErrorCodeCustom } from "./response/json-rpc-error";
 
 const server = new JSONRPCServer();
 
@@ -74,7 +75,7 @@ const exceptionMiddleware = async (
 
             return createJSONRPCErrorResponse(
                 request.id,
-                -32001,
+                JSONRPCErrorCodeCustom.HederaError,
                 "Hedera Error",
                 {
                     status: error.status.toString(),
@@ -83,14 +84,14 @@ const exceptionMiddleware = async (
             );
         }
 
-        if (error.code === 32602) {
+        if (error.code === JSONRPCErrorCodeCustom.HederaError) {
             console.error(
                 `Params error occurred processing JSON-RPC request: ${requestMethod} \nError: ${errorMessage}`,
             );
 
             return createJSONRPCErrorResponse(
                 request.id,
-                -32602,
+                JSONRPCErrorCodeCustom.InvalidParams,
                 "Invalid params error",
                 {
                     message: errorMessage,
@@ -104,7 +105,7 @@ const exceptionMiddleware = async (
 
         return createJSONRPCErrorResponse(
             request.id,
-            -32603,
+            JSONRPCErrorCodeCustom.InternalError,
             "Internal error",
             {
                 message: errorMessage,

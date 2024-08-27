@@ -1,4 +1,5 @@
 import { isHexKeyList } from "../utils/key";
+import { Asn1DecodedKeyResponse } from "../response/asn1-decode";
 
 /**
  * A class to decode ASN.1 encoded data, typically used for parsing cryptographic key data.
@@ -142,7 +143,7 @@ class ASN1Decoder {
  */
 export const asn1DecodeStringDer = (
     keyString: string,
-): { keyTypes: string[]; isPublicKey: boolean; isKeyListHex: boolean } => {
+): Asn1DecodedKeyResponse => {
     const isKeyListHex = isHexKeyList(keyString);
 
     if (isKeyListHex) {

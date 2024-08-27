@@ -1,7 +1,12 @@
-import { PrivateKey, PublicKey, KeyList } from "@hashgraph/sdk";
+import { PrivateKey, KeyList, PublicKey } from "@hashgraph/sdk";
 
 import { invalidParamError } from "../utils/invalid-param-error";
-import { getKeyFromString, convertToKeyListHex } from "../utils/key";
+import {
+    getKeyFromString,
+    convertToKeyListHex,
+    getEvmAddressFromKey,
+    getKeyPairFromParams,
+} from "../utils/key";
 
 import { AccountKey } from "../enums/account-key";
 
@@ -117,42 +122,17 @@ const handleEd25519andEcdsaPublicKey = (
     response: KeyGenerationResponse,
     params?: KeyGenerationParams,
     isList?: boolean,
-) => {
-    let publicKey: string;
-    let privateKey: string;
+): KeyGenerationResponse => {
+    const { privateKey, publicKey } = getKeyPairFromParams(params);
 
-    if (params.fromKey) {
-        if (params.type === AccountKey.ED25519_PUBLIC_KEY) {
-            const pk = PrivateKey.fromStringED25519(params.fromKey);
-            privateKey = pk.toStringDer();
-            publicKey = pk.publicKey.toStringDer();
-        } else {
-            const pk = PrivateKey.fromStringECDSA(params.fromKey);
-            privateKey = pk.toStringDer();
-            publicKey = pk.publicKey.toStringDer();
-        }
-        if (isList) {
-            response.privateKeys.push(privateKey);
-        }
-
-        return { key: publicKey, privateKeys: response.privateKeys };
-    }
-
-    if (params.type === AccountKey.ED25519_PUBLIC_KEY) {
-        const pk = PrivateKey.generateED25519();
-        privateKey = pk.toStringDer();
-        publicKey = pk.publicKey.toStringDer();
-    } else {
-        const pk = PrivateKey.generateECDSA();
-        privateKey = pk.toStringDer();
-        publicKey = pk.publicKey.toStringDer();
-    }
+    const privateKeyDer = privateKey.toStringDer();
+    const publicKeyDer = publicKey.toStringDer();
 
     if (isList) {
-        response.privateKeys.push(privateKey);
+        response.privateKeys.push(privateKeyDer);
     }
 
-    return { key: publicKey, privateKeys: response.privateKeys };
+    return { key: publicKeyDer, privateKeys: response.privateKeys };
 };
 
 const handleKeyList = (
@@ -181,38 +161,18 @@ const handleKeyList = (
 const handleEvmAddress = (
     response: KeyGenerationResponse,
     params?: KeyGenerationParams,
-) => {
+    isList?: boolean,
+): KeyGenerationResponse => {
     if (params.fromKey) {
-        try {
-            const key = getKeyFromString(params.fromKey);
-            if (key instanceof PublicKey) {
-                return {
-                    key: key.toEvmAddress(),
-                    privateKeys: response.privateKeys,
-                };
-            } else if (key instanceof PrivateKey) {
-                return {
-                    key: key.publicKey.toEvmAddress(),
-                    privateKeys: response.privateKeys,
-                };
-            } else {
-                return invalidParamError<KeyGenerationResponse>(
-                    "fromKey for evmAddress is not ECDSAsecp256k1",
-                );
-            }
-        } catch (error) {
-            return invalidParamError<KeyGenerationResponse>(error.message);
-        }
+        return getEvmAddressFromKey(params.fromKey, response);
     }
-    try {
-        const privateKey = PrivateKey.generateECDSA();
-        return {
-            key: privateKey.publicKey.toEvmAddress(),
-            privateKeys: [privateKey.toStringDer()],
-        };
-    } catch (error) {
-        return invalidParamError<KeyGenerationResponse>(error.message);
-    }
+
+    // Generate new EVM address if fromKey is not provided
+    const privateKey = PrivateKey.generateECDSA();
+    return {
+        key: privateKey.publicKey.toEvmAddress(),
+        privateKeys: [privateKey.toStringDer()],
+    };
 };
 
 const keyHandlers: {
