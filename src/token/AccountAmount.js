@@ -46,7 +46,7 @@ export default class AccountAmount {
     }
 
     /**
-     * @returns {Long?}
+     * @returns {Long}
      */
     get amount() {
         return this._amount;
