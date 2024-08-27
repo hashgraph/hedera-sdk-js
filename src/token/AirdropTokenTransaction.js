@@ -11,10 +11,7 @@ import TokenTransfer from "./AirdropTokenTransfer.js";
  * @typedef {import("@hashgraph/proto").proto.AccountID} HashgraphProto.proto.AccountID
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITokenRejectTransactionBody} HashgraphProto.proto.ITokenRejectTransactionBody
- * @typedef {import("@hashgraph/proto").proto.TokenReference} HashgraphProto.proto.TokenReference
  */
 
 /**
@@ -51,7 +48,6 @@ export default class AirdropTokenTransaction extends Transaction {
      * @returns {this}
      */
     setTokenTransfers(tokenTransfers) {
-        console.log(tokenTransfers.length);
         this._tokenTransfers = tokenTransfers;
         return this;
     }
