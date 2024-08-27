@@ -868,8 +868,7 @@ export default class Transaction extends Executable {
         const publicKeyHex = hex.encode(publicKeyData);
 
         if (!this._signerPublicKeys.has(publicKeyHex)) {
-            // If the public key hasn't signed the transaction, there's nothing to remove
-            return this;
+            throw new Error("The public key has not signed this transaction");
         }
 
         // Iterate over the signed transactions and remove matching signatures
