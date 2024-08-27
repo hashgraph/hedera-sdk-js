@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.AccountAmount} Hashgraph.proto.AccountAmount
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} Hashgraph.proto.IAccountAmount
  */
 
 import Long from "long";
@@ -15,7 +15,7 @@ export default class AccountAmount {
      */
     constructor(props = {}) {
         this._accountId = null;
-        this._amount = null;
+        this._amount = Long.ZERO;
         this._isApproval = null;
 
         if (props.accountId != null) {
@@ -78,19 +78,19 @@ export default class AccountAmount {
     }
 
     /**
-     * @returns {Hashgraph.proto.AccountAmount}
+     * @returns {Hashgraph.proto.IAccountAmount}
      */
     _toProtobuf() {
         return {
             accountID:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
-            amount: this._amount != null ? this._amount : Long.ZERO,
+            amount: this._amount,
             isApproval: this._isApproval != null ? this._isApproval : false,
         };
     }
 
     /**
-     * @param {Hashgraph.proto.AccountAmount} pb
+     * @param {Hashgraph.proto.IAccountAmount} pb
      * @returns {AccountAmount}
      */
     static _fromProtobuf(pb) {
@@ -99,7 +99,7 @@ export default class AccountAmount {
                 pb.accountID != null
                     ? AccountId._fromProtobuf(pb.accountID)
                     : undefined,
-            amount: pb.amount,
+            amount: pb.amount != null ? pb.amount : Long.ZERO,
             isApproval: pb.isApproval,
         });
     }
