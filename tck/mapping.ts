@@ -14,7 +14,6 @@ export default async function mapMethods({
 
     let currentObject: any = new cl();
     for (let { name, param } of methods) {
-        console.log(`.${name}(${param})`);
         if (param === "client") {
             param = sdk.getClient();
         }

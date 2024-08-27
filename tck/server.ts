@@ -91,7 +91,7 @@ const exceptionMiddleware = async (
             return createJSONRPCErrorResponse(
                 request.id,
                 -32602,
-                "Internal error",
+                "Invalid params error",
                 {
                     message: errorMessage,
                 },
@@ -102,18 +102,11 @@ const exceptionMiddleware = async (
             `Internal error occurred processing JSON-RPC request: ${requestMethod} \nError: ${errorMessage}`,
         );
 
-        let parsedError: Error;
-
-        try {
-            parsedError = JSON.parse(error.toString().substring(7));
-        } catch (parseError) {}
-
         return createJSONRPCErrorResponse(
             request.id,
             -32603,
             "Internal error",
             {
-                ...parsedError,
                 message: errorMessage,
             },
         );
