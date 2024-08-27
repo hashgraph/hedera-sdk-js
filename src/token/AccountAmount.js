@@ -4,7 +4,7 @@
  */
 
 import Long from "long";
-import { AccountId } from "../exports.js";
+import AccountId from "../account/AccountId.js";
 
 export default class AccountAmount {
     /**
