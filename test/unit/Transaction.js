@@ -335,7 +335,7 @@ describe("Transaction", function () {
                 .freeze();
         });
 
-        function signAndAddSignatures(transaction, ...keys) {
+        const signAndAddSignatures = (transaction, ...keys) => {
             // Map through the keys to sign the transaction and add signatures
             const signatures = keys.map((key) => {
                 const signature = key.signTransaction(transaction);
@@ -343,7 +343,7 @@ describe("Transaction", function () {
             });
 
             return signatures;
-        }
+        };
 
         it("should remove a specific signature", function () {
             // Sign the transaction with multiple keys
