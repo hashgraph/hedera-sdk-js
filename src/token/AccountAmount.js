@@ -100,7 +100,7 @@ export default class AccountAmount {
                     ? AccountId._fromProtobuf(pb.accountID)
                     : undefined,
             amount: pb.amount != null ? pb.amount : Long.ZERO,
-            isApproval: pb.isApproval,
+            isApproval: pb.isApproval != null ? pb.isApproval : false,
         });
     }
 }
