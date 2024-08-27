@@ -314,7 +314,7 @@ describe("Transaction", function () {
         });
     });
 
-    describe.only("Transaction removeSignature/clearAllSignatures methods", function () {
+    describe("Transaction removeSignature/clearAllSignatures methods", function () {
         let key1, key2, key3;
         let transaction;
 
@@ -354,6 +354,7 @@ describe("Transaction", function () {
                 key3,
             );
 
+            //Check if the transaction internal tracking of signer public keys is correct
             expect(transaction._signerPublicKeys.size).to.equal(3);
             expect(transaction._publicKeys.length).to.equal(3);
             expect(transaction._transactionSigners.length).to.equal(3);
@@ -368,6 +369,7 @@ describe("Transaction", function () {
             //Check if the transaction is frozen
             expect(transaction.isFrozen()).to.be.true;
 
+            //Check if the transaction internal tracking of signer public keys is correct
             expect(transaction._signerPublicKeys.size).to.equal(2);
             expect(transaction._publicKeys.length).to.equal(2);
             expect(transaction._transactionSigners.length).to.equal(2);
@@ -391,7 +393,7 @@ describe("Transaction", function () {
             //Check if the transaction is frozen
             expect(transaction.isFrozen()).to.be.true;
 
-            //Check if the transaction keys are empty
+            //Check if the transaction internal tracking of signer public keys is cleared
             expect(transaction._signerPublicKeys.size).to.equal(0);
             expect(transaction._publicKeys.length).to.equal(0);
             expect(transaction._transactionSigners.length).to.equal(0);

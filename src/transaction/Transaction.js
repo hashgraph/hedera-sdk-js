@@ -876,12 +876,9 @@ export default class Transaction extends Executable {
             if (transaction.sigMap && transaction.sigMap.sigPair) {
                 transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
                     (sigPair) => {
-                        let sigPairPublicKeyHex;
-                        if (sigPair.pubKeyPrefix) {
-                            sigPairPublicKeyHex = hex.encode(
-                                sigPair.pubKeyPrefix,
-                            );
-                        }
+                        let sigPairPublicKeyHex = hex.encode(
+                            sigPair?.pubKeyPrefix || new Uint8Array(),
+                        );
 
                         const matchesPublicKey =
                             sigPairPublicKeyHex === publicKeyHex;
@@ -944,9 +941,9 @@ export default class Transaction extends Executable {
         }
 
         // Clear the internal tracking of signer public keys and other relevant arrays
-        this._signerPublicKeys.clear(); // Clear the map of signer public keys
-        this._publicKeys = []; // Clear the array of public keys
-        this._transactionSigners = []; // Clear the array of transaction signers
+        this._signerPublicKeys.clear();
+        this._publicKeys = [];
+        this._transactionSigners = [];
 
         return this;
     }
