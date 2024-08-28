@@ -1,13 +1,15 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import AccountAmount from "./AccountAmount.js";
-import TokenTransfer from "./AirdropTokenTransfer.js";
-import AirdropNftTransfer from "./AirdropNftTransfer.js";
+import TokenTransfer from "./TokenTransfer.js";
+import NftTransfer from "./TokenNftTransfer.js";
 
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.ITokenAirdropTransactionBody} HashgraphProto.proto.ITokenAirdropTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.AccountAmount} HashgraphProto.proto.AccountAmount
+ * @typedef {import("@hashgraph/proto").proto.NftTransfer} HashgraphProto.proto.NftTransfer
+ * @typedef {import("@hashgraph/proto").proto.TokenTransferList} HashgraphProto.proto.TokenTransferList
  * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
  * @typedef {import("@hashgraph/proto").proto.TransactionID} HashgraphProto.proto.TransactionID
  * @typedef {import("@hashgraph/proto").proto.AccountID} HashgraphProto.proto.AccountID
@@ -25,8 +27,8 @@ import AirdropNftTransfer from "./AirdropNftTransfer.js";
 export default class AirdropTokenTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {TokenTransfer[]} [props.tokenTransfer]
-     * @param {[]} [props.tokenTransfer]
+     * @param {TokenTransfer[]} [props.tokenTransfers]
+     * @param {NftTransfer[]} [props.nftTransfers]
      */
     constructor(props = {}) {
         super();
@@ -36,21 +38,31 @@ export default class AirdropTokenTransaction extends Transaction {
          */
         this._tokenTransfers = [];
 
-        if (props.tokenTransfer != null) {
-            this.setTokenTransfers(props.tokenTransfer);
+        if (props.tokenTransfers != null) {
+            this.setTokenTransfers(props.tokenTransfers);
+        }
+
+        /**
+         * @private
+         * @type {NftTransfer[]}
+         */
+        this._nftTransfers = [];
+
+        if (props.nftTransfers != null) {
+            this.setNftTransfers(props.nftTransfers);
         }
     }
 
     /**
-     * @returns {TokenTransfer[]}
+     * @returns {Map<TokenId, Map<AccountId, Long>>}
      */
-    /*
     get tokenTransfers() {
-        return this._tokenTransfers.filter((tokenTransfer) => {
+        const result = new Map();
+        return result;
+        /*return this._tokenTransfers.filter((tokenTransfer) => {
             return tokenTransfer.accountAmounts.length > 0;
-        });
+        });*/
     }
-    */
 
     /**
      * @returns {Map<AccountId,Map<TokenId,Long>>}
@@ -98,15 +110,13 @@ export default class AirdropTokenTransaction extends Transaction {
      * @param {Long} amount
      */
     addTokenTransfer(tokenId, accountId, amount) {
-        const nonApproved = false;
-        const accountAmount = new AccountAmount({
-            accountId,
-            amount,
-            isApproval: nonApproved,
-        });
+        const NON_APPROVED = false;
         const tokenTransfer = new TokenTransfer({
             tokenId,
-            accountAmounts: [accountAmount],
+            accountId: accountId,
+            amount: amount,
+            isApproved: NON_APPROVED,
+            expectedDecimals: null,
         });
         this._tokenTransfers.push(tokenTransfer);
     }
@@ -119,15 +129,13 @@ export default class AirdropTokenTransaction extends Transaction {
      * @returns {this}
      */
     addApprovedTokenTransfer(tokenId, accountId, amount) {
-        const isApproval = true;
-        const accountAmount = new AccountAmount({
-            accountId,
-            amount,
-            isApproval,
-        });
+        const APPROVED = true;
         const tokenTransfer = new TokenTransfer({
             tokenId,
-            accountAmounts: [accountAmount],
+            accountId: accountId,
+            amount: amount,
+            isApproved: APPROVED,
+            expectedDecimals: null,
         });
         this._tokenTransfers.push(tokenTransfer);
         return this;
@@ -147,16 +155,13 @@ export default class AirdropTokenTransaction extends Transaction {
         amount,
         expectedDecimals,
     ) {
-        const isApproval = true;
-        const accountAmount = new AccountAmount({
-            accountId,
-            amount,
-            isApproval,
-        });
+        const IS_APPROVED = true;
         const tokenTransfer = new TokenTransfer({
             tokenId,
-            accountAmounts: [accountAmount],
-            expectedDecimals,
+            accountId,
+            amount,
+            isApproved: IS_APPROVED,
+            expectedDecimals: expectedDecimals,
         });
         this._tokenTransfers.push(tokenTransfer);
         return this;
@@ -171,15 +176,12 @@ export default class AirdropTokenTransaction extends Transaction {
      * @returns {this}
      */
     addTokenTransferWithDecimals(tokenId, accountId, amount, expectedDecimals) {
-        const isApproval = false;
-        const accountAmount = new AccountAmount({
-            accountId,
-            amount,
-            isApproval,
-        });
+        const IS_APPROVED = false;
         const tokenTransfer = new TokenTransfer({
             tokenId,
-            accountAmounts: [accountAmount],
+            accountId,
+            amount,
+            isApproved: IS_APPROVED,
             expectedDecimals,
         });
         this._tokenTransfers.push(tokenTransfer);
@@ -192,18 +194,16 @@ export default class AirdropTokenTransaction extends Transaction {
      * @param {AccountId} receiverAccountId
      */
     addNftTransfer(nftId, senderAccountId, receiverAccountId) {
-        const isApproved = true;
+        const isApproved = false;
 
-        const nftTransfer = new AirdropNftTransfer({
+        const nftTransfer = new NftTransfer({
+            tokenId: nftId.tokenId,
             senderAccountId,
             receiverAccountId,
-            isApproved,
             serialNumber: nftId.serial,
+            isApproved,
         });
-        const tokenTransfer = new TokenTransfer({
-            tokenNftTransfers: [nftTransfer],
-        });
-        this._tokenTransfers.push(tokenTransfer);
+        this._nftTransfers.push(nftTransfer);
     }
 
     /**
@@ -215,17 +215,14 @@ export default class AirdropTokenTransaction extends Transaction {
      */
     addApprovedNftTransfer(nftId, sender, receiver) {
         const isApproved = true;
-        const nftTransfer = new AirdropNftTransfer({
+        const nftTransfer = new NftTransfer({
             senderAccountId: sender,
             receiverAccountId: receiver,
             serialNumber: nftId.serial,
+            tokenId: nftId.tokenId,
             isApproved,
         });
-        const tokenTransfer = new TokenTransfer({
-            tokenId: nftId.tokenId,
-            tokenNftTransfers: [nftTransfer],
-        });
-        this._tokenTransfers.push(tokenTransfer);
+        this._nftTransfers.push(nftTransfer);
         return this;
     }
 
@@ -248,13 +245,73 @@ export default class AirdropTokenTransaction extends Transaction {
     }
 
     /**
+     * @param {NftTransfer[]} nftTransfers
+     * @returns {this}
+     */
+    setNftTransfers(nftTransfers) {
+        this._nftTransfers = nftTransfers;
+        return this;
+    }
+
+    /**
      * @returns {HashgraphProto.proto.ITokenAirdropTransactionBody}
      */
     _makeTransactionData() {
+        /**
+         * @type {HashgraphProto.proto.AccountAmount[]}
+         */
+        const tokenTransfers = this._tokenTransfers.map((tokenTransfer) => {
+            return {
+                accountId: tokenTransfer.accountId._toProtobuf(),
+                amount: tokenTransfer.amount,
+                isApproval: tokenTransfer.isApproved,
+            };
+        });
+
+        /**
+         * @type {HashgraphProto.proto.NftTransfer[]}
+         */
+        const nftTransfers = this._nftTransfers.map((nftTransfer) => {
+            return {
+                senderAccountId: nftTransfer.senderAccountId._toProtobuf(),
+                isApproval: nftTransfer.isApproved,
+                receiverAccountId: nftTransfer.receiverAccountId._toProtobuf(),
+                serialNumber: nftTransfer.serialNumber,
+            };
+        });
+
+        const tokenTransferWithId = this._tokenTransfers.find(
+            (tokenTransfer) => {
+                return tokenTransfer.tokenId != null;
+            },
+        );
+        const tokenId = tokenTransferWithId?.tokenId;
+
+        const tokenTransferWithDecimals = this._tokenTransfers.find(
+            (tokenTransfer) => {
+                return tokenTransfer.expectedDecimals != null;
+            },
+        );
+        const expectedDecimals = tokenTransferWithDecimals?.expectedDecimals;
+
+        if (tokenId == null) {
+            throw new Error("Token ID is required");
+        }
+
+        /**
+         * @type {HashgraphProto.proto.TokenTransferList}
+         */
+        const tokenTransfersList = {
+            transfers: tokenTransfers,
+            nftTransfers: nftTransfers,
+            token: tokenId._toProtobuf(),
+            expectedDecimals: {
+                value: expectedDecimals,
+            },
+        };
+
         return {
-            tokenTransfers: this._tokenTransfers.map((tokenTransfer) =>
-                tokenTransfer._toProtobuf(),
-            ),
+            tokenTransfers: [tokenTransfersList],
         };
     }
 
@@ -280,12 +337,17 @@ export default class AirdropTokenTransaction extends Transaction {
                 body.tokenAirdrop
             );
 
+        const tokenTransfers = TokenTransfer._fromProtobuf(
+            tokenAirdrop.tokenTransfers ?? [],
+        );
+        const nftTransfers = NftTransfer._fromProtobuf(
+            tokenAirdrop.tokenTransfers ?? [],
+        );
+
         return Transaction._fromProtobufTransactions(
             new AirdropTokenTransaction({
-                tokenTransfer: tokenAirdrop.tokenTransfers?.map(
-                    (tokenTransfer) =>
-                        TokenTransfer._fromProtobuf(tokenTransfer),
-                ),
+                nftTransfers: nftTransfers,
+                tokenTransfers: tokenTransfers,
             }),
             transactions,
             signedTransactions,
