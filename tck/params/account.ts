@@ -11,3 +11,17 @@ export interface CreateAccountParams {
     readonly autoRenewPeriod?: number;
     readonly alias?: string;
 }
+
+export interface UpdateAccountParams {
+    readonly accountId?: string;
+    readonly key?: string;
+    readonly autoRenewPeriod?: number;
+    readonly expirationTime?: number;
+    readonly receiverSignatureRequired?: boolean;
+    readonly memo?: string;
+    readonly maxAutoTokenAssociations?: number;
+    readonly stakedAccountId?: string;
+    readonly stakedNodeId?: number;
+    readonly declineStakingReward?: boolean;
+    readonly commonTransactionParams?: Record<string, any>;
+}
