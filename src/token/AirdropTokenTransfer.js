@@ -4,7 +4,7 @@
  */
 import AccountAmount from "./AccountAmount.js";
 import TokenId from "./TokenId.js";
-import TokenNftTransfer from "./TokenNftTransfer.js";
+import TokenNftTransfer from "./AirdropNftTransfer.js";
 
 export default class TokenTransfer {
     /**
