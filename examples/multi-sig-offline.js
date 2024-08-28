@@ -9,6 +9,8 @@ import {
     Transaction,
 } from "@hashgraph/sdk";
 
+import PublicKey from "../src/PublicKey.js";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -38,51 +40,53 @@ async function main() {
     user1Key = PrivateKey.generate();
     user2Key = PrivateKey.generate();
 
-    console.log(`private key for user 1= ${user1Key.toString()}`);
-    console.log(`public key for user 1= ${user1Key.publicKey.toString()}`);
-    console.log(`private key for user 2= ${user2Key.toString()}`);
-    console.log(`public key for user 2= ${user2Key.publicKey.toString()}`);
+    console.log(PublicKey.fromString(user1Key.publicKey.toString()));
 
-    // create a multi-sig account
-    const keyList = new KeyList([user1Key, user2Key]);
+    // console.log(`private key for user 1= ${user1Key.toString()}`);
+    // console.log(`public key for user 1= ${user1Key.publicKey.toString()}`);
+    // console.log(`private key for user 2= ${user2Key.toString()}`);
+    // console.log(`public key for user 2= ${user2Key.publicKey.toString()}`);
 
-    const createAccountTransaction = new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(2)) // 5 h
-        .setKey(keyList);
+    // // create a multi-sig account
+    // const keyList = new KeyList([user1Key, user2Key]);
 
-    const response = await createAccountTransaction.execute(client);
+    // const createAccountTransaction = new AccountCreateTransaction()
+    //     .setInitialBalance(new Hbar(2)) // 5 h
+    //     .setKey(keyList);
 
-    let receipt = await response.getReceipt(client);
+    // const response = await createAccountTransaction.execute(client);
 
-    console.log(`account id = ${receipt.accountId.toString()}`);
+    // let receipt = await response.getReceipt(client);
 
-    // create a transfer from new account to 0.0.3
-    const transferTransaction = new TransferTransaction()
-        .setNodeAccountIds([new AccountId(3)])
-        .addHbarTransfer(receipt.accountId, -1)
-        .addHbarTransfer("0.0.3", 1)
-        .freezeWith(client);
+    // console.log(`account id = ${receipt.accountId.toString()}`);
 
-    // convert transaction to bytes to send to signatories
-    const transactionBytes = transferTransaction.toBytes();
-    const transactionToExecute = Transaction.fromBytes(transactionBytes);
+    // // create a transfer from new account to 0.0.3
+    // const transferTransaction = new TransferTransaction()
+    //     .setNodeAccountIds([new AccountId(3)])
+    //     .addHbarTransfer(receipt.accountId, -1)
+    //     .addHbarTransfer("0.0.3", 1)
+    //     .freezeWith(client);
 
-    // ask users to sign and return signature
-    const user1Signature = user1Signs(transactionBytes);
-    const user2Signature = user2Signs(transactionBytes);
+    // // convert transaction to bytes to send to signatories
+    // const transactionBytes = transferTransaction.toBytes();
+    // const transactionToExecute = Transaction.fromBytes(transactionBytes);
 
-    try {
-        // recreate the transaction from bytes
-        await transactionToExecute.signWithOperator(client);
-        transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
-        transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+    // // ask users to sign and return signature
+    // const user1Signature = user1Signs(transactionBytes);
+    // const user2Signature = user2Signs(transactionBytes);
 
-        const result = await transactionToExecute.execute(client);
-        receipt = await result.getReceipt(client);
-        console.log(`Status: ${receipt.status.toString()}`);
-    } catch (error) {
-        console.error(error);
-    }
+    // try {
+    //     // recreate the transaction from bytes
+    //     await transactionToExecute.signWithOperator(client);
+    //     transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
+    //     transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+
+    //     const result = await transactionToExecute.execute(client);
+    //     receipt = await result.getReceipt(client);
+    //     console.log(`Status: ${receipt.status.toString()}`);
+    // } catch (error) {
+    //     console.error(error);
+    // }
 
     client.close();
 }

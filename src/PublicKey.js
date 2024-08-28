@@ -22,6 +22,7 @@ import * as cryptography from "@hashgraph/cryptography";
 import { arrayEqual } from "./array.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import { asn1DecodeStringDer } from "./asn1Decoder.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -82,6 +83,15 @@ export default class PublicKey extends Key {
      * @returns {PublicKey}
      */
     static fromString(text) {
+        console.log(asn1DecodeStringDer(text));
+
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.keyTypes.includes("ed25519")) {
+            return new PublicKey(
+                cryptography.PublicKey.fromStringED25519(text),
+            );
+        }
         return new PublicKey(cryptography.PublicKey.fromString(text));
     }
 
