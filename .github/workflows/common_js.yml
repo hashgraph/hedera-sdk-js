@@ -21,7 +21,7 @@ permissions:
 jobs:
   test-integration-node:
     name: Integration Tests on Node ${{ matrix.node }}
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: client-sdk-linux-large
     strategy:
       matrix:
         node: [ "16", "18" ]
