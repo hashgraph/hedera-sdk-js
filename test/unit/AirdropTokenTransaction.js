@@ -2,146 +2,102 @@ import { expect } from "chai";
 import {
     AccountId,
     AirdropTokenTransaction,
+    NftId,
     TokenId,
 } from "../../src/index.js";
-import TokenTransfer from "../../src/token/TokenTransfer.js";
-import AccountAmount from "../../src/token/AccountAmount.js";
 
-import TokenNftTransfer from "../../src/token/TokenNftTransfer.js";
-
-describe("Transaction", function () {
+describe("AirdropTokenTransaction", function () {
     it("from | toBytes", async function () {
-        const USER = new AccountId(0, 0, 100);
-        const TOKEN_ID = new TokenId(0, 0, 1);
-        const NFT_ID = 1;
-        const IS_APPROVAL = true;
+        const SENDER = new AccountId(0, 0, 100);
+        const RECEIVER = new AccountId(0, 0, 101);
+        const TOKEN_IDS = [
+            new TokenId(0, 0, 1),
+            new TokenId(0, 0, 2),
+            new TokenId(0, 0, 3),
+            new TokenId(0, 0, 4),
+        ];
+        const NFT_IDS = [
+            new NftId(TOKEN_IDS[0], 1),
+            new NftId(TOKEN_IDS[0], 2),
+        ];
         const AMOUNT = 1000;
+        const EXPECTED_DECIMALS = 1;
 
-        let accountAmount = new AccountAmount()
-            .setAccountId(USER)
-            .setIsApproval(IS_APPROVAL)
-            .setAmount(AMOUNT);
-
-        let nftTransfer = new TokenNftTransfer({
-            isApproved: true,
-            receiverAccountId: USER,
-            senderAccountId: USER,
-            serialNumber: NFT_ID,
-            tokenId: TOKEN_ID,
-        });
-
-        let tokenTransfer = new TokenTransfer()
-            .setAccountAmounts([accountAmount])
-            .setTokenNftTransfers([nftTransfer])
-            .setTokenId(TOKEN_ID)
-            .setExpectedDecimals(1);
-
-        const transaction = new AirdropTokenTransaction().setTokenTransfers([
-            tokenTransfer,
-        ]);
+        const transaction = new AirdropTokenTransaction()
+            .addTokenTransfer(TOKEN_IDS[0], SENDER, AMOUNT)
+            .addTokenTransferWithDecimals(
+                TOKEN_IDS[1],
+                SENDER,
+                AMOUNT,
+                EXPECTED_DECIMALS,
+            )
+            .addApprovedTokenTransfer(TOKEN_IDS[2], SENDER, AMOUNT)
+            .addApprovedTokenTransferWithDecimals(
+                TOKEN_IDS[3],
+                SENDER,
+                AMOUNT,
+                EXPECTED_DECIMALS,
+            )
+            .addNftTransfer(NFT_IDS[0], SENDER, RECEIVER)
+            .addApprovedNftTransfer(NFT_IDS[1], SENDER, RECEIVER);
 
         const txBytes = transaction.toBytes();
         const tx = AirdropTokenTransaction.fromBytes(txBytes);
 
-        expect(tx.tokenTransfers[0].tokenId).to.deep.equal(TOKEN_ID);
+        // normal token transfer
+        const tokenNormalTransfer = tx._tokenTransfers[0];
+        expect(tokenNormalTransfer.tokenId).to.deep.equal(TOKEN_IDS[0]);
+        expect(tokenNormalTransfer.accountId).to.deep.equal(SENDER);
+        expect(tokenNormalTransfer.amount.toInt()).to.equal(AMOUNT);
 
-        // token transfer tests
-        expect(tx.tokenTransfers[0].expectedDecimals).to.equal(1);
-        expect(tx.tokenTransfers[0].tokenId).to.deep.equal(TOKEN_ID);
-        expect(tx.tokenTransfers.length).to.equal(1);
+        // token transfer with decimals
+        const tokenTransferWithDecimals = tx._tokenTransfers[1];
+        expect(tokenTransferWithDecimals.tokenId).to.deep.equal(TOKEN_IDS[1]);
+        expect(tokenTransferWithDecimals.accountId).to.deep.equal(SENDER);
+        expect(tokenTransferWithDecimals.amount.toInt()).to.equal(AMOUNT);
 
-        // account amount tests
-        expect(tx.tokenTransfers[0].accountAmounts[0].accountId).to.deep.equal(
-            USER,
+        expect(tokenTransferWithDecimals.expectedDecimals).to.equal(
+            EXPECTED_DECIMALS,
         );
-        expect(
-            tx.tokenTransfers[0].accountAmounts[0].amount.toInt(),
-        ).to.deep.equal(accountAmount.amount);
-        expect(tx.tokenTransfers[0].accountAmounts[0].isApproval).to.deep.equal(
-            accountAmount.isApproval,
+
+        // approved token transfer
+        const approvedTokenTransfer = tx._tokenTransfers[2];
+        expect(approvedTokenTransfer.tokenId).to.deep.equal(TOKEN_IDS[2]);
+        expect(approvedTokenTransfer.accountId).to.deep.equal(SENDER);
+        expect(approvedTokenTransfer.amount.toInt()).to.equal(AMOUNT);
+        expect(approvedTokenTransfer.isApproved).to.equal(true);
+
+        // approved token transfer with decimals
+        const approvedTokenTransferWithDecimals = tx._tokenTransfers[3];
+        expect(approvedTokenTransferWithDecimals.tokenId).to.deep.equal(
+            TOKEN_IDS[3],
         );
-        expect(tx.tokenTransfers[0].accountAmounts.length).to.equal(1);
-
-        // nft transfer tests
-        expect(tx.tokenTransfers[0].tokenNftTransfers[0].tokenId).to.deep.equal(
-            TOKEN_ID,
+        expect(approvedTokenTransferWithDecimals.accountId).to.deep.equal(
+            SENDER,
         );
-        expect(
-            tx.tokenTransfers[0].tokenNftTransfers[0].senderAccountId,
-        ).to.deep.equal(USER);
-        expect(
-            tx.tokenTransfers[0].tokenNftTransfers[0].receiverAccountId,
-        ).to.deep.equal(USER);
-        expect(
-            tx.tokenTransfers[0].tokenNftTransfers[0].serialNumber.toInt(),
-        ).to.deep.equal(NFT_ID);
-        expect(
-            tx.tokenTransfers[0].tokenNftTransfers[0].isApproved,
-        ).to.deep.equal(IS_APPROVAL);
-        expect(tx.tokenTransfers[0].tokenNftTransfers.length).to.equal(1);
-    });
+        expect(approvedTokenTransferWithDecimals.amount.toInt()).to.equal(
+            AMOUNT,
+        );
+        expect(approvedTokenTransferWithDecimals.isApproved).to.equal(true);
+        expect(approvedTokenTransferWithDecimals.expectedDecimals).to.equal(
+            EXPECTED_DECIMALS,
+        );
 
-    describe("Token Transfer", function () {
-        let tokenTransfer;
+        // nft transfer
+        const nftTransfer = tx._nftTransfers[0];
+        expect(nftTransfer.tokenId).to.deep.equal(NFT_IDS[0].tokenId);
+        expect(nftTransfer.serialNumber).to.deep.equal(NFT_IDS[0].serial);
+        expect(nftTransfer.senderAccountId).to.deep.equal(SENDER);
+        expect(nftTransfer.receiverAccountId).to.deep.equal(RECEIVER);
 
-        beforeEach(function () {
-            tokenTransfer = new TokenTransfer();
-        });
-
-        it("should set token transfer", function () {
-            const ACCOUNT_AMOUNT = new AccountAmount();
-            tokenTransfer.setAccountAmounts(ACCOUNT_AMOUNT);
-            expect(tokenTransfer.accountAmounts).to.equal(ACCOUNT_AMOUNT);
-        });
-
-        it("should set expected decimals", function () {
-            const EXPECTED_DECIMALS = 1;
-            tokenTransfer.setExpectedDecimals(EXPECTED_DECIMALS);
-            expect(tokenTransfer.expectedDecimals).to.equal(EXPECTED_DECIMALS);
-        });
-
-        it("should set token id", function () {
-            const TOKEN_ID = new TokenId(0, 0, 1);
-            tokenTransfer.setTokenId(TOKEN_ID);
-        });
-
-        it("should set token nft transfers", function () {
-            const TOKEN_NFT_TRANSFER = new TokenNftTransfer({
-                isApproved: true,
-                receiverAccountId: new AccountId(0, 0, 100),
-                senderAccountId: new AccountId(0, 0, 100),
-                serialNumber: 1,
-                tokenId: new TokenId(0, 0, 1),
-            });
-            tokenTransfer.setTokenNftTransfers([TOKEN_NFT_TRANSFER]);
-            expect(tokenTransfer.tokenNftTransfers).to.deep.equal([
-                TOKEN_NFT_TRANSFER,
-            ]);
-        });
-    });
-
-    describe("Account Amount", function () {
-        let accountAmount;
-        beforeEach(function () {
-            accountAmount = new AccountAmount();
-        });
-
-        it("should set account id", function () {
-            const ACCOUNT_ID = new AccountId(0, 0, 100);
-            accountAmount.setAccountId(ACCOUNT_ID);
-            expect(accountAmount.accountId).to.deep.equal(ACCOUNT_ID);
-        });
-
-        it("should set amount", function () {
-            const AMOUNT = 1000;
-            accountAmount.setAmount(AMOUNT);
-            expect(accountAmount.amount).to.equal(AMOUNT);
-        });
-
-        it("should set is approval", function () {
-            const IS_APPROVAL = true;
-            accountAmount.setIsApproval(IS_APPROVAL);
-            expect(accountAmount.isApproval).to.equal(IS_APPROVAL);
-        });
+        // approved nft transfer
+        const approvedNftTransfer = tx._nftTransfers[1];
+        expect(approvedNftTransfer.tokenId).to.deep.equal(NFT_IDS[1].tokenId);
+        expect(approvedNftTransfer.serialNumber).to.deep.equal(
+            NFT_IDS[1].serial,
+        );
+        expect(approvedNftTransfer.senderAccountId).to.deep.equal(SENDER);
+        expect(approvedNftTransfer.receiverAccountId).to.deep.equal(RECEIVER);
+        expect(approvedNftTransfer.isApproved).to.equal(true);
     });
 });
