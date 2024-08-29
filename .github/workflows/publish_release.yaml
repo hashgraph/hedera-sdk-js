@@ -25,7 +25,7 @@ permissions:
 jobs:
   validate-release:
     name: Validate Release
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: client-sdk-linux-medium
 
     outputs:
       # Project tag
@@ -228,7 +228,7 @@ jobs:
 
   run-safety-checks:
     name: Safety Checks
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: client-sdk-linux-medium
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
@@ -262,7 +262,7 @@ jobs:
 
   publish-release:
     name: Publish Release
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: client-sdk-linux-large
     needs:
       - validate-release
       - run-safety-checks
