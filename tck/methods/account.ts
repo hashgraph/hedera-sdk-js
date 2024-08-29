@@ -6,8 +6,10 @@ import {
 } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
-import { getKeyFromString } from "../utils/key";
 import { AccountResponse } from "../response/account";
+
+import { getKeyFromString } from "../utils/key";
+import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
 
 import { CreateAccountParams, UpdateAccountParams } from "../params/account";
 import { applyCommonTransactionParams } from "../params/common-tx-params";
@@ -25,7 +27,9 @@ export const createAccount = async ({
     autoRenewPeriod,
     alias,
 }: CreateAccountParams): Promise<AccountResponse> => {
-    let transaction = new AccountCreateTransaction().setGrpcDeadline(30000);
+    let transaction = new AccountCreateTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
 
     if (key != null) {
         transaction.setKey(getKeyFromString(key));
@@ -77,7 +81,6 @@ export const createAccount = async ({
         );
     }
 
-    // Sign the transaction with the client operator private key if not already signed and submit to a Hedera network
     const txResponse = await transaction.execute(sdk.getClient());
     const receipt = await txResponse.getReceipt(sdk.getClient());
 
@@ -100,7 +103,9 @@ export const updateAccount = async ({
     declineStakingReward,
     commonTransactionParams,
 }: UpdateAccountParams): Promise<AccountResponse> => {
-    let transaction = new AccountUpdateTransaction().setGrpcDeadline(30000);
+    let transaction = new AccountUpdateTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
 
     if (accountId != null) {
         transaction.setAccountId(accountId);
@@ -129,7 +134,6 @@ export const updateAccount = async ({
     }
 
     if (expirationTime != null) {
-        // Convert it to milliseconds
         const expirationTimeInSeconds = new Date(expirationTime * 1000);
         transaction.setExpirationTime(expirationTimeInSeconds);
     }
@@ -154,7 +158,6 @@ export const updateAccount = async ({
         );
     }
 
-    // Sign the transaction with the client operator private key if not already signed and submit to a Hedera network
     const txResponse = await transaction.execute(sdk.getClient());
     const receipt = await txResponse.getReceipt(sdk.getClient());
 
