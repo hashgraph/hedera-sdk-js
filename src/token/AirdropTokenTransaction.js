@@ -14,9 +14,11 @@ import AbstractTokenTransfer from "./AbstractTokenTransfer.js";
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  */
 
 /**
+ * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("./NftId.js").default} NftId
@@ -134,11 +136,32 @@ export default class AirdropTokenTransaction extends AbstractTokenTransfer {
 
     /**
      * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
+     */
+    _execute(channel, request) {
+        return channel.token.airdropTokens(request);
+    }
+
+    /**
+     * @override
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "tokenAirdrop";
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TokenAirdropTransaction:${timestamp.toString()}`;
     }
 }
 
