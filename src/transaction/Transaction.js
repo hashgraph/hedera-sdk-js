@@ -854,9 +854,9 @@ export default class Transaction extends Executable {
     /**
      * This method removes a signature from the transaction based on the public key or signature provided.
      *
-     * @param {PublicKey} publicKey The public key associated with the signature to remove.
-     * @param {Uint8Array} signature - The signature to remove. If omitted, all signatures for the given public key will be removed.
-     * @returns {this}
+     * @param {PublicKey} publicKey - The public key associated with the signature to remove.
+     * @param {Uint8Array} [signature] - The signature to remove. If omitted, all signatures for the given public key will be removed.
+     * @returns {Uint8Array[]} The removed signatures.
      */
     removeSignature(publicKey, signature) {
         // If the transaction isn't frozen, freeze it.
@@ -871,42 +871,22 @@ export default class Transaction extends Executable {
             throw new Error("The public key has not signed this transaction");
         }
 
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
         // Iterate over the signed transactions and remove matching signatures
         for (const transaction of this._signedTransactions.list) {
-            if (transaction.sigMap && transaction.sigMap.sigPair) {
-                transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
-                    (sigPair) => {
-                        let sigPairPublicKeyHex = hex.encode(
-                            sigPair?.pubKeyPrefix || new Uint8Array(),
-                        );
-
-                        const matchesPublicKey =
-                            sigPairPublicKeyHex === publicKeyHex;
-
-                        if (signature) {
-                            let matchesSignature = false;
-
-                            if (sigPair.ed25519) {
-                                matchesSignature =
-                                    hex.encode(sigPair.ed25519) ===
-                                    hex.encode(signature);
-                            } else if (sigPair.ECDSASecp256k1) {
-                                matchesSignature =
-                                    hex.encode(sigPair.ECDSASecp256k1) ===
-                                    hex.encode(signature);
-                            }
-
-                            // Remove the signature only if both the public key and signature match
-                            return !(matchesPublicKey && matchesSignature);
-                        }
-
-                        return !matchesPublicKey;
-                    },
+            const removedSignaturesFromTransaction =
+                this._removeSignaturesFromTransaction(
+                    transaction,
+                    publicKeyHex,
+                    signature,
                 );
-            }
+
+            removedSignatures.push(...removedSignaturesFromTransaction);
         }
 
-        // Remove the public key from internal tracking
+        // Remove the public key from internal tracking if no signatures remain
         this._signerPublicKeys.delete(publicKeyHex);
         this._publicKeys = this._publicKeys.filter(
             (key) => !key.equals(publicKey),
@@ -915,22 +895,25 @@ export default class Transaction extends Executable {
         // Update transaction signers array
         this._transactionSigners.pop();
 
-        return this;
+        return removedSignatures;
     }
 
     /**
-     * This method clears all signatures from the transaction.
+     * This method clears all signatures from the transaction and returns them in a specific format.
      *
-     * It will iterate through all signed transactions, remove all signature pairs from the `sigMap`,
-     * and clear the internal tracking of signer public keys.
+     * It will call collectSignatures to get the removed signatures, then clear all signatures
+     * from the internal tracking.
      *
-     * @returns {this}
+     * @returns {{ [transactionId: string]: { [nodeAccountId: string]: Uint8Array[] } }} The removed signatures in the specified format.
      */
     clearAllSignatures() {
         // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
             this.freeze();
         }
+
+        // Collect all signatures
+        const removedSignatures = this._collectSignaturesInSpecificFormat();
 
         // Iterate over the signed transactions and clear all signatures
         for (const transaction of this._signedTransactions.list) {
@@ -945,7 +928,7 @@ export default class Transaction extends Executable {
         this._publicKeys = [];
         this._transactionSigners = [];
 
-        return this;
+        return removedSignatures;
     }
 
     /**
@@ -1841,6 +1824,164 @@ export default class Transaction extends Executable {
         return HashgraphProto.proto.TransactionResponse.encode(
             response,
         ).finish();
+    }
+
+    /**
+     * Removes signatures from a transaction and collects the removed signatures.
+     *
+     * @param {HashgraphProto.proto.ISignedTransaction} transaction - The transaction object to process.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key.
+     * @param {Uint8Array} [signature] - The signature to remove (optional).
+     * @returns {Uint8Array[]} An array of removed signatures.
+     */
+    _removeSignaturesFromTransaction(transaction, publicKeyHex, signature) {
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
+        if (transaction.sigMap && transaction.sigMap.sigPair) {
+            transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
+                (sigPair) => {
+                    const shouldRemove = this._shouldRemoveSignature(
+                        sigPair,
+                        publicKeyHex,
+                        signature,
+                    );
+
+                    if (shouldRemove) {
+                        if (sigPair.ed25519) {
+                            removedSignatures.push(sigPair.ed25519);
+                        } else if (sigPair.ECDSASecp256k1) {
+                            removedSignatures.push(sigPair.ECDSASecp256k1);
+                        }
+                    }
+
+                    return !shouldRemove;
+                },
+            );
+        }
+
+        return removedSignatures;
+    }
+
+    /**
+     * Determines whether a signature should be removed based on the provided signature pair,
+     * signature, and public key.
+     *
+     * This function compares the public key and optional signature of a signature pair against
+     * the provided public key and signature. It returns `true` if the signature should be removed
+     * (i.e., it matches both the provided public key and signature), otherwise `false`.
+     *
+     * @param {HashgraphProto.proto.ISignaturePair} sigPair - The signature pair object to be evaluated.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key to compare against.
+     * @param {Uint8Array} [signature] - The signature to compare against. (optional)
+     * @returns {boolean} `true` if the signature should be removed based on the public key and signature match, otherwise `false`.
+     */
+    _shouldRemoveSignature = (sigPair, publicKeyHex, signature) => {
+        const sigPairPublicKeyHex = hex.encode(
+            sigPair?.pubKeyPrefix || new Uint8Array(),
+        );
+
+        const matchesPublicKey = sigPairPublicKeyHex === publicKeyHex;
+
+        if (signature) {
+            let matchesSignature = false;
+
+            if (sigPair.ed25519) {
+                matchesSignature =
+                    hex.encode(sigPair.ed25519) === hex.encode(signature);
+            } else if (sigPair.ECDSASecp256k1) {
+                matchesSignature =
+                    hex.encode(sigPair.ECDSASecp256k1) ===
+                    hex.encode(signature);
+            }
+
+            // Remove the signature only if both the public key and signature match
+            return matchesPublicKey && matchesSignature;
+        }
+
+        return matchesPublicKey;
+    };
+
+    /**
+     * Collects all signatures from signed transactions and returns them in a specific format.
+     *
+     * @returns {{ [transactionId: string]: { [nodeAccountId: string]: Uint8Array[] } }} The collected signatures in the specified format.
+     */
+    _collectSignaturesInSpecificFormat() {
+        /** @type {{ [transactionId: string]: { [nodeAccountId: string]: Uint8Array[] } }} */
+        const collectedSignatures = {};
+
+        // Iterate over the signed transactions and collect signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (
+                transaction?.bodyBytes?.byteLength === 0 ||
+                transaction.bodyBytes == null
+            ) {
+                continue;
+            }
+
+            // Extract transaction details
+            const { transactionId, nodeAccountId } =
+                this._extractSignedTransactionDetails(transaction.bodyBytes);
+
+            if (!transactionId || !nodeAccountId) {
+                continue;
+            }
+
+            // Initialize the structure for this transactionId and nodeAccountId
+            if (!collectedSignatures[transactionId]) {
+                collectedSignatures[transactionId] = {};
+            }
+            if (!collectedSignatures[transactionId][nodeAccountId]) {
+                collectedSignatures[transactionId][nodeAccountId] = [];
+            }
+
+            // Collect the signatures
+            if (transaction.sigMap && transaction.sigMap.sigPair) {
+                for (const sigPair of transaction.sigMap.sigPair) {
+                    if (sigPair.ed25519) {
+                        collectedSignatures[transactionId][nodeAccountId].push(
+                            sigPair.ed25519,
+                        );
+                    } else if (sigPair.ECDSASecp256k1) {
+                        collectedSignatures[transactionId][nodeAccountId].push(
+                            sigPair.ECDSASecp256k1,
+                        );
+                    }
+                }
+            }
+        }
+
+        return collectedSignatures;
+    }
+
+    /**
+     * Extracts the transactionId and nodeAccountId from a TransactionBody.
+     *
+     * @param {Uint8Array} bodyBytes - The bodyBytes to deserialize.
+     * @returns {{ transactionId: string, nodeAccountId: string }} The extracted transactionId and nodeAccountId.
+     */
+    _extractSignedTransactionDetails(bodyBytes) {
+        // Deserialize bodyBytes into TransactionBody
+        const transactionBody = HashgraphProto.proto.TransactionBody.decode(
+            bodyBytes || new Uint8Array(0),
+        );
+
+        // Extract the transactionId
+        const transactionId = TransactionId._fromProtobuf(
+            /** @type {HashgraphProto.proto.ITransactionID} */ (
+                transactionBody.transactionID
+            ),
+        ).toString();
+
+        // Extract the nodeAccountId
+        const nodeAccountId = AccountId._fromProtobuf(
+            /** @type {HashgraphProto.proto.IAccountID} */ (
+                transactionBody.nodeAccountID
+            ),
+        ).toString();
+
+        return { transactionId, nodeAccountId };
     }
 }
 

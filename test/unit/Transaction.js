@@ -340,6 +340,7 @@ describe("Transaction", function () {
             const signatures = keys.map((key) => {
                 const signature = key.signTransaction(transaction);
                 transaction.addSignature(key.publicKey, signature);
+                return signature;
             });
 
             return signatures;
@@ -441,6 +442,98 @@ describe("Transaction", function () {
             expect(signaturesAfterResign.get(new AccountId(3)).size).to.equal(
                 1,
             );
+        });
+
+        it("should return the removed signature in Uint8Array format when removing a specific signature", function () {
+            // Sign the transaction with multiple keys
+            const [signature1] = signAndAddSignatures(
+                transaction,
+                key1,
+                key2,
+                key3,
+            );
+
+            // Remove one signature and capture the returned value
+            const removedSignatures = transaction.removeSignature(
+                key1.publicKey,
+                signature1,
+            );
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("array");
+            expect(removedSignatures.length).to.equal(1);
+            expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
+
+            // Ensure the returned signature is the one that was removed
+            expect(removedSignatures[0]).to.deep.equal(signature1);
+        });
+
+        it("should return the signatures for a public key in Uint8Array format when only the public key is provided", function () {
+            // Sign the transaction with multiple keys
+            const [signature1] = signAndAddSignatures(transaction, key1);
+
+            // Remove all signatures for key1 and capture the returned value
+            const removedSignatures = transaction.removeSignature(
+                key1.publicKey,
+            );
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("array");
+            expect(removedSignatures.length).to.equal(1);
+            expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
+
+            // Ensure the returned signatures are the ones that were removed
+            expect(removedSignatures).to.include.members([signature1]);
+        });
+
+        it("should return all removed signatures in the expected object format when clearing all signatures", function () {
+            // Sign the transaction with multiple keys
+            signAndAddSignatures(transaction, key1, key2, key3);
+
+            // Clear all signatures and capture the returned value
+            const removedSignatures = transaction.clearAllSignatures();
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("object");
+
+            // Ensure the object has the correct structure
+            const nodeAccountId = new AccountId(3).toString();
+            const transactionId = transaction.transactionId.toString();
+
+            expect(removedSignatures).to.have.property(transactionId);
+            expect(removedSignatures[transactionId]).to.have.property(
+                nodeAccountId,
+            );
+            expect(removedSignatures[transactionId][nodeAccountId]).to.be.an(
+                "array",
+            );
+
+            // Ensure the removed signatures are in the expected format
+            const signaturesArray =
+                removedSignatures[transactionId][nodeAccountId];
+            expect(signaturesArray.length).to.equal(3);
+            signaturesArray.forEach((sig) => {
+                expect(sig).to.be.instanceOf(Uint8Array);
+            });
+        });
+
+        it("should return an empty object when no signatures are present", function () {
+            // Ensure the transaction has no signatures
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(0);
+
+            // Ensure the object has the correct structure
+            const nodeAccountId = new AccountId(3).toString();
+            const transactionId = transaction.transactionId.toString();
+
+            // Clear all signatures and capture the returned value
+            const removedSignatures = transaction.clearAllSignatures();
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("object");
+            expect(
+                Object.keys(removedSignatures[transactionId][nodeAccountId]),
+            ).to.have.lengthOf(0);
         });
     });
 });
