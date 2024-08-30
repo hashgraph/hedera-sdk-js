@@ -3,8 +3,9 @@
  * @typedef {import("@hashgraph/proto").proto.PendingAirdropId} HashgraphProto.proto.PendingAirdropId
  */
 
-import { AccountId, NftId, TokenId, TokenType } from "../exports.js";
-import TokenReference from "../token/TokenReference.js";
+import AccountId from "../account/AccountId.js";
+import TokenId from "./TokenId.js";
+import NftId from "./NftId.js";
 
 export default class PendingAirdropId {
     /**
