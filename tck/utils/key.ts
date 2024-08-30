@@ -1,7 +1,7 @@
 import { PrivateKey, PublicKey, KeyList, Key } from "@hashgraph/sdk";
 import { proto } from "@hashgraph/proto";
 
-import { AccountKey } from "../enums/account-key";
+import { AccountKey } from "./enums/account-key";
 import { asn1DecodeStringDer } from "../utils/asn1-decoder";
 
 import { KeyGenerationResponse } from "../response/key";

@@ -1,4 +1,4 @@
-export interface CreateAccountResponse {
-    readonly accountId: string;
+export interface AccountResponse {
+    readonly accountId?: string;
     readonly status: string;
 }

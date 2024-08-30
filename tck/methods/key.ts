@@ -1,4 +1,4 @@
-import { PrivateKey, KeyList, PublicKey } from "@hashgraph/sdk";
+import { PrivateKey, KeyList } from "@hashgraph/sdk";
 
 import { invalidParamError } from "../utils/invalid-param-error";
 import {
@@ -7,8 +7,7 @@ import {
     getEvmAddressFromKey,
     getKeyPairFromParams,
 } from "../utils/key";
-
-import { AccountKey } from "../enums/account-key";
+import { AccountKey } from "../utils/enums/account-key";
 
 import { KeyGenerationParams } from "../params/key";
 import { KeyGenerationResponse } from "../response/key";
