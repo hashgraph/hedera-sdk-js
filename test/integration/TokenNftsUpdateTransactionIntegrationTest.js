@@ -24,6 +24,7 @@ describe("TokenUpdateNftsTransaction", function () {
         nftCount;
 
     before(async function () {
+        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
         client = env.client;
         operatorId = env.operatorId;
