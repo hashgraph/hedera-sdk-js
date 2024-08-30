@@ -294,7 +294,7 @@ describe("TokenUpdateNftsTransaction", function () {
                 ).execute(client)
             ).getReceipt(client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.TokenHasNoMetadataKey);
+            expect(error.status).to.be.eql(Status.InvalidSignature);
         }
     });
 
