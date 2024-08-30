@@ -32,11 +32,6 @@ export default class AirdropTokenTransaction extends AbstractTokenTransfer {
      */
     constructor(props = {}) {
         super();
-        /**
-         * @private
-         * @type {TokenTransfer[]}
-         */
-        this._tokenTransfers = [];
 
         if (props.tokenTransfers != null) {
             for (const tokenTransfer of props.tokenTransfers) {
