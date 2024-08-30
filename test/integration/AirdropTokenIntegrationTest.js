@@ -342,4 +342,76 @@ describe("AccountId", function () {
         }
         expect(err).to.be.eq(true);
     });
+    it("tokens should be in pending state", async function () {
+        this.timeout(1200000);
+        const ftCreateResponse = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("FFF")
+            .setInitialSupply(INITIAL_SUPPLY)
+            .setTreasuryAccountId(env.operatorId)
+            .setSupplyKey(env.operatorKey)
+            .execute(env.client);
+
+        const { tokenId: ftTokenId } = await ftCreateResponse.getReceipt(
+            env.client,
+        );
+
+        const nftCreateResponse = await new TokenCreateTransaction()
+            .setTokenName("FFFFF")
+            .setTokenSymbol("FFF")
+            .setTokenType(TokenType.NonFungibleUnique)
+            .setSupplyKey(env.operatorKey)
+            .setTreasuryAccountId(env.operatorId)
+            .execute(env.client);
+
+        const { tokenId: nftTokenId } = await nftCreateResponse.getReceipt(
+            env.client,
+        );
+
+        const mintResponse = await new TokenMintTransaction()
+            .setTokenId(nftTokenId)
+            .addMetadata(Buffer.from("-"))
+            .execute(env.client);
+
+        const { serials } = await mintResponse.getReceipt(env.client);
+
+        const receiverPrivateKey = PrivateKey.generateED25519();
+        const accountCreateResponse = await new AccountCreateTransaction()
+            .setKey(receiverPrivateKey.publicKey)
+            .execute(env.client);
+
+        const { accountId: receiverId } =
+            await accountCreateResponse.getReceipt(env.client);
+
+        const airdropTokenResponse = await new AirdropTokenTransaction()
+            .addTokenTransfer(ftTokenId, receiverId, INITIAL_SUPPLY)
+            .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
+            .addNftTransfer(nftTokenId, serials[0], env.operatorId, receiverId)
+            .execute(env.client);
+
+        await airdropTokenResponse.getReceipt(env.client);
+
+        const airdropTokenRecord = await airdropTokenResponse.getRecord(
+            env.client,
+        );
+
+        expect(airdropTokenRecord.newPendingAirdrops.length).to.be.above(0);
+
+        const operatorBalance = await new AccountBalanceQuery()
+            .setAccountId(env.operatorId)
+            .execute(env.client);
+        const receiverBalance = await new AccountBalanceQuery()
+            .setAccountId(receiverId)
+            .execute(env.client);
+
+        // FT checks
+        expect(operatorBalance.tokens.get(ftTokenId).toInt()).to.be.eq(
+            INITIAL_SUPPLY,
+        );
+        expect(receiverBalance.tokens.get(ftTokenId)).to.be.eq(null);
+
+        // NFT checks
+        expect(operatorBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
+        expect(receiverBalance.tokens.get(nftTokenId)).to.be.eq(null);
+    });
 });
