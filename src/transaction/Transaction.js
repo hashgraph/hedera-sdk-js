@@ -802,7 +802,7 @@ export default class Transaction extends Executable {
         // Require that only one node is set on this transaction
         // FIXME: This doesn't consider if we have one node account ID set, but we're
         // also a chunked transaction. We should also check transaction IDs is of length 1
-        this._requireOneNodeAccountId();
+        // this._requireOneNodeAccountId();
 
         // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
