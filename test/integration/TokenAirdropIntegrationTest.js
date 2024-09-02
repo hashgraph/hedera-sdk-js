@@ -1,6 +1,6 @@
 import {
     AccountCreateTransaction,
-    AirdropTokenTransaction,
+    TokenAirdropTransaction,
     TokenCreateTransaction,
     TokenMintTransaction,
     TokenType,
@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("AirdropTokenIntegrationTest", function () {
+describe("TokenAirdropIntegrationTest", function () {
     let env;
     const INITIAL_SUPPLY = 1000;
 
@@ -68,7 +68,7 @@ describe("AirdropTokenIntegrationTest", function () {
             await accountCreateResponse.getReceipt(env.client);
 
         // airdrop the tokens
-        const transactionResponse = await new AirdropTokenTransaction()
+        const transactionResponse = await new TokenAirdropTransaction()
             .addNftTransfer(
                 new NftId(nftTokenId, serials[0]),
                 env.operatorId,
@@ -138,7 +138,7 @@ describe("AirdropTokenIntegrationTest", function () {
         const { accountId: receiverId } =
             await accountCreateResponse.getReceipt(env.client);
 
-        const airdropTokenResponse = await new AirdropTokenTransaction()
+        const airdropTokenResponse = await new TokenAirdropTransaction()
             .addTokenTransfer(ftTokenId, receiverId, INITIAL_SUPPLY)
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .addNftTransfer(nftTokenId, serials[0], env.operatorId, receiverId)
@@ -205,7 +205,7 @@ describe("AirdropTokenIntegrationTest", function () {
         const receiverPrivateKey = PrivateKey.generateED25519();
         const aliasAccountId = receiverPrivateKey.publicKey.toAccountId(0, 0);
 
-        const airdropTokenResponse = await new AirdropTokenTransaction()
+        const airdropTokenResponse = await new TokenAirdropTransaction()
             .addTokenTransfer(ftTokenId, aliasAccountId, INITIAL_SUPPLY)
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .addNftTransfer(
@@ -347,7 +347,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         await (
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     .addTokenTransfer(
                         tokenWithFeeId,
                         receiverId,
@@ -443,7 +443,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         let err = false;
         try {
-            const airdropTokenResponse = await new AirdropTokenTransaction()
+            const airdropTokenResponse = await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addNftTransfer(
@@ -471,7 +471,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         try {
             await (
-                await new AirdropTokenTransaction().execute(env.client)
+                await new TokenAirdropTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
             // SHOULD IT FAIL WITH INVALID TX BODY
@@ -484,7 +484,7 @@ describe("AirdropTokenIntegrationTest", function () {
         err = false;
         try {
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     .addTokenTransfer(tokenId, accountId, 1)
                     .addTokenTransfer(tokenId, accountId, 1)
                     .addTokenTransfer(tokenId, accountId, 1)
