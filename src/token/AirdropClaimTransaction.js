@@ -1,0 +1,119 @@
+import PendingAirdropId from "../token/PendingAirdropId.js";
+import AirdropPendingTransaction from "./AirdropPendingTransaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
+
+/**
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenCancelAirdropTransactionBody} HashgraphProto.proto.ITokenCancelAirdropTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITokenClaimAirdropTransactionBody} HashgraphProto.proto.ITokenClaimAirdropTransactionBody
+ */
+
+/**
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../account/AccountId.js").default} AccountId
+ */
+
+export default class AirdropClaimTransaction extends AirdropPendingTransaction {
+    /**
+     * @param {object} props
+     * @param {PendingAirdropId[]} [props.pendingAirdropIds]
+     */
+    constructor(props) {
+        super(props);
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
+     */
+    _execute(channel, request) {
+        return channel.token.claimAirdrop(request);
+    }
+
+    /**
+     * @override
+     * @internal
+     * @returns {HashgraphProto.proto.ITokenClaimAirdropTransactionBody}
+     */
+    _makeTransactionData() {
+        return {
+            pendingAirdrops: this.pendingAirdropIds
+                ? this.pendingAirdropIds.map((pendingAirdropId) =>
+                      pendingAirdropId.toBytes(),
+                  )
+                : undefined,
+        };
+    }
+
+    /**
+     * @internal
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
+     * @returns {AirdropClaimTransaction}
+     */
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies,
+    ) {
+        const body = bodies[0];
+        const { pendingAirdrops } =
+            /** @type {HashgraphProto.proto.ITokenClaimAirdropTransactionBody} */ (
+                body.tokenClaimAirdrop
+            );
+
+        return Transaction._fromProtobufTransactions(
+            new AirdropClaimTransaction({
+                pendingAirdropIds: pendingAirdrops?.map((pendingAirdrop) => {
+                    return PendingAirdropId.fromBytes(pendingAirdrop);
+                }),
+            }),
+            transactions,
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies,
+        );
+    }
+
+    /**
+     * @override
+     * @protected
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
+     */
+    _getTransactionDataCase() {
+        return "tokenClaimAirdrop";
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `AirdropClaimTransaction:${timestamp.toString()}`;
+    }
+}
+
+TRANSACTION_REGISTRY.set(
+    "tokenClaimAirdrop",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    AirdropClaimTransaction._fromProtobuf,
+);

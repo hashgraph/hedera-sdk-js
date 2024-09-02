@@ -34,6 +34,8 @@ export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
 export { default as AirdropTokenTransaction } from "./token/AirdropTokenTransaction.js";
+export { default as AirdropClaimTransaction } from "./token/AirdropClaimTransaction.js";
+export { default as AirdropCancelTransaction } from "./token/AirdropCancelTransaction.js";
 // eslint-disable-next-line deprecation/deprecation
 export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
 export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
