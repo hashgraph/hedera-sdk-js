@@ -16,7 +16,6 @@ import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 import BigNumber from "bignumber.js";
-import { PublicKey } from "@hashgraph/cryptography";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -532,17 +531,6 @@ describe("Transaction", function () {
                     });
                 },
             );
-        });
-
-        it("should return an empty object when no signatures are present", function () {
-            expect(transaction._signerPublicKeys.size).to.equal(0);
-
-            // Clear all signatures and capture the returned value
-            const removedSignatures = transaction.removeAllSignatures();
-
-            // Check the format of the returned value
-            expect(removedSignatures).to.be.an("object");
-            expect(Object.keys(removedSignatures)).to.have.lengthOf(0);
         });
 
         it("should return an empty object when no signatures are present", function () {
