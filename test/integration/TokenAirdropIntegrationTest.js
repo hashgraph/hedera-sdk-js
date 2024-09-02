@@ -97,6 +97,7 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
         //await client.submitTokenAirdrop(transaction);
     });
+
     it("tokens should be in pending state when no automatic association", async function () {
         this.timeout(1200000);
         const ftCreateResponse = await new TokenCreateTransaction()
@@ -150,7 +151,7 @@ describe("TokenAirdropIntegrationTest", function () {
             env.client,
         );
 
-        expect(airdropTokenRecord.newPendingAirdrops.length).to.be.above(0);
+        const { newPendingAirdrops } = airdropTokenRecord;
 
         const operatorBalance = await new AccountBalanceQuery()
             .setAccountId(env.operatorId)
@@ -168,6 +169,32 @@ describe("TokenAirdropIntegrationTest", function () {
         // NFT checks
         expect(operatorBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
         expect(receiverBalance.tokens.get(nftTokenId)).to.be.eq(null);
+
+        // record check
+        expect(newPendingAirdrops.length).to.be.eq(2);
+        expect(newPendingAirdrops[0].airdropId.senderId).deep.equal(
+            env.operatorId,
+        );
+        expect(newPendingAirdrops[0].airdropId.receiverId).deep.equal(
+            receiverId,
+        );
+        expect(newPendingAirdrops[0].airdropId.tokenId).deep.equal(ftTokenId);
+        expect(newPendingAirdrops[0].airdropId.nftId).to.equal(undefined);
+
+        expect(newPendingAirdrops[1].airdropId.senderId).deep.equal(
+            env.operatorId,
+        );
+        expect(newPendingAirdrops[1].airdropId.receiverId).deep.equal(
+            receiverId,
+        );
+        expect(newPendingAirdrops[1].airdropId.tokenId).deep.equal(undefined);
+        expect(newPendingAirdrops[1].airdropId.nftId.tokenId).to.deep.equal(
+            nftTokenId,
+        );
+        expect(newPendingAirdrops[1].airdropId.nftId.serial).to.deep.equal(
+            serials[0],
+        );
+        // expect(newPendingAirdrops[0]);
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
