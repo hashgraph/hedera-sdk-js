@@ -78,7 +78,10 @@ describe("TokenAirdropIntegrationTest", function () {
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .execute(env.client);
 
-        await transactionResponse.getReceipt(env.client);
+        const { newPendingAirdrops } = await transactionResponse.getRecord(
+            env.client,
+        );
+        expect(newPendingAirdrops.length).to.be.eq(0);
 
         const operatorBalance = await new AccountBalanceQuery()
             .setAccountId(env.operatorId)
