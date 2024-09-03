@@ -12,6 +12,7 @@ import {
     TokenPauseTransaction,
     TokenType,
     AirdropClaimTransaction,
+    TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -311,48 +312,37 @@ describe("AirdropClaimIntegrationTest", function () {
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
                 .setTokenSymbol("FFF")
-                .setInitialSupply(100)
+                .setInitialSupply(INITIAL_SUPPLY)
                 .setTreasuryAccountId(env.operatorId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        const receiverKey = await PrivateKey.generateED25519();
+        const receiverKey = PrivateKey.generateED25519();
         const { accountId: receiverId } = await (
             await new AccountCreateTransaction()
                 .setKey(receiverKey)
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        const { tokenId: nftId } = await (
-            await new TokenCreateTransaction()
-                .setTokenName("nft")
-                .setTokenSymbol("NFT")
-                .setTokenType(TokenType.NonFungibleUnique)
-                .setSupplyKey(env.operatorKey)
-                .setSupplyKey(env.operatorKey)
-                .setTreasuryAccountId(env.operatorId)
-                .execute(env.client)
-        ).getReceipt(env.client);
-
-        const { serials } = await (
-            await new TokenMintTransaction()
-                .setTokenId(nftId)
-                .addMetadata(Buffer.from("-"))
-                .execute(env.client)
-        ).getReceipt(env.client);
-
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
-                .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
-                .addTokenTransfer(tokenId, env.operatorId, -100)
-                .addTokenTransfer(tokenId, receiverId, 100)
+            await new TokenAirdropTransaction()
+                .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
+                .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
         ).getRecord(env.client);
+
+        const randomAccountKey = PrivateKey.generateED25519();
+        const { accountId: randomAccountId } = await (
+            await new AccountCreateTransaction()
+                .setKey(randomAccountKey)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         let err = false;
         try {
             await (
                 await new AirdropClaimTransaction()
+                    .setTransactionId(TransactionId.generate(randomAccountId))
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .execute(env.client)
             ).getReceipt(env.client);

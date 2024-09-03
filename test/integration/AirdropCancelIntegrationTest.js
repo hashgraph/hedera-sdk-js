@@ -12,6 +12,7 @@ import {
     TokenAssociateTransaction,
     TokenPauseTransaction,
     TokenDeleteTransaction,
+    TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
@@ -426,7 +427,7 @@ describe("AirdropCancelIntegrationTest", function () {
         expect(operatorBalance.tokens.get(nftId).toInt()).to.be.equal(2);
     });
 
-    it.skip("should not be able to cancel the tokens when they are not airdropped", async function () {
+    it("should not be able to cancel the tokens when they are not airdropped", async function () {
         this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -437,7 +438,7 @@ describe("AirdropCancelIntegrationTest", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        const receiverKey = await PrivateKey.generateED25519();
+        const receiverKey = PrivateKey.generateED25519();
         const { accountId: receiverId } = await (
             await new AccountCreateTransaction()
                 .setKey(receiverKey)
@@ -445,20 +446,30 @@ describe("AirdropCancelIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
         ).getRecord(env.client);
 
-        let err = false;
+        const randomAccountKey = PrivateKey.generateED25519();
+        const { accountId: randomAccountId } = await (
+            await new AccountCreateTransaction()
+                .setKey(randomAccountKey)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
-        // TODO: this fail tests for some reason???
+        let err = false;
+        try {
             await (
                 await new AirdropCancelTransaction()
+                    .setTransactionId(TransactionId.generate(randomAccountId))
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .execute(env.client)
             ).getReceipt(env.client);
+        } catch (error) {
+            err = error.message.includes("INVALID_SIGNATURE");
+        }
 
         expect(err).to.be.true;
     });
