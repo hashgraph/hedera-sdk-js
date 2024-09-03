@@ -15,7 +15,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("AirdropClaimIntegrationTest", function () {
+describe("AirdropCancelIntegrationTest", function () {
     let env;
     const INITIAL_SUPPLY = 1000;
 
@@ -251,7 +251,7 @@ describe("AirdropClaimIntegrationTest", function () {
         );
     });
 
-    it("should claim the tokens to multiple receivers when they are in pending state", async function () {
+    it("should cancel the tokens to multiple receivers when they are in pending state", async function () {
         this.timeout(120000);
 
         // create nft and ft tokens
@@ -463,7 +463,7 @@ describe("AirdropClaimIntegrationTest", function () {
         expect(err).to.be.true;
     });
 
-    it("should not be able to claim the tokens when they are already claimed", async function () {
+    it("should not be able to cancel the tokens when they are already canceled", async function () {
         this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -516,7 +516,7 @@ describe("AirdropClaimIntegrationTest", function () {
             ).execute(env.client)
         ).getReceipt(env.client);
 
-        // reclaim already claimed airdrop
+        // recancel already canceled airdrop
         let err = false;
         try {
             await (
@@ -533,7 +533,7 @@ describe("AirdropClaimIntegrationTest", function () {
         expect(err).to.be.true;
     });
 
-    it("should not be able to claim the tokens with empty list", async function () {
+    it("should not be able to cancel the tokens with empty list", async function () {
         let err = false;
         try {
             await new AirdropCancelTransaction().execute(env.client);
@@ -543,7 +543,7 @@ describe("AirdropClaimIntegrationTest", function () {
         expect(err).to.be.true;
     });
 
-    it("cannot claim the tokens with duplicate entries", async function () {
+    it("cannot cancel the tokens with duplicate entries", async function () {
         this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()

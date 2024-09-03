@@ -442,7 +442,7 @@ describe("AirdropClaimIntegrationTest", function () {
         expect(err).to.be.true;
     });
 
-    it("cannot claim the tokens with duplicate entries", async function () {
+    it("should not claim the tokens with duplicate entries", async function () {
         this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
