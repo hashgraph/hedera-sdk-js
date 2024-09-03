@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("ClaimAirdropIntegrationTest", function () {
+describe("TokenClaimAirdropIntegrationTest", function () {
     let env, tx;
     const INITIAL_SUPPLY = 1000;
 

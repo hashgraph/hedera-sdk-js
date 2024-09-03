@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("CancelAirdropIntegrationTest", function () {
+describe("TokenCancelAirdropIntegrationTest", function () {
     let env;
     const INITIAL_SUPPLY = 1000;
 
