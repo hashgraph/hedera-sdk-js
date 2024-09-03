@@ -2,7 +2,7 @@ import { expect } from "chai";
 import {
     AccountBalanceQuery,
     AccountCreateTransaction,
-    AirdropTokenTransaction,
+    TokenAirdropTransaction,
     PrivateKey,
     TokenAssociateTransaction,
     TokenCreateTransaction,
@@ -65,7 +65,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         // airdrop ft and nft
-        tx = await new AirdropTokenTransaction()
+        tx = await new TokenAirdropTransaction()
             .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
             .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
             .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
@@ -164,7 +164,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         // airdrop ft and nft
-        tx = await new AirdropTokenTransaction()
+        tx = await new TokenAirdropTransaction()
             .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
             .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY / 2)
             .addTokenTransfer(tokenId, receiverId2, INITIAL_SUPPLY / 2)
@@ -264,14 +264,14 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
         ).getRecord(env.client);
 
         const { newPendingAirdrops: newPendingAirdrops2 } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addNftTransfer(nftId, serials2[0], env.operatorId, receiverId)
                 .execute(env.client)
@@ -399,7 +399,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
@@ -461,7 +461,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 //.addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addTokenTransfer(tokenId, env.operatorId, -100)
                 .addTokenTransfer(tokenId, receiverId, 100)
@@ -509,7 +509,7 @@ describe("AirdropClaimIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     //.addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                     .addTokenTransfer(tokenId, env.operatorId, -100)
                     .addTokenTransfer(tokenId, receiverId, 100)
@@ -549,7 +549,7 @@ describe("AirdropClaimIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     //.addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                     .addTokenTransfer(tokenId, env.operatorId, -100)
                     .addTokenTransfer(tokenId, receiverId, 100)
@@ -598,7 +598,7 @@ describe("AirdropClaimIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     //.addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                     .addTokenTransfer(tokenId, env.operatorId, -100)
                     .addTokenTransfer(tokenId, receiverId, 100)

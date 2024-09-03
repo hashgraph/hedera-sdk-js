@@ -4,7 +4,7 @@ import {
     TokenCreateTransaction,
     TokenType,
     PrivateKey,
-    AirdropTokenTransaction,
+    TokenAirdropTransaction,
     TokenMintTransaction,
     AirdropCancelTransaction,
     AccountBalanceQuery,
@@ -59,7 +59,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
@@ -119,7 +119,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
@@ -177,7 +177,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
@@ -224,7 +224,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
@@ -309,7 +309,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         // airdrop ft and nft
-        let tx = await new AirdropTokenTransaction()
+        let tx = await new TokenAirdropTransaction()
             .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
             .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY / 2)
             .addTokenTransfer(tokenId, receiverId2, INITIAL_SUPPLY / 2)
@@ -325,10 +325,10 @@ describe("AirdropClaimIntegrationTest", function () {
 
         await (
             await (
-                await (
-                    await new AirdropCancelTransaction()
-                        .setPendingAirdropIds(pendingAirdropIds)
-                        .freezeWith(env.client)
+        await (
+            await new AirdropCancelTransaction()
+                .setPendingAirdropIds(pendingAirdropIds)
+                .freezeWith(env.client)
                         .sign(receiverPrivateKey)
                 ).sign(receiverPrivateKey2)
             ).execute(env.client)
@@ -392,14 +392,14 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .execute(env.client)
         ).getRecord(env.client);
 
         const { newPendingAirdrops: newPendingAirdrops2 } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addNftTransfer(nftId, serials2[0], env.operatorId, receiverId)
                 .execute(env.client)
@@ -454,11 +454,11 @@ describe("AirdropClaimIntegrationTest", function () {
         let err = false;
 
         // TODO: this fail tests for some reason???
-        await (
-            await new AirdropCancelTransaction()
-                .addPendingAirdropId(newPendingAirdrops[0].airdropId)
-                .execute(env.client)
-        ).getReceipt(env.client);
+            await (
+                await new AirdropCancelTransaction()
+                    .addPendingAirdropId(newPendingAirdrops[0].airdropId)
+                    .execute(env.client)
+            ).getReceipt(env.client);
 
         expect(err).to.be.true;
     });
@@ -500,7 +500,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 .addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
@@ -562,7 +562,7 @@ describe("AirdropClaimIntegrationTest", function () {
         ).getReceipt(env.client);
 
         const { newPendingAirdrops } = await (
-            await new AirdropTokenTransaction()
+            await new TokenAirdropTransaction()
                 //.addNftTransfer(nftId, serials[0], env.operatorId, receiverId)
                 .addTokenTransfer(tokenId, env.operatorId, -100)
                 .addTokenTransfer(tokenId, receiverId, 100)
