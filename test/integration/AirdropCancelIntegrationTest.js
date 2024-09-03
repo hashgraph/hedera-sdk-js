@@ -325,14 +325,10 @@ describe("AirdropCancelIntegrationTest", function () {
         );
 
         await (
-            await (
-        await (
             await new AirdropCancelTransaction()
                 .setPendingAirdropIds(pendingAirdropIds)
                 .freezeWith(env.client)
-                        .sign(receiverPrivateKey)
-                ).sign(receiverPrivateKey2)
-            ).execute(env.client)
+                .execute(env.client)
         ).getReceipt(env.client);
 
         const operatorBalance = await new AccountBalanceQuery()
@@ -407,14 +403,11 @@ describe("AirdropCancelIntegrationTest", function () {
         ).getRecord(env.client);
 
         await (
-            await (
-                await new AirdropCancelTransaction()
-                    .addPendingAirdropId(newPendingAirdrops[0].airdropId)
-                    .addPendingAirdropId(newPendingAirdrops2[0].airdropId)
-                    .addPendingAirdropId(newPendingAirdrops2[1].airdropId)
-                    .freezeWith(env.client)
-                    .sign(receiverKey)
-            ).execute(env.client)
+            await new AirdropCancelTransaction()
+                .addPendingAirdropId(newPendingAirdrops[0].airdropId)
+                .addPendingAirdropId(newPendingAirdrops2[0].airdropId)
+                .addPendingAirdropId(newPendingAirdrops2[1].airdropId)
+                .execute(env.client)
         ).getReceipt(env.client);
 
         const operatorBalance = await new AccountBalanceQuery()
@@ -519,24 +512,18 @@ describe("AirdropCancelIntegrationTest", function () {
         ).getRecord(env.client);
 
         await (
-            await (
-                await new AirdropCancelTransaction()
-                    .addPendingAirdropId(newPendingAirdrops[0].airdropId)
-                    .freezeWith(env.client)
-                    .sign(receiverKey)
-            ).execute(env.client)
+            await new AirdropCancelTransaction()
+                .addPendingAirdropId(newPendingAirdrops[0].airdropId)
+                .execute(env.client)
         ).getReceipt(env.client);
 
         // recancel already canceled airdrop
         let err = false;
         try {
             await (
-                await (
-                    await new AirdropCancelTransaction()
-                        .addPendingAirdropId(newPendingAirdrops[0].airdropId)
-                        .freezeWith(env.client)
-                        .sign(receiverKey)
-                ).execute(env.client)
+                await new AirdropCancelTransaction()
+                    .addPendingAirdropId(newPendingAirdrops[0].airdropId)
+                    .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
             err = error.message.includes("INVALID_PENDING_AIRDROP_ID");
