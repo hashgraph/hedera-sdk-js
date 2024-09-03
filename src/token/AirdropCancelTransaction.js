@@ -50,7 +50,7 @@ export default class AirdropCancelTransaction extends AirdropPendingTransaction 
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.token.claimAirdrop(request);
+        return channel.token.cancelAirdrop(request);
     }
 
     /**
