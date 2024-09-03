@@ -11,12 +11,12 @@ import {
     TokenMintTransaction,
     TokenPauseTransaction,
     TokenType,
-    AirdropClaimTransaction,
+    TokenClaimAirdropTransaction,
     TransactionId,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("AirdropClaimIntegrationTest", function () {
+describe("ClaimAirdropIntegrationTest", function () {
     let env, tx;
     const INITIAL_SUPPLY = 1000;
 
@@ -81,7 +81,7 @@ describe("AirdropClaimIntegrationTest", function () {
         // claim airdrop
         await (
             await (
-                await new AirdropClaimTransaction()
+                await new TokenClaimAirdropTransaction()
                     .addPendingAirdropId(airdropId)
                     .addPendingAirdropId(airdropNftId)
                     .freezeWith(env.client)
@@ -182,7 +182,7 @@ describe("AirdropClaimIntegrationTest", function () {
         await (
             await (
                 await (
-                    await new AirdropClaimTransaction()
+                    await new TokenClaimAirdropTransaction()
                         .setPendingAirdropIds(pendingAirdropIds)
                         .freezeWith(env.client)
                         .sign(receiverPrivateKey)
@@ -280,7 +280,7 @@ describe("AirdropClaimIntegrationTest", function () {
 
         await (
             await (
-                await new AirdropClaimTransaction()
+                await new TokenClaimAirdropTransaction()
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .addPendingAirdropId(newPendingAirdrops2[0].airdropId)
                     .addPendingAirdropId(newPendingAirdrops2[1].airdropId)
@@ -341,7 +341,7 @@ describe("AirdropClaimIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropClaimTransaction()
+                await new TokenClaimAirdropTransaction()
                     .setTransactionId(TransactionId.generate(randomAccountId))
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .execute(env.client)
@@ -398,7 +398,7 @@ describe("AirdropClaimIntegrationTest", function () {
 
         await (
             await (
-                await new AirdropClaimTransaction()
+                await new TokenClaimAirdropTransaction()
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .freezeWith(env.client)
                     .sign(receiverKey)
@@ -410,7 +410,7 @@ describe("AirdropClaimIntegrationTest", function () {
         try {
             await (
                 await (
-                    await new AirdropClaimTransaction()
+                    await new TokenClaimAirdropTransaction()
                         .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                         .freezeWith(env.client)
                         .sign(receiverKey)
@@ -425,7 +425,7 @@ describe("AirdropClaimIntegrationTest", function () {
     it("should not be able to claim the tokens with empty list", async function () {
         let err = false;
         try {
-            await new AirdropClaimTransaction().execute(env.client);
+            await new TokenClaimAirdropTransaction().execute(env.client);
         } catch (error) {
             err = error.message.includes("EMPTY_PENDING_AIRDROP_ID_LIST");
         }
@@ -460,7 +460,7 @@ describe("AirdropClaimIntegrationTest", function () {
 
         let err = false;
         try {
-            await new AirdropClaimTransaction()
+            await new TokenClaimAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .execute(env.client);

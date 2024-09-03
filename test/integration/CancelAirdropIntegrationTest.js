@@ -6,7 +6,7 @@ import {
     PrivateKey,
     TokenAirdropTransaction,
     TokenMintTransaction,
-    AirdropCancelTransaction,
+    TokenCancelAirdropTransaction,
     AccountBalanceQuery,
     TokenFreezeTransaction,
     TokenAssociateTransaction,
@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("AirdropCancelIntegrationTest", function () {
+describe("CancelAirdropIntegrationTest", function () {
     let env;
     const INITIAL_SUPPLY = 1000;
 
@@ -69,7 +69,7 @@ describe("AirdropCancelIntegrationTest", function () {
 
         const [airdrop] = newPendingAirdrops;
         const { airdropId } = airdrop;
-        await new AirdropCancelTransaction()
+        await new TokenCancelAirdropTransaction()
             .addPendingAirdropId(airdropId)
             .execute(env.client);
 
@@ -144,7 +144,7 @@ describe("AirdropCancelIntegrationTest", function () {
 
         const [airdrop] = newPendingAirdrops;
         const { airdropId } = airdrop;
-        await new AirdropCancelTransaction()
+        await new TokenCancelAirdropTransaction()
             .addPendingAirdropId(airdropId)
             .execute(env.client);
 
@@ -192,7 +192,7 @@ describe("AirdropCancelIntegrationTest", function () {
 
         const [airdrop] = newPendingAirdrops;
         const { airdropId } = airdrop;
-        await new AirdropCancelTransaction()
+        await new TokenCancelAirdropTransaction()
             .addPendingAirdropId(airdropId)
             .execute(env.client);
 
@@ -239,7 +239,7 @@ describe("AirdropCancelIntegrationTest", function () {
 
         const [airdrop] = newPendingAirdrops;
         const { airdropId } = airdrop;
-        await new AirdropCancelTransaction()
+        await new TokenCancelAirdropTransaction()
             .addPendingAirdropId(airdropId)
             .execute(env.client);
 
@@ -325,7 +325,7 @@ describe("AirdropCancelIntegrationTest", function () {
         );
 
         await (
-            await new AirdropCancelTransaction()
+            await new TokenCancelAirdropTransaction()
                 .setPendingAirdropIds(pendingAirdropIds)
                 .freezeWith(env.client)
                 .execute(env.client)
@@ -403,7 +403,7 @@ describe("AirdropCancelIntegrationTest", function () {
         ).getRecord(env.client);
 
         await (
-            await new AirdropCancelTransaction()
+            await new TokenCancelAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .addPendingAirdropId(newPendingAirdrops2[0].airdropId)
                 .addPendingAirdropId(newPendingAirdrops2[1].airdropId)
@@ -455,7 +455,7 @@ describe("AirdropCancelIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropCancelTransaction()
+                await new TokenCancelAirdropTransaction()
                     .setTransactionId(TransactionId.generate(randomAccountId))
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .execute(env.client)
@@ -512,7 +512,7 @@ describe("AirdropCancelIntegrationTest", function () {
         ).getRecord(env.client);
 
         await (
-            await new AirdropCancelTransaction()
+            await new TokenCancelAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .execute(env.client)
         ).getReceipt(env.client);
@@ -521,7 +521,7 @@ describe("AirdropCancelIntegrationTest", function () {
         let err = false;
         try {
             await (
-                await new AirdropCancelTransaction()
+                await new TokenCancelAirdropTransaction()
                     .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -534,7 +534,7 @@ describe("AirdropCancelIntegrationTest", function () {
     it("should not be able to cancel the tokens with empty list", async function () {
         let err = false;
         try {
-            await new AirdropCancelTransaction().execute(env.client);
+            await new TokenCancelAirdropTransaction().execute(env.client);
         } catch (error) {
             err = error.message.includes("EMPTY_PENDING_AIRDROP_ID_LIST");
         }
@@ -569,7 +569,7 @@ describe("AirdropCancelIntegrationTest", function () {
 
         let err = false;
         try {
-            await new AirdropCancelTransaction()
+            await new TokenCancelAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .execute(env.client);

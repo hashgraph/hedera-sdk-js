@@ -9,8 +9,8 @@ import {
     TokenType,
     TokenMintTransaction,
     AccountBalanceQuery,
-    AirdropClaimTransaction,
-    AirdropCancelTransaction,
+    TokenClaimAirdropTransaction,
+    TokenCancelAirdropTransaction,
     TokenRejectTransaction,
     NftId,
 } from "@hashgraph/sdk";
@@ -223,7 +223,7 @@ async function main() {
      */
     await (
         await (
-            await new AirdropClaimTransaction()
+            await new TokenClaimAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdrops[0].airdropId)
                 .freezeWith(client)
                 .sign(privateKey3)
@@ -308,7 +308,7 @@ async function main() {
      */
     await (
         await (
-            await new AirdropClaimTransaction()
+            await new TokenClaimAirdropTransaction()
                 .addPendingAirdropId(newPendingAirdropsNfts[0].airdropId)
                 .freezeWith(client)
                 .sign(privateKey2)
@@ -329,7 +329,7 @@ async function main() {
      * Cancel the airdrop for Account 3
      */
     console.log("Cancelling airdrop for account 3");
-    await new AirdropCancelTransaction()
+    await new TokenCancelAirdropTransaction()
         .addPendingAirdropId(newPendingAirdropsNfts[1].airdropId)
         .execute(client);
 

@@ -1,8 +1,8 @@
 import { AccountId, TokenId } from "../../src/exports.js";
-import AirdropCancelTransaction from "../../src/token/AirdropCancelTransaction.js";
+import TokenCancelAirdropTransaction from "../../src/token/TokenCancelAirdropTransaction.js";
 import PendingAirdropId from "../../src/token/PendingAirdropId.js";
 
-describe("AirdropClaimTransaction", function () {
+describe("TokenAirdropCancelTransaction", function () {
     it("from | to bytes", async function () {
         const pendingAirdropId = new PendingAirdropId({
             tokenId: new TokenId(0, 0, 123),
@@ -11,12 +11,12 @@ describe("AirdropClaimTransaction", function () {
             receiverId: new AccountId(0, 0, 987),
         });
 
-        const tx = new AirdropCancelTransaction({
+        const tx = new TokenCancelAirdropTransaction({
             pendingAirdropIds: [pendingAirdropId],
         });
         console.log(tx.toBytes());
 
-        const tx2 = AirdropCancelTransaction.fromBytes(tx.toBytes());
+        const tx2 = TokenCancelAirdropTransaction.fromBytes(tx.toBytes());
 
         expect(tx2.pendingAirdropIds[0]).to.deep.equal(pendingAirdropId);
     });
