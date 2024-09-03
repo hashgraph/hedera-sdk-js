@@ -7,7 +7,6 @@ import Transaction, {
 /**
  * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.ITokenCancelAirdropTransactionBody} HashgraphProto.proto.ITokenCancelAirdropTransactionBody
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
@@ -16,7 +15,6 @@ import Transaction, {
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
- * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
