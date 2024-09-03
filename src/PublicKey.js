@@ -80,28 +80,39 @@ export default class PublicKey extends Key {
      * the DER header.
      *
      * @param {string} text
-     * @returns {PublicKey}
+     * @returns {PublicKey | Error | any}
      */
     static fromString(text) {
-        console.log(asn1DecodeStringDer(text));
-
         const decodedKey = asn1DecodeStringDer(text);
 
         if (decodedKey.keyTypes.includes("ed25519")) {
             return new PublicKey(
                 cryptography.PublicKey.fromStringED25519(text),
             );
+        } else if (decodedKey.keyTypes.includes("ecdsa")) {
+            return new PublicKey(cryptography.PublicKey.fromStringECDSA(text));
         }
-        return new PublicKey(cryptography.PublicKey.fromString(text));
+
+        return Error("Unsupported key type");
     }
 
     /**
      * Parse an ECDSA public key from a string of hexadecimal digits.
      *
      * @param {string} text
-     * @returns {PublicKey}
+     * @returns {PublicKey | Error}
      */
     static fromStringECDSA(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (!decodedKey.isPublicKey) {
+            return Error("Invalid public key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ecdsa")) {
+            return Error("Invalid ECDSA key");
+        }
+
         return new PublicKey(cryptography.PublicKey.fromStringECDSA(text));
     }
 
@@ -109,9 +120,19 @@ export default class PublicKey extends Key {
      * Parse an ED25519 public key from a string of hexadecimal digits.
      *
      * @param {string} text
-     * @returns {PublicKey}
+     * @returns {PublicKey | Error}
      */
     static fromStringED25519(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (!decodedKey.isPublicKey) {
+            return Error("Invalid public key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ed25519")) {
+            return Error("Invalid ED25519 key");
+        }
+
         return new PublicKey(cryptography.PublicKey.fromStringED25519(text));
     }
 

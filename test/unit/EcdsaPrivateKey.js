@@ -27,6 +27,8 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("fromStringRaw and fromStringDer work", function () {
+        console.log(RAW_KEY);
+
         PrivateKey.fromStringDer(
             hex.encode(PrivateKey.fromStringECDSA(RAW_KEY).toBytesDer()),
         );

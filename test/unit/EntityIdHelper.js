@@ -3,6 +3,7 @@ import { expect } from "chai";
 import BigNumber from "bignumber.js";
 import Long from "long";
 import * as EntityIdHelper from "../../src/EntityIdHelper.js";
+import { Mnemonic, PrivateKey } from "../../src/index.js";
 
 describe("EntityIdHelper", function () {
     it("should return hex encoded solidity address using toSolidityAddress", function () {

@@ -23,6 +23,8 @@ const ACCOUNT_INFO_QUERY_COST_RESPONSE = {
     },
 };
 
+console.log(PRIVATE_KEY.publicKey);
+
 const ACCOUNT_INFO_QUERY_RESPONSE = {
     cryptoGetInfo: {
         header: { nodeTransactionPrecheckCode: 0 },

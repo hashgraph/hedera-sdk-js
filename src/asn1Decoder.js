@@ -205,6 +205,7 @@ export const asn1DecodeStringDer = (keyString) => {
     const decoder = new ASN1Decoder(signerData);
 
     decoder.read();
+
     const keyTypes = decoder.getOidKeyTypes();
     const isPublicKey = decoder.isPublicKeyType();
 

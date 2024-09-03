@@ -112,4 +112,15 @@ describe("PublicKey", function () {
         const ed25519PublicKey1 = PublicKey.fromString(PUBLIC_KEY_DER1);
         expect(ed25519PublicKey1.toStringRaw()).to.be.equal(PUBLIC_KEY1);
     });
+
+    it("SaR?", async function () {
+        this.timeout(120000);
+        for (let index = 0; index < 1000; index++) {
+            console.log(
+                PublicKey.fromString(
+                    PrivateKey.generateECDSA().publicKey.toStringDer(),
+                ),
+            );
+        }
+    });
 });
