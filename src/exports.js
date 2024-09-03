@@ -33,7 +33,7 @@ export { default as PublicKey } from "./PublicKey.js";
 export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
-export { default as AirdropTokenTransaction } from "./token/AirdropTokenTransaction.js";
+export { default as TokenAirdropTransaction } from "./token/TokenAirdropTransaction.js";
 export { default as AirdropClaimTransaction } from "./token/AirdropClaimTransaction.js";
 export { default as AirdropCancelTransaction } from "./token/AirdropCancelTransaction.js";
 // eslint-disable-next-line deprecation/deprecation

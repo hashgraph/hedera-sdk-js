@@ -1,6 +1,6 @@
 import {
     AccountCreateTransaction,
-    AirdropTokenTransaction,
+    TokenAirdropTransaction,
     TokenCreateTransaction,
     TokenMintTransaction,
     TokenType,
@@ -16,7 +16,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("AirdropTokenIntegrationTest", function () {
+describe("TokenAirdropIntegrationTest", function () {
     let env;
     const INITIAL_SUPPLY = 1000;
 
@@ -68,7 +68,7 @@ describe("AirdropTokenIntegrationTest", function () {
             await accountCreateResponse.getReceipt(env.client);
 
         // airdrop the tokens
-        const transactionResponse = await new AirdropTokenTransaction()
+        const transactionResponse = await new TokenAirdropTransaction()
             .addNftTransfer(
                 new NftId(nftTokenId, serials[0]),
                 env.operatorId,
@@ -78,7 +78,10 @@ describe("AirdropTokenIntegrationTest", function () {
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .execute(env.client);
 
-        await transactionResponse.getReceipt(env.client);
+        const { newPendingAirdrops } = await transactionResponse.getRecord(
+            env.client,
+        );
+        expect(newPendingAirdrops.length).to.be.eq(0);
 
         const operatorBalance = await new AccountBalanceQuery()
             .setAccountId(env.operatorId)
@@ -97,6 +100,7 @@ describe("AirdropTokenIntegrationTest", function () {
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
         //await client.submitTokenAirdrop(transaction);
     });
+
     it("tokens should be in pending state when no automatic association", async function () {
         this.timeout(1200000);
         const ftCreateResponse = await new TokenCreateTransaction()
@@ -138,7 +142,7 @@ describe("AirdropTokenIntegrationTest", function () {
         const { accountId: receiverId } =
             await accountCreateResponse.getReceipt(env.client);
 
-        const airdropTokenResponse = await new AirdropTokenTransaction()
+        const airdropTokenResponse = await new TokenAirdropTransaction()
             .addTokenTransfer(ftTokenId, receiverId, INITIAL_SUPPLY)
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .addNftTransfer(nftTokenId, serials[0], env.operatorId, receiverId)
@@ -150,7 +154,7 @@ describe("AirdropTokenIntegrationTest", function () {
             env.client,
         );
 
-        expect(airdropTokenRecord.newPendingAirdrops.length).to.be.above(0);
+        const { newPendingAirdrops } = airdropTokenRecord;
 
         const operatorBalance = await new AccountBalanceQuery()
             .setAccountId(env.operatorId)
@@ -168,6 +172,32 @@ describe("AirdropTokenIntegrationTest", function () {
         // NFT checks
         expect(operatorBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
         expect(receiverBalance.tokens.get(nftTokenId)).to.be.eq(null);
+
+        // record check
+        expect(newPendingAirdrops.length).to.be.eq(2);
+        expect(newPendingAirdrops[0].airdropId.senderId).deep.equal(
+            env.operatorId,
+        );
+        expect(newPendingAirdrops[0].airdropId.receiverId).deep.equal(
+            receiverId,
+        );
+        expect(newPendingAirdrops[0].airdropId.tokenId).deep.equal(ftTokenId);
+        expect(newPendingAirdrops[0].airdropId.nftId).to.equal(undefined);
+
+        expect(newPendingAirdrops[1].airdropId.senderId).deep.equal(
+            env.operatorId,
+        );
+        expect(newPendingAirdrops[1].airdropId.receiverId).deep.equal(
+            receiverId,
+        );
+        expect(newPendingAirdrops[1].airdropId.tokenId).deep.equal(undefined);
+        expect(newPendingAirdrops[1].airdropId.nftId.tokenId).to.deep.equal(
+            nftTokenId,
+        );
+        expect(newPendingAirdrops[1].airdropId.nftId.serial).to.deep.equal(
+            serials[0],
+        );
+        // expect(newPendingAirdrops[0]);
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
@@ -205,7 +235,7 @@ describe("AirdropTokenIntegrationTest", function () {
         const receiverPrivateKey = PrivateKey.generateED25519();
         const aliasAccountId = receiverPrivateKey.publicKey.toAccountId(0, 0);
 
-        const airdropTokenResponse = await new AirdropTokenTransaction()
+        const airdropTokenResponse = await new TokenAirdropTransaction()
             .addTokenTransfer(ftTokenId, aliasAccountId, INITIAL_SUPPLY)
             .addTokenTransfer(ftTokenId, env.operatorId, -INITIAL_SUPPLY)
             .addNftTransfer(
@@ -347,7 +377,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         await (
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     .addTokenTransfer(
                         tokenWithFeeId,
                         receiverId,
@@ -443,7 +473,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         let err = false;
         try {
-            const airdropTokenResponse = await new AirdropTokenTransaction()
+            const airdropTokenResponse = await new TokenAirdropTransaction()
                 .addTokenTransfer(tokenId, receiverId, INITIAL_SUPPLY)
                 .addTokenTransfer(tokenId, env.operatorId, -INITIAL_SUPPLY)
                 .addNftTransfer(
@@ -471,7 +501,7 @@ describe("AirdropTokenIntegrationTest", function () {
 
         try {
             await (
-                await new AirdropTokenTransaction().execute(env.client)
+                await new TokenAirdropTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
             // SHOULD IT FAIL WITH INVALID TX BODY
@@ -484,7 +514,7 @@ describe("AirdropTokenIntegrationTest", function () {
         err = false;
         try {
             await (
-                await new AirdropTokenTransaction()
+                await new TokenAirdropTransaction()
                     .addTokenTransfer(tokenId, accountId, 1)
                     .addTokenTransfer(tokenId, accountId, 1)
                     .addTokenTransfer(tokenId, accountId, 1)

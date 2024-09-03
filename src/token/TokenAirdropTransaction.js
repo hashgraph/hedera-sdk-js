@@ -24,7 +24,7 @@ import AbstractTokenTransfer from "./AbstractTokenTransfer.js";
  * @typedef {import("./NftId.js").default} NftId
  * @typedef {import("./TokenId.js").default} TokenId
  */
-export default class AirdropTokenTransaction extends AbstractTokenTransfer {
+export default class TokenAirdropTransaction extends AbstractTokenTransfer {
     /**
      * @param {object} props
      * @param {TokenTransfer[]} [props.tokenTransfers]
@@ -94,7 +94,7 @@ export default class AirdropTokenTransaction extends AbstractTokenTransfer {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {AirdropTokenTransaction}
+     * @returns {TokenAirdropTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -117,7 +117,7 @@ export default class AirdropTokenTransaction extends AbstractTokenTransfer {
         );
 
         return Transaction._fromProtobufTransactions(
-            new AirdropTokenTransaction({
+            new TokenAirdropTransaction({
                 nftTransfers: nftTransfers,
                 tokenTransfers: tokenTransfers,
             }),
@@ -163,5 +163,5 @@ export default class AirdropTokenTransaction extends AbstractTokenTransfer {
 TRANSACTION_REGISTRY.set(
     "tokenAirdrop",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AirdropTokenTransaction._fromProtobuf,
+    TokenAirdropTransaction._fromProtobuf,
 );

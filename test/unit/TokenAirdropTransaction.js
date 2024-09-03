@@ -1,12 +1,12 @@
 import { expect } from "chai";
 import {
     AccountId,
-    AirdropTokenTransaction,
+    TokenAirdropTransaction,
     NftId,
     TokenId,
 } from "../../src/index.js";
 
-describe("AirdropTokenTransaction", function () {
+describe("TokenAirdropTransaction", function () {
     it("from | toBytes", async function () {
         const SENDER = new AccountId(0, 0, 100);
         const RECEIVER = new AccountId(0, 0, 101);
@@ -23,7 +23,7 @@ describe("AirdropTokenTransaction", function () {
         const AMOUNT = 1000;
         const EXPECTED_DECIMALS = 1;
 
-        const transaction = new AirdropTokenTransaction()
+        const transaction = new TokenAirdropTransaction()
             .addTokenTransfer(TOKEN_IDS[0], SENDER, AMOUNT)
             .addTokenTransferWithDecimals(
                 TOKEN_IDS[1],
@@ -42,7 +42,7 @@ describe("AirdropTokenTransaction", function () {
             .addApprovedNftTransfer(NFT_IDS[1], SENDER, RECEIVER);
 
         const txBytes = transaction.toBytes();
-        const tx = AirdropTokenTransaction.fromBytes(txBytes);
+        const tx = TokenAirdropTransaction.fromBytes(txBytes);
 
         // normal token transfer
         const tokenNormalTransfer = tx._tokenTransfers[0];

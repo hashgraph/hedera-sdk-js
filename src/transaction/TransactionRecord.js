@@ -35,7 +35,7 @@ import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import EvmAddress from "../EvmAddress.js";
 import * as hex from "../encoding/hex.js";
-import PendingAirdropRecord from "../token/PendingAirdrop.js";
+import PendingAirdropRecord from "../token/PendingAirdropRecord.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
