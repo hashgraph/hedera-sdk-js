@@ -43,10 +43,10 @@ export default class PendingAirdropId {
         this._nftId = null;
 
         if (props.receiverId) {
-            this.setReceiverId(props.receiverId);
+            this._receiverId = props.receiverId;
         }
         if (props.senderId) {
-            this.setSenderid(props.senderId);
+            this._setSenderid = props.senderId;
         }
         if (props.tokenId) {
             this._tokenId = new TokenId(props.tokenId);
