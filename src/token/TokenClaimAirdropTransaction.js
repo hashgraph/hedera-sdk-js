@@ -66,11 +66,9 @@ export default class TokenClaimAirdropTransaction extends AirdropPendingTransact
      */
     _makeTransactionData() {
         return {
-            pendingAirdrops: this.pendingAirdropIds
-                ? this.pendingAirdropIds.map((pendingAirdropId) =>
-                      pendingAirdropId.toBytes(),
-                  )
-                : undefined,
+            pendingAirdrops: this.pendingAirdropIds.map((pendingAirdropId) =>
+                pendingAirdropId.toBytes(),
+            ),
         };
     }
 
