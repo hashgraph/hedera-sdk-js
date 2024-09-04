@@ -142,39 +142,39 @@ async function main() {
      * STEP 3:
      * Airdrop tokens to 3 accounts
      */
-    const AIRDROP_SUPPLY_PER_PERSON = INITIAL_SUPPLY / 3;
+    const AIRDROP_SUPPLY_PER_ACCOUNT = INITIAL_SUPPLY / 3;
     const airdropRecord = await (
         await (
             await new TokenAirdropTransaction()
                 .addTokenTransfer(
                     tokenId,
                     treasuryAccount,
-                    -AIRDROP_SUPPLY_PER_PERSON,
+                    -AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .addTokenTransfer(
                     tokenId,
                     accountId1,
-                    AIRDROP_SUPPLY_PER_PERSON,
+                    AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .addTokenTransfer(
                     tokenId,
                     treasuryAccount,
-                    -AIRDROP_SUPPLY_PER_PERSON,
+                    -AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .addTokenTransfer(
                     tokenId,
                     accountId2,
-                    AIRDROP_SUPPLY_PER_PERSON,
+                    AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .addTokenTransfer(
                     tokenId,
                     treasuryAccount,
-                    -AIRDROP_SUPPLY_PER_PERSON,
+                    -AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .addTokenTransfer(
                     tokenId,
                     accountId3,
-                    AIRDROP_SUPPLY_PER_PERSON,
+                    AIRDROP_SUPPLY_PER_ACCOUNT,
                 )
                 .freezeWith(client)
                 .sign(treasuryKey)
