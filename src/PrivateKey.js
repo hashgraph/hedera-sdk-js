@@ -23,6 +23,7 @@ import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import { asn1DecodeStringDer } from "./asn1Decoder.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -140,14 +141,21 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * @deprecated - Use fromStringECDSA() or fromStringED2551() on a HEX-encoded string
-     * and fromStringDer() on a HEX-encoded string with DER prefix instead.
      * Construct a private key from a hex-encoded string. Requires DER header.
      * @param {string} text
      * @returns {PrivateKey}
+     * @throws {Error} If the key type is unsupported.
      */
     static fromString(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromString(text));
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.keyTypes.includes("ed25519")) {
+            return PrivateKey.fromStringED25519(text);
+        } else if (decodedKey.keyTypes.includes("ecdsa")) {
+            return PrivateKey.fromStringECDSA(text);
+        }
+
+        throw new Error("Unsupported key type");
     }
 
     /**
@@ -155,9 +163,18 @@ export default class PrivateKey extends Key {
      *
      * @param {string} text
      * @returns {PrivateKey}
+     * @throws {Error} If the key type is unsupported.
      */
     static fromStringDer(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromString(text));
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.keyTypes.includes("ed25519")) {
+            return PrivateKey.fromStringED25519(text);
+        } else if (decodedKey.keyTypes.includes("ecdsa")) {
+            return PrivateKey.fromStringECDSA(text);
+        }
+
+        throw new Error("Unsupported key type");
     }
 
     /**
@@ -165,8 +182,19 @@ export default class PrivateKey extends Key {
      *
      * @param {string} text
      * @returns {PrivateKey}
+     * @throws {Error} If the key type is unsupported.
      */
     static fromStringECDSA(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.isPublicKey) {
+            throw new Error("Invalid private key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ecdsa")) {
+            throw new Error("Invalid ECDSA key");
+        }
+
         return new PrivateKey(cryptography.PrivateKey.fromStringECDSA(text));
     }
 
@@ -175,8 +203,19 @@ export default class PrivateKey extends Key {
      *
      * @param {string} text
      * @returns {PrivateKey}
+     * @throws {Error} If the key type is unsupported.
      */
     static fromStringED25519(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.isPublicKey) {
+            throw new Error("Invalid private key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ed25519")) {
+            throw new Error("Invalid ED25519 key");
+        }
+
         return new PrivateKey(cryptography.PrivateKey.fromStringED25519(text));
     }
 

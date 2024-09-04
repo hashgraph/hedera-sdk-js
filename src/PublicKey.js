@@ -22,6 +22,7 @@ import * as cryptography from "@hashgraph/cryptography";
 import { arrayEqual } from "./array.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import { asn1DecodeStringDer } from "./asn1Decoder.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -80,9 +81,18 @@ export default class PublicKey extends Key {
      *
      * @param {string} text
      * @returns {PublicKey}
+     * @throws {Error} If the key type is unsupported.
      */
     static fromString(text) {
-        return new PublicKey(cryptography.PublicKey.fromString(text));
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (decodedKey.keyTypes.includes("ed25519")) {
+            return PublicKey.fromStringED25519(text);
+        } else if (decodedKey.keyTypes.includes("ecdsa")) {
+            return PublicKey.fromStringECDSA(text);
+        }
+
+        throw new Error("Unsupported key type");
     }
 
     /**
@@ -90,8 +100,19 @@ export default class PublicKey extends Key {
      *
      * @param {string} text
      * @returns {PublicKey}
+     * @throws {Error} If the key is invalid or not ECDSA.
      */
     static fromStringECDSA(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (!decodedKey.isPublicKey) {
+            throw new Error("Invalid public key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ecdsa")) {
+            throw new Error("Invalid ECDSA key");
+        }
+
         return new PublicKey(cryptography.PublicKey.fromStringECDSA(text));
     }
 
@@ -100,8 +121,19 @@ export default class PublicKey extends Key {
      *
      * @param {string} text
      * @returns {PublicKey}
+     * @throws {Error} If the key is invalid or not ECDSA.
      */
     static fromStringED25519(text) {
+        const decodedKey = asn1DecodeStringDer(text);
+
+        if (!decodedKey.isPublicKey) {
+            throw new Error("Invalid public key");
+        }
+
+        if (!decodedKey.keyTypes.includes("ed25519")) {
+            throw new Error("Invalid ED25519 key");
+        }
+
         return new PublicKey(cryptography.PublicKey.fromStringED25519(text));
     }
 
@@ -288,7 +320,7 @@ export default class PublicKey extends Key {
      * “Unusable” refers to a key such as an Ed25519 0x00000... public key,
      * since it is (presumably) impossible to find the 32-byte string whose SHA-512 hash begins with 32 bytes of zeros.
      *
-     * @returns {PublicKey}
+     * @returns {PublicKey | Error}
      */
     static unusableKey() {
         return PublicKey.fromStringED25519(

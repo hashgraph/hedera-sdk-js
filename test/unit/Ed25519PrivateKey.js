@@ -409,4 +409,33 @@ describe("Ed25519PrivateKey", function () {
             }
         }
     });
+    it("should create ED25519 private key consistently using fromString() method", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const randomEcdsaPrivateKeyDer =
+                PrivateKey.generateED25519().toStringDer();
+
+            const generatedKeyFromString = PrivateKey.fromString(
+                randomEcdsaPrivateKeyDer,
+            );
+
+            expect(generatedKeyFromString.toStringDer()).to.be.equal(
+                randomEcdsaPrivateKeyDer,
+            );
+        }
+    });
+
+    it.only("Verifies that PublicKey.fromStringED25519() throws 'Invalid private key' for an ECDSA private key and 'Invalid ED25519 key' for an ECDSA private key.", function () {
+        const ecdsaPrivateKey = PrivateKey.generateECDSA();
+
+        expect(() =>
+            PrivateKey.fromStringED25519(
+                ecdsaPrivateKey.publicKey.toStringDer(),
+            ),
+        ).to.throw("Invalid private key");
+
+        expect(() =>
+            PrivateKey.fromStringED25519(ecdsaPrivateKey.toStringDer()),
+        ).to.throw("Invalid ED25519 key");
+    });
 });

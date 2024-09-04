@@ -491,4 +491,34 @@ describe("EcdsaPrivateKey", function () {
             }
         }
     });
+
+    it("should create ECDSA private key consistently using fromString() method", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const randomEcdsaPrivateKeyDer =
+                PrivateKey.generateECDSA().toStringDer();
+
+            const generatedKeyFromString = PrivateKey.fromString(
+                randomEcdsaPrivateKeyDer,
+            );
+
+            expect(generatedKeyFromString.toStringDer()).to.be.equal(
+                randomEcdsaPrivateKeyDer,
+            );
+        }
+    });
+
+    it.only("Verifies that PrivateKey.fromStringECDSA() throws 'Invalid private key' for an ED25519 public key and 'Invalid ECDSA key' for an ED25519 public key.", function () {
+        const ed25519PublicKey = PrivateKey.generateED25519();
+
+        expect(() =>
+            PrivateKey.fromStringECDSA(
+                ed25519PublicKey.publicKey.toStringDer(),
+            ),
+        ).to.throw("Invalid private key");
+
+        expect(() =>
+            PrivateKey.fromStringECDSA(ed25519PublicKey.toStringDer()),
+        ).to.throw("Invalid ECDSA key");
+    });
 });

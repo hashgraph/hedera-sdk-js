@@ -1,3 +1,4 @@
+import { expect } from "chai";
 import {
     AccountId,
     PrivateKey,
@@ -6,6 +7,8 @@ import {
     TransferTransaction,
     Transaction,
 } from "../../src/index.js";
+
+const STRESS_TEST_ITERATION_COUNT = 1000;
 
 describe("PublicKey", function () {
     it("`verifyTransaction` works", async function () {
@@ -111,5 +114,74 @@ describe("PublicKey", function () {
 
         const ed25519PublicKey1 = PublicKey.fromString(PUBLIC_KEY_DER1);
         expect(ed25519PublicKey1.toStringRaw()).to.be.equal(PUBLIC_KEY1);
+    });
+
+    it("should create ECDSA public key consistently using fromString() method", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const randomEcdsaPublicKeyDer =
+                PrivateKey.generateECDSA().publicKey.toStringDer();
+
+            const generatedKeyFromString = PublicKey.fromString(
+                randomEcdsaPublicKeyDer,
+            );
+
+            expect(generatedKeyFromString.toStringDer()).to.be.equal(
+                randomEcdsaPublicKeyDer,
+            );
+        }
+    });
+
+    it("should create ED25519 public key consistently using fromString() method", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const randomEcdsaPublicKeyDer =
+                PrivateKey.generateED25519().publicKey.toStringDer();
+
+            const generatedKeyFromString = PublicKey.fromString(
+                randomEcdsaPublicKeyDer,
+            );
+
+            expect(generatedKeyFromString.toStringDer()).to.be.equal(
+                randomEcdsaPublicKeyDer,
+            );
+        }
+    });
+
+    it("Verifies that PublicKey.fromStringECDSA() throws 'Invalid public key' for an ED25519 private key and 'Invalid ECDSA key' for an ED25519 public key.", function () {
+        const ed25519PrivateKey = PrivateKey.generateED25519();
+
+        expect(() =>
+            PublicKey.fromStringECDSA(ed25519PrivateKey.toStringDer()),
+        ).to.throw("Invalid public key");
+
+        expect(() =>
+            PublicKey.fromStringECDSA(
+                ed25519PrivateKey.publicKey.toStringDer(),
+            ),
+        ).to.throw("Invalid ECDSA key");
+    });
+
+    it("Verifies that PublicKey.fromStringED25519() throws 'Invalid public key' for an ECDSA private key and 'Invalid ED25519 key' for an ECDSA public key.", function () {
+        const ecdsaPrivateKey = PrivateKey.generateECDSA();
+
+        expect(() =>
+            PublicKey.fromStringED25519(ecdsaPrivateKey.toStringDer()),
+        ).to.throw("Invalid public key");
+
+        expect(() =>
+            PublicKey.fromStringED25519(
+                ecdsaPrivateKey.publicKey.toStringDer(),
+            ),
+        ).to.throw("Invalid ED25519 key");
+    });
+
+    it.only("Verifies that PublicKey.fromString() throws when incorrect key is passed", function () {
+        const TRUFFLE_KEY =
+            "03af80b90d25145da28c583359beb47b21796b2fe1a23c1511e443e7a64dfdb27d";
+
+        expect(() => PublicKey.fromString(TRUFFLE_KEY)).to.throw(
+            "Unsupported key type",
+        );
     });
 });
