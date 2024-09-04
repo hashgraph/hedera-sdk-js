@@ -46,7 +46,7 @@ export default class PendingAirdropId {
             this._receiverId = props.receiverId;
         }
         if (props.senderId) {
-            this._setSenderid = props.senderId;
+            this._senderId = props.senderId;
         }
         if (props.tokenId) {
             this._tokenId = new TokenId(props.tokenId);
