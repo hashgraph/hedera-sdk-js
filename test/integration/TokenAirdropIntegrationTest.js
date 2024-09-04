@@ -424,7 +424,7 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
     });
 
-    it("should not airdrop with receiver sig set to true", async function () {
+    it("should airdrop with receiver sig set to true", async function () {
         this.timeout(1200000);
         const tokenCreateResponse = await new TokenCreateTransaction()
             .setTokenName("FFFFFFFFFF")
@@ -487,7 +487,7 @@ describe("TokenAirdropIntegrationTest", function () {
             }
         }
 
-        expect(err).to.be.eq(true);
+        expect(err).to.be.eq(false);
     });
 
     it("should not airdrop with invalid tx body", async function () {
