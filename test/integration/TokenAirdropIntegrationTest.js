@@ -98,7 +98,6 @@ describe("TokenAirdropIntegrationTest", function () {
 
         expect(operatorBalance.tokens.get(nftTokenId).toInt()).to.be.eq(0);
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
-        //await client.submitTokenAirdrop(transaction);
     });
 
     it("tokens should be in pending state when no automatic association", async function () {
@@ -197,7 +196,6 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(newPendingAirdrops[1].airdropId.nftId.serial).to.deep.equal(
             serials[0],
         );
-        // expect(newPendingAirdrops[0]);
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
