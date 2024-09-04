@@ -147,8 +147,6 @@ describe("TokenAirdropIntegrationTest", function () {
             .addNftTransfer(nftTokenId, serials[0], env.operatorId, receiverId)
             .execute(env.client);
 
-        await airdropTokenResponse.getReceipt(env.client);
-
         const airdropTokenRecord = await airdropTokenResponse.getRecord(
             env.client,
         );
@@ -502,8 +500,7 @@ describe("TokenAirdropIntegrationTest", function () {
                 await new TokenAirdropTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            // SHOULD IT FAIL WITH INVALID TX BODY
-            if (error.message.includes("FAIL_INVALID")) {
+            if (error.message.includes("EMPTY_TOKEN_TRANSFER_BODY")) {
                 err = true;
             }
         }
