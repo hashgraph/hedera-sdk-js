@@ -7,6 +7,7 @@ import {
     TransferTransaction,
     Transaction,
 } from "../../src/index.js";
+import CryptoJS from "crypto-js";
 
 const STRESS_TEST_ITERATION_COUNT = 1000;
 
@@ -179,9 +180,14 @@ describe("PublicKey", function () {
     it.only("Verifies that PublicKey.fromString() throws when incorrect key is passed", function () {
         const TRUFFLE_KEY =
             "03af80b90d25145da28c583359beb47b21796b2fe1a23c1511e443e7a64dfdb27d";
+        const DES_KEY = CryptoJS.DES.encrypt("Test1", "Test2").toString();
 
         expect(() => PublicKey.fromString(TRUFFLE_KEY)).to.throw(
             "Unsupported key type",
+        );
+
+        expect(() => PublicKey.fromString(DES_KEY)).to.throw(
+            "Unsupported type: undefined",
         );
     });
 });
