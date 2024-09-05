@@ -137,7 +137,7 @@
     * Removed `setSendRecordThreshold(number)` and `setSendRecordThreshold(Hbar)`
     * Removed `setReceiveRecordThreshold(number)` and `setReceiveRecordThreshold(Hbar)`
 
-### Removed `CryptoTransferTranscation`
+### Removed `CryptoTransferTransaction`
     * Use `TransferTransaction` instead.
 
 ### `TransferTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
