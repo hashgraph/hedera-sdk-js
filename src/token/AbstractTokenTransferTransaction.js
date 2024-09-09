@@ -28,7 +28,7 @@ import TokenNftTransferMap from "../account/TokenNftTransferMap.js";
  * @property {Long | number} serial
  */
 
-export default class AbstractTokenTransfer extends Transaction {
+export default class AbstractTokenTransferTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {(TransferTokensInput)[]} [props.tokenTransfers]

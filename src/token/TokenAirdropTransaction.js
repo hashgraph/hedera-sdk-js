@@ -3,7 +3,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import TokenTransfer from "./TokenTransfer.js";
 import NftTransfer from "./TokenNftTransfer.js";
-import AbstractTokenTransfer from "./AbstractTokenTransfer.js";
+import AbstractTokenTransferTransaction from "./AbstractTokenTransferTransaction.js";
 
 /**
  * @namespace proto
@@ -24,7 +24,7 @@ import AbstractTokenTransfer from "./AbstractTokenTransfer.js";
  * @typedef {import("./NftId.js").default} NftId
  * @typedef {import("./TokenId.js").default} TokenId
  */
-export default class TokenAirdropTransaction extends AbstractTokenTransfer {
+export default class TokenAirdropTransaction extends AbstractTokenTransferTransaction {
     /**
      * @param {object} props
      * @param {TokenTransfer[]} [props.tokenTransfers]
