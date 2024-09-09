@@ -29,7 +29,7 @@ import TokenTransfer from "../token/TokenTransfer.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 import TokenNftTransfer from "../token/TokenNftTransfer.js";
 import NftId from "../token/NftId.js";
-import AbstractTokenTransfer from "../token/AbstractTokenTransfer.js";
+import AbstractTokenTransferTransaction from "../token/AbstractTokenTransferTransaction.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
@@ -83,7 +83,7 @@ import AbstractTokenTransfer from "../token/AbstractTokenTransfer.js";
 /**
  * Transfers a new Hedera™ crypto-currency token.
  */
-export default class TransferTransaction extends AbstractTokenTransfer {
+export default class TransferTransaction extends AbstractTokenTransferTransaction {
     /**
      * @param {object} [props]
      * @param {(TransferTokensInput)[]} [props.tokenTransfers]
