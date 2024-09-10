@@ -333,7 +333,7 @@ export default class PrivateKey extends Key {
                 const bodyBytes = signedTransaction.bodyBytes;
 
                 if (!bodyBytes) {
-                    throw new Error("Missing bodyBytes in signed transaction.");
+                    return new Uint8Array();
                 }
 
                 return this._key.sign(bodyBytes);
