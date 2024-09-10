@@ -73,7 +73,18 @@ export default class Wallet {
         /**
          * @type {(message: Uint8Array) => Promise<Uint8Array>}
          */
-        this.signer = (message) => Promise.resolve(key.sign(message));
+        this.signer = (message) => {
+            const signature = key.sign(message);
+
+            // If the message is Uint8Array, it will always return Uint8Array
+            if (signature instanceof Uint8Array) {
+                return Promise.resolve(signature);
+            }
+
+            throw new Error(
+                "Unexpected result: expected Uint8Array but got an array of signatures.",
+            );
+        };
         this.provider = provider;
         this.accountId =
             typeof accountId === "string"

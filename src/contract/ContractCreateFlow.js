@@ -325,9 +325,18 @@ export default class ContractCreateFlow {
      * @returns {this}
      */
     sign(privateKey) {
-        return this.signWith(privateKey.publicKey, (message) =>
-            Promise.resolve(privateKey.sign(message)),
-        );
+        return this.signWith(privateKey.publicKey, (message) => {
+            const signature = privateKey.sign(message);
+
+            // If the message is Uint8Array, it will always return Uint8Array
+            if (signature instanceof Uint8Array) {
+                return Promise.resolve(signature);
+            }
+
+            throw new Error(
+                "Unexpected result: expected Uint8Array but got an array of signatures.",
+            );
+        });
     }
 
     /**

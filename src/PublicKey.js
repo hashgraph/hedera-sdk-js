@@ -108,12 +108,64 @@ export default class PublicKey extends Key {
     /**
      * Verify a signature on a message with this public key.
      *
-     * @param {Uint8Array} message
-     * @param {Uint8Array} signature
+     * @param {Uint8Array | Transaction} message
+     * @param {Uint8Array | Uint8Array[]} signature
      * @returns {boolean}
+     * @throws {error}
      */
     verify(message, signature) {
-        return this._key.verify(message, signature);
+        // Case 1: Both message and signature are Uint8Array
+        if (message instanceof Uint8Array && signature instanceof Uint8Array) {
+            return this._key.verify(message, signature);
+        }
+
+        // Case 2: Message is a Transaction and signature is an array
+        if (
+            !(message instanceof Uint8Array) &&
+            message._signedTransactions &&
+            Array.isArray(signature)
+        ) {
+            // Ensure the number of signatures matches the number of signed transactions
+            if (message._signedTransactions.length !== signature.length) {
+                throw new Error(
+                    "Mismatched number of signatures and transactions.",
+                );
+            }
+
+            // Verify each transaction's signature
+            for (
+                let txIndex = 0;
+                txIndex < message._signedTransactions.length;
+                txIndex++
+            ) {
+                const signedTransaction =
+                    message._signedTransactions.get(txIndex);
+
+                if (!signedTransaction.bodyBytes) {
+                    throw new Error(
+                        `Missing bodyBytes for transaction at index ${txIndex}`,
+                    );
+                }
+
+                // Verify the signature for the corresponding transaction
+                if (
+                    !this._key.verify(
+                        signedTransaction.bodyBytes,
+                        signature[txIndex],
+                    )
+                ) {
+                    return false; // Return false if any signature does not match
+                }
+            }
+
+            // All signatures verified successfully
+            return true;
+        }
+
+        // If neither case is satisfied, throw an error
+        throw new Error(
+            "Invalid arguments, expected either (Uint8Array, Uint8Array) or (Transaction, Uint8Array[])",
+        );
     }
 
     /**

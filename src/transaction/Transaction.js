@@ -680,11 +680,19 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     sign(privateKey) {
-        return this.signWith(privateKey.publicKey, (message) =>
-            Promise.resolve(privateKey.sign(message)),
-        );
-    }
+        return this.signWith(privateKey.publicKey, (message) => {
+            const signature = privateKey.sign(message);
 
+            // If the message is Uint8Array, it will always return Uint8Array
+            if (signature instanceof Uint8Array) {
+                return Promise.resolve(signature);
+            }
+
+            throw new Error(
+                "Unexpected result: expected Uint8Array but got an array of signatures.",
+            );
+        });
+    }
     /**
      * Sign the transaction with the public key and signer function
      *
@@ -795,14 +803,23 @@ export default class Transaction extends Executable {
      * except for node account ID being different.
      *
      * @param {PublicKey} publicKey
-     * @param {Uint8Array} signature
+     * @param {Uint8Array | Uint8Array[]} signature
      * @returns {this}
      */
     addSignature(publicKey, signature) {
-        // Require that only one node is set on this transaction
-        // FIXME: This doesn't consider if we have one node account ID set, but we're
-        // also a chunked transaction. We should also check transaction IDs is of length 1
-        this._requireOneNodeAccountId();
+        let signatureArray;
+
+        // If signature is a Uint8Array, wrap it in an array
+        if (signature instanceof Uint8Array) {
+            this._requireOneNodeAccountId();
+            signatureArray = [signature];
+        } else if (signature.length !== this._signedTransactions.length) {
+            throw new Error(
+                "signature array must be the same length as the number of transactions",
+            );
+        } else {
+            signatureArray = [...signature];
+        }
 
         // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
@@ -817,7 +834,7 @@ export default class Transaction extends Executable {
             return this;
         }
 
-        // Transactions will have to be regenerated
+        // If we add a new signer, then we need to re-create all transactions
         this._transactions.clear();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
@@ -826,21 +843,20 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
         this._signedTransactions.setLocked();
 
-        // Add the signature to the signed transaction list. This is a copy paste
-        // of `.signWith()`, but it really shouldn't be if `_signedTransactions.list`
-        // must be a length of one.
-        // FIXME: Remove unnecessary for loop.
-        for (const transaction of this._signedTransactions.list) {
-            if (transaction.sigMap == null) {
-                transaction.sigMap = {};
+        // Add the signature to the signed transaction list.
+        for (let index = 0; index < this._signedTransactions.length; index++) {
+            const signedTransaction = this._signedTransactions.get(index);
+
+            if (signedTransaction.sigMap == null) {
+                signedTransaction.sigMap = {};
             }
 
-            if (transaction.sigMap.sigPair == null) {
-                transaction.sigMap.sigPair = [];
+            if (signedTransaction.sigMap.sigPair == null) {
+                signedTransaction.sigMap.sigPair = [];
             }
 
-            transaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signature),
+            signedTransaction.sigMap.sigPair.push(
+                publicKey._toProtobufSignature(signatureArray[index]),
             );
         }
 
