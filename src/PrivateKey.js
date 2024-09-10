@@ -316,12 +316,12 @@ export default class PrivateKey extends Key {
     /**
      * Sign a message with this private key.
      *
-     * @param {Uint8Array} data - The data to be signed. Can be of type Uint8Array or Transaction.
+     * @param {Uint8Array} bytes
      * @returns {Uint8Array} - The signature bytes without the message
      * @throws {Error} - If the input data is neither a Uint8Array nor a valid Transaction
      */
-    sign(data) {
-        return this._key.sign(data);
+    sign(bytes) {
+        return this._key.sign(bytes);
     }
 
     /**
