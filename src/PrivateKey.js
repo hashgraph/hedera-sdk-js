@@ -318,7 +318,6 @@ export default class PrivateKey extends Key {
      *
      * @param {Uint8Array} bytes
      * @returns {Uint8Array} - The signature bytes without the message
-     * @throws {Error} - If the input data is neither a Uint8Array nor a valid Transaction
      */
     sign(bytes) {
         return this._key.sign(bytes);
