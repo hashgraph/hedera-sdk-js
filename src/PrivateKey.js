@@ -316,33 +316,12 @@ export default class PrivateKey extends Key {
     /**
      * Sign a message with this private key.
      *
-     * @param {Uint8Array | Transaction} data - The data to be signed. Can be of type Uint8Array or Transaction.
-     * @returns {Uint8Array | Uint8Array[]} - The signature bytes without the message
+     * @param {Uint8Array} data - The data to be signed. Can be of type Uint8Array or Transaction.
+     * @returns {Uint8Array} - The signature bytes without the message
      * @throws {Error} - If the input data is neither a Uint8Array nor a valid Transaction
      */
     sign(data) {
-        // Case 1: Sign a Uint8Array directly
-        if (data instanceof Uint8Array) {
-            return this._key.sign(data);
-        }
-
-        // Case 2: Sign a Transaction
-        if (data._signedTransactions) {
-            return data._signedTransactions.list.map((signedTransaction) => {
-                const bodyBytes = signedTransaction.bodyBytes;
-
-                if (!bodyBytes) {
-                    throw new Error("Missing bodyBytes in signed transaction.");
-                }
-
-                return this._key.sign(bodyBytes);
-            });
-        }
-
-        // If the data type is invalid, throw an error
-        throw new Error(
-            "Invalid argument. Expected Uint8Array or Transaction.",
-        );
+        return this._key.sign(data);
     }
 
     /**
@@ -350,9 +329,17 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array | Uint8Array[]}
      */
     signTransaction(transaction) {
-        const tx = transaction._signedTransactions.get(0);
-        const signatures =
-            tx.bodyBytes != null ? this.sign(tx.bodyBytes) : new Uint8Array();
+        const signatures = transaction._signedTransactions.list.map(
+            (signedTransaction) => {
+                const bodyBytes = signedTransaction.bodyBytes;
+
+                if (!bodyBytes) {
+                    throw new Error("Missing bodyBytes in signed transaction.");
+                }
+
+                return this._key.sign(bodyBytes);
+            },
+        );
 
         transaction.addSignature(this.publicKey, signatures);
 
