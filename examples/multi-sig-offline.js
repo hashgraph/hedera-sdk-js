@@ -61,8 +61,8 @@ async function main() {
     const transferTransactionBytes = transferTransaction.toBytes();
 
     // Collect multiple signatures (Uint8Array[]) from one key
-    const user1Signatures = user1Key.sign(transferTransaction);
-    const user2Signatures = user2Key.sign(transferTransaction);
+    const user1Signatures = user1Key.signTransaction(transferTransaction);
+    const user2Signatures = user2Key.signTransaction(transferTransaction);
 
     // Deserialize the transaction
     const signedTransaction = Transaction.fromBytes(transferTransactionBytes);
