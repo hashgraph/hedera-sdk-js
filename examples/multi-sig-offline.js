@@ -6,8 +6,9 @@ import {
     AccountId,
     KeyList,
     TransferTransaction,
-    Transaction,
 } from "@hashgraph/sdk";
+
+import Transaction from "../src/transaction/Transaction.js";
 
 import dotenv from "dotenv";
 
@@ -67,10 +68,22 @@ async function main() {
     // Deserialize the transaction
     const signedTransaction = Transaction.fromBytes(transferTransactionBytes);
 
+    // @ts-ignore
     signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+    // @ts-ignore
     signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
 
+    const removeUser1Signatures = signedTransaction.removeSignature(
+        // @ts-ignore
+        user1Key.publicKey,
+    );
+
+    // @ts-ignore
+    signedTransaction.addSignature(user1Key.publicKey, removeUser1Signatures);
+
+    // @ts-ignore
     const result = await signedTransaction.execute(client);
+    // @ts-ignore
     const receipt = await result.getReceipt(client);
 
     console.log(`Transaction status: ${receipt.status.toString()}`);
