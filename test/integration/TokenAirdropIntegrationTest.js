@@ -98,7 +98,6 @@ describe("TokenAirdropIntegrationTest", function () {
 
         expect(operatorBalance.tokens.get(nftTokenId).toInt()).to.be.eq(0);
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
-        //await client.submitTokenAirdrop(transaction);
     });
 
     it("tokens should be in pending state when no automatic association", async function () {
@@ -148,8 +147,6 @@ describe("TokenAirdropIntegrationTest", function () {
             .addNftTransfer(nftTokenId, serials[0], env.operatorId, receiverId)
             .execute(env.client);
 
-        await airdropTokenResponse.getReceipt(env.client);
-
         const airdropTokenRecord = await airdropTokenResponse.getRecord(
             env.client,
         );
@@ -197,7 +194,6 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(newPendingAirdrops[1].airdropId.nftId.serial).to.deep.equal(
             serials[0],
         );
-        // expect(newPendingAirdrops[0]);
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
@@ -428,7 +424,7 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(receiverBalance.tokens.get(nftTokenId).toInt()).to.be.eq(1);
     });
 
-    it("should not airdrop with receiver sig set to true", async function () {
+    it("should airdrop with receiver sig set to true", async function () {
         this.timeout(1200000);
         const tokenCreateResponse = await new TokenCreateTransaction()
             .setTokenName("FFFFFFFFFF")
@@ -491,7 +487,7 @@ describe("TokenAirdropIntegrationTest", function () {
             }
         }
 
-        expect(err).to.be.eq(true);
+        expect(err).to.be.eq(false);
     });
 
     it("should not airdrop with invalid tx body", async function () {
@@ -504,8 +500,7 @@ describe("TokenAirdropIntegrationTest", function () {
                 await new TokenAirdropTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            // SHOULD IT FAIL WITH INVALID TX BODY
-            if (error.message.includes("FAIL_INVALID")) {
+            if (error.message.includes("EMPTY_TOKEN_TRANSFER_BODY")) {
                 err = true;
             }
         }
