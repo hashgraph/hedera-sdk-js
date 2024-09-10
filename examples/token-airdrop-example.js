@@ -140,7 +140,7 @@ async function main() {
     }
     /**
      * STEP 3:
-     * Airdrop tokens to 3 accounts
+     * Airdrop fungible tokens to 3 accounts
      */
     const AIRDROP_SUPPLY_PER_ACCOUNT = INITIAL_SUPPLY / 3;
     const airdropRecord = await (
