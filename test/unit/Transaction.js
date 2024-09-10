@@ -313,4 +313,235 @@ describe("Transaction", function () {
             });
         });
     });
+
+    describe("Transaction removeSignature/removeAllSignatures methods", function () {
+        let key1, key2, key3;
+        let transaction;
+
+        beforeEach(async function () {
+            const nodeAccountId = new AccountId(3);
+            const account = AccountId.fromString("0.0.1004");
+            const validStart = new Timestamp(1451, 590);
+            const transactionId = new TransactionId(account, validStart);
+
+            key1 = PrivateKey.generateED25519();
+            key2 = PrivateKey.generateED25519();
+            key3 = PrivateKey.generateED25519();
+
+            transaction = new AccountCreateTransaction()
+                .setInitialBalance(new Hbar(2))
+                .setTransactionId(transactionId)
+                .setNodeAccountIds([nodeAccountId])
+                .freeze();
+        });
+
+        const signAndAddSignatures = (transaction, ...keys) => {
+            // Map through the keys to sign the transaction and add signatures
+            const signatures = keys.map((key) => {
+                const signature = key.signTransaction(transaction);
+                transaction.addSignature(key.publicKey, signature);
+                return signature;
+            });
+
+            return signatures;
+        };
+
+        it("should remove a specific signature", function () {
+            // Sign the transaction with multiple keys
+            const [signature1] = signAndAddSignatures(
+                transaction,
+                key1,
+                key2,
+                key3,
+            );
+
+            //Check if the transaction internal tracking of signer public keys is correct
+            expect(transaction._signerPublicKeys.size).to.equal(3);
+            expect(transaction._publicKeys.length).to.equal(3);
+            expect(transaction._transactionSigners.length).to.equal(3);
+
+            // Ensure all signatures are present before removal
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+
+            // Remove one signature
+            transaction.removeSignature(key1.publicKey, signature1);
+
+            //Check if the transaction is frozen
+            expect(transaction.isFrozen()).to.be.true;
+
+            //Check if the transaction internal tracking of signer public keys is correct
+            expect(transaction._signerPublicKeys.size).to.equal(2);
+            expect(transaction._publicKeys.length).to.equal(2);
+            expect(transaction._transactionSigners.length).to.equal(2);
+
+            // Ensure the specific signature has been removed
+            const signaturesAfter = transaction.getSignatures();
+            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(2);
+        });
+
+        it("should clear all signatures", function () {
+            // Sign the transaction with multiple keys
+            signAndAddSignatures(transaction, key1, key2, key3);
+
+            // Ensure all signatures are present before clearing
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+
+            // Clear all signatures
+            transaction.removeAllSignatures();
+
+            //Check if the transaction is frozen
+            expect(transaction.isFrozen()).to.be.true;
+
+            //Check if the transaction internal tracking of signer public keys is cleared
+            expect(transaction._signerPublicKeys.size).to.equal(0);
+            expect(transaction._publicKeys.length).to.equal(0);
+            expect(transaction._transactionSigners.length).to.equal(0);
+
+            // Ensure all signatures have been cleared
+            const signaturesAfter = transaction.getSignatures();
+            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(0);
+        });
+
+        it("should not remove a non-existing signature", function () {
+            // Sign the transaction with multiple keys
+            signAndAddSignatures(transaction, key1, key2);
+
+            // Attempt to remove a non-existing signature
+            expect(() => {
+                transaction.removeSignature(key3.publicKey);
+            }).to.throw("The public key has not signed this transaction");
+
+            // Ensure signatures are not affected
+            const signaturesAfter = transaction.getSignatures();
+            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(2);
+        });
+
+        it("should clear and re-sign after all signatures are cleared", function () {
+            // Sign the transaction with multiple keys
+            signAndAddSignatures(transaction, key1, key2);
+
+            // Ensure all signatures are present before clearing
+            const signaturesBefore = transaction.getSignatures();
+            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(2);
+
+            // Clear all signatures
+            transaction.removeAllSignatures();
+
+            // Ensure all signatures have been cleared
+            const signaturesAfterClear = transaction.getSignatures();
+            expect(signaturesAfterClear.get(new AccountId(3)).size).to.equal(0);
+
+            // Re-sign the transaction with a different key
+            const signature3 = key3.signTransaction(transaction);
+            transaction.addSignature(key3.publicKey, signature3);
+
+            // Ensure only one signature exists after re-signing
+            const signaturesAfterResign = transaction.getSignatures();
+            expect(signaturesAfterResign.get(new AccountId(3)).size).to.equal(
+                1,
+            );
+        });
+
+        it("should return the removed signature in Uint8Array format when removing a specific signature", function () {
+            // Sign the transaction with multiple keys
+            const [signature1] = signAndAddSignatures(
+                transaction,
+                key1,
+                key2,
+                key3,
+            );
+
+            // Remove one signature and capture the returned value
+            const removedSignatures = transaction.removeSignature(
+                key1.publicKey,
+                signature1,
+            );
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("array");
+            expect(removedSignatures.length).to.equal(1);
+            expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
+
+            // Ensure the returned signature is the one that was removed
+            expect(removedSignatures[0]).to.deep.equal(signature1);
+        });
+
+        it("should return the signatures for a public key in Uint8Array format when only the public key is provided", function () {
+            // Sign the transaction with multiple keys
+            const [signature1] = signAndAddSignatures(transaction, key1);
+
+            // Remove all signatures for key1 and capture the returned value
+            const removedSignatures = transaction.removeSignature(
+                key1.publicKey,
+            );
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("array");
+            expect(removedSignatures.length).to.equal(1);
+            expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
+
+            // Ensure the returned signatures are the ones that were removed
+            expect(removedSignatures).to.include.members([signature1]);
+        });
+
+        it("should return all removed signatures in the expected object format when clearing all signatures", function () {
+            // Sign the transaction with multiple keys
+            signAndAddSignatures(transaction, key1, key2, key3);
+
+            // Clear all signatures and capture the returned value
+            const removedSignatures = transaction.removeAllSignatures();
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("object");
+
+            // Ensure the object has the correct structure
+            expect(removedSignatures).to.have.property(
+                key1.publicKey.toStringRaw(),
+            );
+            expect(removedSignatures[key1.publicKey.toStringRaw()]).to.be.an(
+                "array",
+            );
+            expect(removedSignatures).to.have.property(
+                key2.publicKey.toStringRaw(),
+            );
+            expect(removedSignatures[key2.publicKey.toStringRaw()]).to.be.an(
+                "array",
+            );
+            expect(removedSignatures).to.have.property(
+                key3.publicKey.toStringRaw(),
+            );
+            expect(removedSignatures[key3.publicKey.toStringRaw()]).to.be.an(
+                "array",
+            );
+
+            // Ensure the removed signatures are in the expected format
+            const signaturesArray1 =
+                removedSignatures[key1.publicKey.toStringRaw()];
+            const signaturesArray2 =
+                removedSignatures[key2.publicKey.toStringRaw()];
+            const signaturesArray3 =
+                removedSignatures[key3.publicKey.toStringRaw()];
+
+            [signaturesArray1, signaturesArray2, signaturesArray3].forEach(
+                (signaturesArray) => {
+                    signaturesArray.forEach((sig) => {
+                        expect(sig).to.be.instanceOf(Uint8Array);
+                    });
+                },
+            );
+        });
+
+        it("should return an empty object when no signatures are present", function () {
+            expect(transaction._signerPublicKeys.size).to.equal(0);
+
+            // Clear all signatures and capture the returned value
+            const removedSignatures = transaction.removeAllSignatures();
+
+            // Check the format of the returned value
+            expect(removedSignatures).to.be.an("object");
+            expect(Object.keys(removedSignatures)).to.have.lengthOf(0);
+        });
+    });
 });
