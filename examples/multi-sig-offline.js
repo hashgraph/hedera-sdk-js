@@ -13,10 +13,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-/** @type {PrivateKey | undefined} */
 let user1Key;
-
-/** @type {PrivateKey | undefined} */
 let user2Key;
 
 async function main() {
@@ -32,77 +29,53 @@ async function main() {
 
     const client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
         AccountId.fromString(process.env.OPERATOR_ID),
-        PrivateKey.fromStringDer(process.env.OPERATOR_KEY),
+        PrivateKey.fromStringED25519(process.env.OPERATOR_KEY),
     );
 
     user1Key = PrivateKey.generate();
     user2Key = PrivateKey.generate();
 
-    console.log(`private key for user 1= ${user1Key.toString()}`);
-    console.log(`public key for user 1= ${user1Key.publicKey.toString()}`);
-    console.log(`private key for user 2= ${user2Key.toString()}`);
-    console.log(`public key for user 2= ${user2Key.publicKey.toString()}`);
-
-    // create a multi-sig account
-    const keyList = new KeyList([user1Key, user2Key]);
+    const keyList = new KeyList([user1Key.publicKey, user2Key.publicKey]);
 
     const createAccountTransaction = new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(2)) // 5 h
+        .setInitialBalance(new Hbar(2)) // 2 Hbars
         .setKey(keyList);
 
-    const response = await createAccountTransaction.execute(client);
+    const createResponse = await createAccountTransaction.execute(client);
+    const createReceipt = await createResponse.getReceipt(client);
 
-    let receipt = await response.getReceipt(client);
+    console.log(`New account ID: ${createReceipt.accountId.toString()}`);
 
-    console.log(`account id = ${receipt.accountId.toString()}`);
-
-    // create a transfer from new account to 0.0.3
     const transferTransaction = new TransferTransaction()
-        .setNodeAccountIds([new AccountId(3)])
-        .addHbarTransfer(receipt.accountId, -1)
-        .addHbarTransfer("0.0.3", 1)
+        .addHbarTransfer(createReceipt.accountId, new Hbar(-1))
+        .addHbarTransfer("0.0.3", new Hbar(1))
+        // Set multiple nodes
+        .setNodeAccountIds([
+            new AccountId(3),
+            new AccountId(4),
+            new AccountId(5),
+        ])
         .freezeWith(client);
 
-    // convert transaction to bytes to send to signatories
-    const transactionBytes = transferTransaction.toBytes();
-    const transactionToExecute = Transaction.fromBytes(transactionBytes);
+    // Serialize the transaction
+    const transferTransactionBytes = transferTransaction.toBytes();
 
-    // ask users to sign and return signature
-    const user1Signature = user1Signs(transactionBytes);
-    const user2Signature = user2Signs(transactionBytes);
+    // Collect multiple signatures (Uint8Array[]) from one key
+    const user1Signatures = user1Key.signTransaction(transferTransaction);
+    const user2Signatures = user2Key.signTransaction(transferTransaction);
 
-    try {
-        // recreate the transaction from bytes
-        await transactionToExecute.signWithOperator(client);
-        transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
-        transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+    // Deserialize the transaction
+    const signedTransaction = Transaction.fromBytes(transferTransactionBytes);
 
-        const result = await transactionToExecute.execute(client);
-        receipt = await result.getReceipt(client);
-        console.log(`Status: ${receipt.status.toString()}`);
-    } catch (error) {
-        console.error(error);
-    }
+    signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+    signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+
+    const result = await signedTransaction.execute(client);
+    const receipt = await result.getReceipt(client);
+
+    console.log(`Transaction status: ${receipt.status.toString()}`);
 
     client.close();
-}
-
-/**
- * @param {Uint8Array} transactionBytes
- * @returns {Uint8Array}
- */
-function user1Signs(transactionBytes) {
-    const transaction = Transaction.fromBytes(transactionBytes);
-    return user1Key.signTransaction(transaction);
-}
-
-/**
- * @param {Uint8Array} transactionBytes
- * @returns {Uint8Array}
- */
-function user2Signs(transactionBytes) {
-    const transaction = Transaction.fromBytes(transactionBytes);
-    return user2Key.signTransaction(transaction);
 }
 
 void main();

@@ -316,25 +316,34 @@ export default class PrivateKey extends Key {
     /**
      * Sign a message with this private key.
      *
-     * @param {Uint8Array} bytes
+     * @param {Uint8Array} data - The data to be signed. Can be of type Uint8Array or Transaction.
      * @returns {Uint8Array} - The signature bytes without the message
+     * @throws {Error} - If the input data is neither a Uint8Array nor a valid Transaction
      */
-    sign(bytes) {
-        return this._key.sign(bytes);
+    sign(data) {
+        return this._key.sign(data);
     }
 
     /**
      * @param {Transaction} transaction
-     * @returns {Uint8Array}
+     * @returns {Uint8Array | Uint8Array[]}
      */
     signTransaction(transaction) {
-        const tx = transaction._signedTransactions.get(0);
-        const signature =
-            tx.bodyBytes != null ? this.sign(tx.bodyBytes) : new Uint8Array();
+        const signatures = transaction._signedTransactions.list.map(
+            (signedTransaction) => {
+                const bodyBytes = signedTransaction.bodyBytes;
 
-        transaction.addSignature(this.publicKey, signature);
+                if (!bodyBytes) {
+                    throw new Error("Missing bodyBytes in signed transaction.");
+                }
 
-        return signature;
+                return this._key.sign(bodyBytes);
+            },
+        );
+
+        transaction.addSignature(this.publicKey, signatures);
+
+        return signatures;
     }
 
     /**
