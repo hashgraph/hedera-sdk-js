@@ -91,7 +91,7 @@ export default class PendingAirdropId {
     /**
      *
      * @param {AccountId} senderId
-     * @returns
+     * @returns {this}
      */
     setSenderid(senderId) {
         this._senderId = senderId;
