@@ -179,7 +179,7 @@ describe("TokenAirdropIntegrationTest", function () {
             receiverId,
         );
         expect(newPendingAirdrops[0].airdropId.tokenId).deep.equal(ftTokenId);
-        expect(newPendingAirdrops[0].airdropId.nftId).to.equal(undefined);
+        expect(newPendingAirdrops[0].airdropId.nftId).to.equal(null);
 
         expect(newPendingAirdrops[1].airdropId.senderId).deep.equal(
             env.operatorId,
@@ -187,7 +187,7 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(newPendingAirdrops[1].airdropId.receiverId).deep.equal(
             receiverId,
         );
-        expect(newPendingAirdrops[1].airdropId.tokenId).deep.equal(undefined);
+        expect(newPendingAirdrops[1].airdropId.tokenId).deep.equal(null);
         expect(newPendingAirdrops[1].airdropId.nftId.tokenId).to.deep.equal(
             nftTokenId,
         );
