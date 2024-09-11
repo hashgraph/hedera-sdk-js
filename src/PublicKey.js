@@ -111,7 +111,6 @@ export default class PublicKey extends Key {
      * @param {Uint8Array} message
      * @param {Uint8Array} signature
      * @returns {boolean}
-     * @throws {error}
      */
     verify(message, signature) {
         return this._key.verify(message, signature);

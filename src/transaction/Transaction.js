@@ -800,10 +800,16 @@ export default class Transaction extends Executable {
         const isSingleSignature = signature instanceof Uint8Array;
         const isArraySignature = Array.isArray(signature);
 
-        if (isSingleSignature) {
-            this._requireOneNodeAccountId();
-        } else if (
-            !isArraySignature ||
+        // Check if it is a single signature with NOT exactly one transaction
+        if (isSingleSignature && this._signedTransactions.length !== 1) {
+            throw new Error(
+                "Signature array must match the number of transactions",
+            );
+        }
+
+        // Check if it's an array but the array length doesn't match the number of transactions
+        if (
+            isArraySignature &&
             signature.length !== this._signedTransactions.length
         ) {
             throw new Error(
