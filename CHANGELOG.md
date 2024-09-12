@@ -21,10 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * fix: react native's bip32 should use array instead of buffer due to incompatibility by @ivaylonikolov in https://github.com/hashgraph/hedera-sdk-js/pull/2502
 * feat: token airdrop transactions by @ivaylonikolov in https://github.com/hashgraph/hedera-sdk-js/pull/2492
 
-
-
-
-
 ## v2.50.0
 
 ## What's Changed
