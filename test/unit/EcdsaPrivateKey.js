@@ -494,7 +494,7 @@ describe("EcdsaPrivateKey", function () {
         }
     });
 
-    describe.only("PrivateKey signTransaction", function () {
+    describe("PrivateKey signTransaction", function () {
         let privateKey, mockedTransaction, mockedSignature;
 
         beforeEach(() => {

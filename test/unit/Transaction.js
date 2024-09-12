@@ -10,12 +10,14 @@ import {
     Timestamp,
     Transaction,
     TransactionId,
+    PublicKey,
 } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 import BigNumber from "bignumber.js";
+import sinon from "sinon";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -311,6 +313,159 @@ describe("Transaction", function () {
                     }
                 });
             });
+        });
+    });
+
+    describe("addSignature tests", () => {
+        let transaction, mockedPublicKey, mockedSignature;
+
+        beforeEach(() => {
+            transaction = new Transaction();
+            mockedPublicKey = sinon.createStubInstance(PublicKey);
+            mockedSignature = new Uint8Array([4, 5, 6]);
+
+            // Mock methods of PublicKey
+            mockedPublicKey.toBytesRaw.returns(new Uint8Array([1, 2, 3]));
+            mockedPublicKey._toProtobufSignature = sinon
+                .stub()
+                .returns({ ed25519: mockedSignature });
+
+            // Mock the necessary internals of the Transaction object
+            transaction._signedTransactions = {
+                length: 1,
+                list: [
+                    {
+                        bodyBytes: new Uint8Array([1, 2, 3]),
+                        sigMap: { sigPair: [] },
+                    },
+                ],
+                get(index) {
+                    return this.list[index];
+                },
+            };
+
+            transaction._transactionIds = { setLocked: sinon.spy() };
+            transaction._nodeAccountIds = { setLocked: sinon.spy() };
+            transaction._signedTransactions.setLocked = sinon.spy();
+
+            // Assume that the transaction is not frozen initially
+            transaction.isFrozen = sinon.stub().returns(false);
+            transaction.freeze = sinon.spy();
+        });
+
+        it("should add a single signature when one transaction is present", () => {
+            transaction.addSignature(mockedPublicKey, mockedSignature);
+
+            // Verify the signature was added correctly to sigMap.sigPair
+            expect(
+                transaction._signedTransactions.get(0).sigMap.sigPair,
+            ).to.deep.equal([{ ed25519: mockedSignature }]);
+
+            // Verify freeze was called since the transaction was not frozen
+            sinon.assert.calledOnce(transaction.freeze);
+        });
+
+        it("should throw an error when adding a single signature to multiple transactions", () => {
+            transaction._signedTransactions.length = 2;
+            transaction._signedTransactions.list = [
+                {
+                    bodyBytes: new Uint8Array([1, 2, 3]),
+                    sigMap: { sigPair: [] },
+                },
+                {
+                    bodyBytes: new Uint8Array([4, 5, 6]),
+                    sigMap: { sigPair: [] },
+                },
+            ];
+
+            expect(() => {
+                transaction.addSignature(mockedPublicKey, mockedSignature);
+            }).to.throw(
+                "Signature array must match the number of transactions",
+            );
+        });
+
+        it("should add multiple signatures corresponding to each transaction", () => {
+            const mockedSignatures = [
+                new Uint8Array([10, 11, 12]),
+                new Uint8Array([13, 14, 15]),
+            ];
+
+            transaction._signedTransactions.length = 2;
+            transaction._signedTransactions.list = [
+                {
+                    bodyBytes: new Uint8Array([1, 2, 3]),
+                    sigMap: { sigPair: [] },
+                },
+                {
+                    bodyBytes: new Uint8Array([4, 5, 6]),
+                    sigMap: { sigPair: [] },
+                },
+            ];
+
+            // Update stub to return correct signatures for each call
+            mockedPublicKey._toProtobufSignature
+                .onCall(0)
+                .returns({ ed25519: mockedSignatures[0] })
+                .onCall(1)
+                .returns({ ed25519: mockedSignatures[1] });
+
+            transaction.addSignature(mockedPublicKey, mockedSignatures);
+
+            // Verify the signatures were added correctly
+            expect(
+                transaction._signedTransactions.get(0).sigMap.sigPair,
+            ).to.deep.equal([{ ed25519: mockedSignatures[0] }]);
+            expect(
+                transaction._signedTransactions.get(1).sigMap.sigPair,
+            ).to.deep.equal([{ ed25519: mockedSignatures[1] }]);
+
+            // Validate the calls to _toProtobufSignature
+            sinon.assert.calledWith(
+                mockedPublicKey._toProtobufSignature,
+                mockedSignatures[0],
+            );
+            sinon.assert.calledWith(
+                mockedPublicKey._toProtobufSignature,
+                mockedSignatures[1],
+            );
+        });
+
+        it("should throw an error when signature array length doesn't match the number of transactions", () => {
+            const mismatchedSignatures = [new Uint8Array([10, 11, 12])];
+            transaction._signedTransactions.length = 2;
+            transaction._signedTransactions.list = [
+                {
+                    bodyBytes: new Uint8Array([1, 2, 3]),
+                    sigMap: { sigPair: [] },
+                },
+                {
+                    bodyBytes: new Uint8Array([4, 5, 6]),
+                    sigMap: { sigPair: [] },
+                },
+            ];
+
+            expect(() => {
+                transaction.addSignature(mockedPublicKey, mismatchedSignatures);
+            }).to.throw(
+                "Signature array must match the number of transactions",
+            );
+        });
+
+        it("should freeze the transaction if it is not frozen", () => {
+            transaction.isFrozen.returns(false);
+
+            transaction._signedTransactions.length = 1;
+            transaction._signedTransactions.list = [
+                {
+                    bodyBytes: new Uint8Array([1, 2, 3]),
+                    sigMap: { sigPair: [] },
+                },
+            ];
+
+            transaction.addSignature(mockedPublicKey, mockedSignature);
+
+            sinon.assert.calledOnce(transaction.freeze);
         });
     });
 });
