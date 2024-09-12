@@ -9,17 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## What's Changed
 
-* chore(deps-dev): bump braces in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2347
-* chore: Added prerequisites for building the project by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2478
-* feat(TCK): Add AccountCreate method by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2476
+* feat: token airdrop transactions by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2492
+* fix: react native's bip32 should use array instead of buffer due to incompatibility by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2502
 * ci: update workflows to use latitude.sh based runners by @nathanklick in https://github.com/hashgraph/hedera-sdk-js/pull/2495
-* feat(TCK): Add AccountUpdate method by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2493
-* feat: Added accountDelete JSONRPC method in the TCK and the relevant interfaces by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2497
+* chore: Added prerequisites for building the project by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2478
+* chore(deps-dev): bump braces in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2347
 * chore(deps): bump braces from 3.0.2 to 3.0.3 in /common_js_test by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2344
 * chore(deps-dev): bump braces from 3.0.2 to 3.0.3 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2345
 * chore(deps): bump braces in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2346
-* fix: react native's bip32 should use array instead of buffer due to incompatibility by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2502
-* feat: token airdrop transactions by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2492
 
 ## v2.50.0
 
