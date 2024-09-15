@@ -25,3 +25,9 @@ export interface UpdateAccountParams {
     readonly declineStakingReward?: boolean;
     readonly commonTransactionParams?: Record<string, any>;
 }
+
+export interface DeleteAccountParams {
+    readonly deleteAccountId?: string;
+    readonly transferAccountId?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}

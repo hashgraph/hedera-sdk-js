@@ -3,6 +3,7 @@ import {
     Hbar,
     AccountId,
     AccountUpdateTransaction,
+    AccountDeleteTransaction,
 } from "@hashgraph/sdk";
 
 import { sdk } from "../sdk_data";
@@ -11,7 +12,11 @@ import { AccountResponse } from "../response/account";
 import { getKeyFromString } from "../utils/key";
 import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
 
-import { CreateAccountParams, UpdateAccountParams } from "../params/account";
+import {
+    CreateAccountParams,
+    DeleteAccountParams,
+    UpdateAccountParams,
+} from "../params/account";
 import { applyCommonTransactionParams } from "../params/common-tx-params";
 
 export const createAccount = async ({
@@ -148,6 +153,41 @@ export const updateAccount = async ({
 
     if (autoRenewPeriod != null) {
         transaction.setAutoRenewPeriod(autoRenewPeriod);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const deleteAccount = async ({
+    deleteAccountId,
+    transferAccountId,
+    commonTransactionParams,
+}: DeleteAccountParams): Promise<AccountResponse> => {
+    let transaction = new AccountDeleteTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (deleteAccountId != null) {
+        transaction.setAccountId(AccountId.fromString(deleteAccountId));
+    }
+
+    if (transferAccountId != null) {
+        transaction.setTransferAccountId(
+            AccountId.fromString(transferAccountId),
+        );
     }
 
     if (commonTransactionParams != null) {
