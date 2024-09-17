@@ -858,7 +858,6 @@ export default class Transaction extends Executable {
      * @returns {Uint8Array[]} The removed signatures.
      */
     removeSignature(publicKey) {
-        // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
             this.freeze();
         }
@@ -902,15 +901,13 @@ export default class Transaction extends Executable {
      * It will call collectSignatures to get the removed signatures, then clear all signatures
      * from the internal tracking.
      *
-     * @returns {{ [transactionId: string]: { [nodeAccountId: string]: Uint8Array[] } }} The removed signatures in the specified format.
+     * @returns {{ [userPublicKey: string]: Uint8Array[] | Uint8Array }} The removed signatures in the specified format.
      */
     removeAllSignatures() {
-        // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
             this.freeze();
         }
 
-        // Collect all signatures
         const removedSignatures = this._collectSignaturesByPublicKey();
 
         // Iterate over the signed transactions and clear all signatures
@@ -1835,26 +1832,25 @@ export default class Transaction extends Executable {
         /** @type {Uint8Array[]} */
         const removedSignatures = [];
 
-        if (transaction.sigMap && transaction.sigMap.sigPair) {
-            transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
-                (sigPair) => {
-                    const shouldRemove = this._shouldRemoveSignature(
-                        sigPair,
-                        publicKeyHex,
-                    );
-
-                    if (shouldRemove) {
-                        if (sigPair.ed25519) {
-                            removedSignatures.push(sigPair.ed25519);
-                        } else if (sigPair.ECDSASecp256k1) {
-                            removedSignatures.push(sigPair.ECDSASecp256k1);
-                        }
-                    }
-
-                    return !shouldRemove;
-                },
-            );
+        if (!transaction.sigMap || !transaction.sigMap.sigPair) {
+            return [];
         }
+
+        transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
+            (sigPair) => {
+                const shouldRemove = this._shouldRemoveSignature(
+                    sigPair,
+                    publicKeyHex,
+                );
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
+
+                if (shouldRemove && signature) {
+                    removedSignatures.push(signature);
+                }
+
+                return !shouldRemove;
+            },
+        );
 
         return removedSignatures;
     }
@@ -1889,28 +1885,27 @@ export default class Transaction extends Executable {
 
         // Iterate over the signed transactions and collect signatures
         for (const transaction of this._signedTransactions.list) {
+            if (!(transaction.sigMap && transaction.sigMap.sigPair)) {
+                return [];
+            }
+
             // Collect the signatures
-            if (transaction.sigMap && transaction.sigMap.sigPair) {
-                for (const sigPair of transaction.sigMap.sigPair) {
-                    let signature;
-                    if (sigPair.ed25519) {
-                        signature = sigPair.ed25519;
-                    } else if (sigPair.ECDSASecp256k1) {
-                        signature = sigPair.ECDSASecp256k1;
-                    }
+            for (const sigPair of transaction.sigMap.sigPair) {
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
 
-                    if (signature && sigPair.pubKeyPrefix) {
-                        const publicKeyHex = hex.encode(sigPair.pubKeyPrefix);
-
-                        // Initialize the structure for this publicKey if it doesn't exist
-                        if (!collectedSignatures[publicKeyHex]) {
-                            collectedSignatures[publicKeyHex] = [];
-                        }
-
-                        // Add the signature to the corresponding public key
-                        collectedSignatures[publicKeyHex].push(signature);
-                    }
+                if (!signature || !sigPair.pubKeyPrefix) {
+                    return [];
                 }
+
+                const publicKeyHex = hex.encode(sigPair.pubKeyPrefix);
+
+                // Initialize the structure for this publicKey if it doesn't exist
+                if (!collectedSignatures[publicKeyHex]) {
+                    collectedSignatures[publicKeyHex] = [];
+                }
+
+                // Add the signature to the corresponding public key
+                collectedSignatures[publicKeyHex].push(signature);
             }
         }
 
