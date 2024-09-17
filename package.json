@@ -57,7 +57,6 @@
         "@ethersproject/bytes": "^5.7.0",
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "1.8.2",
-        "@hashgraph/cryptography": "1.4.8-beta.6",
         "@hashgraph/cryptography": "1.4.8-beta.8",
         "@hashgraph/proto": "2.15.0-beta.4",
         "axios": "^1.6.4",
