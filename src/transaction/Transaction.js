@@ -910,7 +910,7 @@ export default class Transaction extends Executable {
      * It will call collectSignatures to get the removed signatures, then clear all signatures
      * from the internal tracking.
      *
-     * @returns {{ [transactionId: string]: { [nodeAccountId: string]: Uint8Array[] } }} The removed signatures in the specified format.
+     * @returns {{ [userPublicKey: string]: Uint8Array[] | Uint8Array }} The removed signatures in the specified format.
      */
     removeAllSignatures() {
         // If the transaction isn't frozen, freeze it.
