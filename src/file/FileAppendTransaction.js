@@ -27,22 +27,12 @@ import FileId from "./FileId.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
 import List from "../transaction/List.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
- * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.IFileAppendTransactionBody} HashgraphProto.proto.IFileAppendTransactionBody
- * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
- */
+import * as HashgraphProto from "@hashgraph/proto";
+import AccountId from "../account/AccountId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<Channel, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  */
@@ -447,21 +437,231 @@ export default class FileAppendTransaction extends Transaction {
 
     /**
      * @override
-     * @protected
-     * @returns {HashgraphProto.proto.IFileAppendTransactionBody}
+     * @returns {Uint8Array}
      */
-    _makeTransactionData() {
-        const length = this._contents != null ? this._contents.length : 0;
-        const startIndex = this._transactionIds.index * this._chunkSize;
-        const endIndex = Math.min(startIndex + this._chunkSize, length);
+    toBytes() {
+        if (this._contents == null) {
+            throw new Error("contents is not set");
+        }
 
-        return {
-            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
-            contents:
-                this._contents != null
-                    ? this._contents.slice(startIndex, endIndex)
-                    : null,
-        };
+        const chunks = Math.floor(
+            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
+        );
+
+        if (chunks > this._maxChunks) {
+            throw new Error(
+                `Contents with size ${this._contents.length} too long for ${this._maxChunks} chunks`,
+            );
+        }
+
+        let nextTransactionId = TransactionId.withValidStart(
+            new AccountId(0, 0, 0),
+            new Timestamp(new Date().getTime(), 0),
+        );
+
+        // Hack around the locked list. Should refactor a bit to remove such code
+        this._transactionIds.locked = false;
+
+        this._transactions.clear();
+        this._transactionIds.clear();
+        this._signedTransactions.clear();
+
+        for (let chunk = 0; chunk < chunks; chunk++) {
+            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.advance();
+
+            this._signedTransactions.push(this._makeSignedTransaction(null));
+
+            nextTransactionId = new TransactionId(
+                /** @type {AccountId} */ (nextTransactionId.accountId),
+                new Timestamp(
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).seconds,
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).nanos.add(1),
+                ),
+            );
+        }
+
+        this._transactionIds.advance();
+        this._transactionIds.setLocked();
+
+        return HashgraphProto.proto.TransactionList.encode({
+            transactionList:
+                /** @type {HashgraphProto.proto.ITransaction[]} */
+                (this._signedTransactions.list),
+        }).finish();
+    }
+
+    /**
+     * Deserialize a transaction from bytes. The bytes can only
+     * be of type FileAppendTransaction
+     * @param {Uint8Array} bytes
+     * @returns {FileAppendTransaction}
+     */
+    static fromBytes(bytes) {
+        /** @type {HashgraphProto.proto.ISignedTransaction[]} */
+        const signedTransactions = [];
+
+        /** @type {TransactionId[]} */
+        const transactionIds = [];
+
+        /** @type {AccountId[]} */
+        const nodeIds = [];
+
+        /** @type {string[]} */
+        const transactionIdStrings = [];
+
+        /** @type {string[]} */
+        const nodeIdStrings = [];
+
+        /** @type {HashgraphProto.proto.TransactionBody[]} */
+        const bodies = [];
+
+        const list =
+            HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
+
+        // This loop is responsible for fill out the `signedTransactions`, `transactionIds`,
+        // `nodeIds`, and `bodies` variables.
+        for (const transaction of list) {
+            // The `bodyBytes` or `signedTransactionBytes` should not be null
+            if (
+                transaction.bodyBytes == null &&
+                transaction.signedTransactionBytes == null
+            ) {
+                throw new Error(
+                    "bodyBytes and signedTransactionBytes are null",
+                );
+            }
+
+            if (transaction.bodyBytes && transaction.bodyBytes.length != 0) {
+                // Decode a transaction
+                const body = HashgraphProto.proto.TransactionBody.decode(
+                    transaction.bodyBytes,
+                );
+
+                // Make sure the transaction ID within the body is set
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.ITransactionID} */ (
+                            body.transactionID
+                        ),
+                    );
+
+                    // If we haven't already seen this transaction ID in the list, add it
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
+                        transactionIds.push(transactionId);
+                        transactionIdStrings.push(transactionId.toString());
+                    }
+                }
+
+                // Make sure the node account ID within the body is set
+                if (body.nodeAccountID != null) {
+                    const nodeAccountId = AccountId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            body.nodeAccountID
+                        ),
+                    );
+
+                    // If we haven't already seen this node account ID in the list, add it
+                    if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                        nodeIds.push(nodeAccountId);
+                        nodeIdStrings.push(nodeAccountId.toString());
+                    }
+                }
+
+                // Make sure the body is set
+                if (body.data == null) {
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
+                }
+                bodies.push(body);
+            }
+
+            if (
+                transaction.signedTransactionBytes &&
+                transaction.signedTransactionBytes.length != 0
+            ) {
+                // Decode a signed transaction
+                const signedTransaction =
+                    HashgraphProto.proto.SignedTransaction.decode(
+                        transaction.signedTransactionBytes,
+                    );
+
+                signedTransactions.push(signedTransaction);
+
+                // Decode a transaction body
+                const body = HashgraphProto.proto.TransactionBody.decode(
+                    signedTransaction.bodyBytes,
+                );
+
+                // Make sure the transaction ID within the body is set
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.ITransactionID} */ (
+                            body.transactionID
+                        ),
+                    );
+
+                    // If we haven't already seen this transaction ID in the list, add it
+                    if (
+                        !transactionIdStrings.includes(transactionId.toString())
+                    ) {
+                        transactionIds.push(transactionId);
+                        transactionIdStrings.push(transactionId.toString());
+                    }
+                }
+
+                // Make sure the node account ID within the body is set
+                if (body.nodeAccountID != null) {
+                    const nodeAccountId = AccountId._fromProtobuf(
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            body.nodeAccountID
+                        ),
+                    );
+
+                    // If we haven't already seen this node account ID in the list, add it
+                    if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                        nodeIds.push(nodeAccountId);
+                        nodeIdStrings.push(nodeAccountId.toString());
+                    }
+                }
+
+                // Make sure the body is set
+                if (body.data == null) {
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf",
+                    );
+                }
+
+                bodies.push(body);
+            }
+        }
+
+        let buffers = [];
+        for (const body of bodies) {
+            if (body.fileAppend?.contents) {
+                buffers.push(body.fileAppend?.contents);
+            }
+        }
+
+        const contents = Buffer.concat(buffers);
+        let fileId;
+        if (bodies[0].fileAppend?.fileID) {
+            fileId = FileId._fromProtobuf(bodies[0].fileAppend.fileID);
+        } else {
+            throw new Error("fileID is required");
+        }
+
+        return new FileAppendTransaction({
+            fileId: fileId,
+            contents: contents,
+        });
     }
 
     /**
