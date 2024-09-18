@@ -795,6 +795,7 @@ describe("TransactionIntegration", function () {
             expect(createdAccountId).to.exist;
         });
 
+        /** @description: example multi-node-multi-signature-remove.js */
         it("Transaction with Signature Removal and Re-addition", async function () {
             // Step 1: Create and sign transfer transaction
             const transferTransaction = new TransferTransaction()
@@ -848,7 +849,8 @@ describe("TransactionIntegration", function () {
             expect(receipt.status).to.be.equal(Status.Success);
         });
 
-        it("Transaction with All Signature Removal and Re-addition", async function () {
+        /** @description: example multi-node-multi-signature-removeAll.js */
+        it("Transaction with All Signature Removal", async function () {
             // Step 1: Create and sign transfer transaction
             const transferTransaction = new TransferTransaction()
                 .addHbarTransfer(createdAccountId, new Hbar(-1))

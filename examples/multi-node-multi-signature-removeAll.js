@@ -17,6 +17,10 @@ dotenv.config();
 let aliceKey;
 let bobKey;
 
+/**
+ * @description Create a transaction with multiple nodes and multiple signatures
+ * and remove all of the signatures from the transaction
+ */
 async function main() {
     /**
      *

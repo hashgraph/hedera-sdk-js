@@ -4,7 +4,6 @@ import {
     Hbar,
     AccountId,
     KeyList,
-    TransferTransaction,
     Transaction,
     Status,
     FileAppendTransaction,
@@ -41,37 +40,6 @@ describe("PrivateKey signTransaction", function () {
         createdAccountId = createReceipt.accountId;
 
         expect(createdAccountId).to.exist;
-    });
-
-    it("Transfer Transaction Execution with Multiple Nodes", async function () {
-        // Create and sign transfer transaction
-        const transferTransaction = new TransferTransaction()
-            .addHbarTransfer(createdAccountId, new Hbar(-1))
-            .addHbarTransfer("0.0.3", new Hbar(1))
-            .setNodeAccountIds([
-                new AccountId(3),
-                new AccountId(4),
-                new AccountId(5),
-            ])
-            .freezeWith(env.client);
-
-        // Serialize and sign the transaction
-        const transferTransactionBytes = transferTransaction.toBytes();
-        const user1Signatures = user1Key.signTransaction(transferTransaction);
-        const user2Signatures = user2Key.signTransaction(transferTransaction);
-
-        // Deserialize the transaction and add signatures
-        const signedTransaction = Transaction.fromBytes(
-            transferTransactionBytes,
-        );
-        signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
-        signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
-
-        // Execute the signed transaction
-        const result = await signedTransaction.execute(env.client);
-        const receipt = await result.getReceipt(env.client);
-
-        expect(receipt.status).to.be.equal(Status.Success);
     });
 
     it("File Append Transaction Execution with Multiple Nodes", async function () {
