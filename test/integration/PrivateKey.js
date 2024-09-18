@@ -21,7 +21,7 @@ describe("PrivateKey signTransaction", function () {
     let env, user1Key, user2Key, createdAccountId, keyList;
 
     // Setting up the environment and creating a new account with a key list
-    before(async () => {
+    before(async function () {
         env = await IntegrationTestEnv.new();
 
         user1Key = PrivateKey.generate();
@@ -43,7 +43,7 @@ describe("PrivateKey signTransaction", function () {
         expect(createdAccountId).to.exist;
     });
 
-    it("Transfer Transaction Execution with Multiple Nodes", async () => {
+    it("Transfer Transaction Execution with Multiple Nodes", async function () {
         // Create and sign transfer transaction
         const transferTransaction = new TransferTransaction()
             .addHbarTransfer(createdAccountId, new Hbar(-1))
@@ -74,7 +74,7 @@ describe("PrivateKey signTransaction", function () {
         expect(receipt.status).to.be.equal(Status.Success);
     });
 
-    it("File Append Transaction Execution with Multiple Nodes", async () => {
+    it("File Append Transaction Execution with Multiple Nodes", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
         // Create file

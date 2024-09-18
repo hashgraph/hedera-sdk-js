@@ -13,9 +13,12 @@ import {
     TransactionId,
     Timestamp,
     AccountUpdateTransaction,
+    KeyList,
+    Status,
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import { expect } from "chai";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
@@ -762,6 +765,140 @@ describe("TransactionIntegration", function () {
                 expect(receipt.status.toString()).to.be.equal("SUCCESS");
             } catch (error) {
                 console.log(error);
+            }
+        });
+    });
+
+    describe("Transaction Signature Manipulation Flow", function () {
+        let env, user1Key, user2Key, createdAccountId, keyList;
+
+        // Setting up the environment and creating a new account with a key list
+        before(async function () {
+            env = await IntegrationTestEnv.new();
+
+            user1Key = PrivateKey.generate();
+            user2Key = PrivateKey.generate();
+            keyList = new KeyList([user1Key.publicKey, user2Key.publicKey]);
+
+            // Create account
+            const createAccountTransaction = new AccountCreateTransaction()
+                .setInitialBalance(new Hbar(2))
+                .setKey(keyList);
+
+            const createResponse = await createAccountTransaction.execute(
+                env.client,
+            );
+            const createReceipt = await createResponse.getReceipt(env.client);
+
+            createdAccountId = createReceipt.accountId;
+
+            expect(createdAccountId).to.exist;
+        });
+
+        it("Transaction with Signature Removal and Re-addition", async function () {
+            // Step 1: Create and sign transfer transaction
+            const transferTransaction = new TransferTransaction()
+                .addHbarTransfer(createdAccountId, new Hbar(-1))
+                .addHbarTransfer("0.0.3", new Hbar(1))
+                .setNodeAccountIds([
+                    new AccountId(3),
+                    new AccountId(4),
+                    new AccountId(5),
+                ])
+                .freezeWith(env.client);
+
+            // Step 2: Serialize and sign the transaction
+            const transferTransactionBytes = transferTransaction.toBytes();
+            const user1Signatures =
+                user1Key.signTransaction(transferTransaction);
+            const user2Signatures =
+                user2Key.signTransaction(transferTransaction);
+
+            // Step 3: Deserialize the transaction and add signatures
+            const signedTransaction = Transaction.fromBytes(
+                transferTransactionBytes,
+            );
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+            signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+
+            const getSignaturesNumberPerNode = () =>
+                signedTransaction._signedTransactions.list[0].sigMap.sigPair
+                    .length;
+
+            // Test if the transaction for a node has 2 signatures
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 4: Remove the signature for user1 from the transaction
+            signedTransaction.removeSignature(user1Key.publicKey);
+
+            // Test if the transaction for a node has 1 signature after removal
+            expect(getSignaturesNumberPerNode()).to.be.equal(1);
+
+            // Step 5: Re-add the removed signature
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+
+            // Test if the transaction for a node has 2 signatures after adding back the signature
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 6: Execute the signed transaction
+            const result = await signedTransaction.execute(env.client);
+            const receipt = await result.getReceipt(env.client);
+
+            // Step 7: Verify the transaction status
+            expect(receipt.status).to.be.equal(Status.Success);
+        });
+
+        it("Transaction with All Signature Removal and Re-addition", async function () {
+            // Step 1: Create and sign transfer transaction
+            const transferTransaction = new TransferTransaction()
+                .addHbarTransfer(createdAccountId, new Hbar(-1))
+                .addHbarTransfer("0.0.3", new Hbar(1))
+                .setNodeAccountIds([
+                    new AccountId(3),
+                    new AccountId(4),
+                    new AccountId(5),
+                ])
+                .freezeWith(env.client);
+
+            // Step 2: Serialize and sign the transaction
+            const transferTransactionBytes = transferTransaction.toBytes();
+            const user1Signatures =
+                user1Key.signTransaction(transferTransaction);
+            const user2Signatures =
+                user2Key.signTransaction(transferTransaction);
+
+            // Step 3: Deserialize the transaction and add signatures
+            const signedTransaction = Transaction.fromBytes(
+                transferTransactionBytes,
+            );
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+            signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+
+            const getSignaturesNumberPerNode = () =>
+                signedTransaction._signedTransactions.list[0].sigMap.sigPair
+                    .length;
+
+            // Test if the transaction for a node has 2 signatures
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 4: Remove the signature for user1 from the transaction
+            signedTransaction.removeAllSignatures();
+
+            // Test if the transaction for a node has 0 signatures after removal
+            expect(getSignaturesNumberPerNode()).to.be.equal(0);
+
+            // Step 5: Try to execute the transaction without any signatures and expect it to fail
+            try {
+                const result = await signedTransaction.execute(env.client);
+                await result.getReceipt(env.client);
+
+                // If we get here, the transaction did not fail as expected
+                throw new Error(
+                    "Transaction should have failed due to missing signatures",
+                );
+            } catch (error) {
+                // Expect the error to be due to an invalid signature
+                expect(error.message).to.include("INVALID_SIGNATURE");
             }
         });
     });

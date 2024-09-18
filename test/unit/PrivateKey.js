@@ -7,7 +7,7 @@ import Transaction from "../../src/transaction/Transaction.js";
 describe("PrivateKey signTransaction", function () {
     let privateKey, mockedTransaction, mockedSignature;
 
-    beforeEach(() => {
+    beforeEach(function () {
         privateKey = PrivateKey.generate();
 
         mockedTransaction = sinon.createStubInstance(Transaction);
@@ -32,7 +32,7 @@ describe("PrivateKey signTransaction", function () {
         const signatures = privateKey.signTransaction(mockedTransaction);
 
         // Validate that the signatures are correct
-        expect(signatures).to.deep.equal([mockedSignature]);
+        expect(signatures).to.deep.equal(mockedSignature);
 
         sinon.assert.calledWith(
             mockedTransaction.addSignature,
@@ -59,7 +59,7 @@ describe("PrivateKey signTransaction", function () {
         const signatures = privateKey.signTransaction(mockedTransaction);
 
         // Validate that an empty Uint8Array was returned
-        expect(signatures).to.deep.equal([new Uint8Array()]);
+        expect(signatures).to.deep.equal(new Uint8Array());
 
         // Ensure that the transaction's addSignature method was called with the empty signature
         sinon.assert.calledWith(
