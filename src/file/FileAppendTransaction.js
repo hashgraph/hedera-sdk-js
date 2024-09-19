@@ -658,10 +658,17 @@ export default class FileAppendTransaction extends Transaction {
             throw new Error("fileID is required");
         }
 
-        return new FileAppendTransaction({
-            fileId: fileId,
-            contents: contents,
-        });
+        return Transaction._fromProtobufTransactions(
+            new FileAppendTransaction({
+                fileId: fileId,
+                contents: contents,
+            }),
+            [],
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies,
+        );
     }
 
     /**
