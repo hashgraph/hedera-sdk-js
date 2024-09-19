@@ -211,7 +211,49 @@ describe("FileAppend", function () {
         ).getReceipt(env.client);
     });
 
+    it("should keep content after deserialization", async function () {
+        this.timeout(120000);
+
+        const NEW_CONTENTS_LENGTH = 5000;
+        const NEW_CONTENTS = generateUInt8Array(NEW_CONTENTS_LENGTH);
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        expect(fileId).to.not.be.null;
+        expect(fileId != null ? fileId.num > 0 : false).to.be.true;
+
+        const tx = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setContents(NEW_CONTENTS);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        await (await txFromBytes.execute(env.client)).getReceipt(env.client);
+
+        const content = await new FileInfoQuery()
+            .setFileId(fileId)
+            .execute(env.client);
+        expect(content.size.toInt()).to.be.equal(NEW_CONTENTS_LENGTH);
+    });
+
     after(async function () {
         await env.close();
     });
 });
+
+function generateUInt8Array(length) {
+    const uint8Array = new Uint8Array(length);
+
+    for (let i = 0; i < length; i++) {
+        uint8Array[i] = Math.floor(Math.random() * 256);
+    }
+
+    return uint8Array;
+}
