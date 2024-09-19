@@ -673,6 +673,25 @@ export default class FileAppendTransaction extends Transaction {
         );
         return `FileAppendTransaction:${timestamp.toString()}`;
     }
+
+    /**
+     * @override
+     * @protected
+     * @returns {HashgraphProto.proto.IFileAppendTransactionBody}
+     */
+    _makeTransactionData() {
+        const length = this._contents != null ? this._contents.length : 0;
+        const startIndex = this._transactionIds.index * this._chunkSize;
+        const endIndex = Math.min(startIndex + this._chunkSize, length);
+
+        return {
+            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            contents:
+                this._contents != null
+                    ? this._contents.slice(startIndex, endIndex)
+                    : null,
+        };
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
