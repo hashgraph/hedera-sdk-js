@@ -866,6 +866,81 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * This method removes all signatures from the transaction based on the public key provided.
+     *
+     * @param {PublicKey} publicKey - The public key associated with the signature to remove.
+     * @returns {Uint8Array[]} The removed signatures.
+     */
+    removeSignature(publicKey) {
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        const publicKeyData = publicKey.toBytesRaw();
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (!this._signerPublicKeys.has(publicKeyHex)) {
+            throw new Error("The public key has not signed this transaction");
+        }
+
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
+        // Iterate over the signed transactions and remove matching signatures
+        for (const transaction of this._signedTransactions.list) {
+            const removedSignaturesFromTransaction =
+                this._removeSignaturesFromTransaction(
+                    transaction,
+                    publicKeyHex,
+                );
+
+            removedSignatures.push(...removedSignaturesFromTransaction);
+        }
+
+        // Remove the public key from internal tracking if no signatures remain
+        this._signerPublicKeys.delete(publicKeyHex);
+        this._publicKeys = this._publicKeys.filter(
+            (key) => !key.equals(publicKey),
+        );
+
+        // Update transaction signers array
+        this._transactionSigners.pop();
+
+        return removedSignatures;
+    }
+
+    /**
+     * This method clears all signatures from the transaction and returns them in a specific format.
+     *
+     * It will call collectSignatures to get the removed signatures, then clear all signatures
+     * from the internal tracking.
+     *
+     * @returns {{ [userPublicKey: string]: Uint8Array[] | Uint8Array }} The removed signatures in the specified format.
+     */
+    removeAllSignatures() {
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        const removedSignatures = this._collectSignaturesByPublicKey();
+
+        // Iterate over the signed transactions and clear all signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (transaction.sigMap && transaction.sigMap.sigPair) {
+                // Clear all signature pairs from the transaction's signature map
+                transaction.sigMap.sigPair = [];
+            }
+        }
+
+        // Clear the internal tracking of signer public keys and other relevant arrays
+        this._signerPublicKeys.clear();
+        this._publicKeys = [];
+        this._transactionSigners = [];
+
+        return removedSignatures;
+    }
+
+    /**
      * Get the current signatures on the request
      *
      * **NOTE**: Does NOT support sign on demand
@@ -1758,6 +1833,97 @@ export default class Transaction extends Executable {
         return HashgraphProto.proto.TransactionResponse.encode(
             response,
         ).finish();
+    }
+
+    /**
+     * Removes all signatures from a transaction and collects the removed signatures.
+     *
+     * @param {HashgraphProto.proto.ISignedTransaction} transaction - The transaction object to process.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key.
+     * @returns {Uint8Array[]} An array of removed signatures.
+     */
+    _removeSignaturesFromTransaction(transaction, publicKeyHex) {
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
+        if (!transaction.sigMap || !transaction.sigMap.sigPair) {
+            return [];
+        }
+
+        transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
+            (sigPair) => {
+                const shouldRemove = this._shouldRemoveSignature(
+                    sigPair,
+                    publicKeyHex,
+                );
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
+
+                if (shouldRemove && signature) {
+                    removedSignatures.push(signature);
+                }
+
+                return !shouldRemove;
+            },
+        );
+
+        return removedSignatures;
+    }
+
+    /**
+     * Determines whether a signature should be removed based on the provided public key.
+     *
+     * @param {HashgraphProto.proto.ISignaturePair} sigPair - The signature pair object that contains
+     *        the public key prefix and signature to be evaluated.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key to compare against.
+     * @returns {boolean} `true` if the public key prefix in the signature pair matches the provided public key,
+     *          indicating that the signature should be removed; otherwise, `false`.
+     */
+    _shouldRemoveSignature = (sigPair, publicKeyHex) => {
+        const sigPairPublicKeyHex = hex.encode(
+            sigPair?.pubKeyPrefix || new Uint8Array(),
+        );
+
+        const matchesPublicKey = sigPairPublicKeyHex === publicKeyHex;
+
+        return matchesPublicKey;
+    };
+
+    /**
+     * Collects all signatures from signed transactions and returns them in a format keyed by public key.
+     *
+     * @returns {{ [publicKey: PublicKey]: Uint8Array[] }} The collected signatures keyed by public key.
+     */
+    _collectSignaturesByPublicKey() {
+        /** @type {{ [publicKey: string]: Uint8Array[] }} */
+        const collectedSignatures = {};
+
+        // Iterate over the signed transactions and collect signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (!(transaction.sigMap && transaction.sigMap.sigPair)) {
+                return [];
+            }
+
+            // Collect the signatures
+            for (const sigPair of transaction.sigMap.sigPair) {
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
+
+                if (!signature || !sigPair.pubKeyPrefix) {
+                    return [];
+                }
+
+                const publicKeyHex = hex.encode(sigPair.pubKeyPrefix);
+
+                // Initialize the structure for this publicKey if it doesn't exist
+                if (!collectedSignatures[publicKeyHex]) {
+                    collectedSignatures[publicKeyHex] = [];
+                }
+
+                // Add the signature to the corresponding public key
+                collectedSignatures[publicKeyHex].push(signature);
+            }
+        }
+
+        return collectedSignatures;
     }
 }
 
