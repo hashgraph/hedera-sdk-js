@@ -104,6 +104,7 @@ describe("FileUpdate", function () {
             "302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137",
         );
         const FEES_FILE_ID = "0.0.111";
+        const DUMMY_TEXT = "Hello, Hedera!";
 
         const client = Client.forLocalNode().setOperator(
             OPERATOR_ID,
@@ -113,7 +114,7 @@ describe("FileUpdate", function () {
         await (
             await new FileUpdateTransaction()
                 .setFileId(FEES_FILE_ID)
-                .setContents("Hello, Hedera!")
+                .setContents(DUMMY_TEXT)
                 .execute(client)
         ).getReceipt(client);
     });
