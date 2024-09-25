@@ -243,6 +243,35 @@ describe("FileAppend", function () {
         expect(content.size.toInt()).to.be.equal(NEW_CONTENTS_LENGTH);
     });
 
+    it("should be able to freeze after deserialze", async function () {
+        this.timeout(120000);
+
+        const NEW_CONTENTS_LENGTH = 5000;
+        const NEW_CONTENTS = generateUInt8Array(NEW_CONTENTS_LENGTH);
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        expect(fileId).to.not.be.null;
+        expect(fileId != null ? fileId.num > 0 : false).to.be.true;
+
+        const tx = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setContents(NEW_CONTENTS);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        txFromBytes.freezeWith(env.client);
+
+        expect(txFromBytes.isFrozen()).to.be.true;
+    });
+
     after(async function () {
         await env.close();
     });
