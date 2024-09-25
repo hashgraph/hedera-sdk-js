@@ -809,6 +809,11 @@ export default class Transaction extends Executable {
         const isSingleSignature = signature instanceof Uint8Array;
         const isArraySignature = Array.isArray(signature);
 
+        if (this.requiredChunks > 1) {
+            throw new Error(
+                "Add signature is not supported for chunked transactions",
+            );
+        }
         // Check if it is a single signature with NOT exactly one transaction
         if (isSingleSignature && this._signedTransactions.length !== 1) {
             throw new Error(

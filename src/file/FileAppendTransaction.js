@@ -413,17 +413,6 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * @abstract
-     * @override
-     * @param {PublicKey} publicKey
-     * @param {Uint8Array | Uint8Array[]} signature
-     * @returns {NonNullable<this>}
-     */
-    addSignature(publicKey, signature) {
-        throw new Error("FileAppendTransaction does not support addSignature");
-    }
-
-    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
