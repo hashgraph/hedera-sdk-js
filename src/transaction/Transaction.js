@@ -673,6 +673,15 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * How many chunk sizes are expected
+     * @abstract
+     * @returns {number}
+     */
+    get requiredChunks() {
+        return 1;
+    }
+
+    /**
      * Sign the transaction with the private key
      * **NOTE**: This is a thin wrapper around `.signWith()`
      *
@@ -1048,7 +1057,7 @@ export default class Transaction extends Executable {
     /**
      * Build all the signed transactions from the node account IDs
      *
-     * @private
+     * @internal
      */
     _buildIncompletedTransactions() {
         if (this._nodeAccountIds.length == 0) {
