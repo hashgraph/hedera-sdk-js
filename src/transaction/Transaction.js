@@ -803,7 +803,7 @@ export default class Transaction extends Executable {
      *
      * @param {PublicKey} publicKey
      * @param {Uint8Array | Uint8Array[]} signature
-     * @returns {this}
+     * @returns {NonNullable<this>}
      */
     addSignature(publicKey, signature) {
         const isSingleSignature = signature instanceof Uint8Array;

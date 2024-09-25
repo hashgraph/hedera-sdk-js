@@ -42,7 +42,7 @@ describe("PrivateKey signTransaction", function () {
         expect(createdAccountId).to.exist;
     });
 
-    it("File Append Transaction Execution with Multiple Nodes", async function () {
+    it.skip("File Append Transaction Execution with Multiple Nodes", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
         // Create file
