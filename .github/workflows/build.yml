@@ -20,19 +20,19 @@ permissions:
   contents: read
 
 env:
-  CG_EXEC: export R_UID=$(id -u); CGROUP_LOGLEVEL=DEBUG cgexec -g cpu,memory:user.slice/user-${R_UID}.slice/user@${R_UID}.service/e2e-${{ github.run_id }} --sticky ionice -c 2 -n 2 nice -n 19
+  CG_EXEC: ionice -c 2 -n 2 nice -n 19
 
 jobs:
   build:
     name: Build using Node ${{ matrix.node }}
-    runs-on: [self-hosted, Linux, medium, ephemeral]
+    runs-on: client-sdk-linux-medium
     strategy:
       matrix:
         node: [ "16", "18" ]
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
         with:
           egress-policy: audit
 
@@ -52,7 +52,7 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -62,55 +62,14 @@ jobs:
 
   test:
     name: Test using Node ${{ matrix.node }}
-    runs-on: [self-hosted, Linux, large, ephemeral]
+    runs-on: client-sdk-linux-large
     strategy:
       matrix:
         node: [ "16" ]
 
     steps:
-      - name: Setup Control Groups
-        run: |
-            echo "::group::Get System Configuration"
-              USR_ID="$(id -un)"
-              GRP_ID="$(id -gn)"
-              E2E_MEM_LIMIT="30064771072"
-              AGENT_MEM_LIMIT="2147483648"
-              USER_SLICE="user.slice/user-$(id -u).slice"
-              USER_SERVICE="${USER_SLICE}/user@$(id -u).service"
-              E2E_GROUP_NAME="${USER_SERVICE}/e2e-${{ github.run_id }}"
-              AGENT_GROUP_NAME="${USER_SERVICE}/agent-${{ github.run_id }}"
-            echo "::endgroup::"
-
-            echo "::group::Install Control Group Tools"
-              if ! command -v cgcreate >/dev/null 2>&1; then
-                sudo apt-get update
-                sudo apt-get install -y cgroup-tools
-              fi
-            echo "::endgroup::"
-
-            echo "::group::Create Control Groups"
-              sudo cgcreate -g cpu,memory:${USER_SLICE} -a ${USR_ID}:${GRP_ID} -t ${USR_ID}:${GRP_ID}
-              sudo cgcreate -g cpu,memory:${USER_SERVICE} -a ${USR_ID}:${GRP_ID} -t ${USR_ID}:${GRP_ID}
-              sudo cgcreate -g cpu,memory:${E2E_GROUP_NAME} -a ${USR_ID}:${GRP_ID} -t ${USR_ID}:${GRP_ID}
-              sudo cgcreate -g cpu,memory:${AGENT_GROUP_NAME} -a ${USR_ID}:${GRP_ID} -t ${USR_ID}:${GRP_ID}
-            echo "::endgroup::"
-
-            echo "::group::Set Control Group Limits"
-              cgset -r cpu.weight=768 ${E2E_GROUP_NAME}
-              cgset -r cpu.weight=500 ${AGENT_GROUP_NAME}
-              cgset -r memory.max=${E2E_MEM_LIMIT} ${E2E_GROUP_NAME}
-              cgset -r memory.max=${AGENT_MEM_LIMIT} ${AGENT_GROUP_NAME}
-              cgset -r memory.swap.max=${E2E_MEM_LIMIT} ${E2E_GROUP_NAME}
-              cgset -r memory.swap.max=${AGENT_MEM_LIMIT} ${AGENT_GROUP_NAME}
-            echo "::endgroup::"
-
-            echo "::group::Move Runner Processes to Control Groups"
-              sudo cgclassify --sticky -g cpu,memory:${AGENT_GROUP_NAME} $(pgrep 'Runner.Listener' | tr '\n' ' ')
-              sudo cgclassify -g cpu,memory:${AGENT_GROUP_NAME} $(pgrep 'Runner.Worker' | tr '\n' ' ')
-            echo "::endgroup::"
-
       -  name: Harden Runner
-         uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+         uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
          with:
            egress-policy: audit
 
@@ -138,7 +97,7 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm

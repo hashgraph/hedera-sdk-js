@@ -325,16 +325,25 @@ export default class PrivateKey extends Key {
 
     /**
      * @param {Transaction} transaction
-     * @returns {Uint8Array}
+     * @returns {Uint8Array | Uint8Array[]}
      */
     signTransaction(transaction) {
-        const tx = transaction._signedTransactions.get(0);
-        const signature =
-            tx.bodyBytes != null ? this.sign(tx.bodyBytes) : new Uint8Array();
+        const signatures = transaction._signedTransactions.list.map(
+            (signedTransaction) => {
+                const bodyBytes = signedTransaction.bodyBytes;
 
-        transaction.addSignature(this.publicKey, signature);
+                if (!bodyBytes) {
+                    return new Uint8Array();
+                }
 
-        return signature;
+                return this._key.sign(bodyBytes);
+            },
+        );
+
+        transaction.addSignature(this.publicKey, signatures);
+
+        // Return directly Uint8Array if there is only one signature
+        return signatures.length === 1 ? signatures[0] : signatures;
     }
 
     /**
