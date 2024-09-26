@@ -458,7 +458,7 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * Build all the transactions when
+     * Build all the transactions when transacgtions are not signed
      * @override
      * @internal
      */
