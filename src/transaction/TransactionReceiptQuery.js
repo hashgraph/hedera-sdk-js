@@ -256,7 +256,6 @@ export default class TransactionReceiptQuery extends Query {
             case Status.ReceiptNotFound:
                 return [status, ExecutionState.Retry];
             case Status.Success:
-                return [status, ExecutionState.Finished];
             case Status.FeeScheduleFilePartUploaded:
                 return [status, ExecutionState.Finished];
             default:
