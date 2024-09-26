@@ -675,9 +675,10 @@ export default class Transaction extends Executable {
     /**
      * How many chunk sizes are expected
      * @abstract
+     * @internal
      * @returns {number}
      */
-    get requiredChunks() {
+    getRequiredChunks() {
         return 1;
     }
 
@@ -809,7 +810,7 @@ export default class Transaction extends Executable {
         const isSingleSignature = signature instanceof Uint8Array;
         const isArraySignature = Array.isArray(signature);
 
-        if (this.requiredChunks > 1) {
+        if (this.getRequiredChunks() > 1) {
             throw new Error(
                 "Add signature is not supported for chunked transactions",
             );

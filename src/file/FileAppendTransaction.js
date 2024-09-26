@@ -225,7 +225,7 @@ export default class FileAppendTransaction extends Transaction {
      * @override
      * @returns {number}
      */
-    get requiredChunks() {
+    getRequiredChunks() {
         if (this._contents == null) {
             return 0;
         }
@@ -326,7 +326,7 @@ export default class FileAppendTransaction extends Transaction {
         this._transactionIds.clear();
         this._signedTransactions.clear();
 
-        for (let chunk = 0; chunk < this.requiredChunks; chunk++) {
+        for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
@@ -385,7 +385,7 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client, requestTimeout) {
-        if (this.maxChunks && this.requiredChunks > this.maxChunks) {
+        if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
                 `cannot execute \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
             );
@@ -479,7 +479,7 @@ export default class FileAppendTransaction extends Transaction {
         this._transactionIds.clear();
         this._signedTransactions.clear();
 
-        for (let chunk = 0; chunk < this.requiredChunks; chunk++) {
+        for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
