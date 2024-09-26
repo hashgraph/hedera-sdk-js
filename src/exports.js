@@ -33,6 +33,9 @@ export { default as PublicKey } from "./PublicKey.js";
 export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
+export { default as TokenAirdropTransaction } from "./token/TokenAirdropTransaction.js";
+export { default as TokenClaimAirdropTransaction } from "./token/TokenClaimAirdropTransaction.js";
+export { default as TokenCancelAirdropTransaction } from "./token/TokenCancelAirdropTransaction.js";
 // eslint-disable-next-line deprecation/deprecation
 export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
 export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
@@ -128,6 +131,8 @@ export { default as Timestamp } from "./Timestamp.js";
 export { default as TokenAllowance } from "./account/TokenAllowance.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
 export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
+export { default as TokenRejectTransaction } from "./token/TokenRejectTransaction.js";
+export { default as TokenRejectFlow } from "./token/TokenRejectFlow.js";
 export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";
 export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransaction.js";
 export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
@@ -175,12 +180,17 @@ export { default as LogLevel } from "./logger/LogLevel.js";
 export { EntityIdHelper };
 export { default as Long } from "long";
 export { default as FreezeType } from "./FreezeType.js";
+export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
-export { default as TokenNftsUpdateTransaction } from "./token/TokenNftsUpdateTransaction.js";
+export { default as TokenUpdateNftsTransaction } from "./token/TokenUpdateNftsTransaction.js";
+export { default as NodeCreateTransaction } from "./node/NodeCreateTransaction.js";
+export { default as ServiceEndpoint } from "./node/ServiceEndpoint.js";
+export { default as NodeDeleteTransaction } from "./node/NodeDeleteTransaction.js";
+export { default as NodeUpdateTransaction } from "./node/NodeUpdateTransaction.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

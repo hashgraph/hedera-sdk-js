@@ -26,6 +26,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import TokenKeyValidation from "./TokenKeyValidation.js";
 
 /**
  * @namespace proto
@@ -68,6 +69,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Key} [props.pauseKey]
      * @param {Key} [props.metadataKey]
      * @param {Uint8Array} [props.metadata]
+     * @param {TokenKeyValidation} [props.keyVerificationMode]
      */
     constructor(props = {}) {
         super();
@@ -174,6 +176,14 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._metadata = null;
 
+        /**
+         * @private
+         * @type {?TokenKeyValidation}
+         * Determines whether the system should check the validity of the passed keys for update.
+         * Defaults to FULL_VALIDATION
+         */
+        this._keyVerificationMode = TokenKeyValidation.FullValidation;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -240,6 +250,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.metadata != null) {
             this.setMetadata(props.metadata);
+        }
+
+        if (props.keyVerificationMode != null) {
+            this.setKeyVerificationMode(props.keyVerificationMode);
         }
     }
 
@@ -332,6 +346,12 @@ export default class TokenUpdateTransaction extends Transaction {
                         ? update.metadata.value != null
                             ? update.metadata.value
                             : undefined
+                        : undefined,
+                keyVerificationMode:
+                    update.keyVerificationMode != null
+                        ? TokenKeyValidation._fromCode(
+                              update.keyVerificationMode,
+                          )
                         : undefined,
             }),
             transactions,
@@ -671,6 +691,24 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?TokenKeyValidation}
+     */
+    get keyVerificationMode() {
+        return this._keyVerificationMode;
+    }
+
+    /**
+     * @param {TokenKeyValidation} keyVerificationMode
+     * @returns {this}
+     */
+    setKeyVerificationMode(keyVerificationMode) {
+        this._requireNotFrozen();
+        this._keyVerificationMode = keyVerificationMode;
+
+        return this;
+    }
+
+    /**
      * @returns {this}
      */
     clearTokenMemo() {
@@ -778,6 +816,10 @@ export default class TokenUpdateTransaction extends Transaction {
                           value: this._metadata,
                       }
                     : null,
+            keyVerificationMode:
+                this._keyVerificationMode != null
+                    ? this._keyVerificationMode._code
+                    : undefined,
         };
     }
 

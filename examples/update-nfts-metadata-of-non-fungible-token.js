@@ -6,7 +6,7 @@ import {
     Client,
     AccountId,
     TokenMintTransaction,
-    TokenNftsUpdateTransaction,
+    TokenUpdateNftsTransaction,
     TokenNftInfoQuery,
     NftId,
     AccountCreateTransaction,
@@ -147,7 +147,7 @@ async function main() {
         );
 
         // Update nfts metadata
-        const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
+        const tokenUpdateNftsTx = new TokenUpdateNftsTransaction()
             .setTokenId(tokenId)
             .setSerialNumbers([nftSerial])
             .setMetadata(newMetadata)

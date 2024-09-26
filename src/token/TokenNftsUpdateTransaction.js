@@ -42,7 +42,7 @@ import Transaction, {
  */
 
 /**
- * Pause a new Hedera™ crypto-currency token.
+ * @deprecated - Use TokenUpdateNftsTransaction instead
  */
 export default class TokenNftsUpdateTransaction extends Transaction {
     /**
@@ -108,6 +108,7 @@ export default class TokenNftsUpdateTransaction extends Transaction {
             );
 
         return Transaction._fromProtobufTransactions(
+            // eslint-disable-next-line deprecation/deprecation
             new TokenNftsUpdateTransaction({
                 tokenId:
                     tokenUpdate.token != null
@@ -232,6 +233,6 @@ export default class TokenNftsUpdateTransaction extends Transaction {
 
 TRANSACTION_REGISTRY.set(
     "tokenUpdateNfts",
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+    // eslint-disable-next-line deprecation/deprecation, @typescript-eslint/unbound-method
     TokenNftsUpdateTransaction._fromProtobuf,
 );

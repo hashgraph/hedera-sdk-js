@@ -197,8 +197,14 @@ export default class RequestType {
                 return "NodeUpdate";
             case RequestType.NodeDelete:
                 return "NodeDelete";
-            case RequestType.NodeGetInfo:
-                return "NodeGetInfo";
+            case RequestType.TokenReject:
+                return "TokenReject";
+            case RequestType.TokenAirdrop:
+                return "TokenAirdrop";
+            case RequestType.TokenCancelAirdrop:
+                return "TokenCancelAirdrop";
+            case RequestType.TokenClaimAirdrop:
+                return "TokenClaimAirdrop";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -368,7 +374,13 @@ export default class RequestType {
             case 91:
                 return RequestType.NodeDelete;
             case 92:
-                return RequestType.NodeGetInfo;
+                return RequestType.TokenReject;
+            case 93:
+                return RequestType.TokenAirdrop;
+            case 94:
+                return RequestType.TokenCancelAirdrop;
+            case 95:
+                return RequestType.TokenClaimAirdrop;
         }
 
         throw new Error(
@@ -773,6 +785,21 @@ RequestType.NodeUpdate = new RequestType(90);
 RequestType.NodeDelete = new RequestType(91);
 
 /**
- * Get Node information
+ * Transfer one or more token balances held by the requesting account to the treasury for each token type.
  */
-RequestType.NodeGetInfo = new RequestType(92);
+RequestType.TokenReject = new RequestType(92);
+
+/**
+ * Airdrop one or more tokens to one or more accounts.
+ */
+RequestType.TokenAirdrop = new RequestType(93);
+
+/**
+ * Remove one or more pending airdrops from state on behalf of the sender(s) for each airdrop.
+ */
+RequestType.TokenCancelAirdrop = new RequestType(94);
+
+/**
+ * Claim one or more pending airdrops
+ */
+RequestType.TokenClaimAirdrop = new RequestType(95);

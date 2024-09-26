@@ -243,9 +243,10 @@ export default class ContractCallQuery extends Query {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -262,6 +263,7 @@ export default class ContractCallQuery extends Query {
             (response.contractCallLocal);
         if (!call.functionResult) {
             return new PrecheckStatusError({
+                nodeId,
                 status,
                 transactionId: this._getTransactionId(),
                 contractFunctionResult: null,
@@ -271,6 +273,7 @@ export default class ContractCallQuery extends Query {
         const contractFunctionResult = this._mapResponseSync(response);
 
         return new PrecheckStatusError({
+            nodeId,
             status,
             transactionId: this._getTransactionId(),
             contractFunctionResult,

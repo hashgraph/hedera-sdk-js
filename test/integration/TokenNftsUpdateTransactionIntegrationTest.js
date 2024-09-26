@@ -3,14 +3,14 @@ import {
     TokenType,
     PrivateKey,
     TokenMintTransaction,
-    TokenNftsUpdateTransaction,
+    TokenUpdateNftsTransaction,
     TokenNftInfoQuery,
     NftId,
     Status,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe("TokenNftsUpdateTransaction", function () {
+describe("TokenUpdateNftsTransaction", function () {
     let client,
         operatorId,
         operatorKey,
@@ -24,6 +24,7 @@ describe("TokenNftsUpdateTransaction", function () {
         nftCount;
 
     before(async function () {
+        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
         client = env.client;
         operatorId = env.operatorId;
@@ -75,7 +76,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
         await (
             await (
-                await new TokenNftsUpdateTransaction()
+                await new TokenUpdateNftsTransaction()
                     .setTokenId(tokenId)
                     .setSerialNumbers(serials)
                     .setMetadata(newMetadata)
@@ -129,7 +130,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
         await (
             await (
-                await new TokenNftsUpdateTransaction()
+                await new TokenUpdateNftsTransaction()
                     .setTokenId(tokenId)
                     .setSerialNumbers([serials[0], serials[1]])
                     .setMetadata(newMetadata)
@@ -183,7 +184,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
         await (
             await (
-                await new TokenNftsUpdateTransaction()
+                await new TokenUpdateNftsTransaction()
                     .setTokenId(tokenId)
                     .setSerialNumbers(serials)
                     .freezeWith(client)
@@ -236,7 +237,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
         await (
             await (
-                await new TokenNftsUpdateTransaction()
+                await new TokenUpdateNftsTransaction()
                     .setTokenId(tokenId)
                     .setMetadata([])
                     .setSerialNumbers(serials)
@@ -281,7 +282,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
             const serials = tokenMintReceipt.serials;
 
-            const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
+            const tokenUpdateNftsTx = new TokenUpdateNftsTransaction()
                 .setTokenId(tokenId)
                 .setSerialNumbers(serials)
                 .setMetadata(newMetadata)
@@ -293,7 +294,7 @@ describe("TokenNftsUpdateTransaction", function () {
                 ).execute(client)
             ).getReceipt(client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.TokenHasNoMetadataKey);
+            expect(error.status).to.be.eql(Status.InvalidSignature);
         }
     });
 
@@ -326,7 +327,7 @@ describe("TokenNftsUpdateTransaction", function () {
 
             const serials = tokenMintReceipt.serials;
 
-            const tokenUpdateNftsTx = new TokenNftsUpdateTransaction()
+            const tokenUpdateNftsTx = new TokenUpdateNftsTransaction()
                 .setTokenId(tokenId)
                 .setSerialNumbers(serials)
                 .setMetadata(newMetadata)
