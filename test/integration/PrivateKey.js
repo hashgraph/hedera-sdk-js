@@ -42,7 +42,7 @@ describe("PrivateKey signTransaction", function () {
         expect(createdAccountId).to.exist;
     });
 
-    // this sklip is temporary before we implement this feature
+    // this skip is temporary before we implement this feature
     // in the next beta release
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("File Append Transaction Execution with Multiple Nodes", async function () {
