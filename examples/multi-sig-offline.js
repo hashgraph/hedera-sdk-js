@@ -89,7 +89,7 @@ async function main() {
 
 /**
  * @param {Uint8Array} transactionBytes
- * @returns {Uint8Array}
+ * @returns {Uint8Array | Uint8Array[]}
  */
 function user1Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);
@@ -98,7 +98,7 @@ function user1Signs(transactionBytes) {
 
 /**
  * @param {Uint8Array} transactionBytes
- * @returns {Uint8Array}
+ * @returns {Uint8Array | Uint8Array[]}
  */
 function user2Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);

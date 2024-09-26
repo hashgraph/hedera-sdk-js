@@ -33,7 +33,9 @@ export default class GrpcServiceError extends Error {
      * @param {GrpcStatus} status
      */
     constructor(status) {
-        super(`gRPC service failed with status: ${status.toString()}`);
+        super(
+            `gRPC service failed with: Status: ${status.toString()}, Code: ${status.valueOf()}`,
+        );
 
         /**
          * @readonly
@@ -55,10 +57,20 @@ export default class GrpcServiceError extends Error {
         if (obj.code != null && obj.details != null) {
             const status = GrpcStatus._fromValue(obj.code);
             const err = new GrpcServiceError(status);
-            err.message = obj.details;
+            err.stack += `\nCaused by: ${
+                obj.stack ? obj.stack.toString() : ""
+            }`;
+            err.message += `: ${obj.details}`;
             return err;
         } else {
             return /** @type {Error} */ (obj);
         }
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return `${this.name}: ${this.message}`;
     }
 }
