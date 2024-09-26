@@ -385,6 +385,12 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client, requestTimeout) {
+        if (this.maxChunks && this.requiredChunks > this.maxChunks) {
+            throw new Error(
+                `cannot execute \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
+
         if (!super._isFrozen()) {
             this.freezeWith(client);
         }
@@ -502,6 +508,17 @@ export default class FileAppendTransaction extends Transaction {
 
         this._transactionIds.advance();
         this._transactionIds.setLocked();
+    }
+
+    /**
+     * Build all the signed transactions
+     * @override
+     * @internal
+     */
+    _buildAllTransactions() {
+        for (let i = 0; i < this._signedTransactions.length; i++) {
+            this._buildTransaction(i);
+        }
     }
 
     /**

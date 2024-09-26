@@ -1470,7 +1470,7 @@ export default class Transaction extends Executable {
     /**
      * Build each signed transaction in a loop
      *
-     * @private
+     * @internal
      */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
@@ -1506,7 +1506,7 @@ export default class Transaction extends Executable {
     /**
      * Build a transaction at a particular index
      *
-     * @private
+     * @internal
      * @param {number} index
      */
     _buildTransaction(index) {
