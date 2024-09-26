@@ -243,7 +243,7 @@ describe("FileAppend", function () {
         expect(content.size.toInt()).to.be.equal(newContentsLength);
     });
 
-    it("should be able to freeze after deserialze", async function () {
+    it("should be able to freeze after deserialize", async function () {
         this.timeout(120000);
 
         const operatorKey = env.operatorKey.publicKey;
