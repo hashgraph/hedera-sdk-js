@@ -11,14 +11,18 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileAppend", function () {
     let env;
+    let newContentsLength;
+    let newContents;
+    let operatorKey;
 
     before(async function () {
         env = await IntegrationTestEnv.new();
+        newContentsLength = 5000;
+        newContents = generateUInt8Array(newContentsLength);
+        operatorKey = env.operatorKey.publicKey;
     });
     it("should be executable", async function () {
         this.timeout(120000);
-
-        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
@@ -214,10 +218,6 @@ describe("FileAppend", function () {
     it("should keep content after deserialization", async function () {
         this.timeout(120000);
 
-        const NEW_CONTENTS_LENGTH = 5000;
-        const NEW_CONTENTS = generateUInt8Array(NEW_CONTENTS_LENGTH);
-        const operatorKey = env.operatorKey.publicKey;
-
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(Buffer.from(""))
@@ -230,7 +230,7 @@ describe("FileAppend", function () {
 
         const tx = new FileAppendTransaction()
             .setFileId(fileId)
-            .setContents(NEW_CONTENTS);
+            .setContents(newContents);
 
         const txBytes = tx.toBytes();
         const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
@@ -240,7 +240,7 @@ describe("FileAppend", function () {
         const content = await new FileInfoQuery()
             .setFileId(fileId)
             .execute(env.client);
-        expect(content.size.toInt()).to.be.equal(NEW_CONTENTS_LENGTH);
+        expect(content.size.toInt()).to.be.equal(newContentsLength);
     });
 
     it("should be able to freeze after deserialze", async function () {
