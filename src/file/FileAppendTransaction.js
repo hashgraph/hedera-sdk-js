@@ -466,6 +466,11 @@ export default class FileAppendTransaction extends Transaction {
         if (this._contents == null) {
             throw new Error("contents is not set");
         }
+        if (this.maxChunks && this.getRequiredChunks() < this.maxChunks) {
+            throw new Error(
+                `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
 
         let nextTransactionId = TransactionId.withValidStart(
             new AccountId(0, 0, 0),
@@ -516,6 +521,11 @@ export default class FileAppendTransaction extends Transaction {
      * @internal
      */
     _buildAllTransactions() {
+        if (this.maxChunks && this.getRequiredChunks() < this.maxChunks) {
+            throw new Error(
+                `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
