@@ -246,8 +246,6 @@ describe("FileAppend", function () {
     it("should be able to freeze after deserialze", async function () {
         this.timeout(120000);
 
-        const NEW_CONTENTS_LENGTH = 5000;
-        const NEW_CONTENTS = generateUInt8Array(NEW_CONTENTS_LENGTH);
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -262,7 +260,7 @@ describe("FileAppend", function () {
 
         const tx = new FileAppendTransaction()
             .setFileId(fileId)
-            .setContents(NEW_CONTENTS);
+            .setContents(newContents);
 
         const txBytes = tx.toBytes();
         const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
