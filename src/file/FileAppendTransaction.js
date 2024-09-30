@@ -458,11 +458,12 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * Build all the transactions when transacgtions are not signed
+     * Build all the transactions
+     * when transactions are not complete.
      * @override
      * @internal
      */
-    _buildIncompletedTransactions() {
+    _buildIncompleteTransactions() {
         const dummyAccountId = AccountId.fromString("0.0.0");
         if (this._contents == null) {
             throw new Error("contents is not set");
