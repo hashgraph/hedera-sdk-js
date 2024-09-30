@@ -463,6 +463,7 @@ export default class FileAppendTransaction extends Transaction {
      * @internal
      */
     _buildIncompletedTransactions() {
+        const dummyAccountId = AccountId.fromString("0.0.0");
         if (this._contents == null) {
             throw new Error("contents is not set");
         }
@@ -481,9 +482,7 @@ export default class FileAppendTransaction extends Transaction {
         this._signedTransactions.clear();
 
         for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
-            let nextTransactionId = TransactionId.generate(
-                AccountId.fromString("0.0.0"),
-            );
+            let nextTransactionId = TransactionId.generate(dummyAccountId);
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
