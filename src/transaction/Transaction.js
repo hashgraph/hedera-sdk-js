@@ -1517,9 +1517,9 @@ export default class Transaction extends Executable {
             }
         }
 
-        // In case when an incompleted transaction is created, serialized and
+        // In case when an incomplete transaction is created, serialized and
         // deserialized,and then the transaction being frozen, the copy of the
-        // incompleted transaction must be updated in order to be prepared for execution
+        // incomplete transaction must be updated in order to be prepared for execution
         if (this._transactions.list[index] != null) {
             this._transactions.set(index, {
                 signedTransactionBytes:
