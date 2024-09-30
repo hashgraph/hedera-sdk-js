@@ -473,11 +473,6 @@ export default class FileAppendTransaction extends Transaction {
             );
         }
 
-        let nextTransactionId = TransactionId.withValidStart(
-            new AccountId(0, 0, 0),
-            new Timestamp(new Date().getTime(), 0),
-        );
-
         // Hack around the locked list. Should refactor a bit to remove such code
         this._transactionIds.locked = false;
 
@@ -486,6 +481,9 @@ export default class FileAppendTransaction extends Transaction {
         this._signedTransactions.clear();
 
         for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
+            let nextTransactionId = TransactionId.generate(
+                AccountId.fromString("0.0.0"),
+            );
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
@@ -498,18 +496,6 @@ export default class FileAppendTransaction extends Transaction {
                     );
                 }
             }
-
-            nextTransactionId = new TransactionId(
-                /** @type {AccountId} */ (nextTransactionId.accountId),
-                new Timestamp(
-                    /** @type {Timestamp} */ (
-                        nextTransactionId.validStart
-                    ).seconds,
-                    /** @type {Timestamp} */ (
-                        nextTransactionId.validStart
-                    ).nanos.add(1),
-                ),
-            );
         }
 
         this._transactionIds.advance();
