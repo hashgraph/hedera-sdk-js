@@ -466,6 +466,7 @@ export default class FileAppendTransaction extends Transaction {
         if (this._contents == null) {
             throw new Error("contents is not set");
         }
+
         if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
                 `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,

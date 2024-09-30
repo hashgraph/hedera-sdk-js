@@ -240,6 +240,7 @@ describe("FileAppend", function () {
         const content = await new FileInfoQuery()
             .setFileId(fileId)
             .execute(env.client);
+
         expect(content.size.toInt()).to.be.equal(newContentsLength);
     });
 
