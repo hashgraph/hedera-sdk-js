@@ -1065,7 +1065,7 @@ export default class Transaction extends Executable {
      *
      * @internal
      */
-    _buildIncompletedTransactions() {
+    _buildIncompleteTransactions() {
         if (this._nodeAccountIds.length == 0) {
             this._transactions.setList([this._makeSignedTransaction(null)]);
         } else {
@@ -1211,7 +1211,7 @@ export default class Transaction extends Executable {
             // Build all the transactions without signing
             this._buildAllTransactions();
         } else {
-            this._buildIncompletedTransactions();
+            this._buildIncompleteTransactions();
         }
 
         // Construct and encode the transaction list
