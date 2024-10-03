@@ -915,7 +915,7 @@ export default class Transaction extends Executable {
      * It will call collectSignatures to get the removed signatures, then clear all signatures
      * from the internal tracking.
      *
-     * @returns {{ [userPublicKey: string]: Uint8Array[] | Uint8Array }} The removed signatures in the specified format.
+     * @returns { Map<PublicKey, Uint8Array[] | Uint8Array> } The removed signatures in the specified format.
      */
     removeAllSignatures() {
         if (!this.isFrozen()) {
@@ -1889,18 +1889,19 @@ export default class Transaction extends Executable {
     };
 
     /**
-     * Collects all signatures from signed transactions and returns them in a format keyed by public key.
+     * Collects all signatures from signed transactions and returns them in a format keyed by PublicKey.
      *
-     * @returns {{ [publicKey: PublicKey]: Uint8Array[] }} The collected signatures keyed by public key.
+     * @returns { Map<PublicKey, Uint8Array[]> } The collected signatures keyed by PublicKey.
      */
     _collectSignaturesByPublicKey() {
-        /** @type {{ [publicKey: string]: Uint8Array[] }} */
-        const collectedSignatures = {};
+        const collectedSignatures = new Map();
+        /** @type { Record<string, PublicKey> } */
+        const publicKeyMap = {}; // Map to hold string representation of the PublicKey object
 
         // Iterate over the signed transactions and collect signatures
         for (const transaction of this._signedTransactions.list) {
             if (!(transaction.sigMap && transaction.sigMap.sigPair)) {
-                return [];
+                return new Map();
             }
 
             // Collect the signatures
@@ -1908,18 +1909,25 @@ export default class Transaction extends Executable {
                 const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
 
                 if (!signature || !sigPair.pubKeyPrefix) {
-                    return [];
+                    return new Map();
                 }
 
-                const publicKeyHex = hex.encode(sigPair.pubKeyPrefix);
+                const publicKeyStr = hex.encode(sigPair.pubKeyPrefix);
+                let publicKeyObj = publicKeyMap[publicKeyStr];
+
+                // If the PublicKey instance for this string representation doesn't exist, create and store it
+                if (!publicKeyObj) {
+                    publicKeyObj = PublicKey.fromString(publicKeyStr);
+                    publicKeyMap[publicKeyStr] = publicKeyObj;
+                }
 
                 // Initialize the structure for this publicKey if it doesn't exist
-                if (!collectedSignatures[publicKeyHex]) {
-                    collectedSignatures[publicKeyHex] = [];
+                if (!collectedSignatures.has(publicKeyObj)) {
+                    collectedSignatures.set(publicKeyObj, []);
                 }
 
                 // Add the signature to the corresponding public key
-                collectedSignatures[publicKeyHex].push(signature);
+                collectedSignatures.get(publicKeyObj).push(signature);
             }
         }
 
