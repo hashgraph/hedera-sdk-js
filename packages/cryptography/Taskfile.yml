@@ -80,10 +80,10 @@ tasks:
         cmds:
             - npx mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
-    "test:unit:codecov":    
+    "test:unit:codecov":
         cmds:
-            - npx nyc --reporter=lcov --reporter=text-summary mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-            - npx nyc report
+           - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+           - npx c8 report
 
     "test:unit:browser":
         cmds:

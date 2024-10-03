@@ -136,8 +136,8 @@ tasks:
 
     "test:unit:codecov":
         cmds:
-            - npx nyc --reporter=lcov --reporter=text-summary mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-            - npx nyc report
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx c8 report
 
     "test:unit:browser":
         cmds:
@@ -153,8 +153,8 @@ tasks:
 
     "test:integration:codecov":
         cmds:
-            - npx nyc --reporter=lcov --reporter=text-summary mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
-            - npx nyc report
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - npx c8 report
 
     "update:proto":
         deps:
