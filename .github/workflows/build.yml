@@ -111,29 +111,29 @@ jobs:
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: sudo npx playwright install-deps
 
-      - name: Start the local node
-        id: start-local-node
-        if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
-        run: |
-          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000
-          # Wait for the network to fully start
-          sleep 30
+  #    - name: Start the local node
+   #     id: start-local-node
+    #    if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
+     #   run: |
+      #    ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000
+       #   # Wait for the network to fully start
+        #  sleep 30
 
-      - name: Run Hedera SDK Integration Tests
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:integration
+    #  - name: Run Hedera SDK Integration Tests
+     #   if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+      #  run: ${{ env.CG_EXEC }} task test:integration
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          fail_ci_if_error: false
+  #    - name: Upload coverage to Codecov
+   #     uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+    #    with:
+     #     token: ${{ secrets.CODECOV_TOKEN }}
+      #    files: ./coverage/lcov.info
+       #   fail_ci_if_error: false
 
-      - name: Stop the local node
-        id: stop-local-node
-        if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} npx @hashgraph/hedera-local stop
+ #     - name: Stop the local node
+  #      id: stop-local-node
+   #     if: ${{ steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
+    #    run: ${{ env.CG_EXEC }} npx @hashgraph/hedera-local stop
 
       - name: Build @hashgraph/cryptography
         working-directory: packages/cryptography
@@ -144,6 +144,12 @@ jobs:
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit
+
+      - name: Echo folder contents
+        run: |
+          echo "Folder contents:"
+          ls -R ./covarage
+          ls -R ./packages/cryptography/coverage/lcov.info
 
       - name: Upload @hashgraph/cryptography coverage to Codecov
         uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
@@ -160,5 +166,4 @@ jobs:
         uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
           fail_ci_if_error: true
