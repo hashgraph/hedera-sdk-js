@@ -1894,6 +1894,7 @@ export default class Transaction extends Executable {
      * @returns { Map<PublicKey, Uint8Array[]> } The collected signatures keyed by PublicKey.
      */
     _collectSignaturesByPublicKey() {
+        /** @type {  Map<PublicKey, Uint8Array[]>} */
         const collectedSignatures = new Map();
         /** @type { Record<string, PublicKey> } */
         const publicKeyMap = {}; // Map to hold string representation of the PublicKey object
@@ -1926,8 +1927,13 @@ export default class Transaction extends Executable {
                     collectedSignatures.set(publicKeyObj, []);
                 }
 
+                const existingSignatures =
+                    collectedSignatures.get(publicKeyObj);
+
                 // Add the signature to the corresponding public key
-                collectedSignatures.get(publicKeyObj).push(signature);
+                if (existingSignatures) {
+                    existingSignatures.push(signature);
+                }
             }
         }
 
