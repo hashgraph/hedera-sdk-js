@@ -143,13 +143,13 @@ jobs:
       - name: Unit Test @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit
+        run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Echo folder contents
         run: |
           echo "Folder contents:"
           ls -R ./
-          
+
       - name: Upload @hashgraph/cryptography coverage to Codecov
         uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
         with:
