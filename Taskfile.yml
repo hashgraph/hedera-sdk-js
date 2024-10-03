@@ -134,11 +134,11 @@ tasks:
         cmds:
             - npx mocha --inline-diffs --exit -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
 
-    "test:unit:codecov":
-        cmds:
-            - npx c8 ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
-            - npx c8 report
-            - npx codecov
+    # "test:unit:codecov":
+    #     cmds:
+    #         - npx c8 ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+    #         - npx c8 report
+    #         - npx codecov
 
     "test:unit:browser":
         cmds:
@@ -152,11 +152,11 @@ tasks:
         cmds:
             - npx mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
-    "test:integration:codecov":
-        cmds:
-            - npx c8 ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
-            - npx c8 report
-            - npx codecov
+    # "test:integration:codecov":
+    #     cmds:
+    #         - npx c8 ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+    #         - npx c8 report
+    #         - npx codecov
 
     "update:proto":
         deps:
