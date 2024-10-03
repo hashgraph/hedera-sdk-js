@@ -148,9 +148,8 @@ jobs:
       - name: Echo folder contents
         run: |
           echo "Folder contents:"
-          ls -R ./covarage
-          ls -R ./packages/cryptography/coverage/lcov.info
-
+          ls -R ./
+          
       - name: Upload @hashgraph/cryptography coverage to Codecov
         uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
         with:
