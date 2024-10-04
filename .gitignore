@@ -28,3 +28,6 @@ examples/address-book.proto.bin
 
 #ds store
 .DS_Store
+
+# package.json backup file in case task:build:browser was executed
+package.json.bak

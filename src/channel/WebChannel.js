@@ -55,6 +55,10 @@ export default class WebChannel extends Channel {
     _createUnaryClient(serviceName) {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         return async (method, requestData, callback) => {
+            console.log(
+                ">> WebChannel",
+                `${this._address}/proto.${serviceName}/${method.name}`,
+            );
             try {
                 const response = await fetch(
                     `${this._address}/proto.${serviceName}/${method.name}`,
