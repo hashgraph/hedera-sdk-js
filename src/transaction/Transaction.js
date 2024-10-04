@@ -673,6 +673,16 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * How many chunk sizes are expected
+     * @abstract
+     * @internal
+     * @returns {number}
+     */
+    getRequiredChunks() {
+        return 1;
+    }
+
+    /**
      * Sign the transaction with the private key
      * **NOTE**: This is a thin wrapper around `.signWith()`
      *
@@ -800,6 +810,11 @@ export default class Transaction extends Executable {
         const isSingleSignature = signature instanceof Uint8Array;
         const isArraySignature = Array.isArray(signature);
 
+        if (this.getRequiredChunks() > 1) {
+            throw new Error(
+                "Add signature is not supported for chunked transactions",
+            );
+        }
         // Check if it is a single signature with NOT exactly one transaction
         if (isSingleSignature && this._signedTransactions.length !== 1) {
             throw new Error(
@@ -1048,9 +1063,9 @@ export default class Transaction extends Executable {
     /**
      * Build all the signed transactions from the node account IDs
      *
-     * @private
+     * @internal
      */
-    _buildIncompletedTransactions() {
+    _buildIncompleteTransactions() {
         if (this._nodeAccountIds.length == 0) {
             this._transactions.setList([this._makeSignedTransaction(null)]);
         } else {
@@ -1196,7 +1211,7 @@ export default class Transaction extends Executable {
             // Build all the transactions without signing
             this._buildAllTransactions();
         } else {
-            this._buildIncompletedTransactions();
+            this._buildIncompleteTransactions();
         }
 
         // Construct and encode the transaction list
@@ -1456,7 +1471,7 @@ export default class Transaction extends Executable {
     /**
      * Build each signed transaction in a loop
      *
-     * @private
+     * @internal
      */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
@@ -1492,7 +1507,7 @@ export default class Transaction extends Executable {
     /**
      * Build a transaction at a particular index
      *
-     * @private
+     * @internal
      * @param {number} index
      */
     _buildTransaction(index) {
@@ -1502,9 +1517,9 @@ export default class Transaction extends Executable {
             }
         }
 
-        // In case when an incompleted transaction is created, serialized and
+        // In case when an incomplete transaction is created, serialized and
         // deserialized,and then the transaction being frozen, the copy of the
-        // incompleted transaction must be updated in order to be prepared for execution
+        // incomplete transaction must be updated in order to be prepared for execution
         if (this._transactions.list[index] != null) {
             this._transactions.set(index, {
                 signedTransactionBytes:
