@@ -60,7 +60,6 @@ describe("Mnemonic", function () {
     });
 
     it("should produce the expected private key with ecdsa", async function () {
-        this.timeout(10000);
         const mnemonic = await Mnemonic.fromString(
             "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
         );
