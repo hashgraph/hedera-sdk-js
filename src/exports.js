@@ -33,6 +33,9 @@ export { default as PublicKey } from "./PublicKey.js";
 export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
+export { default as TokenAirdropTransaction } from "./token/TokenAirdropTransaction.js";
+export { default as TokenClaimAirdropTransaction } from "./token/TokenClaimAirdropTransaction.js";
+export { default as TokenCancelAirdropTransaction } from "./token/TokenCancelAirdropTransaction.js";
 // eslint-disable-next-line deprecation/deprecation
 export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
 export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
@@ -184,6 +187,10 @@ export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
 export { default as TokenUpdateNftsTransaction } from "./token/TokenUpdateNftsTransaction.js";
+export { default as NodeCreateTransaction } from "./node/NodeCreateTransaction.js";
+export { default as ServiceEndpoint } from "./node/ServiceEndpoint.js";
+export { default as NodeDeleteTransaction } from "./node/NodeDeleteTransaction.js";
+export { default as NodeUpdateTransaction } from "./node/NodeUpdateTransaction.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
