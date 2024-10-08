@@ -84,7 +84,6 @@ tasks:
         cmds:
            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
            - npx c8 report
-           - npx codecov
 
     "test:unit:browser":
         cmds:
