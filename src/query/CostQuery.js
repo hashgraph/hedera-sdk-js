@@ -153,11 +153,12 @@ export default class CostQuery extends Executable {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
-        return this._query._mapStatusError(request, response);
+    _mapStatusError(request, response, nodeId) {
+        return this._query._mapStatusError(request, response, nodeId);
     }
 
     /**
