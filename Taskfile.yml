@@ -136,7 +136,7 @@ tasks:
 
     "test:unit:codecov":
         cmds:
-            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" --timeout 120000 {{.CLI_ARGS}}
             - npx c8 report
 
     "test:unit:browser":
