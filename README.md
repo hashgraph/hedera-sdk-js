@@ -25,7 +25,33 @@ $ pnpm add @hashgraph/sdk
 ```
 ## Build
 
-After downloading the repo run `task build` to build the SDK.
+### Prerequisites
+
+1. [Taskfile](https://taskfile.dev/) tool installation
+
+```
+# with npm
+$ npm install -g @go-task/cli
+
+# with homebrew
+$ brew install go-task
+```
+
+2. [pNpm](https://pnpm.io/) package manager installation
+
+```
+# with npm
+$ npm install -g pnpm
+
+# with homebrew
+$ brew install pnpm
+```
+
+After downloading the repo run:
+
+1. `task install`
+
+2. `task build` to build the SDK
 
 ## React Native Support
 
