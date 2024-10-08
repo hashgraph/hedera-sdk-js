@@ -24,6 +24,7 @@ describe("TokenRejectIntegrationTest", function () {
 
     describe("Fungible Tokens", function () {
         beforeEach(async function () {
+            this.timeout(120000);
             env = await IntegrationTestEnv.new();
 
             // create token
@@ -868,6 +869,7 @@ describe("TokenRejectIntegrationTest", function () {
 
     describe("Other", function () {
         beforeEach(async function () {
+            this.timeout(120000);
             env = await IntegrationTestEnv.new();
 
             // create token

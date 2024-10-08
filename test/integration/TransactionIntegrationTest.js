@@ -13,9 +13,12 @@ import {
     TransactionId,
     Timestamp,
     AccountUpdateTransaction,
+    KeyList,
+    Status,
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import { expect } from "chai";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
@@ -157,7 +160,7 @@ describe("TransactionIntegration", function () {
         await env.close();
     });
 
-    describe("HIP-745 - create incompleted transaction", function () {
+    describe("HIP-745 - create incomplete transaction", function () {
         let env, operatorId, recipientKey, recipientId, client, wallet;
 
         beforeEach(async function () {
@@ -259,7 +262,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-3.js */
-        it("should serialize and deserialize so-called incompleted transaction, and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction, and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -302,7 +305,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-4.js */
-        it("should serialize and deserialize so-called incompleted transaction, set node account ids and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction, set node account ids and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -353,7 +356,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-5.js */
-        it("should serialize and deserialize so-called incompleted transaction, set transaction id and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction, set transaction id and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -408,7 +411,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-6.js */
-        it("should serialize and deserialize so-called incompleted transaction, update and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction, update and execute it", async function () {
             this.timeout(120000);
             const amount = new Hbar(1);
             try {
@@ -508,7 +511,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-8.js */
-        it("should serialize and deserialize so-called incompleted transaction (chunked), and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction (chunked), and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -550,7 +553,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-9.js */
-        it("should serialize and deserialize so-called incompleted transaction (chunked), update and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction (chunked), update and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -599,7 +602,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-10.js */
-        it("should serialize and deserialize so-called incompleted transaction (chunked), set transaction id and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction (chunked), set transaction id and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -652,7 +655,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-11.js */
-        it("should serialize and deserialize so-called incompleted transaction (chunked), set node account ids and execute it", async function () {
+        it("should serialize and deserialize so-called incomplete transaction (chunked), set node account ids and execute it", async function () {
             this.timeout(120000);
             try {
                 // 1. Create transaction
@@ -701,7 +704,7 @@ describe("TransactionIntegration", function () {
         });
 
         /** @description: example serialize-deserialize-12.js */
-        it("should create, serialize and deserialize so-called incompleted transaction, then freeze it, serialize and deserialize it again, and execute it", async function () {
+        it("should create, serialize and deserialize so-called incomplete transaction, then freeze it, serialize and deserialize it again, and execute it", async function () {
             this.timeout(120000);
 
             try {
@@ -762,6 +765,142 @@ describe("TransactionIntegration", function () {
                 expect(receipt.status.toString()).to.be.equal("SUCCESS");
             } catch (error) {
                 console.log(error);
+            }
+        });
+    });
+
+    describe("Transaction Signature Manipulation Flow", function () {
+        let env, user1Key, user2Key, createdAccountId, keyList;
+
+        // Setting up the environment and creating a new account with a key list
+        before(async function () {
+            env = await IntegrationTestEnv.new();
+
+            user1Key = PrivateKey.generate();
+            user2Key = PrivateKey.generate();
+            keyList = new KeyList([user1Key.publicKey, user2Key.publicKey]);
+
+            // Create account
+            const createAccountTransaction = new AccountCreateTransaction()
+                .setInitialBalance(new Hbar(2))
+                .setKey(keyList);
+
+            const createResponse = await createAccountTransaction.execute(
+                env.client,
+            );
+            const createReceipt = await createResponse.getReceipt(env.client);
+
+            createdAccountId = createReceipt.accountId;
+
+            expect(createdAccountId).to.exist;
+        });
+
+        /** @description: example multi-node-multi-signature-remove.js */
+        it("Transaction with Signature Removal and Re-addition", async function () {
+            // Step 1: Create and sign transfer transaction
+            const transferTransaction = new TransferTransaction()
+                .addHbarTransfer(createdAccountId, new Hbar(-1))
+                .addHbarTransfer("0.0.3", new Hbar(1))
+                .setNodeAccountIds([
+                    new AccountId(3),
+                    new AccountId(4),
+                    new AccountId(5),
+                ])
+                .freezeWith(env.client);
+
+            // Step 2: Serialize and sign the transaction
+            const transferTransactionBytes = transferTransaction.toBytes();
+            const user1Signatures =
+                user1Key.signTransaction(transferTransaction);
+            const user2Signatures =
+                user2Key.signTransaction(transferTransaction);
+
+            // Step 3: Deserialize the transaction and add signatures
+            const signedTransaction = Transaction.fromBytes(
+                transferTransactionBytes,
+            );
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+            signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+
+            const getSignaturesNumberPerNode = () =>
+                signedTransaction._signedTransactions.list[0].sigMap.sigPair
+                    .length;
+
+            // Test if the transaction for a node has 2 signatures
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 4: Remove the signature for user1 from the transaction
+            signedTransaction.removeSignature(user1Key.publicKey);
+
+            // Test if the transaction for a node has 1 signature after removal
+            expect(getSignaturesNumberPerNode()).to.be.equal(1);
+
+            // Step 5: Re-add the removed signature
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+
+            // Test if the transaction for a node has 2 signatures after adding back the signature
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 6: Execute the signed transaction
+            const result = await signedTransaction.execute(env.client);
+            const receipt = await result.getReceipt(env.client);
+
+            // Step 7: Verify the transaction status
+            expect(receipt.status).to.be.equal(Status.Success);
+        });
+
+        /** @description: example multi-node-multi-signature-removeAll.js */
+        it("Transaction with All Signature Removal", async function () {
+            // Step 1: Create and sign transfer transaction
+            const transferTransaction = new TransferTransaction()
+                .addHbarTransfer(createdAccountId, new Hbar(-1))
+                .addHbarTransfer("0.0.3", new Hbar(1))
+                .setNodeAccountIds([
+                    new AccountId(3),
+                    new AccountId(4),
+                    new AccountId(5),
+                ])
+                .freezeWith(env.client);
+
+            // Step 2: Serialize and sign the transaction
+            const transferTransactionBytes = transferTransaction.toBytes();
+            const user1Signatures =
+                user1Key.signTransaction(transferTransaction);
+            const user2Signatures =
+                user2Key.signTransaction(transferTransaction);
+
+            // Step 3: Deserialize the transaction and add signatures
+            const signedTransaction = Transaction.fromBytes(
+                transferTransactionBytes,
+            );
+            signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
+            signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+
+            const getSignaturesNumberPerNode = () =>
+                signedTransaction._signedTransactions.list[0].sigMap.sigPair
+                    .length;
+
+            // Test if the transaction for a node has 2 signatures
+            expect(getSignaturesNumberPerNode()).to.be.equal(2);
+
+            // Step 4: Remove the signature for user1 from the transaction
+            signedTransaction.removeAllSignatures();
+
+            // Test if the transaction for a node has 0 signatures after removal
+            expect(getSignaturesNumberPerNode()).to.be.equal(0);
+
+            // Step 5: Try to execute the transaction without any signatures and expect it to fail
+            try {
+                const result = await signedTransaction.execute(env.client);
+                await result.getReceipt(env.client);
+
+                // If we get here, the transaction did not fail as expected
+                throw new Error(
+                    "Transaction should have failed due to missing signatures",
+                );
+            } catch (error) {
+                // Expect the error to be due to an invalid signature
+                expect(error.message).to.include("INVALID_SIGNATURE");
             }
         });
     });

@@ -673,6 +673,16 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * How many chunk sizes are expected
+     * @abstract
+     * @internal
+     * @returns {number}
+     */
+    getRequiredChunks() {
+        return 1;
+    }
+
+    /**
      * Sign the transaction with the private key
      * **NOTE**: This is a thin wrapper around `.signWith()`
      *
@@ -789,20 +799,38 @@ export default class Transaction extends Executable {
     /**
      * Add a signature explicitly
      *
-     * This method requires the transaction to have exactly 1 node account ID set
-     * since different node account IDs have different byte representations and
-     * hence the same signature would not work for all transactions that are the same
-     * except for node account ID being different.
+     * This method supports both single and multiple signatures. A single signature will be applied to all transactions,
+     * While an array of signatures must correspond to each transaction individually.
      *
      * @param {PublicKey} publicKey
-     * @param {Uint8Array} signature
+     * @param {Uint8Array | Uint8Array[]} signature
      * @returns {this}
      */
     addSignature(publicKey, signature) {
-        // Require that only one node is set on this transaction
-        // FIXME: This doesn't consider if we have one node account ID set, but we're
-        // also a chunked transaction. We should also check transaction IDs is of length 1
-        this._requireOneNodeAccountId();
+        const isSingleSignature = signature instanceof Uint8Array;
+        const isArraySignature = Array.isArray(signature);
+
+        if (this.getRequiredChunks() > 1) {
+            throw new Error(
+                "Add signature is not supported for chunked transactions",
+            );
+        }
+        // Check if it is a single signature with NOT exactly one transaction
+        if (isSingleSignature && this._signedTransactions.length !== 1) {
+            throw new Error(
+                "Signature array must match the number of transactions",
+            );
+        }
+
+        // Check if it's an array but the array length doesn't match the number of transactions
+        if (
+            isArraySignature &&
+            signature.length !== this._signedTransactions.length
+        ) {
+            throw new Error(
+                "Signature array must match the number of transactions",
+            );
+        }
 
         // If the transaction isn't frozen, freeze it.
         if (!this.isFrozen()) {
@@ -817,7 +845,7 @@ export default class Transaction extends Executable {
             return this;
         }
 
-        // Transactions will have to be regenerated
+        // If we add a new signer, then we need to re-create all transactions
         this._transactions.clear();
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
@@ -826,21 +854,22 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
         this._signedTransactions.setLocked();
 
-        // Add the signature to the signed transaction list. This is a copy paste
-        // of `.signWith()`, but it really shouldn't be if `_signedTransactions.list`
-        // must be a length of one.
-        // FIXME: Remove unnecessary for loop.
-        for (const transaction of this._signedTransactions.list) {
-            if (transaction.sigMap == null) {
-                transaction.sigMap = {};
+        const signatureArray = isSingleSignature ? [signature] : signature;
+
+        // Add the signature to the signed transaction list
+        for (let index = 0; index < this._signedTransactions.length; index++) {
+            const signedTransaction = this._signedTransactions.get(index);
+
+            if (signedTransaction.sigMap == null) {
+                signedTransaction.sigMap = {};
             }
 
-            if (transaction.sigMap.sigPair == null) {
-                transaction.sigMap.sigPair = [];
+            if (signedTransaction.sigMap.sigPair == null) {
+                signedTransaction.sigMap.sigPair = [];
             }
 
-            transaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signature),
+            signedTransaction.sigMap.sigPair.push(
+                publicKey._toProtobufSignature(signatureArray[index]),
             );
         }
 
@@ -849,6 +878,81 @@ export default class Transaction extends Executable {
         this._transactionSigners.push(null);
 
         return this;
+    }
+
+    /**
+     * This method removes all signatures from the transaction based on the public key provided.
+     *
+     * @param {PublicKey} publicKey - The public key associated with the signature to remove.
+     * @returns {Uint8Array[]} The removed signatures.
+     */
+    removeSignature(publicKey) {
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        const publicKeyData = publicKey.toBytesRaw();
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (!this._signerPublicKeys.has(publicKeyHex)) {
+            throw new Error("The public key has not signed this transaction");
+        }
+
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
+        // Iterate over the signed transactions and remove matching signatures
+        for (const transaction of this._signedTransactions.list) {
+            const removedSignaturesFromTransaction =
+                this._removeSignaturesFromTransaction(
+                    transaction,
+                    publicKeyHex,
+                );
+
+            removedSignatures.push(...removedSignaturesFromTransaction);
+        }
+
+        // Remove the public key from internal tracking if no signatures remain
+        this._signerPublicKeys.delete(publicKeyHex);
+        this._publicKeys = this._publicKeys.filter(
+            (key) => !key.equals(publicKey),
+        );
+
+        // Update transaction signers array
+        this._transactionSigners.pop();
+
+        return removedSignatures;
+    }
+
+    /**
+     * This method clears all signatures from the transaction and returns them in a specific format.
+     *
+     * It will call collectSignatures to get the removed signatures, then clear all signatures
+     * from the internal tracking.
+     *
+     * @returns {{ [userPublicKey: string]: Uint8Array[] | Uint8Array }} The removed signatures in the specified format.
+     */
+    removeAllSignatures() {
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
+
+        const removedSignatures = this._collectSignaturesByPublicKey();
+
+        // Iterate over the signed transactions and clear all signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (transaction.sigMap && transaction.sigMap.sigPair) {
+                // Clear all signature pairs from the transaction's signature map
+                transaction.sigMap.sigPair = [];
+            }
+        }
+
+        // Clear the internal tracking of signer public keys and other relevant arrays
+        this._signerPublicKeys.clear();
+        this._publicKeys = [];
+        this._transactionSigners = [];
+
+        return removedSignatures;
     }
 
     /**
@@ -959,9 +1063,9 @@ export default class Transaction extends Executable {
     /**
      * Build all the signed transactions from the node account IDs
      *
-     * @private
+     * @internal
      */
-    _buildIncompletedTransactions() {
+    _buildIncompleteTransactions() {
         if (this._nodeAccountIds.length == 0) {
             this._transactions.setList([this._makeSignedTransaction(null)]);
         } else {
@@ -1107,7 +1211,7 @@ export default class Transaction extends Executable {
             // Build all the transactions without signing
             this._buildAllTransactions();
         } else {
-            this._buildIncompletedTransactions();
+            this._buildIncompleteTransactions();
         }
 
         // Construct and encode the transaction list
@@ -1367,7 +1471,7 @@ export default class Transaction extends Executable {
     /**
      * Build each signed transaction in a loop
      *
-     * @private
+     * @internal
      */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
@@ -1403,7 +1507,7 @@ export default class Transaction extends Executable {
     /**
      * Build a transaction at a particular index
      *
-     * @private
+     * @internal
      * @param {number} index
      */
     _buildTransaction(index) {
@@ -1413,9 +1517,9 @@ export default class Transaction extends Executable {
             }
         }
 
-        // In case when an incompleted transaction is created, serialized and
+        // In case when an incomplete transaction is created, serialized and
         // deserialized,and then the transaction being frozen, the copy of the
-        // incompleted transaction must be updated in order to be prepared for execution
+        // incomplete transaction must be updated in order to be prepared for execution
         if (this._transactions.list[index] != null) {
             this._transactions.set(index, {
                 signedTransactionBytes:
@@ -1744,6 +1848,97 @@ export default class Transaction extends Executable {
         return HashgraphProto.proto.TransactionResponse.encode(
             response,
         ).finish();
+    }
+
+    /**
+     * Removes all signatures from a transaction and collects the removed signatures.
+     *
+     * @param {HashgraphProto.proto.ISignedTransaction} transaction - The transaction object to process.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key.
+     * @returns {Uint8Array[]} An array of removed signatures.
+     */
+    _removeSignaturesFromTransaction(transaction, publicKeyHex) {
+        /** @type {Uint8Array[]} */
+        const removedSignatures = [];
+
+        if (!transaction.sigMap || !transaction.sigMap.sigPair) {
+            return [];
+        }
+
+        transaction.sigMap.sigPair = transaction.sigMap.sigPair.filter(
+            (sigPair) => {
+                const shouldRemove = this._shouldRemoveSignature(
+                    sigPair,
+                    publicKeyHex,
+                );
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
+
+                if (shouldRemove && signature) {
+                    removedSignatures.push(signature);
+                }
+
+                return !shouldRemove;
+            },
+        );
+
+        return removedSignatures;
+    }
+
+    /**
+     * Determines whether a signature should be removed based on the provided public key.
+     *
+     * @param {HashgraphProto.proto.ISignaturePair} sigPair - The signature pair object that contains
+     *        the public key prefix and signature to be evaluated.
+     * @param {string} publicKeyHex - The hexadecimal representation of the public key to compare against.
+     * @returns {boolean} `true` if the public key prefix in the signature pair matches the provided public key,
+     *          indicating that the signature should be removed; otherwise, `false`.
+     */
+    _shouldRemoveSignature = (sigPair, publicKeyHex) => {
+        const sigPairPublicKeyHex = hex.encode(
+            sigPair?.pubKeyPrefix || new Uint8Array(),
+        );
+
+        const matchesPublicKey = sigPairPublicKeyHex === publicKeyHex;
+
+        return matchesPublicKey;
+    };
+
+    /**
+     * Collects all signatures from signed transactions and returns them in a format keyed by public key.
+     *
+     * @returns {{ [publicKey: PublicKey]: Uint8Array[] }} The collected signatures keyed by public key.
+     */
+    _collectSignaturesByPublicKey() {
+        /** @type {{ [publicKey: string]: Uint8Array[] }} */
+        const collectedSignatures = {};
+
+        // Iterate over the signed transactions and collect signatures
+        for (const transaction of this._signedTransactions.list) {
+            if (!(transaction.sigMap && transaction.sigMap.sigPair)) {
+                return [];
+            }
+
+            // Collect the signatures
+            for (const sigPair of transaction.sigMap.sigPair) {
+                const signature = sigPair.ed25519 ?? sigPair.ECDSASecp256k1;
+
+                if (!signature || !sigPair.pubKeyPrefix) {
+                    return [];
+                }
+
+                const publicKeyHex = hex.encode(sigPair.pubKeyPrefix);
+
+                // Initialize the structure for this publicKey if it doesn't exist
+                if (!collectedSignatures[publicKeyHex]) {
+                    collectedSignatures[publicKeyHex] = [];
+                }
+
+                // Add the signature to the corresponding public key
+                collectedSignatures[publicKeyHex].push(signature);
+            }
+        }
+
+        return collectedSignatures;
     }
 }
 

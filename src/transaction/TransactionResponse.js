@@ -80,7 +80,10 @@ export default class TransactionResponse {
     async getReceipt(client) {
         const receipt = await this.getReceiptQuery().execute(client);
 
-        if (receipt.status !== Status.Success) {
+        if (
+            receipt.status !== Status.Success &&
+            receipt.status !== Status.FeeScheduleFilePartUploaded
+        ) {
             throw new ReceiptStatusError({
                 transactionReceipt: receipt,
                 status: receipt.status,

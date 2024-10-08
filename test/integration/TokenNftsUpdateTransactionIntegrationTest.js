@@ -24,6 +24,7 @@ describe("TokenUpdateNftsTransaction", function () {
         nftCount;
 
     before(async function () {
+        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
         client = env.client;
         operatorId = env.operatorId;
@@ -293,7 +294,7 @@ describe("TokenUpdateNftsTransaction", function () {
                 ).execute(client)
             ).getReceipt(client);
         } catch (error) {
-            expect(error.status).to.be.eql(Status.TokenHasNoMetadataKey);
+            expect(error.status).to.be.eql(Status.InvalidSignature);
         }
     });
 

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { PrivateKey } from "../../src/index.js";
+import { Mnemonic, PrivateKey } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import * as bip32 from "../../packages/cryptography/src/primitive/bip32.js";
 
@@ -15,6 +15,7 @@ const DER_PRIVATE_KEY_BYTES = new Uint8Array([
 ]);
 const DER_PUBLIC_KEY =
     "302d300706052b8104000a032200033697a2b3f9f0b9f4831b39986f7f3885636a3e8622a0bc3814a4a56f7ecdc4f1";
+const STRESS_TEST_ITERATION_COUNT = 1000;
 
 describe("EcdsaPrivateKey", function () {
     it("generate should return object", function () {
@@ -381,5 +382,113 @@ describe("EcdsaPrivateKey", function () {
         const privateKey = PrivateKey.generateECDSA();
 
         expect(privateKey.type).to.be.string("secp256k1");
+    });
+
+    it("should produce consistent public key from 12 word mnemonic and fromStringECDSA", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const mnemonic = await Mnemonic.generate12();
+            const privateKeyFromMnemonic =
+                await mnemonic.toStandardECDSAsecp256k1PrivateKey();
+            const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
+
+            const privateKeyFromString = PrivateKey.fromStringECDSA(
+                privateKeyFromMnemonic.toStringDer(),
+            );
+            const publicKeyFromString = privateKeyFromString.publicKey;
+
+            if (
+                publicKeyFromMnemonic.toStringDer() !==
+                publicKeyFromString.toStringDer()
+            ) {
+                console.log(
+                    "Public key from mnemonic: ",
+                    publicKeyFromMnemonic,
+                );
+                console.log("Public key from string: ", publicKeyFromString);
+                throw new Error("Public key mismatch");
+            }
+        }
+    });
+
+    it("should produce consistent public key from 12 word mnemonic and fromBytesECDSA", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const mnemonic = await Mnemonic.generate12();
+            const privateKeyFromMnemonic =
+                await mnemonic.toStandardECDSAsecp256k1PrivateKey();
+            const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
+
+            const privateKeyFromString = PrivateKey.fromBytesECDSA(
+                privateKeyFromMnemonic.toBytesDer(),
+            );
+            const publicKeyFromString = privateKeyFromString.publicKey;
+
+            if (
+                publicKeyFromMnemonic.toStringDer() !==
+                publicKeyFromString.toStringDer()
+            ) {
+                console.log(
+                    "Public key from mnemonic: ",
+                    publicKeyFromMnemonic,
+                );
+                console.log("Public key from string: ", publicKeyFromString);
+                throw new Error("Public key mismatch");
+            }
+        }
+    });
+
+    it("should produce consistent public key from 24 word mnemonic and fromStringECDSA", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const mnemonic = await Mnemonic.generate();
+            const privateKeyFromMnemonic =
+                await mnemonic.toStandardECDSAsecp256k1PrivateKey();
+            const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
+
+            const privateKeyFromString = PrivateKey.fromStringECDSA(
+                privateKeyFromMnemonic.toStringDer(),
+            );
+            const publicKeyFromString = privateKeyFromString.publicKey;
+
+            if (
+                publicKeyFromMnemonic.toStringDer() !==
+                publicKeyFromString.toStringDer()
+            ) {
+                console.log(
+                    "Public key from mnemonic: ",
+                    publicKeyFromMnemonic,
+                );
+                console.log("Public key from string: ", publicKeyFromString);
+                throw new Error("Public key mismatch");
+            }
+        }
+    });
+
+    it("should produce consistent public key from 24 word mnemonic and fromBytesECDSA", async function () {
+        this.timeout(120000);
+        for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
+            const mnemonic = await Mnemonic.generate();
+            const privateKeyFromMnemonic =
+                await mnemonic.toStandardECDSAsecp256k1PrivateKey();
+            const publicKeyFromMnemonic = privateKeyFromMnemonic.publicKey;
+
+            const privateKeyFromString = PrivateKey.fromBytesECDSA(
+                privateKeyFromMnemonic.toBytesDer(),
+            );
+            const publicKeyFromString = privateKeyFromString.publicKey;
+
+            if (
+                publicKeyFromMnemonic.toStringDer() !==
+                publicKeyFromString.toStringDer()
+            ) {
+                console.log(
+                    "Public key from mnemonic: ",
+                    publicKeyFromMnemonic,
+                );
+                console.log("Public key from string: ", publicKeyFromString);
+                throw new Error("Public key mismatch");
+            }
+        }
     });
 });

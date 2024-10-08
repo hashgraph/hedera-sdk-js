@@ -80,9 +80,9 @@ export default class AccountUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {boolean}
+         * @type {?boolean}
          */
-        this._receiverSignatureRequired = false;
+        this._receiverSignatureRequired = null;
 
         /**
          * @private
@@ -324,7 +324,7 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {boolean}
+     * @returns {?boolean}
      */
     get receiverSignatureRequired() {
         return this._receiverSignatureRequired;

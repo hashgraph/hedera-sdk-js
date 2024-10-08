@@ -91,7 +91,6 @@ export default class TokenNftTransfer {
                     tokenTransfer.token
                 ),
             );
-
             for (const transfer of tokenTransfer.nftTransfers != null
                 ? tokenTransfer.nftTransfers
                 : []) {
