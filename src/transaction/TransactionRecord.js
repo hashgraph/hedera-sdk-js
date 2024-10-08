@@ -35,6 +35,7 @@ import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import EvmAddress from "../EvmAddress.js";
 import * as hex from "../encoding/hex.js";
+import PendingAirdropRecord from "../token/PendingAirdropRecord.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -108,6 +109,7 @@ export default class TransactionRecord {
      * @param {?Uint8Array} props.prngBytes
      * @param {?number} props.prngNumber
      * @param {?EvmAddress} props.evmAddress
+     * @param {PendingAirdropRecord[]} props.newPendingAirdrops
      */
     constructor(props) {
         /**
@@ -303,6 +305,14 @@ export default class TransactionRecord {
          */
         this.evmAddress = props.evmAddress;
 
+        /**
+         * The new default EVM address of the account created by this transaction.
+         * This field is populated only when the EVM address is not specified in the related transaction body.
+         *
+         * @readonly
+         */
+        this.newPendingAirdrops = props.newPendingAirdrops;
+
         Object.freeze(this);
     }
 
@@ -427,6 +437,9 @@ export default class TransactionRecord {
                 prngNumber: this.prngNumber != null ? this.prngNumber : null,
                 evmAddress:
                     this.evmAddress != null ? this.evmAddress.toBytes() : null,
+                newPendingAirdrops: this.newPendingAirdrops.map((airdrop) =>
+                    airdrop.toBytes(),
+                ),
             },
         };
     }
@@ -482,6 +495,13 @@ export default class TransactionRecord {
                         true,
                     )
                   : undefined;
+
+        const newPendingAirdrops =
+            record.newPendingAirdrops != null
+                ? record.newPendingAirdrops.map((airdrop) =>
+                      PendingAirdropRecord.fromBytes(airdrop),
+                  )
+                : [];
 
         return new TransactionRecord({
             receipt: TransactionReceipt._fromProtobuf({
@@ -568,6 +588,7 @@ export default class TransactionRecord {
                 record.evmAddress != null
                     ? EvmAddress.fromBytes(record.evmAddress)
                     : null,
+            newPendingAirdrops: newPendingAirdrops,
         });
     }
 
