@@ -711,5 +711,21 @@ describe("Transaction", function () {
             expect(removedSignatures).to.be.instanceOf(Map);
             expect(Object.keys(removedSignatures)).to.have.lengthOf(0);
         });
+
+        it("should return an empty Map if transaction.sigMap is undefined", function () {
+            transaction._signedTransactions.list = [1];
+
+            const result = transaction.removeAllSignatures();
+            expect(result).to.be.instanceOf(Map);
+            expect(result.size).to.equal(0);
+        });
+
+        it("should return an empty Map if sigPair.pubKeyPrefix is undefined", function () {
+            transaction._signedTransactions.list[0].sigMap = { sigPair: [1] };
+
+            const result = transaction.removeAllSignatures();
+            expect(result).to.be.instanceOf(Map);
+            expect(result.size).to.equal(0);
+        });
     });
 });
