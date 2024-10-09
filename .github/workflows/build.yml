@@ -52,7 +52,7 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -97,7 +97,7 @@ jobs:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -119,9 +119,16 @@ jobs:
           # Wait for the network to fully start
           sleep 30
 
-      - name: Run Hedera SDK Integration Tests Codecov
+      - name: Run Hedera SDK Integration Tests
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.start-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:integration:codecov
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
 
       - name: Stop the local node
         id: stop-local-node
@@ -137,11 +144,18 @@ jobs:
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit
-
+      
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit:codecov
+
+      - name: Upload @hashgraph/cryptography coverage to Codecov
+        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/cryptography/coverage/lcov.info
+          fail_ci_if_error: false
 
       - name: Unit Test @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
@@ -150,3 +164,9 @@ jobs:
       - name: Codecov @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit:codecov
+
+      - name: Upload @hashgraph/sdk coverage to Codecov
+        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

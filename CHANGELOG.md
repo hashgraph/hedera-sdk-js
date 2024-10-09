@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# v2.52.0-beta.3
+
+## What's Changed
+
+* fix: serialize deserialize FileAppend by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2532
+* fix: change FEE_SCHEDULE_FILE_PART_UPLOADED to not show as an error by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2537
+* ci: Updating the build workflow to use Codecov actions instead of codecov npm package by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2558
+
+## v2.52.0-beta.1
+
+## What's Changed
+
+* feat: Add multi-signature and multi-node support for signing and adding signatures by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2514
+* feat: Add removeSignature/clearAllSignatures methods by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2491
+* chore(deps): bump actions/setup-node from 4.0.3 to 4.0.4 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2538
+
 ## v2.51.0
 
 ## What's Changed
