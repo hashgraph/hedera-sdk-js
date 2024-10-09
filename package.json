@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.51.0",
+    "version": "2.52.0-beta.3",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -67,7 +67,7 @@
         "long": "^4.0.0",
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.0",
-        "protobufjs": "^7.2.5",
+        "protobufjs": "7.2.5",
         "rfc4648": "^1.5.3",
         "utf8": "^3.0.0"
     },
