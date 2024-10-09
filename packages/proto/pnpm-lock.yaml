@@ -9,7 +9,7 @@ dependencies:
     specifier: ^4.0.0
     version: 4.0.0
   protobufjs:
-    specifier: ^7.2.5
+    specifier: 7.2.5
     version: 7.2.5
 
 devDependencies:
