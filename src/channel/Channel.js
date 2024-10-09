@@ -85,6 +85,12 @@ export default class Channel {
          * @type {?HashgraphProto.proto.UtilService}
          */
         this._util = null;
+
+        /**
+         * @protected
+         * @type {?HashgraphProto.proto.AddressBookService}
+         */
+        this._addressBook = null;
     }
 
     /**
@@ -228,6 +234,21 @@ export default class Channel {
         );
 
         return this._util;
+    }
+
+    /**
+     * @returns {HashgraphProto.proto.AddressBookService}
+     */
+    get addressBook() {
+        if (this._addressBook != null) {
+            return this._addressBook;
+        }
+
+        this._addressBook = proto.AddressBookService.create(
+            this._createUnaryClient("AddressBookService"),
+        );
+
+        return this._addressBook;
     }
 
     /**
