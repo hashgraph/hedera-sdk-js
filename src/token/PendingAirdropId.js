@@ -33,10 +33,10 @@ export default class PendingAirdropId {
      * @param {object} props
      * @param {AccountId} [props.senderId]
      * @param {AccountId} [props.receiverId]
-     * @param {TokenId?} props.tokenId
-     * @param {NftId?} props.nftId
+     * @param {TokenId?} [props.tokenId]
+     * @param {NftId?} [props.nftId]
      */
-    constructor(props) {
+    constructor(props = {}) {
         this._senderId = null;
         this._receiverId = null;
         this._tokenId = null;
@@ -112,6 +112,7 @@ export default class PendingAirdropId {
      * @returns {this}
      */
     setTokenId(tokenId) {
+        this._nftId = null;
         this._tokenId = tokenId;
         return this;
     }
@@ -121,6 +122,7 @@ export default class PendingAirdropId {
      * @returns {this}
      */
     setNftId(nftId) {
+        this._tokenId = null;
         this._nftId = nftId;
         return this;
     }
