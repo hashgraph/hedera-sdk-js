@@ -25,8 +25,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -123,8 +121,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should be able to update treasury", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -230,8 +226,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should be executable when no properties except token ID are set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -263,8 +257,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should error updating immutable token", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -293,8 +285,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
@@ -311,8 +301,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should return error when updating immutable token", async function () {
-        this.timeout(120000);
-
         let status;
         const operatorId = env.operatorId;
 
@@ -339,8 +327,6 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -377,8 +363,6 @@ describe("TokenUpdate", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot change current treasury until no NFTs are owned", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -468,8 +452,6 @@ describe("TokenUpdate", function () {
 
     describe("[HIP-646] Fungible Token Metadata Field", function () {
         it("should update the metadata of token after signing the transaction with metadata key", async function () {
-            this.timeout(120000);
-
             let tokenInfo;
             const operatorId = env.operatorId;
             const metadataKey = PrivateKey.generateED25519();
@@ -518,8 +500,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should update the metadata of token after signing the transaction with admin key", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
             const metadata = new Uint8Array([1]);
@@ -566,8 +546,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token when the new metadata is NOT set", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
             const metadata = new Uint8Array([1]);
@@ -612,8 +590,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should earse the metadata of token after signing the transaction with metadata key", async function () {
-            this.timeout(120000);
-
             let tokenInfo;
             const operatorId = env.operatorId;
             const metadataKey = PrivateKey.generateED25519();
@@ -662,8 +638,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should earse the metadata of token after signing the transaction with admin key", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
             const metadata = new Uint8Array([1]);
@@ -710,8 +684,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token when the transaction is not signed with metadata or admin key", async function () {
-            this.timeout(120000);
-
             let status;
             const operatorId = env.operatorId;
             const adminKey = PrivateKey.generateED25519();
@@ -756,8 +728,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token if the metadata or admin keys are NOT set", async function () {
-            this.timeout(120000);
-
             let status;
             const operatorId = env.operatorId;
             const metadata = new Uint8Array([1]);
@@ -797,8 +767,6 @@ describe("TokenUpdate", function () {
 
     describe("[HIP-765] Non Fungible Token Metadata Field", function () {
         it("should update the metadata of token after signing the transaction with metadata key", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const metadataKey = PrivateKey.generateED25519();
             const supplyKey = PrivateKey.generateED25519();
@@ -847,8 +815,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should update the metadata of token after signing the transaction with admin key", async function () {
-            this.timeout(120000);
-
             let tokenInfo;
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
@@ -895,8 +861,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token when the new metadata is NOT set", async function () {
-            this.timeout(120000);
-
             let tokenInfo;
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
@@ -941,8 +905,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should earse the metadata of token after signing the transaction with metadata key", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const metadataKey = PrivateKey.generateED25519();
             const supplyKey = PrivateKey.generateED25519();
@@ -991,8 +953,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should earse the metadata of token after signing the transaction with admin key", async function () {
-            this.timeout(120000);
-
             const operatorId = env.operatorId;
             const adminKey = env.operatorKey;
             const suppyKey = PrivateKey.generateED25519();
@@ -1039,8 +999,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token when the transaction is not signed with metadata or admin key", async function () {
-            this.timeout(120000);
-
             let status;
             const operatorId = env.operatorId;
             const adminKey = PrivateKey.generateED25519();
@@ -1085,8 +1043,6 @@ describe("TokenUpdate", function () {
         });
 
         it("should NOT update the metadata of token if the metadata or admin keys are NOT set", async function () {
-            this.timeout(120000);
-
             let status;
             const operatorId = env.operatorId;
             const supplyKey = PrivateKey.generateED25519();
@@ -1126,8 +1082,6 @@ describe("TokenUpdate", function () {
 
     describe("[HIP-540] Change or remove existing keys from a token", function () {
         it("Can make the token immutable when updating all of its keys to an empty KeyList, signing with an Admin Key, and setting the key verification mode to NO_VALIDATION.", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1226,8 +1180,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can remove all of token's lower-privilege keys when updating them to an empty KeyList, signing with an Admin Key, and setting the key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1329,8 +1281,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can update all of token's lower-privilege keys to an unusable key (i.e. all-zeros key) when signing with an Admin Key, and setting the key verification mode to FULL_VALIDATION and then set all lower-privilege keys back by signing with an Admin Key and setting key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1490,8 +1440,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can update all of token's lower-privilege keys when signing with an Admin Key and new respective lower-privilege key, and setting key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1610,8 +1558,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot make the token immutable when updating all of its keys to an empty KeyList, signing with a key that is different from an Admin Key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1702,8 +1648,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot make a token immutable when updating all of its keys to an unusable key (i.e. all-zeros key), signing with a key that is different from an Admin Key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
@@ -1794,8 +1738,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update the Admin Key to an unusable key (i.e. all-zeros key), signing with an Admin Key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const adminKey = PrivateKey.generateED25519();
             const supplyKey = PrivateKey.generateED25519();
             const unusableKey = PublicKey.unusableKey();
@@ -1851,8 +1793,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can update all of token’s lower-privilege keys to an unusable key (i.e. all-zeros key), when signing with a respective lower-privilege key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -1964,8 +1904,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can update all of token’s lower-privilege keys when signing with an old respective lower-privilege key and a new respective lower-privilege key, and setting key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2113,8 +2051,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Can update all of token's lower-privilege keys when signing ONLY with an old respective lower-privilege key and setting key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2234,8 +2170,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot remove all of token's lower-privilege keys when updating them to an empty KeyList, signing with a respective lower-privilege key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2328,8 +2262,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update all of token’s lower-privilege keys to an unusable key (i.e. all-zeros key), when signing with a key that is different from a respective lower-privilege key, and setting the key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2412,8 +2344,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update all of token's lower-privilege keys to an unusable key (i.e. all-zeros key), when signing ONLY with an old respective lower-privilege key, and setting key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2586,8 +2516,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update all of token's lower-privilege to an unusable key (i.e. all-zeros key), when signing with an old respective lower-privilege key and a new respective lower-privilege key, and setting key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2779,8 +2707,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update all of token's lower-privilege keys when signing ONLY with an old respective lower-privilege key and setting key verification mode to FULL_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();
@@ -2953,8 +2879,6 @@ describe("TokenUpdate", function () {
         });
 
         it("Cannot update all of token's lower-privilege keys when updating them to a keys with an invalid structure and signing with an old respective lower-privilege and setting key verification mode to NO_VALIDATION", async function () {
-            this.timeout(120000);
-
             const wipeKey = PrivateKey.generateED25519();
             const freezeKey = PrivateKey.generateED25519();
             const pauseKey = PrivateKey.generateED25519();

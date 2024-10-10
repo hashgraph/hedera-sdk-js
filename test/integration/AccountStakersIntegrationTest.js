@@ -9,8 +9,6 @@ describe("AccountStakers", function () {
     });
 
     it("should error", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         let err = false;

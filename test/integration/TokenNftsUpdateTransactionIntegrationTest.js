@@ -24,7 +24,6 @@ describe("TokenUpdateNftsTransaction", function () {
         nftCount;
 
     before(async function () {
-        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
         client = env.client;
         operatorId = env.operatorId;
@@ -40,8 +39,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should update the metadata of entire NFT collection", async function () {
-        this.timeout(120000);
-
         const createTokenTx = new TokenCreateTransaction()
             .setTokenName(tokenName)
             .setTokenSymbol(tokenSymbol)
@@ -94,8 +91,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should update the NFT's metadata", async function () {
-        this.timeout(120000);
-
         const createTokenTx = new TokenCreateTransaction()
             .setTokenName(tokenName)
             .setTokenSymbol(tokenSymbol)
@@ -148,8 +143,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should NOT update the NFT's metadata", async function () {
-        this.timeout(120000);
-
         const createTokenTx = new TokenCreateTransaction()
             .setTokenName(tokenName)
             .setTokenSymbol(tokenSymbol)
@@ -201,8 +194,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should earse the metadata of entire NFT collection", async function () {
-        this.timeout(120000);
-
         const createTokenTx = new TokenCreateTransaction()
             .setTokenName(tokenName)
             .setTokenSymbol(tokenSymbol)
@@ -255,7 +246,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should NOT update the NFTs metadata if the metadataKey is NOT set", async function () {
-        this.timeout(120000);
         try {
             const createTokenTx = new TokenCreateTransaction()
                 .setTokenName(tokenName)
@@ -299,7 +289,6 @@ describe("TokenUpdateNftsTransaction", function () {
     });
 
     it("should NOT update the NFTs metadata when the transaction is not signed with the metadataKey", async function () {
-        this.timeout(120000);
         try {
             const createTokenTx = new TokenCreateTransaction()
                 .setTokenName(tokenName)

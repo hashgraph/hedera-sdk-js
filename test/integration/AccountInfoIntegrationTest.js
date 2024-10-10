@@ -18,8 +18,6 @@ describe("AccountInfo", function () {
     });
 
     it("should be able to query cost", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const cost = await new AccountInfoQuery()
@@ -30,8 +28,6 @@ describe("AccountInfo", function () {
     });
 
     it("should error on query cost on deleted account with ACCOUNT_DELETED", async function () {
-        this.timeout(120000);
-
         const newKey = PrivateKey.generate();
 
         let createTransaction = await new AccountCreateTransaction()
@@ -70,8 +66,6 @@ describe("AccountInfo", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -113,8 +107,6 @@ describe("AccountInfo", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be able to get 300 accounts", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
         let response = [];
@@ -155,8 +147,6 @@ describe("AccountInfo", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const token = (
@@ -183,8 +173,6 @@ describe("AccountInfo", function () {
     });
 
     it("should be error with no account ID", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {

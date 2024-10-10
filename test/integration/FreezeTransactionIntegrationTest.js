@@ -17,7 +17,6 @@ describe("FreezeTransaction", function () {
     });
 
     it("should be executable but not supported", async function () {
-        this.timeout(120000);
         const seconds = Math.round(Date.now() / 1000);
         const validStart = new Timestamp(seconds, 0);
 

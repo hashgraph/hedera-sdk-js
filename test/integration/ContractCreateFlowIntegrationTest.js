@@ -14,8 +14,6 @@ describe("ContractCreateFlow", function () {
         env = await IntegrationTestEnv.new();
     });
     it("works", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         await new ContractCreateFlow()

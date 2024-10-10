@@ -25,8 +25,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should claim the tokens when they are in pending state", async function () {
-        this.timeout(120000);
-
         // create nft and ft tokens
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -108,8 +106,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should claim the tokens to multiple receivers when they are in pending state", async function () {
-        this.timeout(120000);
-
         // create nft and ft tokens
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -218,7 +214,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should claim the tokens when they are in pending state with multiple airdrop ids", async function () {
-        this.timeout(120000);
         // create nft and ft tokens
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -307,7 +302,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not be able to claim the tokens when they are not airdropped", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -353,7 +347,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not be able to claim the tokens when they are already claimed", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
@@ -433,7 +426,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not claim the tokens with duplicate entries", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
@@ -472,7 +464,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not be able to claim tokens when token is paused", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
@@ -512,7 +503,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not be able to claim tokens when token is deleted", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
@@ -552,7 +542,6 @@ describe("TokenClaimAirdropIntegrationTest", function () {
     });
 
     it("should not be able to claim tokens when token is frozen", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")

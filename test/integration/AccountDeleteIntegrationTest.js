@@ -17,8 +17,6 @@ describe("AccountDelete", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -59,8 +57,6 @@ describe("AccountDelete", function () {
     });
 
     it("should error with invalid signature", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -94,7 +90,6 @@ describe("AccountDelete", function () {
     });
 
     it("should error with no account ID set", async function () {
-        this.timeout(120000);
         let status;
 
         try {

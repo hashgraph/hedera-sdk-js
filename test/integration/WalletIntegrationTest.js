@@ -22,7 +22,6 @@ describe("WalletIntegration", function () {
     });
 
     it("issue-1530", async function () {
-        this.timeout(30000);
         const env = await IntegrationTestEnv.new();
 
         // Generate a key for the signer
