@@ -1,5 +1,9 @@
 import {
     AccountId,
+    CustomFee,
+    CustomFixedFee,
+    CustomFractionalFee,
+    CustomRoyaltyFee,
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenSupplyType,
@@ -16,6 +20,8 @@ import { CreateTokenParams, DeleteTokenParams } from "../params/token";
 
 import { TokenResponse } from "../response/token";
 
+import Long from "long";
+
 export const createToken = async ({
     name,
     symbol,
@@ -30,6 +36,7 @@ export const createToken = async ({
     freezeDefault,
     expirationTime,
     autoRenewPeriod,
+    autoRenewAccountId,
     memo,
     tokenType,
     supplyType,
@@ -58,7 +65,7 @@ export const createToken = async ({
     }
 
     if (initialSupply != null) {
-        transaction.setInitialSupply(initialSupply);
+        transaction.setInitialSupply(Long.fromString(initialSupply));
     }
 
     if (treasuryAccountId != null) {
@@ -92,12 +99,17 @@ export const createToken = async ({
     }
 
     if (expirationTime != null) {
-        const expirationTimeInSeconds = new Date(expirationTime * 1000);
-        transaction.setExpirationTime(expirationTimeInSeconds);
+        transaction.setExpirationTime(new Date(expirationTime));
+    }
+
+    if (autoRenewAccountId != null) {
+        transaction.setAutoRenewAccountId(
+            AccountId.fromString(autoRenewAccountId),
+        );
     }
 
     if (autoRenewPeriod != null) {
-        transaction.setAutoRenewPeriod(autoRenewPeriod);
+        transaction.setAutoRenewPeriod(Long.fromString(autoRenewPeriod));
     }
 
     if (memo != null) {
@@ -105,15 +117,27 @@ export const createToken = async ({
     }
 
     if (tokenType != null) {
-        transaction.setTokenType(TokenType[tokenType]);
+        if (tokenType === "ft") {
+            transaction.setTokenType(TokenType.FungibleCommon);
+        } else if (tokenType === "nft") {
+            transaction.setTokenType(TokenType.NonFungibleUnique);
+        } else {
+            throw new Error(`Invalid token type: ${tokenType}`);
+        }
     }
 
     if (supplyType != null) {
-        transaction.setSupplyType(TokenSupplyType[supplyType]);
+        if (supplyType === "finite") {
+            transaction.setSupplyType(TokenSupplyType.Finite);
+        } else if (supplyType === "infinite") {
+            transaction.setSupplyType(TokenSupplyType.Infinite);
+        } else {
+            throw new Error(`Invalid supply type: ${supplyType}`);
+        }
     }
 
     if (maxSupply != null) {
-        transaction.setMaxSupply(maxSupply);
+        transaction.setMaxSupply(Long.fromString(maxSupply));
     }
 
     if (feeScheduleKey != null) {
@@ -121,7 +145,84 @@ export const createToken = async ({
     }
 
     if (customFees != null && customFees.length > 0) {
-        transaction.setCustomFees(customFees);
+        let customFeeList = [];
+
+        customFees.forEach((customFee: Record<string, any>) => {
+            // Set fixed fees
+            if (customFee.fixedFee) {
+                let fixedFee = new CustomFixedFee()
+                    .setAmount(Long.fromString(customFee.fixedFee.amount))
+                    .setFeeCollectorAccountId(
+                        AccountId.fromString(customFee.feeCollectorAccountId),
+                    )
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+
+                if (customFee.fixedFee.denominatingTokenId) {
+                    fixedFee.setDenominatingTokenId(
+                        customFee.fixedFee.denominatingTokenId,
+                    );
+                }
+
+                customFeeList.push(fixedFee);
+            }
+
+            // Set fractional fees
+            if (customFee.fractionalFee) {
+                let fractionalFee = new CustomFractionalFee()
+                    .setNumerator(
+                        Long.fromString(customFee.fractionalFee.numerator),
+                    )
+                    .setDenominator(
+                        Long.fromString(customFee.fractionalFee.denominator),
+                    )
+                    .setMin(
+                        Long.fromString(customFee.fractionalFee.minimumAmount),
+                    )
+                    .setMax(
+                        Long.fromString(customFee.fractionalFee.maximumAmount),
+                    )
+                    .setFeeCollectorAccountId(
+                        AccountId.fromString(customFee.feeCollectorAccountId),
+                    )
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+
+                customFeeList.push(fractionalFee);
+            }
+
+            // Set royalty fees
+            if (customFee.royaltyFee) {
+                let royaltyFee = new CustomRoyaltyFee()
+                    .setNumerator(
+                        Long.fromString(customFee.royaltyFee.numerator),
+                    )
+                    .setDenominator(
+                        Long.fromString(customFee.royaltyFee.denominator),
+                    )
+                    .setFeeCollectorAccountId(
+                        AccountId.fromString(customFee.feeCollectorAccountId),
+                    )
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+
+                if (customFee.royaltyFee.fallbackFee) {
+                    let fallbackFee = new CustomFixedFee().setAmount(
+                        Long.fromString(
+                            customFee.royaltyFee.fallbackFee.amount,
+                        ),
+                    );
+                    if (customFee.royaltyFee.fallbackFee.denominatingTokenId) {
+                        fallbackFee.setDenominatingTokenId(
+                            customFee.royaltyFee.fallbackFee
+                                .denominatingTokenId,
+                        );
+                    }
+                    royaltyFee.setFallbackFee(fallbackFee);
+                }
+
+                customFeeList.push(royaltyFee);
+            }
+        });
+
+        transaction.setCustomFees(customFeeList);
     }
 
     if (pauseKey != null) {
@@ -129,7 +230,7 @@ export const createToken = async ({
     }
 
     if (metadata != null) {
-        transaction.setMetadata(Buffer.from(metadata, "hex"));
+        transaction.setMetadata(Buffer.from(metadata, "utf8"));
     }
 
     if (metadataKey != null) {
