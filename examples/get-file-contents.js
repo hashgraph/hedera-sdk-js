@@ -1,72 +1,95 @@
-/**
- * Get File Contents Example using Hedera JavaScript SDK
- */
-
 import {
     Client,
     PrivateKey,
     AccountId,
     FileContentsQuery,
     Hbar,
-    FileId,
+    FileCreateTransaction,
+    FileDeleteTransaction,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-async function main() {
-    console.log("Get File Contents Example Start!");
+/**
+ * How to get file contents
+ *
+ */
 
-    // Step 1: Client and operator setup
+async function main() {
+    /**
+     * Step 0:
+     * Create and configure the SDK Client
+     */
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const operatorKey = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
-    const client = Client.forName(process.env.HEDERA_NETWORK || "testnet");
+    const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
+
+    // Create a client for the local Hedera network
+    const node = { [process.env.HEDERA_NETWORK]: new AccountId(3) };
+    const client = Client.forNetwork(node);
+
     client.setOperator(operatorId, operatorKey);
+
+    // Increase the timeout settings
+    client.setRequestTimeout(60000); // Set timeout to 60 seconds
 
     console.log("Client and operator setup complete.");
 
-    // For this example, we'll use a known file ID. In practice, you'd use an existing file ID.
-    const fileIdStr = process.env.FILE_ID;
-    if (!fileIdStr) {
-        throw new Error("FILE_ID not set in .env file");
-    }
+    /**
+     * Step 1: Submit the file create transaction
+     */
+
+    // Content to be stored in the file.
+    const fileContents = Buffer.from("Hedera is great!", "utf-8");
 
     try {
-        // Step 2: File contents query
-        const fileId = FileId.fromString(fileIdStr); // Convert fileId to FileId object
-        console.log(`Querying contents of file with ID: ${fileId}`);
-        const query = new FileContentsQuery()
-            .setFileId(fileId)
-            .setMaxQueryPayment(new Hbar(2)); // Set max payment to 2 HBAR
+        console.log("Creating new file...");
 
-        // Step 3: Processing the file contents
-        const contents = await query.execute(client);
-        console.log("File contents retrieved successfully.");
+        // Create the transaction
+        const transaction = new FileCreateTransaction()
+            .setKeys([operatorKey.publicKey]) // The public key of the owner of the file.
+            .setContents(fileContents)
+            .setMaxTransactionFee(new Hbar(2)); // Change the default max transaction fee to 2 hbars
 
-        // Output the file contents
-        console.log("File contents:");
-        console.log(contents.toString("utf8")); // Convert contents to a readable string
-    } catch (error) {
-        // Step 5: Error handling
-        console.error("Error occurred during file query:");
-        if (typeof error === "object" && error !== null) {
-            if ("status" in error && error.status) {
-                console.error(`Hedera network status: ${String(error.status)}`);
-            }
-            if ("message" in error && error.message) {
-                console.error(`Error message: ${error.message}`);
-            }
-            if ("transactionId" in error && error.transactionId) {
-                console.error(
-                    `Transaction ID: ${error.transactionId.toString()}`,
-                );
-            }
-            if ("receipt" in error && error.receipt) {
-                console.error(
-                    `Transaction receipt: ${JSON.stringify(error.receipt, null, 2)}`,
-                );
-            }
+        // Freeze the transaction, sign with the key on the file and the client operator key, then submit to a Hedera network
+        const txId = await transaction.execute(client);
+
+        // Request the receipt
+        const receipt = await txId.getReceipt(client);
+
+        // Get the file ID
+        const newFileId = receipt.fileId;
+
+        if (newFileId) {
+            console.log(`Created new file with ID: ${newFileId.toString()}`);
+        } else {
+            throw new Error("Failed to retrieve new file ID");
         }
+
+        /**
+         * Step 2: Get file contents and print them
+         */
+
+        const fileContentsQuery = await new FileContentsQuery()
+            .setFileId(newFileId)
+            .execute(client);
+
+        if (fileContentsQuery) {
+            console.log("File contents: " + fileContentsQuery.toString());
+        } else {
+            throw new Error("Failed to retrieve file contents");
+        }
+
+        // Clean up: Delete created file
+        const fileDeleteTxResponse = await new FileDeleteTransaction()
+            .setFileId(newFileId)
+            .execute(client);
+
+        await fileDeleteTxResponse.getReceipt(client);
+
+        console.log("File deleted successfully");
+    } catch (error) {
+        console.error("Error occurred during file creation:", error.message);
     } finally {
         // Close the client
         client.close();
