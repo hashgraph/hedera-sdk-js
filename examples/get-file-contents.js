@@ -35,7 +35,9 @@ async function main() {
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
     // Create a client for the local Hedera network
-    const client = Client.forNetwork({ "127.0.0.1:50211": new AccountId(3) });
+    const client = Client.forNetwork({
+        [process.env.HEDERA_NETWORK]: new AccountId(3),
+    });
     client.setOperator(operatorId, operatorKey);
 
     // Increase the timeout settings
