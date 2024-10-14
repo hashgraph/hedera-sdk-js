@@ -33,8 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * chore(deps): bump serve-static and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2520
 * chore(deps): bump renovatebot/github-action from 40.3.1 to 40.3.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2577
 
-
-
 # v2.52.0-beta.3
 
 ## What's Changed
