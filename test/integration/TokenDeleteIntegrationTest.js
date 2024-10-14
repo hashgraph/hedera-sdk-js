@@ -13,8 +13,6 @@ describe("TokenDelete", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -42,8 +40,6 @@ describe("TokenDelete", function () {
     });
 
     it("should error with no token ID set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
