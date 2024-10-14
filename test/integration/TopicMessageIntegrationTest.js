@@ -16,8 +16,6 @@ describe("TopicMessage", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -77,8 +75,6 @@ describe("TopicMessage", function () {
     });
 
     it("should be executable with large message", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -138,8 +134,6 @@ describe("TopicMessage", function () {
     });
 
     it("should error when topic ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -187,8 +181,6 @@ describe("TopicMessage", function () {
     });
 
     it("should error when message is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 

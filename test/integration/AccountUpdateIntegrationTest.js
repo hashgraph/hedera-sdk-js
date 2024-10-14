@@ -16,13 +16,10 @@ describe("AccountUpdate", function () {
     let env;
 
     before(async function () {
-        this.timeout(120000);
         env = await IntegrationTestEnv.new();
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const key1 = PrivateKey.generateED25519();
@@ -93,8 +90,6 @@ describe("AccountUpdate", function () {
     });
 
     it("should error with invalid auto renew period", async function () {
-        this.timeout(120000);
-
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
 
@@ -147,8 +142,6 @@ describe("AccountUpdate", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
-        this.timeout(120000);
-
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
 
@@ -189,7 +182,6 @@ describe("AccountUpdate", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(120000);
         let status;
 
         try {
@@ -206,8 +198,6 @@ describe("AccountUpdate", function () {
     });
 
     it("should execute with only account ID", async function () {
-        this.timeout(120000);
-
         const key1 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
@@ -242,8 +232,6 @@ describe("AccountUpdate", function () {
     });
 
     it("should error with invalid signature", async function () {
-        this.timeout(120000);
-
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateED25519();
 

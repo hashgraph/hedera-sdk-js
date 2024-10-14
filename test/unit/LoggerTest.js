@@ -5,8 +5,6 @@ import fs from "fs";
 import { spy } from "sinon";
 
 describe("Logger", function () {
-    this.timeout(50000);
-
     it("set and get log level correctly inside the `Client` object", async function () {
         const client = Client.forPreviewnet({
             scheduleNetworkUpdate: false,
