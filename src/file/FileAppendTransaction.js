@@ -181,6 +181,16 @@ export default class FileAppendTransaction extends Transaction {
 
         const chunkSize = append.contents?.length || undefined;
         const maxChunks = bodies.length || undefined;
+        let chunkInterval;
+        if (transactionIds.length > 1) {
+            const firstValidStart = transactionIds[0].validStart;
+            const secondValidStart = transactionIds[1].validStart;
+            if (firstValidStart && secondValidStart) {
+                chunkInterval = secondValidStart.nanos
+                    .sub(firstValidStart.nanos)
+                    .toNumber();
+            }
+        }
 
         return Transaction._fromProtobufTransactions(
             new FileAppendTransaction({
@@ -195,6 +205,7 @@ export default class FileAppendTransaction extends Transaction {
                 contents,
                 chunkSize,
                 maxChunks,
+                chunkInterval,
             }),
             transactions,
             signedTransactions,

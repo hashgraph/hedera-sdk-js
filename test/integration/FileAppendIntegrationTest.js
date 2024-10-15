@@ -407,8 +407,10 @@ describe("FileAppend", function () {
         expect(receipt.status).to.be.equal(Status.Success);
     });
 
-    it("should keep chunk size and correct maxChunks after deserialization", async function () {
+    it("should keep chunk size, chunk interval and correct max chunks after deserialization", async function () {
         const operatorKey = env.operatorKey.publicKey;
+        const chunkSize = 1024;
+        const chunkInterval = 230;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
@@ -419,7 +421,8 @@ describe("FileAppend", function () {
 
         const tx = new FileAppendTransaction()
             .setFileId(fileId)
-            .setChunkSize(1024)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
             .setMaxChunks(99999)
             .setContents(newContents);
 
@@ -430,6 +433,7 @@ describe("FileAppend", function () {
         expect(txFromBytes.maxChunks).to.be.equal(
             txFromBytes.getRequiredChunks(),
         );
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
 
         txFromBytes.freezeWith(env.client);
         await txFromBytes.sign(env.operatorKey);
