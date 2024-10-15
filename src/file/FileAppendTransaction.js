@@ -60,6 +60,7 @@ export default class FileAppendTransaction extends Transaction {
      * @param {Uint8Array | string} [props.contents]
      * @param {number} [props.maxChunks]
      * @param {number} [props.chunkSize]
+     * @param {number} [props.chunkInterval]
      */
     constructor(props = {}) {
         super();
@@ -88,6 +89,12 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._chunkSize = 4096;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this._chunkInterval = 10;
+
         this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.fileId != null) {
@@ -104,6 +111,10 @@ export default class FileAppendTransaction extends Transaction {
 
         if (props.chunkSize != null) {
             this.setChunkSize(props.chunkSize);
+        }
+
+        if (props.chunkInterval != null) {
+            this.setChunkInterval(props.chunkInterval);
         }
 
         /** @type {List<TransactionId>} */
@@ -297,6 +308,22 @@ export default class FileAppendTransaction extends Transaction {
      */
     setChunkSize(chunkSize) {
         this._chunkSize = chunkSize;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get chunkInterval() {
+        return this._chunkInterval;
+    }
+
+    /**
+     * @param {number} chunkInterval
+     * @returns {this}
+     */
+    setChunkInterval(chunkInterval) {
+        this._chunkInterval = chunkInterval;
         return this;
     }
 
