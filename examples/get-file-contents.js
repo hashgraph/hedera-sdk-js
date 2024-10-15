@@ -22,12 +22,12 @@ async function main() {
      * Create and configure the SDK Client
      */
     if (
-        process.env.OPERATOR_ID == null ||
-        process.env.OPERATOR_KEY == null ||
-        process.env.HEDERA_NETWORK == null
+        !process.env.OPERATOR_ID ||
+        !process.env.OPERATOR_KEY ||
+        !process.env.HEDERA_NETWORK
     ) {
         throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
+            "Environment variables OPERATOR_ID, OPERATOR_KEY, and HEDERA_NETWORK are required.",
         );
     }
 
@@ -35,13 +35,29 @@ async function main() {
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
     // Create a client for the local Hedera network
-    const client = Client.forNetwork({
-        [process.env.HEDERA_NETWORK]: new AccountId(3),
-    });
-    client.setOperator(operatorId, operatorKey);
+    let client;
 
-    // Increase the timeout settings
-    client.setRequestTimeout(120000);
+    switch (process.env.HEDERA_NETWORK) {
+        case "mainnet":
+            client = Client.forMainnet();
+            break;
+        case "testnet":
+            client = Client.forTestnet();
+            break;
+        case "previewnet":
+            client = Client.forPreviewnet();
+            break;
+        case "local-node":
+            client = Client.forNetwork({
+                "127.0.0.1:50211": new AccountId(3),
+            });
+            break;
+        default:
+            throw new Error(
+                "Unsupported HEDERA_NETWORK value. Please set it to 'mainnet', 'testnet', 'previewnet', or 'local-node'.",
+            );
+    }
+    client.setOperator(operatorId, operatorKey);
 
     /**
      * Step 1: Submit the file create transaction
@@ -55,10 +71,10 @@ async function main() {
 
         // Create the transaction
         let transaction = new FileCreateTransaction()
-            .setKeys([operatorKey.publicKey]) // The public key of the owner of the file.
+            .setKeys([operatorKey.publicKey])
             .setContents(fileContents)
-            .setMaxTransactionFee(new Hbar(2)) // Change the default max transaction fee to 2 hbars
-            .freezeWith(client); // Freeze with client
+            .setMaxTransactionFee(new Hbar(2))
+            .freezeWith(client);
 
         transaction = await transaction.sign(operatorKey);
 
@@ -68,12 +84,7 @@ async function main() {
 
         // Get the file ID
         const newFileId = receipt.fileId;
-
-        if (newFileId) {
-            console.log(`Created new file with ID: ${newFileId.toString()}`);
-        } else {
-            throw new Error("Failed to retrieve new file ID");
-        }
+        console.log(`Created new file with ID: ${newFileId.toString()}`);
 
         /**
          * Step 2: Get file contents and print them
@@ -83,11 +94,7 @@ async function main() {
             .setFileId(newFileId)
             .execute(client);
 
-        if (fileContentsQuery) {
-            console.log("File contents: " + fileContentsQuery.toString());
-        } else {
-            throw new Error("Failed to retrieve file contents");
-        }
+        console.log("File contents: " + fileContentsQuery.toString());
 
         // Clean up: Delete created file
         const fileDeleteTxResponse = await new FileDeleteTransaction()
@@ -100,13 +107,9 @@ async function main() {
     } catch (error) {
         console.error("Error occurred during file creation:", error);
     } finally {
-        // Close the client
         client.close();
         console.log("Get File Contents Example Complete!");
     }
 }
 
-main().catch((error) => {
-    console.error("Unhandled error:", error);
-    process.exit(1);
-});
+void main();
