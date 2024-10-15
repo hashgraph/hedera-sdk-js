@@ -17,8 +17,6 @@ describe("AccountRecords", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
