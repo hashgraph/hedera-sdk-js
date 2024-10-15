@@ -641,44 +641,57 @@ describe("Transaction", function () {
             expect(removedSignatures).to.include.members([signature1]);
         });
 
-        it("should return all removed signatures in the expected object format when clearing all signatures", function () {
+        it("should return all removed signatures in the expected Map format when clearing all signatures", function () {
             // Sign the transaction with multiple keys
             signAndAddSignatures(transaction, key1, key2, key3);
 
-            // Clear all signatures and capture the returned value
+            // Clear all signatures and capture the returned Map
             const removedSignatures = transaction.removeAllSignatures();
 
             // Check the format of the returned value
-            expect(removedSignatures).to.be.an("object");
+            expect(removedSignatures).to.be.instanceOf(Map);
 
-            // Ensure the object has the correct structure
-            expect(removedSignatures).to.have.property(
-                key1.publicKey.toStringRaw(),
+            // Check if the Map contains keys using the toString() method
+            const key1Exists = Array.from(removedSignatures.keys()).some(
+                (key) => key.toString() === key1.publicKey.toString(),
             );
-            expect(removedSignatures[key1.publicKey.toStringRaw()]).to.be.an(
-                "array",
+            const key2Exists = Array.from(removedSignatures.keys()).some(
+                (key) => key.toString() === key2.publicKey.toString(),
             );
-            expect(removedSignatures).to.have.property(
-                key2.publicKey.toStringRaw(),
+            const key3Exists = Array.from(removedSignatures.keys()).some(
+                (key) => key.toString() === key3.publicKey.toString(),
             );
-            expect(removedSignatures[key2.publicKey.toStringRaw()]).to.be.an(
-                "array",
+
+            // Assert that all keys exist
+            expect(key1Exists).to.be.true;
+            expect(key2Exists).to.be.true;
+            expect(key3Exists).to.be.true;
+
+            // Retrieve values using the keys and convert them to strings for comparison
+            const signaturesArray1 = removedSignatures.get(
+                Array.from(removedSignatures.keys()).find(
+                    (key) => key.toString() === key1.publicKey.toString(),
+                ),
             );
-            expect(removedSignatures).to.have.property(
-                key3.publicKey.toStringRaw(),
+
+            const signaturesArray2 = removedSignatures.get(
+                Array.from(removedSignatures.keys()).find(
+                    (key) => key.toString() === key2.publicKey.toString(),
+                ),
             );
-            expect(removedSignatures[key3.publicKey.toStringRaw()]).to.be.an(
-                "array",
+
+            const signaturesArray3 = removedSignatures.get(
+                Array.from(removedSignatures.keys()).find(
+                    (key) => key.toString() === key3.publicKey.toString(),
+                ),
             );
+
+            // Validate that the retrieved arrays are present
+            expect(signaturesArray1).to.be.an("array").that.is.not.empty;
+            expect(signaturesArray2).to.be.an("array").that.is.not.empty;
+            expect(signaturesArray3).to.be.an("array").that.is.not.empty;
 
             // Ensure the removed signatures are in the expected format
-            const signaturesArray1 =
-                removedSignatures[key1.publicKey.toStringRaw()];
-            const signaturesArray2 =
-                removedSignatures[key2.publicKey.toStringRaw()];
-            const signaturesArray3 =
-                removedSignatures[key3.publicKey.toStringRaw()];
-
             [signaturesArray1, signaturesArray2, signaturesArray3].forEach(
                 (signaturesArray) => {
                     signaturesArray.forEach((sig) => {
@@ -695,8 +708,24 @@ describe("Transaction", function () {
             const removedSignatures = transaction.removeAllSignatures();
 
             // Check the format of the returned value
-            expect(removedSignatures).to.be.an("object");
+            expect(removedSignatures).to.be.instanceOf(Map);
             expect(Object.keys(removedSignatures)).to.have.lengthOf(0);
+        });
+
+        it("should return an empty Map if transaction.sigMap is undefined", function () {
+            transaction._signedTransactions.list = [1];
+
+            const result = transaction.removeAllSignatures();
+            expect(result).to.be.instanceOf(Map);
+            expect(result.size).to.equal(0);
+        });
+
+        it("should return an empty Map if sigPair.pubKeyPrefix is undefined", function () {
+            transaction._signedTransactions.list[0].sigMap = { sigPair: [1] };
+
+            const result = transaction.removeAllSignatures();
+            expect(result).to.be.instanceOf(Map);
+            expect(result.size).to.equal(0);
         });
     });
 });

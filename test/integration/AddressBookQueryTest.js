@@ -3,8 +3,6 @@ import { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AddressBookQuery", function () {
     it("should be query the addressbook on testnet", async function () {
-        this.timeout(10000);
-
         const client = Client.forTestnet();
 
         const addressBook = await new AddressBookQuery()
@@ -16,8 +14,6 @@ describe("AddressBookQuery", function () {
     });
 
     it("should be query the addressbook on mainnet", async function () {
-        this.timeout(10000);
-
         const client = Client.forMainnet();
 
         const addressBook = await new AddressBookQuery()
