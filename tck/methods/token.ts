@@ -4,6 +4,7 @@ import {
     CustomFractionalFee,
     CustomRoyaltyFee,
     TokenCreateTransaction,
+    TokenDeleteTransaction,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -13,7 +14,7 @@ import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
 import { getKeyFromString } from "../utils/key";
 
 import { applyCommonTransactionParams } from "../params/common-tx-params";
-import { CreateTokenParams } from "../params/token";
+import { CreateTokenParams, DeleteTokenParams } from "../params/token";
 
 import { TokenResponse } from "../response/token";
 import { supplyTypeMap, tokenTypeMap } from "../utils/constants/properties";
@@ -241,6 +242,34 @@ export const createToken = async ({
 
     return {
         tokenId: receipt.tokenId.toString(),
+        status: receipt.status.toString(),
+    };
+};
+
+export const deleteToken = async ({
+    tokenId,
+    commonTransactionParams,
+}: DeleteTokenParams): Promise<TokenResponse> => {
+    let transaction = new TokenDeleteTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
         status: receipt.status.toString(),
     };
 };
