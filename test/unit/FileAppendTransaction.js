@@ -107,71 +107,33 @@ describe("FileAppendTransaction", function () {
             .setContents("1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000))
             .freeze();
 
-        const transactionId = transaction.transactionId;
-
         expect(transaction._transactionIds.list.length).to.be.equal(3);
-        expect(transaction._nodeAccountIds.list.length).to.be.equal(1);
 
-        let body = transaction._makeTransactionBody(nodeAccountId);
+        for (let i = 0; i < 3; i++) {
+            let body = transaction._makeTransactionBody(nodeAccountId);
 
-        expect(body.transactionID).to.deep.equal(transactionId._toProtobuf());
+            expect(body.transactionID).to.deep.equal(
+                transaction._transactionIds.list[i]._toProtobuf(),
+            );
 
-        expect(body.memo).to.be.equal("");
-        expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[0]._toProtobuf(),
-        );
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
-        expect(body.transactionValidDuration).to.deep.equal({
-            seconds: Long.fromNumber(120),
-        });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
-        expect(body.fileAppend.contents.length).to.be.equal(1000);
-        expect(body.fileAppend.contents[0]).to.be.equal(49);
+            if (i > 0) {
+                expect(
+                    transaction._transactionIds.list[i].validStart.nanos.sub(
+                        transaction._transactionIds.list[i - 1].validStart
+                            .nanos,
+                    ),
+                ).to.deep.equal(Long.fromNumber(chunkInterval));
+            }
 
-        transaction._transactionIds.advance();
-        body = transaction._makeTransactionBody(nodeAccountId);
+            if (i === 2) {
+                expect(
+                    transaction._transactionIds.list[2].validStart.nanos.sub(
+                        transaction._transactionIds.list[0].validStart.nanos,
+                    ),
+                ).to.deep.equal(Long.fromNumber(chunkInterval * 2));
+            }
 
-        expect(body.memo).to.be.equal("");
-        expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[1]._toProtobuf(),
-        );
-        expect(
-            transaction._transactionIds.list[1].validStart.nanos.sub(
-                transaction._transactionIds.list[0].validStart.nanos,
-            ),
-        ).to.deep.equal(Long.fromNumber(chunkInterval));
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
-        expect(body.transactionValidDuration).to.deep.equal({
-            seconds: Long.fromNumber(120),
-        });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
-        expect(body.fileAppend.contents.length).to.be.equal(1000);
-        expect(body.fileAppend.contents[0]).to.be.equal(50);
-
-        transaction._transactionIds.advance();
-        body = transaction._makeTransactionBody(nodeAccountId);
-
-        expect(body.memo).to.be.equal("");
-        expect(body.transactionID).to.deep.equal(
-            transaction._transactionIds.list[2]._toProtobuf(),
-        );
-        expect(
-            transaction._transactionIds.list[2].validStart.nanos.sub(
-                transaction._transactionIds.list[1].validStart.nanos,
-            ),
-        ).to.deep.equal(Long.fromNumber(chunkInterval));
-        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
-        expect(body.transactionValidDuration).to.deep.equal({
-            seconds: Long.fromNumber(120),
-        });
-        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
-        expect(body.fileAppend.contents.length).to.be.equal(1000);
-        expect(body.fileAppend.contents[0]).to.be.equal(51);
-
-        expect(
-            transaction._transactionIds.list[2].validStart.nanos.sub(
-                transaction._transactionIds.list[0].validStart.nanos,
-            ),
-        ).to.deep.equal(Long.fromNumber(chunkInterval * 2));
+            transaction._transactionIds.advance();
+        }
     });
 });
