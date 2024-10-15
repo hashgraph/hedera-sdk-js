@@ -6,6 +6,8 @@ import {
     FileInfoQuery,
     Hbar,
     Status,
+    Timestamp,
+    TransactionId,
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -22,6 +24,7 @@ describe("FileAppend", function () {
         newContents = generateUInt8Array(newContentsLength);
         operatorKey = env.operatorKey.publicKey;
     });
+
     it("should be executable", async function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
@@ -347,6 +350,57 @@ describe("FileAppend", function () {
 
         const receipt = await (
             await fromBytesTx.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should keep transaction id after non-frozen deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const chunkInterval = 230;
+        const tx = new FileAppendTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(
+                    env.operatorId,
+                    Timestamp.fromDate(new Date()),
+                ),
+            )
+            .setFileId(fileId)
+            .setChunkInterval(chunkInterval)
+            .setChunkSize(1000)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(
+            txFromBytes.transactionId.accountId._toProtobuf(),
+        ).to.be.deep.equal(env.operatorId?._toProtobuf());
+
+        txFromBytes._transactionIds.list.forEach(
+            (transactionId, index, array) => {
+                if (index > 0) {
+                    const previousTimestamp = array[index - 1].validStart;
+                    const currentTimestamp = transactionId.validStart;
+                    const difference =
+                        currentTimestamp.nanos - previousTimestamp.nanos;
+                    expect(difference).to.be.equal(chunkInterval);
+                }
+            },
+        );
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
         ).getReceipt(env.client);
         expect(receipt.status).to.be.equal(Status.Success);
     });
