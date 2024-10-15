@@ -7,7 +7,6 @@ import {
     KeyList,
     TransferTransaction,
     Transaction,
-    PublicKey,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -146,34 +145,20 @@ async function main() {
         signaturesInTheTransactionAfter,
     );
 
-    /**
-     * Print the signatures in DER format
-     * @param {Uint8Array[]} signatures - The signatures to print.
-     * @returns {void} An array of signatures in DER format.
-     */
-    const printSignatures = (signatures) => {
-        return signatures.forEach((sig) => {
-            console.log(PrivateKey.fromBytes(sig).toStringDer());
-        });
-    };
-
-    for (const [publicKey, signatures] of Object.entries(
-        allSignaturesRemoved,
-    )) {
-        // Show the signatures for Alice & Bob
-        console.log(`\nRemoved signatures for ${publicKey}:`);
-
+    for (const [publicKey, signatures] of allSignaturesRemoved) {
+        // Show the signatures for each publicKey
+        console.log(`\nRemoved signatures for ${publicKey.toStringDer()}:`);
         if (Array.isArray(signatures)) {
-            printSignatures(signatures);
+            console.log(
+                signatures.map((sig) => {
+                    return PrivateKey.fromBytes(sig).toStringDer();
+                }),
+            );
         }
 
         // Add the removed signatures back
-        signedTransaction.addSignature(
-            PublicKey.fromString(publicKey),
-            signatures,
-        );
+        signedTransaction.addSignature(publicKey, signatures);
     }
-
     /**
      *
      * Step 8: Execute and take the receipt

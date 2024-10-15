@@ -21,7 +21,6 @@ describe("ScheduleCreate", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
@@ -106,7 +105,6 @@ describe("ScheduleCreate", function () {
     });
 
     it("should be able to query cost", async function () {
-        this.timeout(120000);
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
@@ -170,8 +168,6 @@ describe("ScheduleCreate", function () {
     });
 
     it("should be able to encode/decode scheduled transaction", async function () {
-        this.timeout(120000);
-
         const tx = new TransferTransaction()
             .addHbarTransfer(env.operatorId, Hbar.fromTinybars(1))
             .addHbarTransfer("0.0.1023", Hbar.fromTinybars(1).negated());
