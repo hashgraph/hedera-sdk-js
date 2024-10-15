@@ -11,7 +11,6 @@ import {
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionReceipt", function () {
-    this.timeout(120000);
     let env;
 
     before(async function () {
@@ -19,7 +18,6 @@ describe("TransactionReceipt", function () {
     });
 
     it("should exist in the `ReceiptStatusError`", async function () {
-        this.timeout(120000);
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 

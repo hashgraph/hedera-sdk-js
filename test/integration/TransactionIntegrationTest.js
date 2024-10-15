@@ -22,8 +22,6 @@ import { expect } from "chai";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
@@ -62,8 +60,6 @@ describe("TransactionIntegration", function () {
     });
 
     it("signs on demand", async function () {
-        this.timeout(10000);
-
         const env = await IntegrationTestEnv.new();
         env.client.setSignOnDemand(true);
 
@@ -81,8 +77,6 @@ describe("TransactionIntegration", function () {
     });
 
     it("signs correctly", async function () {
-        this.timeout(10000);
-
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generateED25519();
 
@@ -112,7 +106,6 @@ describe("TransactionIntegration", function () {
     });
 
     it("issue-327", async function () {
-        this.timeout(30000);
         const env = await IntegrationTestEnv.new();
         const privateKey1 = PrivateKey.generateED25519();
         const privateKey2 = PrivateKey.generateED25519();
@@ -178,7 +171,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-1.js */
         it("should serialize and deserialize the so-called signed transaction, and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction and freeze it
                 const transaction = new TransferTransaction()
@@ -220,7 +212,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-2.js */
         it("should serialize and deserialize the so-called signed transaction after being signed, and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction and freeze it
                 let transaction = new TransferTransaction()
@@ -263,7 +254,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-3.js */
         it("should serialize and deserialize so-called incomplete transaction, and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new TransferTransaction()
@@ -306,7 +296,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-4.js */
         it("should serialize and deserialize so-called incomplete transaction, set node account ids and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new TransferTransaction()
@@ -357,7 +346,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-5.js */
         it("should serialize and deserialize so-called incomplete transaction, set transaction id and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new TransferTransaction()
@@ -412,7 +400,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-6.js */
         it("should serialize and deserialize so-called incomplete transaction, update and execute it", async function () {
-            this.timeout(120000);
             const amount = new Hbar(1);
             try {
                 // 1. Create transaction
@@ -476,7 +463,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-7.js */
         it("should serialize and deserialize so-called signed transaction (chunked), and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction and freeze it
                 const transaction = await new FileCreateTransaction()
@@ -512,7 +498,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-8.js */
         it("should serialize and deserialize so-called incomplete transaction (chunked), and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
@@ -554,7 +539,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-9.js */
         it("should serialize and deserialize so-called incomplete transaction (chunked), update and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
@@ -603,7 +587,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-10.js */
         it("should serialize and deserialize so-called incomplete transaction (chunked), set transaction id and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
@@ -656,7 +639,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-11.js */
         it("should serialize and deserialize so-called incomplete transaction (chunked), set node account ids and execute it", async function () {
-            this.timeout(120000);
             try {
                 // 1. Create transaction
                 const transaction = new FileCreateTransaction()
@@ -705,8 +687,6 @@ describe("TransactionIntegration", function () {
 
         /** @description: example serialize-deserialize-12.js */
         it("should create, serialize and deserialize so-called incomplete transaction, then freeze it, serialize and deserialize it again, and execute it", async function () {
-            this.timeout(120000);
-
             try {
                 // Create transaction id
                 const transactionId = new TransactionId(
