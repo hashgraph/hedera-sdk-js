@@ -23,8 +23,6 @@ describe("FileAppend", function () {
         operatorKey = env.operatorKey.publicKey;
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
@@ -83,8 +81,6 @@ describe("FileAppend", function () {
     });
 
     it("should be chunk contents", async function () {
-        this.timeout(120000 * 2);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -145,8 +141,6 @@ describe("FileAppend", function () {
     });
 
     it("should error with no file ID set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -186,8 +180,6 @@ describe("FileAppend", function () {
     });
 
     it("should not error with no contents appended", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -217,8 +209,6 @@ describe("FileAppend", function () {
     });
 
     it("should keep content after deserialization", async function () {
-        this.timeout(120000);
-
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(Buffer.from(""))
@@ -246,8 +236,6 @@ describe("FileAppend", function () {
     });
 
     it("should be able to freeze after deserialize", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
