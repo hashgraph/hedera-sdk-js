@@ -9,43 +9,70 @@ import {
     AccountDeleteTransaction,
     KeyList,
 } from "@hashgraph/sdk";
+
 import dotenv from "dotenv";
 
 dotenv.config();
 
+// Removed pino logger initialization
+const logger = console;
+
+/**
+ * Step 0: Set up client connection to Hedera network
+ */
+
 async function main() {
     if (
-        process.env.OPERATOR_ID == null ||
-        process.env.OPERATOR_KEY == null ||
-        process.env.HEDERA_NETWORK == null
+        !process.env.OPERATOR_ID ||
+        !process.env.OPERATOR_KEY ||
+        !process.env.HEDERA_NETWORK
     ) {
-        throw new Error(
-            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
+        logger.error(
+            "Environment variables OPERATOR_ID, OPERATOR_KEY, and HEDERA_NETWORK are required.",
         );
+        throw new Error("Missing required environment variables.");
     }
 
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
-    // Create a client for the local Hedera network
-    const client = Client.forNetwork({
-        [process.env.HEDERA_NETWORK]: new AccountId(3)
-    });
+    let client;
+
+    // Adjust this as needed for your local network
+    const localNetworkConfig = {
+        "127.0.0.1:50211": new AccountId(3),
+    }
+
+    switch (process.env.HEDERA_NETWORK) {
+        case "mainnet":
+            client = Client.forMainnet();
+            break;
+        case "testnet":
+            client = Client.forTestnet();
+            break;
+        case "previewnet":
+            client = Client.forPreviewnet();
+            break;
+        case "local-node":
+            client = Client.forNetwork(localNetworkConfig);
+            break;
+        default:
+            logger.error("Unsupported HEDERA_NETWORK value.");
+            throw new Error(
+                "Unsupported HEDERA_NETWORK value. Set to 'mainnet', 'testnet', 'previewnet', or 'local-node'.",
+            );
+    }
     client.setOperator(operatorId, operatorKey);
 
     try {
-        console.log("Create Account With Threshold Key Example Start!");
+        logger.info("Create Account With Threshold Key Example Start!");
 
         /*
          * Step 1:
          * Generate three new Ed25519 private, public key pairs.
          *
-         * You do not need the private keys to create the Threshold Key List,
-         * you only need the public keys, and if you're doing things correctly,
-         * you probably shouldn't have these private keys.
          */
 
-        // Generate 3 new Ed25519 private, public key pairs
         const privateKeys = [];
         const publicKeys = [];
         for (let i = 0; i < 3; i++) {
@@ -54,9 +81,11 @@ async function main() {
             publicKeys.push(key.publicKey);
         }
 
-        console.log("Generating public keys...");
+        logger.info("Generating public keys...");
         publicKeys.forEach((publicKey, index) => {
-            console.log(`Generated public key ${index + 1}: ${publicKey.toString()}`);
+            console.log(
+                `Generated public key ${index + 1}: ${publicKey.toString()}`,
+            );
         });
 
         /*
@@ -65,36 +94,33 @@ async function main() {
          *
          * Require 2 of the 3 keys we generated to sign on anything modifying this account.
          */
-        const thresholdKey = new KeyList();
-        thresholdKey.setThreshold(2);
-        publicKeys.forEach((publicKey) => thresholdKey.push(publicKey));
+        const thresholdKey = new KeyList(publicKeys, 2);
 
         /*
          * Step 3:
          * Create a new account setting a Key List from a previous step as an account's key.
          */
-        console.log("Creating new account...");
+        logger.info("Creating new account...");
         const accountCreateTxResponse = await new AccountCreateTransaction()
             .setKey(thresholdKey)
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(100))
             .execute(client);
 
-        const accountCreateTxReceipt = await accountCreateTxResponse.getReceipt(client);
+        const accountCreateTxReceipt =
+            await accountCreateTxResponse.getReceipt(client);
         const newAccountId = accountCreateTxReceipt.accountId;
-        if (!newAccountId) {
-            throw new Error("Failed to retrieve new account ID");
-        }
-        console.log(`Created account with ID: ${newAccountId.toString()}`);
+
+        logger.info(`Created account with ID: ${newAccountId.toString()}`);
 
         /*
          * Step 4:
          * Create a transfer transaction from a newly created account to demonstrate the signing process (threshold).
          */
-        console.log("Transferring 1 Hbar from a newly created account...");
-        let transferTx =  new TransferTransaction()
-            .addHbarTransfer(newAccountId, new Hbar(-1)) // 1 Hbar in negative
-            .addHbarTransfer(new AccountId(3), new Hbar(1)) // 1 Hbar
-            .freezeWith(client); // Freeze with client
+        logger.info("Transferring 1 Hbar from a newly created account...");
+        let transferTx = new TransferTransaction()
+            .addHbarTransfer(newAccountId, new Hbar(-50))
+            .addHbarTransfer(new AccountId(3), new Hbar(50))
+            .freezeWith(client);
 
         // Sign with 2 of the 3 keys
         transferTx = await transferTx.sign(privateKeys[0]);
@@ -111,13 +137,16 @@ async function main() {
             .setAccountId(newAccountId)
             .execute(client);
 
-        console.log("New account's Hbar balance after transfer: " + accountBalanceAfterTransfer.hbars.toString());
+        logger.info(
+            "New account's Hbar balance after transfer: " +
+                accountBalanceAfterTransfer.hbars.toString(),
+        );
 
         /*
          * Step 5:
          * Clean up: Delete created account.
          */
-        let accountDeleteTx =  new AccountDeleteTransaction()
+        let accountDeleteTx = new AccountDeleteTransaction()
             .setTransferAccountId(operatorId)
             .setAccountId(newAccountId)
             .freezeWith(client);
@@ -128,18 +157,13 @@ async function main() {
         const accountDeleteTxResponse = await accountDeleteTx.execute(client);
         await accountDeleteTxResponse.getReceipt(client);
 
-        console.log("Account deleted successfully");
-
-        console.log("Create Account With Threshold Key Example Complete!");
+        logger.info("Account deleted successfully");
     } catch (error) {
-        console.error("Error occurred:", error);
+        logger.error("Error occurred during account creation:", error);
     } finally {
-        // Close the client
         client.close();
+        logger.info("Create Account With Threshold Key Example Complete!");
     }
 }
 
-main().catch((error) => {
-    console.error("Unhandled error:", error);
-    process.exit(1);
-});
+void main();
