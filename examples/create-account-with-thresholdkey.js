@@ -1,3 +1,4 @@
+/* eslint-disable n/no-extraneous-import */
 import {
     Client,
     PrivateKey,
@@ -11,11 +12,25 @@ import {
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
+import pino from "pino";
+import pinoPretty from "pino-pretty";
 
 dotenv.config();
 
-// Removed pino logger initialization
-const logger = console;
+// Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
+const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
+
+// Logger configuration based on SDK_LOG_LEVEL
+const logger = pino(
+    {
+        level: SDK_LOG_LEVEL.toUpperCase(),
+    },
+    pinoPretty({
+        colorize: true,
+        translateTime: "SYS:standard",
+        ignore: "pid,hostname",
+    }),
+);
 
 /**
  * Step 0: Set up client connection to Hedera network
@@ -36,32 +51,9 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
-    let client;
+    //  Create the client based on the HEDERA_NETWORK environment variable
+    let client = Client.forName(process.env.HEDERA_NETWORK);
 
-    // Adjust this as needed for your local network
-    const localNetworkConfig = {
-        "127.0.0.1:50211": new AccountId(3),
-    }
-
-    switch (process.env.HEDERA_NETWORK) {
-        case "mainnet":
-            client = Client.forMainnet();
-            break;
-        case "testnet":
-            client = Client.forTestnet();
-            break;
-        case "previewnet":
-            client = Client.forPreviewnet();
-            break;
-        case "local-node":
-            client = Client.forNetwork(localNetworkConfig);
-            break;
-        default:
-            logger.error("Unsupported HEDERA_NETWORK value.");
-            throw new Error(
-                "Unsupported HEDERA_NETWORK value. Set to 'mainnet', 'testnet', 'previewnet', or 'local-node'.",
-            );
-    }
     client.setOperator(operatorId, operatorKey);
 
     try {
@@ -83,7 +75,7 @@ async function main() {
 
         logger.info("Generating public keys...");
         publicKeys.forEach((publicKey, index) => {
-            console.log(
+            logger.info(
                 `Generated public key ${index + 1}: ${publicKey.toString()}`,
             );
         });
