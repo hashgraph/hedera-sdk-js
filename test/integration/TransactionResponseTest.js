@@ -14,8 +14,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -46,8 +44,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should make a transaction receipt query available", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -77,8 +73,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should make a transaction record query available", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
