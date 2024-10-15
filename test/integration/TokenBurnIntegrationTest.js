@@ -16,8 +16,6 @@ describe("TokenBurn", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -46,8 +44,6 @@ describe("TokenBurn", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
@@ -65,8 +61,6 @@ describe("TokenBurn", function () {
         }
     });
     it("should not error when amount is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -112,8 +106,6 @@ describe("TokenBurn", function () {
     });
 
     it("cannot burn token with invalid metadata", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
