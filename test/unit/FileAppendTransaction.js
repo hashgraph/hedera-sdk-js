@@ -11,12 +11,15 @@ import {
 import Long from "long";
 
 describe("FileAppendTransaction", function () {
+    const spenderAccountId1 = new AccountId(7);
+    const fileId = new FileId(8);
+    const nodeAccountId = new AccountId(10, 11, 12);
+    const timestamp1 = new Timestamp(14, 15);
+    const fee = new Hbar(5);
+    const chunkSize = 1000;
+
     it("setChunkSize()", function () {
-        const spenderAccountId1 = new AccountId(7);
-        const fileId = new FileId(8);
-        const nodeAccountId = new AccountId(10, 11, 12);
-        const timestamp1 = new Timestamp(14, 15);
-        const fee = new Hbar(5);
+        const contents = "1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000);
 
         let transaction = new FileAppendTransaction()
             .setTransactionId(
@@ -24,8 +27,8 @@ describe("FileAppendTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setFileId(fileId)
-            .setChunkSize(1000)
-            .setContents("1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000))
+            .setChunkSize(chunkSize)
+            .setContents(contents)
             .freeze();
 
         const transactionId = transaction.transactionId;
@@ -90,10 +93,7 @@ describe("FileAppendTransaction", function () {
     });
 
     it("setChunkInterval()", function () {
-        const spenderAccountId1 = new AccountId(7);
-        const fileId = new FileId(8);
-        const nodeAccountId = new AccountId(10, 11, 12);
-        const timestamp1 = new Timestamp(14, 15);
+        const contents = "1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000);
         const chunkInterval = 200;
 
         let transaction = new FileAppendTransaction()
@@ -102,38 +102,40 @@ describe("FileAppendTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setFileId(fileId)
-            .setChunkSize(1000)
+            .setChunkSize(chunkSize)
+            .setContents(contents)
             .setChunkInterval(chunkInterval)
-            .setContents("1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000))
             .freeze();
 
         expect(transaction._transactionIds.list.length).to.be.equal(3);
+        const requiredChunks = contents.length / chunkSize;
 
-        for (let i = 0; i < 3; i++) {
-            let body = transaction._makeTransactionBody(nodeAccountId);
+        let body = transaction._makeTransactionBody(nodeAccountId);
 
+        expect(body.transactionID).to.deep.equal(
+            transaction._transactionIds.list[0]._toProtobuf(),
+        );
+
+        for (let i = 1; i < requiredChunks; i++) {
+            transaction._transactionIds.advance();
+            body = transaction._makeTransactionBody(nodeAccountId);
             expect(body.transactionID).to.deep.equal(
                 transaction._transactionIds.list[i]._toProtobuf(),
             );
 
-            if (i > 0) {
-                expect(
-                    transaction._transactionIds.list[i].validStart.nanos.sub(
-                        transaction._transactionIds.list[i - 1].validStart
-                            .nanos,
-                    ),
-                ).to.deep.equal(Long.fromNumber(chunkInterval));
-            }
-
-            if (i === 2) {
-                expect(
-                    transaction._transactionIds.list[2].validStart.nanos.sub(
-                        transaction._transactionIds.list[0].validStart.nanos,
-                    ),
-                ).to.deep.equal(Long.fromNumber(chunkInterval * 2));
-            }
-
-            transaction._transactionIds.advance();
+            expect(
+                transaction._transactionIds.list[i].validStart.nanos.sub(
+                    transaction._transactionIds.list[i - 1].validStart.nanos,
+                ),
+            ).to.deep.equal(Long.fromNumber(chunkInterval));
         }
+
+        expect(
+            transaction._transactionIds.list[
+                requiredChunks - 1
+            ].validStart.nanos.sub(
+                transaction._transactionIds.list[0].validStart.nanos,
+            ),
+        ).to.deep.equal(Long.fromNumber(chunkInterval * (requiredChunks - 1)));
     });
 });
