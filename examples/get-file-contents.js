@@ -16,12 +16,12 @@ import pinoPretty from "pino-pretty";
 dotenv.config();
 
 // Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
-const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "silent";
+const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
 
 // Logger configuration based on SDK_LOG_LEVEL
 const logger = pino(
     {
-        level: SDK_LOG_LEVEL.toLowerCase(), 
+        level: SDK_LOG_LEVEL.toUpperCase(), 
     },
     pinoPretty({
         colorize: true,
