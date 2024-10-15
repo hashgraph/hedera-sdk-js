@@ -407,6 +407,39 @@ describe("FileAppend", function () {
         expect(receipt.status).to.be.equal(Status.Success);
     });
 
+    it("should keep chunk size and correct maxChunks after deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const tx = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setChunkSize(1024)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
     after(async function () {
         await env.close();
     });

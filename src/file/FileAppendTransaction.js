@@ -179,6 +179,9 @@ export default class FileAppendTransaction extends Transaction {
             contents = concat;
         }
 
+        const chunkSize = append.contents?.length || undefined;
+        const maxChunks = bodies.length || undefined;
+
         return Transaction._fromProtobufTransactions(
             new FileAppendTransaction({
                 fileId:
@@ -189,7 +192,9 @@ export default class FileAppendTransaction extends Transaction {
                               ),
                           )
                         : undefined,
-                contents: contents,
+                contents,
+                chunkSize,
+                maxChunks,
             }),
             transactions,
             signedTransactions,
