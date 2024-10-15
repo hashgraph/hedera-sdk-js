@@ -319,7 +319,7 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * @param {number} chunkInterval
+     * @param {number} chunkInterval The valid start interval between chunks in nanoseconds
      * @returns {this}
      */
     setChunkInterval(chunkInterval) {
@@ -371,7 +371,7 @@ export default class FileAppendTransaction extends Transaction {
                     ).seconds,
                     /** @type {Timestamp} */ (
                         nextTransactionId.validStart
-                    ).nanos.add(1),
+                    ).nanos.add(this._chunkInterval),
                 ),
             );
         }
