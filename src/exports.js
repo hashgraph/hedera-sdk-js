@@ -109,6 +109,7 @@ export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as NftId } from "./token/NftId.js";
+export { default as PendingAirdropId } from "./token/PendingAirdropId.js";
 export { default as Provider } from "./Provider.js";
 export { default as PrngTransaction } from "./PrngTransaction.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";

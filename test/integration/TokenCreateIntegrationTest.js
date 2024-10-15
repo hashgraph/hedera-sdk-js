@@ -15,8 +15,6 @@ describe("TokenCreate", function () {
         env = await IntegrationTestEnv.new();
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -66,8 +64,6 @@ describe("TokenCreate", function () {
     });
 
     it("should be executable with minimal properties set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -120,8 +116,6 @@ describe("TokenCreate", function () {
     });
 
     it("when autoRenewAccountId is set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -144,8 +138,6 @@ describe("TokenCreate", function () {
     });
 
     it("when expirationTime is set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const DAYS_45_IN_SECONDS = 3888000;
         const expirationTime = new Timestamp(
@@ -173,8 +165,6 @@ describe("TokenCreate", function () {
     });
 
     it("when autoRenewAccountId and expirationTime are set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const DAYS_90_IN_SECONDS = 7776000;
         const expirationTime = new Timestamp(
@@ -209,8 +199,6 @@ describe("TokenCreate", function () {
     });
 
     it("should error when token name is not set", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
@@ -233,8 +221,6 @@ describe("TokenCreate", function () {
     });
 
     it("should error when token symbol is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         let err = false;
@@ -256,8 +242,6 @@ describe("TokenCreate", function () {
     });
 
     it("should error when treasury account ID is not set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
@@ -279,8 +263,6 @@ describe("TokenCreate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         let err = false;

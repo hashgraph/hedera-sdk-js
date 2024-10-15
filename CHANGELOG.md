@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# v2.52.0-beta.4
+
+## What's Changed
+
+* feat: expose PendingAirdropId by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2567
+* feat: Changed the return type of removeAllSignatures method by @ivaylogarnev in https://github.com/hashgraph/hedera-sdk-js/pull/2559
+* fix: lock protobufjs version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2569 
+* fix: increase test timeout globally by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2566
+* ci: set codecov config by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2575
+* chore(deps): bump actions/checkout from 4.1.7 to 4.2.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2568
+* chore(deps): bump micromatch in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2484
+* chore(deps): bump micromatch in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2483
+* chore(deps): bump ws in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2357
+* chore(deps-dev): bump braces from 3.0.2 to 3.0.3 in /examples by @dependabot in  https://github.com/hashgraph/hedera-sdk-js/pull/2357
+* Bump tar from 6.2.0 to 6.2.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2249
+* Bump ip from 1.1.8 to 1.1.9 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2150
+* Bump express in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2224
+* Bump express in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2224
+* chore(deps): bump body-parser and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2523
+* chore(deps): bump send and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2522
+* chore(deps): bump path-to-regexp and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2521
+* chore(deps): bump renovatebot/github-action from 40.2.6 to 40.3.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2550
+* chore(deps): bump actions/setup-java from 4.2.2 to 4.4.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2540
+* chore(deps): bump step-security/harden-runner from 2.9.1 to 2.10.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2515
+* Bump vite from 4.4.9 to 4.5.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2236
+* chore(deps): bump serve-static and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2520
+* chore(deps): bump renovatebot/github-action from 40.3.1 to 40.3.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2577
+
 # v2.52.0-beta.3
 
 ## What's Changed

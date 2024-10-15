@@ -37,8 +37,6 @@ describe("TopicMessageMocking", function () {
     });
 
     it("is able to receive messages", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [{ response: TOPIC_MESSAGE }],
         ]));

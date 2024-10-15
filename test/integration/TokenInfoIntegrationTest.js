@@ -14,8 +14,6 @@ describe("TokenInfo", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -68,8 +66,6 @@ describe("TokenInfo", function () {
     });
 
     it("should be executable with minimal properties set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -107,7 +103,6 @@ describe("TokenInfo", function () {
     });
 
     it("should be able to query cost", async function () {
-        this.timeout(120000);
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generateED25519();
@@ -139,8 +134,6 @@ describe("TokenInfo", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
