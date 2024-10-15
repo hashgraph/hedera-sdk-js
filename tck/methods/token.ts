@@ -1,15 +1,11 @@
 import {
     AccountId,
-    CustomFee,
     CustomFixedFee,
     CustomFractionalFee,
     CustomRoyaltyFee,
-    Timestamp,
     TokenCreateTransaction,
-    TokenDeleteTransaction,
-    TokenSupplyType,
-    TokenType,
 } from "@hashgraph/sdk";
+import Long from "long";
 
 import { sdk } from "../sdk_data";
 
@@ -17,11 +13,10 @@ import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
 import { getKeyFromString } from "../utils/key";
 
 import { applyCommonTransactionParams } from "../params/common-tx-params";
-import { CreateTokenParams, DeleteTokenParams } from "../params/token";
+import { CreateTokenParams } from "../params/token";
 
 import { TokenResponse } from "../response/token";
-
-import Long from "long";
+import { supplyTypeMap, tokenTypeMap } from "../utils/constants/properties";
 
 export const createToken = async ({
     name,
@@ -118,20 +113,18 @@ export const createToken = async ({
     }
 
     if (tokenType != null) {
-        if (tokenType === "ft") {
-            transaction.setTokenType(TokenType.FungibleCommon);
-        } else if (tokenType === "nft") {
-            transaction.setTokenType(TokenType.NonFungibleUnique);
+        const selectedTokenType = tokenTypeMap[tokenType];
+        if (selectedTokenType) {
+            transaction.setTokenType(selectedTokenType);
         } else {
             throw new Error(`Invalid token type: ${tokenType}`);
         }
     }
 
     if (supplyType != null) {
-        if (supplyType === "finite") {
-            transaction.setSupplyType(TokenSupplyType.Finite);
-        } else if (supplyType === "infinite") {
-            transaction.setSupplyType(TokenSupplyType.Infinite);
+        const selectedSupplyType = supplyTypeMap[supplyType];
+        if (selectedSupplyType) {
+            transaction.setSupplyType(selectedSupplyType);
         } else {
             throw new Error(`Invalid supply type: ${supplyType}`);
         }

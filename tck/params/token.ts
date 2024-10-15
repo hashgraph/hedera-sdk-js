@@ -33,8 +33,3 @@ export interface CreateTokenParams {
     readonly metadataKey?: string;
     readonly commonTransactionParams?: Record<string, any>;
 }
-
-export interface DeleteTokenParams {
-    readonly tokenId?: string;
-    readonly commonTransactionParams?: Record<string, any>;
-}
