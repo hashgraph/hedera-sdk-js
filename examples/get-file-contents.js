@@ -34,7 +34,7 @@ async function main() {
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
-    // Create a client for the local Hedera network
+    
     let client;
 
     switch (process.env.HEDERA_NETWORK) {
