@@ -18,8 +18,6 @@ describe("TokenGrantKyc", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -83,8 +81,6 @@ describe("TokenGrantKyc", function () {
     });
 
     it("should be executable even when no token IDs are set", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
@@ -115,8 +111,6 @@ describe("TokenGrantKyc", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
