@@ -365,12 +365,11 @@ describe("FileAppend", function () {
         let { fileId } = await response.getReceipt(env.client);
 
         const chunkInterval = 230;
+        const validStart = Timestamp.fromDate(new Date());
+
         const tx = new FileAppendTransaction()
             .setTransactionId(
-                TransactionId.withValidStart(
-                    env.operatorId,
-                    Timestamp.fromDate(new Date()),
-                ),
+                TransactionId.withValidStart(env.operatorId, validStart),
             )
             .setFileId(fileId)
             .setChunkInterval(chunkInterval)
@@ -383,6 +382,9 @@ describe("FileAppend", function () {
         expect(
             txFromBytes.transactionId.accountId._toProtobuf(),
         ).to.be.deep.equal(env.operatorId?._toProtobuf());
+        expect(txFromBytes.transactionId.validStart).to.be.deep.equal(
+            validStart,
+        );
 
         txFromBytes._transactionIds.list.forEach(
             (transactionId, index, array) => {
