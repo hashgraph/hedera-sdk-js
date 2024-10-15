@@ -492,6 +492,10 @@ export default class FileAppendTransaction extends Transaction {
      */
     _buildIncompleteTransactions() {
         const dummyAccountId = AccountId.fromString("0.0.0");
+        const accountId = this.transactionId?.accountId || dummyAccountId;
+        const validStart =
+            this.transactionId?.validStart || Timestamp.fromDate(new Date());
+
         if (this._contents == null) {
             throw new Error("contents is not set");
         }
@@ -510,7 +514,10 @@ export default class FileAppendTransaction extends Transaction {
         this._signedTransactions.clear();
 
         for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
-            let nextTransactionId = TransactionId.generate(dummyAccountId);
+            let nextTransactionId = TransactionId.withValidStart(
+                accountId,
+                validStart.plusNanos(this._chunkInterval * chunk),
+            );
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
