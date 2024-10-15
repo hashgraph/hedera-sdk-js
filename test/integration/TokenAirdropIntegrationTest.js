@@ -25,8 +25,6 @@ describe("TokenAirdropIntegrationTest", function () {
     });
 
     it("should transfer tokens when the account is associated", async function () {
-        this.timeout(1200000);
-
         const ftCreateResponse = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("FFF")
@@ -101,7 +99,6 @@ describe("TokenAirdropIntegrationTest", function () {
     });
 
     it("tokens should be in pending state when no automatic association", async function () {
-        this.timeout(1200000);
         const ftCreateResponse = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("FFF")
@@ -197,7 +194,6 @@ describe("TokenAirdropIntegrationTest", function () {
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
-        this.timeout(1200000);
         const ftCreateResponse = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("FFF")
@@ -261,8 +257,6 @@ describe("TokenAirdropIntegrationTest", function () {
     });
 
     it("should airdrop with custom fees", async function () {
-        this.timeout(1200000);
-
         const FEE_AMOUNT = 1;
         const receiverPrivateKey = PrivateKey.generateED25519();
         const createAccountResponse = await new AccountCreateTransaction()
@@ -425,7 +419,6 @@ describe("TokenAirdropIntegrationTest", function () {
     });
 
     it("should airdrop with receiver sig set to true", async function () {
-        this.timeout(1200000);
         const tokenCreateResponse = await new TokenCreateTransaction()
             .setTokenName("FFFFFFFFFF")
             .setTokenSymbol("FFF")

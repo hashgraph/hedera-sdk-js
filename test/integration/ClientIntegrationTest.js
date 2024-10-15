@@ -22,8 +22,6 @@ describe("ClientIntegration", function () {
     });
 
     it("should error when invalid network on entity ID", async function () {
-        this.timeout(120000);
-
         if (env.client.ledgerId == null) {
             return;
         }
@@ -63,8 +61,6 @@ describe("ClientIntegration", function () {
     });
 
     it("can execute with sign on demand", async function () {
-        this.timeout(120000);
-
         env.client.setSignOnDemand(true);
 
         const operatorId = env.operatorId;
@@ -108,7 +104,7 @@ describe("ClientIntegration", function () {
 
     it("can get bytes without sign on demand", async function () {
         env.client.setSignOnDemand(false);
-        this.timeout(120000);
+
         const key = PrivateKey.generateED25519();
 
         const bytes = (
@@ -122,14 +118,10 @@ describe("ClientIntegration", function () {
     });
 
     it("can pingAll", async function () {
-        this.timeout(120000);
-
         await env.client.pingAll();
     });
 
     it("should fail on ping", async function () {
-        this.timeout(120000);
-
         let error = null;
         try {
             await env.client.ping(""); // Non exist Node ID
@@ -142,7 +134,6 @@ describe("ClientIntegration", function () {
     // TODO(2023-11-01 NK) - test is consistently failing and should be enabled once fixed.
     // eslint-disable-next-line mocha/no-skipped-tests
     xit("can set network name on custom network", async function () {
-        this.timeout(120000);
         expect(clientTestnet.ledgerId).to.be.equal(LedgerId.TESTNET);
         expect(clientPreviewNet.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
@@ -156,7 +147,6 @@ describe("ClientIntegration", function () {
     });
 
     it("can use same proxies of one node", async function () {
-        this.timeout(100000);
         let nodes = {
             "0.testnet.hedera.com:50211": new AccountId(3),
             "34.94.106.61:50211": new AccountId(3),
@@ -173,7 +163,6 @@ describe("ClientIntegration", function () {
     });
 
     it("should return the following error message `defaultMaxQueryPayment must be non-negative` when the user tries to set a negative value to the defaultMaxQueryPayment field", async function () {
-        this.timeout(120000);
         try {
             env.client.setDefaultMaxQueryPayment(new Hbar(1).negated());
         } catch (error) {
@@ -184,7 +173,6 @@ describe("ClientIntegration", function () {
     });
 
     it("should set defaultMaxQueryPayment field", async function () {
-        this.timeout(120000);
         const value = new Hbar(100);
         env.client.setDefaultMaxQueryPayment(value);
         expect(env.client.defaultMaxQueryPayment).to.be.equal(value);

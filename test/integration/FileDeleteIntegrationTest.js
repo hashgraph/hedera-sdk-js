@@ -14,8 +14,6 @@ describe("FileDelete", function () {
         env = await IntegrationTestEnv.new();
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -53,8 +51,6 @@ describe("FileDelete", function () {
     });
 
     it("should error when file ID is not set", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {

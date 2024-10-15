@@ -25,8 +25,6 @@ describe("TokenAssociate", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -86,8 +84,6 @@ describe("TokenAssociate", function () {
     });
 
     it("should be executable even when no token IDs are set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         await (
@@ -98,8 +94,6 @@ describe("TokenAssociate", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -156,7 +150,6 @@ describe("TokenAssociate", function () {
 
         describe("Limited Auto Associations", function () {
             it("should revert FT transfer when no auto associations left", async function () {
-                this.timeout(120000);
                 // update account to have one auto association
                 const accountUpdateTx = await new AccountUpdateTransaction()
                     .setAccountId(receiverId)
@@ -236,7 +229,6 @@ describe("TokenAssociate", function () {
             });
 
             it("should revert NFTs transfer when no auto associations left", async function () {
-                this.timeout(120000);
                 const accountUpdateTx = await new AccountUpdateTransaction()
                     .setAccountId(receiverId)
                     .setMaxAutomaticTokenAssociations(1)
@@ -339,7 +331,6 @@ describe("TokenAssociate", function () {
             });
 
             it("should contain sent balance when transfering FT to account with manual token association", async function () {
-                this.timeout(120000);
                 const tokenCreateTransaction =
                     await new TokenCreateTransaction()
                         .setTokenType(TokenType.FungibleCommon)
@@ -385,7 +376,6 @@ describe("TokenAssociate", function () {
             });
 
             it("should contain sent balance when transfering NFT to account with manual token association", async function () {
-                this.timeout(120000);
                 const tokenCreateTransaction =
                     await new TokenCreateTransaction()
                         .setTokenType(TokenType.NonFungibleUnique)
@@ -442,7 +432,6 @@ describe("TokenAssociate", function () {
 
         describe("Unlimited Auto Associations", function () {
             it("receiver should contain FTs when transfering to account with unlimited auto associations", async function () {
-                this.timeout(120000);
                 const tokenCreateResponse = await new TokenCreateTransaction()
                     .setTokenType(TokenType.FungibleCommon)
                     .setTokenName("ffff")
@@ -522,7 +511,6 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should contain NFTs when transfering to account with unlimited auto associations", async function () {
-                this.timeout(120000);
                 const tokenCreateResponse = await new TokenCreateTransaction()
                     .setTokenType(TokenType.NonFungibleUnique)
                     .setTokenName("ffff")
@@ -609,7 +597,6 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should have token balance even if it has given allowance to spender", async function () {
-                this.timeout(120000);
                 const spenderKey = PrivateKey.generateECDSA();
                 const spenderAccountCreateTx =
                     await new AccountCreateTransaction()
@@ -700,7 +687,6 @@ describe("TokenAssociate", function () {
             });
 
             it("receiver should have nft even if it has given allowance to spender", async function () {
-                this.timeout(120000);
                 const spenderKey = PrivateKey.generateECDSA();
 
                 const unlimitedAutoAssociationReceiverTx =

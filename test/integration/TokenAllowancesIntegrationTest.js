@@ -28,7 +28,6 @@ describe("TokenAllowances", function () {
     });
 
     it("Cannot transfer on behalf of `spender` account without allowance approval", async function () {
-        this.timeout(120000);
         let status;
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
@@ -97,8 +96,6 @@ describe("TokenAllowances", function () {
     });
 
     it("Can transfer on behalf of `spender` account with allowance approval", async function () {
-        this.timeout(120000);
-
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
             await (
@@ -183,8 +180,6 @@ describe("TokenAllowances", function () {
     });
 
     it("Can set `spender` account to be ContractId instead of AccountId", async function () {
-        this.timeout(120000);
-
         const receiverKey = PrivateKey.generateED25519();
         const receiverAccountId = (
             await (

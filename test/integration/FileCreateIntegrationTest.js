@@ -15,8 +15,6 @@ describe("FileCreate", function () {
         env = await IntegrationTestEnv.new();
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -54,8 +52,6 @@ describe("FileCreate", function () {
     });
 
     it("should be executable with empty contents", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -78,8 +74,6 @@ describe("FileCreate", function () {
     });
 
     it("should be executable with no keys", async function () {
-        this.timeout(120000);
-
         let response = await new FileCreateTransaction().execute(env.client);
 
         let receipt = await response.getReceipt(env.client);
@@ -90,7 +84,6 @@ describe("FileCreate", function () {
     });
 
     it("should error with too large expiration time", async function () {
-        this.timeout(120000);
         let status;
         const timestamp = new Timestamp(Date.now() / 1000 + 9999999999, 0);
         const operatorKey = env.operatorKey.publicKey;

@@ -19,8 +19,6 @@ describe("ContractExecute", function () {
         env = await IntegrationTestEnv.new();
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -82,8 +80,6 @@ describe("ContractExecute", function () {
     });
 
     it("should error when contract ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -156,8 +152,6 @@ describe("ContractExecute", function () {
     });
 
     it("should error when function is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -225,8 +219,6 @@ describe("ContractExecute", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -299,8 +291,6 @@ describe("ContractExecute", function () {
     });
 
     it("should error when function's parameter are not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()

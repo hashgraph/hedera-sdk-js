@@ -13,8 +13,6 @@ describe("TopicMessageQuery", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(60000);
-
         // client.setTransportSecurity(true);
         // client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
 

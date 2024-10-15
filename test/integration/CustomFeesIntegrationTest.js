@@ -20,8 +20,6 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("CustomFees", function () {
     it("User can create a fungible token with a fixed custom fee schedule", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -52,8 +50,6 @@ describe("CustomFees", function () {
     });
 
     it("User can create a fungible token with a fractional fee schedule", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -87,8 +83,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot create a fungible token with a fractional fee schedule that has a denominator zero", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -128,8 +122,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot create a custom fee schedule over 10 entries", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -181,8 +173,6 @@ describe("CustomFees", function () {
     });
 
     it("User can create custom fixed fee schedule with up to 10 entries", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -224,8 +214,6 @@ describe("CustomFees", function () {
     });
 
     it("User can create custom fractional fee schedule with up to 10 entries", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -270,8 +258,6 @@ describe("CustomFees", function () {
     });
 
     it("User has an invalid custom fee collector account ID(s)", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -309,8 +295,6 @@ describe("CustomFees", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("User cannot transfer a custom fee schedule token to a fee collecting account that is not associated with it", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const key = PrivateKey.generateED25519();
@@ -369,8 +353,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot update a token fee schedule without having a fee schedule key signing the transaction", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -414,8 +396,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot create a token with a fractional fee schedule where the maximum amount is less than the minimum amount", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -458,8 +438,6 @@ describe("CustomFees", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("User cannot create a token with a custom fractional fee is greater than 1", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFractionalFee()
@@ -502,8 +480,6 @@ describe("CustomFees", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("User cannot execute the fee schedule update transaction if there is not fee schedule set already", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -551,8 +527,6 @@ describe("CustomFees", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("User cannot sign the fee schedule update transaction with any key besides the key schedule key", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const key = PrivateKey.generateED25519();
@@ -611,8 +585,6 @@ describe("CustomFees", function () {
     });
 
     it("User can update a fee schedule using the token fee schedule update transaction and fee schedule key", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -650,8 +622,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot have an invalid token ID in the custom fee field", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const key = PrivateKey.generateED25519();
@@ -700,8 +670,6 @@ describe("CustomFees", function () {
     });
 
     it("User can create NFT with RoyaltyFees", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomRoyaltyFee()
@@ -737,8 +705,6 @@ describe("CustomFees", function () {
     });
 
     it("User cannot add RoyaltyFees on FTs", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomRoyaltyFee()
@@ -786,8 +752,6 @@ describe("CustomFees", function () {
     });
 
     it("cannot create custom fee with un-associated token fee collector", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const key = PrivateKey.generateED25519();
@@ -846,8 +810,6 @@ describe("CustomFees", function () {
     });
 
     it("cannot create token with a custom fee without a fee schedule key", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomFixedFee()
@@ -893,8 +855,6 @@ describe("CustomFees", function () {
     });
 
     it("cannot create royalty fee with numerator greater than denominator", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         const fee = new CustomRoyaltyFee()
@@ -936,8 +896,6 @@ describe("CustomFees", function () {
     // Skipping since the test seems setting an empty custom fee list is no longer an error
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot clear custom fees when no custom fees are present", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         let err = false;
@@ -981,8 +939,6 @@ describe("CustomFees", function () {
     });
 
     it("cannot create custom with denominating token being an NFT", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         let err = false;
@@ -1043,8 +999,6 @@ describe("CustomFees", function () {
     // Cannot reproduce `CustomFeeChargingExceededMaxRecursionDepth`
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot have recursive custom fees", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         let err = false;
@@ -1194,8 +1148,6 @@ describe("CustomFees", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot have more than 20 balance changes in a single transfer", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         let err = false;
@@ -1411,8 +1363,6 @@ describe("CustomFees", function () {
     });
 
     it("cannot set invalid schedule key", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
 
         let err = false;

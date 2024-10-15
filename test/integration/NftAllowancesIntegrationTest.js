@@ -24,7 +24,6 @@ describe("TokenNftAllowances", function () {
     });
 
     it("Cannot transfer on behalf of `spender` account without allowance approval", async function () {
-        this.timeout(120000);
         let status;
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
@@ -108,8 +107,6 @@ describe("TokenNftAllowances", function () {
     });
 
     it("Cannot transfer on behalf of `spender` account after removing the allowance approval", async function () {
-        this.timeout(120000);
-
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
             await (
@@ -239,8 +236,6 @@ describe("TokenNftAllowances", function () {
     });
 
     it("Cannot remove single serial number allowance when the allowance is given for all serials at once", async function () {
-        this.timeout(120000);
-
         const spenderKey = PrivateKey.generateED25519();
         const spenderAccountId = (
             await (
@@ -375,8 +370,6 @@ describe("TokenNftAllowances", function () {
     });
 
     it("Account, which given the allowance for all serials at once, should be able to give allowances for single serial numbers to other accounts", async function () {
-        this.timeout(120000);
-
         const delegatingSpenderKey = PrivateKey.generateED25519();
         const delegatingSpenderAccountId = (
             await (

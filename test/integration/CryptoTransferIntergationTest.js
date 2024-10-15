@@ -16,8 +16,6 @@ describe("CryptoTransfer", function () {
         env = await IntegrationTestEnv.new();
     });
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
@@ -51,8 +49,6 @@ describe("CryptoTransfer", function () {
     });
 
     it("should error when there is invalid account amounts", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
 
