@@ -4,6 +4,7 @@ import {
     CustomFixedFee,
     CustomFractionalFee,
     CustomRoyaltyFee,
+    Timestamp,
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenSupplyType,
@@ -99,7 +100,7 @@ export const createToken = async ({
     }
 
     if (expirationTime != null) {
-        transaction.setExpirationTime(new Date(expirationTime));
+        transaction.setExpirationTime(new Date(Number(expirationTime) * 1000));
     }
 
     if (autoRenewAccountId != null) {
@@ -157,11 +158,9 @@ export const createToken = async ({
                     )
                     .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
 
-                if (customFee.fixedFee.denominatingTokenId) {
-                    fixedFee.setDenominatingTokenId(
-                        customFee.fixedFee.denominatingTokenId,
-                    );
-                }
+                fixedFee.setDenominatingTokenId(
+                    customFee.fixedFee.denominatingTokenId,
+                );
 
                 customFeeList.push(fixedFee);
             }
@@ -209,12 +208,11 @@ export const createToken = async ({
                             customFee.royaltyFee.fallbackFee.amount,
                         ),
                     );
-                    if (customFee.royaltyFee.fallbackFee.denominatingTokenId) {
-                        fallbackFee.setDenominatingTokenId(
-                            customFee.royaltyFee.fallbackFee
-                                .denominatingTokenId,
-                        );
-                    }
+
+                    fallbackFee.setDenominatingTokenId(
+                        customFee.royaltyFee.fallbackFee.denominatingTokenId,
+                    );
+
                     royaltyFee.setFallbackFee(fallbackFee);
                 }
 
@@ -250,34 +248,6 @@ export const createToken = async ({
 
     return {
         tokenId: receipt.tokenId.toString(),
-        status: receipt.status.toString(),
-    };
-};
-
-export const deleteToken = async ({
-    tokenId,
-    commonTransactionParams,
-}: DeleteTokenParams): Promise<TokenResponse> => {
-    let transaction = new TokenDeleteTransaction().setGrpcDeadline(
-        DEFAULT_GRPC_DEADLINE,
-    );
-
-    if (tokenId != null) {
-        transaction.setTokenId(tokenId);
-    }
-
-    if (commonTransactionParams != null) {
-        applyCommonTransactionParams(
-            commonTransactionParams,
-            transaction,
-            sdk.getClient(),
-        );
-    }
-
-    const txResponse = await transaction.execute(sdk.getClient());
-    const receipt = await txResponse.getReceipt(sdk.getClient());
-
-    return {
         status: receipt.status.toString(),
     };
 };

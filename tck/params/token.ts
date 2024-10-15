@@ -16,7 +16,7 @@ export interface CreateTokenParams {
     readonly wipeKey?: string;
     readonly supplyKey?: string;
     readonly freezeDefault?: boolean;
-    readonly expirationTime?: number;
+    readonly expirationTime?: string;
     readonly autoRenewPeriod?: string;
     readonly autoRenewAccountId?: string;
     readonly memo?: string;
