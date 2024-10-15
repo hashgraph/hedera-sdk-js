@@ -25,7 +25,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the tokens when they are in pending state", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -84,7 +83,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the token when token's frozen", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -159,7 +157,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the token if paused", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -206,7 +203,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the token if token is deleted", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -253,8 +249,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the tokens to multiple receivers when they are in pending state", async function () {
-        this.timeout(120000);
-
         // create nft and ft tokens
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -342,7 +336,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should cancel the tokens when they are in pending state with multiple airdrop ids", async function () {
-        this.timeout(120000);
         // create nft and ft tokens
         const { tokenId } = await (
             await new TokenCreateTransaction()
@@ -421,7 +414,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should not be able to cancel the tokens when they are not airdropped", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFFFFFF")
@@ -468,7 +460,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("should not be able to cancel the tokens when they are already canceled", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
@@ -542,7 +533,6 @@ describe("TokenCancelAirdropIntegrationTest", function () {
     });
 
     it("cannot cancel the tokens with duplicate entries", async function () {
-        this.timeout(120000);
         const { tokenId } = await (
             await new TokenCreateTransaction()
                 .setTokenName("FFFFF")
