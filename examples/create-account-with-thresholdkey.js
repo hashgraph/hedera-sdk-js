@@ -1,4 +1,3 @@
-/* eslint-disable n/no-extraneous-import */
 import {
     Client,
     PrivateKey,
@@ -9,28 +8,19 @@ import {
     AccountBalanceQuery,
     AccountDeleteTransaction,
     KeyList,
+    Logger,
+    LogLevel,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
-import pino from "pino";
-import pinoPretty from "pino-pretty";
 
 dotenv.config();
 
 // Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
 const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
 
-// Logger configuration based on SDK_LOG_LEVEL
-const logger = pino(
-    {
-        level: SDK_LOG_LEVEL.toUpperCase(),
-    },
-    pinoPretty({
-        colorize: true,
-        translateTime: "SYS:standard",
-        ignore: "pid,hostname",
-    }),
-);
+// Initialize Logger with the specified log level from the environment variable
+const logger = new Logger(LogLevel._fromString(SDK_LOG_LEVEL));
 
 /**
  * Step 0: Set up client connection to Hedera network
@@ -55,6 +45,8 @@ async function main() {
     let client = Client.forName(process.env.HEDERA_NETWORK);
 
     client.setOperator(operatorId, operatorKey);
+    // Attach your custom logger to the SDK client
+    client.setLogger(logger);
 
     try {
         logger.info("Create Account With Threshold Key Example Start!");
@@ -151,7 +143,7 @@ async function main() {
 
         logger.info("Account deleted successfully");
     } catch (error) {
-        logger.error("Error occurred during account creation:", error);
+        logger.error("Error occurred during account creation");
     } finally {
         client.close();
         logger.info("Create Account With Threshold Key Example Complete!");
