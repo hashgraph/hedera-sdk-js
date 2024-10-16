@@ -32,7 +32,7 @@ async function main() {
         !process.env.OPERATOR_KEY ||
         !process.env.HEDERA_NETWORK
     ) {
-        logger.error(
+        console.error(
             "Environment variables OPERATOR_ID, OPERATOR_KEY, and HEDERA_NETWORK are required.",
         );
         throw new Error("Missing required environment variables.");
@@ -49,7 +49,7 @@ async function main() {
     client.setLogger(logger);
 
     try {
-        logger.info("Create Account With Threshold Key Example Start!");
+        console.log("Create Account With Threshold Key Example Start!");
 
         /*
          * Step 1:
@@ -65,9 +65,9 @@ async function main() {
             publicKeys.push(key.publicKey);
         }
 
-        logger.info("Generating public keys...");
+        console.log("Generating public keys...");
         publicKeys.forEach((publicKey, index) => {
-            logger.info(
+            console.log(
                 `Generated public key ${index + 1}: ${publicKey.toString()}`,
             );
         });
@@ -84,7 +84,7 @@ async function main() {
          * Step 3:
          * Create a new account setting a Key List from a previous step as an account's key.
          */
-        logger.info("Creating new account...");
+        console.log("Creating new account...");
         const accountCreateTxResponse = await new AccountCreateTransaction()
             .setKey(thresholdKey)
             .setInitialBalance(new Hbar(100))
@@ -94,13 +94,13 @@ async function main() {
             await accountCreateTxResponse.getReceipt(client);
         const newAccountId = accountCreateTxReceipt.accountId;
 
-        logger.info(`Created account with ID: ${newAccountId.toString()}`);
+        console.log(`Created account with ID: ${newAccountId.toString()}`);
 
         /*
          * Step 4:
          * Create a transfer transaction from a newly created account to demonstrate the signing process (threshold).
          */
-        logger.info("Transferring 1 Hbar from a newly created account...");
+        console.log("Transferring 1 Hbar from a newly created account...");
         let transferTx = new TransferTransaction()
             .addHbarTransfer(newAccountId, new Hbar(-50))
             .addHbarTransfer(new AccountId(3), new Hbar(50))
@@ -121,7 +121,7 @@ async function main() {
             .setAccountId(newAccountId)
             .execute(client);
 
-        logger.info(
+        console.log(
             "New account's Hbar balance after transfer: " +
                 accountBalanceAfterTransfer.hbars.toString(),
         );
@@ -141,12 +141,12 @@ async function main() {
         const accountDeleteTxResponse = await accountDeleteTx.execute(client);
         await accountDeleteTxResponse.getReceipt(client);
 
-        logger.info("Account deleted successfully");
+        console.log("Account deleted successfully");
     } catch (error) {
-        logger.error("Error occurred during account creation");
+        console.error("Error occurred during account creation");
     } finally {
         client.close();
-        logger.info("Create Account With Threshold Key Example Complete!");
+        console.log("Create Account With Threshold Key Example Complete!");
     }
 }
 
