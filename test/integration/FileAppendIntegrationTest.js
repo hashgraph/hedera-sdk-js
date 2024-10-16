@@ -6,6 +6,8 @@ import {
     FileInfoQuery,
     Hbar,
     Status,
+    Timestamp,
+    TransactionId,
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -22,6 +24,7 @@ describe("FileAppend", function () {
         newContents = generateUInt8Array(newContentsLength);
         operatorKey = env.operatorKey.publicKey;
     });
+
     it("should be executable", async function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
@@ -347,6 +350,96 @@ describe("FileAppend", function () {
 
         const receipt = await (
             await fromBytesTx.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should keep transaction id after non-frozen deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const chunkInterval = 230;
+        const validStart = Timestamp.fromDate(new Date());
+
+        const tx = new FileAppendTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(env.operatorId, validStart),
+            )
+            .setFileId(fileId)
+            .setChunkInterval(chunkInterval)
+            .setChunkSize(1000)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(
+            txFromBytes.transactionId.accountId._toProtobuf(),
+        ).to.be.deep.equal(env.operatorId?._toProtobuf());
+        expect(txFromBytes.transactionId.validStart).to.be.deep.equal(
+            validStart,
+        );
+
+        txFromBytes._transactionIds.list.forEach(
+            (transactionId, index, array) => {
+                if (index > 0) {
+                    const previousTimestamp = array[index - 1].validStart;
+                    const currentTimestamp = transactionId.validStart;
+                    const difference =
+                        currentTimestamp.nanos - previousTimestamp.nanos;
+                    expect(difference).to.be.equal(chunkInterval);
+                }
+            },
+        );
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should keep chunk size, chunk interval and correct max chunks after deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+        const chunkSize = 1024;
+        const chunkInterval = 230;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const tx = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
         ).getReceipt(env.client);
         expect(receipt.status).to.be.equal(Status.Success);
     });
