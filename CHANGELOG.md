@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * fix: file append transaction id after deserialization by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2583
 
-# v2.52.0-beta.4
+## v2.52.0-beta.4
 
 ## What's Changed
 
@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * chore(deps): bump serve-static and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2520
 * chore(deps): bump renovatebot/github-action from 40.3.1 to 40.3.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2577
 
-# v2.52.0-beta.3
+## v2.52.0-beta.3
 
 ## What's Changed
 
