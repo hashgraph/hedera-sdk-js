@@ -1,4 +1,3 @@
-/* eslint-disable n/no-extraneous-import */
 import {
     PrivateKey,
     FileContentsQuery,
@@ -7,28 +6,18 @@ import {
     FileDeleteTransaction,
     Client,
     AccountId,
+    Logger,
+    LogLevel,
 } from "@hashgraph/sdk";
 import dotenv from "dotenv";
-
-import pino from "pino";
-import pinoPretty from "pino-pretty";
 
 dotenv.config();
 
 // Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
 const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
 
-// Logger configuration based on SDK_LOG_LEVEL
-const logger = pino(
-    {
-        level: SDK_LOG_LEVEL.toUpperCase(), 
-    },
-    pinoPretty({
-        colorize: true,
-        translateTime: "SYS:standard",
-        ignore: "pid,hostname",
-    }),
-);
+// Initialize Logger with the specified log level from the environment variable
+const logger = new Logger(LogLevel._fromString(SDK_LOG_LEVEL));
 
 /**
  * How to get file contents
@@ -45,7 +34,7 @@ async function main() {
         !process.env.OPERATOR_KEY ||
         !process.env.HEDERA_NETWORK
     ) {
-        logger.error(
+        console.error(
             "Environment variables OPERATOR_ID, OPERATOR_KEY, and HEDERA_NETWORK are required.",
         );
         throw new Error("Missing required environment variables.");
@@ -55,9 +44,12 @@ async function main() {
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
     //  Create the client based on the HEDERA_NETWORK environment variable
-    let client = Client.forName(process.env.HEDERA_NETWORK);
+    const client = Client.forName(process.env.HEDERA_NETWORK);
 
     client.setOperator(operatorId, operatorKey);
+
+    // Attach your custom logger to the SDK client
+    client.setLogger(logger);
 
     /**
      * Step 1: Submit the file create transaction
@@ -67,7 +59,7 @@ async function main() {
     const fileContents = Buffer.from("Hedera is great!", "utf-8");
 
     try {
-        logger.info("Creating new file...");
+        console.log("Creating new file...");
 
         // Create the transaction
         let transaction = new FileCreateTransaction()
@@ -84,7 +76,7 @@ async function main() {
 
         // Get the file ID
         const newFileId = receipt.fileId;
-        logger.info(`Created new file with ID: ${newFileId.toString()}`);
+        console.log(`Created new file with ID: ${newFileId.toString()}`);
 
         /**
          * Step 2: Get file contents and print them
@@ -94,7 +86,7 @@ async function main() {
             .setFileId(newFileId)
             .execute(client);
 
-        logger.info("File contents: " + fileContentsQuery.toString());
+        console.log("File contents: " + fileContentsQuery.toString());
 
         // Clean up: Delete created file
         const fileDeleteTxResponse = await new FileDeleteTransaction()
@@ -103,12 +95,12 @@ async function main() {
 
         await fileDeleteTxResponse.getReceipt(client);
 
-        logger.info("File deleted successfully");
+        console.log("File deleted successfully");
     } catch (error) {
-        logger.error("Error occurred during file creation:", error);
+        console.error("Error occurred during file creation:", error);
     } finally {
         client.close();
-        logger.info("Get File Contents Example Complete!");
+        console.log("Get File Contents Example Complete!");
     }
 }
 
