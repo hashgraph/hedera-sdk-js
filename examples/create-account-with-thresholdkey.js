@@ -42,7 +42,7 @@ async function main() {
     const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 
     //  Create the client based on the HEDERA_NETWORK environment variable
-    let client = Client.forName(process.env.HEDERA_NETWORK);
+    const client = Client.forName(process.env.HEDERA_NETWORK);
 
     client.setOperator(operatorId, operatorKey);
     // Attach your custom logger to the SDK client
