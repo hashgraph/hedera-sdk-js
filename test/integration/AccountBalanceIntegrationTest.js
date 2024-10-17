@@ -20,8 +20,6 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("can query balance of node 0.0.3", async function () {
-        this.timeout(50000);
-
         const balance = await new AccountBalanceQuery()
             .setAccountId("0.0.3")
             .execute(clientTestnet);
@@ -31,7 +29,6 @@ describe("AccountBalanceQuery", function () {
     // TODO(2023-11-01 NK) - test is consistently failing and should be enabled once fixed.
     // eslint-disable-next-line mocha/no-skipped-tests
     xit("can connect to previewnet with TLS", async function () {
-        this.timeout(30000);
         if (skipTestDueToNodeJsVersion(16)) {
             return;
         }
@@ -49,8 +46,6 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("can connect to testnet with TLS", async function () {
-        this.timeout(30000);
-
         if (skipTestDueToNodeJsVersion(16)) {
             return;
         }
@@ -68,8 +63,6 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("an account that does not exist should return an error", async function () {
-        this.timeout(120000);
-
         let err = false;
 
         try {
@@ -86,8 +79,6 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         const token = (

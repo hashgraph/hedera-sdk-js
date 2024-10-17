@@ -54,8 +54,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("payment transaction is correctly constructed", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 {
@@ -98,8 +96,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should retry on UNAVAILABLE", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
@@ -116,8 +112,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should error when cost is greater than max cost set on client", async function () {
-        this.timeout(10000);
-
         let errorName;
 
         ({ client, servers } = await Mocker.withResponses([
@@ -141,8 +135,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("setQueryPayemnt() avoids querying actual cost", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [{ response: ACCOUNT_INFO_QUERY_RESPONSE }],
         ]));
@@ -157,8 +149,6 @@ describe("AccountInfoMocking", function () {
     }, 15000);
 
     it("setQueryPayemnt() + setMaxQueryPayment() avoids querying actual cost", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [{ response: ACCOUNT_INFO_QUERY_RESPONSE }],
         ]));
@@ -174,8 +164,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("actual cost is compared to Client.maxQueryPayment if Query.setMaxQueryPayment is not used", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -199,8 +187,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("actual cost is compared to Query.setMaxQueryPayment when set", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -224,8 +210,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should not error when cost is less than max cost set on request", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -248,8 +232,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should retry on `INTERNAL` and retry multiple nodes", async function () {
-        this.timeout(10000);
-
         const responses1 = [
             { error: INTERNAL },
             { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
@@ -277,8 +259,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should be able to execute after getting transaction hashes", async function () {
-        this.timeout(10000);
-
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
         ({ client, servers } = await Mocker.withResponses([responses1]));
@@ -300,8 +280,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should be able to execute after getting transaction hashes with sign on demand disabled", async function () {
-        this.timeout(10000);
-
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
         ({ client, servers } = await Mocker.withResponses([responses1]));
@@ -321,8 +299,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should generate new transaction ID when TRANSACTION_EXPIRED is return", async function () {
-        this.timeout(10000);
-
         const transactionIds = new Set();
         const callResponses = [
             {
@@ -373,8 +349,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should error `TRANSACTION_EXPIRED` is return and client disabled transaction regeneration", async function () {
-        this.timeout(10000);
-
         const responses1 = [
             {
                 response: {
@@ -407,8 +381,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should still regenerate transaction IDs on `TRANSACTION_EXPIRED` when client disabled it, but transaction re-enabled it", async function () {
-        this.timeout(10000);
-
         const transactionIds = new Set();
         const callResponses = [
             {
@@ -544,8 +516,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should timeout immediately", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
@@ -571,8 +541,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should doesn't timeout immediately", async function () {
-        this.timeout(10000);
-
         ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
@@ -598,8 +566,6 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should re-create a transaction if sign on demand is enabled and a random node is chosen which is not in the current list", async function () {
-        this.timeout(10000);
-
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
         ({ client, servers } = await Mocker.withResponses([responses1]));

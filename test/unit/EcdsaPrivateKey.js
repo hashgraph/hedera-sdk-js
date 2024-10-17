@@ -47,7 +47,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("SLIP10 test vector 1", async function () {
-        this.timeout(5000);
         // generate master PrivateKey with 'fromSeedECDSAsecp256k1()' and child key derivation
         // and test them against the provided constants which are always the source of truth
         // source - https://github.com/satoshilabs/slips/blob/master/slip-0010.md#test-vector-1-for-secp256k1
@@ -385,7 +384,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("should produce consistent public key from 12 word mnemonic and fromStringECDSA", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate12();
             const privateKeyFromMnemonic =
@@ -412,7 +410,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("should produce consistent public key from 12 word mnemonic and fromBytesECDSA", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate12();
             const privateKeyFromMnemonic =
@@ -439,7 +436,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("should produce consistent public key from 24 word mnemonic and fromStringECDSA", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate();
             const privateKeyFromMnemonic =
@@ -466,7 +462,6 @@ describe("EcdsaPrivateKey", function () {
     });
 
     it("should produce consistent public key from 24 word mnemonic and fromBytesECDSA", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate();
             const privateKeyFromMnemonic =

@@ -22,8 +22,6 @@ describe("TokenWipe", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -114,8 +112,6 @@ describe("TokenWipe", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
@@ -147,8 +143,6 @@ describe("TokenWipe", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -187,8 +181,6 @@ describe("TokenWipe", function () {
     });
 
     it("should not error when amount is not set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -257,8 +249,6 @@ describe("TokenWipe", function () {
     });
 
     it("should convert fromBytes", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();

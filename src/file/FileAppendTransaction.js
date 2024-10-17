@@ -27,6 +27,7 @@ import FileId from "./FileId.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
 import List from "../transaction/List.js";
+import AccountId from "../account/AccountId.js";
 
 /**
  * @namespace proto
@@ -40,9 +41,9 @@ import List from "../transaction/List.js";
  */
 
 /**
+ * @typedef {import("../PublicKey.js").default} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<Channel, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  */
@@ -59,6 +60,7 @@ export default class FileAppendTransaction extends Transaction {
      * @param {Uint8Array | string} [props.contents]
      * @param {number} [props.maxChunks]
      * @param {number} [props.chunkSize]
+     * @param {number} [props.chunkInterval]
      */
     constructor(props = {}) {
         super();
@@ -87,6 +89,12 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._chunkSize = 4096;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this._chunkInterval = 10;
+
         this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.fileId != null) {
@@ -103,6 +111,10 @@ export default class FileAppendTransaction extends Transaction {
 
         if (props.chunkSize != null) {
             this.setChunkSize(props.chunkSize);
+        }
+
+        if (props.chunkInterval != null) {
+            this.setChunkInterval(props.chunkInterval);
         }
 
         /** @type {List<TransactionId>} */
@@ -167,6 +179,19 @@ export default class FileAppendTransaction extends Transaction {
             contents = concat;
         }
 
+        const chunkSize = append.contents?.length || undefined;
+        const maxChunks = bodies.length || undefined;
+        let chunkInterval;
+        if (transactionIds.length > 1) {
+            const firstValidStart = transactionIds[0].validStart;
+            const secondValidStart = transactionIds[1].validStart;
+            if (firstValidStart && secondValidStart) {
+                chunkInterval = secondValidStart.nanos
+                    .sub(firstValidStart.nanos)
+                    .toNumber();
+            }
+        }
+
         return Transaction._fromProtobufTransactions(
             new FileAppendTransaction({
                 fileId:
@@ -177,7 +202,10 @@ export default class FileAppendTransaction extends Transaction {
                               ),
                           )
                         : undefined,
-                contents: contents,
+                contents,
+                chunkSize,
+                maxChunks,
+                chunkInterval,
             }),
             transactions,
             signedTransactions,
@@ -218,6 +246,21 @@ export default class FileAppendTransaction extends Transaction {
                 : fileId.clone();
 
         return this;
+    }
+
+    /**
+     * @override
+     * @returns {number}
+     */
+    getRequiredChunks() {
+        if (this._contents == null) {
+            return 0;
+        }
+
+        const result = Math.floor(
+            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
+        );
+        return result;
     }
 
     /**
@@ -285,6 +328,22 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @returns {number}
+     */
+    get chunkInterval() {
+        return this._chunkInterval;
+    }
+
+    /**
+     * @param {number} chunkInterval The valid start interval between chunks in nanoseconds
+     * @returns {this}
+     */
+    setChunkInterval(chunkInterval) {
+        this._chunkInterval = chunkInterval;
+        return this;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -301,16 +360,6 @@ export default class FileAppendTransaction extends Transaction {
             return this;
         }
 
-        const chunks = Math.floor(
-            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
-        );
-
-        if (chunks > this._maxChunks) {
-            throw new Error(
-                `Contents with size ${this._contents.length} too long for ${this._maxChunks} chunks`,
-            );
-        }
-
         let nextTransactionId = this._getTransactionId();
 
         // Hack around the locked list. Should refactor a bit to remove such code
@@ -320,7 +369,7 @@ export default class FileAppendTransaction extends Transaction {
         this._transactionIds.clear();
         this._signedTransactions.clear();
 
-        for (let chunk = 0; chunk < chunks; chunk++) {
+        for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
@@ -338,7 +387,7 @@ export default class FileAppendTransaction extends Transaction {
                     ).seconds,
                     /** @type {Timestamp} */ (
                         nextTransactionId.validStart
-                    ).nanos.add(1),
+                    ).nanos.add(this._chunkInterval),
                 ),
             );
         }
@@ -379,6 +428,12 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client, requestTimeout) {
+        if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
+            throw new Error(
+                `cannot execute \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
+
         if (!super._isFrozen()) {
             this.freezeWith(client);
         }
@@ -446,6 +501,84 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * Build all the transactions
+     * when transactions are not complete.
+     * @override
+     * @internal
+     */
+    _buildIncompleteTransactions() {
+        const dummyAccountId = AccountId.fromString("0.0.0");
+        const accountId = this.transactionId?.accountId || dummyAccountId;
+        const validStart =
+            this.transactionId?.validStart || Timestamp.fromDate(new Date());
+
+        if (this._contents == null) {
+            throw new Error("contents is not set");
+        }
+
+        if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
+            throw new Error(
+                `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
+
+        // Hack around the locked list. Should refactor a bit to remove such code
+        this._transactionIds.locked = false;
+
+        this._transactions.clear();
+        this._transactionIds.clear();
+        this._signedTransactions.clear();
+
+        for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
+            let nextTransactionId = TransactionId.withValidStart(
+                accountId,
+                validStart.plusNanos(this._chunkInterval * chunk),
+            );
+            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.advance();
+
+            if (this._nodeAccountIds.list.length === 0) {
+                this._transactions.push(this._makeSignedTransaction(null));
+            } else {
+                for (const nodeAccountId of this._nodeAccountIds.list) {
+                    this._signedTransactions.push(
+                        this._makeSignedTransaction(nodeAccountId),
+                    );
+                }
+            }
+        }
+
+        this._transactionIds.advance();
+        this._transactionIds.setLocked();
+    }
+
+    /**
+     * Build all the signed transactions
+     * @override
+     * @internal
+     */
+    _buildAllTransactions() {
+        if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
+            throw new Error(
+                `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
+            );
+        }
+        for (let i = 0; i < this._signedTransactions.length; i++) {
+            this._buildTransaction(i);
+        }
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `FileAppendTransaction:${timestamp.toString()}`;
+    }
+
+    /**
      * @override
      * @protected
      * @returns {HashgraphProto.proto.IFileAppendTransactionBody}
@@ -462,16 +595,6 @@ export default class FileAppendTransaction extends Transaction {
                     ? this._contents.slice(startIndex, endIndex)
                     : null,
         };
-    }
-
-    /**
-     * @returns {string}
-     */
-    _getLogId() {
-        const timestamp = /** @type {import("../Timestamp.js").default} */ (
-            this._transactionIds.current.validStart
-        );
-        return `FileAppendTransaction:${timestamp.toString()}`;
     }
 }
 

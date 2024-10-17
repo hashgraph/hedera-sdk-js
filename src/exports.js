@@ -33,6 +33,9 @@ export { default as PublicKey } from "./PublicKey.js";
 export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
+export { default as TokenAirdropTransaction } from "./token/TokenAirdropTransaction.js";
+export { default as TokenClaimAirdropTransaction } from "./token/TokenClaimAirdropTransaction.js";
+export { default as TokenCancelAirdropTransaction } from "./token/TokenCancelAirdropTransaction.js";
 // eslint-disable-next-line deprecation/deprecation
 export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
 export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
@@ -106,6 +109,7 @@ export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as NftId } from "./token/NftId.js";
+export { default as PendingAirdropId } from "./token/PendingAirdropId.js";
 export { default as Provider } from "./Provider.js";
 export { default as PrngTransaction } from "./PrngTransaction.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";

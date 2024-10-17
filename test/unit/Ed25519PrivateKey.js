@@ -303,7 +303,6 @@ describe("Ed25519PrivateKey", function () {
     });
 
     it("should produce consistent public key from 12 word mnemonic and fromStringED25519", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate12();
             const privateKeyFromMnemonic =
@@ -330,7 +329,6 @@ describe("Ed25519PrivateKey", function () {
     });
 
     it("should produce consistent public key from 12 word mnemonic and fromBytesED25519", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate12();
             const privateKeyFromMnemonic =
@@ -357,7 +355,6 @@ describe("Ed25519PrivateKey", function () {
     });
 
     it("should produce consistent public key from 24 word mnemonic and fromStringED5519", async function () {
-        this.timeout(120000);
         for (let i = 0; i < STRESS_TEST_ITERATION_COUNT; i++) {
             const mnemonic = await Mnemonic.generate();
             const privateKeyFromMnemonic =
