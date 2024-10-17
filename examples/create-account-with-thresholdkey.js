@@ -16,12 +16,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
-const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
-
-// Initialize Logger with the specified log level from the environment variable
-const logger = new Logger(LogLevel._fromString(SDK_LOG_LEVEL));
-
 /**
  * Step 0: Set up client connection to Hedera network
  */
@@ -45,8 +39,10 @@ async function main() {
     const client = Client.forName(process.env.HEDERA_NETWORK);
 
     client.setOperator(operatorId, operatorKey);
-    // Attach your custom logger to the SDK client
-    client.setLogger(logger);
+    
+    // Set logger
+    const infoLogger = new Logger(LogLevel.Info);
+    client.setLogger(infoLogger);
 
     try {
         console.log("Create Account With Threshold Key Example Start!");
