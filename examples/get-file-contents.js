@@ -12,13 +12,6 @@ import {
 import dotenv from "dotenv";
 
 dotenv.config();
-
-// Set default log level to 'silent' if SDK_LOG_LEVEL is not specified in .env
-const SDK_LOG_LEVEL = process.env.SDK_LOG_LEVEL || "SILENT";
-
-// Initialize Logger with the specified log level from the environment variable
-const logger = new Logger(LogLevel._fromString(SDK_LOG_LEVEL));
-
 /**
  * How to get file contents
  *
@@ -48,8 +41,9 @@ async function main() {
 
     client.setOperator(operatorId, operatorKey);
 
-    // Attach your custom logger to the SDK client
-    client.setLogger(logger);
+    // Set logger
+    const infoLogger = new Logger(LogLevel.Info);
+    client.setLogger(infoLogger);
 
     /**
      * Step 1: Submit the file create transaction
