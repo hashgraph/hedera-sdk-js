@@ -15,8 +15,8 @@ importers:
         specifier: ^4.3.6
         version: 4.3.7
       mocha:
-        specifier: ^10.6.0
-        version: 10.7.3
+        specifier: 10.6.0
+        version: 10.6.0
 
 packages:
 
@@ -218,8 +218,8 @@ packages:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
 
-  mocha@10.7.3:
-    resolution: {integrity: sha512-uQWxAu44wwiACGqjbPYmjo7Lg8sFrS3dQe7PP2FQI+woptP4vZXSMcfMyFL/e1yFEeEpV4RtyTpZROOKmxis+A==}
+  mocha@10.6.0:
+    resolution: {integrity: sha512-hxjt4+EEB0SA0ZDygSS015t65lJw/I2yRCS3Ae+SJ5FrbzrXgfYwJr96f0OvIXdj7h4lv/vLCrH3rkiuizFSvw==}
     engines: {node: '>= 14.0.0'}
     hasBin: true
 
@@ -505,7 +505,7 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  mocha@10.7.3:
+  mocha@10.6.0:
     dependencies:
       ansi-colors: 4.1.3
       browser-stdout: 1.3.1
