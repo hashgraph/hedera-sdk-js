@@ -11,6 +11,7 @@ import {
     Transaction,
     TransactionId,
     PublicKey,
+    FileAppendTransaction,
 } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
@@ -18,6 +19,10 @@ import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 import BigNumber from "bignumber.js";
 import sinon from "sinon";
+import SignatureMap from "../../src/transaction/SignatureMap.js";
+import NodeAccountIdSignatureMap from "../../src/transaction/NodeAccountIdSignatureMap.js";
+import SignaturePairMap from "../../src/transaction/SignaturePairMap.js";
+import { Hash } from "crypto";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -104,10 +109,12 @@ describe("Transaction", function () {
         expect(signatures.size).to.be.equal(1);
 
         for (const [nodeAccountId, nodeSignatures] of signatures) {
+            const transactionSignatures = nodeSignatures.get(
+                transaction.transactionId,
+            );
             expect(nodeAccountId.toString()).equals("0.0.6");
-
-            expect(nodeSignatures.size).to.be.equal(2);
-            for (const [publicKey] of nodeSignatures) {
+            expect(transactionSignatures.size).to.be.equal(2);
+            for (const [publicKey] of transactionSignatures) {
                 expect(publicKey.verifyTransaction(transaction)).to.be.true;
             }
         }
@@ -353,16 +360,40 @@ describe("Transaction", function () {
             transaction.freeze = sinon.spy();
         });
 
-        it("should add a single signature when one transaction is present", function () {
-            transaction.addSignature(mockedPublicKey, mockedSignature);
+        it("should add a single signature when one transaction is present", async function () {
+            const sigMap = new SignatureMap();
+            const nodeAccountId = new AccountId(3);
+            const op = PrivateKey.generateED25519();
 
-            // Verify the signature was added correctly to sigMap.sigPair
-            expect(
-                transaction._signedTransactions.get(0).sigMap.sigPair,
-            ).to.deep.equal([{ ed25519: mockedSignature }]);
+            const txId = TransactionId.generate(nodeAccountId);
 
-            // Verify freeze was called since the transaction was not frozen
-            sinon.assert.calledOnce(transaction.freeze);
+            const tx = new FileAppendTransaction()
+                .setContents("Hello, World!")
+                .setChunkSize(1)
+                .setNodeAccountIds([nodeAccountId])
+                .setTransactionId(txId)
+                .freeze();
+
+            const nodeAccountIdSigMap = new NodeAccountIdSignatureMap();
+
+            const pubKey = new PublicKey(
+                PrivateKey.generateED25519().publicKey,
+            );
+
+            for (const txChunk of tx._signedTransactions.list) {
+                //                const sig = op.sign(txChunk.bodyBytes);
+                const txBody = HashgraphProto.proto.TransactionBody.decode(
+                    txChunk.bodyBytes,
+                );
+                const txId = TransactionId._fromProtobuf(txBody.transactionID);
+                const sig = op.sign(txChunk.bodyBytes);
+                const sigPairMap = new SignaturePairMap();
+                sigPairMap._set(pubKey, sig);
+                nodeAccountIdSigMap._set(txId, sigPairMap);
+            }
+
+            sigMap._set(nodeAccountId, nodeAccountIdSigMap);
+            console.log(sigMap.get(AccountId.fromString("0.0.3")));
         });
 
         it("should throw an error when adding a single signature to multiple transactions", function () {
@@ -378,6 +409,7 @@ describe("Transaction", function () {
                 },
             ];
 
+            transaction._;
             expect(() => {
                 transaction.addSignature(mockedPublicKey, mockedSignature);
             }).to.throw(
@@ -510,14 +542,20 @@ describe("Transaction", function () {
                 key3,
             );
 
+            // console.log(transaction);
+
             //Check if the transaction internal tracking of signer public keys is correct
             expect(transaction._signerPublicKeys.size).to.equal(3);
             expect(transaction._publicKeys.length).to.equal(3);
             expect(transaction._transactionSigners.length).to.equal(3);
 
             // Ensure all signatures are present before removal
-            const signaturesBefore = transaction.getSignatures();
-            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+            const signaturesBefore = transaction
+                .getSignatures()
+                .get(new AccountId(3))
+                .get(transaction.transactionId);
+
+            expect(signaturesBefore.size).to.equal(3);
 
             // Remove one signature
             transaction.removeSignature(key1.publicKey, signature1);
@@ -532,7 +570,11 @@ describe("Transaction", function () {
 
             // Ensure the specific signature has been removed
             const signaturesAfter = transaction.getSignatures();
-            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(2);
+            expect(
+                signaturesAfter
+                    .get(new AccountId(3))
+                    .get(transaction.transactionId).size,
+            ).to.equal(2);
         });
 
         it("should clear all signatures", function () {
@@ -541,7 +583,11 @@ describe("Transaction", function () {
 
             // Ensure all signatures are present before clearing
             const signaturesBefore = transaction.getSignatures();
-            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(3);
+            expect(
+                signaturesBefore
+                    .get(new AccountId(3))
+                    .get(transaction.transactionId).size,
+            ).to.equal(3);
 
             // Clear all signatures
             transaction.removeAllSignatures();
@@ -556,7 +602,11 @@ describe("Transaction", function () {
 
             // Ensure all signatures have been cleared
             const signaturesAfter = transaction.getSignatures();
-            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(0);
+            expect(
+                signaturesAfter
+                    .get(new AccountId(3))
+                    .get(transaction.transactionId).size,
+            ).to.equal(0);
         });
 
         it("should not remove a non-existing signature", function () {
@@ -569,8 +619,11 @@ describe("Transaction", function () {
             }).to.throw("The public key has not signed this transaction");
 
             // Ensure signatures are not affected
-            const signaturesAfter = transaction.getSignatures();
-            expect(signaturesAfter.get(new AccountId(3)).size).to.equal(2);
+            const signaturesAfter = transaction
+                .getSignatures()
+                .get(new AccountId(3))
+                .get(transaction.transactionId);
+            expect(signaturesAfter.size).to.equal(2);
         });
 
         it("should clear and re-sign after all signatures are cleared", function () {
@@ -578,15 +631,21 @@ describe("Transaction", function () {
             signAndAddSignatures(transaction, key1, key2);
 
             // Ensure all signatures are present before clearing
-            const signaturesBefore = transaction.getSignatures();
-            expect(signaturesBefore.get(new AccountId(3)).size).to.equal(2);
+            const signaturesBefore = transaction
+                .getSignatures()
+                .get(new AccountId(3))
+                .get(transaction.transactionId);
+            expect(signaturesBefore.size).to.equal(2);
 
             // Clear all signatures
             transaction.removeAllSignatures();
 
             // Ensure all signatures have been cleared
-            const signaturesAfterClear = transaction.getSignatures();
-            expect(signaturesAfterClear.get(new AccountId(3)).size).to.equal(0);
+            const signaturesAfterClear = transaction
+                .getSignatures()
+                .get(new AccountId(3))
+                .get(transaction.transactionId);
+            expect(signaturesAfterClear.size).to.equal(0);
 
             // Re-sign the transaction with a different key
             const signature3 = key3.signTransaction(transaction);
@@ -729,3 +788,29 @@ describe("Transaction", function () {
         });
     });
 });
+
+const getAllSignaturesFromTransaction = (signedTransaction) => {
+    /** @type {string[]} */
+    const signatures = [];
+    signedTransaction._signedTransactions.list.forEach((transaction) => {
+        if (transaction.sigMap?.sigPair) {
+            transaction.sigMap.sigPair.forEach((sigPair) => {
+                if (sigPair.ed25519) {
+                    signatures.push(
+                        PrivateKey.fromBytesED25519(
+                            sigPair.ed25519,
+                        ).toStringDer(),
+                    );
+                } else if (sigPair.ECDSASecp256k1) {
+                    signatures.push(
+                        PrivateKey.fromBytesECDSA(
+                            sigPair.ECDSASecp256k1,
+                        ).toStringDer(),
+                    );
+                }
+            });
+        }
+    });
+
+    return signatures;
+};

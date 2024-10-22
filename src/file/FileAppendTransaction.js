@@ -512,10 +512,6 @@ export default class FileAppendTransaction extends Transaction {
         const validStart =
             this.transactionId?.validStart || Timestamp.fromDate(new Date());
 
-        if (this._contents == null) {
-            throw new Error("contents is not set");
-        }
-
         if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
                 `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,

@@ -19,36 +19,38 @@
  */
 
 import ObjectMap from "../ObjectMap.js";
-import PublicKey from "../PublicKey.js";
+import TransactionId from "./TransactionId.js";
+import SignaturePairMap from "./SignaturePairMap.js";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
- * @augments {ObjectMap<PublicKey, Uint8Array>}
+ * @augments {ObjectMap<TransactionId, SignaturePairMap>}
  */
 export default class NodeAccountIdSignatureMap extends ObjectMap {
     constructor() {
-        super((s) => PublicKey.fromString(s));
+        super((s) => TransactionId.fromString(s));
     }
 
     /**
-     * @param {import("@hashgraph/proto").proto.ISignatureMap} sigMap
+     * @param { import('./List.js').default<import("@hashgraph/proto").proto.ISignedTransaction>} signedTransactions
      * @returns {NodeAccountIdSignatureMap}
      */
-    static _fromTransactionSigMap(sigMap) {
+    static _fromSignedTransactions(signedTransactions) {
         const signatures = new NodeAccountIdSignatureMap();
 
-        const sigPairs = sigMap.sigPair != null ? sigMap.sigPair : [];
+        for (const { bodyBytes, sigMap } of signedTransactions.list) {
+            if (bodyBytes != null && sigMap != null) {
+                const body =
+                    HashgraphProto.proto.TransactionBody.decode(bodyBytes);
 
-        for (const sigPair of sigPairs) {
-            if (sigPair.pubKeyPrefix != null) {
-                if (sigPair.ed25519 != null) {
-                    signatures._set(
-                        PublicKey.fromBytesED25519(sigPair.pubKeyPrefix),
-                        sigPair.ed25519,
+                if (body.transactionID != null) {
+                    const transactionId = TransactionId._fromProtobuf(
+                        body.transactionID,
                     );
-                } else if (sigPair.ECDSASecp256k1 != null) {
+
                     signatures._set(
-                        PublicKey.fromBytesECDSA(sigPair.pubKeyPrefix),
-                        sigPair.ECDSASecp256k1,
+                        transactionId,
+                        SignaturePairMap._fromTransactionSigMap(sigMap),
                     );
                 }
             }
