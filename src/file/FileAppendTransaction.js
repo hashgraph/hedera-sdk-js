@@ -254,12 +254,11 @@ export default class FileAppendTransaction extends Transaction {
      */
     getRequiredChunks() {
         if (this._contents == null) {
-            return 0;
+            return 1;
         }
 
-        const result = Math.floor(
-            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
-        );
+        const result = Math.ceil(this._contents.length / this._chunkSize);
+
         return result;
     }
 
@@ -511,10 +510,6 @@ export default class FileAppendTransaction extends Transaction {
         const accountId = this.transactionId?.accountId || dummyAccountId;
         const validStart =
             this.transactionId?.validStart || Timestamp.fromDate(new Date());
-
-        if (this._contents == null) {
-            throw new Error("contents is not set");
-        }
 
         if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
