@@ -21,7 +21,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@grpc/grpc-js':
-        specifier: 1.12.2
+        specifier: ~1.12.2
         version: 1.12.2
       '@hashgraph/cryptography':
         specifier: 1.4.8-beta.9
