@@ -22,6 +22,7 @@ import NodeAccountIdSignatureMap from "./NodeAccountIdSignatureMap.js";
 import ObjectMap from "../ObjectMap.js";
 import AccountId from "../account/AccountId.js";
 import List from "./List.js";
+import TransactionId from "./TransactionId.js";
 
 /**
  * @augments {ObjectMap<AccountId, NodeAccountIdSignatureMap>}
@@ -60,5 +61,26 @@ export default class SignatureMap extends ObjectMap {
         }
 
         return signatures;
+    }
+
+    /**
+     *
+     * @param {AccountId} nodeId
+     * @param {TransactionId} txId
+     * @param {import("../SignerSignature.js").PublicKey} publicKey
+     * @param {Uint8Array} signature
+     */
+    addSignature(nodeId, txId, publicKey, signature) {
+        if (!this.get(nodeId)) {
+            this._set(nodeId, new NodeAccountIdSignatureMap());
+        }
+
+        const nodeAccountIdSigdMap = this.get(nodeId);
+        if (!nodeAccountIdSigdMap) {
+            throw new Error("Node Account ID Signature Map not found");
+        }
+
+        nodeAccountIdSigdMap.addSignature(txId, publicKey, signature);
+        this._set(nodeId, nodeAccountIdSigdMap);
     }
 }

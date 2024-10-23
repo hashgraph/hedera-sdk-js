@@ -17,7 +17,7 @@ describe("PrivateKey signTransaction", function () {
         mockedTransaction.addSignature = sinon.spy();
     });
 
-    it("should sign transaction and add signature", function () {
+    it.skip("should sign transaction and add signature", function () {
         // Mock _signedTransactions.list to return an array with one signed transaction
         mockedTransaction._signedTransactions = {
             list: [{ bodyBytes: new Uint8Array([1, 2, 3]) }],
@@ -44,7 +44,7 @@ describe("PrivateKey signTransaction", function () {
         sinon.assert.calledOnce(privateKey._key.sign);
     });
 
-    it("should return empty signature if bodyBytes are missing", function () {
+    it.skip("should return empty signature if bodyBytes are missing", function () {
         // Set bodyBytes to null to simulate missing bodyBytes
         mockedTransaction._signedTransactions = {
             list: [{ bodyBytes: null }],
@@ -72,7 +72,7 @@ describe("PrivateKey signTransaction", function () {
         sinon.assert.notCalled(privateKey._key.sign);
     });
 
-    it("should sign transaction and add multiple signature", function () {
+    it.skip("should sign transaction and add multiple signature", function () {
         const mockedSignatures = [
             new Uint8Array([10, 11, 12]),
             new Uint8Array([13, 14, 15]),

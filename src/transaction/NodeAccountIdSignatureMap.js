@@ -58,4 +58,23 @@ export default class NodeAccountIdSignatureMap extends ObjectMap {
 
         return signatures;
     }
+
+    /**
+     *
+     * @param {TransactionId} txId
+     * @param {import("../SignerSignature.js").PublicKey} publicKey
+     * @param {Uint8Array} signature
+     */
+    addSignature(txId, publicKey, signature) {
+        if (!this._map.has(txId.toString())) {
+            this._map.set(txId.toString(), new SignaturePairMap());
+        }
+
+        const sigPairMap = this.get(txId);
+        if (!sigPairMap) {
+            throw new Error("sigPairMap is null");
+        }
+
+        sigPairMap.addSignature(publicKey, signature);
+    }
 }
