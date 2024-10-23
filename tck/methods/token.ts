@@ -150,11 +150,10 @@ export const createToken = async ({
                     .setFeeCollectorAccountId(
                         AccountId.fromString(customFee.feeCollectorAccountId),
                     )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
-
-                fixedFee.setDenominatingTokenId(
-                    customFee.fixedFee.denominatingTokenId,
-                );
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
+                    .setDenominatingTokenId(
+                        customFee.fixedFee.denominatingTokenId,
+                    );
 
                 customFeeList.push(fixedFee);
             }
@@ -197,15 +196,16 @@ export const createToken = async ({
                     .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
 
                 if (customFee.royaltyFee.fallbackFee) {
-                    let fallbackFee = new CustomFixedFee().setAmount(
-                        Long.fromString(
-                            customFee.royaltyFee.fallbackFee.amount,
-                        ),
-                    );
-
-                    fallbackFee.setDenominatingTokenId(
-                        customFee.royaltyFee.fallbackFee.denominatingTokenId,
-                    );
+                    let fallbackFee = new CustomFixedFee()
+                        .setAmount(
+                            Long.fromString(
+                                customFee.royaltyFee.fallbackFee.amount,
+                            ),
+                        )
+                        .setDenominatingTokenId(
+                            customFee.royaltyFee.fallbackFee
+                                .denominatingTokenId,
+                        );
 
                     royaltyFee.setFallbackFee(fallbackFee);
                 }
