@@ -21,6 +21,8 @@
 import NodeAccountIdSignatureMap from "./NodeAccountIdSignatureMap.js";
 import ObjectMap from "../ObjectMap.js";
 import AccountId from "../account/AccountId.js";
+import List from "./List.js";
+import TransactionId from "./TransactionId.js";
 
 /**
  * @augments {ObjectMap<AccountId, NodeAccountIdSignatureMap>}
@@ -37,17 +39,48 @@ export default class SignatureMap extends ObjectMap {
     static _fromTransaction(transaction) {
         const signatures = new SignatureMap();
 
-        for (let i = 0; i < transaction._nodeAccountIds.length; i++) {
-            const sigMap = transaction._signedTransactions.get(i).sigMap;
+        const rowLength = transaction._nodeAccountIds.length;
+        const columns = transaction._signedTransactions.length / rowLength;
 
-            if (sigMap != null) {
-                signatures._set(
-                    transaction._nodeAccountIds.list[i],
-                    NodeAccountIdSignatureMap._fromTransactionSigMap(sigMap),
+        for (let row = 0; row < rowLength; row++) {
+            /** @type { List<import("@hashgraph/proto").proto.ISignedTransaction> } */
+            const signedTransactions = new List();
+
+            for (let col = 0; col < columns; col++) {
+                signedTransactions.push(
+                    transaction._signedTransactions.get(col * rowLength + row),
                 );
             }
+
+            signatures._set(
+                transaction._nodeAccountIds.list[row],
+                NodeAccountIdSignatureMap._fromSignedTransactions(
+                    signedTransactions,
+                ),
+            );
         }
 
         return signatures;
+    }
+
+    /**
+     *
+     * @param {AccountId} nodeId
+     * @param {TransactionId} txId
+     * @param {import("../SignerSignature.js").PublicKey} publicKey
+     * @param {Uint8Array} signature
+     */
+    addSignature(nodeId, txId, publicKey, signature) {
+        if (!this.get(nodeId)) {
+            this._set(nodeId, new NodeAccountIdSignatureMap());
+        }
+
+        const nodeAccountIdSigdMap = this.get(nodeId);
+        if (!nodeAccountIdSigdMap) {
+            throw new Error("Node Account ID Signature Map not found");
+        }
+
+        nodeAccountIdSigdMap.addSignature(txId, publicKey, signature);
+        this._set(nodeId, nodeAccountIdSigdMap);
     }
 }

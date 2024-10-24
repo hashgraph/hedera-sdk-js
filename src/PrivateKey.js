@@ -23,10 +23,12 @@ import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import SignatureMap from "./transaction/SignatureMap.js";
+import { proto } from "@hashgraph/proto";
+import { AccountId, TransactionId } from "./exports.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
- * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
 /**
@@ -325,27 +327,39 @@ export default class PrivateKey extends Key {
 
     /**
      * @param {Transaction} transaction
-     * @returns {Uint8Array | Uint8Array[]}
+     * @returns {SignatureMap}
      */
     signTransaction(transaction) {
-        const signatures = transaction._signedTransactions.list.map(
-            (signedTransaction) => {
-                const bodyBytes = signedTransaction.bodyBytes;
+        const sigMap = new SignatureMap();
+        for (const signedTransaction of transaction._signedTransactions.list) {
+            const bodyBytes = signedTransaction.bodyBytes;
 
-                if (!bodyBytes) {
-                    return new Uint8Array();
+            if (bodyBytes) {
+                const body = proto.TransactionBody.decode(bodyBytes);
+                if (
+                    !body.transactionID ||
+                    !body.nodeAccountID ||
+                    !body.nodeAccountID
+                ) {
+                    throw new Error(
+                        "Transaction ID or Node Account ID not found in the signed transaction",
+                    );
                 }
 
-                return this._key.sign(bodyBytes);
-            },
-        );
+                const nodeId = AccountId._fromProtobuf(body.nodeAccountID);
+                const transactionId = TransactionId._fromProtobuf(
+                    body.transactionID,
+                );
 
-        transaction.addSignature(this.publicKey, signatures);
+                const sig = this._key.sign(bodyBytes);
+                sigMap.addSignature(nodeId, transactionId, this.publicKey, sig);
+                //add the sig to the map
+            }
+        }
 
-        // Return directly Uint8Array if there is only one signature
-        return signatures.length === 1 ? signatures[0] : signatures;
+        transaction.addSignature(this.publicKey, sigMap);
+        return sigMap;
     }
-
     /**
      * Check if `derive` can be called on this private key.
      *
