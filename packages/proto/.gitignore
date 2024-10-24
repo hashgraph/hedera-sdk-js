@@ -1,2 +1,5 @@
 src/proto.js
 src/proto.d.ts
+src/proto/services
+src/proto/streams
+src/services

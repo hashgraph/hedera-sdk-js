@@ -10,18 +10,49 @@ tasks:
     docs:
         cmds:
             - npx typedoc
-                --excludeInternal 
-                --excludePrivate 
-                --excludeProtected 
-                --out docs 
-                --validation.invalidLink 
-                --entryPoints src/index.js src/browser.js src/native.js
+              --excludeInternal
+              --excludePrivate
+              --excludeProtected
+              --out docs
+              --validation.invalidLink
+              --entryPoints src/index.js src/browser.js src/native.js
 
-    "install:submodules":
+    install:submodules:
+        dir: src/services
+        vars:
+            latest_tag:
+                sh: git -c versionsort.suffix=-alpha
+                    -c versionsort.suffix=-beta
+                    -c versionsort.suffix=-rc
+                    tag -l --sort=version:refname | tail -1
+            proto: "{{.proto | default .latest_tag}}"
         cmds:
-            - git submodule update --init
-        status:
-            - test -e src/proto/.git
+            - echo "Protobuf version set to {{.proto}}"
+            - git submodule update --init --recursive --remote
+            - git checkout {{.proto}}
+            - git show-ref --verify -q refs/heads/{{.proto}} && git pull origin || exit 0
+            - echo "Successfully installed submodule at version {{.proto}}"
+
+    move:protobufs:
+        dir: src/services
+        after:
+            - "install:submodules"
+        desc: "Move protobufs from src/services/hapi/hedera-protobufs/services to src/proto"
+        cmds:
+            - mv src/services/hapi/hedera-protobufs/services src/proto/
+            - mv src/services/hapi/hedera-protobufs/streams src/proto/
+            - echo "Protobufs moved successfully!"
+
+    delete:submodule:
+        dir: src/services
+        after:
+            - "move:protobufs"
+        vars:
+            submodule_path: "packages/proto/src/services"
+        cmds:
+            - rm -rf {{.submodule_path}}
+            - git rm --cached {{.submodule_path}}
+            - echo "Submodule removed successfully."
 
     install:
         deps:
@@ -74,14 +105,14 @@ tasks:
             - build
 
     update:
-        dir: src/proto
+        dir: src/services
         vars:
             latest_tag:
-                sh: git -c versionsort.suffix=-alpha 
-                        -c versionsort.suffix=-beta 
-                        -c versionsort.suffix=-rc  
-                        tag -l --sort=version:refname|tail -1
-            proto: '{{.proto | default .latest_tag}}'
+                sh: git -c versionsort.suffix=-alpha
+                    -c versionsort.suffix=-beta
+                    -c versionsort.suffix=-rc
+                    tag -l --sort=version:refname|tail -1
+            proto: "{{.proto | default .latest_tag}}"
         cmds:
             - echo "Protobuf version set to {{.proto}}"
             - git fetch origin
