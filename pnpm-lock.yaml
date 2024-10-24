@@ -18,8 +18,8 @@ dependencies:
     specifier: ^5.7.0
     version: 5.7.0
   '@grpc/grpc-js':
-    specifier: 1.8.2
-    version: 1.8.2
+    specifier: 1.8.22
+    version: 1.8.22
   '@hashgraph/cryptography':
     specifier: 1.4.8-beta.8
     version: 1.4.8-beta.8(expo@49.0.20)
@@ -2631,8 +2631,8 @@ packages:
     dependencies:
       graphql: 15.8.0
 
-  /@grpc/grpc-js@1.8.2:
-    resolution: {integrity: sha512-5cqCjUvDKJWHGeu1prlrFOUmjuML0NequZKJ38PsCkfwIqPnZq4Q9burPP3It7/+46wpl0KsqVN3s6Te3B9Qtw==}
+  /@grpc/grpc-js@1.8.22:
+    resolution: {integrity: sha512-oAjDdN7fzbUi+4hZjKG96MR6KTEubAeMpQEb+77qy+3r0Ua5xTFuie6JOLr4ZZgl5g+W5/uRTS2M1V8mVAFPuA==}
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.9
