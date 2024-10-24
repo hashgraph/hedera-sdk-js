@@ -22,6 +22,9 @@ export default class SubscriptionHandle {
     constructor() {
         /** @type {{(): void} | null} */
         this._call = null;
+
+        /** @type {boolean} */
+        this._unsubscribed = false;
     }
 
     /**
@@ -34,6 +37,7 @@ export default class SubscriptionHandle {
 
     unsubscribe() {
         if (this._call != null) {
+            this._unsubscribed = true;
             this._call();
         }
     }

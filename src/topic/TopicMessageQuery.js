@@ -438,6 +438,10 @@ export default class TopicMessageQuery extends Query {
                     const message =
                         error instanceof Error ? error.message : error.details;
 
+                    if (this._handle?._unsubscribed) {
+                        return;
+                    }
+
                     if (
                         this._attempt < this._maxAttempts &&
                         this._retryHandler(error)
