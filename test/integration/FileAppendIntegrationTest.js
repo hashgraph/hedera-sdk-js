@@ -444,6 +444,34 @@ describe("FileAppend", function () {
         expect(receipt.status).to.be.equal(Status.Success);
     });
 
+    it("should return transaction bytes when content is empty", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+        const validStart = Timestamp.fromDate(new Date());
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const transaction = new FileAppendTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(env.operatorId, validStart),
+            )
+            .setFileId(fileId);
+
+        const transactionBytes = transaction.toBytes();
+
+        const deserializedTransaction =
+            FileAppendTransaction.fromBytes(transactionBytes);
+
+        expect(transactionBytes.length).to.be.greaterThan(0);
+        expect(transaction.transactionId).to.be.deep.equal(
+            deserializedTransaction.transactionId,
+        );
+    });
+
     after(async function () {
         await env.close();
     });
