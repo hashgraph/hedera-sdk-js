@@ -1,0 +1,14 @@
+# Get the last commit hash
+last_commit=$(git rev-parse HEAD)
+
+# Check if the last commit is signed
+if git log --show-signature -1 "$last_commit" | grep -q 'gpg: Signature made'; then
+  echo "The last commit is signed."
+else
+  echo "Error: The last commit is not signed."
+  echo "Please sign the last commit using 'git commit --amend -S'"
+  exit 1
+fi
+
+exit 0
+
