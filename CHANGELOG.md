@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.53.0-beta.1
+
+## What's Changed
+
+* feat: exports WebClient for testing grpc-web proxies in https://github.com/hashgraph/hedera-sdk-js/pull/2603
+
 ## v2.52.0
 
 ## What's Changed
