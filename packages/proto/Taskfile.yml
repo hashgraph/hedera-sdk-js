@@ -22,20 +22,20 @@ tasks:
             - git submodule update --init --recursive --remote
 
     move:protobufs:
-        dir: src/services
         after:
             - "install:submodules"
         desc: "Move protobufs from src/services/hapi/hedera-protobufs/services to src/proto"
         cmds:
+            - rm -rf src/proto/services
             - mv src/services/hapi/hedera-protobufs/services src/proto/
+            - rm -rf src/proto/streams
             - mv src/services/hapi/hedera-protobufs/streams src/proto/
             - echo "Protobufs moved successfully!"
             - task "delete:submodule"
 
     delete:submodule:
         cmds:
-            - rm -rf src/services/* src/services/.*
-            - git rm --cached src/services/* src/services/.*
+            - find src/services -mindepth 1 -delete
             - echo "Submodule contents removed successfully, folder retained."
 
     install:
