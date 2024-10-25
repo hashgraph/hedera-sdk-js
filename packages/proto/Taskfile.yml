@@ -18,20 +18,8 @@ tasks:
               --entryPoints src/index.js src/browser.js src/native.js
 
     install:submodules:
-        dir: src/services
-        vars:
-            latest_tag:
-                sh: git -c versionsort.suffix=-alpha
-                    -c versionsort.suffix=-beta
-                    -c versionsort.suffix=-rc
-                    tag -l --sort=version:refname | tail -1
-            proto: "{{.proto | default .latest_tag}}"
         cmds:
-            - echo "Protobuf version set to {{.proto}}"
             - git submodule update --init --recursive --remote
-            - git checkout {{.proto}}
-            - git show-ref --verify -q refs/heads/{{.proto}} && git pull origin || exit 0
-            - echo "Successfully installed submodule at version {{.proto}}"
 
     move:protobufs:
         dir: src/services
@@ -42,22 +30,19 @@ tasks:
             - mv src/services/hapi/hedera-protobufs/services src/proto/
             - mv src/services/hapi/hedera-protobufs/streams src/proto/
             - echo "Protobufs moved successfully!"
+            - task "delete:submodule"
 
     delete:submodule:
-        dir: src/services
-        after:
-            - "move:protobufs"
-        vars:
-            submodule_path: "packages/proto/src/services"
         cmds:
-            - rm -rf {{.submodule_path}}
-            - git rm --cached {{.submodule_path}}
-            - echo "Submodule removed successfully."
+            - rm -rf src/services/* src/services/.*
+            - git rm --cached src/services/* src/services/.*
+            - echo "Submodule contents removed successfully, folder retained."
 
     install:
         deps:
             - "install:submodules"
         cmds:
+            - task "move:protobufs"
             - pnpm i > /dev/null
 
     build:
