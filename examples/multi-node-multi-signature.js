@@ -171,4 +171,6 @@ const getAllSignaturesFromTransaction = (signedTransaction) => {
     });
 
     return signatures;
+
+    console.log("test signed commit");
 };
