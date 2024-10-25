@@ -23,6 +23,8 @@ import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import SignatureMap from "./transaction/SignatureMap.js";
+import NodeAccountIdSignatureMap from "./transaction/NodeAccountIdSignatureMap.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -325,25 +327,15 @@ export default class PrivateKey extends Key {
 
     /**
      * @param {Transaction} transaction
-     * @returns {Uint8Array | Uint8Array[]}
+     * @returns {SignatureMap}
      */
     signTransaction(transaction) {
-        const signatures = transaction._signedTransactions.list.map(
-            (signedTransaction) => {
-                const bodyBytes = signedTransaction.bodyBytes;
+        console.log(transaction._signedTransactions.list);
+        const sigMap = SignatureMap._fromTransaction(transaction);
 
-                if (!bodyBytes) {
-                    return new Uint8Array();
-                }
+        transaction.addSignature(this.publicKey, sigMap);
 
-                return this._key.sign(bodyBytes);
-            },
-        );
-
-        transaction.addSignature(this.publicKey, signatures);
-
-        // Return directly Uint8Array if there is only one signature
-        return signatures.length === 1 ? signatures[0] : signatures;
+        return sigMap;
     }
 
     /**

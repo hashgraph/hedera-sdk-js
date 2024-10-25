@@ -799,43 +799,12 @@ export default class Transaction extends Executable {
     /**
      * Add a signature explicitly
      *
-     * This method supports both single and multiple signatures. A single signature will be applied to all transactions,
-     * While an array of signatures must correspond to each transaction individually.
-     *
      * @param {PublicKey} publicKey
-     * @param {Uint8Array | Uint8Array[]} signature
+     * @param {SignatureMap} signatureMap
      * @returns {this}
      */
-    addSignature(publicKey, signature) {
-        const isSingleSignature = signature instanceof Uint8Array;
-        const isArraySignature = Array.isArray(signature);
-
-        if (this.getRequiredChunks() > 1) {
-            throw new Error(
-                "Add signature is not supported for chunked transactions",
-            );
-        }
-        // Check if it is a single signature with NOT exactly one transaction
-        if (isSingleSignature && this._signedTransactions.length !== 1) {
-            throw new Error(
-                "Signature array must match the number of transactions",
-            );
-        }
-
-        // Check if it's an array but the array length doesn't match the number of transactions
-        if (
-            isArraySignature &&
-            signature.length !== this._signedTransactions.length
-        ) {
-            throw new Error(
-                "Signature array must match the number of transactions",
-            );
-        }
-
-        // If the transaction isn't frozen, freeze it.
-        if (!this.isFrozen()) {
-            this.freeze();
-        }
+    addSignature(publicKey, signatureMap) {
+        //const txSignatures = signatureMap.get(accountId)?.get(transactionId);
 
         const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
@@ -854,12 +823,9 @@ export default class Transaction extends Executable {
         this._nodeAccountIds.setLocked();
         this._signedTransactions.setLocked();
 
-        const signatureArray = isSingleSignature ? [signature] : signature;
-
         // Add the signature to the signed transaction list
         for (let index = 0; index < this._signedTransactions.length; index++) {
             const signedTransaction = this._signedTransactions.get(index);
-
             if (signedTransaction.sigMap == null) {
                 signedTransaction.sigMap = {};
             }
@@ -868,9 +834,32 @@ export default class Transaction extends Executable {
                 signedTransaction.sigMap.sigPair = [];
             }
 
-            signedTransaction.sigMap.sigPair.push(
-                publicKey._toProtobufSignature(signatureArray[index]),
-            );
+            if (signedTransaction.bodyBytes) {
+                const { transactionID, nodeAccountID } =
+                    HashgraphProto.proto.TransactionBody.decode(
+                        signedTransaction.bodyBytes,
+                    );
+
+                if (transactionID == null || nodeAccountID == null) {
+                    throw new Error(
+                        "Transaction ID or Node Account ID not found in the signed transaction",
+                    );
+                }
+
+                const transactionId =
+                    TransactionId._fromProtobuf(transactionID);
+                const nodeAccountId = AccountId._fromProtobuf(nodeAccountID);
+
+                const signature = signatureMap
+                    .get(nodeAccountId)
+                    ?.get(transactionId)
+                    ?.get(publicKey);
+
+                if (signature) {
+                    const sigPair = publicKey._toProtobufSignature(signature);
+                    signedTransaction.sigMap?.sigPair?.push(sigPair);
+                }
+            }
         }
 
         this._signerPublicKeys.add(publicKeyHex);
