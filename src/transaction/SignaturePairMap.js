@@ -18,7 +18,6 @@ export default class SignaturePairMap extends ObjectMap {
 
         const sigPairs = sigMap.sigPair != null ? sigMap.sigPair : [];
 
-        console.log(sigMap);
         for (const sigPair of sigPairs) {
             if (sigPair.pubKeyPrefix != null) {
                 if (sigPair.ed25519 != null) {
@@ -36,5 +35,14 @@ export default class SignaturePairMap extends ObjectMap {
         }
 
         return signatures;
+    }
+
+    /**
+     *
+     * @param {PublicKey} pubKey
+     * @param {Uint8Array} signature
+     */
+    addSignature(pubKey, signature) {
+        this._set(pubKey, signature);
     }
 }

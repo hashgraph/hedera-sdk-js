@@ -24,11 +24,11 @@ import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
 import SignatureMap from "./transaction/SignatureMap.js";
-import NodeAccountIdSignatureMap from "./transaction/NodeAccountIdSignatureMap.js";
+import { proto } from "@hashgraph/proto";
+import { AccountId, TransactionId } from "./exports.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
- * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
 /**
@@ -330,14 +330,36 @@ export default class PrivateKey extends Key {
      * @returns {SignatureMap}
      */
     signTransaction(transaction) {
-        console.log(transaction._signedTransactions.list);
-        const sigMap = SignatureMap._fromTransaction(transaction);
+        const sigMap = new SignatureMap();
+        for (const signedTransaction of transaction._signedTransactions.list) {
+            const bodyBytes = signedTransaction.bodyBytes;
+
+            if (bodyBytes) {
+                const body = proto.TransactionBody.decode(bodyBytes);
+                if (
+                    !body.transactionID ||
+                    !body.nodeAccountID ||
+                    !body.nodeAccountID
+                ) {
+                    throw new Error(
+                        "Transaction ID or Node Account ID not found in the signed transaction",
+                    );
+                }
+
+                const nodeId = AccountId._fromProtobuf(body.nodeAccountID);
+                const transactionId = TransactionId._fromProtobuf(
+                    body.transactionID,
+                );
+
+                const sig = this._key.sign(bodyBytes);
+                sigMap.addSignature(nodeId, transactionId, this.publicKey, sig);
+                //add the sig to the map
+            }
+        }
 
         transaction.addSignature(this.publicKey, sigMap);
-
         return sigMap;
     }
-
     /**
      * Check if `derive` can be called on this private key.
      *
