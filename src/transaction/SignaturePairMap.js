@@ -10,6 +10,7 @@ export default class SignaturePairMap extends ObjectMap {
     }
 
     /**
+     * This function is used to create a SignaturePairMap from an already built transaction.
      * @param {import("@hashgraph/proto").proto.ISignatureMap} sigMap
      * @returns {SignaturePairMap}
      */
@@ -19,18 +20,20 @@ export default class SignaturePairMap extends ObjectMap {
         const sigPairs = sigMap.sigPair != null ? sigMap.sigPair : [];
 
         for (const sigPair of sigPairs) {
-            if (sigPair.pubKeyPrefix != null) {
-                if (sigPair.ed25519 != null) {
-                    signatures._set(
-                        PublicKey.fromBytesED25519(sigPair.pubKeyPrefix),
-                        sigPair.ed25519,
-                    );
-                } else if (sigPair.ECDSASecp256k1 != null) {
-                    signatures._set(
-                        PublicKey.fromBytesECDSA(sigPair.pubKeyPrefix),
-                        sigPair.ECDSASecp256k1,
-                    );
-                }
+            if (sigPair.pubKeyPrefix == null) {
+                continue;
+            }
+
+            if (sigPair.ed25519 != null) {
+                signatures._set(
+                    PublicKey.fromBytesED25519(sigPair.pubKeyPrefix),
+                    sigPair.ed25519,
+                );
+            } else if (sigPair.ECDSASecp256k1 != null) {
+                signatures._set(
+                    PublicKey.fromBytesECDSA(sigPair.pubKeyPrefix),
+                    sigPair.ECDSASecp256k1,
+                );
             }
         }
 

@@ -36,6 +36,7 @@ export default class SignatureMap extends ObjectMap {
     }
 
     /**
+     * This function is used to create a SignatureMap from an already built transaction.
      * @param {import("./Transaction.js").default} transaction
      * @returns {SignatureMap}
      */
@@ -45,6 +46,12 @@ export default class SignatureMap extends ObjectMap {
         const rowLength = transaction._nodeAccountIds.length;
         const columns = transaction._signedTransactions.length / rowLength;
 
+        /*
+        this setup implies that the signed transactions are stored sequentially
+        in the signed transactions list. This means that the first rowLength
+        signed transactions are for the first node account id, the next rowLength
+        signed transactions are for the second node account id and so on.
+        */
         for (let row = 0; row < rowLength; row++) {
             /** @type { List<import("@hashgraph/proto").proto.ISignedTransaction> } */
             const signedTransactions = new List();
@@ -67,6 +74,9 @@ export default class SignatureMap extends ObjectMap {
     }
 
     /**
+     * Updates the signature map with the given signature.
+     * by generating a new node account id signature map if it does not exist
+     * or adding the signature to the existing node account id signature map.
      *
      * @param {AccountId} nodeId
      * @param {TransactionId} txId
