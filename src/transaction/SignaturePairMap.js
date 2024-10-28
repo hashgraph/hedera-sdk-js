@@ -41,8 +41,10 @@ export default class SignaturePairMap extends ObjectMap {
      *
      * @param {PublicKey} pubKey
      * @param {Uint8Array} signature
+     * @returns {SignaturePairMap}
      */
     addSignature(pubKey, signature) {
         this._set(pubKey, signature);
+        return this;
     }
 }
