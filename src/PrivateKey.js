@@ -339,11 +339,7 @@ export default class PrivateKey extends Key {
 
             if (bodyBytes) {
                 const body = proto.TransactionBody.decode(bodyBytes);
-                if (
-                    !body.transactionID ||
-                    !body.nodeAccountID ||
-                    !body.nodeAccountID
-                ) {
+            if (!body.transactionID || !body.nodeAccountID) {
                     throw new Error(
                         "Transaction ID or Node Account ID not found in the signed transaction",
                     );
