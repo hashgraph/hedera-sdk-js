@@ -22,12 +22,15 @@ import NodeAccountIdSignatureMap from "./NodeAccountIdSignatureMap.js";
 import ObjectMap from "../ObjectMap.js";
 import AccountId from "../account/AccountId.js";
 import List from "./List.js";
-import TransactionId from "./TransactionId.js";
 
 /**
  * @augments {ObjectMap<AccountId, NodeAccountIdSignatureMap>}
  */
 export default class SignatureMap extends ObjectMap {
+    /**
+     * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+     * @typedef {import("../transaction/SignaturePairMap.js").default} SignaturePairMap
+     */
     constructor() {
         super((s) => AccountId.fromString(s));
     }
@@ -69,6 +72,7 @@ export default class SignatureMap extends ObjectMap {
      * @param {TransactionId} txId
      * @param {import("../SignerSignature.js").PublicKey} publicKey
      * @param {Uint8Array} signature
+     * @returns {SignatureMap}
      */
     addSignature(nodeId, txId, publicKey, signature) {
         if (!this.get(nodeId)) {
@@ -82,6 +86,9 @@ export default class SignatureMap extends ObjectMap {
 
         nodeAccountIdSigdMap.addSignature(txId, publicKey, signature);
         this._set(nodeId, nodeAccountIdSigdMap);
+        return this;
+    }
+
     /**
      * @returns {SignaturePairMap[]}
      */
