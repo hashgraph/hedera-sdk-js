@@ -470,6 +470,9 @@ describe("FileAppend", function () {
         );
         expect(txFromBytes.chunkSize).to.be.equal(1024);
         expect(txFromBytes.chunkInterval).to.be.equal(230);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
         expect(txFromBytes.contents).to.be.deep.equal(newContents);
     });
 
