@@ -853,10 +853,10 @@ export default class Transaction extends Executable {
                     TransactionId._fromProtobuf(transactionID);
                 const nodeAccountId = AccountId._fromProtobuf(nodeAccountID);
 
-                const signature = signatureMap
-                    .get(nodeAccountId)
-                    ?.get(transactionId)
-                    ?.get(publicKey);
+                const nodeSignatures = signatureMap.get(nodeAccountId);
+                const transactionSignatures =
+                    nodeSignatures?.get(transactionId);
+                const signature = transactionSignatures?.get(publicKey);
 
                 if (!signature) {
                     throw new Error(
