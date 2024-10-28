@@ -66,15 +66,13 @@ export default class NodeAccountIdSignatureMap extends ObjectMap {
      * @param {Uint8Array} signature
      */
     addSignature(txId, publicKey, signature) {
-        if (!this._map.has(txId.toString())) {
-            this._map.set(txId.toString(), new SignaturePairMap());
+        if (!this.get(txId)) {
+            this._set(
+                txId,
+                new SignaturePairMap().addSignature(publicKey, signature),
+            );
+        } else {
+            this.get(txId)?.addSignature(publicKey, signature);
         }
-
-        const sigPairMap = this.get(txId);
-        if (!sigPairMap) {
-            throw new Error("sigPairMap is null");
-        }
-
-        sigPairMap.addSignature(publicKey, signature);
     }
 }
