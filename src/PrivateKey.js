@@ -24,10 +24,10 @@ import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
 import SignatureMap from "./transaction/SignatureMap.js";
+
 import AccountId from "./account/AccountId.js";
 import TransactionId from "./transaction/TransactionId.js";
 import { proto } from "@hashgraph/proto";
-import { AccountId, TransactionId } from "./exports.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -334,27 +334,24 @@ export default class PrivateKey extends Key {
      */
     signTransaction(transaction) {
         const sigMap = new SignatureMap();
-        for (const signedTransaction of transaction._signedTransactions.list) {
-            const bodyBytes = signedTransaction.bodyBytes;
+
+        for (const signedTx of transaction._signedTransactions.list) {
+            const bodyBytes = signedTx.bodyBytes;
             if (!bodyBytes) throw new Error("Body bytes are missing");
 
-            if (bodyBytes) {
-                const body = proto.TransactionBody.decode(bodyBytes);
+            const body = proto.TransactionBody.decode(bodyBytes);
             if (!body.transactionID || !body.nodeAccountID) {
-                    throw new Error(
-                        "Transaction ID or Node Account ID not found in the signed transaction",
-                    );
-                }
-
-                const nodeId = AccountId._fromProtobuf(body.nodeAccountID);
-                const transactionId = TransactionId._fromProtobuf(
-                    body.transactionID,
+                throw new Error(
+                    "Transaction ID or Node Account ID not found in the signed transaction",
                 );
-
-                const sig = this._key.sign(bodyBytes);
-                sigMap.addSignature(nodeId, transactionId, this.publicKey, sig);
-                //add the sig to the map
             }
+
+            const nodeId = AccountId._fromProtobuf(body.nodeAccountID);
+            const transactionId = TransactionId._fromProtobuf(
+                body.transactionID,
+            );
+            const sig = this._key.sign(bodyBytes);
+            sigMap.addSignature(nodeId, transactionId, this.publicKey, sig);
         }
 
         transaction.addSignature(this.publicKey, sigMap);
