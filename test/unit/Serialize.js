@@ -69,7 +69,6 @@ describe("Mix signing and serialization", function () {
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
         const serialized = serialize(tx);
-
         expect(serialized).equal(SERIALIZED);
     });
 
@@ -113,7 +112,6 @@ describe("Mix signing and serialization", function () {
         let tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
-
         tx = deserialize(serialize(tx));
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
