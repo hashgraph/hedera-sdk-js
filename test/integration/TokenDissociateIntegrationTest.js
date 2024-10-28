@@ -24,8 +24,6 @@ describe("TokenDissociate", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generateED25519();
@@ -107,8 +105,6 @@ describe("TokenDissociate", function () {
     });
 
     it("should be executable even when no token IDs are set", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
 
         await (
@@ -119,8 +115,6 @@ describe("TokenDissociate", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(120000);
-
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
@@ -159,8 +153,6 @@ describe("TokenDissociate", function () {
     });
 
     it("cannot dissociate account which owns NFTs", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
