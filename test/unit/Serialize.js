@@ -69,7 +69,7 @@ describe("Mix signing and serialization", function () {
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
         const serialized = serialize(tx);
-        expect(serialized).equal(SERIALIZED);
+        expect(serialized).equals(SERIALIZED);
     });
 
     it("Call serialize before signing without using it", function () {
