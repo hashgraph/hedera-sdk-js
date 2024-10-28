@@ -101,7 +101,7 @@ export default class TokenUpdateNftsTransaction extends Transaction {
         const body = bodies[0];
         const tokenUpdate =
             /** @type {HashgraphProto.proto.ITokenUpdateNftsTransactionBody} */ (
-                body.tokenUpdate
+                body.tokenUpdateNfts
             );
 
         return Transaction._fromProtobufTransactions(
