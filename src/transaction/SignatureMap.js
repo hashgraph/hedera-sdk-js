@@ -82,5 +82,18 @@ export default class SignatureMap extends ObjectMap {
 
         nodeAccountIdSigdMap.addSignature(txId, publicKey, signature);
         this._set(nodeId, nodeAccountIdSigdMap);
+    /**
+     * @returns {SignaturePairMap[]}
+     */
+    getFlatSignatureList() {
+        const flatSignatureList = [];
+
+        for (const nodeAccountIdSignatureMap of this.values()) {
+            for (const tx of nodeAccountIdSignatureMap.values()) {
+                flatSignatureList.push(tx);
+            }
+        }
+
+        return flatSignatureList;
     }
 }
