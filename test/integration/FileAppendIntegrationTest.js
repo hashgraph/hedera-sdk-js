@@ -1,4 +1,5 @@
 import {
+    AccountId,
     FileAppendTransaction,
     FileContentsQuery,
     FileCreateTransaction,
@@ -441,6 +442,35 @@ describe("FileAppend", function () {
         expect(transaction.transactionId).to.be.deep.equal(
             deserializedTransaction.transactionId,
         );
+    });
+
+    it("should serialize an incomplete transaction with node account ids set", async function () {
+        const chunkSize = 1024;
+        const chunkInterval = 230;
+        const nodeAccountIds = [
+            AccountId.fromString("0.0.3"),
+            AccountId.fromString("0.0.4"),
+        ];
+        const tx = new FileAppendTransaction()
+            .setNodeAccountIds(nodeAccountIds)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.nodeAccountIds).to.have.length(2);
+        expect(txFromBytes.nodeAccountIds[0]).to.be.deep.equal(
+            nodeAccountIds[0],
+        );
+        expect(txFromBytes.nodeAccountIds[1]).to.be.deep.equal(
+            nodeAccountIds[1],
+        );
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
+        expect(txFromBytes.contents).to.be.deep.equal(newContents);
     });
 
     after(async function () {
