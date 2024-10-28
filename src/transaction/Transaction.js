@@ -804,7 +804,10 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     addSignature(publicKey, signatureMap) {
-        //const txSignatures = signatureMap.get(accountId)?.get(transactionId);
+        // If the transaction isn't frozen, freeze it.
+        if (!this.isFrozen()) {
+            this.freeze();
+        }
 
         const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
@@ -840,7 +843,7 @@ export default class Transaction extends Executable {
                         signedTransaction.bodyBytes,
                     );
 
-                if (transactionID == null || nodeAccountID == null) {
+                if (!transactionID || !nodeAccountID) {
                     throw new Error(
                         "Transaction ID or Node Account ID not found in the signed transaction",
                     );
@@ -855,10 +858,13 @@ export default class Transaction extends Executable {
                     ?.get(transactionId)
                     ?.get(publicKey);
 
-                if (signature) {
-                    const sigPair = publicKey._toProtobufSignature(signature);
-                    signedTransaction.sigMap?.sigPair?.push(sigPair);
+                if (!signature) {
+                    throw new Error(
+                        "Signature not found for the transaction and public key",
+                    );
                 }
+                const sigPair = publicKey._toProtobufSignature(signature);
+                signedTransaction.sigMap?.sigPair?.push(sigPair);
             }
         }
 
