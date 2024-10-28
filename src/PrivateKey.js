@@ -24,6 +24,8 @@ import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
 import SignatureMap from "./transaction/SignatureMap.js";
+import AccountId from "./account/AccountId.js";
+import TransactionId from "./transaction/TransactionId.js";
 import { proto } from "@hashgraph/proto";
 import { AccountId, TransactionId } from "./exports.js";
 
@@ -37,6 +39,7 @@ import { AccountId, TransactionId } from "./exports.js";
  * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
  * @typedef {import("@hashgraph/proto").proto.ISignaturePair} HashgraphProto.proto.ISignaturePair
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  */
 
 export default class PrivateKey extends Key {
