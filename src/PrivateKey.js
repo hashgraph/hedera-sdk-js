@@ -336,6 +336,7 @@ export default class PrivateKey extends Key {
         const sigMap = new SignatureMap();
         for (const signedTransaction of transaction._signedTransactions.list) {
             const bodyBytes = signedTransaction.bodyBytes;
+            if (!bodyBytes) throw new Error("Body bytes are missing");
 
             if (bodyBytes) {
                 const body = proto.TransactionBody.decode(bodyBytes);
