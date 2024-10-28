@@ -37,8 +37,10 @@ describe("PrivateKey signTransaction", function () {
 
         transaction.addSignature(privateKey.publicKey, sigMap);
 
-        const sigs = transaction.getSignatures().getFlatSignatureList();
-        expect(sigs.length).to.equal(1);
+        const sigPairMaps = transaction.getSignatures().getFlatSignatureList();
+        for (const sigPairMap of sigPairMaps) {
+            expect(sigPairMap.get(privateKey.publicKey)).to.equal(sig);
+        }
     });
 
     it("should throw an error if bodyBytes are missing", async function () {
@@ -91,9 +93,19 @@ describe("PrivateKey signTransaction", function () {
         });
         multisignatureTransaction.addSignature(privateKey.publicKey, sigMap);
 
-        const flatSigs = multisignatureTransaction
+        const txSigPairMaps = multisignatureTransaction
             .getSignatures()
             .getFlatSignatureList();
-        expect(flatSigs.length).to.equal(contents.length);
+
+        /*  Check if all the signatures are added to the transaction. This works 
+            because the transaction signatures are added in the same order as the
+            sigmap signatures.
+        */
+        for (const txSigPairMap of txSigPairMaps) {
+            expect(txSigPairMap.get(privateKey.publicKey)).to.equal(
+                sigs.shift(),
+            );
+        }
+        expect(txSigPairMaps.length).to.equal(contents.length);
     });
 });

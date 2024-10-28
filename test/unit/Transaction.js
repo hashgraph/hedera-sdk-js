@@ -99,15 +99,18 @@ describe("Transaction", function () {
         expect(key1.publicKey.verifyTransaction(transaction)).to.be.true;
         expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
 
-        const signatures = transaction.getSignatures();
-        expect(signatures.size).to.be.equal(1);
+        const sigMap = transaction.getSignatures();
+        expect(sigMap.size).to.be.equal(1);
 
-        for (const [nodeAccountId, nodeSignatures] of signatures) {
+        for (const [nodeAccountId, nodeSignatures] of sigMap) {
             const transactionSignatures = nodeSignatures.get(
                 transaction.transactionId,
             );
             expect(nodeAccountId.toString()).equals("0.0.6");
             expect(transactionSignatures.size).to.be.equal(2);
+            expect(transactionSignatures.get(key1.publicKey)).to.not.be.null;
+            expect(transactionSignatures.get(key2.publicKey)).to.not.be.null;
+
             for (const [publicKey] of transactionSignatures) {
                 expect(publicKey.verifyTransaction(transaction)).to.be.true;
             }
@@ -336,6 +339,7 @@ describe("Transaction", function () {
             const sigMap = new SignatureMap();
             const pubKey = account.publicKey;
 
+            const signaturesArray = [];
             for (const tx of transaction._signedTransactions.list) {
                 //                const sig = op.sign(txChunk.bodyBytes);
                 const txBody = HashgraphProto.proto.TransactionBody.decode(
@@ -347,17 +351,26 @@ describe("Transaction", function () {
                 );
                 const sig = account.sign(tx.bodyBytes);
                 sigMap.addSignature(nodeAccountId, txId, pubKey, sig);
+                signaturesArray.push(sig);
             }
 
             transaction.addSignature(pubKey, sigMap);
 
-            const signatures = transaction
+            const sigPairMap = transaction
                 .getSignatures()
                 .getFlatSignatureList();
 
-            expect(signatures.length).to.equal(
+            expect(sigPairMap.length).to.equal(
                 transaction._signedTransactions.length,
             );
+
+            /*
+             This works because the order of the signatures in the sigPairMap
+             is the same as the order of the signatures in the transaction.
+            */
+            for (const sigPair of sigPairMap) {
+                expect(sigPair.get(pubKey)).to.equal(signaturesArray.shift());
+            }
         });
     });
 
