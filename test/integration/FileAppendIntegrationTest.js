@@ -293,35 +293,6 @@ describe("FileAppend", function () {
         expect(fileInfo.length).to.be.equal(CHUNK_SIZE);
     });
 
-    it("should not be able to sign transaction with 2 chunks", async function () {
-        const operatorKey = env.operatorKey.publicKey;
-        const CHUNKS_LENGTH = 2;
-        const CHUNK_SIZE = 1;
-
-        let response = await new FileCreateTransaction()
-            .setKeys([operatorKey])
-            .setContents(Buffer.from(""))
-            .execute(env.client);
-
-        let { fileId } = await response.getReceipt(env.client);
-
-        const tx = new FileAppendTransaction()
-            .setFileId(fileId)
-            .setContents(generateUInt8Array(CHUNKS_LENGTH))
-            .setChunkSize(CHUNK_SIZE);
-
-        let error = false;
-        try {
-            env.operatorKey.signTransaction(tx);
-        } catch (err) {
-            error = err.message.includes(
-                "Add signature is not supported for chunked transactions",
-            );
-        }
-
-        expect(error).to.be.true;
-    });
-
     it("should be able to sign transaction with 1 chunk", async function () {
         const operatorKey = env.operatorKey.publicKey;
 

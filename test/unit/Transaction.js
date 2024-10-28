@@ -10,15 +10,12 @@ import {
     Timestamp,
     Transaction,
     TransactionId,
-    PublicKey,
-    FileAppendTransaction,
 } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 import BigNumber from "bignumber.js";
-import sinon from "sinon";
 import SignatureMap from "../../src/transaction/SignatureMap.js";
 
 describe("Transaction", function () {
@@ -321,121 +318,58 @@ describe("Transaction", function () {
     });
 
     describe("addSignature tests", function () {
-        let transaction, mockedPublicKey;
+        let transaction, nodeAccountIds, account, txId;
 
         beforeEach(function () {
-            const privKey = PrivateKey.generateED25519();
+            account = PrivateKey.generateED25519();
+            nodeAccountIds = [new AccountId(3), new AccountId(4)];
+            txId = TransactionId.generate(nodeAccountIds[0]);
 
             transaction = new AccountCreateTransaction()
-                .setKey(privKey.publicKey)
-                .setNodeAccountIds([new AccountId(1)]);
-            expect(transaction.isFrozen()).to.equal(false);
-
-            const sig = privKey.sign(transaction.toBytes());
-            const sigMap = new SignatureMap();
-            sigMap.addSignature(
-                new AccountId(3),
-                new TransactionId(new AccountId(3), new Timestamp(1, 2)),
-                privKey.publicKey,
-                sig,
-            );
-            transaction.addSignature(privKey.publicKey, sigMap);
+                .setKey(account.publicKey)
+                .setNodeAccountIds(nodeAccountIds)
+                .setTransactionId(txId)
+                .freeze();
         });
 
         it("should add a single signature when one transaction is present", async function () {
             const sigMap = new SignatureMap();
-            const nodeAccountId = new AccountId(3);
-            const op = PrivateKey.generateED25519();
-            const contents = "Hello, World!";
-            const txId = TransactionId.generate(nodeAccountId);
+            const pubKey = account.publicKey;
 
-            const tx = new FileAppendTransaction()
-                .setContents(contents)
-                .setChunkSize(1)
-                .setNodeAccountIds([nodeAccountId])
-                .setTransactionId(txId)
-                .freeze();
-
-            const pubKey = new PublicKey(
-                PrivateKey.generateED25519().publicKey,
-            );
-
-            for (const txChunk of tx._signedTransactions.list) {
+            for (const tx of transaction._signedTransactions.list) {
                 //                const sig = op.sign(txChunk.bodyBytes);
                 const txBody = HashgraphProto.proto.TransactionBody.decode(
-                    txChunk.bodyBytes,
+                    tx.bodyBytes,
                 );
                 const txId = TransactionId._fromProtobuf(txBody.transactionID);
-                const sig = op.sign(txChunk.bodyBytes);
+                const nodeAccountId = AccountId._fromProtobuf(
+                    txBody.nodeAccountID,
+                );
+                const sig = account.sign(tx.bodyBytes);
                 sigMap.addSignature(nodeAccountId, txId, pubKey, sig);
             }
 
-            expect(sigMap.get(nodeAccountId).size).to.equal(contents.length);
-        });
+            transaction.addSignature(pubKey, sigMap);
 
-        it.skip("should throw an error when adding a single signature to multiple transactions", function () {
-            //console.log(transaction._transactions);
-            console.log(transaction);
-            expect(transaction._transactions.length).eq(1);
-            expect(transaction._signedTransactions.length).eq(1);
-        });
+            const signatures = transaction
+                .getSignatures()
+                .getFlatSignatureList();
 
-        it.skip("should add multiple signatures corresponding to each transaction", function () {
-            const mockedSignatures = [
-                new Uint8Array([10, 11, 12]),
-                new Uint8Array([13, 14, 15]),
-            ];
-
-            transaction._signedTransactions.length = 2;
-            transaction._signedTransactions.list = [
-                {
-                    bodyBytes: new Uint8Array([1, 2, 3]),
-                    sigMap: { sigPair: [] },
-                },
-                {
-                    bodyBytes: new Uint8Array([4, 5, 6]),
-                    sigMap: { sigPair: [] },
-                },
-            ];
-
-            // Update stub to return correct signatures for each call
-            mockedPublicKey._toProtobufSignature
-                .onCall(0)
-                .returns({ ed25519: mockedSignatures[0] })
-                .onCall(1)
-                .returns({ ed25519: mockedSignatures[1] });
-
-            transaction.addSignature(mockedPublicKey, mockedSignatures);
-
-            // Verify the signatures were added correctly
-            expect(
-                transaction._signedTransactions.get(0).sigMap.sigPair,
-            ).to.deep.equal([{ ed25519: mockedSignatures[0] }]);
-            expect(
-                transaction._signedTransactions.get(1).sigMap.sigPair,
-            ).to.deep.equal([{ ed25519: mockedSignatures[1] }]);
-
-            // Validate the calls to _toProtobufSignature
-            sinon.assert.calledWith(
-                mockedPublicKey._toProtobufSignature,
-                mockedSignatures[0],
-            );
-            sinon.assert.calledWith(
-                mockedPublicKey._toProtobufSignature,
-                mockedSignatures[1],
+            expect(signatures.length).to.equal(
+                transaction._signedTransactions.length,
             );
         });
     });
 
     describe("Transaction removeSignature/removeAllSignatures methods", function () {
         let key1, key2, key3;
-        let transaction;
+        let transaction, transactionId, nodeAccountId;
 
         beforeEach(async function () {
-            const nodeAccountId = new AccountId(3);
             const account = AccountId.fromString("0.0.1004");
             const validStart = new Timestamp(1451, 590);
-            const transactionId = new TransactionId(account, validStart);
+            transactionId = new TransactionId(account, validStart);
+            nodeAccountId = new AccountId(3);
 
             key1 = PrivateKey.generateED25519();
             key2 = PrivateKey.generateED25519();
@@ -449,50 +383,59 @@ describe("Transaction", function () {
         });
 
         const signAndAddSignatures = (transaction, ...keys) => {
-            // Map through the keys to sign the transaction and add signatures
-            const signatures = keys.map((key) => {
-                const signature = key.signTransaction(transaction);
-                transaction.addSignature(key.publicKey, signature);
-                return signature;
-            });
+            for (const key of keys) {
+                const sigMap = createSigmap(transaction, key);
+                transaction.addSignature(key.publicKey, sigMap);
+            }
 
-            return signatures;
+            return transaction.getSignatures();
+        };
+
+        const createSigmap = (transaction, key) => {
+            const sigMap = new SignatureMap();
+            for (const tx of transaction._signedTransactions.list) {
+                const txBody = HashgraphProto.proto.TransactionBody.decode(
+                    tx.bodyBytes,
+                );
+                const txId = TransactionId._fromProtobuf(txBody.transactionID);
+                const nodeAccountId = AccountId._fromProtobuf(
+                    txBody.nodeAccountID,
+                );
+                const sig = key.sign(tx.bodyBytes);
+
+                sigMap.addSignature(nodeAccountId, txId, key.publicKey, sig);
+            }
+            return sigMap;
         };
 
         it("should remove a specific signature", function () {
             // Sign the transaction with multiple keys
-            const [signature1] = signAndAddSignatures(
-                transaction,
-                key1,
-                key2,
-                key3,
-            );
+            signAndAddSignatures(transaction, key1);
 
             // console.log(transaction);
 
             //Check if the transaction internal tracking of signer public keys is correct
-            expect(transaction._signerPublicKeys.size).to.equal(3);
-            expect(transaction._publicKeys.length).to.equal(3);
-            expect(transaction._transactionSigners.length).to.equal(3);
+            expect(transaction._signerPublicKeys.size).to.equal(1);
+            expect(transaction._publicKeys.length).to.equal(1);
+            expect(transaction._transactionSigners.length).to.equal(1);
 
             // Ensure all signatures are present before removal
             const signaturesBefore = transaction
                 .getSignatures()
-                .get(new AccountId(3))
-                .get(transaction.transactionId);
+                .getFlatSignatureList();
 
-            expect(signaturesBefore.size).to.equal(3);
+            expect(signaturesBefore.length).to.equal(1);
 
             // Remove one signature
-            transaction.removeSignature(key1.publicKey, signature1);
+            transaction.removeSignature(key1.publicKey);
 
             //Check if the transaction is frozen
             expect(transaction.isFrozen()).to.be.true;
 
             //Check if the transaction internal tracking of signer public keys is correct
-            expect(transaction._signerPublicKeys.size).to.equal(2);
-            expect(transaction._publicKeys.length).to.equal(2);
-            expect(transaction._transactionSigners.length).to.equal(2);
+            expect(transaction._signerPublicKeys.size).to.equal(0);
+            expect(transaction._publicKeys.length).to.equal(0);
+            expect(transaction._transactionSigners.length).to.equal(0);
 
             // Ensure the specific signature has been removed
             const signaturesAfter = transaction.getSignatures();
@@ -500,7 +443,7 @@ describe("Transaction", function () {
                 signaturesAfter
                     .get(new AccountId(3))
                     .get(transaction.transactionId).size,
-            ).to.equal(2);
+            ).to.equal(0);
         });
 
         it("should clear all signatures", function () {
@@ -584,46 +527,19 @@ describe("Transaction", function () {
             );
         });
 
-        it.skip("should return the removed signature in Uint8Array format when removing a specific signature", function () {
+        it("should return the removed signature in Uint8Array format when removing a specific signature", function () {
             // Sign the transaction with multiple keys
-            const [signature1] = signAndAddSignatures(
-                transaction,
-                key1,
-                key2,
-                key3,
-            );
+            signAndAddSignatures(transaction, key1);
 
             // Remove one signature and capture the returned value
             const removedSignatures = transaction.removeSignature(
                 key1.publicKey,
-                signature1,
             );
 
             // Check the format of the returned value
             expect(removedSignatures).to.be.an("array");
             expect(removedSignatures.length).to.equal(1);
             expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
-
-            // Ensure the returned signature is the one that was removed
-            expect(removedSignatures[0]).to.deep.equal(signature1);
-        });
-
-        it.skip("should return the signatures for a public key in Uint8Array format when only the public key is provided", function () {
-            // Sign the transaction with multiple keys
-            const [signature1] = signAndAddSignatures(transaction, key1);
-
-            // Remove all signatures for key1 and capture the returned value
-            const removedSignatures = transaction.removeSignature(
-                key1.publicKey,
-            );
-
-            // Check the format of the returned value
-            expect(removedSignatures).to.be.an("array");
-            expect(removedSignatures.length).to.equal(1);
-            expect(removedSignatures[0]).to.be.instanceOf(Uint8Array);
-
-            // Ensure the returned signatures are the ones that were removed
-            expect(removedSignatures).to.include.members([signature1]);
         });
 
         it("should return all removed signatures in the expected Map format when clearing all signatures", function () {

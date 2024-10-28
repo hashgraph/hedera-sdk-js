@@ -114,8 +114,8 @@ describe("Mix signing and serialization", function () {
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
 
-        //tx = deserialize(serialize(tx));
-        //const serialized = serialize(tx);
-        //expect(serialized).equals(SERIALIZED);
+        tx = deserialize(serialize(tx));
+        const serialized = serialize(tx);
+        expect(serialized).equals(SERIALIZED);
     });
 });
