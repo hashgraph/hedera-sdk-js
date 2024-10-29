@@ -85,20 +85,18 @@ export default class SignatureMap extends ObjectMap {
      * @returns {SignatureMap}
      */
     addSignature(nodeId, txId, publicKey, signature) {
-        if (!this.get(nodeId)) {
-            this._set(nodeId, new NodeAccountIdSignatureMap());
-        }
+        let nodeAccountIdSigdMap = this.get(nodeId);
 
-        const nodeAccountIdSigdMap = this.get(nodeId);
         if (!nodeAccountIdSigdMap) {
-            throw new Error("Node Account ID Signature Map not found");
+            nodeAccountIdSigdMap = new NodeAccountIdSignatureMap();
+            this._set(nodeId, nodeAccountIdSigdMap);
         }
 
         nodeAccountIdSigdMap.addSignature(txId, publicKey, signature);
         this._set(nodeId, nodeAccountIdSigdMap);
+
         return this;
     }
-
     /**
      * @returns {SignaturePairMap[]}
      */
