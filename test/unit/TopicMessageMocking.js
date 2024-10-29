@@ -83,5 +83,4 @@ describe("TopicMessageMocking", function () {
 
         expect(messageProcessed).to.be.false;
     });
-
 });

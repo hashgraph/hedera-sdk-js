@@ -30,7 +30,7 @@ describe("TokenUpdateNftsTransaction", function () {
             signedTransactions,
             transactionIds,
             nodeIds,
-            bodies
+            bodies,
         );
 
         expect(transaction._tokenId.toString()).to.eql(tokenId);
