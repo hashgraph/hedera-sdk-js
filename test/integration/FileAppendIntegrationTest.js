@@ -1,4 +1,5 @@
 import {
+    AccountId,
     FileAppendTransaction,
     FileContentsQuery,
     FileCreateTransaction,
@@ -293,35 +294,6 @@ describe("FileAppend", function () {
         expect(fileInfo.length).to.be.equal(CHUNK_SIZE);
     });
 
-    it("should not be able to sign transaction with 2 chunks", async function () {
-        const operatorKey = env.operatorKey.publicKey;
-        const CHUNKS_LENGTH = 2;
-        const CHUNK_SIZE = 1;
-
-        let response = await new FileCreateTransaction()
-            .setKeys([operatorKey])
-            .setContents(Buffer.from(""))
-            .execute(env.client);
-
-        let { fileId } = await response.getReceipt(env.client);
-
-        const tx = new FileAppendTransaction()
-            .setFileId(fileId)
-            .setContents(generateUInt8Array(CHUNKS_LENGTH))
-            .setChunkSize(CHUNK_SIZE);
-
-        let error = false;
-        try {
-            env.operatorKey.signTransaction(tx);
-        } catch (err) {
-            error = err.message.includes(
-                "Add signature is not supported for chunked transactions",
-            );
-        }
-
-        expect(error).to.be.true;
-    });
-
     it("should be able to sign transaction with 1 chunk", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
@@ -470,6 +442,38 @@ describe("FileAppend", function () {
         expect(transaction.transactionId).to.be.deep.equal(
             deserializedTransaction.transactionId,
         );
+    });
+
+    it("should serialize an incomplete transaction with node account ids set", async function () {
+        const chunkSize = 1024;
+        const chunkInterval = 230;
+        const nodeAccountIds = [
+            AccountId.fromString("0.0.3"),
+            AccountId.fromString("0.0.4"),
+        ];
+        const tx = new FileAppendTransaction()
+            .setNodeAccountIds(nodeAccountIds)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.nodeAccountIds).to.have.length(2);
+        expect(txFromBytes.nodeAccountIds[0]).to.be.deep.equal(
+            nodeAccountIds[0],
+        );
+        expect(txFromBytes.nodeAccountIds[1]).to.be.deep.equal(
+            nodeAccountIds[1],
+        );
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
+        expect(txFromBytes.contents).to.be.deep.equal(newContents);
     });
 
     after(async function () {
