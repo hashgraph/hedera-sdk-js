@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.53.0-beta.2
+## v2.53.0-beta.3
 
 ## What's Changed
 
+* fix: comment-out-not-working-examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2620
+* feat: adding account 32, 33, and 34 endpoints to the clientconstants.js by @rustyShacklefurd in https://github.com/hashgraph/hedera-sdk-js/pull/2607
 * feat: Refactor SignatureMap for Multi-Transaction Support in _signedTransactions by @ivaylonikolov7 and @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2601
 * feat: tokenTransfer property exposed in AbstractTokenTransferTransaction by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2616
 * feat: example for get file contents by @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2578
