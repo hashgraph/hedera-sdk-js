@@ -123,6 +123,7 @@ export { default as ScheduleInfo } from "./schedule/ScheduleInfo.js";
 export { default as ScheduleInfoQuery } from "./schedule/ScheduleInfoQuery.js";
 export { default as ScheduleSignTransaction } from "./schedule/ScheduleSignTransaction.js";
 export { default as SemanticVersion } from "./network/SemanticVersion.js";
+export { default as SignatureMap } from "./transaction/SignatureMap.js";
 export { default as Signer } from "./Signer.js";
 export { default as SignerSignature } from "./SignerSignature.js";
 export { default as Status } from "./Status.js";

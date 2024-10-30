@@ -140,10 +140,18 @@ describe("TransactionIntegration", function () {
 
         const nodeSignatures = signatures.get(nodeAccountId);
 
-        const publicKey1Signature = nodeSignatures.get(publicKey1);
-        const publicKey2Signature = nodeSignatures.get(publicKey2);
-        const publicKey3Signature = nodeSignatures.get(publicKey3);
-        const publicKey4Signature = nodeSignatures.get(publicKey4);
+        const publicKey1Signature = nodeSignatures
+            .get(transaction.transactionId)
+            .get(publicKey1);
+        const publicKey2Signature = nodeSignatures
+            .get(transaction.transactionId)
+            .get(publicKey2);
+        const publicKey3Signature = nodeSignatures
+            .get(transaction.transactionId)
+            .get(publicKey3);
+        const publicKey4Signature = nodeSignatures
+            .get(transaction.transactionId)
+            .get(publicKey4);
 
         expect(publicKey1Signature).to.be.not.null;
         expect(publicKey2Signature).to.be.not.null;

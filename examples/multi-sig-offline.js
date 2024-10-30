@@ -1,3 +1,4 @@
+/*
 import {
     Client,
     PrivateKey,
@@ -14,9 +15,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 /** @type {PrivateKey | undefined} */
+/*
 let user1Key;
 
 /** @type {PrivateKey | undefined} */
+/*
 let user2Key;
 
 async function main() {
@@ -91,6 +94,7 @@ async function main() {
  * @param {Uint8Array} transactionBytes
  * @returns {Uint8Array | Uint8Array[]}
  */
+/*
 function user1Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);
     return user1Key.signTransaction(transaction);
@@ -100,9 +104,11 @@ function user1Signs(transactionBytes) {
  * @param {Uint8Array} transactionBytes
  * @returns {Uint8Array | Uint8Array[]}
  */
+/*
 function user2Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);
     return user2Key.signTransaction(transaction);
 }
 
 void main();
+*/
