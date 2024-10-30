@@ -4,14 +4,16 @@ import {
     Hbar,
     AccountId,
     KeyList,
-    Transaction,
     Status,
     FileAppendTransaction,
     FileCreateTransaction,
+    TransactionId,
 } from "../../src/exports.js";
 import dotenv from "dotenv";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import SignatureMap from "../../src/transaction/SignatureMap.js";
 
+import { proto } from "@hashgraph/proto";
 import { expect } from "chai";
 
 dotenv.config();
@@ -42,15 +44,13 @@ describe("PrivateKey signTransaction", function () {
         expect(createdAccountId).to.exist;
     });
 
-    // this skip is temporary before we implement this feature
-    // in the next beta release
+    // this skip is temporary before we add SOLO for the CI tests
+    // as currently its unable to run the test with multiple nodes
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("File Append Transaction Execution with Multiple Nodes", async function () {
-        const operatorKey = env.operatorKey.publicKey;
-
         // Create file
         let response = await new FileCreateTransaction()
-            .setKeys([operatorKey])
+            .setKeys([env.operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -60,7 +60,8 @@ describe("PrivateKey signTransaction", function () {
         // Append content to the file
         const fileAppendTx = new FileAppendTransaction()
             .setFileId(file)
-            .setContents("[e2e::FileAppendTransaction]")
+            .setContents("test")
+            .setChunkSize(1)
             .setNodeAccountIds([
                 new AccountId(3),
                 new AccountId(4),
@@ -68,21 +69,31 @@ describe("PrivateKey signTransaction", function () {
             ])
             .freezeWith(env.client);
 
-        // Serialize and sign the transaction
-        const fileAppendTransactionBytes = fileAppendTx.toBytes();
-        const user1Signatures = user1Key.signTransaction(fileAppendTx);
-        const user2Signatures = user2Key.signTransaction(fileAppendTx);
+        const sigMap = new SignatureMap();
+        fileAppendTx._signedTransactions.list.forEach((signedTx) => {
+            const sig = env.operatorKey.sign(signedTx.bodyBytes);
+            const decodedTx = proto.TransactionBody.decode(signedTx.bodyBytes);
+            const nodeId = AccountId._fromProtobuf(decodedTx.nodeAccountID);
+            const transactionId = TransactionId._fromProtobuf(
+                decodedTx.transactionID,
+            );
 
-        // Deserialize the transaction and add signatures
-        const signedTransaction = Transaction.fromBytes(
-            fileAppendTransactionBytes,
-        );
-        signedTransaction.addSignature(user1Key.publicKey, user1Signatures);
-        signedTransaction.addSignature(user2Key.publicKey, user2Signatures);
+            sigMap.addSignature(
+                nodeId,
+                transactionId,
+                env.operatorKey.publicKey,
+                sig,
+            );
+        });
+
+        //console.log(sigMap);
+
+        fileAppendTx.addSignature(env.operatorKey.publicKey, sigMap);
 
         // Execute the signed transaction
-        const result = await signedTransaction.execute(env.client);
-        const receipt = await result.getReceipt(env.client);
+        const receipt = await (
+            await fileAppendTx.execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.status).to.be.equal(Status.Success);
     });

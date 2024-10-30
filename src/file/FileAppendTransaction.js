@@ -60,6 +60,7 @@ export default class FileAppendTransaction extends Transaction {
      * @param {Uint8Array | string} [props.contents]
      * @param {number} [props.maxChunks]
      * @param {number} [props.chunkSize]
+     * @param {number} [props.chunkInterval]
      */
     constructor(props = {}) {
         super();
@@ -88,6 +89,12 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._chunkSize = 4096;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this._chunkInterval = 10;
+
         this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.fileId != null) {
@@ -104,6 +111,10 @@ export default class FileAppendTransaction extends Transaction {
 
         if (props.chunkSize != null) {
             this.setChunkSize(props.chunkSize);
+        }
+
+        if (props.chunkInterval != null) {
+            this.setChunkInterval(props.chunkInterval);
         }
 
         /** @type {List<TransactionId>} */
@@ -167,6 +178,20 @@ export default class FileAppendTransaction extends Transaction {
             );
             contents = concat;
         }
+        const chunkSize = append.contents?.length || undefined;
+        const maxChunks = bodies.length
+            ? bodies.length / incrementValue
+            : undefined;
+        let chunkInterval;
+        if (transactionIds.length > 1) {
+            const firstValidStart = transactionIds[0].validStart;
+            const secondValidStart = transactionIds[1].validStart;
+            if (firstValidStart && secondValidStart) {
+                chunkInterval = secondValidStart.nanos
+                    .sub(firstValidStart.nanos)
+                    .toNumber();
+            }
+        }
 
         return Transaction._fromProtobufTransactions(
             new FileAppendTransaction({
@@ -178,7 +203,10 @@ export default class FileAppendTransaction extends Transaction {
                               ),
                           )
                         : undefined,
-                contents: contents,
+                contents,
+                chunkSize,
+                maxChunks,
+                chunkInterval,
             }),
             transactions,
             signedTransactions,
@@ -227,12 +255,11 @@ export default class FileAppendTransaction extends Transaction {
      */
     getRequiredChunks() {
         if (this._contents == null) {
-            return 0;
+            return 1;
         }
 
-        const result = Math.floor(
-            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
-        );
+        const result = Math.ceil(this._contents.length / this._chunkSize);
+
         return result;
     }
 
@@ -301,6 +328,22 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @returns {number}
+     */
+    get chunkInterval() {
+        return this._chunkInterval;
+    }
+
+    /**
+     * @param {number} chunkInterval The valid start interval between chunks in nanoseconds
+     * @returns {this}
+     */
+    setChunkInterval(chunkInterval) {
+        this._chunkInterval = chunkInterval;
+        return this;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -344,7 +387,7 @@ export default class FileAppendTransaction extends Transaction {
                     ).seconds,
                     /** @type {Timestamp} */ (
                         nextTransactionId.validStart
-                    ).nanos.add(1),
+                    ).nanos.add(this._chunkInterval),
                 ),
             );
         }
@@ -465,9 +508,9 @@ export default class FileAppendTransaction extends Transaction {
      */
     _buildIncompleteTransactions() {
         const dummyAccountId = AccountId.fromString("0.0.0");
-        if (this._contents == null) {
-            throw new Error("contents is not set");
-        }
+        const accountId = this.transactionId?.accountId || dummyAccountId;
+        const validStart =
+            this.transactionId?.validStart || Timestamp.fromDate(new Date());
 
         if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
@@ -483,7 +526,10 @@ export default class FileAppendTransaction extends Transaction {
         this._signedTransactions.clear();
 
         for (let chunk = 0; chunk < this.getRequiredChunks(); chunk++) {
-            let nextTransactionId = TransactionId.generate(dummyAccountId);
+            let nextTransactionId = TransactionId.withValidStart(
+                accountId,
+                validStart.plusNanos(this._chunkInterval * chunk),
+            );
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
 
@@ -491,7 +537,7 @@ export default class FileAppendTransaction extends Transaction {
                 this._transactions.push(this._makeSignedTransaction(null));
             } else {
                 for (const nodeAccountId of this._nodeAccountIds.list) {
-                    this._signedTransactions.push(
+                    this._transactions.push(
                         this._makeSignedTransaction(nodeAccountId),
                     );
                 }

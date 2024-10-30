@@ -1,4 +1,5 @@
 import {
+    AccountId,
     FileAppendTransaction,
     FileContentsQuery,
     FileCreateTransaction,
@@ -6,6 +7,8 @@ import {
     FileInfoQuery,
     Hbar,
     Status,
+    Timestamp,
+    TransactionId,
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -22,6 +25,7 @@ describe("FileAppend", function () {
         newContents = generateUInt8Array(newContentsLength);
         operatorKey = env.operatorKey.publicKey;
     });
+
     it("should be executable", async function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
@@ -290,35 +294,6 @@ describe("FileAppend", function () {
         expect(fileInfo.length).to.be.equal(CHUNK_SIZE);
     });
 
-    it("should not be able to sign transaction with 2 chunks", async function () {
-        const operatorKey = env.operatorKey.publicKey;
-        const CHUNKS_LENGTH = 2;
-        const CHUNK_SIZE = 1;
-
-        let response = await new FileCreateTransaction()
-            .setKeys([operatorKey])
-            .setContents(Buffer.from(""))
-            .execute(env.client);
-
-        let { fileId } = await response.getReceipt(env.client);
-
-        const tx = new FileAppendTransaction()
-            .setFileId(fileId)
-            .setContents(generateUInt8Array(CHUNKS_LENGTH))
-            .setChunkSize(CHUNK_SIZE);
-
-        let error = false;
-        try {
-            env.operatorKey.signTransaction(tx);
-        } catch (err) {
-            error = err.message.includes(
-                "Add signature is not supported for chunked transactions",
-            );
-        }
-
-        expect(error).to.be.true;
-    });
-
     it("should be able to sign transaction with 1 chunk", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
@@ -349,6 +324,156 @@ describe("FileAppend", function () {
             await fromBytesTx.execute(env.client)
         ).getReceipt(env.client);
         expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should keep transaction id after non-frozen deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const chunkInterval = 230;
+        const validStart = Timestamp.fromDate(new Date());
+
+        const tx = new FileAppendTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(env.operatorId, validStart),
+            )
+            .setFileId(fileId)
+            .setChunkInterval(chunkInterval)
+            .setChunkSize(1000)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(
+            txFromBytes.transactionId.accountId._toProtobuf(),
+        ).to.be.deep.equal(env.operatorId?._toProtobuf());
+        expect(txFromBytes.transactionId.validStart).to.be.deep.equal(
+            validStart,
+        );
+
+        txFromBytes._transactionIds.list.forEach(
+            (transactionId, index, array) => {
+                if (index > 0) {
+                    const previousTimestamp = array[index - 1].validStart;
+                    const currentTimestamp = transactionId.validStart;
+                    const difference =
+                        currentTimestamp.nanos - previousTimestamp.nanos;
+                    expect(difference).to.be.equal(chunkInterval);
+                }
+            },
+        );
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should keep chunk size, chunk interval and correct max chunks after deserialization", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+        const chunkSize = 1024;
+        const chunkInterval = 230;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const tx = new FileAppendTransaction()
+            .setFileId(fileId)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
+
+        txFromBytes.freezeWith(env.client);
+        await txFromBytes.sign(env.operatorKey);
+
+        const receipt = await (
+            await txFromBytes.execute(env.client)
+        ).getReceipt(env.client);
+        expect(receipt.status).to.be.equal(Status.Success);
+    });
+
+    it("should return transaction bytes when content is empty", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+        const validStart = Timestamp.fromDate(new Date());
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(Buffer.from(""))
+            .execute(env.client);
+
+        let { fileId } = await response.getReceipt(env.client);
+
+        const transaction = new FileAppendTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(env.operatorId, validStart),
+            )
+            .setFileId(fileId);
+
+        const transactionBytes = transaction.toBytes();
+
+        const deserializedTransaction =
+            FileAppendTransaction.fromBytes(transactionBytes);
+
+        expect(transactionBytes.length).to.be.greaterThan(0);
+        expect(transaction.transactionId).to.be.deep.equal(
+            deserializedTransaction.transactionId,
+        );
+    });
+
+    it("should serialize an incomplete transaction with node account ids set", async function () {
+        const chunkSize = 1024;
+        const chunkInterval = 230;
+        const nodeAccountIds = [
+            AccountId.fromString("0.0.3"),
+            AccountId.fromString("0.0.4"),
+        ];
+        const tx = new FileAppendTransaction()
+            .setNodeAccountIds(nodeAccountIds)
+            .setChunkSize(chunkSize)
+            .setChunkInterval(chunkInterval)
+            .setMaxChunks(99999)
+            .setContents(newContents);
+
+        const txBytes = tx.toBytes();
+        const txFromBytes = FileAppendTransaction.fromBytes(txBytes);
+
+        expect(txFromBytes.nodeAccountIds).to.have.length(2);
+        expect(txFromBytes.nodeAccountIds[0]).to.be.deep.equal(
+            nodeAccountIds[0],
+        );
+        expect(txFromBytes.nodeAccountIds[1]).to.be.deep.equal(
+            nodeAccountIds[1],
+        );
+        expect(txFromBytes.chunkSize).to.be.equal(1024);
+        expect(txFromBytes.chunkInterval).to.be.equal(230);
+        expect(txFromBytes.maxChunks).to.be.equal(
+            txFromBytes.getRequiredChunks(),
+        );
+        expect(txFromBytes.contents).to.be.deep.equal(newContents);
     });
 
     after(async function () {
