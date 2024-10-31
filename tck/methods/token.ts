@@ -359,7 +359,6 @@ export const updateToken = async ({
     const receipt = await txResponse.getReceipt(sdk.getClient());
 
     return {
-        tokenId: receipt.tokenId?.toString() ?? tokenId,
         status: receipt.status.toString(),
     };
 };
