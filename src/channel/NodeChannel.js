@@ -100,6 +100,11 @@ export default class NodeChannel extends Channel {
                 : 10000;
             deadline.setMilliseconds(deadline.getMilliseconds() + milliseconds);
 
+            console.log(
+                "IP address of the request ->",
+                this._client.getChannel().getChannelzRef().name,
+            );
+
             this._client.waitForReady(deadline, (err) => {
                 if (err) {
                     callback(new GrpcServicesError(GrpcStatus.Timeout));
