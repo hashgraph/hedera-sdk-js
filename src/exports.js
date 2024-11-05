@@ -195,6 +195,7 @@ export { default as NodeCreateTransaction } from "./node/NodeCreateTransaction.j
 export { default as ServiceEndpoint } from "./node/ServiceEndpoint.js";
 export { default as NodeDeleteTransaction } from "./node/NodeDeleteTransaction.js";
 export { default as NodeUpdateTransaction } from "./node/NodeUpdateTransaction.js";
+export { default as LocalProvider } from "./LocalProvider.js";
 
 export { default as WebClient } from "./client/WebClient.js";
 
