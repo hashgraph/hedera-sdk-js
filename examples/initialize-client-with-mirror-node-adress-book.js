@@ -52,5 +52,7 @@ async function main() {
     } catch (error) {
         console.log(error);
     }
+
+    client.close();
 }
 void main();
