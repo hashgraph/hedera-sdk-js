@@ -3,6 +3,7 @@ import {
     Client,
     PrivateKey,
     Hbar,
+    AccountId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -24,15 +25,20 @@ async function main() {
         throw new Error("Please set required keys in .env file.");
     }
 
+    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
+
     const accountKey = PrivateKey.generate();
 
+    // Initialize the client with the testnet mirror node. This will also get the address book from the mirror node and
+    // use it to populate the Client's consensus network.
     const client = (
         await Client.forMirrorNetwork("testnet.mirrornode.hedera.com:443")
-    ).setOperator(process.env.OPERATOR_ID, process.env.OPERATOR_KEY);
+    ).setOperator(operatorId, operatorKey);
 
     try {
         let transaction = new AccountCreateTransaction()
-            .setInitialBalance(new Hbar(10)) // 10 h
+            .setInitialBalance(new Hbar(1))
             .setKey(accountKey)
             .freezeWith(client);
 

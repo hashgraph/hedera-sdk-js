@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Client, LedgerId } from "../../src/index.js";
 import AccountId from "../../src/account/AccountId.js";
 import NodeClient from "../../src/client/NodeClient.js";
+import MirrorNode from "../../src/MirrorNode.js";
 
 const ledgerId = LedgerId.LOCAL_NODE;
 
@@ -196,5 +197,39 @@ describe("Client", function () {
         expect(client.mirrorNetwork).to.deep.equal([
             "mainnet-public.mirrornode.hedera.com:443",
         ]);
+    });
+
+    describe("forMirrorNetwork method tests", function () {
+        it("should create a NodeClient with the specified mirror network", async function () {
+            const networkAddress = "testnet.mirrornode.hedera.com:443";
+
+            const client = await Client.forMirrorNetwork(networkAddress);
+
+            expect(client).to.be.instanceOf(NodeClient);
+
+            expect(client._mirrorNetwork._network.has(networkAddress)).to.be
+                .true;
+
+            const mirrorNode =
+                client._mirrorNetwork._network.get(networkAddress)[0];
+
+            expect(mirrorNode).to.be.an.instanceof(MirrorNode);
+            expect(mirrorNode._address).to.not.be.undefined;
+        });
+
+        it("should throw an error if network name is unknown", async function () {
+            try {
+                await Client.forMirrorNetwork("unknown-net");
+            } catch (error) {
+                expect(error.message).to.equal(
+                    "failed to parse address: unknown-net",
+                );
+            }
+        });
+
+        it("should set a default update period for network address book query", async function () {
+            const client = await NodeClient.forMirrorNetwork("testnet");
+            expect(client._networkUpdatePeriod).to.equal(86400000);
+        });
     });
 });
