@@ -30,8 +30,8 @@ import * as mainnet from "./addressbooks/mainnet.js";
 import * as testnet from "./addressbooks/testnet.js";
 import * as previewnet from "./addressbooks/previewnet.js";
 import * as hex from "../encoding/hex.js";
-import AddressBookQuery from "../../src/network/AddressBookQuery.js";
-import FileId from "../../src/file/FileId.js";
+import AddressBookQuery from "../network/AddressBookQuery.js";
+import FileId from "../file/FileId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
