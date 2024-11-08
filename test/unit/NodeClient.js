@@ -229,7 +229,7 @@ describe("Client", function () {
 
         it("should set a default update period for network address book query", async function () {
             const client = await NodeClient.forMirrorNetwork("testnet");
-            expect(client._networkUpdatePeriod).to.equal(86400000);
+            expect(client._networkUpdatePeriod).to.equal(10000);
         });
     });
 });
