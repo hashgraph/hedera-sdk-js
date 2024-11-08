@@ -176,7 +176,8 @@ export default class AddressBookQuery extends Query {
      * @returns {Promise<NodeAddressBook>}
      */
     execute(client, requestTimeout) {
-        if (!client._timer) {
+        // Extra validation when initializing the client with only a mirror network
+        if (client._network._network.size === 0 && !client._timer) {
             throw new Error(
                 "The client's network update period is required. Please set it using the setNetworkUpdatePeriod method.",
             );
