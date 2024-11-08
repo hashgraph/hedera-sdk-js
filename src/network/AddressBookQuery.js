@@ -176,6 +176,12 @@ export default class AddressBookQuery extends Query {
      * @returns {Promise<NodeAddressBook>}
      */
     execute(client, requestTimeout) {
+        if (!client._timer) {
+            throw new Error(
+                "The client's network update period is required. Please set it using the setNetworkUpdatePeriod method.",
+            );
+        }
+
         return new Promise((resolve, reject) => {
             this._makeServerStreamRequest(
                 client,
