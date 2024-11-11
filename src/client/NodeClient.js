@@ -200,7 +200,8 @@ export default class NodeClient extends Client {
 
         client
             .setMirrorNetwork(network)
-            .setNetworkUpdatePeriod(client.networkUpdatePeriod);
+            // @ts-ignore
+            ._scheduleNetworkUpdate();
 
         // Execute an address book query to get the network nodes
         const addressBook = await new AddressBookQuery()
