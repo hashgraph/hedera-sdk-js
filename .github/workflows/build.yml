@@ -18,6 +18,7 @@ defaults:
 
 permissions:
   contents: read
+  pull-requests: write
 
 env:
   CG_EXEC: ionice -c 2 -n 2 nice -n 19
@@ -129,7 +130,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
           fail_ci_if_error: false
-          verbose: true
 
       - name: Stop the local node
         id: stop-local-node
@@ -171,4 +171,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          verbose: true
