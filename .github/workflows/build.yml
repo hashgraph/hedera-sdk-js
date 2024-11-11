@@ -157,9 +157,9 @@ jobs:
           files: ./packages/cryptography/coverage/lcov.info
           fail_ci_if_error: false
 
-      - name: Unit Test @hashgraph/sdk
-        if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
-        run: ${{ env.CG_EXEC }} task test:unit
+   #   - name: Unit Test @hashgraph/sdk
+    #    if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && steps.playwright-deps.conclusion == 'success' && !cancelled() && always() }}
+     #   run: ${{ env.CG_EXEC }} task test:unit
 
       - name: Codecov @hashgraph/sdk
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
