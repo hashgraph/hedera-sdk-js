@@ -5,9 +5,6 @@ updates:
       schedule:
         interval: "daily"
       open-pull-requests-limit: 10
-      secrets:
-        CODECOV_TOKEN:
-          required: true
     - package-ecosystem: npm
       directory: "/"
       schedule:
