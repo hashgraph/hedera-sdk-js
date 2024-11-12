@@ -24,7 +24,7 @@ import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
 import Status from "./Status.js";
-import NodeInfoError from "./NodeInfoError.js";
+import MaxAttemptsOrTimeoutError from "./MaxAttemptsOrTimeoutError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -569,7 +569,7 @@ export default class Executable {
                 this._requestTimeout != null &&
                 startTime + this._requestTimeout <= Date.now()
             ) {
-                throw new NodeInfoError(
+                throw new MaxAttemptsOrTimeoutError(
                     `timeout exceeded`,
                     this._nodeAccountIds.current,
                 );
@@ -746,7 +746,7 @@ export default class Executable {
         // We'll only get here if we've run out of attempts, so we return an error wrapping the
         // persistent error we saved before.
 
-        throw new NodeInfoError(
+        throw new MaxAttemptsOrTimeoutError(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
             }`,

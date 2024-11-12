@@ -1,12 +1,12 @@
 import {
     AccountId,
-    NodeInfoError,
     TransferTransaction,
     Hbar,
+    MaxAttemptsOrTimeoutError,
 } from "../../src/index.js";
 import Mocker from "./Mocker.js";
 
-describe("NodeInfoError", function () {
+describe("MaxAttemptsOrTimeoutError", function () {
     let message;
     let nodeAccountId;
     let error;
@@ -15,11 +15,11 @@ describe("NodeInfoError", function () {
         message = "Test error message";
         nodeAccountId = new AccountId(3);
 
-        error = new NodeInfoError(message, nodeAccountId);
+        error = new MaxAttemptsOrTimeoutError(message, nodeAccountId);
     });
 
     it("should create an instance with correct properties", () => {
-        expect(error).to.be.instanceOf(NodeInfoError);
+        expect(error).to.be.instanceOf(MaxAttemptsOrTimeoutError);
         expect(error.message).to.be.equal(message);
         expect(error.nodeAccountId).to.be.equal(nodeAccountId);
     });

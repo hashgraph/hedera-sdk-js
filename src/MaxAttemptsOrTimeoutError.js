@@ -2,7 +2,7 @@
  * ‌
  * Hedera JavaScript SDK
  * ​
- * Copyright (C) 2020 - 2023 Hedera Hashgraph, LLC
+ * Copyright (C) 2020 - 2024 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@
  */
 
 /**
- * @typedef {object} NodeInfoErrorJSON
+ * @typedef {object} MaxAttemptsOrTimeoutErrorJSON
  * @property {string} message
  * @property {string} nodeAccountId
  *
  */
 
-export default class NodeInfoError extends Error {
+export default class MaxAttemptsOrTimeoutError extends Error {
     /**
      * @param {string} message
      * @param {AccountId} nodeAccountId
@@ -57,7 +57,7 @@ export default class NodeInfoError extends Error {
     }
 
     /**
-     * @returns {NodeInfoErrorJSON}
+     * @returns {MaxAttemptsOrTimeoutErrorJSON}
      */
     valueOf() {
         return this.toJSON();

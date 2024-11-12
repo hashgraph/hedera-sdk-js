@@ -186,7 +186,7 @@ export { default as FreezeType } from "./FreezeType.js";
 export { default as TokenKeyValidation } from "./token/TokenKeyValidation.js";
 
 export { default as StatusError } from "./StatusError.js";
-export { default as NodeInfoError } from "./NodeInfoError.js";
+export { default as MaxAttemptsOrTimeoutError } from "./MaxAttemptsOrTimeoutError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
