@@ -30,6 +30,8 @@ import * as mainnet from "./addressbooks/mainnet.js";
 import * as testnet from "./addressbooks/testnet.js";
 import * as previewnet from "./addressbooks/previewnet.js";
 import * as hex from "../encoding/hex.js";
+import AddressBookQuery from "../network/AddressBookQuery.js";
+import FileId from "../file/FileId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
@@ -187,6 +189,25 @@ export default class NodeClient extends Client {
      */
     static forTestnet(props = {}) {
         return new NodeClient({ network: "testnet", ...props });
+    }
+
+    /**
+     * @param {string[] | string} mirrorNetwork
+     * @returns {Promise<NodeClient>}
+     */
+    static async forMirrorNetwork(mirrorNetwork) {
+        const client = new NodeClient();
+
+        client.setMirrorNetwork(mirrorNetwork).setNetworkUpdatePeriod(10000);
+
+        // Execute an address book query to get the network nodes
+        const addressBook = await new AddressBookQuery()
+            .setFileId(FileId.ADDRESS_BOOK)
+            .execute(client);
+
+        client.setNetworkFromAddressBook(addressBook);
+
+        return client;
     }
 
     /**
