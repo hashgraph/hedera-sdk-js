@@ -571,7 +571,7 @@ export default class Executable {
             ) {
                 throw new MaxAttemptsOrTimeoutError(
                     `timeout exceeded`,
-                    this._nodeAccountIds.current,
+                    this._nodeAccountIds.current.toString(),
                 );
             }
 
@@ -750,7 +750,7 @@ export default class Executable {
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
             }`,
-            this._nodeAccountIds.current,
+            this._nodeAccountIds.current.toString(),
         );
     }
 

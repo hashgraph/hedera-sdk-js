@@ -13,7 +13,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
 
     beforeEach(function () {
         message = "Test error message";
-        nodeAccountId = new AccountId(3);
+        nodeAccountId = "0.0.3";
 
         error = new MaxAttemptsOrTimeoutError(message, nodeAccountId);
     });
@@ -27,7 +27,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
     it("toJSON should return correct JSON representation", () => {
         const expectedJson = {
             message,
-            nodeAccountId: nodeAccountId.toString(),
+            nodeAccountId,
         };
 
         expect(error.toJSON()).to.be.deep.equal(expectedJson);
@@ -36,7 +36,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
     it("toString should return a JSON string", () => {
         const expectedString = JSON.stringify({
             message,
-            nodeAccountId: nodeAccountId.toString(),
+            nodeAccountId,
         });
 
         expect(error.toString()).to.be.equal(expectedString);
@@ -67,7 +67,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
                 throw new Error("Expected request to time out but it didn't.");
             } catch (error) {
                 expect(error.message).to.include("timeout exceeded");
-                expect(error.nodeAccountId.toString()).to.equal("0.0.5");
+                expect(error.nodeAccountId).to.equal("0.0.5");
             }
         });
 
@@ -84,7 +84,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
                 expect(error.message).to.include(
                     "max attempts of 0 was reached for request with last error being:",
                 );
-                expect(error.nodeAccountId.toString()).to.equal("0.0.5");
+                expect(error.nodeAccountId).to.equal("0.0.5");
             }
         });
     });

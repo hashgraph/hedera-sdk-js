@@ -106,7 +106,6 @@ export default class NodeChannel extends Channel {
                     callback(
                         new GrpcServicesError(
                             GrpcStatus.Timeout,
-                            // @ts-ignore
                             ALL_NETWORK_IPS[
                                 this._client.getChannel().getChannelzRef().name
                             ],

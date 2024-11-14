@@ -65,12 +65,18 @@ export const NATIVE_PREVIEWNET = {
     "https://grpc-web.previewnet.myhbarwallet.com:443": new AccountId(3),
 };
 
+/**
+ * @type {Record<string, AccountId>}
+ */
 export const ALL_WEB_NETWORK_NODES = {
     ...MAINNET,
     ...WEB_TESTNET,
     ...WEB_PREVIEWNET,
 };
 
+/**
+ * @type {Record<string, string>}
+ */
 export const ALL_NETWORK_IPS = {
     // MAINNET
     "34.239.82.6:50211": "0.0.3",

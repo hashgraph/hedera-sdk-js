@@ -19,10 +19,6 @@
  */
 
 /**
- * @typedef {import("./account/AccountId.js").default} AccountId
- */
-
-/**
  * @typedef {object} MaxAttemptsOrTimeoutErrorJSON
  * @property {string} message
  * @property {string} nodeAccountId
@@ -32,7 +28,7 @@
 export default class MaxAttemptsOrTimeoutError extends Error {
     /**
      * @param {string} message
-     * @param {AccountId} nodeAccountId
+     * @param {string} nodeAccountId
      */
     constructor(message, nodeAccountId) {
         // Call the Error constructor with the message
@@ -45,7 +41,7 @@ export default class MaxAttemptsOrTimeoutError extends Error {
     toJSON() {
         return {
             message: this.message,
-            nodeAccountId: this.nodeAccountId.toString(),
+            nodeAccountId: this.nodeAccountId,
         };
     }
 
