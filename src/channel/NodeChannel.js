@@ -103,16 +103,13 @@ export default class NodeChannel extends Channel {
 
             this._client.waitForReady(deadline, (err) => {
                 if (err) {
-                    const nodeInfo = ALL_NETWORK_IPS.find(
-                        (node) =>
-                            node.ip ===
-                            this._client.getChannel().getChannelzRef().name,
-                    );
-
                     callback(
                         new GrpcServicesError(
                             GrpcStatus.Timeout,
-                            nodeInfo?.node,
+                            // @ts-ignore
+                            ALL_NETWORK_IPS[
+                                this._client.getChannel().getChannelzRef().name
+                            ],
                         ),
                     );
                 } else {
