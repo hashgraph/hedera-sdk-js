@@ -13,8 +13,6 @@ describe("TopicCreate", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -50,8 +48,6 @@ describe("TopicCreate", function () {
     });
 
     it("should be executable when no fields are set", async function () {
-        this.timeout(120000);
-
         const response = await new TopicCreateTransaction().execute(env.client);
 
         const topic = (await response.getReceipt(env.client)).topicId;

@@ -117,12 +117,10 @@ const bitSizes = [
 ];
 
 describe("ContractFunctionParameters", function () {
-    this.timeout(120000);
     let env;
     let newContractId;
 
     before(async function () {
-        this.timeout(120000);
         env = await IntegrationTestEnv.new({ balance: 100000 });
         // Create a file on Hedera and store the bytecode
         const fileCreateTx = new FileCreateTransaction()
@@ -172,7 +170,6 @@ describe("ContractFunctionParameters", function () {
 
     bitSizes.forEach((bitSize) => {
         describe(`Tests for addInt${bitSize} method`, function () {
-            this.timeout(120000);
             it(
                 getDescription(
                     EXTREMUM.MIN,
@@ -181,7 +178,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -216,7 +212,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -252,7 +247,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -286,7 +280,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -323,7 +316,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -359,7 +351,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
                         .setGas(12000000)
@@ -388,7 +379,6 @@ describe("ContractFunctionParameters", function () {
         });
 
         describe(`Tests for addInt${bitSize}Array method`, function () {
-            this.timeout(120000);
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
@@ -396,7 +386,6 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
-                    this.timeout(120000);
                     const arr = createArray(bitSize, INPUT_TYPE.NUMBER);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query

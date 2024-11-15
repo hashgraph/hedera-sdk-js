@@ -55,8 +55,6 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         it("should execute TokenReject Tx", async function () {
-            this.timeout(120000);
-
             // create another token
             const tokenCreateResponse2 = await new TokenCreateTransaction()
                 .setTokenName("ffff2")
@@ -123,7 +121,6 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         it("should return token back when receiver has receiverSigRequired is true", async function () {
-            this.timeout(120000);
             const TREASURY_TOKENS_AMOUNT = 1000000;
 
             await new AccountUpdateTransaction()
@@ -169,8 +166,6 @@ describe("TokenRejectIntegrationTest", function () {
         // temporary disabled until issue re nfts will be resolved on services side
         // eslint-disable-next-line mocha/no-skipped-tests
         it.skip("should not return spender allowance to zero after owner rejects FT", async function () {
-            this.timeout(120000);
-
             const spenderAccountPrivateKey = PrivateKey.generateED25519();
             const spenderAccountResponse = await new AccountCreateTransaction()
                 .setMaxAutomaticTokenAssociations(-1)
@@ -267,8 +262,6 @@ describe("TokenRejectIntegrationTest", function () {
 
         describe("should throw an error", function () {
             it("when paused FT", async function () {
-                this.timeout(120000);
-
                 await (
                     await new TokenPauseTransaction()
                         .setTokenId(tokenId)
@@ -296,7 +289,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when FT is frozen", async function () {
-                this.timeout(120000);
                 // transfer token to receiver
                 await new TransferTransaction()
                     .addTokenTransfer(tokenId, env.operatorId, -1)
@@ -345,8 +337,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when user does not have balance", async function () {
-                this.timeout(120000);
-
                 // create receiver account
                 const receiverPrivateKey = PrivateKey.generateED25519();
                 const { accountId: emptyBalanceUserId } = await (
@@ -396,7 +386,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when more than 11 tokens in token list for RejectToken transaction", async function () {
-                this.timeout(120000);
                 const tokenIds = [];
 
                 for (let i = 0; i < 11; i++) {
@@ -431,7 +420,6 @@ describe("TokenRejectIntegrationTest", function () {
     describe("Non-Fungible Tokens", function () {
         let tokenId, receiverPrivateKey, receiverId, nftId;
         beforeEach(async function () {
-            this.timeout(120000);
             env = await IntegrationTestEnv.new();
             const tokenCreateResponse = await new TokenCreateTransaction()
                 .setTokenType(TokenType.NonFungibleUnique)
@@ -467,8 +455,6 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         it("should execute TokenReject Tx", async function () {
-            this.timeout(120000);
-
             const tokenCreateResponse2 = await new TokenCreateTransaction()
                 .setTokenType(TokenType.NonFungibleUnique)
                 .setTokenName("ffff2")
@@ -537,8 +523,6 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         it("should return tokens back to treasury receiverSigRequired is true", async function () {
-            this.timeout(1200000);
-
             await new AccountUpdateTransaction()
                 .setAccountId(env.operatorId)
                 .setReceiverSignatureRequired(true)
@@ -583,8 +567,6 @@ describe("TokenRejectIntegrationTest", function () {
         // temporary disabled until issue re nfts will be resolved on services side
         // eslint-disable-next-line mocha/no-skipped-tests
         it.skip("should return spender allowance to 0 after owner rejects NFT", async function () {
-            this.timeout(120000);
-
             // create spender account
             const spenderAccountPrivateKey = PrivateKey.generateED25519();
             const spenderAccountResponse = await new AccountCreateTransaction()
@@ -653,8 +635,6 @@ describe("TokenRejectIntegrationTest", function () {
 
         describe("should throw an error", function () {
             it("when paused NFT", async function () {
-                this.timeout(120000);
-
                 await (
                     await new TokenPauseTransaction()
                         .setTokenId(tokenId)
@@ -680,8 +660,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when NFT is frozen", async function () {
-                this.timeout(120000);
-
                 // transfer token to receiver
                 await new TransferTransaction()
                     .addNftTransfer(nftId, env.operatorId, receiverId)
@@ -712,8 +690,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when using Fungible Token id when referencing NFTs", async function () {
-                this.timeout(120000);
-
                 // transfer to receiver
                 await (
                     await new TransferTransaction()
@@ -757,8 +733,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when there's a duplicated token reference", async function () {
-                this.timeout(120000);
-
                 // transfer nft to receiver
                 await (
                     await new TransferTransaction()
@@ -777,8 +751,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when user does not have balance", async function () {
-                this.timeout(120000);
-
                 // transfer nft to receiver
                 await (
                     await new TransferTransaction()
@@ -830,8 +802,6 @@ describe("TokenRejectIntegrationTest", function () {
             });
 
             it("when wrong owner id", async function () {
-                this.timeout(120000);
-
                 // generate wrong owner account
                 const wrongOwnerPrivateKey = PrivateKey.generateED25519();
                 const { accountId: wrongOwnerId } = await (
@@ -900,8 +870,6 @@ describe("TokenRejectIntegrationTest", function () {
         });
 
         it("should execute TokenReject tx with mixed type of tokens in one tx", async function () {
-            this.timeout(120000);
-
             // create NFT collection
             const tokenCreateResponse = await new TokenCreateTransaction()
                 .setTokenType(TokenType.NonFungibleUnique)

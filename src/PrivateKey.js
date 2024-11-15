@@ -23,10 +23,14 @@ import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
+import SignatureMap from "./transaction/SignatureMap.js";
+
+import AccountId from "./account/AccountId.js";
+import TransactionId from "./transaction/TransactionId.js";
+import { proto } from "@hashgraph/proto";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
- * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
 /**
@@ -35,6 +39,7 @@ import CACHE from "./Cache.js";
  * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
  * @typedef {import("@hashgraph/proto").proto.ISignaturePair} HashgraphProto.proto.ISignaturePair
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  */
 
 export default class PrivateKey extends Key {
@@ -325,18 +330,33 @@ export default class PrivateKey extends Key {
 
     /**
      * @param {Transaction} transaction
-     * @returns {Uint8Array}
+     * @returns {SignatureMap}
      */
     signTransaction(transaction) {
-        const tx = transaction._signedTransactions.get(0);
-        const signature =
-            tx.bodyBytes != null ? this.sign(tx.bodyBytes) : new Uint8Array();
+        const sigMap = new SignatureMap();
 
-        transaction.addSignature(this.publicKey, signature);
+        for (const signedTx of transaction._signedTransactions.list) {
+            const bodyBytes = signedTx.bodyBytes;
+            if (!bodyBytes) throw new Error("Body bytes are missing");
 
-        return signature;
+            const body = proto.TransactionBody.decode(bodyBytes);
+            if (!body.transactionID || !body.nodeAccountID) {
+                throw new Error(
+                    "Transaction ID or Node Account ID not found in the signed transaction",
+                );
+            }
+
+            const nodeId = AccountId._fromProtobuf(body.nodeAccountID);
+            const transactionId = TransactionId._fromProtobuf(
+                body.transactionID,
+            );
+            const sig = this._key.sign(bodyBytes);
+            sigMap.addSignature(nodeId, transactionId, this.publicKey, sig);
+        }
+
+        transaction.addSignature(this.publicKey, sigMap);
+        return sigMap;
     }
-
     /**
      * Check if `derive` can be called on this private key.
      *
