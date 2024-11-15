@@ -571,7 +571,9 @@ export default class Executable {
             ) {
                 throw new MaxAttemptsOrTimeoutError(
                     `timeout exceeded`,
-                    this._nodeAccountIds.current.toString(),
+                    this._nodeAccountIds.isEmpty
+                        ? "No node account ID set"
+                        : this._nodeAccountIds.current.toString(),
                 );
             }
 
