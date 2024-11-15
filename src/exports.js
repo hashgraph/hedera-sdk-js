@@ -106,6 +106,7 @@ export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransact
 export { default as LiveHashDeleteTransaction } from "./account/LiveHashDeleteTransaction.js";
 export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
 export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js";
+export { default as NodeAddressBook } from "./address_book/NodeAddressBook.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as NftId } from "./token/NftId.js";
@@ -122,6 +123,7 @@ export { default as ScheduleInfo } from "./schedule/ScheduleInfo.js";
 export { default as ScheduleInfoQuery } from "./schedule/ScheduleInfoQuery.js";
 export { default as ScheduleSignTransaction } from "./schedule/ScheduleSignTransaction.js";
 export { default as SemanticVersion } from "./network/SemanticVersion.js";
+export { default as SignatureMap } from "./transaction/SignatureMap.js";
 export { default as Signer } from "./Signer.js";
 export { default as SignerSignature } from "./SignerSignature.js";
 export { default as Status } from "./Status.js";
@@ -192,6 +194,8 @@ export { default as NodeCreateTransaction } from "./node/NodeCreateTransaction.j
 export { default as ServiceEndpoint } from "./node/ServiceEndpoint.js";
 export { default as NodeDeleteTransaction } from "./node/NodeDeleteTransaction.js";
 export { default as NodeUpdateTransaction } from "./node/NodeUpdateTransaction.js";
+
+export { default as WebClient } from "./client/WebClient.js";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

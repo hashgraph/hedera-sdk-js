@@ -27,6 +27,8 @@ import Transaction from "../transaction/Transaction.js";
 import Long from "long";
 import NullableTokenDecimalMap from "../account/NullableTokenDecimalMap.js";
 import TokenNftTransferMap from "../account/TokenNftTransferMap.js";
+import TokenTransferMap from "../account/TokenTransferMap.js";
+import TokenTransferAccountMap from "../account/TokenTransferAccountMap.js";
 
 /**
  * @namespace proto
@@ -403,6 +405,27 @@ export default class AbstractTokenTransferTransaction extends Transaction {
                 transferList.push(nftTransfer);
             } else {
                 map._set(transfer.tokenId, [nftTransfer]);
+            }
+        }
+
+        return map;
+    }
+
+    /**
+     * @returns {TokenTransferMap}
+     */
+    get tokenTransfers() {
+        const map = new TokenTransferMap();
+
+        for (const transfer of this._tokenTransfers) {
+            let transferMap = map.get(transfer.tokenId);
+
+            if (transferMap != null) {
+                transferMap._set(transfer.accountId, transfer.amount);
+            } else {
+                transferMap = new TokenTransferAccountMap();
+                transferMap._set(transfer.accountId, transfer.amount);
+                map._set(transfer.tokenId, transferMap);
             }
         }
 

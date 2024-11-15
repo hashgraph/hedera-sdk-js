@@ -1,3 +1,4 @@
+/*
 import {
     Client,
     PrivateKey,
@@ -20,12 +21,14 @@ let bobKey;
  * @description Create a transaction with multiple nodes and multiple signatures
  * and remove all of the signatures from the transaction
  */
+/*
 async function main() {
     /**
      *
      *  Step 1: Create Client
      *
      */
+/*
     if (
         process.env.OPERATOR_ID == null ||
         process.env.OPERATOR_KEY == null ||
@@ -46,6 +49,7 @@ async function main() {
      * Step 2: Create keys for two users
      *
      */
+/*
     aliceKey = PrivateKey.generate();
     bobKey = PrivateKey.generate();
 
@@ -59,6 +63,7 @@ async function main() {
      * Step 3: Create an account with the keyList
      *
      */
+/*
     const createAccountTransaction = new AccountCreateTransaction()
         .setInitialBalance(new Hbar(2))
         .setKey(keyList);
@@ -71,6 +76,7 @@ async function main() {
      * Step 4: Create a transfer transaction with multiple nodes
      *
      */
+/*
     const transferTransaction = new TransferTransaction()
         .addHbarTransfer(createReceipt.accountId, new Hbar(-1))
         .addHbarTransfer("0.0.3", new Hbar(1))
@@ -88,7 +94,7 @@ async function main() {
      *  & Collect multiple signatures (Uint8Array[]) from one key
      *
      */
-
+/*
     const transferTransactionBytes = transferTransaction.toBytes();
 
     const aliceSignatures = aliceKey.signTransaction(transferTransaction);
@@ -100,6 +106,7 @@ async function main() {
      *  & Add the previously collected signatures
      *
      */
+/*
     const signedTransaction = Transaction.fromBytes(transferTransactionBytes);
 
     signedTransaction.addSignature(aliceKey.publicKey, aliceSignatures);
@@ -134,7 +141,7 @@ async function main() {
      * Step 7: Remove all signatures from the transaction and add them back
      *
      */
-
+/*
     const allSignaturesRemoved = signedTransaction.removeAllSignatures();
 
     const signaturesInTheTransactionAfter =
@@ -164,6 +171,7 @@ async function main() {
      * Step 8: Execute and take the receipt
      *
      */
+/*
     const result = await signedTransaction.execute(client);
 
     const receipt = await result.getReceipt(client);
@@ -180,8 +188,10 @@ void main();
  * @param {Transaction} signedTransaction - The signed transaction object containing the list of signed transactions.
  * @returns {string[]} An array of signatures in DER format.
  */
+/*
 const getAllSignaturesFromTransaction = (signedTransaction) => {
     /** @type {string[]} */
+/*
     const signatures = [];
 
     signedTransaction._signedTransactions.list.forEach((transaction) => {
@@ -206,3 +216,4 @@ const getAllSignaturesFromTransaction = (signedTransaction) => {
 
     return signatures;
 };
+*/

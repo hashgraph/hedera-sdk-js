@@ -32,6 +32,9 @@ export const MAINNET = {
     "https://node26.swirldslabs.com:443": new AccountId(29),
     "https://node27.swirldslabs.com:443": new AccountId(30),
     "https://node28.swirldslabs.com:443": new AccountId(31),
+    "https://node29.swirldslabs.com:443": new AccountId(32),
+    "https://node30.swirldslabs.com:443": new AccountId(33),
+    "https://node31.swirldslabs.com:443": new AccountId(34),
 };
 
 export const WEB_TESTNET = {
