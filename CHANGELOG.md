@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.53.0
+
+## What's Changed
+
+* feat: Refactor SignatureMap for Multi-Transaction Support in _signedTransactions by @ivaylonikolov7 and @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2601
+* feat: export NodeAddressBook class by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2599
+* feat: exports WebClient for testing grpc-web proxies by @agadzhalov in https://github.com/hashgraph/hedera-sdk-js/pull/2603
+* feat: adding account 32, 33, and 34 endpoints to the clientconstants.js by @rustyShacklefurd in https://github.com/hashgraph/hedera-sdk-js/pull/2607
+* feat: tokenTransfer property exposed in AbstractTokenTransferTransaction by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2616
+* feat: example for get file contents by @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2578
+* feat: example for create account with threshold key @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2579
+* fix: incomplete file append transaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2600
+* fix: comment-out-not-working-examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2620
+* fix: TopicMessageQuery#unsubscribe() attempts to re-subscribe by @Jexsie in https://github.com/hashgraph/hedera-sdk-js/pull/2582
+* fix: incorrect protobuf body field used by @kantorcodes in https://github.com/hashgraph/hedera-sdk-js/pull/2613
+* fix: new eslint settings because of eslint bump in simple_rest_signature_provider by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2624
+* ci: fix vulnerable library versions by @mishomihov00 in https://github.com/hashgraph/hedera-sdk-js/pull/2594
+* chore(deps): bump actions/checkout from 4.2.1 to 4.2.2 by @dependabot https://github.com/hashgraph/hedera-sdk-js/pull/2602
+
 ## v2.53.0-beta.4
 
 ## What's Changed
