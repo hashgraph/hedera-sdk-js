@@ -8,7 +8,6 @@ import {
     KeyList,
     TransferTransaction,
     Transaction,
-    SignatureMap,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";

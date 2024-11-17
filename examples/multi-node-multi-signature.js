@@ -44,8 +44,8 @@ async function main() {
      *
      */
 
-    let aliceKey = PrivateKey.generate();
-    let bobKey = PrivateKey.generate();
+    const aliceKey = PrivateKey.generate();
+    const bobKey = PrivateKey.generate();
 
     const keyList = new KeyList([aliceKey.publicKey, bobKey.publicKey]);
 
