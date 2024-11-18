@@ -22,6 +22,7 @@ import { Client, credentials } from "@grpc/grpc-js";
 import Channel from "./Channel.js";
 import GrpcServicesError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
+import { ALL_NETWORK_IPS } from "../constants/ClientConstants.js";
 
 /**
  * @property {?HashgraphProto.proto.CryptoService} _crypto
@@ -102,7 +103,14 @@ export default class NodeChannel extends Channel {
 
             this._client.waitForReady(deadline, (err) => {
                 if (err) {
-                    callback(new GrpcServicesError(GrpcStatus.Timeout));
+                    callback(
+                        new GrpcServicesError(
+                            GrpcStatus.Timeout,
+                            ALL_NETWORK_IPS[
+                                this._client.getChannel().getChannelzRef().name
+                            ],
+                        ),
+                    );
                 } else {
                     this._client.makeUnaryRequest(
                         `/proto.${serviceName}/${method.name}`,
