@@ -31,8 +31,9 @@ import GrpcStatus from "./GrpcStatus.js";
 export default class GrpcServiceError extends Error {
     /**
      * @param {GrpcStatus} status
+     * @param {string} [nodeAccountId]
      */
-    constructor(status) {
+    constructor(status, nodeAccountId) {
         super(
             `gRPC service failed with: Status: ${status.toString()}, Code: ${status.valueOf()}`,
         );
@@ -41,6 +42,11 @@ export default class GrpcServiceError extends Error {
          * @readonly
          */
         this.status = status;
+
+        /**
+         * Optional: node account ID associated with the error
+         */
+        this.nodeAccountId = nodeAccountId;
 
         this.name = "GrpcServiceError";
 

@@ -24,6 +24,7 @@ import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
 import Status from "./Status.js";
+import MaxAttemptsOrTimeoutError from "./MaxAttemptsOrTimeoutError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -568,7 +569,12 @@ export default class Executable {
                 this._requestTimeout != null &&
                 startTime + this._requestTimeout <= Date.now()
             ) {
-                throw new Error("timeout exceeded");
+                throw new MaxAttemptsOrTimeoutError(
+                    `timeout exceeded`,
+                    this._nodeAccountIds.isEmpty
+                        ? "No node account ID set"
+                        : this._nodeAccountIds.current.toString(),
+                );
             }
 
             let nodeAccountId;
@@ -741,10 +747,12 @@ export default class Executable {
 
         // We'll only get here if we've run out of attempts, so we return an error wrapping the
         // persistent error we saved before.
-        throw new Error(
+
+        throw new MaxAttemptsOrTimeoutError(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
             }`,
+            this._nodeAccountIds.current.toString(),
         );
     }
 
