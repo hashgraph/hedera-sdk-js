@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## What's Changed
 
+* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
+* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
 * chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
 * chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
 * chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
@@ -16,10 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * chore(deps-dev): bump pino-pretty from 10.0.0 to 11.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2427
 * chore(deps-dev): bump vite from 4.4.9 to 5.3.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2429
 * chore(deps): bump micromatch from 4.0.5 to 4.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2485
-* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
-* test: add FileAppend unit tests for better code coverage by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2570
-* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
-* ci: Attempts to resolve issues with uploading coverage to Codecov. by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2641
 
 ## v2.53.0
 
