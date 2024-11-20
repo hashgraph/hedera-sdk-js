@@ -192,7 +192,9 @@ export default class ContractFunctionResult {
                 : []
             ).map((contractId) => ContractId._fromProtobuf(contractId)),
             evmAddress:
-                result.evmAddress != null && result.evmAddress.value != null
+                result.evmAddress != null &&
+                Object.hasOwn(result.evmAddress, "value") &&
+                result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
             stateChanges: [],
@@ -213,8 +215,8 @@ export default class ContractFunctionResult {
             ),
             signerNonce:
                 result.signerNonce != null
-                    ? result.signerNonce.value
-                        ? result.signerNonce.value
+                    ? Object.hasOwn(result.signerNonce, "value")
+                        ? result.signerNonce.value || null
                         : null
                     : null,
         });

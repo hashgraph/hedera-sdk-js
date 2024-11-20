@@ -37,4 +37,12 @@ describe("TokenUpdateNftsTransaction", function () {
         expect(transaction._serialNumbers).to.eql(serials);
         expect(transaction._metadata).to.eql(metadata);
     });
+
+    it("should _metadata equal to null", async function () {
+        const tx = new TokenUpdateNftsTransaction();
+        const tx2 = TokenUpdateNftsTransaction.fromBytes(tx.toBytes());
+
+        expect(tx._metadata).to.be.null;
+        expect(tx2._metadata).to.be.null;
+    });
 });
