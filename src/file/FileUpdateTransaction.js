@@ -54,7 +54,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {Key[] | KeyList} [props.keys]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
-     * @param {string} [props.fileMemo]
+     * @param {?string} [props.fileMemo]
      */
     constructor(props = {}) {
         super();
@@ -153,7 +153,7 @@ export default class FileUpdateTransaction extends Transaction {
                 contents: update.contents != null ? update.contents : undefined,
                 fileMemo:
                     update.memo != null
-                        ? update.memo.value != null
+                        ? Object.hasOwn(update.memo, "value")
                             ? update.memo.value
                             : undefined
                         : undefined,
