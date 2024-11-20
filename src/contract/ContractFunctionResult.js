@@ -213,8 +213,8 @@ export default class ContractFunctionResult {
             ),
             signerNonce:
                 result.signerNonce != null
-                    ? result.signerNonce.value
-                        ? result.signerNonce.value
+                    ? Object.hasOwn(result.signerNonce, "value")
+                        ? result.signerNonce.value || null
                         : null
                     : null,
         });
