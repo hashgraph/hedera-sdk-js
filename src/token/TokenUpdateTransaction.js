@@ -68,7 +68,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Key} [props.feeScheduleKey]
      * @param {Key} [props.pauseKey]
      * @param {Key} [props.metadataKey]
-     * @param {Uint8Array} [props.metadata]
+     * @param {?Uint8Array} [props.metadata]
      * @param {TokenKeyValidation} [props.keyVerificationMode]
      */
     constructor(props = {}) {
@@ -347,7 +347,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 metadata:
                     update.metadata != null
-                        ? update.metadata.value != null
+                        ? Object.hasOwn(update.metadata, "value")
                             ? update.metadata.value
                             : undefined
                         : undefined,

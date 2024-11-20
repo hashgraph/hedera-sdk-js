@@ -154,6 +154,7 @@ describe("TokenUpdateTransaction", function () {
         expect(tx.tokenMemo).to.be.null;
         expect(tx.feeScheduleKey).to.be.null;
         expect(tx.pauseKey).to.be.null;
+        expect(tx.metadata).to.be.null;
 
         expect(tx2.tokenId).to.be.null;
         expect(tx2.tokenName).to.be.null;
@@ -170,5 +171,6 @@ describe("TokenUpdateTransaction", function () {
         expect(tx2.tokenMemo).to.be.null;
         expect(tx2.feeScheduleKey).to.be.null;
         expect(tx2.pauseKey).to.be.null;
+        expect(tx2.metadata).to.be.null;
     });
 });
