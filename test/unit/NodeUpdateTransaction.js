@@ -277,4 +277,24 @@ describe("NodeUpdateTransaction", function () {
             expect(err).to.be.true;
         });
     });
+
+    describe("deserialization of optional parameters", function () {
+        it("should deserialize with gossipCaCertificate, grpcCertificateHash being null", function () {
+            const tx = new NodeUpdateTransaction();
+            const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx.gossipCaCertificate).to.be.null;
+            expect(tx.certificateHash).to.be.null;
+            expect(tx2.gossipCaCertificate).to.be.null;
+            expect(tx2.certificateHash).to.be.null;
+        });
+
+        it("should deserialize with description being null", function () {
+            const tx = new NodeUpdateTransaction();
+            const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx.description).to.be.null;
+            expect(tx2.description).to.be.null;
+        });
+    });
 });
