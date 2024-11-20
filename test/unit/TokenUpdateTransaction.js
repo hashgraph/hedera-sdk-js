@@ -137,6 +137,7 @@ describe("TokenUpdateTransaction", function () {
 
     it("all properties should be equal to their initial values", async function () {
         const tx = new TokenUpdateTransaction();
+        const tx2 = TokenUpdateTransaction.fromBytes(tx.toBytes());
 
         expect(tx.tokenId).to.be.null;
         expect(tx.tokenName).to.be.null;
@@ -153,5 +154,21 @@ describe("TokenUpdateTransaction", function () {
         expect(tx.tokenMemo).to.be.null;
         expect(tx.feeScheduleKey).to.be.null;
         expect(tx.pauseKey).to.be.null;
+
+        expect(tx2.tokenId).to.be.null;
+        expect(tx2.tokenName).to.be.null;
+        expect(tx2.tokenSymbol).to.be.null;
+        expect(tx2.treasuryAccountId).to.be.null;
+        expect(tx2.adminKey).to.be.null;
+        expect(tx2.kycKey).to.be.null;
+        expect(tx2.freezeKey).to.be.null;
+        expect(tx2.wipeKey).to.be.null;
+        expect(tx2.supplyKey).to.be.null;
+        expect(tx2.autoRenewAccountId).to.be.null;
+        expect(tx2.expirationTime).to.be.null;
+        expect(tx2.autoRenewPeriod).to.be.null;
+        expect(tx2.tokenMemo).to.be.null;
+        expect(tx2.feeScheduleKey).to.be.null;
+        expect(tx2.pauseKey).to.be.null;
     });
 });

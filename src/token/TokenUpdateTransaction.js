@@ -53,8 +53,8 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
-     * @param {string} [props.tokenName]
-     * @param {string} [props.tokenSymbol]
+     * @param {?string} [props.tokenName]
+     * @param {?string} [props.tokenSymbol]
      * @param {AccountId | string} [props.treasuryAccountId]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.kycKey]
@@ -64,7 +64,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
-     * @param {string} [props.tokenMemo]
+     * @param {?string} [props.tokenMemo]
      * @param {Key} [props.feeScheduleKey]
      * @param {Key} [props.pauseKey]
      * @param {Key} [props.metadataKey]
@@ -285,8 +285,12 @@ export default class TokenUpdateTransaction extends Transaction {
                     update.token != null
                         ? TokenId._fromProtobuf(update.token)
                         : undefined,
-                tokenName: update.name != null ? update.name : undefined,
-                tokenSymbol: update.symbol != null ? update.symbol : undefined,
+                tokenName: Object.hasOwn(update, "name")
+                    ? update.name
+                    : undefined,
+                tokenSymbol: Object.hasOwn(update, "symbol")
+                    ? update.symbol
+                    : undefined,
                 treasuryAccountId:
                     update.treasury != null
                         ? AccountId._fromProtobuf(update.treasury)
@@ -325,7 +329,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 tokenMemo:
                     update.memo != null
-                        ? update.memo.value != null
+                        ? Object.hasOwn(update.memo, "value")
                             ? update.memo.value
                             : undefined
                         : undefined,
@@ -763,7 +767,7 @@ export default class TokenUpdateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-            name: this.tokenName,
+            name: this.tokenName != null ? this.tokenName : null,
             symbol: this.tokenSymbol,
             treasury:
                 this._treasuryAccountId != null
