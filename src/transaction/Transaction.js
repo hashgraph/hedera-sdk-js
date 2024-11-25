@@ -1338,6 +1338,9 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        // @ts-ignore
+        super.setTransactionNodeIds(Object.values(client.network));
+
         if (this._logger) {
             this._logger.info(
                 `Network used: ${client._network.networkName}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
