@@ -79,10 +79,10 @@ export default class Executable {
          * List of the transaction node account IDs to check if
          * the node account ID of the request is in the list
          *
-         * @internal
-         * @type {List<AccountId>}
+         * @protected
+         * @type {Array<string>}
          */
-        this._transactionNodeIds = new List();
+        this.transactionNodeIds = [];
 
         /**
          * @internal
@@ -163,19 +163,6 @@ export default class Executable {
     }
 
     /**
-     * Get the list of node account IDs set in the transaction. If no nodes are set, then null is returned.
-     *
-     * @returns {?string[]}
-     */
-    get transactionNodeAccountIds() {
-        if (this._transactionNodeIds.isEmpty) {
-            return null;
-        } else {
-            return this._transactionNodeIds.list.map((node) => node.toString());
-        }
-    }
-
-    /**
      * Set the node account IDs on the request
      *
      * @param {AccountId[]} nodeIds
@@ -185,18 +172,6 @@ export default class Executable {
         // Set the node account IDs, and lock the list. This will require `execute`
         // to use these nodes instead of random nodes from the network.
         this._nodeAccountIds.setList(nodeIds).setLocked();
-        return this;
-    }
-
-    /**
-     * Set the node account IDs of the transaction
-     *
-     * @param {AccountId[]} nodeIds
-     * @returns {this}
-     */
-    setTransactionNodeIds(nodeIds) {
-        // Set the node account IDs of the transaction.
-        this._transactionNodeIds.setList(nodeIds);
         return this;
     }
 
@@ -629,11 +604,10 @@ export default class Executable {
                 );
             }
 
-            if (this.transactionNodeAccountIds) {
-                const isNodeAccountIdValid =
-                    this.transactionNodeAccountIds.includes(
-                        nodeAccountId.toString(),
-                    );
+            if (this.transactionNodeIds.length) {
+                const isNodeAccountIdValid = this.transactionNodeIds.includes(
+                    nodeAccountId.toString(),
+                );
 
                 if (!isNodeAccountIdValid) {
                     throw new Error(

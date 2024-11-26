@@ -1338,8 +1338,10 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        // @ts-ignore
-        super.setTransactionNodeIds(Object.values(client.network));
+        // Assign the account IDs to which the transaction should be sent.
+        this.transactionNodeIds = Object.values(client.network).map(
+            (accountNodeId) => accountNodeId.toString(),
+        );
 
         if (this._logger) {
             this._logger.info(
