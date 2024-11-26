@@ -629,7 +629,7 @@ export default class Executable {
                 );
             }
 
-            if (this.transactionNodeAccountIds?.length) {
+            if (this.transactionNodeAccountIds) {
                 const isNodeAccountIdValid =
                     this.transactionNodeAccountIds.includes(
                         nodeAccountId.toString(),
@@ -637,7 +637,7 @@ export default class Executable {
 
                 if (!isNodeAccountIdValid) {
                     throw new Error(
-                        "Trying to execute transaction on an invalid node",
+                        `Attempting to execute a transaction against node ${nodeAccountId.toString()}, which is not present in the Client's node list. Please review and adjust your setup.`,
                     );
                 }
             }
