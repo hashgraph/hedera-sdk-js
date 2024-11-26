@@ -79,6 +79,11 @@ export default class CostQuery extends Executable {
             throw new Error("Cannot do CostQuery without Client");
         }
 
+        // Assign the account IDs to which the transaction should be sent.
+        this.transactionNodeIds = Object.values(client.network).map(
+            (accountNodeId) => accountNodeId.toString(),
+        );
+
         const operator =
             this._operator != null ? this._operator : client._operator;
 
