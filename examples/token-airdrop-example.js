@@ -371,7 +371,7 @@ async function main() {
 
     /**
      * Step 14:
-     * Query to verify treasury no longer has the NFT
+     * Query to verify treasury has received the NFT back
      */
     let treasuryBalance = await new AccountBalanceQuery()
         .setAccountId(treasuryAccount)
