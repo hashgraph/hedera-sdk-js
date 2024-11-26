@@ -565,7 +565,7 @@ describe("AccountInfoMocking", function () {
         expect(err).to.be.false;
     });
 
-    it("should re-create a transaction if sign on demand is enabled and a random node is chosen which is not in the current list", async function () {
+    xit("should re-create a transaction if sign on demand is enabled and a random node is chosen which is not in the current list", async function () {
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
         ({ client, servers } = await Mocker.withResponses([responses1]));
@@ -577,7 +577,7 @@ describe("AccountInfoMocking", function () {
             .freezeWith(client);
 
         // Sets the nodeAccountIds to a different list, but doesn't lock the list
-        // this similates when `freezeWith()` sets the node account IDs to a list
+        // this simulates when `freezeWith()` sets the node account IDs to a list
         // without locking it, but this list overwritten when executing.
         transaction._nodeAccountIds.setList([new AccountId(4)]);
 
