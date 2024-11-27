@@ -976,6 +976,7 @@ describe("TransactionIntegration", function () {
                 await signTransferTransaction.execute(client);
             } catch (error) {
                 expect(error.message).to.be.equal(
+                    // Attempting to execute the transaction with a node that is not in the client's node list
                     "max attempts of 10 was reached for request with last error being: ",
                 );
             }

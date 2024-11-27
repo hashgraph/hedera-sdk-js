@@ -36,6 +36,7 @@ describe("Transaction flows", function () {
         try {
             await signTransferTransaction.execute(client);
         } catch (error) {
+            // Attempting to execute the transaction with a node that is not in the client's node list
             expect(error.message).to.be.equal(
                 "max attempts of 10 was reached for request with last error being: ",
             );

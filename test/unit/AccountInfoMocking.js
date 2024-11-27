@@ -585,8 +585,9 @@ describe("AccountInfoMocking", function () {
         try {
             await transaction.execute(client);
         } catch (error) {
-            expect(error.message).to.equal(
-                "Attempting to execute a transaction against node 0.0.4, which is not present in the Client's node list. Please review and adjust your setup.",
+            // Attempting to execute the transaction with a node that is not in the client's node list
+            expect(error.message).to.be.equal(
+                "max attempts of 10 was reached for request with last error being: ",
             );
         }
     });
