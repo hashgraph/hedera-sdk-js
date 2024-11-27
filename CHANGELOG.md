@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * chore(deps): bump codecov/codecov-action from 4.6.0 to 5.0.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2651
 * chore(deps): bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
 * chore(deps): bump renovatebot/github-action from 40.3.3 to 41.0.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
-* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/proto (#2666)
+* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2666
 
 ## v2.54.0-beta.1
 
