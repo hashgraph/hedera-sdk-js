@@ -60,6 +60,7 @@ describe("TokenBurn", function () {
             throw new Error("token Burn did not error");
         }
     });
+
     it("should not error when amount is not set", async function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
