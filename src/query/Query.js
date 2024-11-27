@@ -262,6 +262,11 @@ export default class Query extends Executable {
             return;
         }
 
+        // Assign the account IDs to which the transaction should be sent.
+        this.transactionNodeIds = Object.values(client.network).map(
+            (accountNodeId) => accountNodeId.toString(),
+        );
+
         // Check checksums if enabled
         if (client.isAutoValidateChecksumsEnabled()) {
             this._validateChecksums(client);

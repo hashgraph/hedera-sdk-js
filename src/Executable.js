@@ -610,9 +610,12 @@ export default class Executable {
                 );
 
                 if (!isNodeAccountIdValid) {
-                    throw new Error(
-                        `Attempting to execute a transaction against node ${nodeAccountId.toString()}, which is not present in the Client's node list. Please review and adjust your setup.`,
+                    console.error(
+                        `Attempting to execute a transaction against node ${nodeAccountId.toString()}, which is not included in the Client's node list. Please review your Client configuration.`,
                     );
+
+                    this._nodeAccountIds.advance();
+                    continue;
                 }
             }
 
