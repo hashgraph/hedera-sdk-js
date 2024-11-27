@@ -149,6 +149,7 @@ describe("NodeCreateTransaction", function () {
 
         expect(err).to.be.true;
     });
+
     it("should change certificate", function () {
         const NEW_CERTIFICATE = Buffer.from("newCertificate");
         tx.setGossipCaCertificate(NEW_CERTIFICATE);
