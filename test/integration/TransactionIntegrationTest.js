@@ -968,7 +968,11 @@ describe("TransactionIntegration", function () {
             const signTransferTransaction = await new TransferTransaction()
                 .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
                 .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1))
-                .setNodeAccountIds([new AccountId(10000)]) // Non-existent node account ID
+                .setNodeAccountIds([
+                    new AccountId(10000),
+                    new AccountId(10001),
+                    new AccountId(10002),
+                ]) // Non-existent node account IDs
                 .freezeWith(client)
                 .sign(operatorKey);
 
@@ -977,7 +981,7 @@ describe("TransactionIntegration", function () {
             } catch (error) {
                 expect(error.message).to.be.equal(
                     // Attempting to execute the transaction with a node that is not in the client's node list
-                    "max attempts of 10 was reached for request with last error being: ",
+                    "Attempting to execute a transaction against nodes 0.0.10000, 0.0.10001 ..., which are not included in the Client's node list. Please review your Client configuration.",
                 );
             }
         });

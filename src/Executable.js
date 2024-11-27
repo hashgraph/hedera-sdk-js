@@ -571,6 +571,30 @@ export default class Executable {
         // the last error that was returned by the consensus node
         let persistentError = null;
 
+        // Checks if has a valid nodes to which the TX can be sent
+        if (this.transactionNodeIds.length) {
+            const nodeAccountIds = this._nodeAccountIds.list.map((nodeId) =>
+                nodeId.toString(),
+            );
+
+            const hasValidNodes = this.transactionNodeIds.some((nodeId) =>
+                nodeAccountIds.includes(nodeId),
+            );
+
+            if (!hasValidNodes) {
+                const displayNodeAccountIds =
+                    nodeAccountIds.length > 2
+                        ? `${nodeAccountIds.slice(0, 2).join(", ")} ...`
+                        : nodeAccountIds.join(", ");
+                const isSingleNode = nodeAccountIds.length === 1;
+
+                throw new Error(
+                    `Attempting to execute a transaction against node${isSingleNode ? "" : "s"} ${displayNodeAccountIds}, ` +
+                        `which ${isSingleNode ? "is" : "are"} not included in the Client's node list. Please review your Client configuration.`,
+                );
+            }
+        }
+
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             // Determine if we've exceeded request timeout

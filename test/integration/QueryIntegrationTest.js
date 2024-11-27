@@ -38,7 +38,7 @@ describe("Transaction flows", function () {
         } catch (error) {
             // Attempting to execute the transaction with a node that is not in the client's node list
             expect(error.message).to.be.equal(
-                "max attempts of 10 was reached for request with last error being: ",
+                "Attempting to execute a transaction against node 0.0.111, which is not included in the Client's node list. Please review your Client configuration.",
             );
         }
     });
