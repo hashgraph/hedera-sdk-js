@@ -9,9 +9,6 @@ describe("Transaction flows", function () {
     // Setting up the environment and creating a new account with a key list
     before(async function () {
         env = await IntegrationTestEnv.new();
-
-        operatorId = env.operatorId;
-        operatorKey = env.operatorKey;
         client = env.client;
     });
 

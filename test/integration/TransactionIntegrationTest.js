@@ -21,7 +21,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { expect } from "chai";
 import { Client } from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TransactionIntegration", function () {
+describe("TransactionIntegration", function () {
     it("should be executable", async function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
