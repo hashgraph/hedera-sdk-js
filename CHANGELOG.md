@@ -5,14 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.54.0
+## v2.54.2
 
 ## What's Changed
 
 * feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
 * feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
 * fix: \_fromProtobuf functions where google primitive wrappers used (#2657) by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2657
-* fix: update typescript version by @ivaylonikolov in https://github.com/hashgraph/hedera-sdk-js/pull/2666
+* fix: update typescript version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2666
 * chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
 * chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
 * chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
