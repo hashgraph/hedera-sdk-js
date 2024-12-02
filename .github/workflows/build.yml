@@ -125,8 +125,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:integration:codecov
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
-        with:
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
           fail_ci_if_error: false
@@ -152,7 +151,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/cryptography coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/cryptography/coverage/lcov.info
@@ -167,7 +166,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/sdk coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
