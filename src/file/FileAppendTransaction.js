@@ -178,9 +178,10 @@ export default class FileAppendTransaction extends Transaction {
             );
             contents = concat;
         }
-
         const chunkSize = append.contents?.length || undefined;
-        const maxChunks = bodies.length || undefined;
+        const maxChunks = bodies.length
+            ? bodies.length / incrementValue
+            : undefined;
         let chunkInterval;
         if (transactionIds.length > 1) {
             const firstValidStart = transactionIds[0].validStart;
@@ -536,7 +537,7 @@ export default class FileAppendTransaction extends Transaction {
                 this._transactions.push(this._makeSignedTransaction(null));
             } else {
                 for (const nodeAccountId of this._nodeAccountIds.list) {
-                    this._signedTransactions.push(
+                    this._transactions.push(
                         this._makeSignedTransaction(nodeAccountId),
                     );
                 }
