@@ -684,7 +684,7 @@ export default class Status {
             case Status.PendingAirdropIdRepeated:
                 return "PENDING_AIRDROP_ID_REPEATED";
             case Status.MaxPendingAirdropIdExceeded:
-                return "PENDING_AIRDROP_ID_LIST_TOO_LONG";
+                return "MAX_PENDING_AIRDROP_ID_EXCEEDED";
             case Status.PendingNftAirdropAlreadyExists:
                 return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
             case Status.AccountHasPendingAirdrops:
