@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * feat: Pull protos from services @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
 * fix: rework examples y @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
 * docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
 
 ## v2.54.2
 
