@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.55.0-beta.1
+
+## What's Changed
+
+* feat: Pull protos from services @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: rework examples y @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+
 ## v2.54.2
 
 ## What's Changed
