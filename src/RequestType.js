@@ -211,6 +211,8 @@ export default class RequestType {
                 return "TssVote";
             case RequestType.TssShareSignature:
                 return "TssShareSignature";
+            case RequestType.TssEncryptionKey:
+                return "TssEncryptionKey";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -393,6 +395,8 @@ export default class RequestType {
                 return RequestType.TssVote;
             case 98:
                 return RequestType.TssShareSignature;
+            case 99:
+                return RequestType.TssEncryptionKey;
         }
 
         throw new Error(
@@ -831,3 +835,8 @@ RequestType.TssVote = new RequestType(97);
  * using its private share within the TSS process
  */
 RequestType.TssShareSignature = new RequestType(98);
+
+/**
+ * Submit a node public tss encryption key as part of the Threshold Signature Scheme (TSS).
+ */
+RequestType.TssEncryptionKey = new RequestType(99);

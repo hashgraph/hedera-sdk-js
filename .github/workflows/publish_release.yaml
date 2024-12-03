@@ -84,7 +84,7 @@ jobs:
           SDK_PACKAGE_VERSION="$(jq -r '.version' package.json)"
           PROTO_PACKAGE_VERSION="$(jq -r '.version' './packages/proto/package.json')"
           CRYPTO_PACKAGE_VERSION="$(jq -r '.version' './packages/cryptography/package.json')"
-          
+
           echo "sdk-version=${SDK_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "proto-version=${PROTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
           echo "crypto-version=${CRYPTO_PACKAGE_VERSION}" >>"${GITHUB_OUTPUT}"
@@ -96,7 +96,7 @@ jobs:
           if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/proto/${{ steps.npm-package.outputs.proto-version }}" >/dev/null 2>&1; then
             PUBLISH_REQUIRED="true"
           fi
-          
+
           echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
 
       - name: Crypto Subpackage Publish Required
@@ -106,7 +106,7 @@ jobs:
           if ! curl -sSLf "https://registry.npmjs.org/@hashgraph/cryptography/${{ steps.npm-package.outputs.crypto-version }}" >/dev/null 2>&1; then
             PUBLISH_REQUIRED="true"
           fi
-          
+
           echo "publish-required=${PUBLISH_REQUIRED}" >>"${GITHUB_OUTPUT}"
 
       - name: Extract SDK Tag Information
@@ -157,10 +157,10 @@ jobs:
             echo "::error title=Invalid Tag::The tag '${{ steps.npm-package.outputs.proto-version }}' is not a valid SemVer tag."
             exit 1
           fi
-          
+
           PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.proto-version }}')"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
-          
+
           IS_PRERELEASE="false"
           [[ -n "${PREREL_VERSION}" ]] && IS_PRERELEASE="true"
 
@@ -174,10 +174,10 @@ jobs:
           else
             PREREL_TYPE="production"
           fi
-          
+
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
-          
+
       - name: Extract Crypto Subpackage Information
         id: crypto-package
         run: |
@@ -190,7 +190,7 @@ jobs:
 
           PREREL_VERSION="$(semver get prerel '${{ steps.npm-package.outputs.crypto-version }}')"
           PREREL_VERSION_LC="$(printf "%s" "${PREREL_VERSION}" | tr '[:upper:]' '[:lower:]')"
-          
+
           IS_PRERELEASE="false"
           [[ -n "${PREREL_VERSION}" ]] && IS_PRERELEASE="true"
 
@@ -204,7 +204,7 @@ jobs:
           else
             PREREL_TYPE="production"
           fi
-          
+
           echo "prerelease=${IS_PRERELEASE}" >>"${GITHUB_OUTPUT}"
           echo "type=${PREREL_TYPE}" >>"${GITHUB_OUTPUT}"
 
@@ -247,7 +247,7 @@ jobs:
           version: 3.35.1
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -284,7 +284,7 @@ jobs:
           version: 3.35.1
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -322,7 +322,7 @@ jobs:
           PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           [[ "${{ needs.validate-release.outputs.crypto-prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.crypto-type }}"
-          
+
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
 
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
@@ -334,9 +334,9 @@ jobs:
           PUBLISH_ARGS="--access public --no-git-checks"
           [[ "${{ github.event.inputs.dry-run-enabled }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --dry-run"
           [[ "${{ needs.validate-release.outputs.sdk-prerelease }}" == "true" ]] && PUBLISH_ARGS="${PUBLISH_ARGS} --tag ${{ needs.validate-release.outputs.sdk-type }}"
-          
+
           echo "args=${PUBLISH_ARGS}" >>"${GITHUB_OUTPUT}"
-          
+
           # Add the registry authentication stanza with variable substitution to the .npmrc configuration file.
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >>".npmrc"
 
