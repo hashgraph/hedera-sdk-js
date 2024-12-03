@@ -48,7 +48,7 @@ jobs:
           version: 3.35.1
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -93,7 +93,7 @@ jobs:
           cat .env
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -125,7 +125,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:integration:codecov
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
@@ -145,14 +145,14 @@ jobs:
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit
-      
+
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/cryptography coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/cryptography/coverage/lcov.info
@@ -167,7 +167,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/sdk coverage to Codecov
-        uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
