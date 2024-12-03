@@ -18,13 +18,13 @@ describe("MaxAttemptsOrTimeoutError", function () {
         error = new MaxAttemptsOrTimeoutError(message, nodeAccountId);
     });
 
-    it("should create an instance with correct properties", function() {
+    it("should create an instance with correct properties", function () {
         expect(error).to.be.instanceOf(MaxAttemptsOrTimeoutError);
         expect(error.message).to.be.equal(message);
         expect(error.nodeAccountId).to.be.equal(nodeAccountId);
     });
 
-    it("toJSON should return correct JSON representation", function() {
+    it("toJSON should return correct JSON representation", function () {
         const expectedJson = {
             message,
             nodeAccountId,
@@ -33,7 +33,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
         expect(error.toJSON()).to.be.deep.equal(expectedJson);
     });
 
-    it("toString should return a JSON string", function() {
+    it("toString should return a JSON string", function () {
         const expectedString = JSON.stringify({
             message,
             nodeAccountId,
@@ -42,7 +42,7 @@ describe("MaxAttemptsOrTimeoutError", function () {
         expect(error.toString()).to.be.equal(expectedString);
     });
 
-    it("valueOf should return the same result as toJSON", function() {
+    it("valueOf should return the same result as toJSON", function () {
         expect(error.valueOf()).to.be.deep.equal(error.toJSON());
     });
 
