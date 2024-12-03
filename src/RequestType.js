@@ -205,6 +205,12 @@ export default class RequestType {
                 return "TokenCancelAirdrop";
             case RequestType.TokenClaimAirdrop:
                 return "TokenClaimAirdrop";
+            case RequestType.TssMessage:
+                return "TssMessage";
+            case RequestType.TssVote:
+                return "TssVote";
+            case RequestType.TssShareSignature:
+                return "TssShareSignature";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -381,6 +387,12 @@ export default class RequestType {
                 return RequestType.TokenCancelAirdrop;
             case 95:
                 return RequestType.TokenClaimAirdrop;
+            case 96:
+                return RequestType.TssMessage;
+            case 97:
+                return RequestType.TssVote;
+            case 98:
+                return RequestType.TssShareSignature;
         }
 
         throw new Error(
@@ -803,3 +815,19 @@ RequestType.TokenCancelAirdrop = new RequestType(94);
  * Claim one or more pending airdrops
  */
 RequestType.TokenClaimAirdrop = new RequestType(95);
+
+/**
+ * (TSS) Messages for a candidate roster.
+ */
+RequestType.TssMessage = new RequestType(96);
+
+/**
+ * Vote on the validity of Threshold Signature Scheme (TSS)
+ */
+RequestType.TssVote = new RequestType(97);
+
+/**
+ * Communicates a node's signature of a block hash
+ * using its private share within the TSS process
+ */
+RequestType.TssShareSignature = new RequestType(98);
