@@ -11,5 +11,8 @@
         ],
         "@babel/plugin-transform-runtime"
     ],
-    "comments": false
+    "comments": false,
+    "minify": {
+        "keepFnName": true
+    }
 }
