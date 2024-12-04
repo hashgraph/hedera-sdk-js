@@ -12,6 +12,7 @@
         "strict": true,
         "noImplicitAny": true,
         "noUnusedLocals": true,
+        "skipLibCheck": true,
         "noUnusedParameters": false,
         "downlevelIteration": true,
         "noImplicitReturns": true,
