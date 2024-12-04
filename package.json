@@ -57,8 +57,8 @@
         "@ethersproject/bytes": "^5.7.0",
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "1.8.2",
-        "@hashgraph/cryptography": "file:.yalc/@hashgraph/cryptography",
-        "@hashgraph/proto": "file:.yalc/@hashgraph/proto",
+        "@hashgraph/cryptography": "1.4.8-beta.10",
+        "@hashgraph/proto": "2.16.0-beta.1",
         "axios": "^1.6.4",
         "bignumber.js": "^9.1.1",
         "bn.js": "^5.1.1",
@@ -128,6 +128,5 @@
         "expo": {
             "optional": true
         }
-    },
-    "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
+    }
 }
