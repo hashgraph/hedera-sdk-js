@@ -20,6 +20,7 @@ describe("ContractCallIntegration", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
+
     it("should be executable", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
