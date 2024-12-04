@@ -39,6 +39,9 @@ importers:
       babel-plugin-dynamic-import-node:
         specifier: ^2.3.3
         version: 2.3.3
+      babel-plugin-minify-mangle-names:
+        specifier: ^0.5.1
+        version: 0.5.1
       babel-preset-minify:
         specifier: ^0.5.2
         version: 0.5.2

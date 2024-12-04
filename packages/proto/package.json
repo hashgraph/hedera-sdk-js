@@ -47,6 +47,7 @@
         "@typescript-eslint/parser": "^5.62.0",
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-preset-minify": "^0.5.2",
+        "babel-plugin-minify-mangle-names": "^0.5.1",
         "chalk": "^5.2.0",
         "copyfiles": "^2.4.1",
         "escodegen": "^2.0.0",
