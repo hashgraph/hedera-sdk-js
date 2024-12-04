@@ -57,14 +57,14 @@
         "@ethersproject/bytes": "^5.7.0",
         "@ethersproject/rlp": "^5.7.0",
         "@grpc/grpc-js": "1.8.2",
-        "@hashgraph/cryptography": "1.4.8-beta.10",
-        "@hashgraph/proto": "2.16.0-beta.1",
+        "@hashgraph/cryptography": "file:.yalc/@hashgraph/cryptography",
+        "@hashgraph/proto": "file:.yalc/@hashgraph/proto",
         "axios": "^1.6.4",
         "bignumber.js": "^9.1.1",
         "bn.js": "^5.1.1",
         "crypto-js": "^4.2.0",
         "js-base64": "^3.7.4",
-        "long": "^4.0.0",
+        "long": "^5.2.3",
         "pino": "^8.14.1",
         "pino-pretty": "^10.0.0",
         "protobufjs": "7.2.5",
@@ -85,7 +85,6 @@
         "@playwright/test": "^1.30.0",
         "@types/chai": "^4.3.4",
         "@types/crypto-js": "^4.2.0",
-        "@types/long": "^4.0.2",
         "@types/mocha": "^10.0.1",
         "@types/node": "^20.8.10",
         "@types/utf8": "^3.0.1",
@@ -129,5 +128,6 @@
         "expo": {
             "optional": true
         }
-    }
+    },
+    "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
 }
