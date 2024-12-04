@@ -188,9 +188,10 @@ describe("TokenAirdropIntegrationTest", function () {
         expect(newPendingAirdrops[1].airdropId.nftId.tokenId).to.deep.equal(
             nftTokenId,
         );
-        expect(newPendingAirdrops[1].airdropId.nftId.serial).to.deep.equal(
-            serials[0],
-        );
+
+        expect(
+            newPendingAirdrops[1].airdropId.nftId.serial.toString(),
+        ).to.deep.equal(serials[0].toString());
     });
 
     it("should create hollow account when airdropping tokens and transfers them", async function () {
