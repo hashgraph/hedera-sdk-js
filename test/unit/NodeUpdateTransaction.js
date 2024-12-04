@@ -166,6 +166,7 @@ describe("NodeUpdateTransaction", function () {
 
     describe("frozen transaction", function () {
         let tx;
+
         before(function () {
             const ACCOUNT_ID = AccountId.fromString("0.4.20");
             const VALID_START = new Timestamp(1596210382, 0);
@@ -275,6 +276,26 @@ describe("NodeUpdateTransaction", function () {
                 err = error.toString().includes(IMMUTABLE_ERROR);
             }
             expect(err).to.be.true;
+        });
+    });
+
+    describe("deserialization of optional parameters", function () {
+        it("should deserialize with gossipCaCertificate, grpcCertificateHash being null", function () {
+            const tx = new NodeUpdateTransaction();
+            const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx.gossipCaCertificate).to.be.null;
+            expect(tx.certificateHash).to.be.null;
+            expect(tx2.gossipCaCertificate).to.be.null;
+            expect(tx2.certificateHash).to.be.null;
+        });
+
+        it("should deserialize with description being null", function () {
+            const tx = new NodeUpdateTransaction();
+            const tx2 = NodeUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx.description).to.be.null;
+            expect(tx2.description).to.be.null;
         });
     });
 });

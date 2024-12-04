@@ -23,6 +23,7 @@ describe("TransactionRecord", function () {
         const record = TransactionRecord.fromBytes(hex.decode(HEX_BYTES));
         expect(hex.encode(record.toBytes())).to.equal(HEX_BYTES);
     });
+
     it("toJSON()", function () {
         const record = TransactionRecord.fromBytes(hex.decode(HEX_BYTES));
         const accID = AccountId.fromString("0.0.1246");

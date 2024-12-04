@@ -74,7 +74,7 @@ Every example can be executed using the following command from the root director
 
 * To start the integration tests follow the next steps:
     - Run the [local node](https://github.com/hashgraph/hedera-local-node)
-    - Run `task test:intergration:node`
+    - Run `task test:integration:node`
     - Stop the [local node](https://github.com/hashgraph/hedera-local-node)
 * To start unit tests follow the next steps:
     - Run `task test:unit` (Note: the local node should not be running)

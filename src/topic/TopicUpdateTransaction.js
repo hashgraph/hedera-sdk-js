@@ -61,7 +61,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @param {Key} [props.submitKey]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
-     * @param {string} [props.topicMemo]
+     * @param {?string} [props.topicMemo]
      * @param {Timestamp | Date} [props.expirationTime]
      */
     constructor(props = {}) {
@@ -186,7 +186,7 @@ export default class TopicUpdateTransaction extends Transaction {
                         : undefined,
                 topicMemo:
                     update.memo != null
-                        ? update.memo.value != null
+                        ? Object.hasOwn(update.memo, "value")
                             ? update.memo.value
                             : undefined
                         : undefined,

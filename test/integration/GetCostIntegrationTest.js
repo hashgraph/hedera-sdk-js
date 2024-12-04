@@ -12,6 +12,7 @@ describe("GetCost", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
+
     it("should be executable", async function () {
         const operatorId = env.operatorId;
 
