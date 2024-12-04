@@ -1338,6 +1338,11 @@ export default class Transaction extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        // Assign the account IDs to which the transaction should be sent.
+        this.transactionNodeIds = Object.values(client.network).map(
+            (accountNodeId) => accountNodeId.toString(),
+        );
+
         if (this._logger) {
             this._logger.info(
                 `Network used: ${client._network.networkName}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
