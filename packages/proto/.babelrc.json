@@ -1,7 +1,12 @@
 {
     "presets": ["minify"],
     "plugins": [
-        "@babel/plugin-transform-modules-commonjs",
+        [
+            "@babel/plugin-transform-modules-commonjs",
+            {
+                "noInterop": true
+            }
+        ],
         "@babel/plugin-syntax-dynamic-import",
         [
             "babel-plugin-dynamic-import-node",
