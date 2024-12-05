@@ -29,7 +29,7 @@ import * as hex from "../encoding/hex.js";
  */
 
 /**
- * @typedef {import("long").Long} Long
+ * @typedef {import("long")} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 

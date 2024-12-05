@@ -30,6 +30,7 @@ tasks:
             - mv src/services/hapi/hedera-protobufs/services src/proto/
             - rm -rf src/proto/streams
             - mv src/services/hapi/hedera-protobufs/streams src/proto/
+            - mv src/services/hapi/hedera-protobufs/platform/event/* src/proto/services
             - echo "Protobufs moved successfully!"
             - task "delete:submodule"
 
