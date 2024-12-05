@@ -2,26 +2,26 @@ export interface CreateAccountParams {
     readonly key?: string;
     readonly initialBalance?: string;
     readonly receiverSignatureRequired?: boolean;
-    readonly maxAutoTokenAssociations?: number;
+    readonly maxAutoTokenAssociations?: string;
     readonly commonTransactionParams?: Record<string, any>;
     readonly stakedAccountId?: string;
-    readonly stakedNodeId?: number;
+    readonly stakedNodeId?: string;
     readonly declineStakingReward?: boolean;
     readonly memo?: string;
-    readonly autoRenewPeriod?: number;
+    readonly autoRenewPeriod?: string;
     readonly alias?: string;
 }
 
 export interface UpdateAccountParams {
     readonly accountId?: string;
     readonly key?: string;
-    readonly autoRenewPeriod?: number;
-    readonly expirationTime?: number;
+    readonly autoRenewPeriod?: string;
+    readonly expirationTime?: string;
     readonly receiverSignatureRequired?: boolean;
     readonly memo?: string;
-    readonly maxAutoTokenAssociations?: number;
+    readonly maxAutoTokenAssociations?: string;
     readonly stakedAccountId?: string;
-    readonly stakedNodeId?: number;
+    readonly stakedNodeId?: string;
     readonly declineStakingReward?: boolean;
     readonly commonTransactionParams?: Record<string, any>;
 }

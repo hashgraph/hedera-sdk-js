@@ -4,7 +4,9 @@ import {
     AccountId,
     AccountUpdateTransaction,
     AccountDeleteTransaction,
+    Timestamp,
 } from "@hashgraph/sdk";
+import Long from "long";
 
 import { sdk } from "../sdk_data";
 import { AccountResponse } from "../response/account";
@@ -49,7 +51,9 @@ export const createAccount = async ({
     }
 
     if (maxAutoTokenAssociations != null) {
-        transaction.setMaxAutomaticTokenAssociations(maxAutoTokenAssociations);
+        transaction.setMaxAutomaticTokenAssociations(
+            Long.fromString(maxAutoTokenAssociations),
+        );
     }
 
     if (stakedAccountId != null) {
@@ -59,7 +63,7 @@ export const createAccount = async ({
     }
 
     if (stakedNodeId != null) {
-        transaction.setStakedNodeId(stakedNodeId);
+        transaction.setStakedNodeId(Long.fromString(stakedNodeId));
     }
 
     if (declineStakingReward != null) {
@@ -71,7 +75,7 @@ export const createAccount = async ({
     }
 
     if (autoRenewPeriod != null) {
-        transaction.setAutoRenewPeriod(autoRenewPeriod);
+        transaction.setAutoRenewPeriod(Long.fromString(autoRenewPeriod));
     }
 
     if (alias != null) {
@@ -125,7 +129,9 @@ export const updateAccount = async ({
     }
 
     if (maxAutoTokenAssociations != null) {
-        transaction.setMaxAutomaticTokenAssociations(maxAutoTokenAssociations);
+        transaction.setMaxAutomaticTokenAssociations(
+            Long.fromString(maxAutoTokenAssociations),
+        );
     }
 
     if (stakedAccountId != null) {
@@ -135,12 +141,13 @@ export const updateAccount = async ({
     }
 
     if (stakedNodeId != null) {
-        transaction.setStakedNodeId(stakedNodeId);
+        transaction.setStakedNodeId(Long.fromString(stakedNodeId));
     }
 
     if (expirationTime != null) {
-        const expirationTimeInSeconds = new Date(expirationTime * 1000);
-        transaction.setExpirationTime(expirationTimeInSeconds);
+        transaction.setExpirationTime(
+            new Timestamp(Long.fromString(expirationTime), 0),
+        );
     }
 
     if (declineStakingReward != null) {
@@ -152,7 +159,7 @@ export const updateAccount = async ({
     }
 
     if (autoRenewPeriod != null) {
-        transaction.setAutoRenewPeriod(autoRenewPeriod);
+        transaction.setAutoRenewPeriod(Long.fromString(autoRenewPeriod));
     }
 
     if (commonTransactionParams != null) {
