@@ -38,3 +38,12 @@ export interface DeleteTokenParams {
     readonly tokenId?: string;
     readonly commonTransactionParams?: Record<string, any>;
 }
+
+export interface UpdateTokenFeeScheduleParams {
+    readonly tokenId?: string;
+    readonly customFees?:
+        | CustomFixedFee[]
+        | CustomFractionalFee[]
+        | CustomRoyaltyFee[];
+    readonly commonTransactionParams?: Record<string, any>;
+}
