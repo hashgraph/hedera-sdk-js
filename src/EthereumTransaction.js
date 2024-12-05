@@ -42,7 +42,7 @@ import Transaction, {
  * @typedef {import("./client/Client.js").default<*, *>} Client
  * @typedef {import("./Timestamp.js").default} Timestamp
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
- * @typedef {import("long").Long} Long
+ * @typedef {import("long")} Long
  */
 
 /**

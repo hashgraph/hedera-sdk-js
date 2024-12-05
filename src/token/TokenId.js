@@ -22,7 +22,7 @@ import * as entity_id from "../EntityIdHelper.js";
 import * as HashgraphProto from "@hashgraph/proto";
 
 /**
- * @typedef {import("long").Long} Long
+ * @typedef {import("long")} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
