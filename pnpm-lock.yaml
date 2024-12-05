@@ -45,8 +45,8 @@ importers:
         specifier: ^3.7.4
         version: 3.7.7
       long:
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^5.2.3
+        version: 5.2.3
       pino:
         specifier: ^8.14.1
         version: 8.21.0
@@ -102,9 +102,6 @@ importers:
       '@types/crypto-js':
         specifier: ^4.2.0
         version: 4.2.2
-      '@types/long':
-        specifier: ^4.0.2
-        version: 4.0.2
       '@types/mocha':
         specifier: ^10.0.1
         version: 10.0.10
@@ -1519,9 +1516,6 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
-
-  '@types/long@4.0.2':
-    resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
 
   '@types/mocha@10.0.10':
     resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
@@ -3519,9 +3513,6 @@ packages:
   loglevel@1.9.2:
     resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
     engines: {node: '>= 0.6.0'}
-
-  long@4.0.0:
-    resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
 
   long@5.2.3:
     resolution: {integrity: sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==}
@@ -6579,7 +6570,7 @@ snapshots:
 
   '@hashgraph/proto@file:.yalc/@hashgraph/proto':
     dependencies:
-      long: 4.0.0
+      long: 5.2.3
       protobufjs: 7.2.5
 
   '@humanwhocodes/config-array@0.13.0':
@@ -6805,8 +6796,6 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
-
-  '@types/long@4.0.2': {}
 
   '@types/mocha@10.0.10': {}
 
@@ -9091,8 +9080,6 @@ snapshots:
   loglevel-plugin-prefix@0.8.4: {}
 
   loglevel@1.9.2: {}
-
-  long@4.0.0: {}
 
   long@5.2.3: {}
 
