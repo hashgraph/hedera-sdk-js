@@ -51,9 +51,7 @@ export const createAccount = async ({
     }
 
     if (maxAutoTokenAssociations != null) {
-        transaction.setMaxAutomaticTokenAssociations(
-            Long.fromString(maxAutoTokenAssociations),
-        );
+        transaction.setMaxAutomaticTokenAssociations(maxAutoTokenAssociations);
     }
 
     if (stakedAccountId != null) {
@@ -129,9 +127,7 @@ export const updateAccount = async ({
     }
 
     if (maxAutoTokenAssociations != null) {
-        transaction.setMaxAutomaticTokenAssociations(
-            Long.fromString(maxAutoTokenAssociations),
-        );
+        transaction.setMaxAutomaticTokenAssociations(maxAutoTokenAssociations);
     }
 
     if (stakedAccountId != null) {

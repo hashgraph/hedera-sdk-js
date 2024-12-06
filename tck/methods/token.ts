@@ -3,6 +3,7 @@ import {
     CustomFixedFee,
     CustomFractionalFee,
     CustomRoyaltyFee,
+    Timestamp,
     TokenCreateTransaction,
     TokenDeleteTransaction,
 } from "@hashgraph/sdk";
@@ -96,7 +97,9 @@ export const createToken = async ({
     }
 
     if (expirationTime != null) {
-        transaction.setExpirationTime(new Date(Number(expirationTime) * 1000));
+        transaction.setExpirationTime(
+            new Timestamp(Long.fromString(expirationTime), 0),
+        );
     }
 
     if (autoRenewAccountId != null) {

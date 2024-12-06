@@ -2,7 +2,7 @@ export interface CreateAccountParams {
     readonly key?: string;
     readonly initialBalance?: string;
     readonly receiverSignatureRequired?: boolean;
-    readonly maxAutoTokenAssociations?: string;
+    readonly maxAutoTokenAssociations?: number;
     readonly commonTransactionParams?: Record<string, any>;
     readonly stakedAccountId?: string;
     readonly stakedNodeId?: string;
@@ -19,7 +19,7 @@ export interface UpdateAccountParams {
     readonly expirationTime?: string;
     readonly receiverSignatureRequired?: boolean;
     readonly memo?: string;
-    readonly maxAutoTokenAssociations?: string;
+    readonly maxAutoTokenAssociations?: number;
     readonly stakedAccountId?: string;
     readonly stakedNodeId?: string;
     readonly declineStakingReward?: boolean;
