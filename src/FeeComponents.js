@@ -20,6 +20,9 @@
 
 import * as HashgraphProto from "@hashgraph/proto";
 
+/**
+ * @typedef {import("./types/long").default} Long
+ */
 export default class FeeComponents {
     /**
      * @param {object} [props]
