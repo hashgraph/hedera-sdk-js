@@ -697,10 +697,6 @@ export default class Status {
                 return "TOKEN_AIRDROP_WITH_FALLBACK_ROYALTY";
             case Status.InvalidTokenInPendingAirdrop:
                 return "INVALID_TOKEN_IN_PENDING_AIRDROP";
-            case Status.ScheduleExpiryMustBeFuture:
-                return "SCHEDULE_EXPIRY_IS_BUSY";
-            case Status.ScheduleExpiryTooLong:
-                return "SCHEDULE_EXPIRY_TOO_LONG";
             case Status.ScheduleExpiryIsBusy:
                 return "SCHEDULE_EXPIRY_IS_BUSY";
             case Status.InvalidGrpcCertificateHash:
@@ -1376,14 +1372,10 @@ export default class Status {
             case 369:
                 return Status.InvalidTokenInPendingAirdrop;
             case 370:
-                return Status.ScheduleExpiryMustBeFuture;
-            case 371:
-                return Status.ScheduleExpiryTooLong;
-            case 372:
                 return Status.ScheduleExpiryIsBusy;
-            case 373:
+            case 371:
                 return Status.InvalidGrpcCertificateHash;
-            case 374:
+            case 372:
                 return Status.MissingExpiryTime;
             default:
                 throw new Error(
@@ -3100,31 +3092,18 @@ Status.InvalidTokenInPendingAirdrop = new Status(369);
 
 /**
  * A scheduled transaction configured to wait for expiry to execute was given
- * an expiry time not strictly after the time at which its creation reached
- * consensus.
- */
-Status.ScheduleExpiryMustBeFuture = new Status(370);
-/**
- * A scheduled transaction configured to wait for expiry to execute was given
- * an expiry time too far in the future after the time at which its creation
- * reached consensus.
- */
-Status.ScheduleExpiryTooLong = new Status(371);
-
-/**
- * A scheduled transaction configured to wait for expiry to execute was given
  * an expiry time at which there is already too many transactions scheduled to
  * expire; its creation must be retried with a different expiry.
  */
-Status.ScheduleExpiryIsBusy = new Status(372);
+Status.ScheduleExpiryIsBusy = new Status(370);
 
 /**
  * The provided gRPC certificate hash is invalid.
  */
-Status.InvalidGrpcCertificateHash = new Status(373);
+Status.InvalidGrpcCertificateHash = new Status(371);
 
 /**
  * A scheduled transaction configured to wait for expiry to execute was not
  * given an explicit expiration time.
  */
-Status.MissingExpiryTime = new Status(374);
+Status.MissingExpiryTime = new Status(372);
