@@ -19,10 +19,8 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
-
-/**
- * @typedef {import("./types/long").default} Long
- */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Long from "long";
 export default class FeeComponents {
     /**
      * @param {object} [props]
