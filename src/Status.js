@@ -698,7 +698,7 @@ export default class Status {
             case Status.InvalidTokenInPendingAirdrop:
                 return "INVALID_TOKEN_IN_PENDING_AIRDROP";
             case Status.ScheduleExpiryMustBeFuture:
-                return "SCHEDULE_EXPIRY_MUST_BE_FUTURE";
+                return "SCHEDULE_EXPIRY_IS_BUSY";
             case Status.ScheduleExpiryTooLong:
                 return "SCHEDULE_EXPIRY_TOO_LONG";
             case Status.ScheduleExpiryIsBusy:
