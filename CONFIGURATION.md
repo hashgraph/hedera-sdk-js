@@ -202,8 +202,6 @@ const client = Client.forTestnet().setDefaultMaxTransactionFee(
 
 -   `setDefaultRegenerateTransactionId` - Configure transaction ID regeneration. This function accepts a boolean type of value. When set to true it will regenerate the transaction ID when a `TRANSACTION_EXPIRED` status is returned.
 
-Default value: true;
-
 ```javascript
 const client = Client.forTestnet();
 client.setDefaultRegenerateTransactionId(true);
@@ -215,8 +213,6 @@ The setSignOnDemand method in the Hedera JavaScript SDK allows you to configure 
 
 When you call client.setSignOnDemand(true), it instructs the SDK to defer the signing of transactions until the transaction.sign() method is explicitly called. This means that when you create a transaction using the SDK, it will not be signed automatically. Instead, you will need to call transaction.sign() manually before submitting the transaction to the network.
 
-Default value: `false`.
-
 ```javascript
 const client = Client.forTestnet();
 client.setSignOnDemand(true);
@@ -226,8 +222,6 @@ client.setSignOnDemand(true);
 
 -   `setDefaultMaxQueryPayment` - Same as `setDefaultMaxTransactionFee` but for queries.
 
-Default value: 1 Hbar
-
 ## Retry and Timeout Settings
 
 -   `setMaxAttempts` - Sets maximum retry attempts before an error is thrown.
@@ -235,12 +229,8 @@ Default value: 1 Hbar
 -   `setMinBackoff` - Set minimum backoff time for retries.
     There's a time the SDK waits for after every failed attempt. A lower minBackoff value will result in more frequent retries initially, which can be useful for faster recovery from transient failures. This time increases exponentially. The default values provided by the SDK are generally reasonable for most use cases, but you may want to adjust them based on your specific requirements.
 
-    Default value: 250
-
 -   `setMaxBackoff` - Set maximum backoff time for retries
     Same as above but this sets on the maximum amount of seconds the backoff time may go.
-
-    Default value: 8000
 
 -   `setRequestTimeout` - This timeout is the maximum allowed time for the entire transaction/query, including all retries.
 
@@ -295,11 +285,7 @@ client.setNodeWaitTime(5000); // Set node wait time to 5 seconds (5000 milliseco
     The Hedera network is a distributed ledger system that consists of multiple nodes spread across different geographic locations. These nodes can join or leave the network at any time, and their availability and performance can vary depending on various factors such as network conditions, hardware issues, or software updates.
     To ensure that the SDK has an up-to-date view of the network topology, it periodically retrieves information about the available nodes and their respective performance metrics. This information is used to determine which nodes to send requests to and to adjust the load balancing and failover strategies accordingly.
 
-    Default value: `24 * 60 * 60 * 1000`
-
 -   `setAutoValidateChecksums` - Configure automatic checksum validation
-
-Default value: `false`
 
 ### Logging
 
