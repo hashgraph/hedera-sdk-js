@@ -35,8 +35,8 @@ The packages of the JS SDK support loading of configuration from an .env file or
 
 | Name           | Value                                                                       | Example                                                                                          |
 | -------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| OPERATOR_ID    | Account ID of the operator account used to pay for transactions and queries | 302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10 |
-| OPERATOR_KEY   | ED25519 private key of the operator account                                 | 0.0.12345                                                                                        |
+| OPERATOR_ID    | Account ID of the operator account used to pay for transactions and queries | 0.0.12345                                                                                        |
+| OPERATOR_KEY   | ED25519 private key of the operator account                                 | 302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10 |
 | HEDERA_NETWORK | Network to connect to: mainnet, testnet, previewnet, or localhost           | localhost                                                                                        |
 
 ## ED25519 or ECDSA key
