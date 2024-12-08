@@ -1,33 +1,33 @@
 # Introduction
 
-The packages of the JS SDK support loading of configuration from an .env file or via the environment. You can also configure the JS by changing the configuration of the client. This document will explain the settings for all of these settings.
+The packages of the JS SDK support loading of configuration from an .env file or via the environment. You can also configure the client. This document will explain the settings for both of these configuration.
 
 # Table of content
 
 -   [Environment Variables](#environment-variables)
     -   [Required](#required)
--   [ED25519 or ECDSA key](#ed25519-or-ecdsa-key)
-    -   [Integration tests](#integration-tests)
-    -   [Examples](#examples)
-        -   [`fromStringDer`](#-fromstringder-)
-        -   [Optional Parameters](#optional-parameters)
-    -   [React Native Example](#react-native-example)
-    -   [Simple REST Signature Provider](#simple-rest-signature-provider)
--   [Which network to use?](#which-network-to-use-)
--   [How to get my account keys and IDs?](#how-to-get-my-account-keys-and-ids-)
-    -   [Local network](#local-network)
-    -   [Testnet and previewnet](#testnet-and-previewnet)
--   [Possible configuration issues](#possible-configuration-issues)
--   [Should I have multiple .env files like .env.local, .env.production, .envdevelopment etc?](#should-i-have-multiple-env-files-like-envlocal--envproduction--envdevelopment-etc-)
+    -   [ED25519 or ECDSA key](#ed25519-or-ecdsa-key)
+        -   [Integration tests](#integration-tests)
+        -   [Examples](#examples)
+            -   [`fromStringDer`](#-fromstringder-)
+            -   [Optional Parameters](#optional-parameters)
+        -   [React Native Example](#react-native-example)
+        -   [Simple REST Signature Provider](#simple-rest-signature-provider)
+    -   [Which network to use?](#which-network-to-use-)
+    -   [How to get my account keys and IDs?](#how-to-get-my-account-keys-and-ids-)
+        -   [Local network](#local-network)
+        -   [Testnet and previewnet](#testnet-and-previewnet)
+    -   [Possible configuration issues](#possible-configuration-issues)
+    -   [Should I have multiple .env files like .env.local, .env.production, .envdevelopment etc?](#should-i-have-multiple-env-files-like-envlocal--envproduction--envdevelopment-etc-)
 -   [Client Configuration](#client-configuration)
     -   [Network Configuration](#network-configuration)
     -   [Operator Settings](#operator-settings)
     -   [Transaction Settings](#transaction-settings)
     -   [Query Settings](#query-settings)
     -   [Retry and Timeout Settings](#retry-and-timeout-settings)
-    -   [Node Management](#node-management)
-    -   [Network Update Settings](#network-update-settings)
-    -   [Logging](#logging)
+        -   [Node Management](#node-management)
+        -   [Network Update Settings](#network-update-settings)
+        -   [Logging](#logging)
 
 # Environment Variables
 
@@ -82,8 +82,8 @@ This example behaves the same as the React Native example.
 
 ## Which network to use?
 
--   The maintainers of this repository use `hedera-local-node` when running integration tests. Running integration tests on testnet costs far too much HBARs.
--   When running examples you can use any network you want. The examples are used for us to demonstrate to the community how a features is supposed to work so they optimized to work on any network you want.
+-   The maintainers of this repository use `hedera-local-node` when running integration tests. Running integration tests on testnet costs far too much HBARs making it unsustainable.
+-   When running the examples, you can use any network of your choice. These examples are designed to demonstrate how a feature is intended to work and are optimized to function on any network you prefer.
 -   Unit tests do not require environment variables.
 
 ## How to get my account keys and IDs?
@@ -119,7 +119,7 @@ To run the examples on the testnet, you can obtain your account keys and IDs fro
 
 ## Network Configuration
 
--   `setNetwork` - The setNetwork method configures the network nodes that your client will communicate with on the Hedera network. It's a fundamental configuration step that determines which nodes will process your transactions and queries.
+-   `setNetwork` - The method configures the network nodes that your client will communicate with on the Hedera network. It's a fundamental configuration step that determines which nodes will process your transactions and queries.
 
 Example:
 
@@ -190,18 +190,29 @@ tx.setOperatorWith(accountId, key.publicKey, (message) =>
 -   `setDefaultMaxTransactionFee` - Set maximum transaction fee user is willing to pay.
 
 ```javascript
-const client = Client.forTestnet({
-    scheduleNetworkUpdate: false,
-}).setDefaultMaxTransactionFee(Hbar.fromTinybars(1));
+const client = Client.forTestnet().setDefaultMaxTransactionFee(
+    Hbar.fromTinybars(1),
+);
+// the network used here doesn't matter
 ```
 
 -   `setDefaultRegenerateTransactionId` - Configure transaction ID regeneration. This function accepts a boolean type of value. When set to true it will regenerate the transaction ID when a `TRANSACTION_EXPIRED` status is returned.
+
+```javascript
+const client = Client.forTestnet();
+client.setDefaultRegenerateTransactionId(true);
+```
 
 -   `setSignOnDemand` - Configure on-demand transaction signing
 
 The setSignOnDemand method in the Hedera JavaScript SDK allows you to configure how transactions are signed before being submitted to the Hedera network. By default, transactions are signed immediately after being constructed. However, in some cases, you may want to delay the signing process until just before the transaction is submitted. This can be useful in scenarios where you need to perform additional operations or validations on the transaction before signing it.
 
 When you call client.setSignOnDemand(true), it instructs the SDK to defer the signing of transactions until the transaction.sign() method is explicitly called. This means that when you create a transaction using the SDK, it will not be signed automatically. Instead, you will need to call transaction.sign() manually before submitting the transaction to the network.
+
+```javascript
+const client = Client.forTestnet();
+client.setSignOnDemand(true);
+```
 
 ## Query Settings
 
@@ -216,11 +227,20 @@ When you call client.setSignOnDemand(true), it instructs the SDK to defer the si
 -   `setMaxBackoff` - Set maximum backoff time for retries
     Same as above but this sets on the maximum amount of seconds the backoff time may go.
 -   `setRequestTimeout` - This timeout is the maximum allowed time for the entire transaction/query, including all retries.
+
+```javascript
+let client = Client.forTestnet();
+client.setOperator(operatorAccountId, operatorPrivateKey);
+client.setRequestTimeout(30000);
+// Network doesn't matter here.
+```
+
 -   `setMaxExecutionTime` - this timeout applies to each single gRPC request within the transaction/query. It’s used for the edge cases where 10 seconds are not enough for the execution of a single gRPC request and the user can pass more.
 
 ```javascript
 const client = Client.forNetwork();
-client.setRequestTimeout(10000); // Set the request timeout to 10 seconds (10000 milliseconds)
+const timeInMs = 10000;
+client.setMaxExecutionTime(10000); // Set the request timeout to 10 seconds (10000 milliseconds)
 ```
 
 ### Node Management
