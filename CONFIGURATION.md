@@ -1,6 +1,6 @@
 # Introduction
 
-The packages of the JS SDK support loading of configuration from an .env file or via the environment. You can also configure the client. This document will explain the settings for both of these configuration.
+The JS SDK package supports loading of configuration from an .env file or via the environment. You can use these environmental variables to configure the client. This document will explain the environmental variables needed and the client configuration.
 
 # Table of content
 
@@ -43,11 +43,13 @@ The packages of the JS SDK support loading of configuration from an .env file or
 
 ### Integration tests
 
-When you run integration tests you should use an Ed25519 private key. This is set up [here](test/integration/BaseIntegrationTestEnv.js:95). If you have an ECDSA key you should change the line to:
+For integration tests, an Ed25519 private key should be used. This is configured here. If you are using an ECDSA key, update the line as follows:
 
 ```javascript
 const operatorKey = PrivateKey.fromStringECDSA(options.env.OPERATOR_KEY);
 ```
+
+It's recomended to use ED25519 due to it's better speed and performance.
 
 ### Examples
 
@@ -55,7 +57,7 @@ The examples use both ED25519 and ECDSA keys. These examples come with a pre-fil
 
 To verify which type of key is required, check the example code for the initialization method in the client/wallet. Look for either `fromStringED25519` or `fromStringECDSA`.
 
-_Note that some examples are designed to work only with ECDSA private keys._
+_Note that some examples (like the ones that interact with the relay) are designed to work only with ECDSA private keys. _
 
 #### `fromStringDer`
 
@@ -74,7 +76,7 @@ Certain examples simulate different actors in the network, such as Alice, Bob, o
 
 ### React Native Example
 
-This example uses `fromString`, which internally calls `fromStringED25519`.
+This example uses `fromString`, which internally will try to execute the example with `fromStringED25519`.
 
 ### Simple REST Signature Provider
 
@@ -109,7 +111,7 @@ To run the examples on the testnet, you can obtain your account keys and IDs fro
 -   Running unit tests while the local-node is active can disrupt multiple tests. Ensure the node is not running when executing tests.
 -   Occasionally, some tests may fail unexpectedly. However, rerunning them usually resolves the issue.
 -   If local-node has been inactive for a while, it might enter sleep mode. Restarting it is often necessary to rerun tests. This is not an SDK-related issue but is a frequently encountered scenario.
--   Always use the task install command to install dependencies. Avoid manual installation with npm or yarn, as it can lead to configuration problems.
+-   Always use the `task install` command to install dependencies. Avoid manual installation with npm or yarn, as it can lead to configuration problems.
 
 ## Should I have multiple .env files like .env.local, .env.production, .envdevelopment etc?
 
@@ -129,6 +131,8 @@ client.setNetwork({
     "2.testnet.hedera.com:50211": new AccountId(0, 0, 5),
 });
 ```
+
+You can find the nodes addresses and their `AccountIds` here - `[mainnet](https://docs.hedera.com/hedera/networks/mainnet/mainnet-nodes), [testnet](https://docs.hedera.com/hedera/networks/testnet/testnet-nodes), [previewnet](https://docs.hedera.com/hedera/networks/testnet/testnet-nodes#preview-testnet-nodes).
 
 -   `setMirrorNetwork` - Configure the mirror nodes
 
