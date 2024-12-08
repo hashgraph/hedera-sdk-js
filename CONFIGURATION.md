@@ -1,17 +1,31 @@
 # Introduction
 
-The packages of the JS SDK support loading of configuration from an .env file or via the environment.
+The packages of the JS SDK support loading of configuration from an .env file or via the environment. You can also configure the JS by changing the configuration of the client. This document will explain the settings for all of these settings.
 
-# Table of contents
-
-1. Introduction ..................................................
-2. Configuration Options .........................................
-   2.1 Network Configuration .....................................
-   2.2 Operator Settings ..........................................
-   2.3 Transaction Settings .......................................
-3. Error Handling ................................................
-4. Examples ......................................................
-5. Conclusion ....................................................
+-   [Environment Variables](#environment-variables)
+    -   [Required](#required)
+-   [ED25519 or ECDSA key](#ed25519-or-ecdsa-key)
+    -   [Integration tests](#integration-tests)
+    -   [Examples](#examples)
+        -   [`fromStringDer`](#-fromstringder-)
+        -   [Optional Parameters](#optional-parameters)
+    -   [React Native Example](#react-native-example)
+    -   [Simple REST Signature Provider](#simple-rest-signature-provider)
+-   [Which network to use?](#which-network-to-use-)
+-   [How to get my account keys and IDs?](#how-to-get-my-account-keys-and-ids-)
+    -   [Local network](#local-network)
+    -   [Testnet and previewnet](#testnet-and-previewnet)
+-   [Possible configuration issues](#possible-configuration-issues)
+-   [Should I have multiple .env files like .env.local, .env.production, .envdevelopment etc?](#should-i-have-multiple-env-files-like-envlocal--envproduction--envdevelopment-etc-)
+-   [Client Configuration](#client-configuration)
+    -   [Network Configuration](#network-configuration)
+    -   [Operator Settings](#operator-settings)
+    -   [Transaction Settings](#transaction-settings)
+    -   [Query Settings](#query-settings)
+    -   [Retry and Timeout Settings](#retry-and-timeout-settings)
+    -   [Node Management](#node-management)
+    -   [Network Update Settings](#network-update-settings)
+    -   [Logging](#logging)
 
 ## Environment Variables
 
