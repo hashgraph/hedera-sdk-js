@@ -105,11 +105,11 @@ To run the examples on the testnet, you can obtain your account keys and IDs fro
 
 ## Possible configuration issues
 
--   Most common problem is that users use ED25519 key when the code asks for ECDSA key or vice versa. Please double check if you sue the correct key.
--   You might have ran the unit tests while running local-node. This will break multiple tests.
--   Doesn't happen often but on rare ocassions some of the tests will break but rerunning them will give the expected result.
--   If you hadn't used `local-node` for a long time sometimes it goes in sleep mode and you need to restart it to rerun the tests. This is not an issue with the SDK itself but still a very common problem.
--   Please use the command `task install` and do not install the packages manually using `npm` or `yarn`. This might create some configuration issues.
+-   The most common issue occurs when users mistakenly use an ED25519 key instead of an ECDSA key, or vice versa. Please verify that you are using the correct key type.
+-   Running unit tests while the local-node is active can disrupt multiple tests. Ensure the node is not running when executing tests.
+-   Occasionally, some tests may fail unexpectedly. However, rerunning them usually resolves the issue.
+-   If local-node has been inactive for a while, it might enter sleep mode. Restarting it is often necessary to rerun tests. This is not an SDK-related issue but is a frequently encountered scenario.
+-   Always use the task install command to install dependencies. Avoid manual installation with npm or yarn, as it can lead to configuration problems.
 
 ## Should I have multiple .env files like .env.local, .env.production, .envdevelopment etc?
 
