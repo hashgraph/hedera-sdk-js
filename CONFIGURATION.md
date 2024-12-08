@@ -78,7 +78,7 @@ This example uses `fromString`, which internally calls `fromStringED25519`.
 
 ### Simple REST Signature Provider
 
-This behaves the same as the React Native example.
+This example behaves the same as the React Native example.
 
 ## Which network to use?
 
