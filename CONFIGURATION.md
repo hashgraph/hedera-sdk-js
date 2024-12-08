@@ -173,7 +173,8 @@ When you call client.setSignOnDemand(true), it instructs the SDK to defer the si
     There's a time the SDK waits for after every failed attempt. A lower minBackoff value will result in more frequent retries initially, which can be useful for faster recovery from transient failures. This time increases exponentially. The default values provided by the SDK are generally reasonable for most use cases, but you may want to adjust them based on your specific requirements.
 -   `setMaxBackoff` - Set maximum backoff time for retries
     Same as above but this sets on the maximum amount of seconds the backoff time may go.
--   `setRequestTimeout` - This method in the Hedera JavaScript SDK is used to set the maximum amount of time (in milliseconds) that the SDK will wait for a response from a node before considering the request as timed out
+-   `setRequestTimeout` - This timeout is the maximum allowed time for the entire transaction/query, including all retries.
+-   `setMaxExecutionTime` - this timeout applies to each single gRPC request within the transaction/query. It’s used for the edge cases where 10 seconds are not enough for the execution of a single gRPC request and the user can pass more.
 
 ```
 const client = Client.forNetwork();
