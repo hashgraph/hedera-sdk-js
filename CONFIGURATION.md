@@ -2,6 +2,8 @@
 
 The packages of the JS SDK support loading of configuration from an .env file or via the environment. You can also configure the JS by changing the configuration of the client. This document will explain the settings for all of these settings.
 
+# Table of content
+
 -   [Environment Variables](#environment-variables)
     -   [Required](#required)
 -   [ED25519 or ECDSA key](#ed25519-or-ecdsa-key)
@@ -27,9 +29,9 @@ The packages of the JS SDK support loading of configuration from an .env file or
     -   [Network Update Settings](#network-update-settings)
     -   [Logging](#logging)
 
-## Environment Variables
+# Environment Variables
 
-### Required
+## Required
 
 | Name           | Value                                                                       | Example                                                                                          |
 | -------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -113,9 +115,9 @@ To run the examples on the testnet, you can obtain your account keys and IDs fro
 
 [Owner of dotenv says - no.](https://github.com/motdotla/dotenv#should-i-have-multiple-env-files)
 
-## Client Configuration
+# Client Configuration
 
-### Network Configuration
+## Network Configuration
 
 -   `setNetwork` - The setNetwork method configures the network nodes that your client will communicate with on the Hedera network. It's a fundamental configuration step that determines which nodes will process your transactions and queries.
 
@@ -165,7 +167,7 @@ const client = Client.forNetwork();
 client.setTransportSecurity(true);
 ```
 
-### Operator Settings
+## Operator Settings
 
 -   `setOperator` - Set the operator account and private key. The operator is the account that will pay for the transactions the user executes.
 
@@ -183,7 +185,7 @@ tx.setOperatorWith(accountId, key.publicKey, (message) =>
 );
 ```
 
-### Transaction Settings
+## Transaction Settings
 
 -   `setDefaultMaxTransactionFee` - Set maximum transaction fee user is willing to pay.
 
@@ -201,11 +203,11 @@ The setSignOnDemand method in the Hedera JavaScript SDK allows you to configure 
 
 When you call client.setSignOnDemand(true), it instructs the SDK to defer the signing of transactions until the transaction.sign() method is explicitly called. This means that when you create a transaction using the SDK, it will not be signed automatically. Instead, you will need to call transaction.sign() manually before submitting the transaction to the network.
 
-### Query Settings
+## Query Settings
 
 -   `setDefaultMaxQueryPayment` - Same as `setDefaultMaxTransactionFee` but for queries.
 
-### Retry and Timeout Settings
+## Retry and Timeout Settings
 
 -   `setMaxAttempts` - Sets maximum retry attempts before an error is thrown.
 -   `setMaxNodeAttempts` - Set maximum node retry attempts
