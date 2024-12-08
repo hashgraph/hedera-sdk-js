@@ -1,6 +1,17 @@
-# Configuration
+# Introduction
 
 The packages of the JS SDK support loading of configuration from an .env file or via the environment.
+
+# Table of contents
+
+1. Introduction ..................................................
+2. Configuration Options .........................................
+   2.1 Network Configuration .....................................
+   2.2 Operator Settings .......................................... 4
+   2.3 Transaction Settings ....................................... 5
+3. Error Handling ................................................
+4. Examples ......................................................
+5. Conclusion ....................................................
 
 ## Environment Variables
 
@@ -112,33 +123,39 @@ client.setMirrorNode(["https://testnet.mirrornode.hedera.com"]);
 
 -   `setNetworkFromAddressBook` - Set network using address book response from the AddressBookQuery execution.
 
-    ```javascript
-    const result = await new AddressBookQuery()
-        .setFileId(FileId.ADDRESS_BOOK)
-        .execute(client);
+```javascript
+const result = await new AddressBookQuery()
+    .setFileId(FileId.ADDRESS_BOOK)
+    .execute(client);
 
-    client = client.setNetworkFromAddressBook(result);
-    ```
+client = client.setNetworkFromAddressBook(result);
+```
 
 -   `setLedgerId` - Set the network ledger ID (mainnet/testnet/previewnet)
 
-```
+```javascript
 let client = Client.forNetwork().setLedgerId(LedgerId.PREVIEWNET);
 ```
 
 or
 
-```
+```javascript
 let client = Client.forNetwork().setLedgerId("previewnet");
 ```
 
--   `setTransportSecurity` - Configure transport security settings
+-   `setTransportSecurity` - The `setTransportSecurity` method in the Hedera JavaScript SDK is used to enable or disable transport security for the communication between the SDK and the Hedera network nodes. Transport security refers to the mechanisms used to secure the communication channel, typically involving encryption and authentication protocols.
+    When transport security is enabled, the SDK will establish a secure connection with the Hedera network nodes using protocols like Transport Layer Security (TLS) or its predecessor, Secure Sockets Layer (SSL). This ensures that the data transmitted between the SDK and the nodes is encrypted, protecting it from eavesdropping and tampering. It also provides authentication mechanisms to verify the identity of the nodes and prevent man-in-the-middle attacks.
+
+```javascript
+const client = Client.forNetwork();
+client.setTransportSecurity(true);
+```
 
 ### Operator Settings
 
--   `setOperator` - Set the operator account and private key. This operator is the account that will pay for the transactions you execute.
+-   `setOperator` - Set the operator account and private key. The operator is the account that will pay for the transactions the user executes.
 
-```
+```javascript
 const operatorId = AccountId.fromString("...");
 const operatorKey = PrivateKey.generateED25519();
 let client = Client.forNetwork().setOperator(operatorId, operatorKey);
@@ -146,16 +163,24 @@ let client = Client.forNetwork().setOperator(operatorId, operatorKey);
 
 -   `setOperatorWith` - Set the operator id and key and also provide a custom transaction signer function instead of using the default one.
 
-```
+```javascript
 tx.setOperatorWith(accountId, key.publicKey, (message) =>
-            Promise.resolve(key.sign(message)),
-        );
+    Promise.resolve(key.sign(message)),
+);
 ```
 
 ### Transaction Settings
 
 -   `setDefaultMaxTransactionFee` - Set maximum transaction fee user is willing to pay.
+
+```javascript
+const client = Client.forTestnet({
+    scheduleNetworkUpdate: false,
+}).setDefaultMaxTransactionFee(Hbar.fromTinybars(1));
+```
+
 -   `setDefaultRegenerateTransactionId` - Configure transaction ID regeneration. This function accepts a boolean type of value. When set to true it will regenerate the transaction ID when a `TRANSACTION_EXPIRED` status is returned.
+
 -   `setSignOnDemand` - Configure on-demand transaction signing
 
 The setSignOnDemand method in the Hedera JavaScript SDK allows you to configure how transactions are signed before being submitted to the Hedera network. By default, transactions are signed immediately after being constructed. However, in some cases, you may want to delay the signing process until just before the transaction is submitted. This can be useful in scenarios where you need to perform additional operations or validations on the transaction before signing it.
@@ -164,7 +189,7 @@ When you call client.setSignOnDemand(true), it instructs the SDK to defer the si
 
 ### Query Settings
 
--   `setDefaultMaxQueryPayment` - Set maximum query payment.
+-   `setDefaultMaxQueryPayment` - Same as `setDefaultMaxTransactionFee` but for queries.
 
 ### Retry and Timeout Settings
 
@@ -177,7 +202,7 @@ When you call client.setSignOnDemand(true), it instructs the SDK to defer the si
 -   `setRequestTimeout` - This timeout is the maximum allowed time for the entire transaction/query, including all retries.
 -   `setMaxExecutionTime` - this timeout applies to each single gRPC request within the transaction/query. It’s used for the edge cases where 10 seconds are not enough for the execution of a single gRPC request and the user can pass more.
 
-```
+```javascript
 const client = Client.forNetwork();
 client.setRequestTimeout(10000); // Set the request timeout to 10 seconds (10000 milliseconds)
 ```
@@ -186,33 +211,28 @@ client.setRequestTimeout(10000); // Set the request timeout to 10 seconds (10000
 
 -   `setMaxNodesPerTransaction` - Set maximum nodes per transaction
     This sets the maximum amount of nodes that the transaction will try to execute to.Setting a higher value for setMaxNodesPerTransaction can improve the reliability of transaction execution, but it also increases the network load and the overall cost of the transaction (since you'll be paying transaction fees for each node that executes the transaction).
--   `setNodeMinBackoff` - Set minimum node backoff time
+-   `setNodeMinBackoff` - The `setNodeMinBackoff` method is SDK is used to set the minimum backoff time (in milliseconds) for retrying operations on a specific node.
+    When you send a request to a node in the Hedera network, and the node fails to respond or encounters an error, the SDK will attempt to retry the request on the same node after a certain amount of time. This time is known as the backoff time, and it starts at a minimum value (set by setNodeMinBackoff) and increases exponentially with each subsequent retry attempt, up to a maximum value (set by setNodeMaxBackoff).
+    The backoff mechanism is designed to prevent overwhelming the nodes with too many retries in a short period of time, while still allowing the SDK to recover from transient failures or network issues.
+    Here's an example of how you can set the minimum node backoff time using the setNodeMinBackoff method:
 
-The setNodeMinBackoff method in the Hedera JavaScript SDK is used to set the minimum backoff time (in milliseconds) for retrying operations on a specific node.
-When you send a request to a node in the Hedera network, and the node fails to respond or encounters an error, the SDK will attempt to retry the request on the same node after a certain amount of time. This time is known as the backoff time, and it starts at a minimum value (set by setNodeMinBackoff) and increases exponentially with each subsequent retry attempt, up to a maximum value (set by setNodeMaxBackoff).
-The backoff mechanism is designed to prevent overwhelming the nodes with too many retries in a short period of time, while still allowing the SDK to recover from transient failures or network issues.
-Here's an example of how you can set the minimum node backoff time using the setNodeMinBackoff method:
-
-```
+```javascript
 const client = Client.forNetwork();
 client.setNodeMinBackoff(500); // Set minimum node backoff to 500 milliseconds (0.5 seconds)
 ```
 
--   `setNodeMaxBackoff` - Set maximum node backoff time
-
-Same as above but it sets the maximum seconds allowed for a node backoff.
+-   `setNodeMaxBackoff` - It sets the maximum seconds allowed for the node backoff explained in the previous setting.
 
 -   `setNodeMinReadmitPeriod` - Set minimum node readmit period
     When a node fails to respond or encounters an error while processing a request, the SDK will temporarily remove that node from the pool of available nodes. This is done to prevent the SDK from repeatedly sending requests to a node that is experiencing issues, which could further exacerbate the problem.
     The `setNodeMinReadmitPeriod` method allows you to configure the minimum amount of time that a node must wait before it can be readmitted to the pool of available nodes. During this period, the SDK will not send any requests to that node, giving it time to recover or resolve any issues it may be experiencing.
 
 -   `setNodeMaxReadmitPeriod` - Set maximum node readmit period.
+    The setNodeMaxReadmitPeriod method allows you to configure the maximum amount of time that a node can be excluded from the pool of available nodes. After this period has elapsed, the SDK will automatically readmit the node to the pool, regardless of whether it has recovered or not.
 
-The setNodeMaxReadmitPeriod method allows you to configure the maximum amount of time that a node can be excluded from the pool of available nodes. After this period has elapsed, the SDK will automatically readmit the node to the pool, regardless of whether it has recovered or not.
+-   `setNodeWaitTime` - The `setNodeWaitTime` method in the Hedera JavaScript SDK is used to set the minimum amount of time (in milliseconds) that the SDK will wait before attempting to send a request to a node that has recently failed or encountered an error.
 
--   `setNodeWaitTime` - The setNodeWaitTime method in the Hedera JavaScript SDK is used to set the minimum amount of time (in milliseconds) that the SDK will wait before attempting to send a request to a node that has recently failed or encountered an error.
-
-```
+```javascript
 const client = Client.forNetwork();
 client.setNodeWaitTime(5000); // Set node wait time to 5 seconds (5000 milliseconds)
 ```
@@ -228,9 +248,9 @@ client.setNodeWaitTime(5000); // Set node wait time to 5 seconds (5000 milliseco
 
 -   `setLogger` - Configure client logger. Setting a logger can give you additional information for debugging processes. This is an example of how you can use this fucntionality.
 
-```
-    const infoLogger = new Logger(LogLevel.Info);
-    client.setLogger(infoLogger);
+```javascript
+const infoLogger = new Logger(LogLevel.Info);
+client.setLogger(infoLogger);
 ```
 
-There are different LogLevels. They may show only errors, warnings, or infos depending on the loglevel you have set.
+There are different LogLevels: `LogLevel.Info`, ``LogLevel.Silent`, `LogLeve.Trace`, `LogLevel.Debug`, `LogLevel.Warn`, `LogLevel.Error`, `LogLevel.Fatal`.
