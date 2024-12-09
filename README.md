@@ -70,6 +70,10 @@ See [examples](./examples).
 
 Every example can be executed using the following command from the root directory: `node examples/[name-of-example].js`
 
+## Configuration
+
+For detailed information on configuring the SDK, including environment variables and client settings, please refer to the [CONFIGURATION.md](CONFIGURATION.md) file.
+
 ## Start tests
 
 * To start the integration tests follow the next steps:
