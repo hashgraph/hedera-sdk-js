@@ -34,6 +34,27 @@ export interface CreateTokenParams {
     readonly commonTransactionParams?: Record<string, any>;
 }
 
+export interface UpdateTokenParams {
+    readonly tokenId?: string;
+    readonly symbol?: string;
+    readonly name?: string;
+    readonly treasuryAccountId?: string;
+    readonly adminKey?: string;
+    readonly kycKey?: string;
+    readonly freezeKey?: string;
+    readonly wipeKey?: string;
+    readonly supplyKey?: string;
+    readonly autoRenewAccountId?: string;
+    readonly autoRenewPeriod?: string;
+    readonly expirationTime?: string;
+    readonly memo?: string;
+    readonly feeScheduleKey?: string;
+    readonly pauseKey?: string;
+    readonly metadata?: string;
+    readonly metadataKey?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
 export interface DeleteTokenParams {
     readonly tokenId?: string;
     readonly commonTransactionParams?: Record<string, any>;

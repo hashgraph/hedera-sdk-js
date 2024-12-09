@@ -5,6 +5,7 @@ import {
     CustomRoyaltyFee,
     TokenCreateTransaction,
     TokenDeleteTransaction,
+    TokenUpdateTransaction,
     TokenFeeScheduleUpdateTransaction,
 } from "@hashgraph/sdk";
 import Long from "long";
@@ -18,6 +19,7 @@ import { applyCommonTransactionParams } from "../params/common-tx-params";
 import {
     CreateTokenParams,
     DeleteTokenParams,
+    UpdateTokenParams,
     UpdateTokenFeeScheduleParams,
 } from "../params/token";
 
@@ -247,6 +249,118 @@ export const createToken = async ({
 
     return {
         tokenId: receipt.tokenId.toString(),
+        status: receipt.status.toString(),
+    };
+};
+
+export const updateToken = async ({
+    tokenId,
+    symbol,
+    name,
+    treasuryAccountId,
+    adminKey,
+    kycKey,
+    freezeKey,
+    wipeKey,
+    supplyKey,
+    autoRenewAccountId,
+    autoRenewPeriod,
+    expirationTime,
+    memo,
+    feeScheduleKey,
+    pauseKey,
+    metadata,
+    metadataKey,
+    commonTransactionParams,
+}: UpdateTokenParams): Promise<TokenResponse> => {
+    let transaction = new TokenUpdateTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (symbol != null) {
+        transaction.setTokenSymbol(symbol);
+    }
+
+    if (name != null) {
+        transaction.setTokenName(name);
+    }
+
+    if (treasuryAccountId != null) {
+        transaction.setTreasuryAccountId(
+            AccountId.fromString(treasuryAccountId),
+        );
+    }
+
+    if (adminKey != null) {
+        transaction.setAdminKey(getKeyFromString(adminKey));
+    }
+
+    if (kycKey != null) {
+        transaction.setKycKey(getKeyFromString(kycKey));
+    }
+
+    if (freezeKey != null) {
+        transaction.setFreezeKey(getKeyFromString(freezeKey));
+    }
+
+    if (wipeKey != null) {
+        transaction.setWipeKey(getKeyFromString(wipeKey));
+    }
+
+    if (supplyKey != null) {
+        transaction.setSupplyKey(getKeyFromString(supplyKey));
+    }
+
+    if (autoRenewAccountId != null) {
+        transaction.setAutoRenewAccountId(
+            AccountId.fromString(autoRenewAccountId),
+        );
+    }
+
+    if (autoRenewPeriod != null) {
+        transaction.setAutoRenewPeriod(Long.fromString(autoRenewPeriod));
+    }
+
+    if (expirationTime != null) {
+        transaction.setExpirationTime(new Date(Number(expirationTime) * 1000));
+    }
+
+    if (memo != null) {
+        transaction.setTokenMemo(memo);
+    }
+
+    if (feeScheduleKey != null) {
+        transaction.setFeeScheduleKey(getKeyFromString(feeScheduleKey));
+    }
+
+    if (pauseKey != null) {
+        transaction.setPauseKey(getKeyFromString(pauseKey));
+    }
+
+    if (metadata != null) {
+        transaction.setMetadata(Buffer.from(metadata, "utf8"));
+    }
+
+    if (metadataKey != null) {
+        transaction.setMetadataKey(getKeyFromString(metadataKey));
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
         status: receipt.status.toString(),
     };
 };
