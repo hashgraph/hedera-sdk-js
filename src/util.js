@@ -299,7 +299,6 @@ export function convertToBigNumber(variable) {
     requireNonNull(variable);
     if (
         isBigNumber(variable) ||
-        isString(variable) ||
         isNumber(variable) ||
         isLong(variable)
     ) {
