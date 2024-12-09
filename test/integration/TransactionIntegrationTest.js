@@ -19,6 +19,7 @@ import {
 import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { expect } from "chai";
+import { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
@@ -890,6 +891,157 @@ describe("TransactionIntegration", function () {
                 // Expect the error to be due to an invalid signature
                 expect(error.message).to.include("INVALID_SIGNATURE");
             }
+        });
+    });
+
+    describe("Transaction flows", function () {
+        let env, operatorId, operatorKey, client;
+
+        // Setting up the environment and creating a new account with a key list
+        before(async function () {
+            env = await IntegrationTestEnv.new();
+
+            operatorId = env.operatorId;
+            operatorKey = env.operatorKey;
+            client = env.client;
+        });
+
+        it("Creating, Signing, and Submitting a Transaction Using the Client with a Known Address Book", async function () {
+            // For simplicity, sending back to the operator
+            const recipientAccountId = env.operatorId;
+
+            // Create, sign, and execute the transfer transaction
+            const transferTx = await new TransferTransaction()
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1)) // Sender
+                .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1)) // Recipient
+                .freezeWith(client)
+                .sign(operatorKey);
+
+            const response = await transferTx.execute(client);
+
+            // Get and validate receipt
+            const receipt = await response.getReceipt(client);
+            expect(receipt.status.toString()).to.be.equal("SUCCESS");
+
+            // Get and validate record
+            const record = await response.getRecord(client);
+            expect(record.transactionId.accountId.toString()).to.be.equal(
+                operatorId.toString(),
+            );
+        });
+
+        it(`Creating, Signing, and Submitting a Transaction Using the Client with a Known Address Book.
+          In Addition, Serialize and Deserialize the Signed Transaction `, async function () {
+            // For simplicity, sending back to the operator
+            const recipientAccountId = env.operatorId;
+
+            const transaction = new TransferTransaction()
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1)) // Sender
+                .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1)) // Recipient
+                .freezeWith(client);
+
+            // Sign the transaction
+            await transaction.sign(operatorKey);
+
+            // Serialize the transaction to bytes
+            const transactionBytes = transaction.toBytes();
+
+            // Deserialize the transaction from bytes
+            const transactionFromBytes =
+                Transaction.fromBytes(transactionBytes);
+
+            // Execute the transaction
+            const executedTransaction =
+                await transactionFromBytes.execute(client);
+
+            const record = await executedTransaction.getRecord(client);
+            expect(record.transactionId.accountId.toString()).to.equal(
+                operatorId.toString(),
+            );
+        });
+
+        it("Creating, Signing, and Executing a Transaction with a Non-Existent Node Account ID", async function () {
+            // For simplicity, sending back to the operator
+            const recipientAccountId = env.operatorId;
+
+            // Create a transfer transaction and point it to an unknown node account ID (10000)
+            const signTransferTransaction = await new TransferTransaction()
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
+                .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1))
+                .setNodeAccountIds([
+                    new AccountId(10000),
+                    new AccountId(10001),
+                    new AccountId(10002),
+                ]) // Non-existent node account IDs
+                .freezeWith(client)
+                .sign(operatorKey);
+
+            try {
+                await signTransferTransaction.execute(client);
+            } catch (error) {
+                expect(error.message).to.be.equal(
+                    // Attempting to execute the transaction with a node that is not in the client's node list
+                    "Attempting to execute a transaction against nodes 0.0.10000, 0.0.10001 ..., which are not included in the Client's node list. Please review your Client configuration.",
+                );
+            }
+        });
+
+        it("Creating, Signing, and Executing a Transaction with a Non-Existent Node Account ID and an Existent one", async function () {
+            // For simplicity, sending back to the operator
+            const recipientAccountId = env.operatorId;
+
+            const signTransferTransaction = await new TransferTransaction()
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1))
+                .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1))
+                .setNodeAccountIds([new AccountId(10000), new AccountId(3)])
+                .freezeWith(client)
+                .sign(operatorKey);
+
+            const transferTransactionReceipt = await (
+                await signTransferTransaction.execute(client)
+            ).getReceipt(client);
+
+            expect(transferTransactionReceipt.status.toString()).to.be.equal(
+                "SUCCESS",
+            );
+        });
+
+        it("Creating transaction with clientTwo and executing it with clientOne which nodes aren't the same", async function () {
+            // For simplicity, sending back to the operator
+            const recipientAccountId = operatorId;
+            const clientOne = client;
+
+            const clientTwoNodes = {
+                "54.176.199.109:50211": new AccountId(7),
+                "35.155.49.147:50211": new AccountId(8),
+                "127.0.0.1:50211": new AccountId(3),
+                "34.106.102.218:50211": new AccountId(8),
+            };
+
+            // Create clientTwo with different nodes, most of them incorrect
+            const clientTwo = Client.forNetwork(clientTwoNodes).setOperator(
+                operatorId,
+                operatorKey,
+            );
+
+            // Construct the transaction with clientTwo
+            const signTransferTransaction = await new TransferTransaction()
+                .addHbarTransfer(operatorId, Hbar.fromTinybars(-1)) //Sending account
+                .addHbarTransfer(recipientAccountId, Hbar.fromTinybars(1)) //Receiving account
+                .freezeWith(clientTwo)
+                .sign(operatorKey);
+
+            // Execute the transaction with clientOne
+            const signTransferTxExecution =
+                await signTransferTransaction.execute(clientOne);
+
+            // Get the receipt
+            const signTransferTxReceipt =
+                await signTransferTxExecution.getReceipt(clientOne);
+
+            expect(signTransferTxReceipt.status.toString()).to.be.equal(
+                "SUCCESS",
+            );
         });
     });
 });

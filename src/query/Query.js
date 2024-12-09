@@ -282,6 +282,11 @@ export default class Query extends Executable {
         if (this._paymentTransactionId == null) {
             // And payment is required
             if (this._isPaymentRequired()) {
+                // Assign the account IDs to which the transaction should be sent.
+                this.transactionNodeIds = Object.values(client.network).map(
+                    (accountNodeId) => accountNodeId.toString(),
+                );
+
                 // And the client has an operator
                 if (this._operator != null) {
                     // Generate the payment transaction ID
