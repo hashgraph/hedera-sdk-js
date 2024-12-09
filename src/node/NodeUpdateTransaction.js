@@ -477,18 +477,18 @@ export default class NodeUpdateTransaction extends Transaction {
                               endpoint._toProtobuf(),
                       )
                     : null,
-            gossipCaCertificate: {
-                value:
-                    this._gossipCaCertificate != null
-                        ? this._gossipCaCertificate
-                        : null,
-            },
-            grpcCertificateHash: {
-                value:
-                    this._grpcCertificateHash != null
-                        ? this._grpcCertificateHash
-                        : null,
-            },
+            gossipCaCertificate:
+                this._gossipCaCertificate != null
+                    ? {
+                          value: this._gossipCaCertificate,
+                      }
+                    : null,
+            grpcCertificateHash:
+                this._grpcCertificateHash != null
+                    ? {
+                          value: this._grpcCertificateHash,
+                      }
+                    : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             nodeId: this._nodeId != null ? this._nodeId : null,
