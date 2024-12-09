@@ -29,7 +29,7 @@ import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @typedef {import("./Endpoint.js").EndPointJson} EndpointJson
- * @typedef {import("long").Long} Long
+ * @typedef {import("long")} Long
  */
 
 /**
