@@ -79,8 +79,11 @@ async function main() {
     let info = await new ScheduleInfoQuery()
         .setScheduleId(scheduleId)
         .execute(client);
-
-    console.log("Scheduled transaction is not yet executed. ");
+    let executedAt = info.executed ? info.executed : "null";
+    console.log(
+        "Scheduled transaction is not yet executed. Executed at: ",
+        executedAt,
+    );
 
     // Step 5: Sign the transaction with the other key
     let accountBalance = await new AccountBalanceQuery()
@@ -114,7 +117,7 @@ async function main() {
         .execute(client);
     console.log(
         "Scheduled transaction is executed. Executed at: ",
-        info.executed,
+        info.executed.toDate(),
     );
 
     // Step 6: Schedule another transfer transaction
@@ -149,7 +152,11 @@ async function main() {
     info = await new ScheduleInfoQuery()
         .setScheduleId(scheduleId2)
         .execute(client);
-    console.log("Scheduled transaction is not yet executed.");
+    executedAt = info.executed ? info.executed : "null";
+    console.log(
+        "Scheduled transaction is not yet executed. Executed at: ",
+        executedAt,
+    );
 
     // Step 8: Update the account’s key
     console.log("Updating Alice's key to be the 1st key");
