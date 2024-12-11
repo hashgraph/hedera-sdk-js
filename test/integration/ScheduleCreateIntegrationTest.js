@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import {
     AccountCreateTransaction,
     Hbar,
@@ -125,12 +126,6 @@ describe("ScheduleCreate", function () {
             key2.publicKey,
             key3.publicKey,
         );
-
-        const balance = await new AccountBalanceQuery()
-            .setAccountId(operatorId)
-            .execute(env.client);
-
-        console.log(`Balances of the new account: ${balance.toString()}`);
 
         const response = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(10))
@@ -480,6 +475,69 @@ describe("ScheduleCreate", function () {
 
         // Verify the transaction is executed
         expect(info.executed).to.not.be.null;
+    });
+
+    it("should execute with short expiration time", async function () {
+        const key = PrivateKey.generateED25519();
+        const hasJitter = false;
+        const SHORT_EXPIRATION_TIME = 10_000;
+
+        const { accountId } = await (
+            await new AccountCreateTransaction()
+                .setKey(key)
+                .setInitialBalance(new Hbar(10))
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        const transfer = new TransferTransaction()
+            .addHbarTransfer(accountId, new Hbar(1).negated())
+            .addHbarTransfer(env.operatorId, new Hbar(1));
+
+        var { scheduleId } = await (
+            await transfer
+                .schedule()
+                .setExpirationTime(
+                    Timestamp.generate(hasJitter).plusNanos(15_000_000_000),
+                )
+                .setWaitForExpiry(true)
+                .setScheduleMemo("HIP-423 Integration Test")
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        let info = await new ScheduleInfoQuery()
+            .setScheduleId(scheduleId)
+            .execute(env.client);
+
+        expect(info.executed).to.equal(null);
+
+        await (
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new ScheduleInfoQuery()
+            .setScheduleId(scheduleId)
+            .execute(env.client);
+
+        expect(info.executed).to.equal(null);
+
+        const balanceBefore = await new AccountBalanceQuery()
+            .setAccountId(accountId)
+            .execute(env.client);
+
+        await setTimeout(SHORT_EXPIRATION_TIME);
+
+        const balanceAfter = await new AccountBalanceQuery()
+            .setAccountId(accountId)
+            .execute(env.client);
+
+        expect(balanceAfter.hbars.toTinybars().toNumber()).to.be.lte(
+            balanceBefore.hbars.toTinybars().toNumber(),
+        );
     });
 
     after(async function () {
