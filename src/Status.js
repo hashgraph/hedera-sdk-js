@@ -703,6 +703,10 @@ export default class Status {
                 return "INVALID_GRPC_CERTIFICATE_HASH";
             case Status.MissingExpiryTime:
                 return "MISSING_EXPIRY_TIME";
+            case Status.NoSchedulingAllowedAfterScheduledRecursion:
+                return "NO_SCHEDULING_ALLOWED_AFTER_SCHEDULED_RECURSION";
+            case Status.RecursiveSchedulingLimitReached:
+                return "RECURSIVE_SCHEDULING_LIMIT_REACHED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1377,6 +1381,10 @@ export default class Status {
                 return Status.InvalidGrpcCertificateHash;
             case 372:
                 return Status.MissingExpiryTime;
+            case 373:
+                return Status.NoSchedulingAllowedAfterScheduledRecursion;
+            case 374:
+                return Status.RecursiveSchedulingLimitReached;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -3107,3 +3115,15 @@ Status.InvalidGrpcCertificateHash = new Status(371);
  * given an explicit expiration time.
  */
 Status.MissingExpiryTime = new Status(372);
+
+/**
+ * A contract operation attempted to schedule another transaction after it
+ * had already scheduled a recursive contract call.
+ */
+Status.NoSchedulingAllowedAfterScheduledRecursion = new Status(373);
+
+/**
+ * A contract can schedule recursive calls a finite number of times (this is
+ * approximately four million times with typical network configuration.)
+ */
+Status.RecursiveSchedulingLimitReached = new Status(374);
