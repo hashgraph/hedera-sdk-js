@@ -52,6 +52,7 @@ async function main() {
     const transfer = new TransferTransaction()
         .addHbarTransfer(alice, new Hbar(-1))
         .addHbarTransfer(client.operatorAccountId, new Hbar(1));
+    const hasJitter = false;
 
     const scheduleId = (
         await (
@@ -59,7 +60,9 @@ async function main() {
                 .schedule()
                 .setWaitForExpiry(false)
                 .setExpirationTime(
-                    Timestamp.generate().plusNanos(86400 * 1_000_000_000),
+                    Timestamp.generate(hasJitter).plusNanos(
+                        86400 * 1_000_000_000,
+                    ),
                 ) // 1 day in milliseconds
                 .execute(client)
         ).getReceipt(client)
@@ -121,7 +124,7 @@ async function main() {
     );
 
     // Step 6: Schedule another transfer transaction
-    console.log("Creating new scheduled transaction with 20 seconds expiry");
+    console.log("Creating new scheduled transaction with 10 seconds expiry");
     const transfer2 = new TransferTransaction()
         .addHbarTransfer(alice, new Hbar(-1))
         .addHbarTransfer(client.operatorAccountId, new Hbar(1));
@@ -132,7 +135,7 @@ async function main() {
                 .schedule()
                 .setWaitForExpiry(true)
                 .setExpirationTime(
-                    Timestamp.generate().plusNanos(20 * 1_000_000_000),
+                    Timestamp.generate(hasJitter).plusNanos(10 * 1_000_000_000),
                 ) // 10 seconds in milliseconds
                 .execute(client)
         ).getReceipt(client)
