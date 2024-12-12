@@ -1,5 +1,3 @@
-// LongTermScheduledTransactionExample.js
-
 import {
     Client,
     AccountCreateTransaction,
@@ -18,6 +16,16 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
+    if (
+        process.env.OPERATOR_ID == null ||
+        process.env.OPERATOR_KEY == null ||
+        process.env.HEDERA_NETWORK == null
+    ) {
+        throw new Error(
+            "Environment variables OPERATOR_ID, HEDERA_NETWORK, and OPERATOR_KEY are required.",
+        );
+    }
+
     console.log("Long Term Scheduled Transaction Example Start!");
 
     // Step 0: Create and configure the SDK Client.
@@ -37,7 +45,7 @@ async function main() {
 
     // Step 2: Create the account
     console.log("Creating new account...");
-    const alice = (
+    const aliceId = (
         await (
             await new AccountCreateTransaction()
                 .setKey(thresholdKey)
@@ -45,12 +53,12 @@ async function main() {
                 .execute(client)
         ).getReceipt(client)
     ).accountId;
-    console.log("Created new account with ID: ", alice.toString());
+    console.log("Created new account with ID: ", aliceId.toString());
 
     // Step 3: Schedule a transfer transaction
     console.log("Creating new scheduled transaction with 1 day expiry");
     const transfer = new TransferTransaction()
-        .addHbarTransfer(alice, new Hbar(-1))
+        .addHbarTransfer(aliceId, new Hbar(-1))
         .addHbarTransfer(client.operatorAccountId, new Hbar(1));
     const hasJitter = false;
 
@@ -82,7 +90,7 @@ async function main() {
     let info = await new ScheduleInfoQuery()
         .setScheduleId(scheduleId)
         .execute(client);
-    let executedAt = info.executed ? info.executed : "null";
+    let executedAt = info.executed ? info.executed : "none";
     console.log(
         "Scheduled transaction is not yet executed. Executed at: ",
         executedAt,
@@ -90,7 +98,7 @@ async function main() {
 
     // Step 5: Sign the transaction with the other key
     let accountBalance = await new AccountBalanceQuery()
-        .setAccountId(alice)
+        .setAccountId(aliceId)
         .execute(client);
     console.log(
         "Alice's account balance before schedule transfer: ",
@@ -108,7 +116,7 @@ async function main() {
     ).getReceipt(client);
 
     accountBalance = await new AccountBalanceQuery()
-        .setAccountId(alice)
+        .setAccountId(aliceId)
         .execute(client);
     console.log(
         "Alice's account balance after schedule transfer: ",
@@ -126,7 +134,7 @@ async function main() {
     // Step 6: Schedule another transfer transaction
     console.log("Creating new scheduled transaction with 10 seconds expiry");
     const transfer2 = new TransferTransaction()
-        .addHbarTransfer(alice, new Hbar(-1))
+        .addHbarTransfer(aliceId, new Hbar(-1))
         .addHbarTransfer(client.operatorAccountId, new Hbar(1));
 
     const scheduleId2 = (
@@ -155,7 +163,7 @@ async function main() {
     info = await new ScheduleInfoQuery()
         .setScheduleId(scheduleId2)
         .execute(client);
-    executedAt = info.executed ? info.executed : "null";
+    executedAt = info.executed ? info.executed : "none";
     console.log(
         "Scheduled transaction is not yet executed. Executed at: ",
         executedAt,
@@ -167,7 +175,7 @@ async function main() {
         await (
             await (
                 await new AccountUpdateTransaction()
-                    .setAccountId(alice)
+                    .setAccountId(aliceId)
                     .setKey(privateKey1.publicKey)
                     .freezeWith(client)
                     .sign(privateKey1)
@@ -177,7 +185,7 @@ async function main() {
 
     // Step 9: Verify that the transfer successfully executes
     accountBalance = await new AccountBalanceQuery()
-        .setAccountId(alice)
+        .setAccountId(aliceId)
         .execute(client);
     console.log(
         "Alice's account balance before schedule transfer: ",
@@ -188,7 +196,7 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for 10 seconds
 
     accountBalance = await new AccountBalanceQuery()
-        .setAccountId(alice)
+        .setAccountId(aliceId)
         .execute(client);
     console.log(
         "Alice's account balance after schedule transfer: ",
