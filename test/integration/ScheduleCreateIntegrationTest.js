@@ -497,7 +497,7 @@ describe("ScheduleCreate", function () {
             await transfer
                 .schedule()
                 .setExpirationTime(
-                    Timestamp.generate(hasJitter).plusNanos(15_000_000_000),
+                    Timestamp.generate(hasJitter).plusNanos(10_000_000_000),
                 )
                 .setWaitForExpiry(true)
                 .setScheduleMemo("HIP-423 Integration Test")
