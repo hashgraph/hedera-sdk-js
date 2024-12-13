@@ -5,12 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.55.1
+
+## What's Changed
+
+* feat: update \_makeTransactionData of NodeUpdateTransaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2658
+* chore: update protobufs by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/265
+
+## v2.55.0
+
+## What's Changed
+
+* feat: Added InvalidNode check in the Executable by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: Protobufs updated by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2691
+* fix: typescript issue with long by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2692
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+* ci: add pr title check workflow to ensure conventional commits by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+
+
 ## v2.55.0-beta.1
 
 ## What's Changed
 
-* feat: Pull protos from services @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
-* fix: rework examples y @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
 * docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
 * chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
 * ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684

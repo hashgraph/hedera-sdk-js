@@ -697,16 +697,16 @@ export default class Status {
                 return "TOKEN_AIRDROP_WITH_FALLBACK_ROYALTY";
             case Status.InvalidTokenInPendingAirdrop:
                 return "INVALID_TOKEN_IN_PENDING_AIRDROP";
-            case Status.ScheduleExpiryMustBeFuture:
-                return "SCHEDULE_EXPIRY_MUST_BE_FUTURE";
-            case Status.ScheduleExpiryTooLong:
-                return "SCHEDULE_EXPIRY_TOO_LONG";
             case Status.ScheduleExpiryIsBusy:
                 return "SCHEDULE_EXPIRY_IS_BUSY";
             case Status.InvalidGrpcCertificateHash:
                 return "INVALID_GRPC_CERTIFICATE_HASH";
             case Status.MissingExpiryTime:
                 return "MISSING_EXPIRY_TIME";
+            case Status.NoSchedulingAllowedAfterScheduledRecursion:
+                return "NO_SCHEDULING_ALLOWED_AFTER_SCHEDULED_RECURSION";
+            case Status.RecursiveSchedulingLimitReached:
+                return "RECURSIVE_SCHEDULING_LIMIT_REACHED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1376,15 +1376,15 @@ export default class Status {
             case 369:
                 return Status.InvalidTokenInPendingAirdrop;
             case 370:
-                return Status.ScheduleExpiryMustBeFuture;
-            case 371:
-                return Status.ScheduleExpiryTooLong;
-            case 372:
                 return Status.ScheduleExpiryIsBusy;
-            case 373:
+            case 371:
                 return Status.InvalidGrpcCertificateHash;
-            case 374:
+            case 372:
                 return Status.MissingExpiryTime;
+            case 373:
+                return Status.NoSchedulingAllowedAfterScheduledRecursion;
+            case 374:
+                return Status.RecursiveSchedulingLimitReached;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -3100,31 +3100,30 @@ Status.InvalidTokenInPendingAirdrop = new Status(369);
 
 /**
  * A scheduled transaction configured to wait for expiry to execute was given
- * an expiry time not strictly after the time at which its creation reached
- * consensus.
- */
-Status.ScheduleExpiryMustBeFuture = new Status(370);
-/**
- * A scheduled transaction configured to wait for expiry to execute was given
- * an expiry time too far in the future after the time at which its creation
- * reached consensus.
- */
-Status.ScheduleExpiryTooLong = new Status(371);
-
-/**
- * A scheduled transaction configured to wait for expiry to execute was given
  * an expiry time at which there is already too many transactions scheduled to
  * expire; its creation must be retried with a different expiry.
  */
-Status.ScheduleExpiryIsBusy = new Status(372);
+Status.ScheduleExpiryIsBusy = new Status(370);
 
 /**
  * The provided gRPC certificate hash is invalid.
  */
-Status.InvalidGrpcCertificateHash = new Status(373);
+Status.InvalidGrpcCertificateHash = new Status(371);
 
 /**
  * A scheduled transaction configured to wait for expiry to execute was not
  * given an explicit expiration time.
  */
-Status.MissingExpiryTime = new Status(374);
+Status.MissingExpiryTime = new Status(372);
+
+/**
+ * A contract operation attempted to schedule another transaction after it
+ * had already scheduled a recursive contract call.
+ */
+Status.NoSchedulingAllowedAfterScheduledRecursion = new Status(373);
+
+/**
+ * A contract can schedule recursive calls a finite number of times (this is
+ * approximately four million times with typical network configuration.)
+ */
+Status.RecursiveSchedulingLimitReached = new Status(374);
