@@ -74,6 +74,7 @@ export const ALL_WEB_NETWORK_NODES = {
     ...WEB_PREVIEWNET,
 };
 
+// sonar-ignore-start
 /**
  * @type {Record<string, string>}
  */
@@ -182,3 +183,4 @@ export const ALL_NETWORK_IPS = {
     "50.18.17.93": "0.0.9",
     "34.125.23.49": "0.0.9",
 };
+// sonar-ignore-end
