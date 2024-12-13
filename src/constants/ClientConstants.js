@@ -75,14 +75,16 @@ export const ALL_WEB_NETWORK_NODES = {
     ...WEB_PREVIEWNET,
 };
 
-// sonar-ignore-start
 /**
  * @type {Record<string, string>}
  */
+//NOSONAR
 export const ALL_NETWORK_IPS = {
     // MAINNET
     "34.239.82.6": "0.0.3",
+    //NOSONAR
     "35.237.200.180": "0.0.3",
+    //NOSONAR
     "3.130.52.236": "0.0.4",
     "35.186.191.247": "0.0.4",
     "3.18.18.254": "0.0.5",
