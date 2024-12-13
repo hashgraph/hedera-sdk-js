@@ -25,6 +25,11 @@ import GrpcServicesError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
 import { ALL_NETWORK_IPS } from "../constants/ClientConstants.js";
 
+/** @type {{ [key: string]: string }} */
+const certificateCache = {};
+/** @type {{ [key: string]: Client }} */
+const clientCache = {};
+
 export default class NodeChannel extends Channel {
     /**
      * @internal
@@ -36,10 +41,6 @@ export default class NodeChannel extends Channel {
 
         /** @type {Client | null} */
         this._client = null;
-        /** @type {{ [key: string]: string }} */
-        this.certificateCache = {};
-        /** @type {{ [key: string]: Client }} */
-        this.clientCache = {};
 
         this.address = address;
         this.maxExecutionTime = maxExecutionTime;
@@ -81,8 +82,8 @@ export default class NodeChannel extends Channel {
      * @returns {Promise<string>}
      */
     async _retrieveCertificate(address) {
-        if (this.certificateCache[address]) {
-            return this.certificateCache[address];
+        if (certificateCache[address]) {
+            return certificateCache[address];
         }
 
         return new Promise((resolve, reject) => {
@@ -98,8 +99,8 @@ export default class NodeChannel extends Channel {
 
                         if (cert && cert.raw) {
                             const certPEM = this.bytesToPem(cert.raw);
+                            certificateCache[address] = certPEM;
 
-                            this.certificateCache[address] = certPEM;
                             resolve(certPEM);
                         } else {
                             reject(new Error("No certificate retrieved."));
@@ -121,8 +122,8 @@ export default class NodeChannel extends Channel {
      * @returns {Promise<void>}
      */
     async _initializeClient() {
-        if (this.clientCache[this.address]) {
-            this._client = this.clientCache[this.address];
+        if (clientCache[this.address]) {
+            this._client = clientCache[this.address];
             return;
         }
 
@@ -150,7 +151,7 @@ export default class NodeChannel extends Channel {
 
         this._client = new Client(this.address, security, options);
 
-        this.clientCache[this.address] = this._client;
+        clientCache[this.address] = this._client;
     }
 
     /**
@@ -160,7 +161,7 @@ export default class NodeChannel extends Channel {
     close() {
         if (this._client) {
             this._client.close();
-            delete this.clientCache[this.address];
+            delete clientCache[this.address];
         }
     }
 
@@ -187,7 +188,7 @@ export default class NodeChannel extends Channel {
                             callback(
                                 new GrpcServicesError(
                                     GrpcStatus.Timeout,
-                                    ALL_NETWORK_IPS[this.address],
+                                    ALL_NETWORK_IPS[this.nodeIp],
                                 ),
                             );
                         } else {

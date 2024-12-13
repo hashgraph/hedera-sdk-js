@@ -1,6 +1,5 @@
 import {
     AccountBalanceQuery,
-    AccountId,
     Status,
     TokenCreateTransaction,
 } from "../../src/exports.js";
@@ -59,7 +58,6 @@ describe("AccountBalanceQuery", function () {
             await new AccountBalanceQuery()
                 .setAccountId(nodeAccountId)
                 .setMaxAttempts(10)
-                .setNodeAccountIds([new AccountId(4)])
                 .execute(clientTestnet);
         }
     });
