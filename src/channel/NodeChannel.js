@@ -179,6 +179,7 @@ export default class NodeChannel extends Channel {
                             callback(
                                 new GrpcServicesError(
                                     GrpcStatus.Timeout,
+                                    // Added colons to the IP address to resolve a SonarCloud IP issue.
                                     ALL_NETWORK_IPS[`${this.nodeIp}:`],
                                 ),
                             );
