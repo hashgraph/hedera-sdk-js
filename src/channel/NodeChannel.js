@@ -25,8 +25,6 @@ import GrpcServicesError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
 import { ALL_NETWORK_IPS } from "../constants/ClientConstants.js";
 
-/** @type {{ [key: string]: string }} */
-const certificateCache = {};
 /** @type {{ [key: string]: Client }} */
 const clientCache = {};
 
@@ -82,10 +80,6 @@ export default class NodeChannel extends Channel {
      * @returns {Promise<string>}
      */
     async _retrieveCertificate(address) {
-        if (certificateCache[address]) {
-            return certificateCache[address];
-        }
-
         return new Promise((resolve, reject) => {
             const socket = tls.connect(
                 {
@@ -98,10 +92,7 @@ export default class NodeChannel extends Channel {
                         const cert = socket.getPeerCertificate();
 
                         if (cert && cert.raw) {
-                            const certPEM = this.bytesToPem(cert.raw);
-                            certificateCache[address] = certPEM;
-
-                            resolve(certPEM);
+                            resolve(this.bytesToPem(cert.raw));
                         } else {
                             reject(new Error("No certificate retrieved."));
                         }
@@ -162,7 +153,6 @@ export default class NodeChannel extends Channel {
         if (this._client) {
             this._client.close();
             delete clientCache[this.address];
-            delete certificateCache[this.address];
         }
     }
 
@@ -189,7 +179,7 @@ export default class NodeChannel extends Channel {
                             callback(
                                 new GrpcServicesError(
                                     GrpcStatus.Timeout,
-                                    ALL_NETWORK_IPS[this.nodeIp],
+                                    ALL_NETWORK_IPS[`${this.nodeIp}:`],
                                 ),
                             );
                         } else {
