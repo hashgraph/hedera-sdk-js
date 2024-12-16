@@ -105,6 +105,8 @@ export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransact
 export { default as LiveHashDeleteTransaction } from "./account/LiveHashDeleteTransaction.js";
 export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
 export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js";
+export { default as MirrorNodeContractCallQuery } from "./query/MirrorNodeContractCallQuery.js";
+export { default as MirrorNodeContractEstimateQuery } from "./query/MirrorNodeContractEstimateQuery.js";
 export { default as NodeAddressBook } from "./address_book/NodeAddressBook.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
