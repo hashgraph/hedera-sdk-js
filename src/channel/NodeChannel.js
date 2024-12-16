@@ -162,6 +162,7 @@ export default class NodeChannel extends Channel {
         if (this._client) {
             this._client.close();
             delete clientCache[this.address];
+            delete certificateCache[this.address];
         }
     }
 

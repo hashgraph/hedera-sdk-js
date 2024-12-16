@@ -1,4 +1,4 @@
-/* sonar-ignore-file */
+/* NOSONAR */
 import AccountId from "../account/AccountId.js";
 
 // MAINNET node proxies are the same for both 'WebClient' and 'NativeClient'
@@ -78,13 +78,10 @@ export const ALL_WEB_NETWORK_NODES = {
 /**
  * @type {Record<string, string>}
  */
-//NOSONAR
 export const ALL_NETWORK_IPS = {
     // MAINNET
     "34.239.82.6": "0.0.3",
-    //NOSONAR
     "35.237.200.180": "0.0.3",
-    //NOSONAR
     "3.130.52.236": "0.0.4",
     "35.186.191.247": "0.0.4",
     "3.18.18.254": "0.0.5",
@@ -186,4 +183,3 @@ export const ALL_NETWORK_IPS = {
     "50.18.17.93": "0.0.9",
     "34.125.23.49": "0.0.9",
 };
-// sonar-ignore-end
