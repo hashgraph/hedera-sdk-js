@@ -15,6 +15,8 @@ import {
     TokenFreezeTransaction,
     TokenUnfreezeTransaction,
     TokenGrantKycTransaction,
+    TokenRevokeKycTransaction,
+    TokenMintTransaction,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -32,7 +34,8 @@ import {
     AssociateDisassociateTokenParams,
     PauseUnPauseTokenParams,
     FreezeUnfreezeTokenParams,
-    GrantTokenKycParams,
+    GrantRevokeTokenKycParams,
+    MintTokenParams,
 } from "../params/token";
 
 import { TokenResponse } from "../response/token";
@@ -708,7 +711,7 @@ export const grantTokenKyc = async ({
     tokenId,
     accountId,
     commonTransactionParams,
-}: GrantTokenKycParams): Promise<TokenResponse> => {
+}: GrantRevokeTokenKycParams): Promise<TokenResponse> => {
     const transaction = new TokenGrantKycTransaction().setGrpcDeadline(
         DEFAULT_GRPC_DEADLINE,
     );
@@ -719,6 +722,77 @@ export const grantTokenKyc = async ({
 
     if (accountId != null) {
         transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const revokeTokenKyc = async ({
+    tokenId,
+    accountId,
+    commonTransactionParams,
+}: GrantRevokeTokenKycParams): Promise<TokenResponse> => {
+    const transaction = new TokenRevokeKycTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const mintToken = async ({
+    tokenId,
+    amount,
+    metadata,
+    commonTransactionParams,
+}: MintTokenParams): Promise<TokenResponse> => {
+    const transaction = new TokenMintTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (amount != null) {
+        transaction.setAmount(Long.fromString(amount));
+    }
+
+    if (metadata != null) {
+        transaction.setMetadata([Buffer.from(metadata[0], "utf8")]);
     }
 
     if (commonTransactionParams != null) {

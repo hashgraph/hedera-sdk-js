@@ -86,8 +86,15 @@ export interface FreezeUnfreezeTokenParams {
     readonly commonTransactionParams?: Record<string, any>;
 }
 
-export interface GrantTokenKycParams {
+export interface GrantRevokeTokenKycParams {
     readonly tokenId?: string;
     readonly accountId?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
+export interface MintTokenParams {
+    readonly tokenId?: string;
+    readonly amount?: string;
+    readonly metadata?: string[];
     readonly commonTransactionParams?: Record<string, any>;
 }
