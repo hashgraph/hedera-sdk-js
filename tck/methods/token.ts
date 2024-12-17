@@ -8,6 +8,13 @@ import {
     TokenDeleteTransaction,
     TokenUpdateTransaction,
     TokenFeeScheduleUpdateTransaction,
+    TokenAssociateTransaction,
+    TokenPauseTransaction,
+    TokenUnpauseTransaction,
+    TokenDissociateTransaction,
+    TokenFreezeTransaction,
+    TokenUnfreezeTransaction,
+    TokenGrantKycTransaction,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -22,6 +29,10 @@ import {
     DeleteTokenParams,
     UpdateTokenParams,
     UpdateTokenFeeScheduleParams,
+    AssociateDisassociateTokenParams,
+    PauseUnPauseTokenParams,
+    FreezeUnfreezeTokenParams,
+    GrantTokenKycParams,
 } from "../params/token";
 
 import { TokenResponse } from "../response/token";
@@ -487,6 +498,227 @@ export const updateTokenFeeSchedule = async ({
         });
 
         transaction.setCustomFees(customFeeList);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const associateToken = async ({
+    accountId,
+    tokenIds,
+    commonTransactionParams,
+}: AssociateDisassociateTokenParams): Promise<TokenResponse> => {
+    let transaction = new TokenAssociateTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (tokenIds != null) {
+        transaction.setTokenIds(tokenIds);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const dissociateToken = async ({
+    accountId,
+    tokenIds,
+    commonTransactionParams,
+}: AssociateDisassociateTokenParams): Promise<TokenResponse> => {
+    let transaction = new TokenDissociateTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (tokenIds != null) {
+        transaction.setTokenIds(tokenIds);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const pauseToken = async ({
+    tokenId,
+    commonTransactionParams,
+}: PauseUnPauseTokenParams): Promise<TokenResponse> => {
+    const transaction = new TokenPauseTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const unpauseToken = async ({
+    tokenId,
+    commonTransactionParams,
+}: PauseUnPauseTokenParams): Promise<TokenResponse> => {
+    const transaction = new TokenUnpauseTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const freezeToken = async ({
+    tokenId,
+    accountId,
+    commonTransactionParams,
+}: FreezeUnfreezeTokenParams): Promise<TokenResponse> => {
+    const transaction = new TokenFreezeTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const unfreezeToken = async ({
+    tokenId,
+    accountId,
+    commonTransactionParams,
+}: FreezeUnfreezeTokenParams): Promise<TokenResponse> => {
+    const transaction = new TokenUnfreezeTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const grantTokenKyc = async ({
+    tokenId,
+    accountId,
+    commonTransactionParams,
+}: GrantTokenKycParams): Promise<TokenResponse> => {
+    const transaction = new TokenGrantKycTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    if (tokenId != null) {
+        transaction.setTokenId(tokenId);
+    }
+
+    if (accountId != null) {
+        transaction.setAccountId(AccountId.fromString(accountId));
     }
 
     if (commonTransactionParams != null) {

@@ -68,3 +68,26 @@ export interface UpdateTokenFeeScheduleParams {
         | CustomRoyaltyFee[];
     readonly commonTransactionParams?: Record<string, any>;
 }
+
+export interface AssociateDisassociateTokenParams {
+    readonly accountId?: string;
+    readonly tokenIds?: string[];
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
+export interface PauseUnPauseTokenParams {
+    readonly tokenId?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
+export interface FreezeUnfreezeTokenParams {
+    readonly accountId?: string;
+    readonly tokenId?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
+export interface GrantTokenKycParams {
+    readonly tokenId?: string;
+    readonly accountId?: string;
+    readonly commonTransactionParams?: Record<string, any>;
+}
