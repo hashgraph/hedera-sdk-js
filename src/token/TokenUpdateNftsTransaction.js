@@ -46,7 +46,7 @@ export default class TokenUpdateNftsTransaction extends Transaction {
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
      * @param {Long[]} [props.serialNumbers]
-     * @param {Uint8Array} [props.metadata]
+     * @param {?Uint8Array} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -116,7 +116,7 @@ export default class TokenUpdateNftsTransaction extends Transaction {
                         : [],
                 metadata:
                     tokenUpdate.metadata != null
-                        ? tokenUpdate.metadata.value != null
+                        ? Object.hasOwn(tokenUpdate.metadata, "value")
                             ? tokenUpdate.metadata.value
                             : undefined
                         : undefined,

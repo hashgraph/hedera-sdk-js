@@ -5,6 +5,76 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.55.1
+
+## What's Changed
+
+* feat: update \_makeTransactionData of NodeUpdateTransaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2658
+* chore: update protobufs by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/265
+
+## v2.55.0
+
+## What's Changed
+
+* feat: Added InvalidNode check in the Executable by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: Protobufs updated by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2691
+* fix: typescript issue with long by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2692
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+* ci: add pr title check workflow to ensure conventional commits by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+
+
+## v2.55.0-beta.1
+
+## What's Changed
+
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+
+## v2.54.2
+
+## What's Changed
+
+* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
+* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
+* fix: \_fromProtobuf functions where google primitive wrappers used (#2657) by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2657
+* fix: update typescript version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2666
+* chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
+* chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
+* chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2525
+* chore(deps-dev): bump pino-pretty from 10.0.0 to 11.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2427
+* chore(deps-dev): bump vite from 4.4.9 to 5.3.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2429
+* chore(deps): bump micromatch from 4.0.5 to 4.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2485
+* chore(deps): bump codecov/codecov-action from 5.0.2 to 5.0.4 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2656
+* chore(deps): bump actions/setup-java from 4.4.0 to 4.5.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2608
+* chore(deps): bump actions/setup-node from 4.0.4 to 4.1.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2609
+* chore(deps): bump dcarbone/install-jq-action from 2.0.2 to 3.0.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2650
+* chore(deps): bump codecov/codecov-action from 4.6.0 to 5.0.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2651
+* chore(deps): bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
+* chore(deps): bump renovatebot/github-action from 40.3.3 to 41.0.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
+* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2666
+
+## v2.54.0-beta.1
+
+## What's Changed
+
+* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
+* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
+* chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
+* chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
+* chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2525
+* chore(deps-dev): bump pino-pretty from 10.0.0 to 11.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2427
+* chore(deps-dev): bump vite from 4.4.9 to 5.3.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2429
+* chore(deps): bump micromatch from 4.0.5 to 4.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2485
+
 ## v2.53.0
 
 ## What's Changed

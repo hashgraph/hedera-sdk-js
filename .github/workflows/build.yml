@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
         with:
           egress-policy: audit
 
@@ -48,12 +48,12 @@ jobs:
           version: 3.35.1
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -70,7 +70,7 @@ jobs:
 
     steps:
       -  name: Harden Runner
-         uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+         uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
          with:
            egress-policy: audit
 
@@ -93,12 +93,12 @@ jobs:
           cat .env
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
       - name: Setup Node
-        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
@@ -116,7 +116,7 @@ jobs:
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: |
-          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000
+          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000 --network-tag=0.57.0
           # Wait for the network to fully start
           sleep 30
 
@@ -125,7 +125,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:integration:codecov
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
@@ -145,14 +145,14 @@ jobs:
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit
-      
+
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/cryptography coverage to Codecov
-        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/cryptography/coverage/lcov.info
@@ -167,7 +167,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/sdk coverage to Codecov
-        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true

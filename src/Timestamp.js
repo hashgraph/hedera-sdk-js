@@ -52,10 +52,16 @@ export default class Timestamp {
     }
 
     /**
+     * @param {boolean} hasJitter
      * @returns {Timestamp}
      */
-    static generate() {
-        const jitter = Math.floor(Math.random() * 5000) + 8000;
+    static generate(hasJitter = true) {
+        let jitter;
+        if (hasJitter) {
+            jitter = Math.floor(Math.random() * 5000) + 3000;
+        } else {
+            jitter = 0;
+        }
         const now = Date.now() - jitter;
         const seconds = Math.floor(now / 1000) + Cache.timeDrift;
         const nanos =

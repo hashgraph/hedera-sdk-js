@@ -60,8 +60,8 @@ export default class NodeUpdateTransaction extends Transaction {
      * @param {?string} [props.description]
      * @param {Array<ServiceEndpoint>} [props.gossipEndpoints]
      * @param {?Array<ServiceEndpoint>} [props.serviceEndpoints]
-     * @param {Uint8Array} [props.gossipCaCertificate]
-     * @param {Uint8Array} [props.grpcCertificateHash]
+     * @param {?Uint8Array} [props.gossipCaCertificate]
+     * @param {?Uint8Array} [props.grpcCertificateHash]
      * @param {Key} [props.adminKey]
      */
     constructor(props) {
@@ -164,7 +164,7 @@ export default class NodeUpdateTransaction extends Transaction {
                         : undefined,
                 description:
                     nodeUpdate.description != null
-                        ? nodeUpdate.description.value != null
+                        ? Object.hasOwn(nodeUpdate.description, "value")
                             ? nodeUpdate.description.value
                             : undefined
                         : undefined,
@@ -182,13 +182,13 @@ export default class NodeUpdateTransaction extends Transaction {
                         : undefined,
                 gossipCaCertificate:
                     nodeUpdate.gossipCaCertificate != null
-                        ? nodeUpdate.gossipCaCertificate.value != null
+                        ? Object.hasOwn(nodeUpdate.gossipCaCertificate, "value")
                             ? nodeUpdate.gossipCaCertificate.value
                             : undefined
                         : undefined,
                 grpcCertificateHash:
                     nodeUpdate.grpcCertificateHash != null
-                        ? nodeUpdate.grpcCertificateHash.value != null
+                        ? Object.hasOwn(nodeUpdate.grpcCertificateHash, "value")
                             ? nodeUpdate.grpcCertificateHash.value
                             : undefined
                         : undefined,
@@ -477,18 +477,18 @@ export default class NodeUpdateTransaction extends Transaction {
                               endpoint._toProtobuf(),
                       )
                     : null,
-            gossipCaCertificate: {
-                value:
-                    this._gossipCaCertificate != null
-                        ? this._gossipCaCertificate
-                        : null,
-            },
-            grpcCertificateHash: {
-                value:
-                    this._grpcCertificateHash != null
-                        ? this._grpcCertificateHash
-                        : null,
-            },
+            gossipCaCertificate:
+                this._gossipCaCertificate != null
+                    ? {
+                          value: this._gossipCaCertificate,
+                      }
+                    : null,
+            grpcCertificateHash:
+                this._grpcCertificateHash != null
+                    ? {
+                          value: this._grpcCertificateHash,
+                      }
+                    : null,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             nodeId: this._nodeId != null ? this._nodeId : null,

@@ -46,7 +46,7 @@ import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("bignumber.js").BigNumber} BigNumber
- * @typedef {import("long").Long} Long
+ * @typedef {import("long")} Long
  */
 
 export default class ContractCreateFlow {

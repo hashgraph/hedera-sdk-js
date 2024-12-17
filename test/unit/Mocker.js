@@ -123,6 +123,12 @@ const PROTOS = [
     "./packages/proto/src/proto/services/transaction_record.proto",
     "./packages/proto/src/proto/services/transaction_response.proto",
     "./packages/proto/src/proto/services/unchecked_submit.proto",
+    "./packages/proto/src/proto/services/event_consensus_data.proto",
+    "./packages/proto/src/proto/services/event_core.proto",
+    "./packages/proto/src/proto/services/event_descriptor.proto",
+    "./packages/proto/src/proto/services/event_transaction.proto",
+    "./packages/proto/src/proto/services/gossip_event.proto",
+    "./packages/proto/src/proto/services/state_signature_transaction.proto",
 ];
 
 export const ABORTED = {

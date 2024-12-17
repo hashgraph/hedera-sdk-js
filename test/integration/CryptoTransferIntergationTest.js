@@ -15,6 +15,7 @@ describe("CryptoTransfer", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
+
     it("should be executable", async function () {
         const operatorId = env.operatorId;
         const key = PrivateKey.generateED25519();
