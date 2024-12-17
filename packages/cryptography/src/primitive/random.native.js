@@ -1,4 +1,4 @@
-import * as Random from "expo-random";
+import * as Random from "expo-crypto";
 
 /**
  * @param {number} count
