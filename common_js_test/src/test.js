@@ -18,7 +18,11 @@ describe("CommonJS", function () {
                 console.log(`Failed for ${nodeAccountId}`);
             }
         }
+
+        // Close the client connection
         client.close();
+
+        // Ensure that at least one attempt was successful
         if (!succeededAtLeastOnce) {
             throw new Error("No successful query attempts were made.");
         }
