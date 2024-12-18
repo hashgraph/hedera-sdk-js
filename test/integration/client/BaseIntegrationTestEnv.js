@@ -4,9 +4,9 @@ import {
     TokenDeleteTransaction,
     Hbar,
     AccountId,
-    Wallet
+    Wallet,
 } from "../../../src/exports.js";
-import LocalProvider from '../../../src/LocalProvider.js'
+import LocalProvider from "../../../src/LocalProvider.js";
 
 /**
  * @typedef {import("../../../src/exports.js").TokenId} TokenId
@@ -79,11 +79,11 @@ export default class BaseIntegrationTestEnv {
             });
         } else if (options.env.CONFIG_FILE != null) {
             client = await options.client.fromConfigFile(
-                options.env.CONFIG_FILE
+                options.env.CONFIG_FILE,
             );
         } else {
             throw new Error(
-                "Failed to construct client for IntegrationTestEnv"
+                "Failed to construct client for IntegrationTestEnv",
             );
         }
 
@@ -92,7 +92,9 @@ export default class BaseIntegrationTestEnv {
             options.env.OPERATOR_KEY != null
         ) {
             const operatorId = AccountId.fromString(options.env.OPERATOR_ID);
-            const operatorKey = PrivateKey.fromStringED25519(options.env.OPERATOR_KEY);
+            const operatorKey = PrivateKey.fromStringECDSA(
+                options.env.OPERATOR_KEY,
+            );
 
             client.setOperator(operatorId, operatorKey);
         }
@@ -127,7 +129,7 @@ export default class BaseIntegrationTestEnv {
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)
             .setInitialBalance(
-                new Hbar(options.balance != null ? options.balance : 100)
+                new Hbar(options.balance != null ? options.balance : 100),
             )
             .execute(client);
 
@@ -135,11 +137,7 @@ export default class BaseIntegrationTestEnv {
 
         client.setOperator(newOperatorId, newOperatorKey);
 
-        wallet = new Wallet(
-            newOperatorId,
-            newOperatorKey,
-            new LocalProvider()
-        )
+        wallet = new Wallet(newOperatorId, newOperatorKey, new LocalProvider());
 
         return new BaseIntegrationTestEnv({
             client: client,
