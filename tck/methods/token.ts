@@ -17,6 +17,7 @@ import {
     TokenGrantKycTransaction,
     TokenRevokeKycTransaction,
     TokenMintTransaction,
+    FeeAssessmentMethod,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -200,7 +201,12 @@ export const createToken = async ({
                     .setFeeCollectorAccountId(
                         AccountId.fromString(customFee.feeCollectorAccountId),
                     )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
+                    .setAssessmentMethod(
+                        customFee.fractionalFee.assessmentMethod === "inclusive"
+                            ? FeeAssessmentMethod.Inclusive
+                            : FeeAssessmentMethod.Exclusive,
+                    );
 
                 customFeeList.push(fractionalFee);
             }
@@ -460,7 +466,12 @@ export const updateTokenFeeSchedule = async ({
                     .setFeeCollectorAccountId(
                         AccountId.fromString(customFee.feeCollectorAccountId),
                     )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
+                    .setAssessmentMethod(
+                        customFee.fractionalFee.assessmentMethod === "inclusive"
+                            ? FeeAssessmentMethod.Inclusive
+                            : FeeAssessmentMethod.Exclusive,
+                    );
 
                 customFeeList.push(fractionalFee);
             }
