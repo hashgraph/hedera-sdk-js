@@ -337,8 +337,7 @@ export default class NodeClient extends Client {
      * @returns {(address: string, cert?: string) => NodeChannel}
      */
     _createNetworkChannel() {
-        return (address, cert) =>
-            new NodeChannel(address, cert, this._maxExecutionTime);
+        return (address) => new NodeChannel(address, this._maxExecutionTime);
     }
 
     /**
