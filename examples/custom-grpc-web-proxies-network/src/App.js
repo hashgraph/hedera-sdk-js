@@ -54,7 +54,12 @@ function App() {
         transferTransaction();
     }, []);
 
-    return <div className="App"></div>;
+    return (
+        <div className="App">
+            <h1>Custom gRPC web proxies network example</h1>
+            <p>Check the console for the transaction details.</p>
+        </div>
+    );
 }
 
 export default App;
