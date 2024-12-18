@@ -13,10 +13,8 @@ This guide demonstrates how to configure the Hedera SDK to communicate with a cu
 First, you need to set up your operator account and private key. These credentials are required to sign and authorize the transaction.
 
 ```javascript
-const operatorId = AccountId.fromString("0.0.1458");
-const operatorKey = PrivateKey.fromStringECDSA(
-    "3030020100300706052b8104000a042204208c4ffe487636e8102f72502a2ed16cb4f98073582a777fcfa758481485d9f887",
-);
+const operatorId = AccountId.fromString("<YOUR_ACCOUNT_ID>");
+const operatorKey = PrivateKey.fromStringECDSA("<YOUR_PRIVATE_KEY>");
 ```
 
 Replace `0.0.1458` and the private key with your own operator account ID and key.
