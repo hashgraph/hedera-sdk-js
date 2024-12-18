@@ -1,0 +1,97 @@
+# Custom Network Configuration with gRPC Web Proxies
+
+This guide demonstrates how to configure the Hedera SDK to communicate with a custom network using gRPC web proxies in a React application. The example sets up a transfer transaction, which is triggered when the page is loaded, using a custom network configuration with multiple gRPC web proxies.
+
+## Steps to Configure the Custom Network
+
+### 1. Setup the Operator Account
+
+First, you need to set up your operator account and private key. These credentials are required to sign and authorize the transaction.
+
+```javascript
+const operatorId = AccountId.fromString("0.0.1458");
+const operatorKey = PrivateKey.fromStringECDSA(
+    "3030020100300706052b8104000a042204208c4ffe487636e8102f72502a2ed16cb4f98073582a777fcfa758481485d9f887",
+);
+```
+
+Replace `0.0.1458` and the private key with your own operator account ID and key.
+
+### 2. Create a Custom Network with gRPC Web Proxies
+
+Define a list of gRPC web proxies to communicate with your custom network. Each entry consists of a proxy URL and its associated account ID.
+
+```javascript
+const nodes = {
+    "https://testnet-node02-00-grpc.hedera.com:443": new AccountId(5),
+    "https://testnet-node03-00-grpc.hedera.com:443": new AccountId(6),
+    "https://testnet-node04-00-grpc.hedera.com:443": new AccountId(7),
+};
+```
+
+These proxy URLs correspond to the gRPC web proxies you wish to use for the custom network.
+
+### 3. Setup the Client Using Client.forNetwork()
+
+To configure the client with the custom network, use `Client.forNetwork()` and pass the list of nodes you defined. The SDK automatically detects the environment (whether it's a browser or Node.js environment) and selects the appropriate implementation (NodeClient, WebClient, or NativeClient).
+
+```javascript
+const client = Client.forNetwork(nodes);
+client.setOperator(operatorId, operatorKey);
+```
+
+In the browser environment, this will use gRPC web proxies.
+
+### 4 Configure the Transaction for the Custom Network
+
+Before sending a transaction, you need to configure it with the necessary parameters, such as the sender, receiver, and amount. Here's how to create a transfer transaction using the configured client for the custom network.
+
+```javascript
+const transferTransaction = new TransferTransaction()
+    .addSender(senderAccountId, amountToSend)
+    .addReceiver(receiverAccountId, amountToReceive)
+    .setTransactionMemo("Transfer via custom gRPC web proxy network")
+    .setTransactionFee(transactionFee);
+
+const response = await transferTransaction.execute(client);
+```
+
+### 5. Running the Application
+
+Once you've set up the client and transaction as described above, you can run your React application with `npm start`. The transfer transaction will be executed using the **custom gRPC web proxies** configured in the Client.forNetwork() method.
+
+## Web Proxies related logs:
+
+### Node AccountID and IP:
+
+```
+[TransferTransaction:1734513974.997722147] Node AccountID: 0.0.7, IP: https://testnet-node04-00-grpc.hedera.com:443
+```
+
+This log shows that the transaction was sent to the node with the Account ID `0.0.7`. The associated gRPC web proxy IP is `https://testnet-node04-00-grpc.hedera.com:443`.
+
+This log confirms that the SDK used the specified gRPC web proxy to communicate with the Hedera network.
+
+### Node AccountID and Status Response:
+
+```
+[TransferTransaction:1734513974.997722147] received status OK
+```
+
+This log shows that the transaction was successfully processed by the node at `https://testnet-node04-00-grpc.hedera.com:443`. The transaction status returned is `OK`, indicating successful execution.
+
+### SDK Transaction Status Response:
+
+```
+SDK Transaction Status Response: OK
+```
+
+This confirms that the SDK received an `OK` response from the proxy node, meaning the transaction was successful.
+
+### Transaction Info:
+
+```
+Transaction Info: {"nodeId":"0.0.7","transactionHash":"bdb51685e7bc59d7e40e8f8387e33e37bbad1aff809d8bd49eccae3796efe765759aa47c992d7620900fc4a0f57a2993","transactionId":"0.0.1458@1734513974.997722147"}
+```
+
+This log provides detailed information about the transaction that was processed using the gRPC web proxy. It shows the nodeId (`0.0.7`), the transaction hash, and the transaction ID, confirming that the transaction successfully passed through the specified proxy.
