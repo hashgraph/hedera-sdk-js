@@ -18,8 +18,6 @@ const operatorId = AccountId.fromString("<YOUR_ACCOUNT_ID>");
 const operatorKey = PrivateKey.fromStringECDSA("<YOUR_PRIVATE_KEY>");
 ```
 
-Replace `0.0.1458` and the private key with your own operator account ID and key.
-
 ### 2. Create a custom network with gRPC web proxies
 
 Define a list of gRPC web proxies to communicate with your custom network. Each entry consists of a proxy URL and its associated account ID.
