@@ -29,7 +29,7 @@ jobs:
     runs-on: client-sdk-linux-medium
     strategy:
       matrix:
-        node: [ "16", "18" ]
+        node: [ "20", "22" ]
 
     steps:
       - name: Harden Runner
@@ -66,7 +66,7 @@ jobs:
     runs-on: client-sdk-linux-large
     strategy:
       matrix:
-        node: [ "16" ]
+        node: [ "20" ]
 
     steps:
       -  name: Harden Runner
@@ -116,7 +116,7 @@ jobs:
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: |
-          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000
+          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000 --network-tag=0.57.0
           # Wait for the network to fully start
           sleep 30
 
