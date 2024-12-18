@@ -15,9 +15,11 @@ function App() {
         /**
          * 1. Setup operatorId and operatorKey
          */
-        const operatorId = AccountId.fromString("0.0.1458");
+        const operatorId = AccountId.fromString(
+            process.env.REACT_APP_OPERATOR_ID,
+        );
         const operatorKey = PrivateKey.fromStringECDSA(
-            "3030020100300706052b8104000a042204208c4ffe487636e8102f72502a2ed16cb4f98073582a777fcfa758481485d9f887",
+            process.env.REACT_APP_OPERATOR_KEY,
         );
 
         /**

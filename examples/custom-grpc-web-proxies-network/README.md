@@ -7,6 +7,7 @@ This guide demonstrates how to configure the Hedera SDK to communicate with a cu
 ### Prerequisites
 
 -   Install the required Node modules by running `npm install`
+-   Create a `.env` file in the root directory and add your credentials.
 
 ### 1. Setup the operator account
 
