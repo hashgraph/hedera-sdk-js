@@ -3,10 +3,12 @@ import {
     CustomFixedFee,
     CustomFractionalFee,
     CustomRoyaltyFee,
+    Timestamp,
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenUpdateTransaction,
     TokenFeeScheduleUpdateTransaction,
+    FeeAssessmentMethod,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -103,7 +105,9 @@ export const createToken = async ({
     }
 
     if (expirationTime != null) {
-        transaction.setExpirationTime(new Date(Number(expirationTime) * 1000));
+        transaction.setExpirationTime(
+            new Timestamp(Long.fromString(expirationTime), 0),
+        );
     }
 
     if (autoRenewAccountId != null) {
@@ -183,7 +187,12 @@ export const createToken = async ({
                     .setFeeCollectorAccountId(
                         AccountId.fromString(customFee.feeCollectorAccountId),
                     )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
+                    .setAssessmentMethod(
+                        customFee.fractionalFee.assessmentMethod === "inclusive"
+                            ? FeeAssessmentMethod.Inclusive
+                            : FeeAssessmentMethod.Exclusive,
+                    );
 
                 customFeeList.push(fractionalFee);
             }
@@ -443,7 +452,12 @@ export const updateTokenFeeSchedule = async ({
                     .setFeeCollectorAccountId(
                         AccountId.fromString(customFee.feeCollectorAccountId),
                     )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
+                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
+                    .setAssessmentMethod(
+                        customFee.fractionalFee.assessmentMethod === "inclusive"
+                            ? FeeAssessmentMethod.Inclusive
+                            : FeeAssessmentMethod.Exclusive,
+                    );
 
                 customFeeList.push(fractionalFee);
             }
