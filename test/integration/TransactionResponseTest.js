@@ -101,6 +101,21 @@ describe("TransactionResponse", function () {
         ).getReceipt(env.client);
     });
 
+    it("should return nextExchangeRate in receipt", async function () {
+        const operatorId = env.operatorId;
+        expect(operatorId).to.not.be.null;
+
+        const key = PrivateKey.generateED25519();
+
+        const receipt = await (
+            await new AccountCreateTransaction()
+                .setKey(key.publicKey)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        expect(receipt.nextExchangeRate).to.not.be.null;
+    });
+
     after(async function () {
         await env.close();
     });
