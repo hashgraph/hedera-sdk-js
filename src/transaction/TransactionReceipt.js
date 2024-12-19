@@ -278,11 +278,6 @@ export default class TransactionReceipt {
                 response.receipt
             );
 
-        const exchangeRateSet =
-            /** @type {HashgraphProto.proto.IExchangeRateSet} */ (
-                receipt.exchangeRate
-            );
-
         const children =
             response.childTransactionReceipts != null
                 ? response.childTransactionReceipts.map((child) =>
@@ -336,15 +331,15 @@ export default class TransactionReceipt {
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           /** @type {HashgraphProto.proto.IExchangeRate} */
-                          (exchangeRateSet.currentRate),
+                          (receipt.exchangeRate.currentRate),
                       )
                     : null,
 
             nextExchangeRate:
-                exchangeRateSet.nextRate != null
+                receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           /** @type {HashgraphProto.proto.IExchangeRate} */
-                          (exchangeRateSet.nextRate),
+                          (receipt.exchangeRate.nextRate),
                       )
                     : null,
 
