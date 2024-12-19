@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ContractFunctionParameters } from "../exports.js";
+import ContractFunctionParameters from "../contract/ContractFunctionParameters.js";
 
 /**
  * @typedef {import("../contract/ContractId").default} ContractId
@@ -25,7 +25,7 @@ export default class MirrorNodeContractQuery {
     /**
      *
      * @param {ContractId} contractId
-     * @returns
+     * @returns {this}
      */
     setContractId(contractId) {
         this._contractId = contractId;
@@ -34,7 +34,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {AccountId} sender
-     * @returns
+     * @returns {this}
      */
     setSender(sender) {
         this._sender = sender;
@@ -45,7 +45,7 @@ export default class MirrorNodeContractQuery {
      *
      * @param {string} name
      * @param {ContractFunctionParameters} functionParameters
-     * @returns
+     * @returns {this}
      */
     setFunction(name, functionParameters) {
         this._functionParameters =
@@ -58,7 +58,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} value
-     * @returns
+     * @returns {this}
      */
     setValue(value) {
         this._value = value;
@@ -67,7 +67,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} gasLimit
-     * @returns
+     * @returns {this}
      */
     setGasLimit(gasLimit) {
         this._gasLimit = gasLimit;
@@ -76,7 +76,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} gasPrice
-     * @returns
+     * @returns {this}
      */
     setGasPrice(gasPrice) {
         this._gasPrice = gasPrice;
@@ -85,7 +85,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} blockNumber
-     * @returns
+     * @returns {this}
      */
     setBlockNumber(blockNumber) {
         this._blockNumber = blockNumber;
