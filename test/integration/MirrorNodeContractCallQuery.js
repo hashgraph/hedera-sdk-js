@@ -37,7 +37,7 @@ describe("MirrorNodeContractCallQuery", function () {
             .setContractId(contractId)
             .setBlockNumber("latest")
             .setFunction("getMessage", new ContractFunctionParameters())
-            .execute();
+            .execute(env.client);
         expect(result).to.not.be.null;
     });
 });

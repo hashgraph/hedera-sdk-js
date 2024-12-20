@@ -7,9 +7,10 @@ import MirrorNodeContractQuery from "./MirrorNodeContractQuery.js";
  */
 export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery {
     /**
+     * @param {Client} client
      * @returns {Promise<Long>}
      */
-    async execute() {
+    async execute(client) {
         if (this.callData == null) {
             throw new Error("Call data is required.");
         }
@@ -26,11 +27,10 @@ export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery
          * @type {{data: {result: string}}}
          */
         const mirrorNodeRequest = await this.performMirrorNodeRequest(
+            client,
             "contracts/call",
             JSON.stringify(JSON_PAYLOAD),
         );
-
-        console.log(Number(mirrorNodeRequest.data.result));
         return Long.fromNumber(Number(mirrorNodeRequest.data.result));
     }
 }

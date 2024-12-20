@@ -6,9 +6,10 @@ import MirrorNodeContractQuery from "./MirrorNodeContractQuery.js";
  */
 export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery {
     /**
+     * @param {Client} client
      * @returns {Promise<string>}
      */
-    async execute() {
+    async execute(client) {
         if (this.callData == null) {
             throw new Error("Call data is required.");
         }
@@ -20,18 +21,14 @@ export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery
             estimate: false,
         };
 
-        console.log(JSON_PAYLOAD);
         /**
          * @type { { data: { result: string } } }
          */
         const mirrorNodeRequest = await this.performMirrorNodeRequest(
+            client,
             API_ENDPOINT,
             JSON.stringify(JSON_PAYLOAD),
         );
-        //console.log(mirrorNodeRequest);
-        /**
-         * @type {object}
-         */
         return mirrorNodeRequest.data.result;
     }
 }

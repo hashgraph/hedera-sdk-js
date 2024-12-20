@@ -18,7 +18,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const OPERATOR_ID = AccountId.fromString(process.env.OPERATOR_ID);
-const OPERATOR_KEY = PrivateKey.fromStringECDSA(process.env.OPERATOR_KEY);
+const OPERATOR_KEY = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
 const HEDERA_NETWORK = process.env.HEDERA_NETWORK || "testnet";
 
 async function main() {
@@ -57,7 +57,7 @@ async function main() {
         .setGasLimit(gasLimit)
         .setGasPrice(gasPrice)
         .setFunction("getMessage", new ContractFunctionParameters())
-        .execute();
+        .execute(client);
 
     // Step 5: Do the query against the consensus node using the estimated gas
     const callQuery = new ContractCallQuery()
@@ -76,7 +76,7 @@ async function main() {
         .setBlockNumber(Long.fromString("10000"))
         .setGasPrice(Long.fromString("1234"))
         .setFunction("getMessage", new ContractFunctionParameters())
-        .execute();
+        .execute(client);
 
     // need to do this to remove the readonly property of the array
     /**

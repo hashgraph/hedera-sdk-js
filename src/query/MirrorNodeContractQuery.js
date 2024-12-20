@@ -165,19 +165,26 @@ export default class MirrorNodeContractQuery {
 
     /**
      *
+     * @param {Client} client
      * @param {string} apiEndpoint
      * @param {string} jsonPayload
      * @returns {Promise<AxiosResponse>}
      */
-    async performMirrorNodeRequest(apiEndpoint, jsonPayload) {
+    async performMirrorNodeRequest(client, apiEndpoint, jsonPayload) {
         if (this.contractId == null) {
             throw new Error("Contract ID is not set");
         }
+        let mirrorNetworkAddress = client.mirrorNetwork[0];
 
-        const MIRROR_NETWORK_ADDRESS =
-            "https://testnet.mirrornode.hedera.com/api/v1/" + apiEndpoint;
+        if (!client.ledgerId) {
+            mirrorNetworkAddress = "http://".concat(
+                client.mirrorNetwork[0].replace("5600", "8545"),
+            );
+        }
 
-        let result = await axios.post(MIRROR_NETWORK_ADDRESS, jsonPayload, {
+        console.log(mirrorNetworkAddress);
+        console.log(jsonPayload);
+        let result = await axios.post(mirrorNetworkAddress, jsonPayload, {
             headers: {
                 "Content-Type": "application/json",
             },

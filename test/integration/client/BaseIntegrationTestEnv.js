@@ -92,11 +92,12 @@ export default class BaseIntegrationTestEnv {
             options.env.OPERATOR_KEY != null
         ) {
             const operatorId = AccountId.fromString(options.env.OPERATOR_ID);
-            const operatorKey = PrivateKey.fromStringECDSA(
+            const operatorKey = PrivateKey.fromStringED25519(
                 options.env.OPERATOR_KEY,
             );
 
             client.setOperator(operatorId, operatorKey);
+            client.setMirrorNetwork(options.env.HEDERA_NETWORK);
         }
 
         expect(client.operatorAccountId).to.not.be.null;

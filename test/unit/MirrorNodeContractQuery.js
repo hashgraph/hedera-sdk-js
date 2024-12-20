@@ -50,16 +50,6 @@ describe("MirrorNodeContractQuery", function () {
             err = e.message.includes("Contract ID is not set");
         }
         expect(err).to.be.true;
-        /*
-        err = false;
-        try {
-            await query.execute();
-        } catch (e) {
-            console.log(e);
-            err = e.message.includes("Contract ID is not set");
-        }
-        expect(err).to.be.true;
-        */
     });
 
     it("should throw an error when no sender sent", async function () {
@@ -79,16 +69,6 @@ describe("MirrorNodeContractQuery", function () {
             err = e.message.includes("Sender is not set");
         }
         expect(err).to.be.true;
-
-        /*
-        err = false;
-        try {
-            await query.execute();
-        } catch (e) {
-            err = e.message.includes("Sender is not set");
-        }
-        expect(err).to.be.true;
-        */
     });
 
     it("should not be able to perform MN request without contract id", async function () {
