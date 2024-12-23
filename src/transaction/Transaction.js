@@ -59,8 +59,8 @@ export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
 // 120 seconds
 const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 
-// The default message chunk size when creating a topic message submit transaction. 
-// This value can be overriden using `setChunkSize` when submitting a message via `TopicMessageSubmitTransaction`.
+// The default message chunk size in bytes to chunk a given message. 
+// This value can be overriden using `setChunkSize` when preparing to submit a messsage via `TopicMessageSubmitTransaction`.
 export const CHUNK_SIZE = 1024;
 
 /**
