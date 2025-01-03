@@ -98,3 +98,11 @@ export interface MintTokenParams {
     readonly metadata?: string[];
     readonly commonTransactionParams?: Record<string, any>;
 }
+
+export interface BurnTokenParams {
+    readonly tokenId?: string;
+    readonly amount?: string;
+    readonly metadata?: string[];
+    readonly serialNumbers?: string[];
+    readonly commonTransactionParams?: Record<string, any>;
+}
