@@ -51,7 +51,7 @@ const configureTransaction = (
         transaction.setTokenId(params.tokenId);
     }
 
-    if (params.accountId != null) {
+    if (params.accountId != null && transaction.setAccountId) {
         transaction.setAccountId(AccountId.fromString(params.accountId));
     }
 
