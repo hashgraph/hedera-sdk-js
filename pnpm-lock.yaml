@@ -24,11 +24,11 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       '@hashgraph/cryptography':
-        specifier: file:.yalc/@hashgraph/cryptography
-        version: file:.yalc/@hashgraph/cryptography(expo@49.0.23(@babel/core@7.26.0))
+        specifier: 1.4.8-beta.10
+        version: 1.4.8-beta.10(expo@49.0.23(@babel/core@7.26.0))
       '@hashgraph/proto':
-        specifier: file:.yalc/@hashgraph/proto
-        version: file:.yalc/@hashgraph/proto
+        specifier: 2.16.0-beta.2
+        version: 2.16.0-beta.2
       axios:
         specifier: ^1.6.4
         version: 1.7.7
@@ -1141,7 +1141,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.10.17':
     resolution: {integrity: sha512-HkHDvHPzq4M244hIerwnsw2IdjOo7RSsMYWGhc7ZY7DQWIMUC88b7f5+0RtD4JQfXQrgKS5Tvqm/5E6kAH0rIA==}
@@ -1238,8 +1238,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  '@hashgraph/cryptography@file:.yalc/@hashgraph/cryptography':
-    resolution: {directory: .yalc/@hashgraph/cryptography, type: directory}
+  '@hashgraph/cryptography@1.4.8-beta.10':
+    resolution: {integrity: sha512-ctDbjue5Zq3Z0Sbvs5AgmdsbBRmxBhgKOkIGd1wSun1uiGYIvuV4aIVSKV0Rw+TGh1c8kWsMXZCNynPctcSQMg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^49.0.16
@@ -1253,8 +1253,8 @@ packages:
       expo-random:
         optional: true
 
-  '@hashgraph/proto@file:.yalc/@hashgraph/proto':
-    resolution: {directory: .yalc/@hashgraph/proto, type: directory}
+  '@hashgraph/proto@2.16.0-beta.2':
+    resolution: {integrity: sha512-BTPShOMhxZqHmayyhg+dqXX1ABP2/znYJ9LKxr2QIf2Jqk2ZfBByPLlp94PzW3Zn9jwJGVJT01Kdl7Rh1Xkxkg==}
     engines: {node: '>=10.0.0'}
 
   '@humanwhocodes/config-array@0.13.0':
@@ -3705,8 +3705,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.7:
-    resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
+  nanoid@3.3.8:
+    resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -6552,7 +6552,7 @@ snapshots:
       protobufjs: 7.2.5
       yargs: 17.7.2
 
-  '@hashgraph/cryptography@file:.yalc/@hashgraph/cryptography(expo@49.0.23(@babel/core@7.26.0))':
+  '@hashgraph/cryptography@1.4.8-beta.10(expo@49.0.23(@babel/core@7.26.0))':
     dependencies:
       asn1js: 3.0.5
       bignumber.js: 9.1.2
@@ -6568,7 +6568,7 @@ snapshots:
     optionalDependencies:
       expo: 49.0.23(@babel/core@7.26.0)
 
-  '@hashgraph/proto@file:.yalc/@hashgraph/proto':
+  '@hashgraph/proto@2.16.0-beta.2':
     dependencies:
       long: 5.2.3
       protobufjs: 7.2.5
@@ -9304,7 +9304,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.7: {}
+  nanoid@3.3.8: {}
 
   natural-compare-lite@1.4.0: {}
 
@@ -9701,7 +9701,7 @@ snapshots:
 
   postcss@8.4.49:
     dependencies:
-      nanoid: 3.3.7
+      nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
 

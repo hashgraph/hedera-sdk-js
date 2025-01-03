@@ -76,10 +76,9 @@ export default class NodeChannel extends Channel {
 
     /**
      * Retrieve the server's certificate dynamically.
-     * @param {string} address
      * @returns {Promise<string>}
      */
-    async _retrieveCertificate(address) {
+    async _retrieveCertificate() {
         return new Promise((resolve, reject) => {
             const socket = tls.connect(
                 {
@@ -131,9 +130,7 @@ export default class NodeChannel extends Channel {
 
         // If the port is 50212, use TLS
         if (this.nodePort === "50212") {
-            const certificate = Buffer.from(
-                await this._retrieveCertificate(this.address),
-            );
+            const certificate = Buffer.from(await this._retrieveCertificate());
 
             security = credentials.createSsl(certificate);
         } else {
