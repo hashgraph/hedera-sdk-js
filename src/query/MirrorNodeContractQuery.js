@@ -176,7 +176,7 @@ export default class MirrorNodeContractQuery {
     let mirrorNetworkAddress = client.mirrorNetwork[0];
     let contractCallEndpoint = "/api/v1/contracts/call"
 
-    if (client.ledgerId?.isLocalNode) {
+    if (!client.ledgerId || client.ledgerId.isLocalNode()) {
       mirrorNetworkAddress = "http://".concat(
         client.mirrorNetwork[0].replace("5600", "8545"),
       ).concat(contractCallEndpoint);
