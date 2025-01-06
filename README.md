@@ -28,6 +28,7 @@ $ pnpm add @hashgraph/sdk
 ### Prerequisites
 
 1. [Taskfile](https://taskfile.dev/) tool installation
+2. **Node.js**: It is **recommended** to use Node.js **v20 or higher** for best performance and compatibility. The package may also work with **Node.js v16**, but this version has **not been officially tested**.
 
 ```
 # with npm
@@ -74,7 +75,7 @@ Every example can be executed using the following command from the root director
 
 * To start the integration tests follow the next steps:
     - Run the [local node](https://github.com/hashgraph/hedera-local-node)
-    - Run `task test:intergration:node`
+    - Run `task test:integration:node`
     - Stop the [local node](https://github.com/hashgraph/hedera-local-node)
 * To start unit tests follow the next steps:
     - Run `task test:unit` (Note: the local node should not be running)

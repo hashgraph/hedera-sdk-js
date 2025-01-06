@@ -39,7 +39,7 @@ async function main() {
     const client = Client.forName(process.env.HEDERA_NETWORK);
 
     client.setOperator(operatorId, operatorKey);
-    
+
     // Set logger
     const infoLogger = new Logger(LogLevel.Info);
     client.setLogger(infoLogger);

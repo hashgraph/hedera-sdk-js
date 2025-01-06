@@ -419,6 +419,7 @@ describe("TokenRejectIntegrationTest", function () {
 
     describe("Non-Fungible Tokens", function () {
         let tokenId, receiverPrivateKey, receiverId, nftId;
+
         beforeEach(async function () {
             env = await IntegrationTestEnv.new();
             const tokenCreateResponse = await new TokenCreateTransaction()

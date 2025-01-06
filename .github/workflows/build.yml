@@ -29,7 +29,7 @@ jobs:
     runs-on: client-sdk-linux-medium
     strategy:
       matrix:
-        node: [ "16", "18" ]
+        node: [ "20", "22" ]
 
     steps:
       - name: Harden Runner
@@ -48,7 +48,7 @@ jobs:
           version: 3.35.1
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -66,7 +66,7 @@ jobs:
     runs-on: client-sdk-linux-large
     strategy:
       matrix:
-        node: [ "16" ]
+        node: [ "20" ]
 
     steps:
       -  name: Harden Runner
@@ -93,7 +93,7 @@ jobs:
           cat .env
 
       - name: Install PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
         with:
           version: 8.15.4
 
@@ -116,7 +116,7 @@ jobs:
         id: start-local-node
         if: ${{ steps.build-sdk.conclusion == 'success' && !cancelled() && always() }}
         run: |
-          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000
+          ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000 --network-tag=0.57.0
           # Wait for the network to fully start
           sleep 30
 
@@ -125,7 +125,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:integration:codecov
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@985343d70564a82044c1b7fcb84c2fa05405c1a2 # v5.0.4
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
@@ -145,14 +145,14 @@ jobs:
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit
-      
+
       - name: Codecov @hashgraph/cryptography
         working-directory: packages/cryptography
         if: ${{ steps.build-sdk.conclusion == 'success' && steps.stop-local-node.conclusion == 'success' && !cancelled() && always() }}
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/cryptography coverage to Codecov
-        uses: codecov/codecov-action@985343d70564a82044c1b7fcb84c2fa05405c1a2 # v5.0.4
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/cryptography/coverage/lcov.info
@@ -167,7 +167,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload @hashgraph/sdk coverage to Codecov
-        uses: codecov/codecov-action@985343d70564a82044c1b7fcb84c2fa05405c1a2 # v5.0.4
+        uses: codecov/codecov-action@5c47607acb93fed5485fdbf7232e8a31425f672a # v5.0.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true

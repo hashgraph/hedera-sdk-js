@@ -684,7 +684,7 @@ export default class Status {
             case Status.PendingAirdropIdRepeated:
                 return "PENDING_AIRDROP_ID_REPEATED";
             case Status.MaxPendingAirdropIdExceeded:
-                return "MAX_PENDING_AIRDROP_ID_EXCEEDED";
+                return "PENDING_AIRDROP_ID_LIST_TOO_LONG";
             case Status.PendingNftAirdropAlreadyExists:
                 return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
             case Status.AccountHasPendingAirdrops:
@@ -697,6 +697,16 @@ export default class Status {
                 return "TOKEN_AIRDROP_WITH_FALLBACK_ROYALTY";
             case Status.InvalidTokenInPendingAirdrop:
                 return "INVALID_TOKEN_IN_PENDING_AIRDROP";
+            case Status.ScheduleExpiryIsBusy:
+                return "SCHEDULE_EXPIRY_IS_BUSY";
+            case Status.InvalidGrpcCertificateHash:
+                return "INVALID_GRPC_CERTIFICATE_HASH";
+            case Status.MissingExpiryTime:
+                return "MISSING_EXPIRY_TIME";
+            case Status.NoSchedulingAllowedAfterScheduledRecursion:
+                return "NO_SCHEDULING_ALLOWED_AFTER_SCHEDULED_RECURSION";
+            case Status.RecursiveSchedulingLimitReached:
+                return "RECURSIVE_SCHEDULING_LIMIT_REACHED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1365,6 +1375,16 @@ export default class Status {
                 return Status.TokenAirdropWithFallbackRoyalty;
             case 369:
                 return Status.InvalidTokenInPendingAirdrop;
+            case 370:
+                return Status.ScheduleExpiryIsBusy;
+            case 371:
+                return Status.InvalidGrpcCertificateHash;
+            case 372:
+                return Status.MissingExpiryTime;
+            case 373:
+                return Status.NoSchedulingAllowedAfterScheduledRecursion;
+            case 374:
+                return Status.RecursiveSchedulingLimitReached;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -3077,3 +3097,33 @@ Status.TokenAirdropWithFallbackRoyalty = new Status(368);
  * airdrop and whether the sender can fulfill the offer.
  */
 Status.InvalidTokenInPendingAirdrop = new Status(369);
+
+/**
+ * A scheduled transaction configured to wait for expiry to execute was given
+ * an expiry time at which there is already too many transactions scheduled to
+ * expire; its creation must be retried with a different expiry.
+ */
+Status.ScheduleExpiryIsBusy = new Status(370);
+
+/**
+ * The provided gRPC certificate hash is invalid.
+ */
+Status.InvalidGrpcCertificateHash = new Status(371);
+
+/**
+ * A scheduled transaction configured to wait for expiry to execute was not
+ * given an explicit expiration time.
+ */
+Status.MissingExpiryTime = new Status(372);
+
+/**
+ * A contract operation attempted to schedule another transaction after it
+ * had already scheduled a recursive contract call.
+ */
+Status.NoSchedulingAllowedAfterScheduledRecursion = new Status(373);
+
+/**
+ * A contract can schedule recursive calls a finite number of times (this is
+ * approximately four million times with typical network configuration.)
+ */
+Status.RecursiveSchedulingLimitReached = new Status(374);

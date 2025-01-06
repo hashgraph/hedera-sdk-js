@@ -15,6 +15,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenRejectIntegrationTest", function () {
     let env;
+
     it("can execute TokenRejectFlow for fungible tokens", async function () {
         env = await IntegrationTestEnv.new();
         const FULL_TREASURY_BALANCE = 1000000;
