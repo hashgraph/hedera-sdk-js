@@ -41,16 +41,16 @@ The JS SDK package supports loading of configuration from an `.env` file or via 
 
 ### Default client settings values:
 
-| Key Name                          | Default Value                   |
-| --------------------------------- | ------------------------------- |
-| setDefaultRegenerateTransactionId | true                            |
-| setSignOnDemand                   | false                           |
-| setDefaultMaxQueryPayment         | 1 Hbar                          |
-| setMinBackoff                     | 250 (milliseconds)              |
-| setMaxBackoff                     | 8000 (milliseconds)             |
-| setNetworkUpdatePeriod            | 1 day                           |
-| setAutoValidateChecksums          | false                           |
-| setMaxExecutionTime               | If you use NodeClient its 10000 |
+| Key Name                          | Default Value                                              |
+| --------------------------------- | ---------------------------------------------------------- |
+| setDefaultRegenerateTransactionId | true                                                       |
+| setSignOnDemand                   | false                                                      |
+| setDefaultMaxQueryPayment         | 1 Hbar                                                     |
+| setMinBackoff                     | 250 (milliseconds)                                         |
+| setMaxBackoff                     | 8000 (milliseconds)                                        |
+| setNetworkUpdatePeriod            | 1 day                                                      |
+| setAutoValidateChecksums          | false                                                      |
+| setMaxExecutionTime               | If you use NodeClient default value is 10000 (miliseconds) |
 
 ## ED25519 or ECDSA key
 
