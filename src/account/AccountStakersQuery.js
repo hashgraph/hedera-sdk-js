@@ -42,9 +42,9 @@ import ProxyStaker from "./ProxyStaker.js";
  * Get all the accounts that are proxy staking to this account.
  * For each of them, give the amount currently staked.
  *
- * This is not yet implemented, but will be in a future version of the API.
  *
  * @augments {Query<ProxyStaker[]>}
+ * @deprecated - No longer supported via Hedera Protobufs
  */
 export default class AccountStakersQuery extends Query {
     /**
@@ -122,8 +122,11 @@ export default class AccountStakersQuery extends Query {
      * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _execute(channel, request) {
-        return channel.crypto.getStakersByAccountID(request);
+        return Promise.reject(
+            new Error("This feature has been deprecated for this class."),
+        );
     }
 
     /**
@@ -195,7 +198,3 @@ export default class AccountStakersQuery extends Query {
         return `AccountStakersQuery:${timestamp.toString()}`;
     }
 }
-
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/unbound-method
-QUERY_REGISTRY.set("cryptoGetProxyStakers", AccountStakersQuery._fromProtobuf);
