@@ -1,4 +1,3 @@
-import Long from "long";
 import MirrorNodeContractQuery from "./MirrorNodeContractQuery.js";
 
 /**
@@ -19,10 +18,10 @@ export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery
             from: this.senderEvmAddress,
             to: this.contractEvmAddress,
             estimate: true,
-            gasPrice: this.gasPrice,
-            blockNumber: this.blockNumber,
-            gasLimit: this.gasLimit,
-            value: this.value,
+            gasPrice: this.gasPrice?.toString(),
+            gas: this.gasLimit?.toString(),
+            blockNumber: this.blockNumber?.toString(),
+            value: this.value?.toString(),
         };
     }
 }

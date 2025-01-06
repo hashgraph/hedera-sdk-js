@@ -62,7 +62,7 @@ async function main() {
     // Step 5: Do the query against the consensus node using the estimated gas
     const callQuery = new ContractCallQuery()
         .setContractId(contractId)
-        .setGas(gas)
+        .setGas(Number(gas))
         .setFunction("getMessage")
         .setQueryPayment(new Hbar(1));
 
