@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Java
-        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
         with:
           distribution: "zulu"
           java-version: "8"
@@ -47,7 +47,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "16"
+          node-version: "20"
 
       - name: Install PNPM
         uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
@@ -95,7 +95,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Java
-        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
         with:
           distribution: "zulu"
           java-version: "8"
@@ -108,7 +108,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-          node-version: "16"
+          node-version: "20"
 
       - name: Install PNPM
         uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0

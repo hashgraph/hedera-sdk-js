@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.56.0
+
+## What's Changed
+* feat: Custom web proxies usage and documentation @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2729
+* feat: bump node version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2647
+* feat: HIP 423 Long Term Scheduled Transactions by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2708
+* feat: Enhance gRPC TLS by Dynamic Certificate Retrieval by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2718
+* fix: check for successful node execution by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2730
+* chore(deps-dev): bump rollup in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2544
+* chore(deps): bump nanoid in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2714
+* chore(deps): bump nanoid from 3.3.7 to 3.3.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2716
+* chore(deps): bump nanoid from 3.3.6 to 3.3.8 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2715
+* chore(deps): bump renovatebot/github-action from 41.0.5 to 41.0.6 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2709
+
 ## v2.55.1
 
 ## What's Changed
