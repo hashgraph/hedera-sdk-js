@@ -18,7 +18,7 @@
  * ‍
  */
 
-import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import Query from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ProxyStaker from "./ProxyStaker.js";
 
