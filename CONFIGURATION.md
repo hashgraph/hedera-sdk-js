@@ -1,6 +1,6 @@
 # Introduction
 
-The JS SDK package supports loading of configuration from an .env file or via the environment. You can use these environmental variables to configure the client. This document will explain the environmental variables needed and the client configuration.
+The JS SDK package supports loading of configuration from an `.env` file or via the environment. You can use these environmental variables to configure the client. This document will explain the environmental variables needed and the client configuration.
 
 # Table of content
 
@@ -39,6 +39,19 @@ The JS SDK package supports loading of configuration from an .env file or via th
 | OPERATOR_KEY   | ED25519 private key of the operator account                                 | 302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10 |
 | HEDERA_NETWORK | Network to connect to: mainnet, testnet, previewnet, or localhost           | localhost                                                                                        |
 
+### Default client settings values:
+
+| Key Name                          | Default Value                   |
+| --------------------------------- | ------------------------------- |
+| setDefaultRegenerateTransactionId | true                            |
+| setSignOnDemand                   | false                           |
+| setDefaultMaxQueryPayment         | 1 Hbar                          |
+| setMinBackoff                     | 250 (milliseconds)              |
+| setMaxBackoff                     | 8000 (milliseconds)             |
+| setNetworkUpdatePeriod            | 1 day                           |
+| setAutoValidateChecksums          | false                           |
+| setMaxExecutionTime               | If you use NodeClient its 10000 |
+
 ## ED25519 or ECDSA key
 
 ### Integration tests
@@ -53,7 +66,7 @@ It's recomended to use ED25519 due to it's better speed and performance.
 
 ### Examples
 
-The examples use both ED25519 and ECDSA keys. These examples come with a pre-filled .env file, so you generally don’t need to make changes. However, if you modify the .env file, ensure the correct type of private key is used.
+The examples use both ED25519 and ECDSA keys. These examples come with a pre-filled `.env` file, so you generally don’t need to make changes. However, if you modify the `.env` file, ensure the correct type of private key is used.
 
 To verify which type of key is required, check the example code for the initialization method in the client/wallet. Look for either `fromStringED25519` or `fromStringECDSA`.
 
@@ -65,7 +78,7 @@ This example uses `fromString`, which internally calls `fromStringED25519`.
 
 #### Optional Parameters
 
-Certain examples simulate different actors in the network, such as Alice, Bob, or Treasury. These examples require additional environment variables, which are pre-configured in the .env file. Examples of such variables include:
+Certain examples simulate different actors in the network, such as Alice, Bob, or Treasury. These examples require additional environment variables, which are pre-configured in the `.env` file. Examples of such variables include:
 
 -   `ALICE_KEY`
 -   `BOB_KEY`
@@ -76,11 +89,13 @@ Certain examples simulate different actors in the network, such as Alice, Bob, o
 
 ### React Native Example
 
+Path: [examples/react-native-example](/examples/react-native-example)
 This example uses `fromString`, which internally will try to execute the example with `fromStringED25519`.
 
 ### Simple REST Signature Provider
 
-This example behaves the same as the React Native example.
+Path: [examples/simple_rest_signature_provider](/examples/simple_rest_signature_provider)
+This example behaves the same way as the React Native example.
 
 ## Which network to use?
 
@@ -164,7 +179,7 @@ let client = Client.forNetwork().setLedgerId("previewnet");
 ```
 
 -   `setTransportSecurity` - The `setTransportSecurity` method in the Hedera JavaScript SDK is used to enable or disable transport security for the communication between the SDK and the Hedera network nodes. Transport security refers to the mechanisms used to secure the communication channel, typically involving encryption and authentication protocols.
-    When transport security is enabled, the SDK will establish a secure connection with the Hedera network nodes using protocols like Transport Layer Security (TLS) or its predecessor, Secure Sockets Layer (SSL). This ensures that the data transmitted between the SDK and the nodes is encrypted, protecting it from eavesdropping and tampering. It also provides authentication mechanisms to verify the identity of the nodes and prevent man-in-the-middle attacks.
+    When transport security is enabled, the SDK will establish a secure connection with the Hedera network nodes using protocols like Transport Layer Security (TLS). This ensures that the data transmitted between the SDK and the nodes is encrypted, protecting it from eavesdropping and tampering. It also provides authentication mechanisms to verify the identity of the nodes and prevent man-in-the-middle attacks.
 
 ```javascript
 const client = Client.forNetwork();
@@ -178,7 +193,7 @@ client.setTransportSecurity(true);
 ```javascript
 const operatorId = AccountId.fromString("...");
 const operatorKey = PrivateKey.generateED25519();
-let client = Client.forNetwork().setOperator(operatorId, operatorKey);
+const client = Client.forNetwork().setOperator(operatorId, operatorKey);
 ```
 
 -   `setOperatorWith` - Set the operator id and key and also provide a custom transaction signer function instead of using the default one.
@@ -209,9 +224,9 @@ client.setDefaultRegenerateTransactionId(true);
 
 -   `setSignOnDemand` - Configure on-demand transaction signing
 
-The setSignOnDemand method in the Hedera JavaScript SDK allows you to configure how transactions are signed before being submitted to the Hedera network. By default, transactions are signed immediately after being constructed. However, in some cases, you may want to delay the signing process until just before the transaction is submitted. This can be useful in scenarios where you need to perform additional operations or validations on the transaction before signing it.
+The `setSignOnDemand` method in the Hedera JavaScript SDK allows you to configure how transactions are signed before being submitted to the Hedera network. By default, transactions are signed immediately after being constructed. However, in some cases, you may want to delay the signing process until just before the transaction is submitted. This can be useful in scenarios where you need to perform additional operations or validations on the transaction before signing it.
 
-When you call client.setSignOnDemand(true), it instructs the SDK to defer the signing of transactions until the transaction.sign() method is explicitly called. This means that when you create a transaction using the SDK, it will not be signed automatically. Instead, you will need to call transaction.sign() manually before submitting the transaction to the network.
+When you call `client.setSignOnDemand(true)`, it instructs the SDK to defer the signing of transactions until the transaction.sign() method is explicitly called. This means that when you create a transaction using the SDK, it will not be signed automatically. Instead, you will need to call `transaction.sign()` manually before submitting the transaction to the network.
 
 ```javascript
 const client = Client.forTestnet();
@@ -252,7 +267,10 @@ client.setMaxExecutionTime(10000); // Set the request timeout to 10 seconds (100
 ### Node Management
 
 -   `setMaxNodesPerTransaction` - Set maximum nodes per transaction
-    This sets the maximum amount of nodes that the transaction will try to execute to.Setting a higher value for setMaxNodesPerTransaction can improve the reliability of transaction execution, but it also increases the network load and the overall cost of the transaction (since you'll be paying transaction fees for each node that executes the transaction).
+    This sets the maximum amount of nodes that the transaction will try to execute to.
+
+    Setting a higher value for setMaxNodesPerTransaction can improve the reliability of transaction execution, but it also increases the network load and the overall cost of the transaction (since you'll be paying transaction fees for each node that executes the transaction).
+
 -   `setNodeMinBackoff` - The `setNodeMinBackoff` method is SDK is used to set the minimum backoff time (in milliseconds) for retrying operations on a specific node.
     When you send a request to a node in the Hedera network, and the node fails to respond or encounters an error, the SDK will attempt to retry the request on the same node after a certain amount of time. This time is known as the backoff time, and it starts at a minimum value (set by setNodeMinBackoff) and increases exponentially with each subsequent retry attempt, up to a maximum value (set by setNodeMaxBackoff).
     The backoff mechanism is designed to prevent overwhelming the nodes with too many retries in a short period of time, while still allowing the SDK to recover from transient failures or network issues.
@@ -265,8 +283,7 @@ client.setNodeMinBackoff(500); // Set minimum node backoff to 500 milliseconds (
 
 -   `setNodeMaxBackoff` - It sets the maximum seconds allowed for the node backoff explained in the previous setting.
 
--   `setNodeMinReadmitPeriod` - Set minimum node readmit period
-    When a node fails to respond or encounters an error while processing a request, the SDK will temporarily remove that node from the pool of available nodes. This is done to prevent the SDK from repeatedly sending requests to a node that is experiencing issues, which could further exacerbate the problem.
+-   `setNodeMinReadmitPeriod` - When a node fails to respond or encounters an error while processing a request, the SDK will temporarily remove that node from the pool of available nodes. This is done to prevent the SDK from repeatedly sending requests to a node that is experiencing issues, which could further exacerbate the problem.
     The `setNodeMinReadmitPeriod` method allows you to configure the minimum amount of time that a node must wait before it can be readmitted to the pool of available nodes. During this period, the SDK will not send any requests to that node, giving it time to recover or resolve any issues it may be experiencing.
 
 -   `setNodeMaxReadmitPeriod` - Set maximum node readmit period.
@@ -296,16 +313,4 @@ const infoLogger = new Logger(LogLevel.Info);
 client.setLogger(infoLogger);
 ```
 
-There are different LogLevels: `LogLevel.Info`, ``LogLevel.Silent`, `LogLeve.Trace`, `LogLevel.Debug`, `LogLevel.Warn`, `LogLevel.Error`, `LogLevel.Fatal`.
-
-### Default values:
-
-| Key Name                          | Default Value                |
-| --------------------------------- | ---------------------------- |
-| setDefaultRegenerateTransactionId | true                         |
-| setSignOnDemand                   | false                        |
-| setDefaultMaxQueryPayment         | 1 Hbar                       |
-| setMinBackoff                     | 250 (milliseconds)           |
-| setMaxBackoff                     | 8000 (milliseconds)          |
-| setNetworkUpdatePeriod            | 24 60 60 1000 (milliseconds) |
-| setAutoValidateChecksums          | false                        |
+There are different LogLevels: `LogLevel.Info`, `LogLevel.Silent`, `LogLeve.Trace`, `LogLevel.Debug`, `LogLevel.Warn`, `LogLevel.Error`, `LogLevel.Fatal`.
