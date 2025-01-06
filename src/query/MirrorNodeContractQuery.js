@@ -190,4 +190,29 @@ export default class MirrorNodeContractQuery {
         let result = await axios.post(mirrorNetworkAddress, jsonPayload);
         return result;
     }
+
+    /**
+     * @param {Client} client
+     * @returns {Promise<string>}
+     */
+    async execute(client) {
+        /**
+         * @type { { data: { result: string } } }
+         */
+        const mirrorNodeRequest = await this.performMirrorNodeRequest(
+            client,
+            this.JSONPayload,
+        );
+        return mirrorNodeRequest.data.result;
+    }
+
+    // eslint-disable-next-line jsdoc/require-returns-check
+    /**
+     * @returns {object}
+     */
+    get JSONPayload() {
+        throw new Error(
+            "JSONPayload getter is not implemented. Please implement this method in the subclass.",
+        );
+    }
 }

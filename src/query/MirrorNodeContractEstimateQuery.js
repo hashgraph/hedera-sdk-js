@@ -7,28 +7,22 @@ import MirrorNodeContractQuery from "./MirrorNodeContractQuery.js";
  */
 export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery {
     /**
-     * @param {Client} client
-     * @returns {Promise<Long>}
+     * @returns {Object}
      */
-    async execute(client) {
+    get JSONPayload() {
         if (this.callData == null) {
             throw new Error("Call data is required.");
         }
 
-        const JSON_PAYLOAD = {
+        return {
             data: Buffer.from(this.callData).toString("hex"),
             from: this.senderEvmAddress,
             to: this.contractEvmAddress,
             estimate: true,
+            gasPrice: this.gasPrice,
+            blockNumber: this.blockNumber,
+            gasLimit: this.gasLimit,
+            value: this.value,
         };
-
-        /**
-         * @type {{data: {result: string}}}
-         */
-        const mirrorNodeRequest = await this.performMirrorNodeRequest(
-            client,
-            JSON_PAYLOAD,
-        );
-        return Long.fromNumber(Number(mirrorNodeRequest.data.result));
     }
 }
