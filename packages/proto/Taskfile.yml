@@ -26,6 +26,9 @@ tasks:
                 (
                 cd src/services &&
                 git fetch --all &&
+                pwd &&
+                pwd &&
+                pwd &&
                 git checkout {{.scommit_hash}}
                 )
 
