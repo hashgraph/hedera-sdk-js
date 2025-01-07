@@ -43,6 +43,16 @@ export default class MirrorNodeContractQuery {
 
     /**
      *
+     * @param {string} sender
+     * @returns {this}
+     */
+    setSenderEvmAddress(sender) {
+        this._senderEvmAddress = sender;
+        return this;
+    }
+
+    /**
+     *
      * @param {string} name
      * @param {ContractFunctionParameters} functionParameters
      * @returns {this}
@@ -118,14 +128,16 @@ export default class MirrorNodeContractQuery {
     }
 
     /**
-     * @returns {string?}
+     * @returns {string | null }
      */
     get senderEvmAddress() {
-        const solidityAddress = this._sender?.toSolidityAddress();
-        if (solidityAddress == null) {
-            throw new Error("Sender is not set");
+        if (this.sender) {
+            return this.sender.toSolidityAddress();
+        } else if (this._senderEvmAddress) {
+            return this._senderEvmAddress;
+        } else {
+            return null;
         }
-        return solidityAddress;
     }
 
     /**

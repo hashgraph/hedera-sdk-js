@@ -15,7 +15,7 @@ export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery
 
         return {
             data: Buffer.from(this.callData).toString("hex"),
-            from: this.sender?.evmAddress,
+            from: this.senderEvmAddress,
             to: this.contractEvmAddress,
             estimate: false,
             gasPrice: this.gasPrice?.toString(),
