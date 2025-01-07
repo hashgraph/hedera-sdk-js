@@ -18,8 +18,16 @@ tasks:
               --entryPoints src/index.js src/browser.js src/native.js
 
     install:submodules:
+        vars:
+            scommit_hash: "59be979d9f4d23a406e6636223161fdcdc967dcc"
         cmds:
             - git submodule update --init --recursive --remote
+            - |
+                (
+                cd src/services &&
+                git fetch --all &&
+                git checkout {{.scommit_hash}}
+                )
 
     move:protobufs:
         after:
