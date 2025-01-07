@@ -25,7 +25,9 @@ tasks:
             - |
                 (
                 cd src/services &&
-                git fetch --unshallow &&
+                if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+                    git fetch --unshallow
+                fi &&
                 git checkout {{.scommit_hash}}
                 )
 
