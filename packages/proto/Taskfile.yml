@@ -29,6 +29,7 @@ tasks:
                 pwd &&
                 pwd &&
                 pwd &&
+                git log --oneline --decorate | head -n 10 &&
                 git checkout {{.scommit_hash}}
                 )
 
