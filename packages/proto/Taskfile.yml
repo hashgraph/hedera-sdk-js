@@ -25,7 +25,7 @@ tasks:
             - |
                 (
                 cd src/services &&
-                git fetch --all &&
+                git fetch --unshallow &&
                 pwd &&
                 pwd &&
                 pwd &&
