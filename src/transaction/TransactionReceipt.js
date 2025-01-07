@@ -45,6 +45,7 @@ import * as hex from "../encoding/hex.js";
  * @property {?string} tokenId
  * @property {?string} scheduleId
  * @property {?ExchangeRateJSON} exchangeRate
+ * @property {?ExchangeRateJSON} nextExchangeRate
  * @property {?string} topicSequenceNumber
  * @property {?string} topicRunningHash
  * @property {?string} totalSupply
@@ -71,6 +72,7 @@ export default class TransactionReceipt {
      * @param {?TokenId} props.tokenId
      * @param {?ScheduleId} props.scheduleId
      * @param {?ExchangeRate} props.exchangeRate
+     * @param {?ExchangeRate} props.nextExchangeRate
      * @param {?Long} props.topicSequenceNumber
      * @param {?Uint8Array} props.topicRunningHash
      * @param {?Long} props.totalSupply
@@ -136,6 +138,13 @@ export default class TransactionReceipt {
          * @readonly
          */
         this.exchangeRate = props.exchangeRate;
+
+        /**
+         * The next exchange rate of Hbars to cents (USD).
+         *
+         * @readonly
+         */
+        this.nextExchangeRate = props.nextExchangeRate;
 
         /**
          * Updated sequence number for a consensus service topic.
@@ -236,7 +245,10 @@ export default class TransactionReceipt {
                 topicSequenceNumber: this.topicSequenceNumber,
 
                 exchangeRate: {
-                    nextRate: null,
+                    nextRate:
+                        this.nextExchangeRate != null
+                            ? this.nextExchangeRate._toProtobuf()
+                            : null,
                     currentRate:
                         this.exchangeRate != null
                             ? this.exchangeRate._toProtobuf()
@@ -264,11 +276,6 @@ export default class TransactionReceipt {
         const receipt =
             /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
                 response.receipt
-            );
-
-        const exchangeRateSet =
-            /** @type {HashgraphProto.proto.IExchangeRateSet} */ (
-                receipt.exchangeRate
             );
 
         const children =
@@ -324,7 +331,15 @@ export default class TransactionReceipt {
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           /** @type {HashgraphProto.proto.IExchangeRate} */
-                          (exchangeRateSet.currentRate),
+                          (receipt.exchangeRate.currentRate),
+                      )
+                    : null,
+
+            nextExchangeRate:
+                receipt.exchangeRate != null
+                    ? ExchangeRate._fromProtobuf(
+                          /** @type {HashgraphProto.proto.IExchangeRate} */
+                          (receipt.exchangeRate.nextRate),
                       )
                     : null,
 
@@ -393,6 +408,7 @@ export default class TransactionReceipt {
             tokenId: this.tokenId?.toString() || null,
             scheduleId: this.scheduleId?.toString() || null,
             exchangeRate: this.exchangeRate?.toJSON() || null,
+            nextExchangeRate: this.nextExchangeRate?.toJSON() || null,
             topicSequenceNumber: this.topicSequenceNumber?.toString() || null,
             topicRunningHash:
                 this.topicRunningHash != null
