@@ -70,7 +70,7 @@ The examples use both ED25519 and ECDSA keys. These examples come with a pre-fil
 
 To verify which type of key is required, check the example code for the initialization method in the client/wallet. Look for either `fromStringED25519` or `fromStringECDSA`.
 
-_ Note that some examples (like the ones that interact with the relay) are designed to work only with ECDSA private keys. _
+_Note that some examples (like the ones that interact with the relay) are designed to work only with ECDSA private keys._
 
 #### `fromStringDer`
 
