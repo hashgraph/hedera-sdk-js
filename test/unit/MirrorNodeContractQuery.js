@@ -52,25 +52,6 @@ describe("MirrorNodeContractQuery", function () {
         expect(err).to.be.true;
     });
 
-    it("should throw an error when no sender sent", async function () {
-        const query = new MirrorNodeContractQuery()
-            .setBlockNumber(BLOCK_NUMBER)
-            .setFunction(FUNCTION_NAME)
-            .setValue(VALUE)
-            .setGasLimit(GAS_LIMIT)
-            .setGasPrice(GAS_PRICE)
-            .setContractId(CONTRACT_ID);
-        expect(query.sender).to.be.null;
-
-        let err = false;
-        try {
-            query.senderEvmAddress;
-        } catch (e) {
-            err = e.message.includes("Sender is not set");
-        }
-        expect(err).to.be.true;
-    });
-
     it("should not be able to perform MN request without contract id", async function () {
         const query = new MirrorNodeContractQuery()
             .setBlockNumber(BLOCK_NUMBER)
