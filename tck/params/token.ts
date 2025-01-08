@@ -75,7 +75,7 @@ export interface AssociateDisassociateTokenParams {
     readonly commonTransactionParams?: Record<string, any>;
 }
 
-export interface PauseUnPauseTokenParams {
+export interface PauseUnpauseTokenParams {
     readonly tokenId?: string;
     readonly commonTransactionParams?: Record<string, any>;
 }
