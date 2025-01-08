@@ -18,9 +18,9 @@ export default class TestnetIntegrationTestEnv extends BaseIntegrationTestEnv {
         return BaseIntegrationTestEnv.new({
             client: Client,
             env: {
-                OPERATOR_ID: "0.0.4481103",
+                OPERATOR_ID: "0.0.8920",
                 OPERATOR_KEY:
-                    "3d11515c6794311c87dfdeaac90d4c223c22f3634db8f24690b557ea0ca97c11",
+                    "07f9f9c355d32c5c93a50024b596ed3ccc39954ba1963c68ac21cb7802fd5f83",
                 HEDERA_NETWORK: "testnet",
             },
             nodeAccountIds: options.nodeAccountIds,
