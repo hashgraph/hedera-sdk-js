@@ -8,6 +8,11 @@ import ContractFunctionParameters from "../contract/ContractFunctionParameters.j
  * @typedef {import("axios").AxiosResponse} AxiosResponse
  *
  */
+
+/**
+ * MirrorNodeContractQuery returns a result from EVM execution such as cost-free execution of read-only smart contract
+ * queries, gas estimation, and transient simulation of read-write operations.
+ */
 export default class MirrorNodeContractQuery {
     constructor() {
         this._contractId = null;
@@ -25,6 +30,7 @@ export default class MirrorNodeContractQuery {
     /**
      *
      * @param {ContractId} contractId
+     * @description Sets the contract instance to call.
      * @returns {this}
      */
     setContractId(contractId) {
@@ -34,6 +40,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {AccountId} sender
+     * @description Sets the sender of the transaction simulation.
      * @returns {this}
      */
     setSender(sender) {
@@ -44,6 +51,7 @@ export default class MirrorNodeContractQuery {
     /**
      *
      * @param {string} sender
+     * @description Set the 20-byte EVM address of the sender.
      * @returns {this}
      */
     setSenderEvmAddress(sender) {
@@ -55,6 +63,7 @@ export default class MirrorNodeContractQuery {
      *
      * @param {string} name
      * @param {ContractFunctionParameters} functionParameters
+     * @description Sets the function to call, and the parameters to pass to the function
      * @returns {this}
      */
     setFunction(name, functionParameters) {
@@ -68,6 +77,8 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} value
+     * @description Sets the amount of value (in tinybars or wei) to be sent to the contract in the transaction.
+     * Use this to specify an amount for a payable function call.
      * @returns {this}
      */
     setValue(value) {
@@ -77,6 +88,8 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} gasLimit
+     * @description Sets the gas limit for the contract call.
+     * This specifies the maximum amount of gas that the transaction can consume.
      * @returns {this}
      */
     setGasLimit(gasLimit) {
@@ -86,6 +99,7 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} gasPrice
+     * @description Sets the gas price to be used for the contract call. This specifies the price of each unit of gas used in the transaction.
      * @returns {this}
      */
     setGasPrice(gasPrice) {
@@ -95,6 +109,8 @@ export default class MirrorNodeContractQuery {
 
     /**
      * @param {Long} blockNumber
+     * @description  Sets the block number for the simulation of the contract call.
+     * The block number determines the context of the contract call simulation within the blockchain.
      * @returns {this}
      */
     setBlockNumber(blockNumber) {
