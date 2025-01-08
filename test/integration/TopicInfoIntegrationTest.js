@@ -6,7 +6,7 @@ import {
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
-describe.only("TopicInfo", function () {
+describe("TopicInfo", function () {
     let env;
 
     before(async function () {
