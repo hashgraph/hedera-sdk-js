@@ -151,9 +151,9 @@ export default class MirrorNodeContractQuery {
             return this.sender.toSolidityAddress();
         } else if (this._senderEvmAddress) {
             return this._senderEvmAddress;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -202,7 +202,7 @@ export default class MirrorNodeContractQuery {
             throw new Error("Contract ID is not set");
         }
         let mirrorNetworkAddress = client.mirrorNetwork[0];
-        let contractCallEndpoint = "/api/v1/contracts/call";
+        const contractCallEndpoint = "/api/v1/contracts/call";
 
         if (!client.ledgerId || client.ledgerId?.isLocalNode()) {
             mirrorNetworkAddress = "http://"
@@ -231,6 +231,7 @@ export default class MirrorNodeContractQuery {
             client,
             this.JSONPayload,
         );
+
         return mirrorNodeRequest.data.result;
     }
 
