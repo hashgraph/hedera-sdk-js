@@ -47,20 +47,20 @@ describe("MirrorNodeContractQuery", function () {
             .setFunction("getOwner")
             .execute(env.client);
 
-        expect(Number(gas)).to.be.gt(0);
+        expect(gas).to.be.gt(0);
 
         const result = await new MirrorNodeContractCallQuery()
             .setContractId(contractId)
             .setBlockNumber("latest")
             .setFunction("getOwner")
-            .setGasLimit(Number(gas))
+            .setGasLimit(gas)
             .execute(env.client);
         expect(result).to.not.be.null;
         const ownerMirrorNode = result.substring(26);
 
         const resultNode = await new ContractCallQuery()
             .setContractId(contractId)
-            .setGas(Number(gas))
+            .setGas(gas)
             .setFunction("getOwner")
             .execute(env.client);
         const ownerConsensusNode = resultNode.getAddress(0);
@@ -177,7 +177,7 @@ describe("MirrorNodeContractQuery", function () {
                     newOwnerSolidityAddress,
                 ),
             )
-            .setGas(Number(gas))
+            .setGas(gas)
             .setPayableAmount(new Hbar(1))
             .execute(env.client);
     });

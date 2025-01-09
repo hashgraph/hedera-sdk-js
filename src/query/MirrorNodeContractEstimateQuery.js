@@ -24,4 +24,20 @@ export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery
             value: this.value?.toString(),
         };
     }
+
+    /**
+     * @param {Client} client
+     * @returns {Promise<number>}
+     */
+    async execute(client) {
+        /**
+         * @type { { data: { result: string } } }
+         */
+        const mirrorNodeRequest = await this.performMirrorNodeRequest(
+            client,
+            this.JSONPayload,
+        );
+
+        return Number(mirrorNodeRequest.data.result);
+    }
 }

@@ -219,22 +219,6 @@ export default class MirrorNodeContractQuery {
         return result;
     }
 
-    /**
-     * @param {Client} client
-     * @returns {Promise<string>}
-     */
-    async execute(client) {
-        /**
-         * @type { { data: { result: string } } }
-         */
-        const mirrorNodeRequest = await this.performMirrorNodeRequest(
-            client,
-            this.JSONPayload,
-        );
-
-        return mirrorNodeRequest.data.result;
-    }
-
     // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @returns {object}
