@@ -1,6 +1,5 @@
 /**
- * # Duration
- * A duration, in seconds.
+ * # Current and next TSS encryption keys
  *
  * ### Keywords
  * The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -11,10 +10,10 @@
  */
 syntax = "proto3";
 
-package proto;
+package com.hedera.hapi.node.state.tss;
 
 /*
- * Copyright (C) 2018-2024 Hedera Hashgraph, LLC
+ * Copyright (C) 2024 Hedera Hashgraph, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,19 +28,24 @@ package proto;
  * limitations under the License.
  */
 
-option java_package = "com.hederahashgraph.api.proto.java";
-// <<<pbj.java_package = "com.hedera.hapi.node.base">>> This comment is special code for setting PBJ Compiler java package
+option java_package = "com.hedera.hapi.node.state.tss.legacy";
+// <<<pbj.java_package = "com.hedera.hapi.node.state.tss">>> This comment is special code for setting PBJ Compiler java package
 option java_multiple_files = true;
 
 /**
- * A length of time in seconds.
- *
- * It is RECOMMENDED that this message be used whenever an amount of time,
- * rather than a specific point in time, is needed.
+ * A message containing a node's current and next TSS encryption keys, where
+ * the next key (if present) will be switched to the node's current key during
+ * the first transaction at the beginning of a staking period.<br/>
  */
-message Duration {
-    /**
-     * The number of seconds for this duration.
-     */
-    int64 seconds = 1;
+message TssEncryptionKeys {
+
+  /**
+   * If non-empty, a node's current TSS encryption key.
+   */
+  bytes current_encryption_key = 1;
+
+  /**
+   * If non-empty, the same node's next TSS encryption key.
+   */
+  bytes next_encryption_key = 2;
 }

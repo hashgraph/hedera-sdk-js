@@ -1,21 +1,33 @@
 import {
     AccountId,
-    CustomFixedFee,
-    CustomFractionalFee,
-    CustomRoyaltyFee,
     Timestamp,
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenUpdateTransaction,
     TokenFeeScheduleUpdateTransaction,
-    FeeAssessmentMethod,
+    TokenAssociateTransaction,
+    TokenPauseTransaction,
+    TokenUnpauseTransaction,
+    TokenDissociateTransaction,
+    TokenFreezeTransaction,
+    TokenUnfreezeTransaction,
+    TokenGrantKycTransaction,
+    TokenRevokeKycTransaction,
+    TokenMintTransaction,
+    TokenBurnTransaction,
 } from "@hashgraph/sdk";
 import Long from "long";
 
 import { sdk } from "../sdk_data";
 
 import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
+import { supplyTypeMap, tokenTypeMap } from "../utils/constants/properties";
 import { getKeyFromString } from "../utils/key";
+import {
+    configureTokenManagementTransaction,
+    createCustomFees,
+    executeTokenManagementTransaction,
+} from "../utils/helpers/token";
 
 import { applyCommonTransactionParams } from "../params/common-tx-params";
 import {
@@ -23,10 +35,19 @@ import {
     DeleteTokenParams,
     UpdateTokenParams,
     UpdateTokenFeeScheduleParams,
+    AssociateDisassociateTokenParams,
+    PauseUnPauseTokenParams,
+    FreezeUnfreezeTokenParams,
+    GrantRevokeTokenKycParams,
+    BurnTokenParams,
+    MintTokenParams,
 } from "../params/token";
 
-import { TokenResponse } from "../response/token";
-import { supplyTypeMap, tokenTypeMap } from "../utils/constants/properties";
+import {
+    TokenResponse,
+    TokenBurnResponse,
+    TokenMintResponse,
+} from "../response/token";
 
 export const createToken = async ({
     name,
@@ -151,85 +172,7 @@ export const createToken = async ({
     }
 
     if (customFees != null && customFees.length > 0) {
-        let customFeeList = [];
-
-        customFees.forEach((customFee: Record<string, any>) => {
-            // Set fixed fees
-            if (customFee.fixedFee) {
-                let fixedFee = new CustomFixedFee()
-                    .setAmount(Long.fromString(customFee.fixedFee.amount))
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
-                    .setDenominatingTokenId(
-                        customFee.fixedFee.denominatingTokenId,
-                    );
-
-                customFeeList.push(fixedFee);
-            }
-
-            // Set fractional fees
-            if (customFee.fractionalFee) {
-                let fractionalFee = new CustomFractionalFee()
-                    .setNumerator(
-                        Long.fromString(customFee.fractionalFee.numerator),
-                    )
-                    .setDenominator(
-                        Long.fromString(customFee.fractionalFee.denominator),
-                    )
-                    .setMin(
-                        Long.fromString(customFee.fractionalFee.minimumAmount),
-                    )
-                    .setMax(
-                        Long.fromString(customFee.fractionalFee.maximumAmount),
-                    )
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
-                    .setAssessmentMethod(
-                        customFee.fractionalFee.assessmentMethod === "inclusive"
-                            ? FeeAssessmentMethod.Inclusive
-                            : FeeAssessmentMethod.Exclusive,
-                    );
-
-                customFeeList.push(fractionalFee);
-            }
-
-            // Set royalty fees
-            if (customFee.royaltyFee) {
-                let royaltyFee = new CustomRoyaltyFee()
-                    .setNumerator(
-                        Long.fromString(customFee.royaltyFee.numerator),
-                    )
-                    .setDenominator(
-                        Long.fromString(customFee.royaltyFee.denominator),
-                    )
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
-
-                if (customFee.royaltyFee.fallbackFee) {
-                    let fallbackFee = new CustomFixedFee()
-                        .setAmount(
-                            Long.fromString(
-                                customFee.royaltyFee.fallbackFee.amount,
-                            ),
-                        )
-                        .setDenominatingTokenId(
-                            customFee.royaltyFee.fallbackFee
-                                .denominatingTokenId,
-                        );
-
-                    royaltyFee.setFallbackFee(fallbackFee);
-                }
-
-                customFeeList.push(royaltyFee);
-            }
-        });
-
+        const customFeeList = createCustomFees(customFees);
         transaction.setCustomFees(customFeeList);
     }
 
@@ -416,87 +359,7 @@ export const updateTokenFeeSchedule = async ({
     }
 
     if (customFees != null && customFees.length > 0) {
-        let customFeeList = [];
-
-        customFees.forEach((customFee: Record<string, any>) => {
-            // Set fixed fees
-            if (customFee.fixedFee) {
-                let fixedFee = new CustomFixedFee()
-                    .setAmount(Long.fromString(customFee.fixedFee.amount))
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
-                    .setDenominatingTokenId(
-                        customFee.fixedFee.denominatingTokenId,
-                    );
-
-                customFeeList.push(fixedFee);
-            }
-
-            // Set fractional fees
-            if (customFee.fractionalFee) {
-                let fractionalFee = new CustomFractionalFee()
-                    .setNumerator(
-                        Long.fromString(customFee.fractionalFee.numerator),
-                    )
-                    .setDenominator(
-                        Long.fromString(customFee.fractionalFee.denominator),
-                    )
-                    .setMin(
-                        Long.fromString(customFee.fractionalFee.minimumAmount),
-                    )
-                    .setMax(
-                        Long.fromString(customFee.fractionalFee.maximumAmount),
-                    )
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt)
-                    .setAssessmentMethod(
-                        customFee.fractionalFee.assessmentMethod === "inclusive"
-                            ? FeeAssessmentMethod.Inclusive
-                            : FeeAssessmentMethod.Exclusive,
-                    );
-
-                customFeeList.push(fractionalFee);
-            }
-
-            // Set royalty fees
-            if (customFee.royaltyFee) {
-                let royaltyFee = new CustomRoyaltyFee()
-                    .setNumerator(
-                        Long.fromString(customFee.royaltyFee.numerator),
-                    )
-                    .setDenominator(
-                        Long.fromString(customFee.royaltyFee.denominator),
-                    )
-                    .setFeeCollectorAccountId(
-                        AccountId.fromString(customFee.feeCollectorAccountId),
-                    )
-                    .setAllCollectorsAreExempt(customFee.feeCollectorsExempt);
-
-                if (customFee.royaltyFee.fallbackFee) {
-                    console.log(customFee.royaltyFee.fallbackFee.amount);
-
-                    let fallbackFee = new CustomFixedFee()
-                        .setAmount(
-                            Long.fromString(
-                                customFee.royaltyFee.fallbackFee.amount,
-                            ),
-                        )
-                        .setDenominatingTokenId(
-                            customFee.royaltyFee.fallbackFee
-                                .denominatingTokenId,
-                        );
-
-                    royaltyFee.setFallbackFee(fallbackFee);
-                }
-
-                customFeeList.push(royaltyFee);
-            }
-        });
-
+        const customFeeList = createCustomFees(customFees);
         transaction.setCustomFees(customFeeList);
     }
 
@@ -513,5 +376,132 @@ export const updateTokenFeeSchedule = async ({
 
     return {
         status: receipt.status.toString(),
+    };
+};
+
+export const associateToken = async (
+    params: AssociateDisassociateTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenAssociateTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const dissociateToken = async (
+    params: AssociateDisassociateTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenDissociateTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const pauseToken = async (
+    params: PauseUnPauseTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenPauseTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const unpauseToken = async (
+    params: PauseUnPauseTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenUnpauseTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const freezeToken = async (
+    params: FreezeUnfreezeTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenFreezeTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const unfreezeToken = async (
+    params: FreezeUnfreezeTokenParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenUnfreezeTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const grantTokenKyc = async (
+    params: GrantRevokeTokenKycParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenGrantKycTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+    const receipt = await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+    return { status: receipt.status.toString() };
+};
+
+export const revokeTokenKyc = async (
+    params: GrantRevokeTokenKycParams,
+): Promise<TokenResponse> => {
+    const transaction = new TokenRevokeKycTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    return await executeTokenManagementTransaction(
+        transaction,
+        sdk.getClient(),
+    );
+};
+
+export const mintToken = async (
+    params: MintTokenParams,
+): Promise<TokenMintResponse> => {
+    const transaction = new TokenMintTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+        newTotalSupply: receipt.totalSupply.toString(),
+        serialNumbers: receipt.serials.map((serial) => serial.toString()),
+    };
+};
+
+export const burnToken = async (
+    params: BurnTokenParams,
+): Promise<TokenBurnResponse> => {
+    const transaction = new TokenBurnTransaction();
+    configureTokenManagementTransaction(transaction, params, sdk.getClient());
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+        newTotalSupply: receipt.totalSupply.toString(),
     };
 };
