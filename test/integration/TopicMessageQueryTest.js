@@ -12,6 +12,9 @@ describe("TopicMessageQuery", function () {
         env = await IntegrationTestEnv.new({ throwaway: true });
     });
 
+    // TODO: find out why this test fails, if it can be fixed
+    // and when did it stop working.
+    // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be executable", async function () {
         // client.setTransportSecurity(true);
         // client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
