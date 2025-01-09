@@ -68,25 +68,16 @@ describe("MirrorNodeContractQuery", function () {
         expect(ownerMirrorNode).to.equal(ownerConsensusNode);
     });
 
-    it("should fail when contract is not deployed", async function () {
-        const NON_EXISTING_CONTRACT = new ContractId(1);
-        let err = false;
+    it("should return default gas when contract is not deployed", async function () {
+        const NON_EXISTING_CONTRACT = new ContractId(12341234);
+        const DEFAULT_GAS = 22892;
 
-        const GAS_USED = await new MirrorNodeContractEstimateQuery()
+        const gasUsed = await new MirrorNodeContractEstimateQuery()
             .setContractId(NON_EXISTING_CONTRACT)
             .setFunction("getOwner")
             .execute(env.client);
 
-        try {
-            await new MirrorNodeContractCallQuery()
-                .setContractId(NON_EXISTING_CONTRACT)
-                .setGasLimit(GAS_USED)
-                .setFunction("getOwner")
-                .execute(env.client);
-        } catch (e) {
-            err = true;
-        }
-        expect(err).to.be.true;
+        expect(gasUsed).to.equal(DEFAULT_GAS);
     });
 
     it("should fail when gas limit is too low", async function () {
