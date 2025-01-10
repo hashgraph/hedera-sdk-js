@@ -204,6 +204,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -239,6 +240,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MIN,
@@ -272,6 +274,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -308,6 +311,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MIN,
@@ -343,6 +347,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -576,6 +581,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -612,6 +618,7 @@ describe("ContractFunctionParameters", function () {
                     );
                 },
             );
+
             it(
                 getDescription(
                     EXTREMUM.MAX,
@@ -687,6 +694,7 @@ describe("ContractFunctionParameters", function () {
                     });
                 },
             );
+
             it(
                 getDescriptionForArrayMethod(
                     bitSize,
@@ -725,6 +733,7 @@ describe("ContractFunctionParameters", function () {
                     });
                 },
             );
+
             it(
                 getDescriptionForArrayMethod(
                     bitSize,

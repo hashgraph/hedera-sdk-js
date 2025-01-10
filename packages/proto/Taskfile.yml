@@ -10,23 +10,50 @@ tasks:
     docs:
         cmds:
             - npx typedoc
-                --excludeInternal 
-                --excludePrivate 
-                --excludeProtected 
-                --out docs 
-                --validation.invalidLink 
-                --entryPoints src/index.js src/browser.js src/native.js
+              --excludeInternal
+              --excludePrivate
+              --excludeProtected
+              --out docs
+              --validation.invalidLink
+              --entryPoints src/index.js src/browser.js src/native.js
 
-    "install:submodules":
+    install:submodules:
+        vars:
+            scommit_hash: "a9692704da783ef3754b84a23fa1b1aa0654f920" # v0.58.0
         cmds:
-            - git submodule update --init
-        status:
-            - test -e src/proto/.git
+            - git submodule update --init --recursive --remote
+            - |
+                (
+                cd src/services &&
+                if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+                    git fetch --unshallow
+                fi &&
+                git checkout {{.scommit_hash}}
+                )
+
+    move:protobufs:
+        after:
+            - "install:submodules"
+        desc: "Move protobufs from src/services/hapi/hedera-protobufs/services to src/proto"
+        cmds:
+            - rm -rf src/proto/services
+            - mv src/services/hapi/hedera-protobufs/services src/proto/
+            - rm -rf src/proto/streams
+            - mv src/services/hapi/hedera-protobufs/streams src/proto/
+            - mv src/services/hapi/hedera-protobufs/platform/event/* src/proto/services
+            - echo "Protobufs moved successfully!"
+            - task "delete:submodule"
+
+    delete:submodule:
+        cmds:
+            - find src/services -mindepth 1 -delete
+            - echo "Submodule contents removed successfully, folder retained."
 
     install:
         deps:
             - "install:submodules"
         cmds:
+            - task "move:protobufs"
             - pnpm i > /dev/null
 
     build:
@@ -74,14 +101,14 @@ tasks:
             - build
 
     update:
-        dir: src/proto
+        dir: src/services
         vars:
             latest_tag:
-                sh: git -c versionsort.suffix=-alpha 
-                        -c versionsort.suffix=-beta 
-                        -c versionsort.suffix=-rc  
-                        tag -l --sort=version:refname|tail -1
-            proto: '{{.proto | default .latest_tag}}'
+                sh: git -c versionsort.suffix=-alpha
+                    -c versionsort.suffix=-beta
+                    -c versionsort.suffix=-rc
+                    tag -l --sort=version:refname|tail -1
+            proto: "{{.proto | default .latest_tag}}"
         cmds:
             - echo "Protobuf version set to {{.proto}}"
             - git fetch origin

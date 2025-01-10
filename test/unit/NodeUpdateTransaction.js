@@ -166,6 +166,7 @@ describe("NodeUpdateTransaction", function () {
 
     describe("frozen transaction", function () {
         let tx;
+
         before(function () {
             const ACCOUNT_ID = AccountId.fromString("0.4.20");
             const VALID_START = new Timestamp(1596210382, 0);

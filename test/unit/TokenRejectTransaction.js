@@ -13,6 +13,7 @@ describe("Transaction", function () {
     const owner = new AccountId(1);
     const tokenIds = [new TokenId(2)];
     const nftId = new NftId(tokenIds[0], 3);
+
     it("encodes to correct protobuf", async function () {
         const owner = new AccountId(1);
         const tokenReject = new TokenRejectTransaction()

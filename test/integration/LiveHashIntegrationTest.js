@@ -93,6 +93,7 @@ describe("LiveHash", function () {
             ).execute(env.client)
         ).getReceipt(env.client);
     });
+
     after(async function () {
         await env.close();
     });

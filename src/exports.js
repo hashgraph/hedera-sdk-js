@@ -49,7 +49,6 @@ export { default as AccountInfo } from "./account/AccountInfo.js";
 export { default as AccountInfoFlow } from "./account/AccountInfoFlow.js";
 export { default as AccountInfoQuery } from "./account/AccountInfoQuery.js";
 export { default as AccountRecordsQuery } from "./account/AccountRecordsQuery.js";
-export { default as AccountStakersQuery } from "./account/AccountStakersQuery.js";
 export { default as AccountUpdateTransaction } from "./account/AccountUpdateTransaction.js";
 export { default as AddressBookQuery } from "./network/AddressBookQuery.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
@@ -106,6 +105,8 @@ export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransact
 export { default as LiveHashDeleteTransaction } from "./account/LiveHashDeleteTransaction.js";
 export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
 export { default as MaxQueryPaymentExceeded } from "./MaxQueryPaymentExceeded.js";
+export { default as MirrorNodeContractCallQuery } from "./query/MirrorNodeContractCallQuery.js";
+export { default as MirrorNodeContractEstimateQuery } from "./query/MirrorNodeContractEstimateQuery.js";
 export { default as NodeAddressBook } from "./address_book/NodeAddressBook.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
