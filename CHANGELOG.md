@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * feat: Add configurable commit hash for JS builds. by @ggstyokov in https://github.com/hashgraph/hedera-sdk-js/pull/2751
 * feat: add new nextExchangeRate property to receipt by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2727
 * docs: add configuration.md file by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2687
+* chore(deps): bump ncipollo/release-action from 1.14.0 to 1.15.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2760
+* chore(deps): bump step-security/harden-runner from 2.10.2 to 2.10.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2758
 * chore: delete AccountStakersQuery  by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2742
 * chore(deps): bump actions/setup-java from 4.5.0 to 4.6.0 by @andrewb1269hg in https://github.com/hashgraph/hedera-sdk-js/pull/2735
 * chore(deps-dev): bump replace-in-file from 7.0.2 to 8.3.0 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2745
