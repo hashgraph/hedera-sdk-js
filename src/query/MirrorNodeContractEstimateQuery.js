@@ -6,7 +6,7 @@ import MirrorNodeContractQuery from "./MirrorNodeContractQuery.js";
  */
 export default class MirrorNodeContractCallQuery extends MirrorNodeContractQuery {
     /**
-     * @returns {Object}
+     * @returns {object}
      */
     get JSONPayload() {
         if (this.callData == null) {
