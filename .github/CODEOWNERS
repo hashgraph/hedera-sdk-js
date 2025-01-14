@@ -9,7 +9,7 @@
 
 # Protection Rules for Github Configuration Files and Actions Workflows
 /.github/                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers
-/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+/.github/workflows/                             @hashgraph/devops-ci @hashgraph/devops-ci-committers @hashgraph/release-engineering-managers
 
 # Codacy Tool Configurations
 /config/                                        @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
