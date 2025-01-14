@@ -18,6 +18,6 @@ interface TokenAllowanceParams {
 interface NftAllowanceParams {
     readonly tokenId: string;
     readonly serialNumbers?: string[];
-    readonly approveForAll?: boolean;
+    readonly approvedForAll?: boolean;
     readonly delegateSpenderAccountId?: string;
 }

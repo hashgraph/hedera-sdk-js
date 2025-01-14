@@ -241,17 +241,31 @@ export const approveAllowance = async ({
     } else {
         if (allowance.nft?.serialNumbers != null) {
             for (const serialNumber of allowance.nft.serialNumbers) {
-                transaction.approveTokenNftAllowance(
-                    new NftId(
-                        TokenId.fromString(allowance.nft?.tokenId),
-                        Long.fromString(serialNumber),
-                    ),
-                    owner,
-                    spender,
-                );
+                if (allowance.nft.delegateSpenderAccountId) {
+                    transaction.approveTokenNftAllowanceWithDelegatingSpender(
+                        new NftId(
+                            TokenId.fromString(allowance.nft?.tokenId),
+                            Long.fromString(serialNumber),
+                        ),
+                        owner,
+                        spender,
+                        AccountId.fromString(
+                            allowance.nft.delegateSpenderAccountId,
+                        ),
+                    );
+                } else {
+                    transaction.approveTokenNftAllowance(
+                        new NftId(
+                            TokenId.fromString(allowance.nft?.tokenId),
+                            Long.fromString(serialNumber),
+                        ),
+                        owner,
+                        spender,
+                    );
+                }
             }
         } else {
-            if (allowance.nft?.approveForAll != null) {
+            if (allowance.nft?.approvedForAll != null) {
                 transaction.approveTokenNftAllowanceAllSerials(
                     TokenId.fromString(allowance.nft?.tokenId),
                     owner,
