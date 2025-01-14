@@ -448,6 +448,9 @@ class Cache {
     }
 }
 
+/**
+ * This variable is strictly designed to prevent cyclic dependencies.
+ */
 const CACHE = new Cache();
 
 export default CACHE;

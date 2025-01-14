@@ -110,6 +110,13 @@ export const ArgumentType = {
  * @property {boolean} array
  */
 
+/**
+ * Class to help construct function selectors for Hedera smart contract function calls.
+ * Function selectors are the first 4 bytes of the Keccak-256 hash of the function's signature.
+ *
+ * This class provides methods to build function signatures by adding parameters of various Solidity types.
+ * It supports all standard Solidity parameter types and their array variants.
+ */
 export default class ContractFunctionSelector {
     /**
      * @param {string} [name]

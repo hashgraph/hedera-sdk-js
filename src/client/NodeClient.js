@@ -77,6 +77,8 @@ export const MirrorNetwork = {
 
 /**
  * @augments {Client<NodeChannel, NodeMirrorChannel>}
+ * Client for interacting with the Hedera network using Node.js.
+ * Extends the base Client class with Node.js specific implementations.
  */
 export default class NodeClient extends Client {
     /**

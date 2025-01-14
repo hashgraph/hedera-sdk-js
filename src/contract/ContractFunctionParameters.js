@@ -33,6 +33,14 @@ import { arrayify } from "@ethersproject/bytes";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import EvmAddress from "../EvmAddress.js";
 
+/**
+ * Class to help construct parameters for a Hedera smart contract function call.
+ *
+ * This class provides methods to add different types of parameters that will be passed to a smart contract function.
+ * It supports all Solidity parameter types including basic types (uint/int of various sizes, bool, address),
+ * arrays, strings, and bytes.
+ *
+ */
 export default class ContractFunctionParameters {
     constructor() {
         /**

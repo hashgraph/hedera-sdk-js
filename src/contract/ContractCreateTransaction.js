@@ -49,6 +49,27 @@ import Key from "../Key.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Create a new smart contract.
+ *
+ * If this transaction succeeds, the `ContractID` for the new smart contract
+ * SHALL be set in the transaction receipt.<br/>
+ * The contract is defined by the initial bytecode (or `initcode`). The
+ * `initcode` SHALL be stored either in a previously created file, or in the
+ * transaction body itself for very small contracts.
+ *
+ * As part of contract creation, the constructor defined for the new smart
+ * contract SHALL run with the parameters provided in the
+ * `constructorParameters` field.<br/>
+ * The gas to "power" that constructor MUST be provided via the `gas` field,
+ * and SHALL be charged to the payer for this transaction.<br/>
+ * If the contract _constructor_ stores information, it is charged gas for that
+ * storage. There is a separate fee in HBAR to maintain that storage until the
+ * expiration, and that fee SHALL be added to this transaction as part of the
+ * _transaction fee_, rather than gas.
+ *
+ */
+
 export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
