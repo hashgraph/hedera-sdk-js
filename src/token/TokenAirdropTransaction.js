@@ -44,6 +44,13 @@ import AbstractTokenTransferTransaction from "./AbstractTokenTransferTransaction
  * @typedef {import("./NftId.js").default} NftId
  * @typedef {import("./TokenId.js").default} TokenId
  */
+
+/**
+ * A transaction that allows the transfer of tokens to multiple accounts in a single transaction.
+ * This is a more efficient way to distribute tokens to multiple accounts compared to individual
+ * token transfer transactions.
+ *
+ */
 export default class TokenAirdropTransaction extends AbstractTokenTransferTransaction {
     /**
      * @param {object} props

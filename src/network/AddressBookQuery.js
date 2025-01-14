@@ -39,6 +39,12 @@ import CACHE from "../Cache.js";
 
 /**
  * @augments {Query<NodeAddressBook>}
+ * Query to get a list of Hedera network node addresses from a mirror node.
+ *
+ * This query can be used to retrieve node addresses either from a specific file ID
+ * or from the most recent address book if no file ID is specified. The response
+ * contains node metadata including IP addresses and ports for both node and mirror
+ * node services.
  */
 export default class AddressBookQuery extends Query {
     /**
