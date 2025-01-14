@@ -24,6 +24,7 @@ import {
     UpdateAccountParams,
 } from "../params/account";
 import { applyCommonTransactionParams } from "../params/common-tx-params";
+import { AllowanceParams } from "../params/allowance";
 
 export const createAccount = async ({
     key,
@@ -213,38 +214,36 @@ export const deleteAccount = async ({
     };
 };
 
-export const approveAllowance = async (
-    params: AccountAllowanceApproveParams,
-): Promise<AccountResponse> => {
+export const approveAllowance = async ({
+    allowances,
+    commonTransactionParams,
+}: AccountAllowanceApproveParams): Promise<AccountResponse> => {
     const transaction = new AccountAllowanceApproveTransaction();
     transaction.setGrpcDeadline(DEFAULT_GRPC_DEADLINE);
 
-    const allowance = params.allowances;
+    const allowance: AllowanceParams = allowances[0];
     const owner = AccountId.fromString(allowance.ownerAccountId);
     const spender = AccountId.fromString(allowance.spenderAccountId);
 
-    if (allowance.hbarAllowanceParams != null) {
+    if (allowance.hbar != null) {
         transaction.approveHbarAllowance(
             owner,
             spender,
-            Hbar.fromTinybars(allowance.hbarAllowanceParams.amount),
+            Hbar.fromTinybars(allowance.hbar.amount),
         );
-    } else if (allowance.hbarAllowanceParams != null) {
+    } else if (allowance.token != null) {
         transaction.approveTokenAllowance(
-            TokenId.fromString(allowance.tokenAllowanceParams.tokenId),
+            TokenId.fromString(allowance.token.tokenId),
             owner,
             spender,
-            Long.fromString(allowance.tokenAllowanceParams.amount),
+            Long.fromString(allowance.token.amount),
         );
     } else {
-        if (allowance.nftAllowanceParams.serialNumbers != null) {
-            for (const serialNumber of allowance.nftAllowanceParams
-                .serialNumbers) {
+        if (allowance.nft?.serialNumbers != null) {
+            for (const serialNumber of allowance.nft.serialNumbers) {
                 transaction.approveTokenNftAllowance(
                     new NftId(
-                        TokenId.fromString(
-                            allowance.nftAllowanceParams.tokenId,
-                        ),
+                        TokenId.fromString(allowance.nft?.tokenId),
                         Long.fromString(serialNumber),
                     ),
                     owner,
@@ -252,20 +251,28 @@ export const approveAllowance = async (
                 );
             }
         } else {
-            if (allowance.nftAllowanceParams.approveForAll != null) {
+            if (allowance.nft?.approveForAll != null) {
                 transaction.approveTokenNftAllowanceAllSerials(
-                    TokenId.fromString(allowance.nftAllowanceParams.tokenId),
+                    TokenId.fromString(allowance.nft?.tokenId),
                     owner,
                     spender,
                 );
             } else {
                 transaction.deleteTokenNftAllowanceAllSerials(
-                    TokenId.fromString(allowance.nftAllowanceParams.tokenId),
+                    TokenId.fromString(allowance.nft?.tokenId),
                     owner,
                     spender,
                 );
             }
         }
+    }
+
+    if (commonTransactionParams != null) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
     }
 
     const txResponse = await transaction.execute(sdk.getClient());

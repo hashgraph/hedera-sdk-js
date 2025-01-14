@@ -1,9 +1,9 @@
 export interface AllowanceParams {
     readonly ownerAccountId: string;
     readonly spenderAccountId: string;
-    readonly hbarAllowanceParams?: HbarAllowanceParams;
-    readonly tokenAllowanceParams?: TokenAllowanceParams;
-    readonly nftAllowanceParams?: NftAllowanceParams;
+    readonly hbar: HbarAllowanceParams;
+    readonly token?: TokenAllowanceParams;
+    readonly nft?: NftAllowanceParams;
 }
 
 interface HbarAllowanceParams {
