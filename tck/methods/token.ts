@@ -36,7 +36,7 @@ import {
     UpdateTokenParams,
     UpdateTokenFeeScheduleParams,
     AssociateDisassociateTokenParams,
-    PauseUnPauseTokenParams,
+    PauseUnpauseTokenParams,
     FreezeUnfreezeTokenParams,
     GrantRevokeTokenKycParams,
     BurnTokenParams,
@@ -404,7 +404,7 @@ export const dissociateToken = async (
 };
 
 export const pauseToken = async (
-    params: PauseUnPauseTokenParams,
+    params: PauseUnpauseTokenParams,
 ): Promise<TokenResponse> => {
     const transaction = new TokenPauseTransaction();
     configureTokenManagementTransaction(transaction, params, sdk.getClient());
@@ -416,7 +416,7 @@ export const pauseToken = async (
 };
 
 export const unpauseToken = async (
-    params: PauseUnPauseTokenParams,
+    params: PauseUnpauseTokenParams,
 ): Promise<TokenResponse> => {
     const transaction = new TokenUnpauseTransaction();
     configureTokenManagementTransaction(transaction, params, sdk.getClient());
