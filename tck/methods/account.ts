@@ -241,6 +241,12 @@ export const approveAllowance = async ({
     } else {
         if (allowance.nft?.serialNumbers != null) {
             for (const serialNumber of allowance.nft.serialNumbers) {
+                if (allowance.nft.delegateSpenderAccountId === "") {
+                    throw new Error(
+                        "delegateSpenderAccountId cannot be empty string!",
+                    );
+                }
+
                 if (allowance.nft.delegateSpenderAccountId) {
                     transaction.approveTokenNftAllowanceWithDelegatingSpender(
                         new NftId(
@@ -265,7 +271,7 @@ export const approveAllowance = async ({
                 }
             }
         } else {
-            if (allowance.nft?.approvedForAll != null) {
+            if (allowance.nft?.approvedForAll) {
                 transaction.approveTokenNftAllowanceAllSerials(
                     TokenId.fromString(allowance.nft?.tokenId),
                     owner,
