@@ -5,6 +5,157 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.57.0-beta.3
+
+## What's Changed
+* feat: Implement MirrorNodeContractQuery by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2723
+* feat: Add configurable commit hash for JS builds. by @ggstyokov in https://github.com/hashgraph/hedera-sdk-js/pull/2751
+* feat: add new nextExchangeRate property to receipt by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2727
+* docs: add configuration.md file by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2687
+* chore(deps): bump ncipollo/release-action from 1.14.0 to 1.15.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2760
+* chore(deps): bump step-security/harden-runner from 2.10.2 to 2.10.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2758
+* chore: delete AccountStakersQuery  by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2742
+* chore(deps): bump actions/setup-java from 4.5.0 to 4.6.0 by @andrewb1269hg in https://github.com/hashgraph/hedera-sdk-js/pull/2735
+* chore(deps-dev): bump replace-in-file from 7.0.2 to 8.3.0 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2745
+* chore(deps): bump path-to-regexp and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2698
+* chore(deps): bump renovatebot/github-action from 41.0.6 to 41.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2752
+* chore(deps-dev): bump eslint-plugin-n from 16.2.0 to 17.15.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2746
+* chore(deps-dev): bump eslint-plugin-jsdoc from 46.8.2 to 50.6.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2731
+* chore(deps-dev): bump eslint-plugin-jsdoc from 46.8.2 to 50.6.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2749
+* chore(deps-dev): bump eslint-plugin-compat from 4.0.2 to 6.0.2 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2748
+* chore(deps): bump ws from 8.14.2 to 8.18.0 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2750
+* chore(deps-dev): bump cross-spawn from 6.0.5 to 6.0.6 in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2655
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2524
+* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2667
+* chore(deps): bump elliptic from 6.5.4 to 6.6.0 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2744
+
+## v2.56.0
+
+## What's Changed
+* feat: Custom web proxies usage and documentation @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2729
+* feat: bump node version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2647
+* feat: HIP 423 Long Term Scheduled Transactions by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2708
+* feat: Enhance gRPC TLS by Dynamic Certificate Retrieval by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2718
+* fix: check for successful node execution by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2730
+* chore(deps-dev): bump rollup in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2544
+* chore(deps): bump nanoid in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2714
+* chore(deps): bump nanoid from 3.3.7 to 3.3.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2716
+* chore(deps): bump nanoid from 3.3.6 to 3.3.8 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2715
+* chore(deps): bump renovatebot/github-action from 41.0.5 to 41.0.6 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2709
+
+## v2.55.1
+
+## What's Changed
+
+* feat: update \_makeTransactionData of NodeUpdateTransaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2658
+* chore: update protobufs by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/265
+
+## v2.55.0
+
+## What's Changed
+
+* feat: Added InvalidNode check in the Executable by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: Protobufs updated by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2691
+* fix: typescript issue with long by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2692
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+* ci: add pr title check workflow to ensure conventional commits by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2661
+
+
+## v2.55.0-beta.1
+
+## What's Changed
+
+* feat: Pull protos from services by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2611
+* fix: rework examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2646
+* docs: fix readme by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2685
+* chore: replace pnpm/action-setup with a step-security maintained one by @PavelSBorisov in https://github.com/hashgraph/hedera-sdk-js/pull/2676
+* ci: Issues with codecov upload by @san-est in https://github.com/hashgraph/hedera-sdk-js/pull/2684
+
+## v2.54.2
+
+## What's Changed
+
+* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
+* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
+* fix: \_fromProtobuf functions where google primitive wrappers used (#2657) by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2657
+* fix: update typescript version by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2666
+* chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
+* chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
+* chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2525
+* chore(deps-dev): bump pino-pretty from 10.0.0 to 11.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2427
+* chore(deps-dev): bump vite from 4.4.9 to 5.3.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2429
+* chore(deps): bump micromatch from 4.0.5 to 4.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2485
+* chore(deps): bump codecov/codecov-action from 5.0.2 to 5.0.4 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2656
+* chore(deps): bump actions/setup-java from 4.4.0 to 4.5.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2608
+* chore(deps): bump actions/setup-node from 4.0.4 to 4.1.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2609
+* chore(deps): bump dcarbone/install-jq-action from 2.0.2 to 3.0.1 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2650
+* chore(deps): bump codecov/codecov-action from 4.6.0 to 5.0.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2651
+* chore(deps): bump step-security/harden-runner from 2.10.1 to 2.10.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
+* chore(deps): bump renovatebot/github-action from 40.3.3 to 41.0.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2653
+* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2666
+
+## v2.54.0-beta.1
+
+## What's Changed
+
+* feat: Add node AccountId to timeout/max attempt errors by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2631
+* feat: Add method to NodeClient for Initialization with MirrorNetwork only by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2635
+* chore(deps-dev): bump vite from 4.4.9 to 4.5.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2237
+* chore(deps-dev): bump fast-xml-parser from 4.2.7 to 4.4.1 in /examples/react-native-example by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2420
+* chore(deps-dev): bump eslint-plugin-deprecation from 2.0.0 to 3.0.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2426
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2525
+* chore(deps-dev): bump pino-pretty from 10.0.0 to 11.2.2 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2427
+* chore(deps-dev): bump vite from 4.4.9 to 5.3.5 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2429
+* chore(deps): bump micromatch from 4.0.5 to 4.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2485
+
+## v2.53.0
+
+## What's Changed
+
+* feat: Refactor SignatureMap for Multi-Transaction Support in _signedTransactions by @ivaylonikolov7 and @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2601
+* feat: export NodeAddressBook class by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2599
+* feat: exports WebClient for testing grpc-web proxies by @agadzhalov in https://github.com/hashgraph/hedera-sdk-js/pull/2603
+* feat: adding account 32, 33, and 34 endpoints to the clientconstants.js by @rustyShacklefurd in https://github.com/hashgraph/hedera-sdk-js/pull/2607
+* feat: tokenTransfer property exposed in AbstractTokenTransferTransaction by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2616
+* feat: example for get file contents by @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2578
+* feat: example for create account with threshold key @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2579
+* fix: incomplete file append transaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2600
+* fix: comment-out-not-working-examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2620
+* fix: TopicMessageQuery#unsubscribe() attempts to re-subscribe by @Jexsie in https://github.com/hashgraph/hedera-sdk-js/pull/2582
+* fix: incorrect protobuf body field used by @kantorcodes in https://github.com/hashgraph/hedera-sdk-js/pull/2613
+* fix: new eslint settings because of eslint bump in simple_rest_signature_provider by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2624
+* ci: fix vulnerable library versions by @mishomihov00 in https://github.com/hashgraph/hedera-sdk-js/pull/2594
+* chore(deps): bump actions/checkout from 4.2.1 to 4.2.2 by @dependabot https://github.com/hashgraph/hedera-sdk-js/pull/2602
+
+## v2.53.0-beta.4
+
+## What's Changed
+
+* fix: comment-out-not-working-examples by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2620
+* feat: adding account 32, 33, and 34 endpoints to the clientconstants.js by @rustyShacklefurd in https://github.com/hashgraph/hedera-sdk-js/pull/2607
+* feat: Refactor SignatureMap for Multi-Transaction Support in _signedTransactions by @ivaylonikolov7 and @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2601
+* feat: tokenTransfer property exposed in AbstractTokenTransferTransaction by @ivaylogarnev-limechain in https://github.com/hashgraph/hedera-sdk-js/pull/2616
+* feat: example for get file contents by @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2578
+* feat: example for create account with threshold key @b-l-u-e in https://github.com/hashgraph/hedera-sdk-js/pull/2579
+* fix: TopicMessageQuery#unsubscribe() attempts to re-subscribe by @Jexsie in https://github.com/hashgraph/hedera-sdk-js/pull/2582
+* fix: incorrect protobuf body field used by @kantorcodes in https://github.com/hashgraph/hedera-sdk-js/pull/2613
+* chore(deps): bump actions/checkout from 4.2.1 to 4.2.2 by @dependabot https://github.com/hashgraph/hedera-sdk-js/pull/2602
+* fix: new eslint settings because of eslint bump in simple_rest_signature_provider by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2624
+* ci: fix vulnerable library versions by @mishomihov00 in https://github.com/hashgraph/hedera-sdk-js/pull/2594
+
+## v2.53.0-beta.1
+
+## What's Changed
+
+* feat: export NodeAddressBook class by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2599
+* feat: exports WebClient for testing grpc-web proxies by @agadzhalov in https://github.com/hashgraph/hedera-sdk-js/pull/2603
+* fix: incomplete file append transaction by @SvetBorislavov in https://github.com/hashgraph/hedera-sdk-js/pull/2600
+
 ## v2.52.0
 
 ## What's Changed

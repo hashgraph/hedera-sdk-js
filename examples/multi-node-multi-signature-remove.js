@@ -20,12 +20,14 @@ let bobKey;
  * @description Create a transaction with multiple nodes and multiple signatures
  * and remove one of the signatures from the transaction then add it back
  */
+
 async function main() {
     /**
      *
      *  Step 1: Create Client
      *
      */
+
     if (
         process.env.OPERATOR_ID == null ||
         process.env.OPERATOR_KEY == null ||
@@ -46,6 +48,7 @@ async function main() {
      * Step 2: Create keys for two users
      *
      */
+
     aliceKey = PrivateKey.generate();
     bobKey = PrivateKey.generate();
 
@@ -56,6 +59,7 @@ async function main() {
      * Step 3: Create an account with the keyList
      *
      */
+
     const createAccountTransaction = new AccountCreateTransaction()
         .setInitialBalance(new Hbar(2))
         .setKey(keyList);
@@ -68,6 +72,7 @@ async function main() {
      * Step 4: Create a transfer transaction with multiple nodes
      *
      */
+
     const transferTransaction = new TransferTransaction()
         .addHbarTransfer(createReceipt.accountId, new Hbar(-1))
         .addHbarTransfer("0.0.3", new Hbar(1))
@@ -108,6 +113,7 @@ async function main() {
         console.log(
             "Alice Signatures =>",
             aliceSignatures.map((aliceSig) =>
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 PrivateKey.fromBytes(aliceSig).toStringDer(),
             ),
         );
@@ -115,6 +121,7 @@ async function main() {
         console.log(
             "Bob Signatures =>",
             bobSignatures.map((bobSig) =>
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 PrivateKey.fromBytes(bobSig).toStringDer(),
             ),
         );
@@ -131,14 +138,13 @@ async function main() {
      * Step 7: Remove the signatures for Alice from the transaction
      *
      */
-
     const removedAliceSignatures = signedTransaction.removeSignature(
         aliceKey.publicKey,
     );
 
     console.log("\nREMOVED Alice signatures below: \n");
 
-    if (Array.isArray(aliceSignatures) && Array.isArray(bobSignatures)) {
+    if (Array.isArray(removedAliceSignatures)) {
         console.log(
             "Alice removed signatures =>",
             removedAliceSignatures.map((aliceSig) =>
@@ -153,24 +159,6 @@ async function main() {
     console.log("\n\nSignatures left in the transaction: ");
     console.log(signaturesInTheTransactionAfter);
 
-    /**
-     *
-     * Step 8: Add the removed signature back to the transaction
-     *
-     */
-    signedTransaction.addSignature(aliceKey.publicKey, removedAliceSignatures);
-
-    /**
-     *
-     * Step 9: Execute and take the receipt
-     *
-     */
-    const result = await signedTransaction.execute(client);
-
-    const receipt = await result.getReceipt(client);
-
-    console.log(`\n  \nTransaction status: ${receipt.status.toString()}`);
-
     client.close();
 }
 
@@ -183,6 +171,7 @@ void main();
  */
 const getAllSignaturesFromTransaction = (signedTransaction) => {
     /** @type {string[]} */
+
     const signatures = [];
 
     signedTransaction._signedTransactions.list.forEach((transaction) => {

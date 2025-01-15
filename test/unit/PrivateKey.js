@@ -1,121 +1,111 @@
 import { expect } from "chai";
-import sinon from "sinon";
 
-import { PrivateKey } from "../../src/index.js";
-import Transaction from "../../src/transaction/Transaction.js";
+import {
+    AccountId,
+    FileAppendTransaction,
+    PrivateKey,
+    Timestamp,
+    Transaction,
+    TransactionId,
+    TransferTransaction,
+} from "../../src/index.js";
+import SignatureMap from "../../src/transaction/SignatureMap.js";
 
 describe("PrivateKey signTransaction", function () {
-    let privateKey, mockedTransaction, mockedSignature;
+    let privateKey, transaction;
 
     beforeEach(function () {
+        const validStart = new Timestamp(Math.floor(Date.now() / 1000), 0);
+        const txId = new TransactionId(new AccountId(0), validStart);
         privateKey = PrivateKey.generate();
-
-        mockedTransaction = sinon.createStubInstance(Transaction);
-        mockedSignature = new Uint8Array([4, 5, 6]);
-
-        // Mock addSignature method on the transaction
-        mockedTransaction.addSignature = sinon.spy();
+        transaction = new TransferTransaction()
+            .setNodeAccountIds([new AccountId(3)])
+            .setTransactionId(txId)
+            .freeze();
     });
 
     it("should sign transaction and add signature", function () {
-        // Mock _signedTransactions.list to return an array with one signed transaction
-        mockedTransaction._signedTransactions = {
-            list: [{ bodyBytes: new Uint8Array([1, 2, 3]) }],
-        };
+        const { bodyBytes } = transaction._signedTransactions.list[0];
+        const sig = privateKey.sign(bodyBytes);
 
-        // Stub the _key.sign method to return a mock signature
-        privateKey._key = {
-            sign: sinon.stub().returns(mockedSignature),
-        };
-
-        // Call the real signTransaction method
-        const signatures = privateKey.signTransaction(mockedTransaction);
-
-        // Validate that the signatures are correct
-        expect(signatures).to.deep.equal(mockedSignature);
-
-        sinon.assert.calledWith(
-            mockedTransaction.addSignature,
+        const sigMap = new SignatureMap().addSignature(
+            new AccountId(3),
+            transaction.transactionId,
             privateKey.publicKey,
-            [mockedSignature],
+            sig,
         );
 
-        // Ensure that sign method of the privateKey._key was called
-        sinon.assert.calledOnce(privateKey._key.sign);
+        transaction.addSignature(privateKey.publicKey, sigMap);
+
+        const sigPairMaps = transaction.getSignatures().getFlatSignatureList();
+        for (const sigPairMap of sigPairMaps) {
+            expect(sigPairMap.get(privateKey.publicKey)).to.equal(sig);
+        }
     });
 
-    it("should return empty signature if bodyBytes are missing", function () {
+    it("should throw an error if bodyBytes are missing", async function () {
         // Set bodyBytes to null to simulate missing bodyBytes
-        mockedTransaction._signedTransactions = {
-            list: [{ bodyBytes: null }],
-        };
+        const mockedTransaction = new Transaction();
+        mockedTransaction._signedTransactions.setList([
+            {
+                sigMap: {
+                    sigPair: [],
+                },
+                bodyBytes: null,
+            },
+        ]);
 
-        // Stub the _key.sign method to return a mock signature
-        privateKey._key = {
-            sign: sinon.stub().returns(mockedSignature),
-        };
-
-        // Call signTransaction method
-        const signatures = privateKey.signTransaction(mockedTransaction);
-
-        // Validate that an empty Uint8Array was returned
-        expect(signatures).to.deep.equal(new Uint8Array());
-
-        // Ensure that the transaction's addSignature method was called with the empty signature
-        sinon.assert.calledWith(
-            mockedTransaction.addSignature,
-            privateKey.publicKey,
-            [new Uint8Array()],
-        );
-
-        // Ensure that sign method of the privateKey._key was not called
-        sinon.assert.notCalled(privateKey._key.sign);
+        try {
+            privateKey.signTransaction(mockedTransaction);
+        } catch (err) {
+            expect(err.message).to.equal("Body bytes are missing");
+        }
+        const sigs = mockedTransaction.getSignatures().getFlatSignatureList();
+        expect(sigs.length).to.equal(0);
     });
 
     it("should sign transaction and add multiple signature", function () {
-        const mockedSignatures = [
-            new Uint8Array([10, 11, 12]),
-            new Uint8Array([13, 14, 15]),
-            new Uint8Array([16, 17, 18]),
-        ];
+        const contents = "Hello, World!";
+        const multisignatureTransaction = new FileAppendTransaction()
+            .setContents(contents)
+            .setChunkSize(1)
+            .setNodeAccountIds([new AccountId(3)])
+            .setTransactionId(
+                new TransactionId(new AccountId(0), new Timestamp(0, 0)),
+            )
+            .freeze();
 
-        const signedTransactions = [
-            { bodyBytes: new Uint8Array([1, 2, 3]) },
-            { bodyBytes: new Uint8Array([4, 5, 6]) },
-            { bodyBytes: new Uint8Array([7, 8, 9]) },
-        ];
-
-        // Mock _signedTransactions.list to return an array of  transaction
-        mockedTransaction._signedTransactions = {
-            list: signedTransactions,
-        };
-
-        // Stub the _key.sign method to return a list of mock signature
-        privateKey._key = {
-            sign: sinon
-                .stub()
-                .onCall(0)
-                .returns(mockedSignatures[0])
-                .onCall(1)
-                .returns(mockedSignatures[1])
-                .onCall(2)
-                .returns(mockedSignatures[2]),
-        };
-
-        // Call the real signTransaction method
-        const signatures = privateKey.signTransaction(mockedTransaction);
-
-        // Validate that the signatures are correct
-        expect(signatures).to.deep.equal(mockedSignatures);
-
-        // Ensure that the transaction's addSignature method was called with the correct arguments
-        sinon.assert.calledWith(
-            mockedTransaction.addSignature,
-            privateKey.publicKey,
-            mockedSignatures,
+        const sigs = multisignatureTransaction._signedTransactions.list.map(
+            (tx) => {
+                return privateKey.sign(tx.bodyBytes);
+            },
         );
 
-        // Ensure that sign method of the privateKey._key was called the correct number of times
-        sinon.assert.callCount(privateKey._key.sign, 3);
+        const sigMap = new SignatureMap();
+        sigs.forEach((sig, index) => {
+            const txId = multisignatureTransaction._transactionIds.list[index];
+            sigMap.addSignature(
+                new AccountId(3),
+                txId,
+                privateKey.publicKey,
+                sig,
+            );
+        });
+        multisignatureTransaction.addSignature(privateKey.publicKey, sigMap);
+
+        const txSigPairMaps = multisignatureTransaction
+            .getSignatures()
+            .getFlatSignatureList();
+
+        /*  Check if all the signatures are added to the transaction. This works 
+            because the transaction signatures are added in the same order as the
+            sigmap signatures.
+        */
+        for (const txSigPairMap of txSigPairMaps) {
+            expect(txSigPairMap.get(privateKey.publicKey)).to.equal(
+                sigs.shift(),
+            );
+        }
+        expect(txSigPairMaps.length).to.equal(contents.length);
     });
 });

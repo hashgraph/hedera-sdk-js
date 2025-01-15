@@ -98,9 +98,9 @@ export default class TokenTransfer {
             );
             const expectedDecimals =
                 tokenTransfer.expectedDecimals != null
-                    ? /** @type {number | null } */ (
-                          tokenTransfer.expectedDecimals.value
-                      )
+                    ? Object.hasOwn(tokenTransfer.expectedDecimals, "value")
+                        ? tokenTransfer.expectedDecimals.value
+                        : null
                     : null;
 
             for (const transfer of tokenTransfer.transfers != null
@@ -114,7 +114,7 @@ export default class TokenTransfer {
                                 transfer.accountID
                             ),
                         ),
-                        expectedDecimals,
+                        expectedDecimals: expectedDecimals || null,
                         amount:
                             transfer.amount != null
                                 ? transfer.amount

@@ -24,6 +24,7 @@ import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
 import Status from "./Status.js";
+import MaxAttemptsOrTimeoutError from "./MaxAttemptsOrTimeoutError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -73,6 +74,15 @@ export default class Executable {
          * @type {List<AccountId>}
          */
         this._nodeAccountIds = new List();
+
+        /**
+         * List of the transaction node account IDs to check if
+         * the node account ID of the request is in the list
+         *
+         * @protected
+         * @type {Array<string>}
+         */
+        this.transactionNodeIds = [];
 
         /**
          * @internal
@@ -561,6 +571,30 @@ export default class Executable {
         // the last error that was returned by the consensus node
         let persistentError = null;
 
+        // Checks if has a valid nodes to which the TX can be sent
+        if (this.transactionNodeIds.length) {
+            const nodeAccountIds = this._nodeAccountIds.list.map((nodeId) =>
+                nodeId.toString(),
+            );
+
+            const hasValidNodes = this.transactionNodeIds.some((nodeId) =>
+                nodeAccountIds.includes(nodeId),
+            );
+
+            if (!hasValidNodes) {
+                const displayNodeAccountIds =
+                    nodeAccountIds.length > 2
+                        ? `${nodeAccountIds.slice(0, 2).join(", ")} ...`
+                        : nodeAccountIds.join(", ");
+                const isSingleNode = nodeAccountIds.length === 1;
+
+                throw new Error(
+                    `Attempting to execute a transaction against node${isSingleNode ? "" : "s"} ${displayNodeAccountIds}, ` +
+                        `which ${isSingleNode ? "is" : "are"} not included in the Client's node list. Please review your Client configuration.`,
+                );
+            }
+        }
+
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             // Determine if we've exceeded request timeout
@@ -568,7 +602,12 @@ export default class Executable {
                 this._requestTimeout != null &&
                 startTime + this._requestTimeout <= Date.now()
             ) {
-                throw new Error("timeout exceeded");
+                throw new MaxAttemptsOrTimeoutError(
+                    `timeout exceeded`,
+                    this._nodeAccountIds.isEmpty
+                        ? "No node account ID set"
+                        : this._nodeAccountIds.current.toString(),
+                );
             }
 
             let nodeAccountId;
@@ -587,6 +626,21 @@ export default class Executable {
                 throw new Error(
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`,
                 );
+            }
+
+            if (this.transactionNodeIds.length) {
+                const isNodeAccountIdValid = this.transactionNodeIds.includes(
+                    nodeAccountId.toString(),
+                );
+
+                if (!isNodeAccountIdValid) {
+                    console.error(
+                        `Attempting to execute a transaction against node ${nodeAccountId.toString()}, which is not included in the Client's node list. Please review your Client configuration.`,
+                    );
+
+                    this._nodeAccountIds.advance();
+                    continue;
+                }
             }
 
             // Get the log ID for the request.
@@ -741,10 +795,12 @@ export default class Executable {
 
         // We'll only get here if we've run out of attempts, so we return an error wrapping the
         // persistent error we saved before.
-        throw new Error(
+
+        throw new MaxAttemptsOrTimeoutError(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
             }`,
+            this._nodeAccountIds.current.toString(),
         );
     }
 

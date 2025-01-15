@@ -13,6 +13,7 @@ describe("ContractCreateFlow", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
+
     it("works", async function () {
         const operatorKey = env.operatorKey.publicKey;
 

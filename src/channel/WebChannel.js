@@ -18,6 +18,7 @@
  * ‍
  */
 
+import { ALL_WEB_NETWORK_NODES } from "../constants/ClientConstants.js";
 import GrpcServiceError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
 import HttpError from "../http/HttpError.js";
@@ -83,6 +84,7 @@ export default class WebChannel extends Channel {
                 if (grpcStatus != null && grpcMessage != null) {
                     const error = new GrpcServiceError(
                         GrpcStatus._fromValue(parseInt(grpcStatus)),
+                        ALL_WEB_NETWORK_NODES[this._address].toString(),
                     );
                     error.message = grpcMessage;
                     callback(error, null);
@@ -96,6 +98,7 @@ export default class WebChannel extends Channel {
                 const err = new GrpcServiceError(
                     // retry on grpc web errors
                     GrpcStatus._fromValue(18),
+                    ALL_WEB_NETWORK_NODES[this._address].toString(),
                 );
                 callback(err, null);
             }

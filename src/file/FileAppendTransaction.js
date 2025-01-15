@@ -178,9 +178,10 @@ export default class FileAppendTransaction extends Transaction {
             );
             contents = concat;
         }
-
         const chunkSize = append.contents?.length || undefined;
-        const maxChunks = bodies.length || undefined;
+        const maxChunks = bodies.length
+            ? bodies.length / incrementValue
+            : undefined;
         let chunkInterval;
         if (transactionIds.length > 1) {
             const firstValidStart = transactionIds[0].validStart;
@@ -254,12 +255,11 @@ export default class FileAppendTransaction extends Transaction {
      */
     getRequiredChunks() {
         if (this._contents == null) {
-            return 0;
+            return 1;
         }
 
-        const result = Math.floor(
-            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize,
-        );
+        const result = Math.ceil(this._contents.length / this._chunkSize);
+
         return result;
     }
 
@@ -512,10 +512,6 @@ export default class FileAppendTransaction extends Transaction {
         const validStart =
             this.transactionId?.validStart || Timestamp.fromDate(new Date());
 
-        if (this._contents == null) {
-            throw new Error("contents is not set");
-        }
-
         if (this.maxChunks && this.getRequiredChunks() > this.maxChunks) {
             throw new Error(
                 `cannot build \`FileAppendTransaction\` with more than ${this.maxChunks} chunks`,
@@ -541,7 +537,7 @@ export default class FileAppendTransaction extends Transaction {
                 this._transactions.push(this._makeSignedTransaction(null));
             } else {
                 for (const nodeAccountId of this._nodeAccountIds.list) {
-                    this._signedTransactions.push(
+                    this._transactions.push(
                         this._makeSignedTransaction(nodeAccountId),
                     );
                 }
