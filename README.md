@@ -25,7 +25,34 @@ $ pnpm add @hashgraph/sdk
 ```
 ## Build
 
-After downloading the repo run `task build` to build the SDK.
+### Prerequisites
+
+1. [Taskfile](https://taskfile.dev/) tool installation
+2. **Node.js**: It is **recommended** to use Node.js **v20 or higher** for best performance and compatibility. The package may also work with **Node.js v16**, but this version has **not been officially tested**.
+
+```
+# with npm
+$ npm install -g @go-task/cli
+
+# with homebrew
+$ brew install go-task
+```
+
+2. [pNpm](https://pnpm.io/) package manager installation
+
+```
+# with npm
+$ npm install -g pnpm
+
+# with homebrew
+$ brew install pnpm
+```
+
+After downloading the repo run:
+
+1. `task install`
+
+2. `task build` to build the SDK
 
 ## React Native Support
 
@@ -44,11 +71,15 @@ See [examples](./examples).
 
 Every example can be executed using the following command from the root directory: `node examples/[name-of-example].js`
 
+## Configuration
+
+For detailed information on configuring the SDK, including environment variables and client settings, please refer to the [CONFIGURATION.md](CONFIGURATION.md) file.
+
 ## Start tests
 
 * To start the integration tests follow the next steps:
     - Run the [local node](https://github.com/hashgraph/hedera-local-node)
-    - Run `task test:intergration:node`
+    - Run `task test:integration:node`
     - Stop the [local node](https://github.com/hashgraph/hedera-local-node)
 * To start unit tests follow the next steps:
     - Run `task test:unit` (Note: the local node should not be running)

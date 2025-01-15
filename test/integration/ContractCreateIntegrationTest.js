@@ -19,9 +19,8 @@ describe("ContractCreate", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
-    it("should be executable", async function () {
-        this.timeout(120000);
 
+    it("should be executable", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -91,8 +90,6 @@ describe("ContractCreate", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -133,8 +130,6 @@ describe("ContractCreate", function () {
     });
 
     it("should error when contructor parameters are not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -171,8 +166,6 @@ describe("ContractCreate", function () {
     });
 
     it("should error when bytecode file ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let err = false;

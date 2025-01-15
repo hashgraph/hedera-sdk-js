@@ -282,6 +282,11 @@ export default class Query extends Executable {
         if (this._paymentTransactionId == null) {
             // And payment is required
             if (this._isPaymentRequired()) {
+                // Assign the account IDs to which the transaction should be sent.
+                this.transactionNodeIds = Object.values(client.network).map(
+                    (accountNodeId) => accountNodeId.toString(),
+                );
+
                 // And the client has an operator
                 if (this._operator != null) {
                     // Generate the payment transaction ID
@@ -492,6 +497,7 @@ export default class Query extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
+            case Status.PlatformNotActive:
                 return [status, ExecutionState.Retry];
             case Status.Ok:
                 return [status, ExecutionState.Finished];
@@ -505,10 +511,11 @@ export default class Query extends Executable {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -519,6 +526,7 @@ export default class Query extends Executable {
         );
 
         return new PrecheckStatusError({
+            nodeId,
             status,
             transactionId: this._getTransactionId(),
             contractFunctionResult: null,

@@ -199,6 +199,22 @@ export default class RequestType {
                 return "NodeDelete";
             case RequestType.TokenReject:
                 return "TokenReject";
+            case RequestType.TokenAirdrop:
+                return "TokenAirdrop";
+            case RequestType.TokenCancelAirdrop:
+                return "TokenCancelAirdrop";
+            case RequestType.TokenClaimAirdrop:
+                return "TokenClaimAirdrop";
+            case RequestType.TssMessage:
+                return "TssMessage";
+            case RequestType.TssVote:
+                return "TssVote";
+            case RequestType.TssShareSignature:
+                return "TssShareSignature";
+            case RequestType.TssEncryptionKey:
+                return "TssEncryptionKey";
+            case RequestType.StateSignatureTransaction:
+                return "StateSignatureTransaction";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -369,6 +385,22 @@ export default class RequestType {
                 return RequestType.NodeDelete;
             case 92:
                 return RequestType.TokenReject;
+            case 93:
+                return RequestType.TokenAirdrop;
+            case 94:
+                return RequestType.TokenCancelAirdrop;
+            case 95:
+                return RequestType.TokenClaimAirdrop;
+            case 96:
+                return RequestType.TssMessage;
+            case 97:
+                return RequestType.TssVote;
+            case 98:
+                return RequestType.TssShareSignature;
+            case 99:
+                return RequestType.TssEncryptionKey;
+            case 100:
+                return RequestType.StateSignatureTransaction;
         }
 
         throw new Error(
@@ -776,3 +808,44 @@ RequestType.NodeDelete = new RequestType(91);
  * Transfer one or more token balances held by the requesting account to the treasury for each token type.
  */
 RequestType.TokenReject = new RequestType(92);
+
+/**
+ * Airdrop one or more tokens to one or more accounts.
+ */
+RequestType.TokenAirdrop = new RequestType(93);
+
+/**
+ * Remove one or more pending airdrops from state on behalf of the sender(s) for each airdrop.
+ */
+RequestType.TokenCancelAirdrop = new RequestType(94);
+
+/**
+ * Claim one or more pending airdrops
+ */
+RequestType.TokenClaimAirdrop = new RequestType(95);
+
+/**
+ * (TSS) Messages for a candidate roster.
+ */
+RequestType.TssMessage = new RequestType(96);
+
+/**
+ * Vote on the validity of Threshold Signature Scheme (TSS)
+ */
+RequestType.TssVote = new RequestType(97);
+
+/**
+ * Communicates a node's signature of a block hash
+ * using its private share within the TSS process
+ */
+RequestType.TssShareSignature = new RequestType(98);
+
+/**
+ * Submit a node public tss encryption key as part of the Threshold Signature Scheme (TSS).
+ */
+RequestType.TssEncryptionKey = new RequestType(99);
+
+/**
+ * Submit a signature of a state root hash gossiped to other nodes
+ */
+RequestType.StateSignatureTransaction = new RequestType(100);

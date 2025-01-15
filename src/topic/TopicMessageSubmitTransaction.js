@@ -80,12 +80,16 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         /**
          * @private
          * @type {number}
+         * The maximum number of chunks a topic message can be split into.
+         * Default max chunk size: 20
+         * This value can be overridden with `setMaxChunks`
          */
         this._maxChunks = 20;
 
         /**
          * @private
          * @type {number}
+         * The size of each chunk for a given topic message in bytes.
          */
         this._chunkSize = CHUNK_SIZE;
 

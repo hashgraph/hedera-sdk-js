@@ -140,13 +140,12 @@ tasks:
 
     "test:unit:node":
         cmds:
-            - npx mocha --inline-diffs --exit -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx mocha --inline-diffs --exit -r @babel/register -r chai/register-expect.js "test/unit/*.js" --timeout 120000 {{.CLI_ARGS}}
 
     "test:unit:codecov":
         cmds:
-            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" --timeout 120000 {{.CLI_ARGS}}
             - npx c8 report
-            - npx codecov
 
     "test:unit:browser":
         cmds:
@@ -158,13 +157,12 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - npx mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - npx mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" --timeout 120000 {{.CLI_ARGS}}
 
     "test:integration:codecov":
         cmds:
-            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
+            - npx c8 --reporter=lcov --reporter=text-summary ./node_modules/.bin/mocha --exit -r @babel/register -r chai/register-expect.js "test/integration/*.js" --timeout 120000 {{.CLI_ARGS}}
             - npx c8 report
-            - npx codecov
 
     "update:proto":
         deps:

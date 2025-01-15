@@ -19,9 +19,8 @@ describe("ContractDelete", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
-    it("should be executable", async function () {
-        this.timeout(120000);
 
+    it("should be executable", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -91,8 +90,6 @@ describe("ContractDelete", function () {
     });
 
     it("should error when contarct ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -142,8 +139,6 @@ describe("ContractDelete", function () {
     });
 
     it("should create contract without admin key which can NOT be deleted", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()

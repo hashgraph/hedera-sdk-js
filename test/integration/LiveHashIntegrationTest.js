@@ -21,8 +21,6 @@ describe("LiveHash", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const _hash = hex.decode(
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002",
         );
@@ -95,6 +93,7 @@ describe("LiveHash", function () {
             ).execute(env.client)
         ).getReceipt(env.client);
     });
+
     after(async function () {
         await env.close();
     });

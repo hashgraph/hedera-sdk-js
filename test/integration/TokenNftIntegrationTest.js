@@ -24,8 +24,6 @@ describe("TokenNft", function () {
     });
 
     it("Should be able to transfer NFT", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -123,8 +121,6 @@ describe("TokenNft", function () {
     });
 
     it("should be able to query cost", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -193,8 +189,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot burn NFTs when NFT is not owned by treasury", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -291,8 +285,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot mint NFTs if metadata too big", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -465,8 +457,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot query NFT info by invalid NftId", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -537,8 +527,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot query NFT info by invalid NftId Serial Number", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -601,8 +589,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot transfer NFTs you don't own", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -714,8 +700,6 @@ describe("TokenNft", function () {
     });
 
     it("Cannot wipe accounts NFTs if the account doesn't own them", async function () {
-        this.timeout(120000);
-
         const key = PrivateKey.generateED25519();
 
         const account = (
@@ -815,7 +799,7 @@ describe("TokenNft", function () {
         expect(err).to.be.true;
     });
 
-    after(async function () {
-        await env.close();
+    after(function () {
+        env.client.close();
     });
 });

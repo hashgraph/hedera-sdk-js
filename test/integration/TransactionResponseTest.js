@@ -14,8 +14,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -46,8 +44,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should make a transaction receipt query available", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -77,8 +73,6 @@ describe("TransactionResponse", function () {
     });
 
     it("should make a transaction record query available", async function () {
-        this.timeout(120000);
-
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -105,6 +99,21 @@ describe("TransactionResponse", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+    });
+
+    it("should return nextExchangeRate in receipt", async function () {
+        const operatorId = env.operatorId;
+        expect(operatorId).to.not.be.null;
+
+        const key = PrivateKey.generateED25519();
+
+        const receipt = await (
+            await new AccountCreateTransaction()
+                .setKey(key.publicKey)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        expect(receipt.nextExchangeRate).to.not.be.null;
     });
 
     after(async function () {

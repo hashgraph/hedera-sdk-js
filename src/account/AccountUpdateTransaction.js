@@ -52,16 +52,16 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {AccountId} [props.accountId]
      * @param {Key} [props.key]
-     * @param {boolean} [props.receiverSignatureRequired]
+     * @param {?boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Timestamp | Date} [props.expirationTime]
-     * @param {string} [props.accountMemo]
+     * @param {?string} [props.accountMemo]
      * @param {Long | number} [props.maxAutomaticTokenAssociations]
      * @param {Key} [props.aliasKey]
      * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
-     * @param {boolean} [props.declineStakingReward]
+     * @param {?boolean} [props.declineStakingReward]
      */
     constructor(props = {}) {
         super();
@@ -80,9 +80,9 @@ export default class AccountUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {boolean}
+         * @type {?boolean}
          */
-        this._receiverSignatureRequired = false;
+        this._receiverSignatureRequired = null;
 
         /**
          * @private
@@ -224,7 +224,10 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 receiverSignatureRequired:
                     update.receiverSigRequiredWrapper != null
-                        ? update.receiverSigRequiredWrapper.value != null
+                        ? Object.hasOwn(
+                              update.receiverSigRequiredWrapper,
+                              "value",
+                          )
                             ? update.receiverSigRequiredWrapper.value
                             : undefined
                         : undefined,
@@ -248,13 +251,14 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 accountMemo:
                     update.memo != null
-                        ? update.memo.value != null
+                        ? Object.hasOwn(update.memo, "value")
                             ? update.memo.value
                             : undefined
                         : undefined,
                 maxAutomaticTokenAssociations:
                     update.maxAutomaticTokenAssociations != null &&
-                    update.maxAutomaticTokenAssociations.value != null
+                    update.maxAutomaticTokenAssociations.value != null &&
+                    Object.hasOwn(update.maxAutomaticTokenAssociations, "value")
                         ? Long.fromNumber(
                               update.maxAutomaticTokenAssociations.value,
                           )
@@ -269,7 +273,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 declineStakingReward:
                     update.declineReward != null
-                        ? update.declineReward.value != null
+                        ? Object.hasOwn(update.declineReward, "value")
                             ? update.declineReward.value
                             : undefined
                         : undefined,
@@ -324,7 +328,7 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {boolean}
+     * @returns {?boolean}
      */
     get receiverSignatureRequired() {
         return this._receiverSignatureRequired;

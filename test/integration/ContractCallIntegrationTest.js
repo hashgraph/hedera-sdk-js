@@ -20,9 +20,8 @@ describe("ContractCallIntegration", function () {
     before(async function () {
         env = await IntegrationTestEnv.new();
     });
-    it("should be executable", async function () {
-        this.timeout(120000);
 
+    it("should be executable", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -107,8 +106,6 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when function to call is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -176,8 +173,6 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -244,8 +239,6 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when contract ID is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -313,8 +306,6 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should return error when the gas is not set", async function () {
-        this.timeout(120000);
-
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()

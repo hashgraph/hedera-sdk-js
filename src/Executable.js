@@ -23,10 +23,11 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import * as hex from "./encoding/hex.js";
 import HttpError from "./http/HttpError.js";
+import Status from "./Status.js";
+import MaxAttemptsOrTimeoutError from "./MaxAttemptsOrTimeoutError.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
- * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
@@ -46,6 +47,7 @@ export const ExecutionState = {
 };
 
 export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/i;
+export const DEFAULT_MAX_ATTEMPTS = 10;
 
 /**
  * @abstract
@@ -62,7 +64,7 @@ export default class Executable {
          * @internal
          * @type {number}
          */
-        this._maxAttempts = 10;
+        this._maxAttempts = DEFAULT_MAX_ATTEMPTS;
 
         /**
          * List of node account IDs for each transaction that has been
@@ -72,6 +74,15 @@ export default class Executable {
          * @type {List<AccountId>}
          */
         this._nodeAccountIds = new List();
+
+        /**
+         * List of the transaction node account IDs to check if
+         * the node account ID of the request is in the list
+         *
+         * @protected
+         * @type {Array<string>}
+         */
+        this.transactionNodeIds = [];
 
         /**
          * @internal
@@ -314,10 +325,11 @@ export default class Executable {
      * @internal
      * @param {RequestT} request
      * @param {ResponseT} response
+     * @param {AccountId} nodeId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeId) {
         throw new Error("not implemented");
     }
 
@@ -559,6 +571,30 @@ export default class Executable {
         // the last error that was returned by the consensus node
         let persistentError = null;
 
+        // Checks if has a valid nodes to which the TX can be sent
+        if (this.transactionNodeIds.length) {
+            const nodeAccountIds = this._nodeAccountIds.list.map((nodeId) =>
+                nodeId.toString(),
+            );
+
+            const hasValidNodes = this.transactionNodeIds.some((nodeId) =>
+                nodeAccountIds.includes(nodeId),
+            );
+
+            if (!hasValidNodes) {
+                const displayNodeAccountIds =
+                    nodeAccountIds.length > 2
+                        ? `${nodeAccountIds.slice(0, 2).join(", ")} ...`
+                        : nodeAccountIds.join(", ");
+                const isSingleNode = nodeAccountIds.length === 1;
+
+                throw new Error(
+                    `Attempting to execute a transaction against node${isSingleNode ? "" : "s"} ${displayNodeAccountIds}, ` +
+                        `which ${isSingleNode ? "is" : "are"} not included in the Client's node list. Please review your Client configuration.`,
+                );
+            }
+        }
+
         // The retry loop
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             // Determine if we've exceeded request timeout
@@ -566,7 +602,12 @@ export default class Executable {
                 this._requestTimeout != null &&
                 startTime + this._requestTimeout <= Date.now()
             ) {
-                throw new Error("timeout exceeded");
+                throw new MaxAttemptsOrTimeoutError(
+                    `timeout exceeded`,
+                    this._nodeAccountIds.isEmpty
+                        ? "No node account ID set"
+                        : this._nodeAccountIds.current.toString(),
+                );
             }
 
             let nodeAccountId;
@@ -585,6 +626,21 @@ export default class Executable {
                 throw new Error(
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`,
                 );
+            }
+
+            if (this.transactionNodeIds.length) {
+                const isNodeAccountIdValid = this.transactionNodeIds.includes(
+                    nodeAccountId.toString(),
+                );
+
+                if (!isNodeAccountIdValid) {
+                    console.error(
+                        `Attempting to execute a transaction against node ${nodeAccountId.toString()}, which is not included in the Client's node list. Please review your Client configuration.`,
+                    );
+
+                    this._nodeAccountIds.advance();
+                    continue;
+                }
             }
 
             // Get the log ID for the request.
@@ -610,7 +666,7 @@ export default class Executable {
             // If the node is unhealthy, wait for it to be healthy
             // FIXME: This is wrong, we should skip to the next node, and only perform
             // a request backoff after we've tried all nodes in the current list.
-            if (!node.isHealthy()) {
+            if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
                 if (this._logger) {
                     this._logger.debug(
                         `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`,
@@ -705,9 +761,12 @@ export default class Executable {
             // For transactions this would be as simple as checking the response status is `OK`
             // while for _most_ queries it would check if the response status is `SUCCESS`
             // The only odd balls are `TransactionReceiptQuery` and `TransactionRecordQuery`
-            const [err, shouldRetry] = this._shouldRetry(request, response);
-            if (err != null) {
-                persistentError = err;
+            const [status, shouldRetry] = this._shouldRetry(request, response);
+            if (
+                status.toString() !== Status.Ok.toString() &&
+                status.toString() !== Status.Success.toString()
+            ) {
+                persistentError = status;
             }
 
             // Determine by the executing state what we should do
@@ -722,7 +781,11 @@ export default class Executable {
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
                 case ExecutionState.Error:
-                    throw this._mapStatusError(request, response);
+                    throw this._mapStatusError(
+                        request,
+                        response,
+                        nodeAccountId,
+                    );
                 default:
                     throw new Error(
                         "(BUG) non-exhaustive switch statement for `ExecutionState`",
@@ -732,10 +795,12 @@ export default class Executable {
 
         // We'll only get here if we've run out of attempts, so we return an error wrapping the
         // persistent error we saved before.
-        throw new Error(
+
+        throw new MaxAttemptsOrTimeoutError(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
                 persistentError != null ? persistentError.toString() : ""
             }`,
+            this._nodeAccountIds.current.toString(),
         );
     }
 

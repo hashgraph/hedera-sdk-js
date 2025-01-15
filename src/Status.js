@@ -677,6 +677,36 @@ export default class Status {
                 return "EMPTY_TOKEN_REFERENCE_LIST";
             case Status.UpdateNodeAccountNotAllowed:
                 return "UPDATE_NODE_ACCOUNT_NOT_ALLOWED";
+            case Status.TokenHasNoMetadataOrSupplyKey:
+                return "TOKEN_HAS_NO_METADATA_OR_SUPPLY_KEY";
+            case Status.EmptyPendingAirdropIdList:
+                return "EMPTY_PENDING_AIRDROP_ID_LIST";
+            case Status.PendingAirdropIdRepeated:
+                return "PENDING_AIRDROP_ID_REPEATED";
+            case Status.MaxPendingAirdropIdExceeded:
+                return "PENDING_AIRDROP_ID_LIST_TOO_LONG";
+            case Status.PendingNftAirdropAlreadyExists:
+                return "PENDING_NFT_AIRDROP_ALREADY_EXISTS";
+            case Status.AccountHasPendingAirdrops:
+                return "ACCOUNT_HAS_PENDING_AIRDROPS";
+            case Status.ThrottledAtConsensus:
+                return "THROTTLED_AT_CONSENSUS";
+            case Status.InvalidPendingAirdropId:
+                return "INVALID_PENDING_AIRDROP_ID";
+            case Status.TokenAirdropWithFallbackRoyalty:
+                return "TOKEN_AIRDROP_WITH_FALLBACK_ROYALTY";
+            case Status.InvalidTokenInPendingAirdrop:
+                return "INVALID_TOKEN_IN_PENDING_AIRDROP";
+            case Status.ScheduleExpiryIsBusy:
+                return "SCHEDULE_EXPIRY_IS_BUSY";
+            case Status.InvalidGrpcCertificateHash:
+                return "INVALID_GRPC_CERTIFICATE_HASH";
+            case Status.MissingExpiryTime:
+                return "MISSING_EXPIRY_TIME";
+            case Status.NoSchedulingAllowedAfterScheduledRecursion:
+                return "NO_SCHEDULING_ALLOWED_AFTER_SCHEDULED_RECURSION";
+            case Status.RecursiveSchedulingLimitReached:
+                return "RECURSIVE_SCHEDULING_LIMIT_REACHED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1325,6 +1355,36 @@ export default class Status {
                 return Status.EmptyTokenReferenceList;
             case 359:
                 return Status.UpdateNodeAccountNotAllowed;
+            case 360:
+                return Status.TokenHasNoMetadataOrSupplyKey;
+            case 361:
+                return Status.EmptyPendingAirdropIdList;
+            case 362:
+                return Status.PendingAirdropIdRepeated;
+            case 363:
+                return Status.MaxPendingAirdropIdExceeded;
+            case 364:
+                return Status.PendingNftAirdropAlreadyExists;
+            case 365:
+                return Status.AccountHasPendingAirdrops;
+            case 366:
+                return Status.ThrottledAtConsensus;
+            case 367:
+                return Status.InvalidPendingAirdropId;
+            case 368:
+                return Status.TokenAirdropWithFallbackRoyalty;
+            case 369:
+                return Status.InvalidTokenInPendingAirdrop;
+            case 370:
+                return Status.ScheduleExpiryIsBusy;
+            case 371:
+                return Status.InvalidGrpcCertificateHash;
+            case 372:
+                return Status.MissingExpiryTime;
+            case 373:
+                return Status.NoSchedulingAllowedAfterScheduledRecursion;
+            case 374:
+                return Status.RecursiveSchedulingLimitReached;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`,
@@ -2973,3 +3033,97 @@ Status.EmptyTokenReferenceList = new Status(358);
  * The node account is not allowed to be updated
  */
 Status.UpdateNodeAccountNotAllowed = new Status(359);
+
+/*
+ * The token has no metadata or supply key
+ */
+Status.TokenHasNoMetadataOrSupplyKey = new Status(360);
+
+/**
+ * The transaction attempted to the use an empty List of `PendingAirdropId`.
+ */
+Status.EmptyPendingAirdropIdList = new Status(361);
+
+/**
+ * The transaction attempted to the same `PendingAirdropId` twice.
+ */
+Status.PendingAirdropIdRepeated = new Status(362);
+
+/**
+ * The transaction attempted to use more than the allowed number of `PendingAirdropId`.
+ */
+Status.MaxPendingAirdropIdExceeded = new Status(363);
+
+/*
+ * A pending airdrop already exists for the specified NFT.
+ */
+Status.PendingNftAirdropAlreadyExists = new Status(364);
+
+/*
+ * The identified account is sender for one or more pending airdrop(s)
+ * and cannot be deleted.<br/>
+ * Requester should cancel all pending airdrops before resending
+ * this transaction.
+ */
+Status.AccountHasPendingAirdrops = new Status(365);
+
+/**
+ * Consensus throttle did not allow execution of this transaction.<br/>
+ * The transaction should be retried after a modest delay.
+ */
+Status.ThrottledAtConsensus = new Status(366);
+
+/**
+ * The provided pending airdrop id is invalid.<br/>
+ * This pending airdrop MAY already be claimed or cancelled.
+ * <p>
+ * The client SHOULD query a mirror node to determine the current status of
+ * the pending airdrop.
+ */
+Status.InvalidPendingAirdropId = new Status(367);
+
+/**
+ * The token to be airdropped has a fallback royalty fee and cannot be
+ * sent or claimed via an airdrop transaction.
+ */
+Status.TokenAirdropWithFallbackRoyalty = new Status(368);
+
+/**
+ * This airdrop claim is for a pending airdrop with an invalid token.<br/>
+ * The token might be deleted, or the sender may not have enough tokens
+ * to fulfill the offer.
+ * <p>
+ * The client SHOULD query mirror node to determine the status of the pending
+ * airdrop and whether the sender can fulfill the offer.
+ */
+Status.InvalidTokenInPendingAirdrop = new Status(369);
+
+/**
+ * A scheduled transaction configured to wait for expiry to execute was given
+ * an expiry time at which there is already too many transactions scheduled to
+ * expire; its creation must be retried with a different expiry.
+ */
+Status.ScheduleExpiryIsBusy = new Status(370);
+
+/**
+ * The provided gRPC certificate hash is invalid.
+ */
+Status.InvalidGrpcCertificateHash = new Status(371);
+
+/**
+ * A scheduled transaction configured to wait for expiry to execute was not
+ * given an explicit expiration time.
+ */
+Status.MissingExpiryTime = new Status(372);
+
+/**
+ * A contract operation attempted to schedule another transaction after it
+ * had already scheduled a recursive contract call.
+ */
+Status.NoSchedulingAllowedAfterScheduledRecursion = new Status(373);
+
+/**
+ * A contract can schedule recursive calls a finite number of times (this is
+ * approximately four million times with typical network configuration.)
+ */
+Status.RecursiveSchedulingLimitReached = new Status(374);
