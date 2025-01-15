@@ -1,5 +1,5 @@
 # Default code owners for entire repository
-*   @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+*                                               @hiero-ledger/hiero-sdk-js-maintainers
 
 #########################
 #####  Core Files  ######
@@ -8,23 +8,23 @@
 # NOTE: Must be placed last to ensure enforcement over all other rules
 
 # Protection Rules for Github Configuration Files and Actions Workflows
-/.github/                                       @hashgraph/platform-ci @hashgraph/release-engineering-managers
-/.github/workflows/                             @hashgraph/platform-ci @hashgraph/platform-ci-committers @hashgraph/release-engineering-managers
+/.github/                                       @hiero-ledger/github-committers @hiero-ledger/github-maintainers
+/.github/workflows/                             @hiero-ledger/github-committers @hiero-ledger/github-maintainers
 
 # Codacy Tool Configurations
-/config/                                        @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
-.remarkrc                                       @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+/config/                                        @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-committers @hiero-ledger/github-maintainers
+.remarkrc                                       @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-committers @hiero-ledger/github-maintainers
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
-/CODEOWNERS                                     @hashgraph/release-engineering-managers
+/CODEOWNERS                                     @hiero-ledger/github-maintainers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
-**/LICENSE                                      @hashgraph/release-engineering-managers
+/README.md                                      @hiero-ledger/github-committers @hiero-ledger/github-maintainers @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/hiero-sdk-js-committers @hiero-ledger/tsc
+**/LICENSE                                      @hiero-ledger/github-maintainers @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/tsc
 
 # CodeCov configuration
-**/codecov.yml                                  @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+**/codecov.yml                                  @hiero-ledger/github-committers @hiero-ledger/github-maintainers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
-**/.gitignore.*                                 @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+**/.gitignore                                   @hiero-ledger/github-committers @hiero-ledger/github-maintainers @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/tsc
+**/.gitignore.*                                 @hiero-ledger/github-committers @hiero-ledger/github-maintainers @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/tsc
