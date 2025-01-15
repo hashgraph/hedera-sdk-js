@@ -8,23 +8,23 @@
 # NOTE: Must be placed last to ensure enforcement over all other rules
 
 # Protection Rules for Github Configuration Files and Actions Workflows
-/.github/                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers
-/.github/workflows/                             @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+/.github/                                       @hashgraph/platform-ci @hashgraph/release-engineering-managers
+/.github/workflows/                             @hashgraph/platform-ci @hashgraph/platform-ci-committers @hashgraph/release-engineering-managers
 
 # Codacy Tool Configurations
-/config/                                        @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
-.remarkrc                                       @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+/config/                                        @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+.remarkrc                                       @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
 /CODEOWNERS                                     @hashgraph/release-engineering-managers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+/README.md                                      @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
 **/LICENSE                                      @hashgraph/release-engineering-managers
 
 # CodeCov configuration
-**/codecov.yml                                  @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+**/codecov.yml                                  @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
-**/.gitignore.*                                 @hashgraph/devops-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+**/.gitignore                                   @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
+**/.gitignore.*                                 @hashgraph/platform-ci @hashgraph/release-engineering-managers @hashgraph/hedera-sdk @hashgraph/hedera-sdk-js-maintainers
