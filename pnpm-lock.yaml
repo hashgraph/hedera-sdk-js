@@ -24,11 +24,11 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       '@hashgraph/cryptography':
-        specifier: 1.4.8-beta.10
-        version: 1.4.8-beta.10(expo@49.0.23(@babel/core@7.26.0))
+        specifier: 1.4.8-beta.11
+        version: 1.4.8-beta.11(expo@49.0.23(@babel/core@7.26.0))
       '@hashgraph/proto':
-        specifier: 2.16.0-beta.3
-        version: 2.16.0-beta.3
+        specifier: 2.16.0-beta.5
+        version: 2.16.0-beta.5
       axios:
         specifier: ^1.6.4
         version: 1.7.7
@@ -106,8 +106,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.10
       '@types/node':
-        specifier: ^20.8.10
-        version: 20.17.7
+        specifier: ^22.10.6
+        version: 22.10.6
       '@types/utf8':
         specifier: ^3.0.1
         version: 3.0.3
@@ -203,7 +203,7 @@ importers:
         version: 5.5.4
       vite:
         specifier: ^5.3.5
-        version: 5.4.11(@types/node@20.17.7)
+        version: 5.4.11(@types/node@22.10.6)
       yalc:
         specifier: 1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -1238,8 +1238,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  '@hashgraph/cryptography@1.4.8-beta.10':
-    resolution: {integrity: sha512-ctDbjue5Zq3Z0Sbvs5AgmdsbBRmxBhgKOkIGd1wSun1uiGYIvuV4aIVSKV0Rw+TGh1c8kWsMXZCNynPctcSQMg==}
+  '@hashgraph/cryptography@1.4.8-beta.11':
+    resolution: {integrity: sha512-DYDSEp/8BqcaSPC+0cizdv8XI/zr7qJTJRTdPa13oJy+WT8OD6J1CVuD5272hsNy2AVH9l/bDB50VBkuq6mYHA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^49.0.16
@@ -1253,8 +1253,8 @@ packages:
       expo-random:
         optional: true
 
-  '@hashgraph/proto@2.16.0-beta.3':
-    resolution: {integrity: sha512-gbnE8MXi8N7CGqKXt6FFOFYeEvmcQczRkNICiBEhRLO3YmYWuHyE7MU8cWuSt1KnB8kahw90TbxOYAlCxa317g==}
+  '@hashgraph/proto@2.16.0-beta.5':
+    resolution: {integrity: sha512-oE3wrLwnK/OMZ6YD0hlY4xrw3Kw8LoePBq0njrC4TNl/5EqIrGqeys9Bt11g1UHJVjOynseNSlasmG9h1a5UDg==}
     engines: {node: '>=10.0.0'}
 
   '@humanwhocodes/config-array@0.13.0':
@@ -1526,6 +1526,9 @@ packages:
 
   '@types/node@20.17.7':
     resolution: {integrity: sha512-sZXXnpBFMKbao30dUAvzKbdwA2JM1fwUtVEq/kxKuPI5mMwZiRElCpTXb0Biq/LMEVpXDZL5G5V0RPnxKeyaYg==}
+
+  '@types/node@22.10.6':
+    resolution: {integrity: sha512-qNiuwC4ZDAUNcY47xgaSuS92cjf8JbSUoaKS77bmLG1rU7MlATVSiw/IlrjtIyyskXBZ8KkNfjK/P5na7rgXbQ==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -4841,6 +4844,9 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
     engines: {node: '>=4'}
@@ -6580,7 +6586,7 @@ snapshots:
       protobufjs: 7.2.5
       yargs: 17.7.2
 
-  '@hashgraph/cryptography@1.4.8-beta.10(expo@49.0.23(@babel/core@7.26.0))':
+  '@hashgraph/cryptography@1.4.8-beta.11(expo@49.0.23(@babel/core@7.26.0))':
     dependencies:
       asn1js: 3.0.5
       bignumber.js: 9.1.2
@@ -6596,7 +6602,7 @@ snapshots:
     optionalDependencies:
       expo: 49.0.23(@babel/core@7.26.0)
 
-  '@hashgraph/proto@2.16.0-beta.3':
+  '@hashgraph/proto@2.16.0-beta.5':
     dependencies:
       long: 5.2.3
       protobufjs: 7.2.5
@@ -6832,6 +6838,10 @@ snapshots:
   '@types/node@20.17.7':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/node@22.10.6':
+    dependencies:
+      undici-types: 6.20.0
 
   '@types/semver@7.5.8': {}
 
@@ -10567,6 +10577,8 @@ snapshots:
 
   undici-types@6.19.8: {}
 
+  undici-types@6.20.0: {}
+
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
   unicode-match-property-ecmascript@2.0.0:
@@ -10652,13 +10664,13 @@ snapshots:
     dependencies:
       builtins: 1.0.3
 
-  vite@5.4.11(@types/node@20.17.7):
+  vite@5.4.11(@types/node@22.10.6):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.49
       rollup: 4.27.4
     optionalDependencies:
-      '@types/node': 20.17.7
+      '@types/node': 22.10.6
       fsevents: 2.3.3
 
   vscode-oniguruma@1.7.0: {}
