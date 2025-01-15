@@ -22,7 +22,7 @@ concurrency:
 jobs:
   title-check:
     name: Title Check
-    runs-on: client-sdk-linux-medium
+    runs-on: hiero-client-sdk-linux-medium
     if: ${{ !github.event.pull_request.base.repo.fork }}
     permissions:
       statuses: write

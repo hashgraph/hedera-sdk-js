@@ -21,7 +21,7 @@ permissions:
 jobs:
   test-integration-node:
     name: Integration Tests on Node ${{ matrix.node }}
-    runs-on: client-sdk-linux-large
+    runs-on: hiero-client-sdk-linux-large
     strategy:
       matrix:
         node: [ "20", "22" ]
