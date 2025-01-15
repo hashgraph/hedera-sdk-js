@@ -6,16 +6,16 @@ export interface AllowanceParams {
     readonly nft?: NftAllowanceParams;
 }
 
-interface HbarAllowanceParams {
+export interface HbarAllowanceParams {
     readonly amount: string;
 }
 
-interface TokenAllowanceParams {
+export interface TokenAllowanceParams {
     readonly tokenId: string;
     readonly amount: string;
 }
 
-interface NftAllowanceParams {
+export interface NftAllowanceParams {
     readonly tokenId: string;
     readonly serialNumbers?: string[];
     readonly approvedForAll?: boolean;

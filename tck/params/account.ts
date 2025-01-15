@@ -35,6 +35,6 @@ export interface DeleteAccountParams {
 }
 
 export interface AccountAllowanceApproveParams {
-    readonly allowances: AllowanceParams;
+    readonly allowances: AllowanceParams[];
     readonly commonTransactionParams?: Record<string, any>;
 }

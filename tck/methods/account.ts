@@ -7,7 +7,6 @@ import {
     Timestamp,
     AccountAllowanceApproveTransaction,
     TokenId,
-    NftId,
 } from "@hashgraph/sdk";
 import Long from "long";
 
@@ -16,6 +15,7 @@ import { AccountResponse } from "../response/account";
 
 import { getKeyFromString } from "../utils/key";
 import { DEFAULT_GRPC_DEADLINE } from "../utils/constants/config";
+import { handleNftAllowances } from "../utils/helpers/account";
 
 import {
     AccountAllowanceApproveParams,
@@ -24,7 +24,6 @@ import {
     UpdateAccountParams,
 } from "../params/account";
 import { applyCommonTransactionParams } from "../params/common-tx-params";
-import { AllowanceParams } from "../params/allowance";
 
 export const createAccount = async ({
     key,
@@ -218,76 +217,40 @@ export const approveAllowance = async ({
     allowances,
     commonTransactionParams,
 }: AccountAllowanceApproveParams): Promise<AccountResponse> => {
+    if (!allowances || allowances.length === 0) {
+        throw new Error("Allowances must be provided.");
+    }
+
     const transaction = new AccountAllowanceApproveTransaction();
     transaction.setGrpcDeadline(DEFAULT_GRPC_DEADLINE);
 
-    const allowance: AllowanceParams = allowances[0];
-    const owner = AccountId.fromString(allowance.ownerAccountId);
-    const spender = AccountId.fromString(allowance.spenderAccountId);
+    const { ownerAccountId, spenderAccountId, hbar, token, nft } =
+        allowances[0];
+    const owner = AccountId.fromString(ownerAccountId);
+    const spender = AccountId.fromString(spenderAccountId);
 
-    if (allowance.hbar != null) {
+    if (hbar) {
         transaction.approveHbarAllowance(
             owner,
             spender,
-            Hbar.fromTinybars(allowance.hbar.amount),
+            Hbar.fromTinybars(hbar.amount),
         );
-    } else if (allowance.token != null) {
+    } else if (token) {
         transaction.approveTokenAllowance(
-            TokenId.fromString(allowance.token.tokenId),
+            TokenId.fromString(token.tokenId),
             owner,
             spender,
-            Long.fromString(allowance.token.amount),
+            Long.fromString(token.amount),
         );
+    } else if (nft) {
+        handleNftAllowances(transaction, nft, owner, spender);
     } else {
-        if (allowance.nft?.serialNumbers != null) {
-            for (const serialNumber of allowance.nft.serialNumbers) {
-                if (allowance.nft.delegateSpenderAccountId === "") {
-                    throw new Error(
-                        "delegateSpenderAccountId cannot be empty string!",
-                    );
-                }
-
-                if (allowance.nft.delegateSpenderAccountId) {
-                    transaction.approveTokenNftAllowanceWithDelegatingSpender(
-                        new NftId(
-                            TokenId.fromString(allowance.nft?.tokenId),
-                            Long.fromString(serialNumber),
-                        ),
-                        owner,
-                        spender,
-                        AccountId.fromString(
-                            allowance.nft.delegateSpenderAccountId,
-                        ),
-                    );
-                } else {
-                    transaction.approveTokenNftAllowance(
-                        new NftId(
-                            TokenId.fromString(allowance.nft?.tokenId),
-                            Long.fromString(serialNumber),
-                        ),
-                        owner,
-                        spender,
-                    );
-                }
-            }
-        } else {
-            if (allowance.nft?.approvedForAll) {
-                transaction.approveTokenNftAllowanceAllSerials(
-                    TokenId.fromString(allowance.nft?.tokenId),
-                    owner,
-                    spender,
-                );
-            } else {
-                transaction.deleteTokenNftAllowanceAllSerials(
-                    TokenId.fromString(allowance.nft?.tokenId),
-                    owner,
-                    spender,
-                );
-            }
-        }
+        throw new Error("No valid allowance type provided.");
     }
 
-    if (commonTransactionParams != null) {
+    transaction.freezeWith(sdk.getClient());
+
+    if (commonTransactionParams) {
         applyCommonTransactionParams(
             commonTransactionParams,
             transaction,
