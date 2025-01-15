@@ -38,6 +38,9 @@ import * as HashgraphProto from "@hashgraph/proto";
  * @property {TokenBalanceJson[]} tokens
  */
 
+/**
+ * Represents the balance of an account on the Hedera network, including both HBAR and token balances.
+ */
 export default class AccountBalance {
     /**
      * @private

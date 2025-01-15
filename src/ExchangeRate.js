@@ -28,6 +28,11 @@ import Long from "long";
  * @property {number} exchangeRateInCents
  */
 
+/**
+ * Represents an exchange rate between hbars and cents (USD).
+ * This class provides functionality for handling and converting exchange rates
+ * between Hedera's native HBAR currency and US cents.
+ */
 export default class ExchangeRate {
     /**
      * @private

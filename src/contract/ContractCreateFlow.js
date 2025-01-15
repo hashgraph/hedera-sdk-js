@@ -49,6 +49,18 @@ import PublicKey from "../PublicKey.js";
  * @typedef {import("long")} Long
  */
 
+/**
+ * A convenience flow that handles the creation of a smart contract on the Hedera network.
+ * This flow abstracts away the complexity of the contract creation process by:
+ *
+ * 1. Creating a file to store the contract bytecode
+ * 2. Uploading the contract bytecode in chunks if necessary
+ * 3. Creating the contract instance using the uploaded bytecode
+ * 4. Cleaning up by deleting the bytecode file (if operator key is available)
+ *
+ * This flow is particularly useful when deploying large contracts that exceed the 2048 byte
+ * limit of a single transaction.
+ */
 export default class ContractCreateFlow {
     constructor() {
         /** @type {Uint8Array | null} */

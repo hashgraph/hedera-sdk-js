@@ -32,7 +32,6 @@ import {
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
  */
-
 export const Network = {
     /**
      * @param {string} name
