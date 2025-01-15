@@ -35,9 +35,6 @@ tasks:
     docs:
         cmds:
             - npx typedoc
-              --plugin typedoc-plugin-coverage
-              --coverageOutputType json
-              --logLevel Verbose
               --excludeInternal
               --excludePrivate
               --excludeProtected
