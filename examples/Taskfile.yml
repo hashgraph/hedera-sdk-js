@@ -9,7 +9,7 @@ tasks:
 
     install:
         cmds:
-            - pnpm i --no-frozen-lockfile > /dev/null
+            - pnpm i
 
     run-examples:
         description: Run JavaScript examples in the "examples" folder
