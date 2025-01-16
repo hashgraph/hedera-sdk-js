@@ -33,6 +33,10 @@ import * as hex from "../encoding/hex.js";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
+/**
+ * epresents a delegatable smart contract ID on the Hedera network.
+ * This class extends ContractId and provides additional functionality for delegatable contracts.
+ */
 export default class DelegateContractId extends ContractId {
     /**
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props

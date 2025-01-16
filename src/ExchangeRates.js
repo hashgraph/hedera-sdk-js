@@ -23,6 +23,10 @@ import * as HashgraphProto from "@hashgraph/proto";
 
 const { proto } = HashgraphProto;
 
+/**
+ *  Represents a pair of exchange rates for HBAR to USD cents conversion.
+ * Contains both the current exchange rate and the next exchange rate that will take effect.
+ */
 export default class ExchangeRates {
     /**
      * @private

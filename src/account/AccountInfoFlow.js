@@ -29,6 +29,15 @@ import KeyList from "../KeyList.js";
  * @typedef {import("../Signer.js").Signer} Signer
  */
 
+/**
+ * This class provides static methods to verify signatures and transactions by fetching the account's key
+ * from the network. It supports both Client and Signer-based operations.
+ *
+ * The class provides methods to:
+ * - Verify message signatures using account public key
+ * - Verify transaction signatures using account public key
+ * - Perform verifications using either a Client or Signer instance
+ */
 export default class AccountInfoFlow {
     /**
      * @param {Client} client

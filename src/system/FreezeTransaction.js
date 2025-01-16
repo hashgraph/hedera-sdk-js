@@ -48,6 +48,16 @@ import FreezeType from "../FreezeType.js";
  * @property {number} minute
  */
 
+/**
+ * Freeze, cancel, or prepare a freeze.
+ * This single transaction performs all of the functions supported
+ * by the network freeze service. These functions include actions to
+ * prepare an upgrade, prepare a telemetry upgrade, freeze the network,
+ * freeze the network for upgrade, or abort a scheduled freeze.
+ * <p>
+ * The actual freeze action SHALL be determined by the `freeze_type` field
+ * of the `FreezeTransactionBody`.<br/>
+ */
 export default class FreezeTransaction extends Transaction {
     /**
      * @param {object} [props]
