@@ -25,7 +25,7 @@ permissions:
 jobs:
   validate-release:
     name: Validate Release
-    runs-on: client-sdk-linux-medium
+    runs-on: hiero-client-sdk-linux-medium
 
     outputs:
       # Project tag
@@ -228,7 +228,7 @@ jobs:
 
   run-safety-checks:
     name: Safety Checks
-    runs-on: client-sdk-linux-medium
+    runs-on: hiero-client-sdk-linux-medium
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@c95a14d0e5bab51a9f56296a4eb0e416910cd350 # v2.10.3
@@ -246,8 +246,9 @@ jobs:
         with:
           version: 3.35.1
 
+      # Note: After Step-Security is enabled return to step-security/action-setup version
       - name: Install PNPM
-        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           version: 8.15.4
 
@@ -262,7 +263,7 @@ jobs:
 
   publish-release:
     name: Publish Release
-    runs-on: client-sdk-linux-large
+    runs-on: hiero-client-sdk-linux-large
     needs:
       - validate-release
       - run-safety-checks
@@ -283,8 +284,9 @@ jobs:
         with:
           version: 3.35.1
 
+      # Note: After Step-Security is enabled return to step-security/action-setup version
       - name: Install PNPM
-        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           version: 8.15.4
 
