@@ -187,8 +187,8 @@ importers:
         specifier: ^10.2.2
         version: 10.2.2
       nyc:
-        specifier: ^15.1.0
-        version: 15.1.0
+        specifier: ^17.1.0
+        version: 17.1.0
       prettier:
         specifier: ^3.0.3
         version: 3.3.3
@@ -3349,9 +3349,9 @@ packages:
     resolution: {integrity: sha512-Pt/uge1Q9s+5VAZ+pCo16TYMWPBIl+oaNIjgLQxcX0itS6ueeaA+pEfThZpH8WxhFgCiEb8sAJY6MdUKgiIWaQ==}
     engines: {node: '>=8'}
 
-  istanbul-lib-instrument@4.0.3:
-    resolution: {integrity: sha512-BXgQl9kf4WTCPCCpmFGoJkz/+uhvm7h7PFKUYxh7qarQd3ER33vHG//qaE8eN25l07YqZPpHXU9I09l/RD5aGQ==}
-    engines: {node: '>=8'}
+  istanbul-lib-instrument@6.0.3:
+    resolution: {integrity: sha512-Vtgk7L/R2JHyyGW07spoFlB8/lpjiOLTjMdms6AFMraYt3BaJauod/NGrfnVG/y4Ix1JEuMRPDPEj2ua+zz1/Q==}
+    engines: {node: '>=10'}
 
   istanbul-lib-processinfo@2.0.3:
     resolution: {integrity: sha512-NkwHbo3E00oybX6NGJi6ar0B29vxyvNwoC7eJ4G4Yq28UfY758Hgn/heV8VRFhevPED4LXfFz0DQ8z/0kw9zMg==}
@@ -3869,9 +3869,9 @@ packages:
   nullthrows@1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
 
-  nyc@15.1.0:
-    resolution: {integrity: sha512-jMW04n9SxKdKi1ZMGhvUTHBN0EICCRkHemEoE5jm6mTYcqcdas0ATzgUgejlQUHMvpnOZqGB5Xxsv9KxJW1j8A==}
-    engines: {node: '>=8.9'}
+  nyc@17.1.0:
+    resolution: {integrity: sha512-U42vQ4czpKa0QdI1hu950XuNhYqgoM+ZF1HT+VuUHL9hPfDPVvNQyltmMqdE9bUHMVa+8yNbc3QKTj8zQhlVxQ==}
+    engines: {node: '>=18'}
     hasBin: true
 
   object-assign@4.1.1:
@@ -9038,12 +9038,13 @@ snapshots:
     dependencies:
       append-transform: 2.0.0
 
-  istanbul-lib-instrument@4.0.3:
+  istanbul-lib-instrument@6.0.3:
     dependencies:
       '@babel/core': 7.26.0
+      '@babel/parser': 7.26.2
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 6.3.1
+      semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
 
@@ -9567,7 +9568,7 @@ snapshots:
 
   nullthrows@1.1.1: {}
 
-  nyc@15.1.0:
+  nyc@17.1.0:
     dependencies:
       '@istanbuljs/load-nyc-config': 1.1.0
       '@istanbuljs/schema': 0.1.3
@@ -9576,12 +9577,12 @@ snapshots:
       decamelize: 1.2.0
       find-cache-dir: 3.3.2
       find-up: 4.1.0
-      foreground-child: 2.0.0
+      foreground-child: 3.3.0
       get-package-type: 0.1.0
       glob: 7.2.3
       istanbul-lib-coverage: 3.2.2
       istanbul-lib-hook: 3.0.0
-      istanbul-lib-instrument: 4.0.3
+      istanbul-lib-instrument: 6.0.3
       istanbul-lib-processinfo: 2.0.3
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 4.0.1
