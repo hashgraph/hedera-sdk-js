@@ -64,7 +64,7 @@
         "replace-in-file": "^8.3.0",
         "semver": "^7.3.8",
         "tmp": "^0.2.1",
-        "typescript": "5.5.4",
+        "typescript": "^5.7.2",
         "protobufjs-cli": "^1.0.2"
     }
 }
