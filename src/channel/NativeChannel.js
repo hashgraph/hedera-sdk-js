@@ -120,6 +120,7 @@ export default class NativeChannel extends Channel {
                 }
 
                 const unaryResponse = decodeUnaryResponse(
+                    // @ts-ignore
                     responseBuffer.buffer,
                     responseBuffer.byteOffset,
                     responseBuffer.byteLength,
