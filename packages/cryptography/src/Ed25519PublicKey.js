@@ -57,6 +57,7 @@ export default class Ed25519PublicKey extends Key {
      * @returns {Ed25519PublicKey}
      */
     static fromBytesDer(data) {
+        // @ts-ignore
         const asn = forge.asn1.fromDer(new forge.util.ByteStringBuffer(data));
 
         /** * @type {Uint8Array} */
