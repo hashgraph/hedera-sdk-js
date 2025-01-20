@@ -8,6 +8,7 @@ import {
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
+import { setTimeout } from "node:timers/promises";
 
 dotenv.config();
 
@@ -62,25 +63,14 @@ async function main() {
                     .setMessage(bigContents)
                     .execute(client)
             ).getReceipt(client);
-
             console.log(`Sent message ${i}`);
-
-            // eslint-disable-next-line no-await-in-loop
-            await sleep(2500);
+            await setTimeout(2500);
         }
     } catch (error) {
         console.error(error);
     }
 
     client.close();
-}
-
-/**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 void main();
