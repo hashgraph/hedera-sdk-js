@@ -9,7 +9,7 @@ import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { setTimeout } from "timers/promises";
 
-describe("TopicMessage", function () {
+describe.only("TopicMessage", function () {
     let env;
 
     before(async function () {
