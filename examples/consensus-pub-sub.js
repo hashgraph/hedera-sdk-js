@@ -40,6 +40,9 @@ async function main() {
 
         console.log(`topicId = ${topicId.toString()}`);
 
+        // need to wait before the mirror node can see new topic
+        await setTimeout(2500);
+
         new TopicMessageQuery()
             .setTopicId(topicId)
             .setStartTime(0)
@@ -53,6 +56,10 @@ async function main() {
                     console.log(Buffer.from(message.contents).toString("utf8")),
             );
         const MESSAGES_LIMIT = 20;
+
+        // need to wait some time before we can receive messages
+        await setTimeout(2500);
+
         for (let i = 0; i < MESSAGES_LIMIT; i += 1) {
             //NOSONAR
             // eslint-disable-next-line no-await-in-loop
