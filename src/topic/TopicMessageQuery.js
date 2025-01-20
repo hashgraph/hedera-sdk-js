@@ -356,6 +356,9 @@ export default class TopicMessageQuery {
      */
     _makeServerStreamRequest(client) {
         const request = this._buildConsensusRequest();
+        /** @type {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const list = new Map();
 
         const streamHandler = client._mirrorNetwork
             .getNextMirrorNode()
@@ -364,7 +367,7 @@ export default class TopicMessageQuery {
                 "ConsensusService",
                 "subscribeTopic",
                 request,
-                (data) => this._handleMessage(data),
+                (data) => this._handleMessage(data, list),
                 (error) => this._handleError(error, client),
                 this._completionHandler,
             );
@@ -394,6 +397,7 @@ export default class TopicMessageQuery {
                 throw new Error("(BUG) listener is unexpectedly not set");
             }
         } catch (error) {
+            console.log(Buffer.from(topicMessage.contents).toString("utf-8"));
             this._errorHandler(topicMessage, /** @type {Error} */ (error));
         }
     }
@@ -418,8 +422,9 @@ export default class TopicMessageQuery {
      * Handles an incoming message from the topic subscription
      * @private
      * @param {Uint8Array} data - Raw message data
+     * @param {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} list
      */
-    _handleMessage(data) {
+    _handleMessage(data, list) {
         const message =
             HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
                 data,
@@ -441,7 +446,7 @@ export default class TopicMessageQuery {
         ) {
             this._passTopicMessage(TopicMessage._ofSingle(message));
         } else {
-            this._handleChunkedMessage(message);
+            this._handleChunkedMessage(message, list);
         }
     }
 
@@ -449,11 +454,9 @@ export default class TopicMessageQuery {
      * Handles a chunked message from the topic subscription
      * @private
      * @param {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse} message - The message response
+     * @param {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} list
      */
-    _handleChunkedMessage(message) {
-        /** @type {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const list = new Map();
+    _handleChunkedMessage(message, list) {
         const chunkInfo =
             /** @type {HashgraphProto.proto.IConsensusMessageChunkInfo} */ (
                 message.chunkInfo
