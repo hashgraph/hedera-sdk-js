@@ -18,7 +18,6 @@
  * ‍
  */
 
-import Query from "../query/Query.js";
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
@@ -42,7 +41,7 @@ import { RST_STREAM } from "../Executable.js";
 /**
  * @augments {Query<TopicMessageQuery>}
  */
-export default class TopicMessageQuery extends Query {
+export default class TopicMessageQuery {
     /**
      * @param {object} props
      * @param {TopicId | string} [props.topicId]
@@ -54,8 +53,6 @@ export default class TopicMessageQuery extends Query {
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
-        super();
-
         /**
          * @private
          * @type {?TopicId}
@@ -120,18 +117,31 @@ export default class TopicMessageQuery extends Query {
          * @type {() => void}
          */
         this._completionHandler = () => {
-            if (this._logger) {
-                this._logger.info(
-                    `Subscription to topic ${
-                        this._topicId != null ? this._topicId.toString() : ""
-                    } complete`,
-                );
-            }
+            console.log(
+                `Subscription to topic ${
+                    this._topicId != null ? this._topicId.toString() : ""
+                } complete`,
+            );
         };
 
         if (props.completionHandler != null) {
             this._completionHandler = props.completionHandler;
         }
+
+        /* The number of times we can retry the grpc call
+         *
+         * @internal
+         * @type {number}
+         */
+        this._maxAttempts = 20;
+
+        /**
+         * This is the request's max backoff
+         *
+         * @internal
+         * @type {number}
+         */
+        this._maxBackoff = 8000;
 
         /**
          * @private
