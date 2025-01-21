@@ -397,7 +397,6 @@ export default class TopicMessageQuery {
                 throw new Error("(BUG) listener is unexpectedly not set");
             }
         } catch (error) {
-            console.log(Buffer.from(topicMessage.contents).toString("utf-8"));
             this._errorHandler(topicMessage, /** @type {Error} */ (error));
         }
     }
