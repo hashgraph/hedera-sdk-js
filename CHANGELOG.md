@@ -10,10 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * test: fix TopicMessage related tests by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2799
 * docs: documentation batch for classes by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2771
 * docs: update chunk size comments by @SimiHunjan in https://github.com/hiero-ledger/hiero-sdk-js/pull/2738
+* docs: update token-airdrop-example.js by @michielmulders in https://github.com/hiero-ledger/hiero-sdk-js/pull/2593
 * chore(deps): bumped Typescript version by @ivaylogarnev-limechain in https://github.com/hiero-ledger/hiero-sdk-js/pull/2797
 * chore(deps): bump renovatebot/github-action from 41.0.8 to 41.0.10 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2805
 * chore(deps): bump typedoc by @ivaylonikolov in https://github.com/hiero-ledger/hiero-sdk-js/pull/2800
-* docs: update token-airdrop-example.js by @michielmulders in https://github.com/hiero-ledger/hiero-sdk-js/pull/2593
 * chore(deps): bump step-security/harden-runner from 2.10.3 to 2.10.4 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2798
 * chore(deps-dev): bump c8 from 8.0.1 to 10.1.3 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2753
 * chore(deps-dev): bump mocha in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2778
