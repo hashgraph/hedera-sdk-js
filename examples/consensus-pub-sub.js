@@ -41,7 +41,7 @@ async function main() {
         console.log(`topicId = ${topicId.toString()}`);
 
         // need to wait before the mirror node can see new topic
-        await setTimeout(2500);
+        await setTimeout(5000);
 
         new TopicMessageQuery()
             .setTopicId(topicId)
@@ -58,7 +58,7 @@ async function main() {
         const MESSAGES_LIMIT = 20;
 
         // need to wait some time before we can receive messages
-        await setTimeout(2500);
+        await setTimeout(5000);
 
         for (let i = 0; i < MESSAGES_LIMIT; i += 1) {
             //NOSONAR
@@ -71,7 +71,7 @@ async function main() {
                     .execute(client)
             ).getReceipt(client);
             console.log(`Sent message ${i}`);
-            await setTimeout(2500);
+            await setTimeout(5000);
         }
     } catch (error) {
         console.error(error);
