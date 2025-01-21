@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import {
     TopicMessageQuery,
     TopicCreateTransaction,
@@ -5,7 +6,6 @@ import {
     TopicDeleteTransaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { setTimeout } from "timers/promises";
 
 describe("TopicMessageQuery", function () {
     let env;

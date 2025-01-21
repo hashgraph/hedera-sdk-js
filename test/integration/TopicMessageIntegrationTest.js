@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import {
     Status,
     TopicCreateTransaction,
@@ -7,7 +8,6 @@ import {
 } from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { setTimeout } from "timers/promises";
 
 describe("TopicMessage", function () {
     let env;
