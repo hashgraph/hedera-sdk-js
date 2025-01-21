@@ -42,7 +42,7 @@ import Hbar from "../Hbar.js";
  */
 
 /**
- * * A query that returns information about a smart contract instance.
+ * A query that returns information about a smart contract instance.
  * This includes the account that it owns, the contract's bytecode, and the timestamp when it will expire.
  * @augments {Query<ContractInfo>}
  */
