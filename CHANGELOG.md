@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.57.0
+
+* test: fix TopicMessage related tests by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2799
+* docs: documentation batch for classes by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2771
+* docs: update chunk size comments by @SimiHunjan in https://github.com/hiero-ledger/hiero-sdk-js/pull/2738
+* docs: update token-airdrop-example.js by @michielmulders in https://github.com/hiero-ledger/hiero-sdk-js/pull/2593
+* chore(deps): bumped Typescript version by @ivaylogarnev-limechain in https://github.com/hiero-ledger/hiero-sdk-js/pull/2797
+* chore(deps): bump renovatebot/github-action from 41.0.8 to 41.0.10 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2805
+* chore(deps): bump typedoc by @ivaylonikolov in https://github.com/hiero-ledger/hiero-sdk-js/pull/2800
+* chore(deps): bump step-security/harden-runner from 2.10.3 to 2.10.4 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2798
+* chore(deps-dev): bump c8 from 8.0.1 to 10.1.3 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2753
+* chore(deps-dev): bump mocha in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2778
+* chore(deps): bump pino from 8.21.0 to 9.6.0 by dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2779
+* chore(deps-dev): bump nyc from 15.1.0 to 17.1.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2794
+* chore(deps-dev): bump eslint-plugin-deprecation by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2780
+* chore(deps-dev): bump sinon from 18.0.1 to 19.0.2 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2783
+* chore(deps-dev): bump geckodriver from 4.5.1 to 5.0.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2787
+* chore(deps-dev): bump eslint-plugin-compat in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2782
+* chore(deps-dev): bump chromedriver in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2788
+* chore(deps-dev): bump chromedriver from 119.0.1 to 132.0.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2784
+
 ## v2.57.0-beta.3
 
 ## What's Changed
