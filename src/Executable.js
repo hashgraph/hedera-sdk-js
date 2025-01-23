@@ -659,9 +659,9 @@ export default class Executable {
                         )}`,
                     );
                 }
-            } else {
-                this._nodeAccountIds.advance();
             }
+
+            this._nodeAccountIds.advance();
 
             try {
                 // Race the execution promise against the grpc timeout to prevent grpc connections
