@@ -66,5 +66,9 @@
         "tmp": "^0.2.1",
         "typescript": "^5.7.2",
         "protobufjs-cli": "^1.0.2"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
     }
 }
