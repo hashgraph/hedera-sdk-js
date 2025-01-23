@@ -189,4 +189,34 @@ export default class List {
         list.locked = this.locked;
         return list;
     }
+
+    /**
+     * Removes the current element from this list and adjusts the index.
+     * Modifies the current list directly.
+     *
+     * @returns {this}
+     */
+    excludeCurrent() {
+        if (this.isEmpty) {
+            throw new Error("cannot remove from empty list");
+        }
+
+        // Save lock state and temporarily unlock
+        const wasLocked = this.locked;
+        this.locked = false;
+
+        // Remove current element
+        this.list.splice(this.index, 1);
+
+        // If we removed the last element and the index is now out of bounds,
+        // wrap back to the beginning
+        if (this.index >= this.list.length) {
+            this.index = 0;
+        }
+
+        // Restore lock state
+        this.locked = wasLocked;
+
+        return this;
+    }
 }
