@@ -1,4 +1,5 @@
 /* eslint-disable mocha/no-setup-in-describe */
+import { setTimeout } from "timers/promises";
 import {
     FileCreateTransaction,
     ContractCreateTransaction,
@@ -8,6 +9,7 @@ import {
     ContractDeleteTransaction,
     FileAppendTransaction,
     FileDeleteTransaction,
+    MirrorNodeContractEstimateQuery,
 } from "../../src/exports.js";
 import { REQUIRE_ARRAY_ERROR } from "../../src/util.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
@@ -146,6 +148,7 @@ describe("ContractFunctionParameters", function () {
             fileAppendRx.status.toString(10),
         );
 
+        await setTimeout(2500);
         // Instantiate the contract instance
         const contractTx = new ContractCreateTransaction()
             //Set the file ID of the Hedera file storing the bytecode
@@ -178,9 +181,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
+
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -213,9 +230,22 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -249,9 +279,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
+
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -283,9 +327,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
+
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -320,9 +378,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
+
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -356,9 +428,22 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -391,10 +476,24 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
+
                     const arr = createArray(bitSize, INPUT_TYPE.NUMBER);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -428,10 +527,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
                     const arr = createArray(bitSize, INPUT_TYPE.BIG_NUMBER);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -465,10 +577,23 @@ describe("ContractFunctionParameters", function () {
                     METHOD_TYPE.INT,
                 ),
                 async function () {
+                    const gasEstimte =
+                        await new MirrorNodeContractEstimateQuery()
+                            .setContractId(newContractId)
+                            .setFunction(
+                                `returnInt${bitSize}`,
+                                new ContractFunctionParameters()[
+                                    `addInt${bitSize}`
+                                ](
+                                    calculateRange(bitSize, INPUT_TYPE.NUMBER)
+                                        .max,
+                                ),
+                            )
+                            .execute(env.client);
                     const arr = createArray(bitSize, INPUT_TYPE.LONG);
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -496,9 +621,18 @@ describe("ContractFunctionParameters", function () {
             );
 
             it(`addInt${bitSize}Array method should return an empty array`, async function () {
+                const gasEstimte = await new MirrorNodeContractEstimateQuery()
+                    .setContractId(newContractId)
+                    .setFunction(
+                        `returnInt${bitSize}`,
+                        new ContractFunctionParameters()[`addInt${bitSize}`](
+                            calculateRange(bitSize, INPUT_TYPE.NUMBER).max,
+                        ),
+                    )
+                    .execute(env.client);
                 const contractQuery = new ContractCallQuery()
                     //Set the gas for the query
-                    .setGas(12000000)
+                    .setGas(gasEstimte)
                     //Set the contract ID to return the request for
                     .setContractId(newContractId)
                     //Set the contract function to call
@@ -522,10 +656,19 @@ describe("ContractFunctionParameters", function () {
             });
 
             it(`addInt${bitSize}Array method should throw an error`, async function () {
+                const gasEstimte = await new MirrorNodeContractEstimateQuery()
+                    .setContractId(newContractId)
+                    .setFunction(
+                        `returnInt${bitSize}`,
+                        new ContractFunctionParameters()[`addInt${bitSize}`](
+                            calculateRange(bitSize, INPUT_TYPE.NUMBER).max,
+                        ),
+                    )
+                    .execute(env.client);
                 try {
                     new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(gasEstimte)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -556,7 +699,7 @@ describe("ContractFunctionParameters", function () {
                 async function () {
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -592,7 +735,7 @@ describe("ContractFunctionParameters", function () {
                 async function () {
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -629,7 +772,7 @@ describe("ContractFunctionParameters", function () {
                 async function () {
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -666,7 +809,7 @@ describe("ContractFunctionParameters", function () {
                     const arr = [0, range.min + range.max];
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -705,7 +848,7 @@ describe("ContractFunctionParameters", function () {
                     const arr = [0, new BigNumber(2).pow(bitSize - 1).minus(1)];
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -745,7 +888,7 @@ describe("ContractFunctionParameters", function () {
                     const arr = [0, new Long(range.min + range.max)];
                     const contractQuery = new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -777,7 +920,7 @@ describe("ContractFunctionParameters", function () {
             it(`addUint${bitSize}Array method should return an empty array`, async function () {
                 const contractQuery = new ContractCallQuery()
                     //Set the gas for the query
-                    .setGas(12000000)
+                    .setGas(1_500_000)
                     //Set the contract ID to return the request for
                     .setContractId(newContractId)
                     //Set the contract function to call
@@ -804,7 +947,7 @@ describe("ContractFunctionParameters", function () {
                 try {
                     new ContractCallQuery()
                         //Set the gas for the query
-                        .setGas(12000000)
+                        .setGas(1_500_000)
                         //Set the contract ID to return the request for
                         .setContractId(newContractId)
                         //Set the contract function to call
@@ -828,7 +971,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the right min multiple int8 value", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -850,7 +993,7 @@ describe("ContractFunctionParameters", function () {
     it("should work the right way with 0 uint32 value", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -871,7 +1014,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the right multiple values", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -895,7 +1038,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the right multiple int40 values", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -917,7 +1060,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the right zero uint256 value", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -944,7 +1087,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the right 20 decimal uint256 value", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
@@ -971,7 +1114,7 @@ describe("ContractFunctionParameters", function () {
     it("should return the again right uint256 value", async function () {
         const contractQuery = new ContractCallQuery()
             //Set the gas for the query
-            .setGas(12000000)
+            .setGas(1_500_000)
             //Set the contract ID to return the request for
             .setContractId(newContractId)
             //Set the contract function to call
