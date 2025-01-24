@@ -202,6 +202,157 @@ describe("TokenRejectIntegrationTest", function () {
         }
     });
 
+    it.only("can execute via modifying individual transactions", async function () {
+        env = await IntegrationTestEnv.new();
+        const FULL_TREASURY_BALANCE = 1000000;
+
+        // create token
+        const tokenCreateTx = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(FULL_TREASURY_BALANCE)
+            .setTreasuryAccountId(env.operatorId)
+            .setPauseKey(env.operatorKey)
+            .setAdminKey(env.operatorKey)
+            .setSupplyKey(env.operatorKey)
+            .execute(env.client);
+
+        let tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
+
+        // create token
+        const tokenCreateTx2 = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(env.operatorId)
+            .setPauseKey(env.operatorKey)
+            .setAdminKey(env.operatorKey)
+            .setSupplyKey(env.operatorKey)
+            .execute(env.client);
+
+        let tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
+        // create receiver account
+        let receiverPrivateKey = await PrivateKey.generateECDSA();
+        const receiverCreateAccount = await new AccountCreateTransaction()
+            .setKey(receiverPrivateKey)
+            .setInitialBalance(new Hbar(1))
+            .execute(env.client);
+
+        let receiverId = (await receiverCreateAccount.getReceipt(env.client))
+            .accountId;
+
+        await (
+            await new TokenAssociateTransaction()
+                .setAccountId(receiverId)
+                .setTokenIds([tokenId1, tokenId2])
+                .freezeWith(env.client)
+                .sign(receiverPrivateKey)
+        ).execute(env.client);
+
+        await (
+            await new TransferTransaction()
+                .addTokenTransfer(tokenId1, env.operatorId, -100)
+                .addTokenTransfer(tokenId1, receiverId, 100)
+                .addTokenTransfer(tokenId2, env.operatorId, -100)
+                .addTokenTransfer(tokenId2, receiverId, 100)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        let rejectFlow = new TokenRejectFlow();
+
+        rejectFlow.tokenRejectTransaction.setOwnerId(receiverId);
+        rejectFlow.tokenRejectTransaction.setTokenIds([tokenId1, tokenId2]);
+        await rejectFlow.tokenRejectTransaction
+            .freezeWith(env.client)
+            .sign(receiverPrivateKey);
+
+        rejectFlow.tokenDissociateTransaction.setAccountId(receiverId);
+        rejectFlow.tokenDissociateTransaction.setTokenIds([tokenId1, tokenId2]);
+        await rejectFlow.tokenDissociateTransaction
+            .freezeWith(env.client)
+            .sign(receiverPrivateKey);
+
+        await rejectFlow.execute(env.client);
+    });
+
+    it.only("cannot execute when individual txs are frozen", async function () {
+        env = await IntegrationTestEnv.new();
+        const FULL_TREASURY_BALANCE = 1000000;
+
+        // create token
+        const tokenCreateTx = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(FULL_TREASURY_BALANCE)
+            .setTreasuryAccountId(env.operatorId)
+            .setPauseKey(env.operatorKey)
+            .setAdminKey(env.operatorKey)
+            .setSupplyKey(env.operatorKey)
+            .execute(env.client);
+
+        let tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
+
+        // create token
+        const tokenCreateTx2 = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(env.operatorId)
+            .setPauseKey(env.operatorKey)
+            .setAdminKey(env.operatorKey)
+            .setSupplyKey(env.operatorKey)
+            .execute(env.client);
+
+        let tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
+        // create receiver account
+        let receiverPrivateKey = await PrivateKey.generateECDSA();
+        const receiverCreateAccount = await new AccountCreateTransaction()
+            .setKey(receiverPrivateKey)
+            .setInitialBalance(new Hbar(1))
+            .execute(env.client);
+
+        let receiverId = (await receiverCreateAccount.getReceipt(env.client))
+            .accountId;
+        let err;
+        try {
+            let rejectFlow = new TokenRejectFlow()
+                .setOwnerId(receiverId)
+                .setTokenIds([tokenId1, tokenId2]);
+
+            await rejectFlow.tokenDissociateTransaction
+                .freezeWith(env.client)
+                .sign(receiverPrivateKey);
+
+            await rejectFlow.execute(env.client);
+        } catch (error) {
+            err = error.message.includes("transaction is immutable");
+        }
+        if (!err) {
+            throw new Error("Should throw when transactions are frozen");
+        }
+        let err2;
+        try {
+            let rejectFlow = new TokenRejectFlow()
+                .setOwnerId(receiverId)
+                .setTokenIds([tokenId1, tokenId2]);
+
+            await rejectFlow.tokenRejectTransaction
+                .freezeWith(env.client)
+                .sign(receiverPrivateKey);
+
+            await rejectFlow.execute(env.client);
+        } catch (error) {
+            err2 = error.message.includes("transaction is immutable");
+        }
+        if (!err2) {
+            throw new Error("Should throw when transactions are frozen");
+        }
+    });
+
     after(async function () {
         await env.close();
     });

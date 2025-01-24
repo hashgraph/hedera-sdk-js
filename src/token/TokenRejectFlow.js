@@ -40,6 +40,17 @@ export default class TokenRejectFlow {
     constructor() {
         /**
          * @private
+         * @type {TokenRejectTransaction}
+         */
+        this._tokenRejectTransaction = new TokenRejectTransaction();
+
+        /**
+         * @private
+         * @type {TokenDissociateTransaction}
+         */
+        this._tokenDissociateTransaction = new TokenDissociateTransaction();
+        /**
+         * @private
          * @type {?AccountId}
          */
         this._ownerId = null;
@@ -79,6 +90,20 @@ export default class TokenRejectFlow {
          * @type {?(message: Uint8Array) => Promise<Uint8Array>}
          */
         this._transactionSigner = null;
+    }
+
+    /**
+     * @returns {TokenRejectTransaction}
+     */
+    get tokenRejectTransaction() {
+        return this._tokenRejectTransaction;
+    }
+
+    /**
+     * @returns {TokenDissociateTransaction}
+     */
+    get tokenDissociateTransaction() {
+        return this._tokenDissociateTransaction;
     }
 
     /**
@@ -231,15 +256,18 @@ export default class TokenRejectFlow {
      * @returns {Promise<TransactionResponse>}
      */
     async execute(client) {
-        const tokenRejectTxn = new TokenRejectTransaction()
-            .setTokenIds(this.tokenIds)
-            .setNftIds(this.nftIds);
-
-        if (this.ownerId) {
-            tokenRejectTxn.setOwnerId(this.ownerId);
+        if (this.tokenIds.length > 0) {
+            this._tokenRejectTransaction.setTokenIds(this.tokenIds);
+        }
+        if (this.nftIds.length > 0) {
+            this._tokenRejectTransaction.setNftIds(this.nftIds);
         }
 
-        this.fillOutTransaction(tokenRejectTxn);
+        if (this.ownerId) {
+            this._tokenRejectTransaction.setOwnerId(this.ownerId);
+        }
+
+        this.fillOutTransaction(this._tokenRejectTransaction);
 
         /* Get all token ids from NFT and remove duplicates as duplicated IDs 
         will trigger a TOKEN_REFERENCE_REPEATED error. */
@@ -249,21 +277,26 @@ export default class TokenRejectFlow {
                 return array.indexOf(value) === index;
             });
 
-        const tokenDissociateTxn = new TokenDissociateTransaction().setTokenIds(
-            [...this.tokenIds, ...nftTokenIds],
-        );
-
-        if (this.ownerId != null) {
-            tokenDissociateTxn.setAccountId(this.ownerId);
+        if (this.tokenIds.length > 0) {
+            this._tokenDissociateTransaction.setTokenIds([...this.tokenIds]);
         }
 
-        this.fillOutTransaction(tokenDissociateTxn);
+        if (nftTokenIds.length > 0) {
+            this._tokenDissociateTransaction.setTokenIds([...nftTokenIds]);
+        }
 
-        const tokenRejectResponse = await tokenRejectTxn.execute(client);
+        if (this.ownerId != null) {
+            this._tokenDissociateTransaction.setAccountId(this.ownerId);
+        }
+
+        this.fillOutTransaction(this._tokenDissociateTransaction);
+
+        const tokenRejectResponse =
+            await this._tokenRejectTransaction.execute(client);
         await tokenRejectResponse.getReceipt(client);
 
         const tokenDissociateResponse =
-            await tokenDissociateTxn.execute(client);
+            await this._tokenDissociateTransaction.execute(client);
         await tokenDissociateResponse.getReceipt(client);
 
         return tokenRejectResponse;
