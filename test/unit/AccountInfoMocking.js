@@ -591,4 +591,83 @@ describe("AccountInfoMocking", function () {
             );
         }
     });
+
+    describe("Node health checks", function () {
+        beforeEach(async function () {
+            const responses1 = [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ];
+
+            const responses2 = [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ];
+
+            const responses3 = [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ];
+
+            ({ client, servers } = await Mocker.withResponses([
+                responses1,
+                responses2,
+                responses3,
+            ]));
+        });
+
+        it("should throw error because every node is unhealthy", async function () {
+            // Make node 3 unhealthy
+            client._network._network.get("0.0.3")[0]._readmitTime =
+                Date.now() + 100 * 10010;
+
+            // Make node 4 unhealthy
+            client._network._network.get("0.0.4")[0]._readmitTime =
+                Date.now() + 100 * 10010;
+
+            try {
+                await new AccountInfoQuery()
+                    .setNodeAccountIds([new AccountId(3), new AccountId(4)])
+                    .setAccountId("0.0.3")
+                    .execute(client);
+                throw new Error("should have thrown");
+            } catch (error) {
+                expect(error.message).to.equal(
+                    "Network connectivity issue: All nodes are unhealthy. Original node list: 0.0.3, 0.0.4",
+                );
+            }
+        });
+
+        it("should skip unhealthy node and execute with healthy node", async function () {
+            // Make node 3 unhealthy
+            client._network._network.get("0.0.3")[0]._readmitTime =
+                Date.now() + 100 * 10010;
+
+            const info = await new AccountInfoQuery()
+                .setNodeAccountIds([new AccountId(3), new AccountId(4)])
+                .setAccountId("0.0.3")
+                .execute(client);
+
+            expect(info.accountId.toString()).to.be.equal("0.0.10");
+        });
+
+        it("should execute with last healthy node when multiple nodes are unhealthy", async function () {
+            // Make nodes 3 and 5 unhealthy
+            client._network._network.get("0.0.3")[0]._readmitTime =
+                Date.now() + 100 * 10010;
+            client._network._network.get("0.0.5")[0]._readmitTime =
+                Date.now() + 100 * 10010;
+
+            const info = await new AccountInfoQuery()
+                .setNodeAccountIds([
+                    new AccountId(3),
+                    new AccountId(4),
+                    new AccountId(5),
+                ])
+                .setAccountId("0.0.3")
+                .execute(client);
+
+            expect(info.accountId.toString()).to.be.equal("0.0.10");
+        });
+    });
 });

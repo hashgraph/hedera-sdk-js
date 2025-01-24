@@ -643,22 +643,24 @@ export default class Executable {
             let response;
 
             if (!node.isHealthy()) {
-                if (this._nodeAccountIds.length > 1) {
-                    this._nodeAccountIds.excludeCurrent();
+                const isLastNode =
+                    this._nodeAccountIds.index ===
+                    this._nodeAccountIds.list.length - 1;
 
-                    if (this._logger) {
-                        this._logger.debug(
-                            `[${logId}] node is not healthy, trying with the next node.`,
-                        );
-                    }
-                    continue;
-                } else {
+                if (isLastNode || this._nodeAccountIds.length <= 1) {
                     throw new Error(
-                        `Network connectivity issue: All nodes are unhealthy. Original node list: ${this._nodeAccountIds.list.join(
-                            ", ",
-                        )}`,
+                        `Network connectivity issue: All nodes are unhealthy. Original node list: ${this._nodeAccountIds.list.join(", ")}`,
                     );
                 }
+
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] Node is not healthy, trying the next node.`,
+                    );
+                }
+
+                this._nodeAccountIds.advance();
+                continue;
             }
 
             this._nodeAccountIds.advance();
