@@ -224,28 +224,30 @@ export const approveAllowance = async ({
     const transaction = new AccountAllowanceApproveTransaction();
     transaction.setGrpcDeadline(DEFAULT_GRPC_DEADLINE);
 
-    const { ownerAccountId, spenderAccountId, hbar, token, nft } =
-        allowances[0];
-    const owner = AccountId.fromString(ownerAccountId);
-    const spender = AccountId.fromString(spenderAccountId);
+    for (const allowance of allowances) {
+        const { ownerAccountId, spenderAccountId, hbar, token, nft } =
+            allowance;
+        const owner = AccountId.fromString(ownerAccountId);
+        const spender = AccountId.fromString(spenderAccountId);
 
-    if (hbar) {
-        transaction.approveHbarAllowance(
-            owner,
-            spender,
-            Hbar.fromTinybars(hbar.amount),
-        );
-    } else if (token) {
-        transaction.approveTokenAllowance(
-            TokenId.fromString(token.tokenId),
-            owner,
-            spender,
-            Long.fromString(token.amount),
-        );
-    } else if (nft) {
-        handleNftAllowances(transaction, nft, owner, spender);
-    } else {
-        throw new Error("No valid allowance type provided.");
+        if (hbar) {
+            transaction.approveHbarAllowance(
+                owner,
+                spender,
+                Hbar.fromTinybars(hbar.amount),
+            );
+        } else if (token) {
+            transaction.approveTokenAllowance(
+                TokenId.fromString(token.tokenId),
+                owner,
+                spender,
+                Long.fromString(token.amount),
+            );
+        } else if (nft) {
+            handleNftAllowances(transaction, nft, owner, spender);
+        } else {
+            throw new Error("No valid allowance type provided.");
+        }
     }
 
     transaction.freezeWith(sdk.getClient());
