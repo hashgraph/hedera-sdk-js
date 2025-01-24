@@ -202,7 +202,7 @@ describe("TokenRejectIntegrationTest", function () {
         }
     });
 
-    it.only("can execute via modifying individual transactions", async function () {
+    it("can execute via modifying individual transactions", async function () {
         env = await IntegrationTestEnv.new();
         const FULL_TREASURY_BALANCE = 1000000;
 
@@ -218,7 +218,7 @@ describe("TokenRejectIntegrationTest", function () {
             .setSupplyKey(env.operatorKey)
             .execute(env.client);
 
-        let tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
+        const tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
 
         // create token
         const tokenCreateTx2 = await new TokenCreateTransaction()
@@ -232,15 +232,15 @@ describe("TokenRejectIntegrationTest", function () {
             .setSupplyKey(env.operatorKey)
             .execute(env.client);
 
-        let tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
+        const tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
         // create receiver account
-        let receiverPrivateKey = await PrivateKey.generateECDSA();
+        const receiverPrivateKey = await PrivateKey.generateECDSA();
         const receiverCreateAccount = await new AccountCreateTransaction()
             .setKey(receiverPrivateKey)
             .setInitialBalance(new Hbar(1))
             .execute(env.client);
 
-        let receiverId = (await receiverCreateAccount.getReceipt(env.client))
+        const receiverId = (await receiverCreateAccount.getReceipt(env.client))
             .accountId;
 
         await (
@@ -260,7 +260,7 @@ describe("TokenRejectIntegrationTest", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        let rejectFlow = new TokenRejectFlow();
+        const rejectFlow = new TokenRejectFlow();
 
         rejectFlow.tokenRejectTransaction.setOwnerId(receiverId);
         rejectFlow.tokenRejectTransaction.setTokenIds([tokenId1, tokenId2]);
@@ -277,7 +277,7 @@ describe("TokenRejectIntegrationTest", function () {
         await rejectFlow.execute(env.client);
     });
 
-    it.only("cannot execute when individual txs are frozen", async function () {
+    it("cannot execute when individual txs are frozen", async function () {
         env = await IntegrationTestEnv.new();
         const FULL_TREASURY_BALANCE = 1000000;
 
@@ -293,7 +293,7 @@ describe("TokenRejectIntegrationTest", function () {
             .setSupplyKey(env.operatorKey)
             .execute(env.client);
 
-        let tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
+        const tokenId1 = (await tokenCreateTx.getReceipt(env.client)).tokenId;
 
         // create token
         const tokenCreateTx2 = await new TokenCreateTransaction()
@@ -307,19 +307,19 @@ describe("TokenRejectIntegrationTest", function () {
             .setSupplyKey(env.operatorKey)
             .execute(env.client);
 
-        let tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
+        const tokenId2 = (await tokenCreateTx2.getReceipt(env.client)).tokenId;
         // create receiver account
-        let receiverPrivateKey = await PrivateKey.generateECDSA();
+        const receiverPrivateKey = await PrivateKey.generateECDSA();
         const receiverCreateAccount = await new AccountCreateTransaction()
             .setKey(receiverPrivateKey)
             .setInitialBalance(new Hbar(1))
             .execute(env.client);
 
-        let receiverId = (await receiverCreateAccount.getReceipt(env.client))
+        const receiverId = (await receiverCreateAccount.getReceipt(env.client))
             .accountId;
         let err;
         try {
-            let rejectFlow = new TokenRejectFlow()
+            const rejectFlow = new TokenRejectFlow()
                 .setOwnerId(receiverId)
                 .setTokenIds([tokenId1, tokenId2]);
 
@@ -331,12 +331,14 @@ describe("TokenRejectIntegrationTest", function () {
         } catch (error) {
             err = error.message.includes("transaction is immutable");
         }
+
         if (!err) {
             throw new Error("Should throw when transactions are frozen");
         }
+
         let err2;
         try {
-            let rejectFlow = new TokenRejectFlow()
+            const rejectFlow = new TokenRejectFlow()
                 .setOwnerId(receiverId)
                 .setTokenIds([tokenId1, tokenId2]);
 
@@ -348,6 +350,7 @@ describe("TokenRejectIntegrationTest", function () {
         } catch (error) {
             err2 = error.message.includes("transaction is immutable");
         }
+
         if (!err2) {
             throw new Error("Should throw when transactions are frozen");
         }
