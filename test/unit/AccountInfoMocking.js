@@ -592,6 +592,30 @@ describe("AccountInfoMocking", function () {
         }
     });
 
+    it("should demonstrate UNAVAILABLE behavior with multiple nodes", async function () {
+        ({ client, servers } = await Mocker.withResponses([
+            // First node (0.0.3)
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+            // Second node (0.0.4)
+            [
+                { error: UNAVAILABLE },
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ],
+        ]));
+
+        const info = await new AccountInfoQuery()
+            .setNodeAccountIds([new AccountId(3), new AccountId(4)])
+            .setAccountId("0.0.3")
+            .execute(client);
+
+        expect(info.accountId.toString()).to.be.equal("0.0.10");
+    });
+
     describe("Node health checks", function () {
         beforeEach(async function () {
             const responses1 = [
