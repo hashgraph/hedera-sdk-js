@@ -217,10 +217,6 @@ export const approveAllowance = async ({
     allowances,
     commonTransactionParams,
 }: AccountAllowanceApproveParams): Promise<AccountResponse> => {
-    if (!allowances || allowances.length === 0) {
-        throw new Error("Allowances must be provided.");
-    }
-
     const transaction = new AccountAllowanceApproveTransaction();
     transaction.setGrpcDeadline(DEFAULT_GRPC_DEADLINE);
 
