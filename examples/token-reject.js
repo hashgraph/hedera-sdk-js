@@ -183,11 +183,18 @@ async function main() {
         ).execute(client)
     ).getReceipt(client);
 
+    const tokenRejectFlow = await new TokenRejectFlow()
+        .setOwnerId(receiverAccountId)
+        .setNftIds(nftSerialIds);
+
+    tokenRejectFlow.tokenRejectTransaction.setTransactionMemo("Rejecting NFTs");
+    tokenRejectFlow.tokenDissociateTransaction.setTransactionMemo(
+        "Dissociating NFTs",
+    );
+
     // reject NFTs back to treasury
     const rejectFlowResponse = await (
-        await new TokenRejectFlow()
-            .setOwnerId(receiverAccountId)
-            .setNftIds(nftSerialIds)
+        await tokenRejectFlow
             .freezeWith(client)
             .sign(receiverPrivateKey)
             .execute(client)
