@@ -214,6 +214,11 @@ jobs:
           ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000 --network-tag=0.57.0
           sleep 30
       
+      - name: Install dependencies
+        run: | 
+          pnpm i 
+        working-directory: examples
+      
       - name: Run all еxamples
         run: task run:examples
         
