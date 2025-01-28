@@ -277,16 +277,18 @@ export const deleteAllowance = async ({
         DEFAULT_GRPC_DEADLINE,
     );
 
-    const owner = AccountId.fromString(allowances[0].ownerAccountId);
-    const tokenId = AccountId.fromString(allowances[0].tokenId);
+    for (const allowance of allowances) {
+        const owner = AccountId.fromString(allowance.ownerAccountId);
+        const tokenId = AccountId.fromString(allowance.tokenId);
 
-    for (const serialNumber of allowances[0].serialNumbers) {
-        const nftId = new NftId(
-            new TokenId(tokenId),
-            Long.fromString(serialNumber),
-        );
+        for (const serialNumber of allowance.serialNumbers) {
+            const nftId = new NftId(
+                new TokenId(tokenId),
+                Long.fromString(serialNumber),
+            );
 
-        transaction.deleteAllTokenNftAllowances(nftId, owner);
+            transaction.deleteAllTokenNftAllowances(nftId, owner);
+        }
     }
 
     if (commonTransactionParams != null) {
