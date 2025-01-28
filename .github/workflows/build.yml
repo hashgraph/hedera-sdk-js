@@ -207,24 +207,24 @@ jobs:
                   node-version: ${{ matrix.node }}
                   cache: pnpm
 
+            - name: Build @hashgraph/sdk
+              id: build-sdk
+              run: task build
+
             - name: Start the local node
               id: start-local-node
               if: ${{ !cancelled() && always() }}
               run: |
-                  cd examples
                   ${{ env.CG_EXEC }} npx @hashgraph/hedera-local start -d -—network local --balance=100000 --network-tag=0.57.0
                   sleep 30
 
             - name: Install dependencies
               run: |
+                  cd examples
                   pnpm i
 
             - name: Run all еxamples
               run: task run:examples
-
-            - name: Build @hashgraph/sdk
-              id: build-sdk
-              run: task build
 
             - name: Stop the local node
               id: stop-local-node
