@@ -30,7 +30,7 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
             accountID: {
                 shardNum: Long.ZERO,
                 realmNum: Long.ZERO,
-                accountNum: Long.fromNumber(10),
+                accountNum: Long.fromNumber(3),
             },
             key: {
                 ed25519: PRIVATE_KEY.publicKey.toBytesRaw(),
@@ -92,7 +92,7 @@ describe("AccountInfoMocking", function () {
             .setAccountId("0.0.3")
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal("0.0.10");
+        expect(info.accountId.toString()).to.be.equal("0.0.3");
     });
 
     it("should retry on UNAVAILABLE", async function () {
@@ -108,7 +108,7 @@ describe("AccountInfoMocking", function () {
             .setAccountId("0.0.3")
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal("0.0.10");
+        expect(info.accountId.toString()).to.be.equal("0.0.3");
     });
 
     it("should error when cost is greater than max cost set on client", async function () {
@@ -255,7 +255,7 @@ describe("AccountInfoMocking", function () {
             .setAccountId("0.0.3")
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal("0.0.10");
+        expect(info.accountId.toString()).to.be.equal("0.0.3");
     });
 
     it("should be able to execute after getting transaction hashes", async function () {
@@ -613,7 +613,7 @@ describe("AccountInfoMocking", function () {
             .setAccountId("0.0.3")
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal("0.0.10");
+        expect(info.accountId.toString()).to.be.equal("0.0.3");
     });
 
     describe("Node health checks", function () {
@@ -672,7 +672,7 @@ describe("AccountInfoMocking", function () {
                 .setAccountId("0.0.3")
                 .execute(client);
 
-            expect(info.accountId.toString()).to.be.equal("0.0.10");
+            expect(info.accountId.toString()).to.be.equal("0.0.3");
         });
 
         it("should execute with last healthy node when multiple nodes are unhealthy", async function () {
@@ -688,10 +688,9 @@ describe("AccountInfoMocking", function () {
                     new AccountId(4),
                     new AccountId(5),
                 ])
-                .setAccountId("0.0.3")
                 .execute(client);
 
-            expect(info.accountId.toString()).to.be.equal("0.0.10");
+            expect(info.accountId.toString()).to.be.equal("0.0.3");
         });
     });
 });
