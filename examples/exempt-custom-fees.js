@@ -74,7 +74,7 @@ async function main() {
     const firstAccountWallet = new Wallet(
         firstAccountId,
         firstAccountPrivateKey,
-        new LocalProvider(),
+        provider,
     );
 
     let secondAccountPrivateKey = PrivateKey.generateED25519();
@@ -93,7 +93,7 @@ async function main() {
     const secondAccountWallet = new Wallet(
         secondAccountId,
         secondAccountPrivateKey,
-        new LocalProvider(),
+        provider,
     );
 
     let thirdAccountPrivateKey = PrivateKey.generateED25519();
@@ -112,7 +112,7 @@ async function main() {
     const thirdAccountWallet = new Wallet(
         thirdAccountId,
         thirdAccountPrivateKey,
-        new LocalProvider(),
+        provider,
     );
 
     /**

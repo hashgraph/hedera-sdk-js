@@ -204,6 +204,7 @@ async function main() {
     );
 
     console.log("Long Term Scheduled Transaction Example Complete!");
+    client.close();
 }
 
 main().catch(console.error);
