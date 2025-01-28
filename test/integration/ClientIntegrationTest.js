@@ -151,7 +151,8 @@ describe("ClientIntegration", function () {
             "0.testnet.hedera.com:50211": new AccountId(3),
             "34.94.106.61:50211": new AccountId(3),
             "50.18.132.211:50211": new AccountId(3),
-            "138.91.142.219:50211": new AccountId(3),
+            // IP address currently not responding
+            // "138.91.142.219:50211": new AccountId(3)
         };
 
         const clientForNetwork = Client.forNetwork(nodes);
