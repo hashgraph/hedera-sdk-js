@@ -178,8 +178,8 @@ jobs:
     name: Run examples using Node ${{ matrix.node }}
     runs-on: hiero-client-sdk-linux-medium
     strategy:
-    matrix:
-      node: [ "20" ]
+      matrix:
+        node: [ "20" ]
     steps:
       -  name: Harden Runner
          uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
