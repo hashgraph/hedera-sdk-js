@@ -21,6 +21,11 @@
 import * as HashgraphProto from "@hashgraph/proto";
 import FeeSchedule from "./FeeSchedule.js";
 
+/**
+ * Represents a pair of fee schedules on the Hedera network - the currently active fee schedule
+ * and the next upcoming fee schedule. This structure allows for transparent fee updates by making
+ * future fee changes visible before they take effect.
+ */
 export default class FeeSchedules {
     /**
      * @param {object} [props]

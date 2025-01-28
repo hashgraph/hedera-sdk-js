@@ -44,6 +44,58 @@ import AbstractTokenTransferTransaction from "./AbstractTokenTransferTransaction
  * @typedef {import("./NftId.js").default} NftId
  * @typedef {import("./TokenId.js").default} TokenId
  */
+
+/**
+ * Airdrop one or more tokens to one or more accounts.
+ *
+ * ### Effects
+ * This distributes tokens from the balance of one or more sending account(s)
+ * to the balance of one or more recipient accounts. Accounts MAY receive the
+ * tokens in one of four ways.
+ *
+ *  - An account already associated to the token to be distributed SHALL
+ *    receive the airdropped tokens immediately to the recipient account
+ *    balance.<br/>
+ *    The fee for this transfer SHALL include the transfer, the airdrop fee,
+ *    and any custom fees.
+ *  - An account with available automatic association slots SHALL be
+ *    automatically associated to the token, and SHALL immediately receive
+ *    the airdropped tokens to the recipient account balance.<br/>
+ *    The fee for this transfer SHALL include the transfer, the association,
+ *    the cost to renew that association once, the airdrop fee, and
+ *    any custom fees.
+ *  - An account with "receiver signature required" set SHALL have a
+ *    "Pending Airdrop" created and must claim that airdrop with a
+ *    `claimAirdrop` transaction.<br/>
+ *    The fee for this transfer SHALL include the transfer, the association,
+ *    the cost to renew that association once, the airdrop fee, and
+ *    any custom fees.<br/>
+ *    If the pending airdrop is not claimed immediately, the `sender` SHALL
+ *    pay the cost to renew the token association, and the cost to maintain
+ *    the pending airdrop, until the pending airdrop is claimed or cancelled.
+ *  - An account with no available automatic association slots SHALL have a
+ *    "Pending Airdrop" created and must claim that airdrop with a
+ *    `claimAirdrop` transaction.<br/>
+ *    The fee for this transfer SHALL include the transfer, the association,
+ *    the cost to renew that association once, the airdrop fee, and any custom
+ *    fees.<br/>
+ *    If the pending airdrop is not claimed immediately, the `sender` SHALL
+ *    pay the cost to renew the token association, and the cost to maintain
+ *    the pending airdrop, until the pending airdrop is claimed or cancelled.
+ *
+ * If an airdrop would create a pending airdrop for a fungible/common token,
+ * and a pending airdrop for the same sender, receiver, and token already
+ * exists, the existing pending airdrop SHALL be updated to add the new
+ * amount to the existing airdrop, rather than creating
+ * a new pending airdrop.<br/>
+ * Any airdrop that completes immediately SHALL be irreversible. Any airdrop
+ * that results in a "Pending Airdrop" MAY be canceled via a `cancelAirdrop`
+ * transaction.<br/>
+ * All transfer fees (including custom fees and royalties), as well as the
+ * rent cost for the first auto-renewal period for any automatic-association
+ * slot occupied by the airdropped tokens, SHALL be charged to the account
+ * paying for this transaction.<br/>
+ */
 export default class TokenAirdropTransaction extends AbstractTokenTransferTransaction {
     /**
      * @param {object} props

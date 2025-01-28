@@ -40,6 +40,12 @@ import Status from "../Status.js";
  */
 
 /**
+ * A query that calls a function of a contract instance. It will consume the amount of gas
+ * specified, and return the result of the function call.
+ *
+ * This query will not update the state of the contract instance on the network, but will
+ * only retrieve information. To update the state, you must use ContractExecuteTransaction.
+ *
  * @augments {Query<ContractFunctionResult>}
  */
 export default class ContractCallQuery extends Query {

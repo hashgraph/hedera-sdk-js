@@ -21,14 +21,14 @@ permissions:
 jobs:
   test-integration-node:
     name: Integration Tests on Node ${{ matrix.node }}
-    runs-on: client-sdk-linux-large
+    runs-on: hiero-client-sdk-linux-large
     strategy:
       matrix:
         node: [ "20", "22" ]
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@c95a14d0e5bab51a9f56296a4eb0e416910cd350 # v2.10.3
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
         with:
           egress-policy: audit
 
@@ -42,8 +42,9 @@ jobs:
         with:
           version: 3.35.1
 
+      # Note: After Step-Security is enabled return to step-security/action-setup version
       - name: Install PNPM
-        uses: step-security/action-setup@303e8a1dabc4295b9b4ca0f4198fd42f7861406e # v4.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           version: 8.15.4
 

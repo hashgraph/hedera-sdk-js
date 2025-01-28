@@ -38,6 +38,12 @@ import ContractId from "./ContractId.js";
  */
 
 /**
+ * Query to retrieve the bytecode of a smart contract from the network.
+ *
+ * This query returns the bytecode of a smart contract instance that has been
+ * created on the Hedera network. The bytecode represents the compiled code
+ * that is executed by the Hedera network when the contract is called.
+ *
  * @augments {Query<Uint8Array>}
  */
 export default class ContractByteCodeQuery extends Query {

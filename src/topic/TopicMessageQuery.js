@@ -18,7 +18,6 @@
  * ‍
  */
 
-import Query from "../query/Query.js";
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
@@ -42,7 +41,7 @@ import { RST_STREAM } from "../Executable.js";
 /**
  * @augments {Query<TopicMessageQuery>}
  */
-export default class TopicMessageQuery extends Query {
+export default class TopicMessageQuery {
     /**
      * @param {object} props
      * @param {TopicId | string} [props.topicId]
@@ -54,8 +53,6 @@ export default class TopicMessageQuery extends Query {
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
-        super();
-
         /**
          * @private
          * @type {?TopicId}
@@ -120,18 +117,31 @@ export default class TopicMessageQuery extends Query {
          * @type {() => void}
          */
         this._completionHandler = () => {
-            if (this._logger) {
-                this._logger.info(
-                    `Subscription to topic ${
-                        this._topicId != null ? this._topicId.toString() : ""
-                    } complete`,
-                );
-            }
+            console.log(
+                `Subscription to topic ${
+                    this._topicId != null ? this._topicId.toString() : ""
+                } complete`,
+            );
         };
 
         if (props.completionHandler != null) {
             this._completionHandler = props.completionHandler;
         }
+
+        /* The number of times we can retry the grpc call
+         *
+         * @internal
+         * @type {number}
+         */
+        this._maxAttempts = 20;
+
+        /**
+         * This is the request's max backoff
+         *
+         * @internal
+         * @type {number}
+         */
+        this._maxBackoff = 8000;
 
         /**
          * @private
@@ -339,141 +349,31 @@ export default class TopicMessageQuery extends Query {
     }
 
     /**
+     * Makes a server stream request to subscribe to topic messages
      * @private
      * @param {Client<Channel>} client
      * @returns {void}
      */
     _makeServerStreamRequest(client) {
+        const request = this._buildConsensusRequest();
         /** @type {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} */
-
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const list = new Map();
 
-        const request =
-            HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicQuery.encode(
-                {
-                    topicID:
-                        this._topicId != null
-                            ? this._topicId._toProtobuf()
-                            : null,
-                    consensusStartTime:
-                        this._startTime != null
-                            ? this._startTime._toProtobuf()
-                            : null,
-                    consensusEndTime:
-                        this._endTime != null
-                            ? this._endTime._toProtobuf()
-                            : null,
-                    limit: this._limit,
-                },
-            ).finish();
-
-        const cancel = client._mirrorNetwork
+        const streamHandler = client._mirrorNetwork
             .getNextMirrorNode()
             .getChannel()
             .makeServerStreamRequest(
                 "ConsensusService",
                 "subscribeTopic",
                 request,
-                (data) => {
-                    const message =
-                        HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
-                            data,
-                        );
-
-                    if (this._limit != null && this._limit.gt(0)) {
-                        this._limit = this._limit.sub(1);
-                    }
-
-                    this._startTime = Timestamp._fromProtobuf(
-                        /** @type {HashgraphProto.proto.ITimestamp} */ (
-                            message.consensusTimestamp
-                        ),
-                    ).plusNanos(1);
-
-                    if (
-                        message.chunkInfo == null ||
-                        (message.chunkInfo != null &&
-                            message.chunkInfo.total === 1)
-                    ) {
-                        this._passTopicMessage(TopicMessage._ofSingle(message));
-                    } else {
-                        const chunkInfo =
-                            /** @type {HashgraphProto.proto.IConsensusMessageChunkInfo} */ (
-                                message.chunkInfo
-                            );
-                        const initialTransactionID =
-                            /** @type {HashgraphProto.proto.ITransactionID} */ (
-                                chunkInfo.initialTransactionID
-                            );
-                        const total = /** @type {number} */ (chunkInfo.total);
-                        const transactionId =
-                            TransactionId._fromProtobuf(
-                                initialTransactionID,
-                            ).toString();
-
-                        /** @type {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]} */
-                        let responses = [];
-
-                        const temp = list.get(transactionId);
-                        if (temp == null) {
-                            list.set(transactionId, responses);
-                        } else {
-                            responses = temp;
-                        }
-
-                        responses.push(message);
-
-                        if (responses.length === total) {
-                            const topicMessage =
-                                TopicMessage._ofMany(responses);
-
-                            list.delete(transactionId);
-
-                            this._passTopicMessage(topicMessage);
-                        }
-                    }
-                },
-                (error) => {
-                    const message =
-                        error instanceof Error ? error.message : error.details;
-
-                    if (this._handle?._unsubscribed) {
-                        return;
-                    }
-
-                    if (
-                        this._attempt < this._maxAttempts &&
-                        this._retryHandler(error)
-                    ) {
-                        const delay = Math.min(
-                            250 * 2 ** this._attempt,
-                            this._maxBackoff,
-                        );
-                        console.warn(
-                            `Error subscribing to topic ${
-                                this._topicId != null
-                                    ? this._topicId.toString()
-                                    : "UNKNOWN"
-                            } during attempt ${
-                                this._attempt
-                            }. Waiting ${delay} ms before next attempt: ${message}`,
-                        );
-
-                        this._attempt += 1;
-
-                        setTimeout(() => {
-                            this._makeServerStreamRequest(client);
-                        }, delay);
-                    } else {
-                        this._errorHandler(null, new Error(message));
-                    }
-                },
+                (data) => this._handleMessage(data, list),
+                (error) => this._handleError(error, client),
                 this._completionHandler,
             );
 
         if (this._handle != null) {
-            this._handle._setCall(() => cancel());
+            this._handle._setCall(() => streamHandler());
         }
     }
 
@@ -499,5 +399,141 @@ export default class TopicMessageQuery extends Query {
         } catch (error) {
             this._errorHandler(topicMessage, /** @type {Error} */ (error));
         }
+    }
+
+    /**
+     * Builds the consensus topic query request
+     * @private
+     * @returns {Uint8Array} Encoded consensus topic query
+     */
+    _buildConsensusRequest() {
+        return HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicQuery.encode(
+            {
+                topicID: this._topicId?._toProtobuf() ?? null,
+                consensusStartTime: this._startTime?._toProtobuf() ?? null,
+                consensusEndTime: this._endTime?._toProtobuf() ?? null,
+                limit: this._limit,
+            },
+        ).finish();
+    }
+
+    /**
+     * Handles an incoming message from the topic subscription
+     * @private
+     * @param {Uint8Array} data - Raw message data
+     * @param {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} list
+     */
+    _handleMessage(data, list) {
+        const message =
+            HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
+                data,
+            );
+
+        if (this._limit?.gt(0)) {
+            this._limit = this._limit.sub(1);
+        }
+
+        this._startTime = Timestamp._fromProtobuf(
+            /** @type {HashgraphProto.proto.ITimestamp} */ (
+                message.consensusTimestamp
+            ),
+        ).plusNanos(1);
+
+        if (
+            message.chunkInfo == null ||
+            (message.chunkInfo != null && message.chunkInfo.total === 1)
+        ) {
+            this._passTopicMessage(TopicMessage._ofSingle(message));
+        } else {
+            this._handleChunkedMessage(message, list);
+        }
+    }
+
+    /**
+     * Handles a chunked message from the topic subscription
+     * @private
+     * @param {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse} message - The message response
+     * @param {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} list
+     */
+    _handleChunkedMessage(message, list) {
+        const chunkInfo =
+            /** @type {HashgraphProto.proto.IConsensusMessageChunkInfo} */ (
+                message.chunkInfo
+            );
+        const initialTransactionID =
+            /** @type {HashgraphProto.proto.ITransactionID} */ (
+                chunkInfo.initialTransactionID
+            );
+        const total = /** @type {number} */ (chunkInfo.total);
+        const transactionId =
+            TransactionId._fromProtobuf(initialTransactionID).toString();
+
+        /** @type {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]} */
+        let responses = [];
+
+        const temp = list.get(transactionId);
+        if (temp == null) {
+            list.set(transactionId, responses);
+        } else {
+            responses = temp;
+        }
+
+        responses.push(message);
+
+        if (responses.length === total) {
+            const topicMessage = TopicMessage._ofMany(responses);
+            list.delete(transactionId);
+            this._passTopicMessage(topicMessage);
+        }
+    }
+
+    /**
+     * Handles errors from the topic subscription
+     * @private
+     * @param {MirrorError | Error} error - The error that occurred
+     * @param {Client<Channel>} client - The client to use for retries
+     * @returns {void}
+     */
+    _handleError(error, client) {
+        const message = error instanceof Error ? error.message : error.details;
+
+        if (this._handle?._unsubscribed) {
+            return;
+        }
+
+        if (this.shouldRetry(error)) {
+            this._scheduleRetry(client, message);
+        } else {
+            this._errorHandler(null, new Error(message));
+        }
+    }
+
+    /**
+     * Determines if a retry should be attempted
+     * @private
+     * @param {MirrorError | Error} error - The error to check
+     * @returns {boolean} - Whether to retry
+     */
+    shouldRetry(error) {
+        return this._attempt < this._maxAttempts && this._retryHandler(error);
+    }
+
+    /**
+     * Schedules a retry of the server stream request
+     * @private
+     * @param {Client<Channel>} client - The client to use for the retry
+     * @param {string} errorMessage - The error message for logging
+     * @returns {void}
+     */
+    _scheduleRetry(client, errorMessage) {
+        const delay = Math.min(250 * 2 ** this._attempt, this._maxBackoff);
+
+        console.warn(
+            `Error subscribing to topic ${this._topicId?.toString() ?? "UNKNOWN"} ` +
+                `during attempt ${this._attempt}. Waiting ${delay} ms before next attempt: ${errorMessage}`,
+        );
+
+        this._attempt += 1;
+        setTimeout(() => this._makeServerStreamRequest(client), delay);
     }
 }
