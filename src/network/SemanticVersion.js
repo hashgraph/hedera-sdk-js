@@ -19,7 +19,14 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
-
+/**
+ * Represents a semantic versioning structure for software components.
+ *
+ * This class encapsulates the major, minor, and patch version numbers, following
+ * the Semantic Versioning (SemVer) specification. It provides methods for creating,
+ * comparing, and manipulating version numbers, ensuring that versioning adheres to
+ * the SemVer rules.
+ */
 export default class SemanticVersion {
     /**
      * @private

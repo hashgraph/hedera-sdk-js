@@ -30,6 +30,13 @@ import * as HashgraphProto from "@hashgraph/proto";
  * @property {NodeAddressJson[]} nodeAddresses
  */
 
+/**
+ * Represents a collection of node addresses in the Hedera network.
+ *
+ * The NodeAddressBook contains information about the nodes in the Hedera network,
+ * including their network addresses, account IDs, and node IDs. This class is used
+ * to manage and access the network's node information.
+ */
 export default class NodeAddressBook {
     /**
      * @param {object} props

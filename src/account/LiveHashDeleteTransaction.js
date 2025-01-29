@@ -39,6 +39,12 @@ import AccountId from "./AccountId.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * A transaction that deletes a livehash from a Hedera™ account.
+ *
+ * Livehashes are hash values associated with an account that can be used for tracking or verification purposes.
+ * This transaction allows you to remove a previously added livehash from an account.
+ */
 export default class LiveHashDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]

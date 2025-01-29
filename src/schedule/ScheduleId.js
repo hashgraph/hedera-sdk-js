@@ -27,7 +27,11 @@ import * as HashgraphProto from "@hashgraph/proto";
  */
 
 /**
+ * Represents the identifier for a pending airdrop in the Hedera network.
  *
+ * A PendingAirdropId contains information about a pending token or NFT airdrop,
+ * including the sender, receiver, and the token or NFT being airdropped. This class
+ * is used to track and identify specific airdrops in the system.
  * @augments {EntityId<HashgraphProto.proto.IScheduleID>}
  */
 

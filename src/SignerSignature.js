@@ -23,6 +23,13 @@
  * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
+/**
+ * Represents a signature associated with a signer in the Hedera network.
+ *
+ * The `SignerSignature` class encapsulates the public key, signature, and account ID
+ * of a signer. It is used to manage and validate signatures in transactions, ensuring
+ * that the correct signers are associated with the transaction data.
+ */
 export default class SignerSignature {
     /**
      * @param {object} props

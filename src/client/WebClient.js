@@ -60,6 +60,11 @@ export const Network = {
 };
 
 /**
+ * Represents a client for interacting with the Hedera network over the web.
+ * The `WebClient` class extends the base `Client` class and provides methods
+ * for configuring and managing connections to the Hedera network, including
+ * setting the network type (mainnet, testnet, previewnet) and handling
+ * transactions and queries.
  * @augments {Client<WebChannel, *>}
  */
 export default class WebClient extends Client {

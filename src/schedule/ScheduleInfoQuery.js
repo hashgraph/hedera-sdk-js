@@ -42,6 +42,7 @@ import Hbar from "../Hbar.js";
  */
 
 /**
+ * Retrieve the metadata for a schedule.
  * @augments {Query<ScheduleInfo>}
  */
 export default class ScheduleInfoQuery extends Query {
