@@ -189,7 +189,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-        submodules: recursive
+          submodules: recursive
 
       - name: Install Task
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
@@ -204,8 +204,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
-            node-version: ${{ matrix.node }}
-            cache: pnpm
+          node-version: ${{ matrix.node }}
+          cache: pnpm
 
       - name: Build @hashgraph/sdk
         id: build-sdk
