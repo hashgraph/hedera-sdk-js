@@ -27,11 +27,12 @@ import * as HashgraphProto from "@hashgraph/proto";
  */
 
 /**
- * Represents the identifier for a pending airdrop in the Hedera network.
+ * Class representing a unique identifier for a scheduled transaction on the Hedera network.
  *
- * A PendingAirdropId contains information about a pending token or NFT airdrop,
- * including the sender, receiver, and the token or NFT being airdropped. This class
- * is used to track and identify specific airdrops in the system.
+ * A ScheduleId consists of three components:
+ * Shard ID: The shard number where the schedule exists
+ * Realm ID: The realm number within the shard
+ * Schedule Number: The unique number identifying the schedule
  * @augments {EntityId<HashgraphProto.proto.IScheduleID>}
  */
 
