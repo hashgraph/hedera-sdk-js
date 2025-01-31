@@ -77,7 +77,7 @@ async function main() {
          */
         const accountCreateTx = new AccountCreateTransaction()
             .setInitialBalance(Hbar.fromTinybars(100))
-            .setKey(operatorKey)
+            .setKeyWithoutAlias(operatorKey)
             .setAlias(evmAddress)
             .freezeWith(client);
 

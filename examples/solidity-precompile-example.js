@@ -38,7 +38,7 @@ async function main() {
 
     try {
         let transaction = await new hashgraph.AccountCreateTransaction()
-            .setKey(alicePublicKey)
+            .setKeyWithoutAlias(alicePublicKey)
             .setInitialBalance(hashgraph.Hbar.fromString("1000"))
             .freezeWithSigner(wallet);
         transaction = await transaction.signWithSigner(wallet);

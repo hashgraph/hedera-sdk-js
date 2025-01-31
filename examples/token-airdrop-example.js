@@ -51,7 +51,7 @@ async function main() {
     const privateKey = PrivateKey.generateED25519();
     const { accountId: accountId1 } = await (
         await new AccountCreateTransaction()
-            .setKey(privateKey)
+            .setKeyWithAlias(privateKey)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(-1)
             .execute(client)
@@ -60,7 +60,7 @@ async function main() {
     const privateKey2 = PrivateKey.generateED25519();
     const { accountId: accountId2 } = await (
         await new AccountCreateTransaction()
-            .setKey(privateKey2)
+            .setKeyWithAlias(privateKey2)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(1)
             .execute(client)
@@ -69,7 +69,7 @@ async function main() {
     const privateKey3 = PrivateKey.generateED25519();
     const { accountId: accountId3 } = await (
         await new AccountCreateTransaction()
-            .setKey(privateKey3)
+            .setKeyWithoutAlias(privateKey3)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(0)
             .execute(client)
@@ -78,7 +78,7 @@ async function main() {
     const treasuryKey = PrivateKey.generateED25519();
     const { accountId: treasuryAccount } = await (
         await new AccountCreateTransaction()
-            .setKey(treasuryKey)
+            .setKeyWithAlias(treasuryKey)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(-1)
             .execute(client)
