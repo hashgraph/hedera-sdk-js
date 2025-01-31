@@ -67,7 +67,7 @@ describe("ClientIntegration", function () {
         const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
-            .setKey(key.publicKey)
+            .setKeyWithoutAlias(key.publicKey)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -109,7 +109,7 @@ describe("ClientIntegration", function () {
 
         const bytes = (
             await new AccountCreateTransaction()
-                .setKey(key.publicKey)
+                .setKeyWithoutAlias(key.publicKey)
                 .setInitialBalance(new Hbar(2))
                 .freezeWith(env.client)
                 .sign(key)
