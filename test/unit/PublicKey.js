@@ -106,4 +106,44 @@ describe("PublicKey", function () {
         const ed25519PublicKey1 = PublicKey.fromString(PUBLIC_KEY_DER1);
         expect(ed25519PublicKey1.toStringRaw()).to.be.equal(PUBLIC_KEY1);
     });
+
+    it("should throw error when creating ED25519 key from invalid bytes", function () {
+        // Test cases with invalid byte
+        const invalidPrivateKeyBytes = Uint8Array.from([
+            0xca, 0x35, 0x4b, 0x7c, 0xf4, 0x87, 0xd1, 0xbc, 0x43, 0x5a, 0x25,
+            0x66, 0x77, 0x09, 0xc1, 0xab, 0x98, 0x0c, 0x11, 0x4d, 0x35, 0x94,
+            0xe6, 0x25, 0x9e, 0x81, 0x2e, 0x6a, 0x70, 0x3d, 0x4f, 0x51,
+        ]);
+
+        expect(() => {
+            PublicKey.fromBytesED25519(invalidPrivateKeyBytes);
+        }).to.throw;
+    });
+
+    it("should throw error when creating ECDSA key from invalid bytes", function () {
+        // Test cases with invalid byte
+        const invalidPrivateKeyBytes = Uint8Array.from([
+            0x00, 0xca, 0x35, 0x4b, 0x7c, 0xf4, 0x87, 0xd1, 0xbc, 0x43, 0x5a,
+            0x25, 0x66, 0x77, 0x09, 0xc1, 0xab, 0x98, 0x0c, 0x11, 0x4d, 0x35,
+            0x94, 0xe6, 0x25, 0x9e, 0x81, 0x2e, 0x6a, 0x70, 0x3d, 0x4f, 0x51,
+        ]);
+
+        expect(() => {
+            PublicKey.fromBytesECDSA(invalidPrivateKeyBytes);
+        }).to.throw;
+    });
+
+    it("should be able to create ECDSA key from valid bytes", function () {
+        const validPubKey = PrivateKey.generateECDSA().publicKey;
+        const bytes = validPubKey.toBytes();
+        const publicKey = PublicKey.fromBytes(bytes);
+        expect(publicKey.toString()).to.be.equal(validPubKey.toString());
+    });
+
+    it("should be able to create ED25519 key from valid bytes", function () {
+        const validPubKey = PrivateKey.generateED25519().publicKey;
+        const bytes = validPubKey.toBytes();
+        const publicKey = PublicKey.fromBytes(bytes);
+        expect(publicKey.toString()).to.be.equal(validPubKey.toString());
+    });
 });

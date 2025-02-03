@@ -4,6 +4,7 @@ import nacl from "tweetnacl";
 import { arrayEqual } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import forge from "node-forge";
+import { ed25519 } from "@noble/curves/ed25519";
 
 const derPrefix = "302a300506032b6570032100";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -77,7 +78,7 @@ export default class Ed25519PublicKey extends Key {
             );
         }
 
-        return new Ed25519PublicKey(publicKey);
+        return Ed25519PublicKey.fromBytesRaw(publicKey);
     }
 
     /**
@@ -91,7 +92,11 @@ export default class Ed25519PublicKey extends Key {
             );
         }
 
-        return new Ed25519PublicKey(data);
+        if (this.isValid(data)) {
+            return new Ed25519PublicKey(data);
+        } else {
+            throw new BadKeyError("invalid public key");
+        }
     }
 
     /**
@@ -104,6 +109,25 @@ export default class Ed25519PublicKey extends Key {
      */
     static fromString(text) {
         return Ed25519PublicKey.fromBytes(hex.decode(text));
+    }
+
+    /**
+     * @param {Uint8Array} data
+     * @returns {boolean}
+     */
+    static isValid(data) {
+        if (!data) return false;
+
+        const EMPTY_BUFFER = Buffer.from(new Uint8Array(33).fill(0));
+        const bufferData = Buffer.from(data);
+        if (bufferData.equals(EMPTY_BUFFER)) return true;
+
+        try {
+            ed25519.ExtendedPoint.fromHex(data);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /**

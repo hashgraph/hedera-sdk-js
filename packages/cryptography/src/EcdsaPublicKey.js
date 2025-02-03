@@ -4,6 +4,7 @@ import { arrayEqual } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import { keccak256 } from "./primitive/keccak.js";
+import { secp256k1 } from "@noble/curves/secp256k1";
 import elliptic from "elliptic";
 const ec = new elliptic.ec("secp256k1");
 
@@ -92,7 +93,8 @@ export default class EcdsaPublicKey extends Key {
                 `cannot decode ECDSA private key data from DER format`,
             );
         }
-        return new EcdsaPublicKey(ecdsaPublicKeyBytes);
+
+        return EcdsaPublicKey.fromBytesRaw(ecdsaPublicKeyBytes);
     }
 
     /**
@@ -106,7 +108,36 @@ export default class EcdsaPublicKey extends Key {
             );
         }
 
-        return new EcdsaPublicKey(data);
+        if (this.isValid(data)) {
+            return new EcdsaPublicKey(data);
+        } else {
+            throw new BadKeyError("invalid public key");
+        }
+    }
+
+    /**
+     * @param {Uint8Array} data
+     * @returns {boolean}
+     */
+    static isValid(data) {
+        const EMPTY_BUFFER_33_BYTES = Buffer.from(new Uint8Array(33).fill(0));
+        const EMPTY_BUFFER_65_BYTES = Buffer.from(new Uint8Array(65).fill(0));
+        const bufferData = Buffer.from(data);
+
+        // SEE HIP-540
+        if (
+            EMPTY_BUFFER_33_BYTES.equals(bufferData) ||
+            EMPTY_BUFFER_65_BYTES.equals(bufferData)
+        ) {
+            return true;
+        }
+
+        try {
+            secp256k1.ProjectivePoint.fromHex(data);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
     /**
