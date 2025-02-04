@@ -82,19 +82,34 @@ export default class Ed25519PublicKey extends Key {
     }
 
     /**
-     * @param {Uint8Array} data
+     * Creates an Ed25519 public key from raw bytes after validating the input
+     * @param {Uint8Array} data - Raw byte data for the public key
      * @returns {Ed25519PublicKey}
+     * @throws {BadKeyError} If the key is invalid or has an incorrect length
      */
     static fromBytesRaw(data) {
-        if (data.length != 32) {
+        // Check length first
+        if (data.length !== 32) {
             throw new BadKeyError(
                 `invalid public key length: ${data.length} bytes`,
             );
         }
 
-        if (this.isValid(data)) {
+        // Create a buffer from the input data
+        const bufferData = Buffer.from(data);
+
+        // Check for empty buffer (all zeros)
+        // SEE HIP-540
+        const emptyBuffer = Buffer.alloc(33);
+        if (bufferData.equals(emptyBuffer)) {
             return new Ed25519PublicKey(data);
-        } else {
+        }
+
+        // Attempt to validate the key using ed25519 library
+        try {
+            ed25519.ExtendedPoint.fromHex(data);
+            return new Ed25519PublicKey(data);
+        } catch {
             throw new BadKeyError("invalid public key");
         }
     }
@@ -109,25 +124,6 @@ export default class Ed25519PublicKey extends Key {
      */
     static fromString(text) {
         return Ed25519PublicKey.fromBytes(hex.decode(text));
-    }
-
-    /**
-     * @param {Uint8Array} data
-     * @returns {boolean}
-     */
-    static isValid(data) {
-        if (!data) return false;
-
-        const EMPTY_BUFFER = Buffer.from(new Uint8Array(33).fill(0));
-        const bufferData = Buffer.from(data);
-        if (bufferData.equals(EMPTY_BUFFER)) return true;
-
-        try {
-            ed25519.ExtendedPoint.fromHex(data);
-            return true;
-        } catch {
-            return false;
-        }
     }
 
     /**

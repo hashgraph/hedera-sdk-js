@@ -7,6 +7,11 @@ import {
     Transaction,
 } from "../../src/index.js";
 
+const CURVE_ORDER_ED25519 =
+    7237005577332262213973186563042994240857116359379907606001950938285454250989n;
+const CURVE_ORDER_ECDSA =
+    115792089237316195423570985008687907852837564279074904382605163141518161494337n;
+
 describe("PublicKey", function () {
     it("`verifyTransaction` works", async function () {
         const key1 = PrivateKey.generateED25519();
@@ -109,11 +114,10 @@ describe("PublicKey", function () {
 
     it("should throw error when creating ED25519 key from invalid bytes", function () {
         // Test cases with invalid byte
-        const invalidPrivateKeyBytes = Uint8Array.from([
-            0xca, 0x35, 0x4b, 0x7c, 0xf4, 0x87, 0xd1, 0xbc, 0x43, 0x5a, 0x25,
-            0x66, 0x77, 0x09, 0xc1, 0xab, 0x98, 0x0c, 0x11, 0x4d, 0x35, 0x94,
-            0xe6, 0x25, 0x9e, 0x81, 0x2e, 0x6a, 0x70, 0x3d, 0x4f, 0x51,
-        ]);
+
+        const invalidKey = (CURVE_ORDER_ED25519 + 1n).toString(16);
+        const invalidKeyBuffer = Buffer.from(invalidKey, "hex");
+        const invalidPrivateKeyBytes = Uint8Array.from(invalidKeyBuffer);
 
         expect(() => {
             PublicKey.fromBytesED25519(invalidPrivateKeyBytes);
@@ -122,11 +126,10 @@ describe("PublicKey", function () {
 
     it("should throw error when creating ECDSA key from invalid bytes", function () {
         // Test cases with invalid byte
-        const invalidPrivateKeyBytes = Uint8Array.from([
-            0x00, 0xca, 0x35, 0x4b, 0x7c, 0xf4, 0x87, 0xd1, 0xbc, 0x43, 0x5a,
-            0x25, 0x66, 0x77, 0x09, 0xc1, 0xab, 0x98, 0x0c, 0x11, 0x4d, 0x35,
-            0x94, 0xe6, 0x25, 0x9e, 0x81, 0x2e, 0x6a, 0x70, 0x3d, 0x4f, 0x51,
-        ]);
+
+        const invalidKey = (CURVE_ORDER_ECDSA + 1n).toString(16);
+        const invalidKeyBuffer = Buffer.from(invalidKey, "hex");
+        const invalidPrivateKeyBytes = Uint8Array.from(invalidKeyBuffer);
 
         expect(() => {
             PublicKey.fromBytesECDSA(invalidPrivateKeyBytes);

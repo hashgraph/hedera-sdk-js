@@ -98,8 +98,10 @@ export default class EcdsaPublicKey extends Key {
     }
 
     /**
-     * @param {Uint8Array} data
+     * Creates an ECDSA public key from raw bytes after validating the input
+     * @param {Uint8Array} data - Raw byte data for the public key
      * @returns {EcdsaPublicKey}
+     * @throws {BadKeyError} If the key is invalid or has an incorrect length
      */
     static fromBytesRaw(data) {
         if (data.length != 33) {
@@ -108,35 +110,24 @@ export default class EcdsaPublicKey extends Key {
             );
         }
 
-        if (this.isValid(data)) {
-            return new EcdsaPublicKey(data);
-        } else {
-            throw new BadKeyError("invalid public key");
-        }
-    }
-
-    /**
-     * @param {Uint8Array} data
-     * @returns {boolean}
-     */
-    static isValid(data) {
-        const EMPTY_BUFFER_33_BYTES = Buffer.from(new Uint8Array(33).fill(0));
-        const EMPTY_BUFFER_65_BYTES = Buffer.from(new Uint8Array(65).fill(0));
+        const EMPTY_BUFFER_33_BYTES = Buffer.alloc(33);
+        const EMPTY_BUFFER_65_BYTES = Buffer.alloc(65);
         const bufferData = Buffer.from(data);
 
-        // SEE HIP-540
+        // Check for empty buffers (as per HIP-540)
         if (
             EMPTY_BUFFER_33_BYTES.equals(bufferData) ||
             EMPTY_BUFFER_65_BYTES.equals(bufferData)
         ) {
-            return true;
+            return new EcdsaPublicKey(data);
         }
 
+        // Attempt to validate the key using secp256k1 library
         try {
             secp256k1.ProjectivePoint.fromHex(data);
-            return true;
-        } catch (error) {
-            return false;
+            return new EcdsaPublicKey(data);
+        } catch {
+            throw new BadKeyError("invalid public key");
         }
     }
 
