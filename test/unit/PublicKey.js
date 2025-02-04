@@ -7,11 +7,6 @@ import {
     Transaction,
 } from "../../src/index.js";
 
-const CURVE_ORDER_ED25519 =
-    7237005577332262213973186563042994240857116359379907606001950938285454250989n;
-const CURVE_ORDER_ECDSA =
-    115792089237316195423570985008687907852837564279074904382605163141518161494337n;
-
 describe("PublicKey", function () {
     it("`verifyTransaction` works", async function () {
         const key1 = PrivateKey.generateED25519();
@@ -113,8 +108,8 @@ describe("PublicKey", function () {
     });
 
     it("should throw error when creating ED25519 key from invalid bytes", function () {
-        // Test cases with invalid byte
-
+        const CURVE_ORDER_ED25519 =
+            7237005577332262213973186563042994240857116359379907606001950938285454250989n;
         const invalidKey = (CURVE_ORDER_ED25519 + 1n).toString(16);
         const invalidKeyBuffer = Buffer.from(invalidKey, "hex");
         const invalidPrivateKeyBytes = Uint8Array.from(invalidKeyBuffer);
@@ -125,8 +120,8 @@ describe("PublicKey", function () {
     });
 
     it("should throw error when creating ECDSA key from invalid bytes", function () {
-        // Test cases with invalid byte
-
+        const CURVE_ORDER_ECDSA =
+            115792089237316195423570985008687907852837564279074904382605163141518161494337n;
         const invalidKey = (CURVE_ORDER_ECDSA + 1n).toString(16);
         const invalidKeyBuffer = Buffer.from(invalidKey, "hex");
         const invalidPrivateKeyBytes = Uint8Array.from(invalidKeyBuffer);
