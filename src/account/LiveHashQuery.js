@@ -40,6 +40,8 @@ import LiveHash from "./LiveHash.js";
 
 /**
  * @augments {Query<LiveHash>}
+ * @deprecated
+ * Тhis query is no longer supported.
  */
 export default class LiveHashQuery extends Query {
     /**
@@ -82,6 +84,7 @@ export default class LiveHashQuery extends Query {
                 query.cryptoGetLiveHash
             );
 
+        // eslint-disable-next-line deprecation/deprecation
         return new LiveHashQuery({
             accountId:
                 hash.accountID != null
@@ -221,5 +224,5 @@ export default class LiveHashQuery extends Query {
 }
 
 // @ts-ignore
-// eslint-disable-next-line @typescript-eslint/unbound-method
+// eslint-disable-next-line @typescript-eslint/unbound-method, deprecation/deprecation
 QUERY_REGISTRY.set("cryptoGetLiveHash", LiveHashQuery._fromProtobuf);

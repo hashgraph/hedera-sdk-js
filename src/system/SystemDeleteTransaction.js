@@ -43,6 +43,10 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Deprecated: Do not use.
+ * @deprecated
+ */
 export default class SystemDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]
@@ -107,6 +111,7 @@ export default class SystemDeleteTransaction extends Transaction {
             );
 
         return Transaction._fromProtobufTransactions(
+            // eslint-disable-next-line deprecation/deprecation
             new SystemDeleteTransaction({
                 fileId:
                     systemDelete.fileID != null
@@ -248,5 +253,5 @@ export default class SystemDeleteTransaction extends Transaction {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
+// eslint-disable-next-line @typescript-eslint/unbound-method, deprecation/deprecation
 TRANSACTION_REGISTRY.set("systemDelete", SystemDeleteTransaction._fromProtobuf);

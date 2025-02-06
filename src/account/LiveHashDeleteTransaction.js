@@ -39,6 +39,10 @@ import AccountId from "./AccountId.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * @deprecated
+ * This transaction is no longer supported.
+ */
 export default class LiveHashDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]
@@ -92,6 +96,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
             );
 
         return Transaction._fromProtobufTransactions(
+            // eslint-disable-next-line deprecation/deprecation
             new LiveHashDeleteTransaction({
                 hash:
                     hashes.liveHashToDelete != null
@@ -204,6 +209,6 @@ export default class LiveHashDeleteTransaction extends Transaction {
 
 TRANSACTION_REGISTRY.set(
     "cryptoDeleteLiveHash",
-    // eslint-disable-next-line @typescript-eslint/unbound-method
+    // eslint-disable-next-line @typescript-eslint/unbound-method, deprecation/deprecation
     LiveHashDeleteTransaction._fromProtobuf,
 );
