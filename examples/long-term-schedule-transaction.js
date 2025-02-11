@@ -48,7 +48,7 @@ async function main() {
     const aliceId = (
         await (
             await new AccountCreateTransaction()
-                .setKey(thresholdKey)
+                .setKeyWithoutAlias(thresholdKey)
                 .setInitialBalance(new Hbar(2))
                 .execute(client)
         ).getReceipt(client)

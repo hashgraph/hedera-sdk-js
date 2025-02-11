@@ -43,7 +43,7 @@ export const createAccount = async ({
     );
 
     if (key != null) {
-        transaction.setKey(getKeyFromString(key));
+        transaction.setKeyWithoutAlias(getKeyFromString(key));
     }
 
     if (initialBalance != null) {
