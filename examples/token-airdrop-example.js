@@ -48,19 +48,19 @@ async function main() {
      * Create 4 accounts
      */
 
-    const privateKey = PrivateKey.generateED25519();
+    const privateKey = PrivateKey.generateECDSA();
     const { accountId: accountId1 } = await (
         await new AccountCreateTransaction()
-            .setKeyWithAlias(privateKey)
+            .setECDSAKeyWithAlias(privateKey)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(-1)
             .execute(client)
     ).getReceipt(client);
 
-    const privateKey2 = PrivateKey.generateED25519();
+    const privateKey2 = PrivateKey.generateECDSA();
     const { accountId: accountId2 } = await (
         await new AccountCreateTransaction()
-            .setKeyWithAlias(privateKey2)
+            .setECDSAKeyWithAlias(privateKey2)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(1)
             .execute(client)
@@ -75,10 +75,10 @@ async function main() {
             .execute(client)
     ).getReceipt(client);
 
-    const treasuryKey = PrivateKey.generateED25519();
+    const treasuryKey = PrivateKey.generateECDSA();
     const { accountId: treasuryAccount } = await (
         await new AccountCreateTransaction()
-            .setKeyWithAlias(treasuryKey)
+            .setECDSAKeyWithAlias(treasuryKey)
             .setInitialBalance(new Hbar(10))
             .setMaxAutomaticTokenAssociations(-1)
             .execute(client)
