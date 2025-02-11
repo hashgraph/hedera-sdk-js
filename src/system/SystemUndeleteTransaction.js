@@ -43,6 +43,10 @@ import ContractId from "../contract/ContractId.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Recover a file or contract bytecode deleted from the Hedera File
+ * System (HFS) by a `systemDelete` transaction.
+ */
 export default class SystemUndeleteTransaction extends Transaction {
     /**
      * @param {object} [props]
