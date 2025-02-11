@@ -16,6 +16,7 @@ describe("TopicMessage", function () {
         env = await IntegrationTestEnv.new({ throwaway: true });
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be executable", async function () {
         const operatorKey = env.operatorKey.publicKey;
 
