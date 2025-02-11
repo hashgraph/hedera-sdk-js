@@ -42,6 +42,7 @@ import Hbar from "../Hbar.js";
  */
 
 /**
+ * Retrieve the detail characteristics for a token.
  * @augments {Query<TokenInfo>}
  */
 export default class TokenInfoQuery extends Query {

@@ -27,7 +27,12 @@ import * as HashgraphProto from "@hashgraph/proto";
  */
 
 /**
+ * Class representing a unique identifier for a scheduled transaction on the Hedera network.
  *
+ * A ScheduleId consists of three components:
+ * Shard ID: The shard number where the schedule exists
+ * Realm ID: The realm number within the shard
+ * Schedule Number: The unique number identifying the schedule
  * @augments {EntityId<HashgraphProto.proto.IScheduleID>}
  */
 

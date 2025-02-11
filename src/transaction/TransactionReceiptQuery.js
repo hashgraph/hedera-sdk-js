@@ -36,6 +36,12 @@ const { proto } = HashgraphProto;
  */
 
 /**
+ * Get the receipt of a transaction, given its transaction ID.
+ *
+ * <p>Once a transaction reaches consensus, then information about whether it succeeded or failed
+ * will be available until the end of the receipt period.
+ *
+ * <p>This query is free.
  * @augments {Query<TransactionReceipt>}
  */
 export default class TransactionReceiptQuery extends Query {
