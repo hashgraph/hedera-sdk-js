@@ -29,6 +29,7 @@ import Transaction, {
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
+import PrivateKey from "../PrivateKey.js";
 import EvmAddress from "../EvmAddress.js";
 
 /**
@@ -139,7 +140,7 @@ export default class AccountCreateTransaction extends Transaction {
         this._alias = null;
 
         if (props.key != null) {
-            this.setKey(props.key);
+            this.setKeyWithoutAlias(props.key);
         }
 
         if (props.receiverSignatureRequired != null) {
@@ -282,10 +283,71 @@ export default class AccountCreateTransaction extends Transaction {
      * If `receiverSignatureRequired` is true, then the key must also sign
      * any transfer into the account.
      *
+     * @deprecated Use `setKeyWithoutAlias` instead.
      * @param {Key} key
      * @returns {this}
      */
     setKey(key) {
+        this._requireNotFrozen();
+        this._key = key;
+
+        return this;
+    }
+
+    /**
+     * Sets an ECDSA private key and a derived alias from this key in the background.
+     * @param {PrivateKey} key - An ECDSA private key used for signing transactions and alias derivation.
+     * @returns {this}
+     */
+    setECDSAKeyWithAlias(key) {
+        this.setKeyWithoutAlias(key);
+
+        if (!(key instanceof PrivateKey) || key.type !== "secp256k1") {
+            throw new Error(
+                "'key' must be an ECDSA private key when 'aliasKey' is not provided.",
+            );
+        }
+        this.setAlias(key.publicKey.toEvmAddress());
+
+        return this;
+    }
+
+    /**
+     * Sets an account key and an alias derived from a separate ECDSA key.
+     * The transaction must be signed by both keys.
+     * @param {Key} key - The primary account key used for signing transactions.
+     * @param {PrivateKey} aliasKey - The ECDSA private key used to derive the EVM address.
+     * @returns {this}
+     */
+    setKeyWithAlias(key, aliasKey) {
+        this.setKeyWithoutAlias(key);
+
+        if (
+            !(aliasKey instanceof PrivateKey) ||
+            aliasKey.type !== "secp256k1"
+        ) {
+            throw new Error(
+                "'aliasKey' must be an ECDSA private key when provided.",
+            );
+        }
+        this.setAlias(aliasKey.publicKey.toEvmAddress());
+
+        return this;
+    }
+
+    /**
+     * Set the key for this account without an alias.
+     *
+     * This is the key that must sign each transfer out of the account.
+     *
+     * If `receiverSignatureRequired` is true, then the key must also sign
+     * any transfer into the account.
+     *
+     *
+     * @param {Key} key
+     * @returns {this}
+     */
+    setKeyWithoutAlias(key) {
         this._requireNotFrozen();
         this._key = key;
 

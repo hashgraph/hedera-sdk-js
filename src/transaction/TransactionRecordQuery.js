@@ -38,6 +38,14 @@ const { proto } = HashgraphProto;
  */
 
 /**
+ * Get the record for a transaction.
+ * <p>
+ * If the transaction requested a record, then the record lasts for one hour, and a state proof is available for it.
+ * If the transaction created an account, file, or smart contract instance, then the record will contain the ID for
+ * what it created. If the transaction called a smart contract function, then the record contains the result of
+ * that call. If the transaction was a cryptocurrency transfer, then the record includes the TransferList
+ * which gives the details of that transfer. If the transaction didn't return anything that should be
+ * in the record, then the results field will be set to nothing.
  * @augments {Query<TransactionRecord>}
  */
 export default class TransactionRecordQuery extends Query {

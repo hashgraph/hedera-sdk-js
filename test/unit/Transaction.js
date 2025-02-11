@@ -31,7 +31,7 @@ describe("Transaction", function () {
             "0adb012ad8010a6e0a130a0608ab0b10ce0412070800100018ec0718001206080010001803188084af5f2202087832005a440a2212206e0433faf04e8a674a114ed04d27bd43b0549a2ed69c9709a5a2058922c0cc4830ffffffffffffffff7f38ffffffffffffffff7f40004a050880ceda0388010012660a640a206e0433faf04e8a674a114ed04d27bd43b0549a2ed69c9709a5a2058922c0cc481a406f7b1823defed495205f67504243abd623bef1eb9dc4053b879b5e25fff382814172d0676464a6a5b7adfc7968ae8af236ac91fd751d632c0412b5f77431930d0adb012ad8010a6e0a130a0608ab0b10ce0412070800100018ec0718001206080010001804188084af5f2202087832005a440a2212206e0433faf04e8a674a114ed04d27bd43b0549a2ed69c9709a5a2058922c0cc4830ffffffffffffffff7f38ffffffffffffffff7f40004a050880ceda0388010012660a640a206e0433faf04e8a674a114ed04d27bd43b0549a2ed69c9709a5a2058922c0cc481a408d3fb2b8da90457cc447771361b0e27f784b70664604a5490a135595a69f2bbf2fd725a703174999d25f6f295cd58f116210dffefb94703c34fc8107be0a7908";
 
         const transaction = await new AccountCreateTransaction()
-            .setKey(key)
+            .setKeyWithoutAlias(key)
             .setNodeAccountIds([new AccountId(3), new AccountId(4)])
             .setTransactionId(transactionId)
             .freeze()
@@ -329,7 +329,7 @@ describe("Transaction", function () {
             txId = TransactionId.generate(nodeAccountIds[0]);
 
             transaction = new AccountCreateTransaction()
-                .setKey(account.publicKey)
+                .setKeyWithoutAlias(account.publicKey)
                 .setNodeAccountIds(nodeAccountIds)
                 .setTransactionId(txId)
                 .freeze();

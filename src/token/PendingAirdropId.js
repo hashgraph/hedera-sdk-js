@@ -27,6 +27,13 @@ import AccountId from "../account/AccountId.js";
 import TokenId from "./TokenId.js";
 import NftId from "./NftId.js";
 
+/**
+ * Represents the identifier for a pending airdrop in the Hedera network.
+ *
+ * A PendingAirdropId contains information about a pending token or NFT airdrop,
+ * including the sender, receiver, and the token or NFT being airdropped. This class
+ * is used to track and identify specific airdrops in the system.
+ */
 export default class PendingAirdropId {
     /**
      *
