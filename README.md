@@ -1,4 +1,4 @@
-# Hedera™ Hashgraph JavaScript SDK
+# Hiero JavaScript SDK
 
 [![](https://img.shields.io/discord/373889138199494658)](https://discord.com/channels/373889138199494658/616725732650909710)
 [![Docs](https://img.shields.io/badge/docs-%F0%9F%93%84-blue)](https://docs.hedera.com/guides/getting-started/javascript/environment-set-up)
