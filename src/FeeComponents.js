@@ -21,6 +21,11 @@
 import * as HashgraphProto from "@hashgraph/proto";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Long from "long";
+
+/**
+ * A set of values the nodes use in determining transaction and query fees, and
+ * constants involved in fee calculations.
+ */
 export default class FeeComponents {
     /**
      * @param {object} [props]

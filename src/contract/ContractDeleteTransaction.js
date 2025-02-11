@@ -42,6 +42,30 @@ import AccountId from "../account/AccountId.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Delete a smart contract, and transfer any remaining HBAR balance to a
+ * designated account.
+ *
+ * If this call succeeds then all subsequent calls to that smart contract
+ * SHALL execute the `0x0` opcode, as required for EVM equivalence.
+ *
+ * ### Requirements
+ *  - An account or smart contract MUST be designated to receive all remaining
+ *    account balances.
+ *  - The smart contract MUST have an admin key set. If the contract does not
+ *    have `admin_key` set, then this transaction SHALL fail and response code
+ *    `MODIFYING_IMMUTABLE_CONTRACT` SHALL be set.
+ *  - If `admin_key` is, or contains, an empty `KeyList` key, it SHALL be
+ *    treated the same as an admin key that is not set.
+ *  - The `Key` set for `admin_key` on the smart contract MUST have a valid
+ *    signature set on this transaction.
+ *  - The designated receiving account MAY have `receiver_sig_required` set. If
+ *    that field is set, the receiver account MUST also sign this transaction.
+ *  - The field `permanent_removal` MUST NOT be set. That field is reserved for
+ *    internal system use when purging the smart contract from state. Any user
+ *    transaction with that field set SHALL be rejected and a response code
+ *    `PERMANENT_REMOVAL_REQUIRES_SYSTEM_INITIATION` SHALL be set.
+ */
 export default class ContractDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]

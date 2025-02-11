@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.57.2
+
+* test: fix TopicMessage related tests by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2799
+* docs: documentation batch for classes by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2771
+* docs: update chunk size comments by @SimiHunjan in https://github.com/hiero-ledger/hiero-sdk-js/pull/2738
+* docs: update token-airdrop-example.js by @michielmulders in https://github.com/hiero-ledger/hiero-sdk-js/pull/2593
+* chore(deps): bumped Typescript version by @ivaylogarnev-limechain in https://github.com/hiero-ledger/hiero-sdk-js/pull/2797
+* chore(deps): bump renovatebot/github-action from 41.0.8 to 41.0.10 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2805
+* chore(deps): bump typedoc by @ivaylonikolov in https://github.com/hiero-ledger/hiero-sdk-js/pull/2800
+* chore(deps): bump step-security/harden-runner from 2.10.3 to 2.10.4 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2798
+* chore(deps-dev): bump c8 from 8.0.1 to 10.1.3 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2753
+* chore(deps-dev): bump mocha in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2778
+* chore(deps): bump pino from 8.21.0 to 9.6.0 by dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2779
+* chore(deps-dev): bump nyc from 15.1.0 to 17.1.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2794
+* chore(deps-dev): bump eslint-plugin-deprecation by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2780
+* chore(deps-dev): bump sinon from 18.0.1 to 19.0.2 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2783
+* chore(deps-dev): bump geckodriver from 4.5.1 to 5.0.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2787
+* chore(deps-dev): bump eslint-plugin-compat in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2782
+* chore(deps-dev): bump chromedriver in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2788
+* chore(deps-dev): bump chromedriver from 119.0.1 to 132.0.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2784
+
+## v2.57.0-beta.3
+
+## What's Changed
+* feat: Implement MirrorNodeContractQuery by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2723
+* feat: Add configurable commit hash for JS builds. by @ggstyokov in https://github.com/hashgraph/hedera-sdk-js/pull/2751
+* feat: add new nextExchangeRate property to receipt by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2727
+* docs: add configuration.md file by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2687
+* chore(deps): bump ncipollo/release-action from 1.14.0 to 1.15.0 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2760
+* chore(deps): bump step-security/harden-runner from 2.10.2 to 2.10.3 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2758
+* chore: delete AccountStakersQuery  by @ivaylonikolov7 in https://github.com/hashgraph/hedera-sdk-js/pull/2742
+* chore(deps): bump actions/setup-java from 4.5.0 to 4.6.0 by @andrewb1269hg in https://github.com/hashgraph/hedera-sdk-js/pull/2735
+* chore(deps-dev): bump replace-in-file from 7.0.2 to 8.3.0 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2745
+* chore(deps): bump path-to-regexp and express in /tck by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2698
+* chore(deps): bump renovatebot/github-action from 41.0.6 to 41.0.8 by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2752
+* chore(deps-dev): bump eslint-plugin-n from 16.2.0 to 17.15.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2746
+* chore(deps-dev): bump eslint-plugin-jsdoc from 46.8.2 to 50.6.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2731
+* chore(deps-dev): bump eslint-plugin-jsdoc from 46.8.2 to 50.6.1 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2749
+* chore(deps-dev): bump eslint-plugin-compat from 4.0.2 to 6.0.2 in /packages/proto by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2748
+* chore(deps): bump ws from 8.14.2 to 8.18.0 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2750
+* chore(deps-dev): bump cross-spawn from 6.0.5 to 6.0.6 in /examples/simple_rest_signature_provider by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2655
+* chore(deps-dev): bump body-parser from 1.20.2 to 1.20.3 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2524
+* chore(deps): bump cross-spawn from 6.0.5 to 6.0.6 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2667
+* chore(deps): bump elliptic from 6.5.4 to 6.6.0 in /packages/cryptography by @dependabot in https://github.com/hashgraph/hedera-sdk-js/pull/2744
+
 ## v2.56.0
 
 ## What's Changed

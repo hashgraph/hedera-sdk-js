@@ -37,6 +37,12 @@ import AirdropPendingTransaction from "./AirdropPendingTransaction.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
+
+/**
+ * A transaction that allows the cancellation of pending airdrops.
+ * This transaction can be used by authorized accounts to cancel airdrop operations
+ * that have been initiated but not yet claimed by recipients.
+ */
 export default class TokenCancelAirdropTransaction extends AirdropPendingTransaction {
     /**
      * @param {object} props

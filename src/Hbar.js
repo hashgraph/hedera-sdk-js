@@ -28,6 +28,10 @@ import Long from "long";
  * @typedef {import("./long.js").LongObject} LongObject
  */
 
+/**
+ * Represents a quantity of hbar (ℏ), the native currency of the Hedera network.
+ * Provides utilities for handling different hbar denominations and conversions.
+ */
 export default class Hbar {
     /**
      * @param {number | string | Long | LongObject | BigNumber} amount

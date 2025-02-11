@@ -96,6 +96,7 @@ export default class Ed25519PrivateKey {
      * @returns {Ed25519PrivateKey}
      */
     static fromBytesDer(data) {
+        // @ts-ignore
         const asn = forge.asn1.fromDer(new forge.util.ByteStringBuffer(data));
 
         /** * @type {Uint8Array} */

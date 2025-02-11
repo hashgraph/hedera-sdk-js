@@ -41,6 +41,7 @@ import Hbar from "../Hbar.js";
  */
 
 /**
+ * Retrieves the metadata of an account
  * @augments {Query<AccountInfo>}
  */
 export default class AccountInfoQuery extends Query {

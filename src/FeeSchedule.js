@@ -22,6 +22,10 @@ import * as HashgraphProto from "@hashgraph/proto";
 import TransactionFeeSchedule from "./TransactionFeeSchedule.js";
 import Timestamp from "./Timestamp.js";
 
+/**
+ * A set of fee schedules covering all transaction types and query types, along
+ * with a specific time at which this fee schedule will expire.
+ */
 export default class FeeSchedule {
     /**
      * @param {object} [props]
