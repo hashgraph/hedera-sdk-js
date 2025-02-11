@@ -34,6 +34,13 @@ import Long from "long";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
+/**
+ * Represents a token allowance granted to a spender account by an owner account.
+ *
+ * The `TokenAllowance` class manages the permissions for one account to spend a specified
+ * amount of tokens on behalf of another account. It includes details about the token, the
+ * spender, the owner, and the amount allowed.
+ */
 export default class TokenAllowance {
     /**
      * @internal

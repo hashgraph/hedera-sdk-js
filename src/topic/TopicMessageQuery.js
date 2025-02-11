@@ -39,6 +39,8 @@ import { RST_STREAM } from "../Executable.js";
  */
 
 /**
+ * Represents a class that you can use to subscribe to
+ * different topics on Hedera network.
  * @augments {Query<TopicMessageQuery>}
  */
 export default class TopicMessageQuery {
