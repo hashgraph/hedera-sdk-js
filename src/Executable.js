@@ -425,20 +425,6 @@ export default class Executable {
     }
 
     /**
-     * Advance the request to the next node
-     *
-     * FIXME: This method used to perform different code depending on if we're
-     * executing a query or transaction, but that is no longer the case
-     * and hence could be removed.
-     *
-     * @protected
-     * @returns {void}
-     */
-    _advanceRequest() {
-        this._nodeAccountIds.advance();
-    }
-
-    /**
      * Determine if we should continue the execution process, error, or finish.
      *
      * FIXME: This method should really be called something else. Initially it returned
@@ -659,28 +645,30 @@ export default class Executable {
             const channel = node.getChannel();
             const request = await this._makeRequestAsync();
 
-            // advance the internal index
-            // non-free queries and transactions map to more than 1 actual transaction and this will cause
-            // the next invocation of makeRequest to return the _next_ transaction
-            // FIXME: This is likely no longer relavent after we've transitioned to using our `List` type
-            // can be replaced with `this._nodeAccountIds.advance();`
-            this._advanceRequest();
-
             let response;
 
-            // If the node is unhealthy, wait for it to be healthy
-            // FIXME: This is wrong, we should skip to the next node, and only perform
-            // a request backoff after we've tried all nodes in the current list.
-            if (!node.isHealthy() && this._nodeAccountIds.length > 1) {
-                if (this._logger) {
-                    this._logger.debug(
-                        `[${logId}] node is not healthy, skipping waiting ${node.getRemainingTime()}`,
+            if (!node.isHealthy()) {
+                const isLastNode =
+                    this._nodeAccountIds.index ===
+                    this._nodeAccountIds.list.length - 1;
+
+                if (isLastNode || this._nodeAccountIds.length <= 1) {
+                    throw new Error(
+                        `Network connectivity issue: All nodes are unhealthy. Original node list: ${this._nodeAccountIds.list.join(", ")}`,
                     );
                 }
 
-                // We don't need to wait, we can proceed to the next attempt.
+                if (this._logger) {
+                    this._logger.debug(
+                        `[${logId}] Node is not healthy, trying the next node.`,
+                    );
+                }
+
+                this._nodeAccountIds.advance();
                 continue;
             }
+
+            this._nodeAccountIds.advance();
 
             try {
                 // Race the execution promise against the grpc timeout to prevent grpc connections
