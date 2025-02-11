@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.58.0
+
+* feat: account create transaction with key derived alias by @venilinvasilev in https://github.com/hiero-ledger/hiero-sdk-js/pull/2834
+* feat: parallel testing by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2821
+* feat: fix examples and run them in every new PR/per push by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2830
+* fix: Hitting unhealthy node 10 times by @ivaylogarnev-limechain in https://github.com/hiero-ledger/hiero-sdk-js/pull/2819
+* fix: resolve incompatibility with latest pnpm by @venilinvasilev in https://github.com/hiero-ledger/hiero-sdk-js/pull/2829
+* fix: create-contract-with-value example by @venilinvasilev in https://github.com/hiero-ledger/hiero-sdk-js/pull/2825
+* test: add topic info tests by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2756
+* docs: update README.md title by @hendrikebbers in https://github.com/hiero-ledger/hiero-sdk-js/pull/2810
+* docs: generate documentation for batch 2 @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2831
+* chore(deps-dev): bump vite from 5.4.11 to 6.1.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2853
+* chore(deps-dev): bump vite from 4.5.3 to 6.1.0 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2852
+* chore(deps-dev): bump geckodriver from 4.2.1 to 5.0.0 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2838
+* chore(deps-dev): bump eslint-plugin-jsdoc from 46.8.2 to 50.6.3 in /packages/cryptography by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2836
+* chore(deps): bump renovatebot/github-action from 41.0.12 to 41.0.13 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2850
+* chore(deps): bump pnpm/action-setup from 4.0.0 to 4.1.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2847
+* chore(deps): bump renovatebot/github-action from 41.0.11 to 41.0.12 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2843
+* chore(deps): bump actions/setup-java from 4.6.0 to 4.7.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2833
+* chore(deps): bump actions/setup-node from 4.1.0 to 4.2.0 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2826
+* chore(deps): bump renovatebot/github-action from 41.0.10 to 41.0.11 by @dependabot in https://github.com/hiero-ledger/hiero-sdk-js/pull/2827
+
 ## v2.57.2
 
 * test: fix TopicMessage related tests by @ivaylonikolov7 in https://github.com/hiero-ledger/hiero-sdk-js/pull/2799
