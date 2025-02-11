@@ -523,6 +523,10 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
+        // we check if its local node then backoff mechanism should be disabled
+        // and we increase the retry attempts
+        const isLocalNode = client.network["127.0.0.1:50211"] != null;
+
         // If the logger on the request is not set, use the logger in client
         // (if set, otherwise do not use logger)
         this._logger =
@@ -555,21 +559,22 @@ export default class Executable {
             this._minBackoff = client.minBackoff;
         }
 
-        // If the max attempts on the request is not set, use the default value in client
-        // If the default value in client is not set, use a default of 10.
-        //
-        // FIXME: current implementation is wrong, update to follow comment above.
-        const maxAttempts =
-            client._maxAttempts != null
-                ? client._maxAttempts
-                : this._maxAttempts;
-
         // Save the start time to be used later with request timeout
         const startTime = Date.now();
 
         // Saves each error we get so when we err due to max attempts exceeded we'll have
         // the last error that was returned by the consensus node
         let persistentError = null;
+
+        // If the max attempts on the request is not set, use the default value in client
+        // If the default value in client is not set, use a default of 10.
+        //
+        // FIXME: current implementation is wrong, update to follow comment above.
+        // ... existing code ...
+        const LOCAL_NODE_ATTEMPTS = 1000;
+        const maxAttempts = isLocalNode
+            ? LOCAL_NODE_ATTEMPTS
+            : (client._maxAttempts ?? this._maxAttempts);
 
         // Checks if has a valid nodes to which the TX can be sent
         if (this.transactionNodeIds.length) {
@@ -773,6 +778,7 @@ export default class Executable {
             switch (shouldRetry) {
                 case ExecutionState.Retry:
                     await delayForAttempt(
+                        isLocalNode,
                         attempt,
                         this._minBackoff,
                         this._maxBackoff,
@@ -840,12 +846,17 @@ export default class Executable {
 /**
  * A simple function that returns a promise timeout for a specific period of time
  *
+ * @param {boolean} isLocalNode
  * @param {number} attempt
  * @param {number} minBackoff
  * @param {number} maxBackoff
  * @returns {Promise<void>}
  */
-function delayForAttempt(attempt, minBackoff, maxBackoff) {
+function delayForAttempt(isLocalNode, attempt, minBackoff, maxBackoff) {
+    if (isLocalNode) {
+        return new Promise((resolve) => setTimeout(resolve, minBackoff));
+    }
+
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
     const ms = Math.min(
         Math.floor(minBackoff * Math.pow(2, attempt)),
