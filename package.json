@@ -2,9 +2,8 @@
     "name": "@hashgraph/sdk",
     "version": "2.59.0-beta.1",
     "description": "Hedera™ Hashgraph SDK",
-    "types": "./lib/index.d.ts",
-    "main": "./lib/index.cjs",
-    "module": "./src/index.js",
+    "main": "./dist/main.js",
+    "module": "./dist/main.js",
     "react-native": {
         "./lib/index.cjs": "./src/native.js",
         "./src/encoding/hex.js": "./src/encoding/hex.native.js",
@@ -19,9 +18,8 @@
         "crypto": false
     },
     "exports": {
-        "./package.json": "./package.json",
         ".": {
-            "types": "./lib/index.d.ts",
+            "types": "./types/index.d.ts",
             "import": "./src/index.js",
             "require": "./lib/index.cjs"
         }
@@ -39,7 +37,8 @@
     ],
     "files": [
         "lib/",
-        "src/"
+        "src/",
+        "dist/"
     ],
     "engines": {
         "node": ">=14.0.0"
@@ -61,7 +60,7 @@
         "@hashgraph/proto": "2.16.0-beta.8",
         "axios": "^1.6.4",
         "bignumber.js": "^9.1.1",
-        "bn.js": "^5.1.1",
+        "bn.js": "4.12.1",
         "crypto-js": "^4.2.0",
         "js-base64": "^3.7.4",
         "long": "^5.2.3",
@@ -69,17 +68,20 @@
         "pino-pretty": "^10.0.0",
         "protobufjs": "7.2.5",
         "rfc4648": "^1.5.3",
-        "utf8": "^3.0.0"
+        "utf8": "^3.0.0",
+        "webpack-bundle-analyzer": "^4.10.2",
+        "webpack-cli": "^6.0.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.23.4",
-        "@babel/core": "^7.23.3",
+        "@babel/core": "^7.26.0",
         "@babel/eslint-parser": "^7.23.3",
         "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-export-namespace-from": "^7.22.3",
         "@babel/plugin-transform-modules-commonjs": "^7.21.5",
-        "@babel/preset-env": "^7.22.15",
+        "@babel/plugin-transform-runtime": "^7.26.8",
+        "@babel/preset-env": "^7.26.8",
         "@babel/register": "^7.22.5",
         "@grpc/proto-loader": "^0.7.9",
         "@playwright/test": "^1.30.0",
@@ -90,6 +92,7 @@
         "@types/utf8": "^3.0.1",
         "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@typescript-eslint/parser": "^5.62.0",
+        "babel-loader": "^9.2.1",
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-rewrite": "^0.2.0",
         "c8": "^8.0.1",
@@ -98,7 +101,7 @@
         "codecov": "^3.8.3",
         "dotenv": "^16.0.3",
         "dpdm": "^3.11.0",
-        "elliptic": "^6.5.4",
+        "elliptic": "^6.6.1",
         "eslint": "^8.52.0",
         "eslint-plugin-chai-expect": "^3.0.0",
         "eslint-plugin-compat": "^4.0.2",
@@ -119,6 +122,7 @@
         "typedoc": "^0.27.6",
         "typescript": "^5.7.2",
         "vite": "^6.1.0",
+        "webpack": "^5.97.1",
         "yalc": "1.0.0-pre.53"
     },
     "peerDependencies": {
@@ -128,5 +132,6 @@
         "expo": {
             "optional": true
         }
-    }
+    },
+    "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4"
 }

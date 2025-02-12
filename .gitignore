@@ -10,6 +10,8 @@ node_modules/
 lib/
 test/lib/
 **/test-results/
+types/
+dist/
 
 # generated documentation
 docs/

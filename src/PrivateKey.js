@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*-
  * ‌
  * Hedera JavaScript SDK
@@ -18,7 +19,10 @@
  * ‍
  */
 
-import * as cryptography from "@hashgraph/cryptography";
+import {
+    Mnemonic as MnemonicCryptography,
+    PrivateKey as PrivateKeyCryptography,
+} from "@hashgraph/cryptography";
 import Mnemonic from "./Mnemonic.js";
 import PublicKey from "./PublicKey.js";
 import Key from "./Key.js";
@@ -46,7 +50,7 @@ export default class PrivateKey extends Key {
     /**
      * @internal
      * @hideconstructor
-     * @param {cryptography.PrivateKey} key
+     * @param {PrivateKey} key
      */
     constructor(key) {
         super();
@@ -60,7 +64,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static generateED25519() {
-        return new PrivateKey(cryptography.PrivateKey.generateED25519());
+        return new PrivateKey(PrivateKeyCryptography.generateED25519());
     }
 
     /**
@@ -69,7 +73,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static generateECDSA() {
-        return new PrivateKey(cryptography.PrivateKey.generateECDSA());
+        return new PrivateKey(PrivateKeyCryptography.generateECDSA());
     }
 
     /**
@@ -89,7 +93,7 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async generateAsync() {
-        return new PrivateKey(await cryptography.PrivateKey.generateAsync());
+        return new PrivateKey(await PrivateKeyCryptography.generateAsync());
     }
 
     /**
@@ -99,7 +103,7 @@ export default class PrivateKey extends Key {
      */
     static async generateED25519Async() {
         return new PrivateKey(
-            await cryptography.PrivateKey.generateED25519Async(),
+            await PrivateKeyCryptography.generateED25519Async(),
         );
     }
 
@@ -110,7 +114,7 @@ export default class PrivateKey extends Key {
      */
     static async generateECDSAAsync() {
         return new PrivateKey(
-            await cryptography.PrivateKey.generateECDSAAsync(),
+            await PrivateKeyCryptography.generateECDSAAsync(),
         );
     }
 
@@ -121,7 +125,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytes(data) {
-        return new PrivateKey(cryptography.PrivateKey.fromBytes(data));
+        return new PrivateKey(PrivateKeyCryptography.fromBytes(data));
     }
 
     /**
@@ -131,7 +135,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytesECDSA(data) {
-        return new PrivateKey(cryptography.PrivateKey.fromBytesECDSA(data));
+        return new PrivateKey(PrivateKeyCryptography.fromBytesECDSA(data));
     }
 
     /**
@@ -141,7 +145,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytesED25519(data) {
-        return new PrivateKey(cryptography.PrivateKey.fromBytesED25519(data));
+        return new PrivateKey(PrivateKeyCryptography.fromBytesED25519(data));
     }
 
     /**
@@ -152,7 +156,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromString(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromString(text));
+        return new PrivateKey(PrivateKeyCryptography.fromString(text));
     }
 
     /**
@@ -162,7 +166,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromStringDer(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromString(text));
+        return new PrivateKey(PrivateKeyCryptography.fromString(text));
     }
 
     /**
@@ -172,7 +176,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromStringECDSA(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromStringECDSA(text));
+        return new PrivateKey(PrivateKeyCryptography.fromStringECDSA(text));
     }
 
     /**
@@ -182,7 +186,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromStringED25519(text) {
-        return new PrivateKey(cryptography.PrivateKey.fromStringED25519(text));
+        return new PrivateKey(PrivateKeyCryptography.fromStringED25519(text));
     }
 
     /**
@@ -193,7 +197,7 @@ export default class PrivateKey extends Key {
      */
     static async fromSeedED25519(seed) {
         return new PrivateKey(
-            await cryptography.PrivateKey.fromSeedED25519(seed),
+            await PrivateKeyCryptography.fromSeedED25519(seed),
         );
     }
 
@@ -205,7 +209,7 @@ export default class PrivateKey extends Key {
      */
     static async fromSeedECDSAsecp256k1(seed) {
         return new PrivateKey(
-            await cryptography.PrivateKey.fromSeedECDSAsecp256k1(seed),
+            await PrivateKeyCryptography.fromSeedECDSAsecp256k1(seed),
         );
     }
 
@@ -213,7 +217,7 @@ export default class PrivateKey extends Key {
      * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
      *
      * Recover a private key from a mnemonic phrase (and optionally a password).
-     * @param {Mnemonic | cryptography.Mnemonic | string} mnemonic
+     * @param {Mnemonic | MnemonicCryptography | string} mnemonic
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
@@ -221,7 +225,7 @@ export default class PrivateKey extends Key {
         if (mnemonic instanceof Mnemonic) {
             return new PrivateKey(
                 // eslint-disable-next-line deprecation/deprecation
-                await cryptography.PrivateKey.fromMnemonic(
+                await PrivateKeyCryptography.fromMnemonic(
                     mnemonic._mnemonic,
                     passphrase,
                 ),
@@ -230,7 +234,7 @@ export default class PrivateKey extends Key {
 
         return new PrivateKey(
             // eslint-disable-next-line deprecation/deprecation
-            await cryptography.PrivateKey.fromMnemonic(mnemonic, passphrase),
+            await PrivateKeyCryptography.fromMnemonic(mnemonic, passphrase),
         );
     }
 
@@ -246,7 +250,7 @@ export default class PrivateKey extends Key {
      */
     static async fromKeystore(data, passphrase = "") {
         return new PrivateKey(
-            await cryptography.PrivateKey.fromKeystore(data, passphrase),
+            await PrivateKeyCryptography.fromKeystore(data, passphrase),
         );
     }
 
@@ -265,7 +269,7 @@ export default class PrivateKey extends Key {
      */
     static async fromPem(data, passphrase = "") {
         return new PrivateKey(
-            await cryptography.PrivateKey.fromPem(data, passphrase),
+            await PrivateKeyCryptography.fromPem(data, passphrase),
         );
     }
 

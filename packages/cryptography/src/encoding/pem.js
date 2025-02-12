@@ -5,10 +5,8 @@ import * as base64 from "./base64.js";
 import Ed25519PrivateKey from "../Ed25519PrivateKey.js";
 import EcdsaPrivateKey from "../EcdsaPrivateKey.js";
 import * as asn1 from "asn1js";
-import forge from "node-forge";
 import * as hex from "./hex.js";
 import * as aes from "../primitive/aes.js";
-import { Buffer } from "buffer";
 
 const ID_ED25519 = "1.3.101.112";
 
@@ -81,20 +79,40 @@ export async function readPemECDSA(pem, passphrase) {
     const key = base64.decode(pemKeyData);
 
     if (passphrase) {
-        const decodedPem = forge.pem.decode(pem)[0];
-        /** @type {string} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        const ivString = decodedPem.dekInfo.parameters;
-        const iv = hex.decode(ivString);
+        // Parse PEM headers to get encryption info
         const pemLines = pem.split("\n");
-        const key = await aes.messageDigest(passphrase, ivString);
-        const dataToDecrypt = Buffer.from(
-            pemLines.slice(4, pemLines.length - 1).join(""),
-            "base64",
+        const dekInfoLine = pemLines.find((line) =>
+            line.startsWith("DEK-Info:"),
         );
+
+        if (!dekInfoLine) {
+            throw new Error("Missing DEK-Info in encrypted PEM");
+        }
+
+        // Parse DEK-Info header (format: "DEK-Info: AES-128-CBC,{hex-iv}")
+        const [algorithm, ivString] = dekInfoLine
+            .substring(9)
+            .trim()
+            .split(",");
+
+        if (algorithm !== "AES-128-CBC") {
+            throw new Error(`Unsupported encryption algorithm: ${algorithm}`);
+        }
+
+        const iv = hex.decode(ivString);
+        const derivedKey = await aes.messageDigest(passphrase, ivString);
+
+        // Get encrypted data (skip header lines and empty lines)
+        const encryptedData = pemLines
+            .slice(4, pemLines.length - 1)
+            .filter((line) => line && !line.includes(":"))
+            .join("");
+
+        const dataToDecrypt = base64.decode(encryptedData);
+
         const keyDerBytes = await aes.createDecipheriv(
             aes.CipherAlgorithm.Aes128Cbc,
-            key,
+            derivedKey,
             iv,
             dataToDecrypt,
         );
