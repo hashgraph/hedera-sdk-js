@@ -20,6 +20,12 @@
 
 import BigNumber from "bignumber.js";
 
+/**
+ * Represents a unit of HBAR currency measurement in the Hedera network.
+ * Defines the various denominations of HBAR (tinybar, microbar, millibar, hbar, kilobar, megabar, gigabar)
+ * and provides utilities for converting between these units. Each unit has a name, symbol, and conversion
+ * rate to tinybar (the smallest unit of HBAR).
+ */
 export default class HbarUnit {
     /**
      * @internal

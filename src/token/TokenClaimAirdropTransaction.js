@@ -39,6 +39,11 @@ import Transaction, {
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
+/**
+ * A transaction that allows an account to claim tokens from a pending airdrop.
+ * This transaction is used to finalize the receipt of tokens that were distributed
+ * through an airdrop mechanism but require explicit claiming by the recipient.
+ */
 export default class TokenClaimAirdropTransaction extends AirdropPendingTransaction {
     /**
      * @param {object} props

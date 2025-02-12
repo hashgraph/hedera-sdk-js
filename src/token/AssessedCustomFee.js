@@ -35,6 +35,11 @@ import Long from "long";
  * @property {string[]} payerAccountIds
  */
 
+/**
+ * Represents an assessed custom fee that has been evaluated and attached to a transaction.
+ * This includes details about who collects the fee, which token the fee is paid in,
+ * the amount of the fee, and which accounts are responsible for paying it.
+ */
 export default class AssessedCustomFee {
     /**
      * @param {object} props

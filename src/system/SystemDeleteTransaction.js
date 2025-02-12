@@ -43,6 +43,9 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Delete a file or contract bytecode as an administrative transaction.
+ */
 export default class SystemDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]

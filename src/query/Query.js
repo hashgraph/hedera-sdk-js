@@ -278,35 +278,32 @@ export default class Query extends Executable {
         this._operator =
             this._operator != null ? this._operator : client._operator;
 
-        // If the payment transaction ID is not set
-        if (this._paymentTransactionId == null) {
-            // And payment is required
-            if (this._isPaymentRequired()) {
-                // Assign the account IDs to which the transaction should be sent.
-                this.transactionNodeIds = Object.values(client.network).map(
-                    (accountNodeId) => accountNodeId.toString(),
-                );
+        // And payment is required
+        if (this._isPaymentRequired()) {
+            // Assign the account IDs to which the transaction should be sent.
+            this.transactionNodeIds = Object.values(client.network).map(
+                (accountNodeId) => accountNodeId.toString(),
+            );
 
-                // And the client has an operator
-                if (this._operator != null) {
-                    // Generate the payment transaction ID
-                    this._paymentTransactionId = TransactionId.generate(
-                        this._operator.accountId,
-                    );
-                } else {
-                    // If payment is required, but an operator did not exist, throw an error
-                    throw new Error(
-                        "`client` must have an `operator` or an explicit payment transaction must be provided",
-                    );
-                }
-            } else {
-                // If the payment transaction ID is not set, but this query doesn't require a payment
-                // set the payment transaction ID to an empty transaction ID.
-                // FIXME: Should use `TransactionId.withValidStart()` instead
+            // And the client has an operator
+            if (this._operator != null) {
+                // Generate the payment transaction ID
                 this._paymentTransactionId = TransactionId.generate(
-                    new AccountId(0),
+                    this._operator.accountId,
+                );
+            } else {
+                // If payment is required, but an operator did not exist, throw an error
+                throw new Error(
+                    "`client` must have an `operator` or an explicit payment transaction must be provided",
                 );
             }
+        } else {
+            // If the payment transaction ID is not set, but this query doesn't require a payment
+            // set the payment transaction ID to an empty transaction ID.
+            // FIXME: Should use `TransactionId.withValidStart()` instead
+            this._paymentTransactionId = TransactionId.generate(
+                new AccountId(0),
+            );
         }
 
         let cost = new Hbar(0);

@@ -53,7 +53,9 @@
  */
 
 /**
- * This variable is strictly designed to prevent cyclic dependencies.
+ * Cache class is designed to prevent cyclic dependencies in the Hedera JavaScript SDK.
+ * It stores various conversion functions and configuration values that are used across
+ * different parts of the SDK.
  */
 class Cache {
     constructor() {
@@ -446,6 +448,9 @@ class Cache {
     }
 }
 
+/**
+ * This variable is strictly designed to prevent cyclic dependencies.
+ */
 const CACHE = new Cache();
 
 export default CACHE;

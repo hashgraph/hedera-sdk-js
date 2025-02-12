@@ -22,6 +22,22 @@ import * as HashgraphProto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents.js";
 import FeeDataType from "./FeeDataType.js";
 
+/**
+ * A total fee, in component amounts charged for a transaction.
+ *
+ * Total fees are composed of three sets of components.
+ * - Node data, components that compensate the specific node that submitted
+ *   the transaction.
+ * - Network data, components that compensate the Hedera network for gossiping
+ *   the transaction and determining the consensus timestamp.
+ * - Service data, components that compensate the Hedera network for the ongoing
+ *   maintenance and operation of the network, as well as ongoing development
+ *   of network services.
+ *
+ * Fee components are recorded in thousandths of a tiny cent, and the network
+ * exchange rate converts these to tinybar amounts, which are what the network
+ * charges for transactions and what the network reports in the record stream.
+ */
 export default class FeeData {
     /**
      * @param {object} [props]

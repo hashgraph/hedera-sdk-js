@@ -24,6 +24,14 @@ import AccountId from "../account/AccountId.js";
 import List from "./List.js";
 
 /**
+ * Represents a mapping of account IDs to their corresponding signatures for transactions.
+ *
+ * The `SignatureMap` class is used to manage and store signatures associated with
+ * different accounts in a transaction. It allows for adding signatures, retrieving
+ * them, and converting the signature map to and from various formats.
+ */
+
+/**
  * @augments {ObjectMap<AccountId, NodeAccountIdSignatureMap>}
  */
 export default class SignatureMap extends ObjectMap {

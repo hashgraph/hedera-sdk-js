@@ -36,6 +36,10 @@ import Hbar from "../Hbar.js";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
+/**
+ * Represents an HBAR allowance granted to a spender account by an owner account.
+ * This class manages the permissions for one account to spend HBAR on behalf of another account.
+ */
 export default class HbarAllowance {
     /**
      * @internal

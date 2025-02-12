@@ -43,6 +43,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @augments {Query<FileInfo>}
+ * Retrieve the metadata for a file in HFS.<br/>
+ * Note that this query does not retrieve the file _content_.
  */
 export default class FileInfoQuery extends Query {
     /**

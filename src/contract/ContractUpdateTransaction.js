@@ -48,6 +48,14 @@ import Long from "long";
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
+/**
+ * Modify a smart contract.<br/>
+ * Any change other than updating the expiration time requires that the
+ * contract be modifiable (has a valid `adminKey`) and that the
+ * transaction be signed by the `adminKey`
+ * <p>
+ * Fields _not set_ on the request SHALL NOT be modified.
+ */
 export default class ContractUpdateTransaction extends Transaction {
     /**
      * @param {object} props
