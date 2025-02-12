@@ -19,7 +19,7 @@ test("can execute @hashgraph/cryptography within browser", async function ({
                     function (a, b) {
                         return a + (b.nodeType === 3 ? b.textContent : "");
                     },
-                    ""
+                    "",
                 ),
                 error: error != null ? error.innerText.trim() : null,
             };
@@ -28,6 +28,8 @@ test("can execute @hashgraph/cryptography within browser", async function ({
 
     expect(tests.length).toBeGreaterThan(0);
     for (const t of tests) {
+        console.log(t.name);
+        console.log(t.error);
         expect(t.error).toBeNull();
     }
 });

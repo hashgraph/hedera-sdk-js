@@ -30,7 +30,7 @@ describe("TopicMessage", function () {
         ).getReceipt(env.client);
 
         // wait for mirror node to see new topic id
-        await setTimeout(2500);
+        await setTimeout(10000);
 
         new TopicMessageQuery()
             .setTopicId(topicId)
