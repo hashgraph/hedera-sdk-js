@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v2.59.0-beta.1
 
 * chore: Update protobufs to v0.59.0 by @venilinvasilev in https://github.com/hiero-ledger/hiero-sdk-js/pull/2845 ( Deprecated LiveHashAddTransaction, LiveHashDeleteTransaction, LiveHashQuery, SystemDeleteTransaction, SystemUndeleteTransaction)
+
 ## v2.58.0
 
 * feat: account create transaction with key derived alias by @venilinvasilev in https://github.com/hiero-ledger/hiero-sdk-js/pull/2834
