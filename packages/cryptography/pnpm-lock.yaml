@@ -136,8 +136,8 @@ importers:
         specifier: ^49.0.16
         version: 49.0.21(@babel/core@7.23.3)
       expo-crypto:
-        specifier: ^12.0.0
-        version: 12.6.0(expo@49.0.21(@babel/core@7.23.3))
+        specifier: ^14.0.2
+        version: 14.0.2(expo@49.0.21(@babel/core@7.23.3))
       expo-random:
         specifier: ^13.0.0
         version: 13.4.0(expo@49.0.21(@babel/core@7.23.3))
@@ -2536,8 +2536,8 @@ packages:
     peerDependencies:
       expo: '*'
 
-  expo-crypto@12.6.0:
-    resolution: {integrity: sha512-wSq64eIJxk4lQBidtcW9wNF5AgO/UvV8W8mDhb7bo6P3xH41yvu/P4FcxevQY1taGA8VHD+fO+xQDrhPiHzFqQ==}
+  expo-crypto@14.0.2:
+    resolution: {integrity: sha512-WRc9PBpJraJN29VD5Ef7nCecxJmZNyRKcGkNiDQC1nhY5agppzwhqh7zEzNFarE/GqDgSiaDHS8yd5EgFhP9AQ==}
     peerDependencies:
       expo: '*'
 
@@ -7764,7 +7764,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  expo-crypto@12.6.0(expo@49.0.21(@babel/core@7.23.3)):
+  expo-crypto@14.0.2(expo@49.0.21(@babel/core@7.23.3)):
     dependencies:
       base64-js: 1.5.1
       expo: 49.0.21(@babel/core@7.23.3)
