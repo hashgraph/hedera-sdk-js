@@ -24,11 +24,11 @@ importers:
         specifier: ^1.12.6
         version: 1.12.6
       '@hashgraph/cryptography':
-        specifier: file:.yalc/@hashgraph/cryptography
-        version: file:.yalc/@hashgraph/cryptography(expo@49.0.23(@babel/core@7.26.0))
+        specifier: 1.4.8-beta.15
+        version: 1.4.8-beta.15(expo@49.0.23(@babel/core@7.26.0))
       '@hashgraph/proto':
-        specifier: file:.yalc/@hashgraph/proto
-        version: file:.yalc/@hashgraph/proto
+        specifier: 2.16.0-beta.8
+        version: 2.16.0-beta.8
       axios:
         specifier: ^1.6.4
         version: 1.7.7
@@ -1253,8 +1253,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  '@hashgraph/cryptography@file:.yalc/@hashgraph/cryptography':
-    resolution: {directory: .yalc/@hashgraph/cryptography, type: directory}
+  '@hashgraph/cryptography@1.4.8-beta.15':
+    resolution: {integrity: sha512-xTn+Ef29MYjnC5EA4EH8cxaM3Sksqs7AyeDDCospEcbeHKM4mBPLTlTfBFMaYKRrV2AG/puJUe5j9r/9r4U7cQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^49.0.16
@@ -1268,8 +1268,8 @@ packages:
       expo-random:
         optional: true
 
-  '@hashgraph/proto@file:.yalc/@hashgraph/proto':
-    resolution: {directory: .yalc/@hashgraph/proto, type: directory}
+  '@hashgraph/proto@2.16.0-beta.8':
+    resolution: {integrity: sha512-FdIielUr6n1fzC/0IlcZDx1CR7jyWwcn2JPms/hwLiNG1Tr0pK7BOJQEToDNGWU4EFcz6TDD+tjZdbUsssvJ0Q==}
     engines: {node: '>=10.0.0'}
 
   '@humanwhocodes/config-array@0.13.0':
@@ -6735,7 +6735,7 @@ snapshots:
       protobufjs: 7.2.5
       yargs: 17.7.2
 
-  '@hashgraph/cryptography@file:.yalc/@hashgraph/cryptography(expo@49.0.23(@babel/core@7.26.0))':
+  '@hashgraph/cryptography@1.4.8-beta.15(expo@49.0.23(@babel/core@7.26.0))':
     dependencies:
       asn1js: 3.0.5
       bignumber.js: 9.1.2
@@ -6751,7 +6751,7 @@ snapshots:
     optionalDependencies:
       expo: 49.0.23(@babel/core@7.26.0)
 
-  '@hashgraph/proto@file:.yalc/@hashgraph/proto':
+  '@hashgraph/proto@2.16.0-beta.8':
     dependencies:
       long: 5.2.3
       protobufjs: 7.2.5
