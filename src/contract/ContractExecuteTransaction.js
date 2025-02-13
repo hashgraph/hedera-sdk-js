@@ -53,6 +53,16 @@ import Long from "long";
  * @property {ContractFunctionParameters} parameters
  */
 
+/**
+ * Call a function of a given smart contract, providing function parameter
+ * inputs as needed.
+ * <p>
+ * Resource ("gas") charges SHALL include all relevant fees incurred by
+ * the contract execution, including any storage required.<br/>
+ * The total transaction fee SHALL incorporate all of the "gas" actually
+ * consumed as well as the standard fees for transaction handling,
+ * data transfers, signature verification, etc...
+ */
 export default class ContractExecuteTransaction extends Transaction {
     /**
      * @param {object} [props]

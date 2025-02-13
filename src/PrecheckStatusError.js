@@ -37,6 +37,17 @@ import StatusError from "./StatusError.js";
  * @property {?ContractFunctionResult} contractFunctionResult
  */
 
+/**
+ * Represents an error that occurs during the pre-check phase of a transaction
+ * on the Hedera network. The `PrecheckStatusError` class extends the base
+ * `StatusError` class and provides additional context specific to pre-check
+ * failures, such as the transaction ID, status, and any associated messages.
+ *
+ * This error is typically thrown when a transaction fails to meet the necessary
+ * conditions before being processed, allowing developers to handle such errors
+ * gracefully in their applications. The error includes details about the failure,
+ * making it easier to diagnose issues related to transaction submissions.
+ */
 export default class PrecheckStatusError extends StatusError {
     /**
      * @param {object} props

@@ -63,6 +63,10 @@ import { convertToNumber } from "../util.js";
  */
 
 /**
+ * The `Client` class is the main entry point for interacting with the Hedera Hashgraph network.
+ * It provides methods for managing network connections, setting operators, handling transactions
+ * and queries, and configuring various client settings.
+ *
  * @abstract
  * @template {Channel} ChannelT
  * @template {MirrorChannel} MirrorChannelT

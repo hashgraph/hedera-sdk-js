@@ -35,6 +35,9 @@ import Long from "long";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
+/**
+ * The token that the allowance pertains to.
+ */
 export default class TokenNftAllowance {
     /**
      * @internal
@@ -48,8 +51,6 @@ export default class TokenNftAllowance {
      */
     constructor(props) {
         /**
-         * The token that the allowance pertains to.
-         *
          * @readonly
          */
         this.tokenId = props.tokenId;

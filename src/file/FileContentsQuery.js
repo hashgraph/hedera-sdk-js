@@ -40,6 +40,9 @@ import FileId from "./FileId.js";
 
 /**
  * @augments {Query<Uint8Array>}
+ * Retrieve the content of a file in HFS.<br/>
+ * Note that this query retrieves _only_ the file content, not any of
+ * the metadata for the file.
  */
 export default class FileContentsQuery extends Query {
     /**

@@ -29,6 +29,13 @@ import Cache from "./Cache.js";
 const MAX_NS = Long.fromNumber(1000000000);
 const generatedIds = new Set();
 
+/**
+ * Represents a point in time with seconds and nanoseconds precision.
+ *
+ * The `Timestamp` class provides methods for creating, manipulating, and converting
+ * timestamps. It supports operations such as addition of nanoseconds, conversion to
+ * JavaScript Date objects, and generation of timestamps based on the current time.
+ */
 export default class Timestamp {
     /**
      * @param {Long | number} seconds

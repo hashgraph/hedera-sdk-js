@@ -31,6 +31,10 @@ import { arrayEqual } from "./util.js";
  * @typedef {import("./client/Client.js").default<*, *>} Client
  */
 
+/**
+ *  Represents an Ethereum Virtual Machine (EVM) address.
+ * This class extends the Key class and provides functionality for handling EVM addresses.
+ */
 export default class EvmAddress extends Key {
     /**
      * @internal

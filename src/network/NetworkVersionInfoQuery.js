@@ -36,6 +36,13 @@ import NetworkVersionInfo from "./NetworkVersionInfo.js";
  */
 
 /**
+ *
+ * A query to retrieve version information about the Hedera network.
+ *
+ * This query returns information about the versions of both the Hedera Services software
+ * and the protobuf schema in use by the network. This information is useful for ensuring
+ * client-network compatibility and debugging version-related issues.
+ *
  * @augments {Query<NetworkVersionInfo>}
  */
 export default class NetworkVersionInfoQuery extends Query {

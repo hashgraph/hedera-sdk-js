@@ -46,6 +46,17 @@ import * as util from "../util.js";
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  */
 
+/**
+ * <p>
+ * Valid and authorized messages on valid topics will be ordered by the
+ * consensus service, published in the block stream, and available to all
+ * subscribers on this topic via the mirror nodes.<br/>
+ * If this transaction succeeds the resulting TransactionReceipt SHALL
+ * contain the latest topicSequenceNumber and topicRunningHash for the
+ * topic.<br/>
+ * If the topic has a `submitKey` then that key MUST sign this
+ * transaction.<br/>
+ */
 export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @param {object} props
@@ -80,12 +91,16 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         /**
          * @private
          * @type {number}
+         * The maximum number of chunks a topic message can be split into.
+         * Default max chunk size: 20
+         * This value can be overridden with `setMaxChunks`
          */
         this._maxChunks = 20;
 
         /**
          * @private
          * @type {number}
+         * The size of each chunk for a given topic message in bytes.
          */
         this._chunkSize = CHUNK_SIZE;
 
