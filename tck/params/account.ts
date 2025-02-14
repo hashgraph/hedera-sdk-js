@@ -38,3 +38,13 @@ export interface AccountAllowanceApproveParams {
     readonly allowances: AllowanceParams[];
     readonly commonTransactionParams?: Record<string, any>;
 }
+export interface DeleteAllowanceParams {
+    readonly allowances: RemoveAllowancesParams[];
+    readonly commonTransactionParams?: Record<string, any>;
+}
+
+export interface RemoveAllowancesParams {
+    readonly tokenId: string;
+    readonly ownerAccountId: string;
+    readonly serialNumbers?: string[];
+}

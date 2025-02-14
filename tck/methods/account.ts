@@ -6,6 +6,8 @@ import {
     AccountDeleteTransaction,
     Timestamp,
     AccountAllowanceApproveTransaction,
+    AccountAllowanceDeleteTransaction,
+    NftId,
     TokenId,
 } from "@hashgraph/sdk";
 import Long from "long";
@@ -21,6 +23,7 @@ import {
     AccountAllowanceApproveParams,
     CreateAccountParams,
     DeleteAccountParams,
+    DeleteAllowanceParams,
     UpdateAccountParams,
 } from "../params/account";
 import { applyCommonTransactionParams } from "../params/common-tx-params";
@@ -249,6 +252,44 @@ export const approveAllowance = async ({
     transaction.freezeWith(sdk.getClient());
 
     if (commonTransactionParams) {
+        applyCommonTransactionParams(
+            commonTransactionParams,
+            transaction,
+            sdk.getClient(),
+        );
+    }
+
+    const txResponse = await transaction.execute(sdk.getClient());
+    const receipt = await txResponse.getReceipt(sdk.getClient());
+
+    return {
+        status: receipt.status.toString(),
+    };
+};
+
+export const deleteAllowance = async ({
+    allowances,
+    commonTransactionParams,
+}: DeleteAllowanceParams): Promise<AccountResponse> => {
+    let transaction = new AccountAllowanceDeleteTransaction().setGrpcDeadline(
+        DEFAULT_GRPC_DEADLINE,
+    );
+
+    for (const allowance of allowances) {
+        const owner = AccountId.fromString(allowance.ownerAccountId);
+        const tokenId = AccountId.fromString(allowance.tokenId);
+
+        for (const serialNumber of allowance.serialNumbers) {
+            const nftId = new NftId(
+                new TokenId(tokenId),
+                Long.fromString(serialNumber),
+            );
+
+            transaction.deleteAllTokenNftAllowances(nftId, owner);
+        }
+    }
+
+    if (commonTransactionParams != null) {
         applyCommonTransactionParams(
             commonTransactionParams,
             transaction,
