@@ -19,6 +19,7 @@
  */
 
 import AccountId from "../account/AccountId.js";
+import CustomFixedFee from "../token/CustomFixedFee.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
@@ -50,8 +51,11 @@ export default class TopicCreateTransaction extends Transaction {
      * @param {object} props
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
+     * @param {Key} [props.feeScheduleKey]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
+     * @param {CustomFixedFee[]} [props.customFees]
+     * @param {Key[]} [props.feeExemptKeys]
      * @param {string} [props.topicMemo]
      */
     constructor(props = {}) {
@@ -71,6 +75,18 @@ export default class TopicCreateTransaction extends Transaction {
 
         /**
          * @private
+         * @type {?Key}
+         */
+        this._feeScheduleKey = null;
+
+        /**
+         * @private
+         * @type {Key[]}
+         */
+        this._feeExemptKeys = [];
+
+        /**
+         * @private
          * @type {?AccountId}
          */
         this._autoRenewAccountId = null;
@@ -80,6 +96,12 @@ export default class TopicCreateTransaction extends Transaction {
          * @type {Duration}
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
+
+        /**
+         * @private
+         * @type {CustomFixedFee[]}
+         */
+        this._customFees = [];
 
         /**
          * @private
@@ -95,12 +117,24 @@ export default class TopicCreateTransaction extends Transaction {
             this.setSubmitKey(props.submitKey);
         }
 
+        if (props.feeScheduleKey != null) {
+            this.setFeeScheduleKey(props.feeScheduleKey);
+        }
+
+        if (props.feeExemptKeys != null) {
+            this.setFeeExemptKeys(props.feeExemptKeys);
+        }
+
         if (props.autoRenewAccountId != null) {
             this.setAutoRenewAccountId(props.autoRenewAccountId);
         }
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        if (props.customFees != null) {
+            this.setCustomFees(props.customFees);
         }
 
         if (props.topicMemo != null) {
@@ -140,6 +174,16 @@ export default class TopicCreateTransaction extends Transaction {
                     create.submitKey != null
                         ? Key._fromProtobufKey(create.submitKey)
                         : undefined,
+                feeScheduleKey:
+                    create.feeScheduleKey != null
+                        ? Key._fromProtobufKey(create.feeScheduleKey)
+                        : undefined,
+                feeExemptKeys:
+                    create.feeExemptKeyList != null
+                        ? create.feeExemptKeyList.map((key) =>
+                              Key._fromProtobufKey(key),
+                          )
+                        : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
                         ? AccountId._fromProtobuf(create.autoRenewAccount)
@@ -149,6 +193,12 @@ export default class TopicCreateTransaction extends Transaction {
                         ? create.autoRenewPeriod.seconds != null
                             ? create.autoRenewPeriod.seconds
                             : undefined
+                        : undefined,
+                customFees:
+                    create.customFees != null
+                        ? create.customFees.map((customFee) =>
+                              CustomFixedFee._fromProtobuf(customFee),
+                          )
                         : undefined,
                 topicMemo: create.memo != null ? create.memo : undefined,
             }),
@@ -239,6 +289,71 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * Returns the key which allows updates to the new topic’s fees.
+     * @returns {?Key}
+     */
+    getFeeScheduleKey() {
+        return this._feeScheduleKey;
+    }
+
+    /**
+     * Sets the key which allows updates to the new topic’s fees.
+     * @param {Key} feeScheduleKey
+     * @returns {this}
+     */
+    setFeeScheduleKey(feeScheduleKey) {
+        this._requireNotFrozen();
+        this._feeScheduleKey = feeScheduleKey;
+
+        return this;
+    }
+
+    /**
+     * Returns the keys that will be exempt from paying fees.
+     * @returns {Key[]}
+     */
+    getFeeExemptKeys() {
+        return this._feeExemptKeys;
+    }
+
+    /**
+     * Sets the keys that will be exempt from paying fees.
+     * @param {Key[]} feeExemptKeys
+     * @returns {this}
+     */
+    setFeeExemptKeys(feeExemptKeys) {
+        this._requireNotFrozen();
+        this._feeExemptKeys = feeExemptKeys;
+
+        return this;
+    }
+
+    /**
+     * Adds a key that will be exempt from paying fees.
+     * @param {Key} key
+     * @returns {this}
+     */
+    addFeeExemptKey(key) {
+        this._requireNotFrozen();
+
+        this._feeExemptKeys.push(key);
+
+        return this;
+    }
+
+    /**
+     * Clears all keys that will be exempt from paying fees.
+     * @returns {this}
+     */
+    clearFeeExemptKeys() {
+        this._requireNotFrozen();
+
+        this._feeExemptKeys = [];
+
+        return this;
+    }
+
+    /**
      * @deprecated  - Use `getAutoRenewAccountId()` instead
      * @returns {?AccountId}
      */
@@ -299,6 +414,54 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * Returns the fixed fees to assess when a message is submitted to the new topic.
+     * @returns {CustomFixedFee[]}
+     */
+    getCustomFees() {
+        return this._customFees;
+    }
+
+    /**
+     * Sets the fixed fees to assess when a message is submitted to the new topic.
+     *
+     * @param {CustomFixedFee[]} customFees
+     * @returns {this}
+     */
+    setCustomFees(customFees) {
+        this._requireNotFrozen();
+        this._customFees = customFees;
+
+        return this;
+    }
+
+    /**
+     * Adds fixed fee to assess when a message is submitted to the new topic.
+     *
+     * @param {CustomFixedFee} customFee
+     * @returns {this}
+     */
+    addCustomFee(customFee) {
+        this._requireNotFrozen();
+
+        this._customFees.push(customFee);
+
+        return this;
+    }
+
+    /**
+     * Clears fixed fees.
+     *
+     * @returns {this}
+     */
+    clearCustomFees() {
+        this._requireNotFrozen();
+
+        this._customFees = [];
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -340,11 +503,21 @@ export default class TopicCreateTransaction extends Transaction {
                 this._submitKey != null
                     ? this._submitKey._toProtobufKey()
                     : null,
+            feeScheduleKey:
+                this._feeScheduleKey != null
+                    ? this._feeScheduleKey._toProtobufKey()
+                    : null,
+            feeExemptKeyList: this._feeExemptKeys.map((key) =>
+                key._toProtobufKey(),
+            ),
             autoRenewAccount:
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()
                     : null,
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+            customFees: this._customFees.map((customFee) =>
+                customFee._toTopicFeeProtobuf(),
+            ),
             memo: this._topicMemo,
         };
     }
