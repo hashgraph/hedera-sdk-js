@@ -8,5 +8,16 @@
                 "noInterop": true
             }
         ]
+    ],
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "modules": false, // This is crucial - don't transform to CommonJS
+                "targets": {
+                    "browsers": [">0.25%", "not ie 11", "not op_mini all"]
+                }
+            }
+        ]
     ]
 }

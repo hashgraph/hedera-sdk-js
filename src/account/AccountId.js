@@ -20,7 +20,7 @@
 
 import Long from "long";
 import * as entity_id from "../EntityIdHelper.js";
-import * as HashgraphProto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
@@ -136,7 +136,7 @@ export default class AccountId {
 
     /**
      * @internal
-     * @param {HashgraphProto.proto.IAccountID} id
+     * @param {proto.IAccountID} id
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
@@ -147,9 +147,7 @@ export default class AccountId {
             if (id.alias.length === 20) {
                 evmAddress = EvmAddress.fromBytes(id.alias);
             } else {
-                aliasKey = Key._fromProtobufKey(
-                    HashgraphProto.proto.Key.decode(id.alias),
-                );
+                aliasKey = Key._fromProtobufKey(proto.Key.decode(id.alias));
             }
         }
 
@@ -273,9 +271,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromBytes(bytes) {
-        return AccountId._fromProtobuf(
-            HashgraphProto.proto.AccountID.decode(bytes),
-        );
+        return AccountId._fromProtobuf(proto.AccountID.decode(bytes));
     }
 
     /**
@@ -315,16 +311,14 @@ export default class AccountId {
     //TODO remove the comments after we get to HIP-631
     /**
      * @internal
-     * @returns {HashgraphProto.proto.IAccountID}
+     * @returns {proto.IAccountID}
      */
     _toProtobuf() {
         let alias = null;
         //let evmAddress = null;
 
         if (this.aliasKey != null) {
-            alias = HashgraphProto.proto.Key.encode(
-                this.aliasKey._toProtobufKey(),
-            ).finish();
+            alias = proto.Key.encode(this.aliasKey._toProtobufKey()).finish();
         } else if (this.evmAddress != null) {
             alias = this.evmAddress._bytes;
         }
@@ -346,9 +340,7 @@ export default class AccountId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return HashgraphProto.proto.AccountID.encode(
-            this._toProtobuf(),
-        ).finish();
+        return proto.AccountID.encode(this._toProtobuf()).finish();
     }
 
     /**
