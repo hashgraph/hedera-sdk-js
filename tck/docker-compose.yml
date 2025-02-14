@@ -1,0 +1,18 @@
+services:
+    tck-server:
+        image: tck-js-server
+        build:
+            context: .
+        ports:
+            - "8544:8544"
+        networks:
+            - tck-network
+    tck-client:
+        image: ivaylogarnev/tck-client
+        depends_on:
+            - tck-server
+        networks:
+            - tck-network
+networks:
+    tck-network:
+        driver: bridge
