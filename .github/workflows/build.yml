@@ -163,7 +163,7 @@ jobs:
         run: ${{ env.CG_EXEC }} task test:unit:codecov
 
       - name: Upload Test Coverage Artifacts
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-test
           if-no-files-found: error
@@ -177,7 +177,7 @@ jobs:
 
       - name: Upload consensus port forward logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: consensus-port-forward-test-node-${{ matrix.node }}
           path: ${{ runner.temp }}/consensus-port-forward/
@@ -267,7 +267,7 @@ jobs:
         run: task test:integration:dual-mode:codecov -- --bail=1
 
       - name: Upload DAB Coverage Artifacts
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage-dab
           if-no-files-found: error
@@ -277,7 +277,7 @@ jobs:
 
       - name: Upload consensus port forward logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: consensus-port-forward-dab-tests-node-${{ matrix.node }}
           path: ${{ runner.temp }}/consensus-port-forward/
@@ -449,7 +449,7 @@ jobs:
 
       - name: Upload consensus port forward logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: consensus-port-forward-examples-node-${{ matrix.node }}
           path: ${{ runner.temp }}/consensus-port-forward/
@@ -558,7 +558,7 @@ jobs:
 
       - name: Upload the TCK server and port forward logs
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tck-compatibility-logs
           path: |
