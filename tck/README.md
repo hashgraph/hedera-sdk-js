@@ -40,7 +40,7 @@ Once started, your TCK server will be up and running! 🚦
 
 # Continuous integration
 
-Every pull request runs the TCK against the commit under test, as the `TCK Compatibility` job of the Build & Test workflow (`.github/workflows/build.yml`). The job starts after the required Build and Test jobs pass. It builds the SDK, starts this server with `npm run start`, prepares a Solo network and runs the [hiero-sdk-tck](https://github.com/hiero-ledger/hiero-sdk-tck) suite pinned to the commit in `TCK_REF`. The counts land in the job summary and the mochawesome report in the `tck-compatibility` artifact. To move to a newer TCK, change `TCK_REF`, diff the TCK's `js_compatibility.yml` between the two commits and mirror any change to its environment or Solo inputs.
+Every pull request runs the TCK against the commit under test, as the `TCK Compatibility` job of the Build & Test workflow (`.github/workflows/build.yml`). The job starts after the required Build and Test jobs pass. It builds the SDK, starts this server with `npm run start`, prepares a Solo network and runs the suite with the [hiero-sdk-tck](https://github.com/hiero-ledger/hiero-sdk-tck) GitHub Action, pinned to a commit in the `uses:` line. The action writes the counts to the job summary and uploads the mochawesome report as the `tck-compatibility` artifact. To move to a newer TCK, change the pinned commit, preferably to the commit of a TCK release tag, and read that release's notes for new tests.
 
 # Start All TCK Tests with Docker 🐳
 

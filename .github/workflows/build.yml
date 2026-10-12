@@ -475,12 +475,6 @@ jobs:
     timeout-minutes: 45
     env:
       NODE_VERSION: "22"
-      # hiero-sdk-tck main on 2026-10-08: v0.13.0 plus the ClientPing flake
-      # fix (hiero-sdk-tck#734). Bump deliberately; a new TCK test for a
-      # feature the SDK does not have yet would otherwise turn this job red.
-      # When bumping, diff the TCK's js_compatibility.yml between the two
-      # commits and mirror any change to its env block or Solo inputs below.
-      TCK_REF: d564ca2a9efae4d244de45d94117ded26038ff49
 
     steps:
       - name: Harden Runner
@@ -492,14 +486,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
-
-      - name: Checkout hiero-sdk-tck
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: hiero-ledger/hiero-sdk-tck
-          ref: ${{ env.TCK_REF }}
-          path: tck-client
-          persist-credentials: false
 
       - name: Install Task
         uses: arduino/setup-task@c0bc642852239c2689f73f4ea6459c29405f3c52 # v3.0.0
@@ -519,10 +505,6 @@ jobs:
 
       - name: Install dependencies and build SDK
         run: task build
-
-      - name: Install the TCK client
-        working-directory: tck-client
-        run: npm ci
 
       # The server resolves @hiero-ledger/sdk to this checkout (file:..), so
       # it serves the build from the step above.
@@ -553,71 +535,30 @@ jobs:
       - name: Connect the consensus node port directly
         run: node .github/scripts/forward-consensus-port.mjs
 
-      - name: Wait for the TCK server
-        run: |
-          for _ in $(seq 1 60); do
-            if curl --silent --output /dev/null http://127.0.0.1:8544/; then
-              exit 0
-            fi
-            if ! kill -0 "${{ steps.tck-server.outputs.pid }}" 2>/dev/null; then
-              echo "The TCK server exited:" >&2
-              cat "${RUNNER_TEMP}/tck-server.log" >&2
-              exit 1
-            fi
-            sleep 2
-          done
-          echo "The TCK server did not answer on 127.0.0.1:8544 within 120 s:" >&2
-          cat "${RUNNER_TEMP}/tck-server.log" >&2
-          exit 1
-
-      # The genesis operator and the ports match the Solo inputs above and the
-      # TCK repository's own js_compatibility.yml. A healthy run takes 7 min.
+      # The TCK's own action waits for the server, runs the suite, writes the
+      # counts to the job summary, uploads the mochawesome report and fails
+      # last. Its network defaults match the Solo inputs above (consensus
+      # 50211, mirror REST 5551, mirror gRPC 5600, REST Java 8084, genesis
+      # operator 0.0.2). The commit pins the suite and the action together, so
+      # bump it on purpose: a new TCK test for a feature the SDK does not have
+      # yet would otherwise turn this job red. Pinned to hiero-sdk-tck main
+      # after #749 (2026-10-12); move to the v0.14.0 commit once it is tagged.
       - name: Run the TCK
         timeout-minutes: 20
-        working-directory: tck-client
-        env:
-          OPERATOR_ACCOUNT_ID: "0.0.2"
-          OPERATOR_ACCOUNT_PRIVATE_KEY: "302e020100300506032b65700422042091132178e72057a1d7528025956fe39b0b847f200ab59b2fdd367017f3087137"
-          JSON_RPC_SERVER_URL: "http://127.0.0.1:8544"
-          NODE_IP: "127.0.0.1:50211"
-          NODE_ACCOUNT_ID: "0.0.3"
-          NODE_TIMEOUT: "30000"
-          MIRROR_NODE_REST_URL: "http://127.0.0.1:5551"
-          MIRROR_NODE_REST_JAVA_URL: "http://127.0.0.1:8084"
-          MIRROR_NETWORK: "127.0.0.1:5600"
-        run: npm run test
+        uses: hiero-ledger/hiero-sdk-tck@54748979053048cb33dac6d7ca942292c509d33b # main after #749
+        with:
+          artifact-name: tck-compatibility
 
-      # The job summary shows the counts without opening the log. It runs when
-      # the tests failed too, and says so when the suite never produced a
-      # report (a crash before the end leaves no mochawesome.json).
-      - name: Summarize the TCK results
-        if: always()
-        env:
-          SDK_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          node - <<'NODE' >> "${GITHUB_STEP_SUMMARY}"
-          const fs = require("node:fs");
-          console.log("### TCK Compatibility\n");
-          console.log(`SDK commit \`${process.env.SDK_SHA.slice(0, 8)}\`, hiero-sdk-tck \`${process.env.TCK_REF.slice(0, 8)}\`\n`);
-          let stats;
-          try {
-            stats = JSON.parse(fs.readFileSync("tck-client/mochawesome-report/mochawesome.json", "utf8")).stats;
-          } catch {
-            console.log("No report was produced: the suite did not run to completion. See the job log and the `tck-compatibility` artifact.");
-            process.exit(0);
-          }
-          console.log("| Total | Passed | Failed | Pending | Duration |");
-          console.log("|---:|---:|---:|---:|---:|");
-          console.log(`| ${stats.tests} | ${stats.passes} | ${stats.failures} | ${stats.pending} | ${(stats.duration / 60000).toFixed(1)} min |`);
-          NODE
+      - name: Show the TCK server log
+        if: failure()
+        run: cat "${RUNNER_TEMP}/tck-server.log" || true
 
-      - name: Upload TCK report and logs
-        if: always()
+      - name: Upload the TCK server and port forward logs
+        if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: tck-compatibility
+          name: tck-compatibility-logs
           path: |
-            tck-client/mochawesome-report/
             ${{ runner.temp }}/tck-server.log
             ${{ runner.temp }}/consensus-port-forward/
           if-no-files-found: ignore
