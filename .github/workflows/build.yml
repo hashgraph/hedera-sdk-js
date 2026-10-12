@@ -540,12 +540,12 @@ jobs:
       # last. Its network defaults match the Solo inputs above (consensus
       # 50211, mirror REST 5551, mirror gRPC 5600, REST Java 8084, genesis
       # operator 0.0.2). The commit pins the suite and the action together, so
-      # bump it on purpose: a new TCK test for a feature the SDK does not have
-      # yet would otherwise turn this job red. Pinned to hiero-sdk-tck main
-      # after #749 (2026-10-12); move to the v0.14.0 commit once it is tagged.
+      # bump it on purpose, with a TCK release: pin the full commit SHA of the
+      # release tag and name the tag in the comment. A new TCK test for a
+      # feature the SDK does not have yet would otherwise turn this job red.
       - name: Run the TCK
         timeout-minutes: 20
-        uses: hiero-ledger/hiero-sdk-tck@54748979053048cb33dac6d7ca942292c509d33b # main after #749
+        uses: hiero-ledger/hiero-sdk-tck@c9e7169888d86be4793cde5932ce57d9450a9761 # v0.14.0
         with:
           artifact-name: tck-compatibility
 
