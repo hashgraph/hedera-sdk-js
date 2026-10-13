@@ -153,7 +153,7 @@ async function main() {
          *     - To enhance the hollow account to have a public key the hollow account needs to be specified as a transaction fee payer in a HAPI transaction
          */
 
-        // set the accound id of the hollow account and its private key as an operator
+        // set the account ID of the hollow account and its private key as an operator
         // in order to be a transaction fee payer in a HAPI transaction
         client.setOperator(newAccountId, privateKey);
 

@@ -17,7 +17,7 @@ dotenv.config();
 async function main() {
     /* Source and context:https://github.com/hiero-ledger/hiero-sdk-js/issues/1333
 
-        In when we are submiting a message to a topic ID, if this message is large, the SDK is separating it on chunks:
+        In when we are submitting a message to a topic ID, if this message is large, the SDK is separating it on chunks:
             -   The default max chunks are set to 20
             -   If the message is too large, the user needs to set the default max chunks
             -   If the user uses the execute, and get receipt, the receipt is only returned on the first transaction
