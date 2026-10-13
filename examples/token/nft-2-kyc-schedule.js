@@ -211,7 +211,7 @@ async function main() {
             `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`,
         );
 
-        // QUERY TO CHECK INTIAL KYC KEY
+        // QUERY TO CHECK INITIAL KYC KEY
         tokenInfo = await tQueryFcn();
         console.log(
             `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()} \n`,

@@ -230,7 +230,7 @@ async function main() {
         //     `- Disabling token KYC for Alice's account: ${kycDisableRx.status.toString()} \n`
         // );
 
-        // QUERY TO CHECK INTIAL KYC KEY
+        // QUERY TO CHECK INITIAL KYC KEY
         tokenInfo = await tQueryFcn();
         console.log(
             `- KYC key for the NFT is: \n${tokenInfo.kycKey.toString()} \n`,
@@ -407,7 +407,7 @@ async function main() {
             `\nPART 3 ============================================================\n`,
         );
 
-        // PAUSE ALL TOKEN OEPRATIONS
+        // PAUSE ALL TOKEN OPERATIONS
         let tokenPauseTx = await new TokenPauseTransaction()
             .setTokenId(tokenId)
             .freezeWith(client)
@@ -436,7 +436,7 @@ async function main() {
             );
         }
 
-        // PAUSE ALL TOKEN OEPRATIONS
+        // PAUSE ALL TOKEN OPERATIONS
         let tokenUnpauseTx = await new TokenUnpauseTransaction()
             .setTokenId(tokenId)
             .freezeWith(client)

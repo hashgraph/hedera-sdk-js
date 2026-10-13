@@ -97,7 +97,7 @@ async function main() {
     response = await (await token.sign(adminKey)).execute(client);
 
     receipt = await response.getReceipt(client);
-    console.log("Token create transction status:", receipt.status.toString());
+    console.log("Token create transaction status:", receipt.status.toString());
 
     const tokenId = receipt.tokenId;
     console.log("Token id:", tokenId.toString());
