@@ -269,6 +269,7 @@ export default [
         output: {
             format: "umd",
             name: "sdk",
+            // No source map, see the dist/umd.js output above (#4476).
             sourcemap: false,
             file: "dist/umd.min.js",
         },
