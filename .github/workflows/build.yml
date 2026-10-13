@@ -61,6 +61,9 @@ jobs:
       - name: Build @hiero-ledger/sdk
         run: task -v build
 
+      - name: Check published package sizes
+        run: task -v size:check
+
   test:
     name: Test using Node ${{ matrix.node }}
     runs-on: hiero-client-sdk-linux-large
@@ -451,3 +454,121 @@ jobs:
           name: consensus-port-forward-examples-node-${{ matrix.node }}
           path: ${{ runner.temp }}/consensus-port-forward/
           if-no-files-found: ignore
+
+  tck:
+    # The job name is the status check context: "Build & Test / TCK
+    # Compatibility". It is meant to become a required check (repository
+    # ruleset 650010, next to "Test using Node 22"), so rename it only
+    # together with the ruleset.
+    name: TCK Compatibility
+    runs-on: hiero-client-sdk-linux-large
+    # Runs the hiero-sdk-tck conformance suite against this commit through the
+    # JSON-RPC server in tck/, which uses the local build (file:..). It starts
+    # only after the required jobs of this workflow (Build using Node 22 and
+    # 24, Test using Node 22) have passed, so a change that already fails a
+    # build or a test does not spend a Solo network and a large runner on it.
+    # The gate is limited to required jobs on purpose: a job skipped behind a
+    # failed prerequisite counts as passed for a required check, and the
+    # required prerequisite is what then blocks the merge.
+    needs:
+      - build
+      - test
+    # A healthy run takes about 15 min: build 1, Solo 5, tests 7
+    # (hiero-sdk-tck run 37763450768 on 9ace346d: 2189 passed, 233 pending).
+    timeout-minutes: 45
+    env:
+      NODE_VERSION: "22"
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Install Task
+        uses: arduino/setup-task@c0bc642852239c2689f73f4ea6459c29405f3c52 # v3.0.0
+        with:
+          version: 3.35.1
+
+      - name: Install PNPM
+        uses: step-security/action-setup@c9d80a280aaf584da8c913342a763a6de6452c7a # v6.0.10
+        with:
+          version: 9.15.5
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies and build SDK
+        run: task build
+
+      # The server resolves @hiero-ledger/sdk to this checkout (file:..), so
+      # it serves the build from the step above.
+      - name: Start the TCK server
+        id: tck-server
+        working-directory: tck
+        run: |
+          npm install
+          nohup npm run start > "${RUNNER_TEMP}/tck-server.log" 2>&1 &
+          echo "pid=$!" >> "${GITHUB_OUTPUT}"
+
+      - name: Prepare Hiero Solo
+        id: solo
+        uses: hiero-ledger/hiero-solo-action@531a2b283ca4912df537d64bf89da0f6be4c2574 # 0.22.0
+        with:
+          installMirrorNode: true
+          soloVersion: v0.91.0
+          nodeVersion: ${{ env.NODE_VERSION }}
+          hieroVersion: v0.73.0
+          mirrorNodeVersion: v0.153.0
+          haproxyPort: 50211
+          mirrorNodePortRest: 5551
+          grpcProxyPort: 8080
+
+      # Same reasoning as the test job: 50211 is connected straight to the
+      # node's NodePort instead of the kubectl port-forward and haproxy chain
+      # that stopped answering in the hung runs.
+      - name: Connect the consensus node port directly
+        run: node .github/scripts/forward-consensus-port.mjs
+
+      # The TCK's own action waits for the server, runs the suite, writes the
+      # counts to the job summary, uploads the mochawesome report and fails
+      # last. Its network defaults match the Solo inputs above (consensus
+      # 50211, mirror REST 5551, mirror gRPC 5600, REST Java 8084, genesis
+      # operator 0.0.2). The commit pins the suite and the action together, so
+      # bump it on purpose, with a TCK release: pin the full commit SHA of the
+      # release tag and name the tag in the comment. A new TCK test for a
+      # feature the SDK does not have yet would otherwise turn this job red.
+      - name: Run the TCK
+        timeout-minutes: 20
+        uses: hiero-ledger/hiero-sdk-tck@c9e7169888d86be4793cde5932ce57d9450a9761 # v0.14.0
+        with:
+          artifact-name: tck-compatibility
+
+      - name: Show the TCK server log
+        if: failure()
+        run: cat "${RUNNER_TEMP}/tck-server.log" || true
+
+      - name: Upload the TCK server and port forward logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tck-compatibility-logs
+          path: |
+            ${{ runner.temp }}/tck-server.log
+            ${{ runner.temp }}/consensus-port-forward/
+          if-no-files-found: ignore
+
+      - name: Stop the TCK server
+        if: always()
+        run: |
+          if [ -n "${{ steps.tck-server.outputs.pid }}" ]; then
+            kill "${{ steps.tck-server.outputs.pid }}" 2>/dev/null || true
+          fi
