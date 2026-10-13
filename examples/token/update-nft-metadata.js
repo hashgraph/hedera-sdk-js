@@ -67,7 +67,7 @@ async function main() {
         const tokenCreateTxReceipt =
             await tokenCreateTxResponse.getReceipt(client);
         console.log(
-            `Status of token create transction: ${tokenCreateTxReceipt.status.toString()}`,
+            `Status of token create transaction: ${tokenCreateTxReceipt.status.toString()}`,
         );
 
         // Get token id
@@ -91,7 +91,7 @@ async function main() {
         ).execute(client);
         const tokenMintTxReceipt = await tokenMintTxResponse.getReceipt(client);
         console.log(
-            `Status of token mint transction: ${tokenMintTxReceipt.status.toString()}`,
+            `Status of token mint transaction: ${tokenMintTxReceipt.status.toString()}`,
         );
 
         const nftSerial = tokenMintTxReceipt.serials[0];
@@ -159,7 +159,7 @@ async function main() {
         const tokenUpdateNftsTxReceipt =
             await tokenUpdateNftsTxResponse.getReceipt(client);
         console.log(
-            `Status of token update nfts transction: ${tokenUpdateNftsTxReceipt.status.toString()}`,
+            `Status of token update nfts transaction: ${tokenUpdateNftsTxReceipt.status.toString()}`,
         );
 
         // Get token nfts info in order to show the metadata on the NFT created

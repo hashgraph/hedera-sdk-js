@@ -41,7 +41,7 @@ async function main() {
     console.log(`public key = ${newKey.publicKey.toString()}`);
 
     try {
-        // Create an account and stake to an acount ID
+        // Create an account and stake to an account ID
         // In this case we're staking to account ID 3 which happens to be
         // the account ID of node 0, we're only doing this as an example.
         // If you really want to stake to node 0, you should use

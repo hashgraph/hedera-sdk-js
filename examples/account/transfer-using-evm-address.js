@@ -128,7 +128,7 @@ async function main() {
          * Use the hollow account as a transaction fee payer in a HAPI transaction
          */
 
-        // set the accound id of the hollow account and its private key as an operator
+        // set the account ID of the hollow account and its private key as an operator
         // in order to be a transaction fee payer in a HAPI transaction
         client.setOperator(newAccountId, privateKey);
 
