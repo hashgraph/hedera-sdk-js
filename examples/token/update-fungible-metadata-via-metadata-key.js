@@ -60,7 +60,7 @@ async function main() {
         const tokenCreateTxReceipt =
             await tokenCreateTxResponse.getReceipt(client);
         console.log(
-            `Status of token create transction: ${tokenCreateTxReceipt.status.toString()}`,
+            `Status of token create transaction: ${tokenCreateTxReceipt.status.toString()}`,
         );
 
         // Get token id
@@ -87,7 +87,7 @@ async function main() {
         const tokenUpdateTxReceipt =
             await tokenUpdateTxResponse.getReceipt(client);
         console.log(
-            `Status of token update transction: ${tokenUpdateTxReceipt.status.toString()}`,
+            `Status of token update transaction: ${tokenUpdateTxReceipt.status.toString()}`,
         );
 
         tokenInfo = await new TokenInfoQuery()
