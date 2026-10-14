@@ -27,8 +27,22 @@ export default class NftId {
      * @returns {NftId}
      */
     static fromString(text) {
-        const strings =
-            text.split("/").length > 1 ? text.split("/") : text.split("@");
+        const hasSlash = text.includes("/");
+        const hasAt = text.includes("@");
+
+        if (!hasSlash && !hasAt) {
+            throw new Error(
+                "invalid format for NftId: use [token]/[serial] or [token]@[serial]",
+            );
+        }
+
+        const strings = hasSlash ? text.split("/") : text.split("@");
+
+        if (strings.length !== 2) {
+            throw new Error(
+                "invalid format for NftId: use [token]/[serial] or [token]@[serial]",
+            );
+        }
 
         for (const string of strings) {
             if (string === "") {
@@ -36,6 +50,12 @@ export default class NftId {
                     "invalid format for NftId: use [token]/[serial] or [token]@[serial]",
                 );
             }
+        }
+
+        if (!/^\d+$/.test(strings[1])) {
+            throw new Error(
+                "invalid format for NftId: use [token]/[serial] or [token]@[serial]",
+            );
         }
 
         const token = TokenId.fromString(strings[0]);
