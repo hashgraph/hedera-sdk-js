@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   The workspace tests run on the `protobufjs` 8.6.6 the SDK ships instead of an 8.2.0 override. protobufjs 8.6.5 stopped writing default-valued implicit-presence scalars, so `toBytes()` of the same transaction or record is shorter than before (`shardNum` 0, `realmNum` 0, `scheduled` false and an empty memo are no longer encoded); pnpm installs of the SDK already produced these bytes, and both encodings decode to the same object. [#4458](https://github.com/hiero-ledger/hiero-sdk-js/issues/4458)
+-   The 305 `lib/**/*.js.map` source maps in the published `@hiero-ledger/sdk` package no longer embed the source of their module (`sourcesContent`). Every map already points at the matching file under `src/`, which ships in the package, so source map consumers such as bundler loaders and devtools still find the original source. The maps go from 3.1 MB to 0.7 MB. [#4518](https://github.com/hiero-ledger/hiero-sdk-js/issues/4518)
+
+### Removed
+
+-   The SDK and `@hiero-ledger/cryptography` no longer depend on `ansi-regex`, `ansi-styles`, `debug`, `strip-ansi` or `bn.js`, which neither package imports. Installing either package therefore no longer adds exact pins of these five packages to a consumer's dependency tree, where they could clash with the consumer's own versions, as `ansi-styles` 7.0.0 did against 6.2.3 in [#4401](https://github.com/hiero-ledger/hiero-sdk-js/issues/4401). The `bn.js` `resolutions` entry and workspace override and the `@types/bn.js` dev dependency are gone too. A `@hiero-ledger/cryptography` release is needed to drop them from the published package. [#4460](https://github.com/hiero-ledger/hiero-sdk-js/issues/4460)
 
 ### Fixed
 
