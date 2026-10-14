@@ -178,6 +178,8 @@ export default [
             dir: "lib/",
             format: "esm",
             sourcemap: true,
+            // Maps point at src/, which ships in the package (#4518).
+            sourcemapExcludeSources: true,
             preserveModules: true,
         },
     },
@@ -196,6 +198,8 @@ export default [
             dir: "lib/",
             format: "esm",
             sourcemap: true,
+            // Maps point at src/, which ships in the package (#4518).
+            sourcemapExcludeSources: true,
             preserveModules: true,
         },
     },
@@ -213,6 +217,8 @@ export default [
             dir: "lib/",
             format: "esm",
             sourcemap: true,
+            // Maps point at src/, which ships in the package (#4518).
+            sourcemapExcludeSources: true,
             preserveModules: true,
         },
     },
