@@ -25,5 +25,5 @@
         "noEmit": true
     },
     "include": ["*.js", "*.json", "*/*.js"],
-    "exclude": ["demo-umd"]
+    "exclude": ["demo-umd", "custom-grpc-web-proxies-network"]
 }
