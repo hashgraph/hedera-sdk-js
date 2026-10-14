@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   The workspace tests run on the `protobufjs` 8.6.6 the SDK ships instead of an 8.2.0 override. protobufjs 8.6.5 stopped writing default-valued implicit-presence scalars, so `toBytes()` of the same transaction or record is shorter than before (`shardNum` 0, `realmNum` 0, `scheduled` false and an empty memo are no longer encoded); pnpm installs of the SDK already produced these bytes, and both encodings decode to the same object. [#4458](https://github.com/hiero-ledger/hiero-sdk-js/issues/4458)
 
+### Removed
+
+-   The SDK and `@hiero-ledger/cryptography` no longer depend on `ansi-regex`, `ansi-styles`, `debug`, `strip-ansi` or `bn.js`, which neither package imports. Installing either package therefore no longer adds exact pins of these five packages to a consumer's dependency tree, where they could clash with the consumer's own versions, as `ansi-styles` 7.0.0 did against 6.2.3 in [#4401](https://github.com/hiero-ledger/hiero-sdk-js/issues/4401). The `bn.js` `resolutions` entry and workspace override and the `@types/bn.js` dev dependency are gone too. A `@hiero-ledger/cryptography` release is needed to drop them from the published package. [#4460](https://github.com/hiero-ledger/hiero-sdk-js/issues/4460)
+
 ### Fixed
 
 -   A node cloned by `Client.setTransportSecurity()` kept its minimum backoff as its maximum. `Client.setNodeMaxBackoff()` no longer raises a node's current backoff to the new maximum, so the first failure after the call is benched for twice the current backoff instead of the full maximum. `Client.setNodeMinBackoff()` now moves a resting node down to a lower minimum, so after `setNodeMinBackoff(1000)` a node's first failure benches it for 2 s instead of 16 s. Nodes added later by `Client.setNetwork()` or an address book update now receive the network's `nodeMaxBackoff` as well as `nodeMinBackoff`. [#4347](https://github.com/hiero-ledger/hiero-sdk-js/issues/4347) [#4404](https://github.com/hiero-ledger/hiero-sdk-js/pull/4404)
