@@ -94,7 +94,7 @@ describe("BatchTransaction", function () {
             );
         });
 
-        it("should throw an error if the inner transactions doesnt have batch key", async function () {
+        it("should throw an error if the inner transactions don't have batch key", async function () {
             const invalidTransaction = await new TransferTransaction()
                 .setTransactionId(transactionId)
                 .setNodeAccountIds([new AccountId(0, 0, 1)])

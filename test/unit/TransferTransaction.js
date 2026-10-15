@@ -22,7 +22,7 @@ describe("TransferTransaction", function () {
     const accountId4 = new AccountId(4, 4, 4);
     const timestamp1 = new Timestamp(4, 4);
 
-    it("should combine multiple same accountId tansfers into one transfer", function () {
+    it("should combine multiple same accountId transfers into one transfer", function () {
         const expectedHbar = 3;
         const accountId = "0.0.0";
 
