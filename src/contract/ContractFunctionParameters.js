@@ -9,9 +9,14 @@ import * as hex from "../encoding/hex.js";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import BigNumber from "bignumber.js";
 import * as util from "../util.js";
-import { AbiCoder, getBytes } from "ethers";
+import { AbiCoder } from "ethers";
 
-const defaultAbiCoder = AbiCoder.defaultAbiCoder();
+/**
+ * Created on first use, not at import time. ethers keeps the instance.
+ *
+ * @returns {AbiCoder}
+ */
+const defaultAbiCoder = () => AbiCoder.defaultAbiCoder();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import EvmAddress from "../EvmAddress.js";
@@ -1698,13 +1703,12 @@ function argumentToBytes(param, ty) {
                     paramToHex.slice(0, 1) + "0x" + paramToHex.slice(1);
             }
 
-            const encodedData = defaultAbiCoder.encode(
+            const encodedData = defaultAbiCoder().encode(
                 [solidityTypeToString(ty)],
                 [paramToHex],
             );
 
-            const dataToArrayify = getBytes(encodedData);
-            return dataToArrayify;
+            return hex.decode(encodedData);
         }
         case ArgumentType.address:
             value.set(/** @type {Uint8Array} */ (param), 32 - 20);

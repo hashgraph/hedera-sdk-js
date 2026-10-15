@@ -9,7 +9,12 @@ import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import { AbiCoder } from "ethers";
 
-const defaultAbiCoder = AbiCoder.defaultAbiCoder();
+/**
+ * Created on first use, not at import time. ethers keeps the instance.
+ *
+ * @returns {AbiCoder}
+ */
+const defaultAbiCoder = () => AbiCoder.defaultAbiCoder();
 import Long from "long";
 import ContractNonceInfo from "./ContractNonceInfo.js";
 
@@ -350,7 +355,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt40(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int40"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -373,7 +378,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt48(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int48"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -396,7 +401,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt56(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int56"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -419,7 +424,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt64(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int64"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -442,7 +447,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt72(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int72"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -465,7 +470,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt80(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int80"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -488,7 +493,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt88(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int88"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -511,7 +516,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt96(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int96"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -534,7 +539,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt104(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int104"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -557,7 +562,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt112(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int112"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -580,7 +585,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt120(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int120"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -603,7 +608,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt128(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int128"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -626,7 +631,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt136(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int136"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -649,7 +654,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt144(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int144"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -672,7 +677,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt152(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int152"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -695,7 +700,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt160(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int160"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -718,7 +723,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt168(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int168"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -741,7 +746,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt176(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int176"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -764,7 +769,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt184(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int184"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -787,7 +792,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt192(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int192"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -810,7 +815,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt200(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int200"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -833,7 +838,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt208(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int208"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -856,7 +861,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt216(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int216"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -879,7 +884,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt224(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int224"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -902,7 +907,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt232(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int232"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -925,7 +930,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt240(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int240"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -948,7 +953,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt248(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int248"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -971,7 +976,7 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt256(index) {
-        const result = defaultAbiCoder.decode(
+        const result = defaultAbiCoder().decode(
             ["int256"],
             this._getBytes32(index != null ? index : 0),
         );
@@ -1005,7 +1010,7 @@ export default class ContractFunctionResult {
      * @returns {Array<string | number | BigNumber>}
      */
     getResult(types) {
-        const decoded = defaultAbiCoder.decode(types, this.bytes);
+        const decoded = defaultAbiCoder().decode(types, this.bytes);
         /** @type {Array<string | number | BigNumber>} */
         const result = [];
         for (let i = 0; i < decoded.length; i++) {

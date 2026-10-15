@@ -97,6 +97,47 @@ describe("EntityIdHelper", function () {
         expect(result).to.eql(alias);
     });
 
+    describe("publicKeyToAlias hex parsing (#4528)", function () {
+        const alias = "ADYQKZW5EGPUZ63YPBMLTEE2I2ATDXAL";
+
+        it("accepts an evm address without the 0x prefix", function () {
+            expect(
+                EntityIdHelper.publicKeyToAlias(
+                    "00f10566dd219f4cfb787858b9909a468131dc0b",
+                ),
+            ).to.eql(alias);
+        });
+
+        it("accepts an upper case evm address", function () {
+            expect(
+                EntityIdHelper.publicKeyToAlias(
+                    "0x00F10566DD219F4CFB787858B9909A468131DC0B",
+                ),
+            ).to.eql(alias);
+        });
+
+        it("encodes a 40 character string that starts with 0x as 19 bytes", function () {
+            expect(
+                EntityIdHelper.publicKeyToAlias(
+                    "0x00f10566dd219f4cfb787858b9909a468131dc",
+                ),
+            ).to.eql("ADYQKZW5EGPUZ63YPBMLTEE2I2ATDXA");
+        });
+
+        it("throws for an evm address with non-hex characters", function () {
+            expect(() =>
+                EntityIdHelper.publicKeyToAlias(
+                    "0x00f10566dd219f4cfb787858b9909a468131dcZZ",
+                ),
+            ).to.throw(TypeError, /invalid BytesLike value/);
+            expect(() =>
+                EntityIdHelper.publicKeyToAlias(
+                    "00f10566dd219f4cfb787858b9909a468131dcgg",
+                ),
+            ).to.throw(TypeError, /invalid BytesLike value/);
+        });
+    });
+
     describe("fromEvmAddress", function () {
         it("keeps shard and realm Longs from another copy of the long package exact", function () {
             const shard = longFromOtherCopy("9007199254740993");

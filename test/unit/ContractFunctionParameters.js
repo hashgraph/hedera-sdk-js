@@ -582,4 +582,46 @@ describe("ContractFunctionParameters", function () {
         );
         expect(finished.length).to.be.equal(128);
     });
+    describe("ABI encoding of wide integers (#4528)", function () {
+        it("encodes int256 -1 as 32 bytes of 0xff", function () {
+            const built = new ContractFunctionParameters()
+                .addInt256(new BigNumber(-1))
+                ._build();
+            expect(hex.encode(built)).to.equal("ff".repeat(32));
+        });
+
+        it("encodes the largest uint256", function () {
+            const built = new ContractFunctionParameters()
+                .addUint256(new BigNumber(2).pow(256).minus(1))
+                ._build();
+            expect(hex.encode(built)).to.equal("ff".repeat(32));
+        });
+
+        it("encodes a negative int64 with sign extension", function () {
+            const built = new ContractFunctionParameters()
+                .addInt64(new BigNumber(-2))
+                ._build();
+            expect(hex.encode(built)).to.equal("ff".repeat(31) + "fe");
+        });
+
+        it("encodes a uint256 array", function () {
+            const built = new ContractFunctionParameters()
+                .addUint256Array([new BigNumber(1), new BigNumber(255)])
+                ._build();
+            expect(hex.encode(built)).to.equal(
+                "20".padStart(64, "0") +
+                    "2".padStart(64, "0") +
+                    "1".padStart(64, "0") +
+                    "ff".padStart(64, "0"),
+            );
+        });
+
+        it("throws when the value does not fit the type", function () {
+            expect(() =>
+                new ContractFunctionParameters().addUint256(
+                    new BigNumber(2).pow(256),
+                ),
+            ).to.throw();
+        });
+    });
 });

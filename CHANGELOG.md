@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Unreleased
+
+### Changed
+
+-   `PrivateKey.fromBytes()`, `EntityIdHelper.publicKeyToAlias()` and the `int`/`uint` encoding in `ContractFunctionParameters` now use the SDK's own hex helpers instead of `ethers`, and the `ethers` ABI coder is made on first use instead of when the SDK is imported. `ethers` stays a dependency and the public API does not change. [#4528](https://github.com/hiero-ledger/hiero-sdk-js/issues/4528)
+
 # v2.90.0
 
 ### Added

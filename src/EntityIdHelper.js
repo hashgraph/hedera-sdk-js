@@ -7,7 +7,6 @@ import * as util from "./util.js";
 import base32 from "./base32.js";
 import * as HieroProto from "@hiero-ledger/proto";
 import PublicKey from "./PublicKey.js";
-import { getBytes } from "ethers";
 import EvmAddress from "./EvmAddress.js";
 
 /**
@@ -500,6 +499,20 @@ function appendBuffer(buffer1, buffer2) {
     tmp.set(new Uint8Array(buffer1), 0);
     tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
     return tmp;
+}
+
+/**
+ * Same result as ethers `getBytes` for a string: only "0x" followed by
+ * whole bytes of hex is accepted, anything else throws a TypeError.
+ *
+ * @param {string} value
+ * @returns {Uint8Array}
+ */
+function getBytes(value) {
+    if (!/^0x(?:[0-9a-f][0-9a-f])*$/i.test(value)) {
+        throw new TypeError("invalid BytesLike value");
+    }
+    return hex.decode(value);
 }
 
 /**

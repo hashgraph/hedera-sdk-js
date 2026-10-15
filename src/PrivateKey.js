@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-import { hexlify } from "ethers";
 import { PrivateKey as PrivateKeyCrypto } from "@hiero-ledger/cryptography";
 import { proto } from "@hiero-ledger/proto";
 import Mnemonic from "./Mnemonic.js";
@@ -9,7 +8,7 @@ import CACHE from "./Cache.js";
 import SignatureMap from "./transaction/SignatureMap.js";
 import AccountId from "./account/AccountId.js";
 import TransactionId from "./transaction/TransactionId.js";
-import { decode } from "./encoding/hex.js";
+import { decode, encode } from "./encoding/hex.js";
 import { ASN1Decoder } from "./util/ASN1-Decoder.js";
 
 /**
@@ -100,7 +99,11 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytes(data) {
-        const keyString = hexlify(data);
+        // Same check and error as the ethers `hexlify` this replaced.
+        if (!(data instanceof Uint8Array)) {
+            throw new TypeError("invalid BytesLike value");
+        }
+        const keyString = `0x${encode(data)}`;
         if (PrivateKey.isDerKey(keyString)) {
             if (PrivateKey.getAlgorithm(keyString) === "ecdsa") {
                 return new PrivateKey(PrivateKeyCrypto.fromBytesECDSA(data));

@@ -253,6 +253,28 @@ describe("PrivateKey", function () {
             expect(key.toBytesDer()).to.deep.equal(derKey);
         });
 
+        it("should generate key from der bytes in a Uint8Array view with an offset", function () {
+            const derKey = PrivateKey.generateECDSA().toBytesDer();
+            const padded = new Uint8Array(derKey.length + 3);
+            padded.set(derKey, 3);
+            const key = PrivateKey.fromBytes(padded.subarray(3));
+            expect(key.toBytesDer()).to.deep.equal(derKey);
+        });
+
+        it("should throw a TypeError when fromBytes gets a value that is not a Uint8Array", function () {
+            const derKey = PrivateKey.generateECDSA().toBytesDer();
+            for (const value of [
+                Array.from(derKey),
+                derKey.buffer.slice(0),
+                {},
+            ]) {
+                expect(() =>
+                    // @ts-ignore
+                    PrivateKey.fromBytes(value),
+                ).to.throw(TypeError, /invalid BytesLike value/);
+            }
+        });
+
         it("should get ecdsa algorithm from der key", function () {
             const derKey = PrivateKey.generateECDSA().toStringDer();
             expect(PrivateKey.getAlgorithm(derKey)).to.equal("ecdsa");
