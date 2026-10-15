@@ -809,7 +809,9 @@ export default class Executable {
                 requestStartTime + this._requestTimeout <= Date.now()
             ) {
                 throw new MaxAttemptsOrTimeoutError(
-                    "timeout exceeded",
+                    persistentError != null
+                        ? `timeout exceeded with last error being: ${persistentError.toString()}`
+                        : "timeout exceeded",
                     this._nodeAccountIds.isEmpty
                         ? "No node account ID set"
                         : this._nodeAccountIds.current.toString(),
