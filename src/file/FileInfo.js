@@ -10,7 +10,7 @@ import * as HieroProto from "@hiero-ledger/proto";
 const { proto } = HieroProto;
 
 /**
- * Response when the client sends the node CryptoGetInfoQuery.
+ * Response when the client sends the node FileInfoQuery.
  */
 export default class FileInfo {
     /**
@@ -40,7 +40,7 @@ export default class FileInfo {
         this.size = props.size;
 
         /**
-         * The current time at which this account is set to expire.
+         * The current time at which this file is set to expire.
          *
          * @readonly
          */
