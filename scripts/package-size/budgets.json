@@ -7,8 +7,8 @@
     },
     {
         "dir": "packages/proto",
-        "maxFiles": 600,
-        "maxUnpackedMB": 25,
+        "maxFiles": 20,
+        "maxUnpackedMB": 15,
         "maxGrowthPercent": 25,
         "forbiddenPaths": ["src/services/"]
     },
