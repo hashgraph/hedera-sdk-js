@@ -3,6 +3,7 @@
 import {
     DEFAULT_CONSENSUS_NODE_VERSION,
     DEFAULT_MIRROR_NODE_VERSION,
+    DEFAULT_BLOCK_NODE_RELEASE_TAG,
     DEFAULT_NUM_NODES,
     DEFAULT_HBAR_AMOUNT,
     SOLO_CLUSTER_NAME,
@@ -49,7 +50,7 @@ function showHelp() {
         "  --local-build-path <path>            Path to local build (overrides consensus-node-version for node setup)",
     );
     console.log(
-        "  --block-node-release-tag <version>   Optional block node Helm chart version (maps to --chart-version)",
+        `  --block-node-release-tag <version>   Block node Helm chart version, maps to --chart-version (default: ${DEFAULT_BLOCK_NODE_RELEASE_TAG})`,
     );
     console.log(
         "  -h, --help                           Show this help message",
@@ -83,7 +84,8 @@ function parseArgs(argv) {
     let mirrorVersion = DEFAULT_MIRROR_NODE_VERSION;
     let mirrorNodeChartDir = "";
     let localBuildPath = "";
-    let blockNodeReleaseTag = process.env.BLOCK_NODE_RELEASE_TAG || "";
+    let blockNodeReleaseTag =
+        process.env.BLOCK_NODE_RELEASE_TAG || DEFAULT_BLOCK_NODE_RELEASE_TAG;
 
     for (let index = 0; index < argv.length; index += 1) {
         const argument = argv[index];
