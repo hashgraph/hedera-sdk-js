@@ -12,7 +12,7 @@
     "license": "ISC",
     "repository": "https://github.com/hiero-ledger/hiero-sdk-js",
     "dependencies": {
-        "@hiero-ledger/proto": "^2.30.0",
+        "@hiero-ledger/proto": "^2.32.0",
         "@hiero-ledger/sdk": "file:..",
         "ansi-regex": "6.2.2",
         "ansi-styles": "6.2.3",
@@ -22,6 +22,7 @@
         "json-rpc-2.0": "1.7.0",
         "long": "^5.3.1",
         "lossless-json": "1.0.5",
+        "protobufjs": "8.6.6",
         "strip-ansi": "7.1.2"
     },
     "devDependencies": {
