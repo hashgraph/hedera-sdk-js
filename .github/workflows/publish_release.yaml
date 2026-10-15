@@ -56,7 +56,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -254,7 +254,7 @@ jobs:
     runs-on: hiero-client-sdk-linux-medium
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -275,7 +275,7 @@ jobs:
           version: 10.17.0
 
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
 
@@ -301,7 +301,7 @@ jobs:
       sdk-publish-args: ${{ steps.sdk-publish-args.outputs.args }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -357,7 +357,7 @@ jobs:
       hiero-sdk-pkg-name: ${{ steps.set-package-names.outputs.hl-sdk-pkg-name || '' }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -378,7 +378,7 @@ jobs:
           version: 10.24.0
 
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: pnpm
@@ -415,7 +415,7 @@ jobs:
 
       - name: Upload HL Proto Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-proto-publish-required == 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hl-proto-package
           path: packages/proto/${{ steps.set-package-names.outputs.hl-proto-pkg-name }}
@@ -429,7 +429,7 @@ jobs:
 
       - name: Upload HL Crypto Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-crypto-publish-required == 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hl-crypto-package
           path: packages/cryptography/${{ steps.set-package-names.outputs.hl-crypto-pkg-name }}
@@ -442,7 +442,7 @@ jobs:
 
       - name: Upload HL SDK Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-sdk-publish-required == 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: hl-sdk-package
           path: ./${{ steps.set-package-names.outputs.hl-sdk-pkg-name }}
@@ -467,7 +467,7 @@ jobs:
       - validate-release
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -483,7 +483,7 @@ jobs:
           version: 3.35.1
 
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -494,7 +494,7 @@ jobs:
       # Publish proto artifact
       - name: Download HL Proto Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-proto-publish-required == 'true' }}
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: hl-proto-package
           path: packages/proto
@@ -508,7 +508,7 @@ jobs:
       # Publish cryptography artifact
       - name: Download HL Crypto Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-crypto-publish-required == 'true' }}
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: hl-crypto-package
           path: packages/cryptography
@@ -522,7 +522,7 @@ jobs:
       # Publish SDK artifact
       - name: Download HL SDK Package Artifact
         if: ${{ needs.validate-release.outputs.hiero-sdk-publish-required == 'true' }}
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: hl-sdk-package
 
