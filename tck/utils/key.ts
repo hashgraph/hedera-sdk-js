@@ -58,28 +58,20 @@ const getKeyFromKeyListHex = (keyString: string): KeyList => {
     try {
         const byteArray = Buffer.from(keyString, "hex");
 
-        let decodedKeyList: proto.KeyList;
-        let decodedThresholdKey: proto.ThresholdKey;
-
-        // Attempt to decode as KeyList
-        try {
-            decodedKeyList = proto.KeyList.decode(byteArray);
-        } catch (keyListError) {
-            // Expected that this may fail if it's not a KeyList
+        // Tell the two messages apart by their first tag: a KeyList starts with
+        // `keys` (field 1, length-delimited, 0x0a), a ThresholdKey with
+        // `threshold` (field 1, varint, 0x08) or `keys` (field 2) when it is 0.
+        // Decoding as a KeyList first does not fail on ThresholdKey bytes:
+        // newer protobufjs decoders skip the field and return an empty KeyList.
+        if (byteArray.length === 0 || byteArray[0] === 0x0a) {
+            return KeyList.__fromProtobufKeyList(
+                proto.KeyList.decode(byteArray),
+            );
         }
 
-        // Attempt to decode as ThresholdKey
-        try {
-            decodedThresholdKey = proto.ThresholdKey.decode(byteArray);
-        } catch (thresholdKeyError) {
-            // Expected that this may fail if it's not a ThresholdKey
-        }
-
-        try {
-            return KeyList.__fromProtobufKeyList(decodedKeyList);
-        } catch (error) {
-            return KeyList.__fromProtobufThresoldKey(decodedThresholdKey);
-        }
+        return KeyList.__fromProtobufThresoldKey(
+            proto.ThresholdKey.decode(byteArray),
+        );
     } catch (error) {
         throw new Error(error);
     }

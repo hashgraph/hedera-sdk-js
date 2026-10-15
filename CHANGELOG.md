@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   The published `@hiero-ledger/proto` package no longer contains `src/proto.d.ts` and `src/index.d.ts`, which are copies of the `lib/` type files that `types` points at, or the `src/proto/*.proto` sources, which nothing loads at runtime. The `files` field now lists only `lib/` and the `src/*.js` browser entry files, so the package goes from 15.4 MB and 194 files to 10.8 MB and 7 files unpacked, and its size budget is lowered to 15 MB and 20 files. Applies from `@hiero-ledger/proto` 2.32.1. [#4527](https://github.com/hiero-ledger/hiero-sdk-js/issues/4527)
 
+# v2.90.1
+
+### Fixed
+
+-   The TCK server in `tck/` no longer turns a ThresholdKey into an empty KeyList when it runs on `@hiero-ledger/proto` 2.32.0, which failed the 26 ThresholdKey tests of the consensus-node TCK regression panel. It now tells the two messages apart by their first field tag instead of decoding as a KeyList and falling back only on an error, which the 2.32.0 decoders no longer raise. The fix is in the TCK server only, and the published packages do not change. [#4524](https://github.com/hiero-ledger/hiero-sdk-js/issues/4524) [#4525](https://github.com/hiero-ledger/hiero-sdk-js/pull/4525)
+
+### Documentation
+
+-   The `FileInfo` JSDoc now names `FileInfoQuery` instead of `CryptoGetInfoQuery`, and `expirationTime` describes the file instead of an account. [#4509](https://github.com/hiero-ledger/hiero-sdk-js/issues/4509) [#4530](https://github.com/hiero-ledger/hiero-sdk-js/pull/4530)
+
 # v2.90.0
 
 ### Added
