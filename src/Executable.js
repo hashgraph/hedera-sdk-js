@@ -280,7 +280,7 @@ export default class Executable {
      *
      * @abstract
      * @protected
-     * @param {import("./client/Client.js").default<Channel, *>} client
+     * @param {import("./client/Client.js").default<Channel, MirrorChannel>} client
      * @returns {Promise<void>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
