@@ -400,7 +400,7 @@ export function _checksum(ledgerId, addr) {
     let s1 = 0; // Sum of odd positions (mod 11)
     let s = 0; // Weighted sum of all positions (mod p3)
     let sh = 0; // Hash of the ledger ID
-    let c = 0; // The checksum, as a single number
+    let c; // The checksum, as a single number
     const p3 = 26 * 26 * 26; // 3 digits in base 26
     const p5 = 26 * 26 * 26 * 26 * 26; // 5 digits in base 26
     const ascii_a = "a".charCodeAt(0); // 97
