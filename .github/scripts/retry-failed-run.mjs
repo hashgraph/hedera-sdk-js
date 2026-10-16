@@ -5,7 +5,8 @@
  * or step that hit its timeout-minutes, a Solo network that stopped answering
  * (tests and hooks timing out), a runner that was lost, a package registry or
  * connection error. Jobs that failed on a test assertion, a build or lint
- * error, or that a person cancelled are left alone.
+ * error, or that a person cancelled are left alone, and so is Solo
+ * Compatibility, whose Solo failures are what it reports.
  *
  * Besides the run that triggered it, the script judges every other completed
  * run of those workflows on the same commit: on a pull request the
@@ -92,6 +93,9 @@ const GENERIC_ANNOTATION =
 // stays red whatever else is re-run, so nothing is.
 const REQUIRED_JOB =
     /^(Build using Node|Test using Node|Integration Tests on Node|TCK Compatibility)\b/;
+// Solo Compatibility fails with a SoloError when this SDK breaks Solo, the
+// failure it exists to report, so it is never re-run.
+const NEVER_RETRY_JOB = /^Solo Compatibility$/;
 const COVERED_WORKFLOWS = [
     ".github/workflows/build.yml",
     ".github/workflows/common_js.yml",
@@ -311,10 +315,15 @@ async function failedJobs(repo, runId) {
             ["success", "skipped", "neutral"].includes(job.conclusion)
         )
             continue;
-        const verdict = classifyLog(
-            await jobLog(repo, job.id),
-            await jobAnnotations(repo, job.id),
-        );
+        const verdict = NEVER_RETRY_JOB.test(job.name)
+            ? {
+                  retry: false,
+                  reason: "Solo Compatibility failures are not re-run",
+              }
+            : classifyLog(
+                  await jobLog(repo, job.id),
+                  await jobAnnotations(repo, job.id),
+              );
         rows.push({
             id: job.id,
             name: job.name,

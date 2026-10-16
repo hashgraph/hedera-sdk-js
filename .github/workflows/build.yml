@@ -572,3 +572,157 @@ jobs:
           if [ -n "${{ steps.tck-server.outputs.pid }}" ]; then
             kill "${{ steps.tck-server.outputs.pid }}" 2>/dev/null || true
           fi
+
+  solo:
+    # The job name is the status check context: "Build & Test / Solo
+    # Compatibility". It is not a required check yet: make it one (repository
+    # ruleset 650010) after two weeks without false failures (#4535).
+    name: Solo Compatibility
+    runs-on: hiero-client-sdk-linux-large
+    # Solo uses this SDK for account creation, key updates and node operations,
+    # but the other Solo jobs here run Solo with its own pinned SDK. This job
+    # installs a pinned Solo release with this commit's SDK, proto and
+    # cryptography packages forced in through npm overrides, fails unless Solo
+    # resolves exactly that SDK, and then has Solo deploy a network and manage
+    # an account. Gated on the build like the TCK job, so a change that does
+    # not build does not spend a Solo network.
+    needs:
+      - build
+    timeout-minutes: 60
+    env:
+      NODE_VERSION: "22"
+      # Pinned together: bump them on purpose. Solo 0.93.0 deploys CN v0.77.2
+      # and mirror node v0.163.0 by default; the flags below pin them anyway.
+      SOLO_VERSION: "0.93.0"
+      CONSENSUS_NODE_VERSION: "v0.77.2"
+      MIRROR_NODE_VERSION: "v0.163.0"
+      SOLO_DEPLOYMENT: one-shot
+      NO_COLOR: "1"
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+
+      - name: Install Task
+        uses: arduino/setup-task@c0bc642852239c2689f73f4ea6459c29405f3c52 # v3.0.0
+        with:
+          version: 3.35.1
+
+      - name: Install PNPM
+        uses: step-security/action-setup@8beec6731697ff7a074963eaa56f6d8e02e1c399 # v6.1.0
+        with:
+          version: 9.15.5
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies and build SDK
+        run: task build
+
+      # pnpm pack turns the workspace:* dependencies into the versions in this
+      # checkout, so the SDK tarball asks for the proto and cryptography
+      # tarballs packed next to it, published or not. SOLO_HOME keeps Solo's
+      # tools, logs and diagnostics in one place for the artifact below.
+      - name: Pack the SDK
+        run: |
+          packs="${RUNNER_TEMP}/solo-compat/packs"
+          mkdir -p "${packs}" "${RUNNER_TEMP}/solo-compat/solo"
+          for dir in packages/proto packages/cryptography .; do
+            (cd "${dir}" && pnpm pack --pack-destination "${packs}")
+          done
+          ls -l "${packs}"
+          {
+            echo "SOLO_DIR=${RUNNER_TEMP}/solo-compat/solo"
+            echo "SOLO_HOME=${RUNNER_TEMP}/solo-compat/home"
+          } >> "${GITHUB_ENV}"
+          {
+            echo "${RUNNER_TEMP}/solo-compat/solo/node_modules/.bin"
+            echo "${RUNNER_TEMP}/solo-compat/home/bin"
+          } >> "${GITHUB_PATH}"
+
+      # Fails unless every copy of the SDK in Solo's tree is this commit's
+      # tarball and Solo's own require and import both resolve it. Writes the
+      # versions and the SDK identity to the job summary.
+      - name: Install Solo with this SDK
+        timeout-minutes: 10
+        run: node .github/scripts/solo-compat.mjs install "${RUNNER_TEMP}/solo-compat/packs"
+
+      # Creates the kind cluster and deploys a consensus node, a mirror node,
+      # the explorer and the relay. Consensus gRPC ends up on 127.0.0.1:35211
+      # and the mirror ingress on 127.0.0.1:38081. The runner is itself a
+      # Kubernetes pod, and without --namespace Solo takes the runner pod's
+      # namespace from the in-cluster context.
+      - name: Deploy the network with Solo
+        timeout-minutes: 30
+        run: |
+          solo one-shot single deploy --quiet-mode \
+            --namespace "${SOLO_DEPLOYMENT}" \
+            --consensus-node-version "${CONSENSUS_NODE_VERSION}" \
+            --mirror-node-version "${MIRROR_NODE_VERSION}"
+
+      - name: Create an account and update its key with Solo
+        timeout-minutes: 10
+        run: |
+          log="${RUNNER_TEMP}/solo-compat/account-create.log"
+          solo ledger account create --deployment "${SOLO_DEPLOYMENT}" --hbar-amount 100 | tee "${log}"
+          account_id=$(grep -m1 '"accountId"' "${log}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+          if [ -z "${account_id}" ]; then
+            echo "::error::no account ID in the solo ledger account create output"
+            exit 1
+          fi
+          key=$(node .github/scripts/solo-compat.mjs new-key)
+          solo ledger account update --deployment "${SOLO_DEPLOYMENT}" --account-id "${account_id}" --ed25519-private-key "${key}"
+          {
+            echo "ACCOUNT_ID=${account_id}"
+            echo "ACCOUNT_KEY=${key}"
+          } >> "${GITHUB_ENV}"
+
+      # As the account, with the new key: checks the key, submits a transfer
+      # and a topic message, checks the receipts and finds both on the mirror
+      # node.
+      - name: Use the network with this SDK
+        timeout-minutes: 10
+        run: node .github/scripts/solo-compat.mjs check-network
+
+      - name: Collect diagnostics
+        if: failure()
+        continue-on-error: true
+        run: |
+          kubectl get pods -A -o wide || true
+          kubectl get events -A --sort-by=.lastTimestamp | tail -100 || true
+          timeout 600 solo deployment diagnostics all --deployment "${SOLO_DEPLOYMENT}" --quiet-mode || true
+
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: solo-compatibility-diagnostics
+          path: |
+            ${{ runner.temp }}/solo-compat/home/logs/
+            ${{ runner.temp }}/solo-compat/account-create.log
+            ${{ runner.temp }}/solo-compat/solo/package.json
+            ${{ runner.temp }}/solo-compat/solo/package-lock.json
+          if-no-files-found: ignore
+
+      # Runs after partial deployments too. kind delete is the backstop for a
+      # destroy that fails; solo-cluster is the cluster the one-shot creates.
+      - name: Destroy the network
+        if: always()
+        timeout-minutes: 10
+        run: |
+          if command -v solo >/dev/null; then
+            solo one-shot single destroy --deployment "${SOLO_DEPLOYMENT}" --quiet-mode || echo "::warning::solo one-shot single destroy failed"
+          fi
+          if command -v kind >/dev/null; then
+            kind delete cluster --name solo-cluster || true
+          fi
