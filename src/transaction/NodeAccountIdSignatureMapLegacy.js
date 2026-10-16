@@ -15,7 +15,7 @@ export default class NodeAccountIdSignatureMap extends ObjectMap {
      * @returns {NodeAccountIdSignatureMap}
      */
     static _fromTransactionSigMap(sigMap) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         const signatures = new NodeAccountIdSignatureMap();
         const sigPairs = sigMap.sigPair != null ? sigMap.sigPair : [];
 

@@ -249,7 +249,7 @@ export default class PrivateKey extends Key {
                     ? CACHE.mnemonicFromString(mnemonic)
                     : mnemonic
             )
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 .toEd25519PrivateKey(passphrase)
         );
     }

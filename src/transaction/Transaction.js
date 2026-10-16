@@ -1409,7 +1409,7 @@ export default class Transaction extends Executable {
         this._transactionIds.setLocked();
         this._nodeAccountIds.setLocked();
         // Construct a signature map from this transaction
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return SignatureMapLegacy._fromTransaction(this);
     }
 

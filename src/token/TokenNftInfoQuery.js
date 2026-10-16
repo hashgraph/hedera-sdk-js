@@ -58,7 +58,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._accountId = null;
         if (properties.accountId != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setAccountId(properties.accountId);
         }
 
@@ -68,7 +68,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._tokenId = null;
         if (properties.tokenId != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setTokenId(properties.tokenId);
         }
 
@@ -78,7 +78,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._start = null;
         if (properties.start != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setStart(properties.start);
         }
 
@@ -88,7 +88,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._end = null;
         if (properties.end != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setEnd(properties.end);
         }
     }

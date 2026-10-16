@@ -165,7 +165,7 @@ export default class ContractCreateFlow {
      * @returns {?AccountId}
      */
     get proxyAccountId() {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return this._contractCreate.proxyAccountId;
     }
 
@@ -175,7 +175,7 @@ export default class ContractCreateFlow {
      * @returns {this}
      */
     setProxyAccountId(proxyAccountId) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this._contractCreate.setProxyAccountId(proxyAccountId);
         return this;
     }

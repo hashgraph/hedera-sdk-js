@@ -236,21 +236,21 @@ export default class TransactionRecord {
          * @deprecated
          * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.hbarAllowanceAdjustments = props.hbarAllowanceAdjustments;
 
         /**
          * @deprecated
          * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.tokenAllowanceAdjustments = props.tokenAllowanceAdjustments;
 
         /**
          * @deprecated
          * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.nftAllowanceAdjustments = props.nftAllowanceAdjustments;
 
         /**
