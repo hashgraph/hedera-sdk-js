@@ -637,8 +637,9 @@ jobs:
         run: |
           packs="${RUNNER_TEMP}/solo-compat/packs"
           mkdir -p "${packs}" "${RUNNER_TEMP}/solo-compat/solo"
-          # TEMPORARY baseline run (review on #4537): the SDK Solo 0.93.0 pins.
-          npm pack @hiero-ledger/sdk@2.87.0 @hiero-ledger/proto@2.31.0 @hiero-ledger/cryptography@1.21.0 --pack-destination "${packs}"
+          for dir in packages/proto packages/cryptography .; do
+            (cd "${dir}" && pnpm pack --pack-destination "${packs}")
+          done
           ls -l "${packs}"
           {
             echo "SOLO_DIR=${RUNNER_TEMP}/solo-compat/solo"
