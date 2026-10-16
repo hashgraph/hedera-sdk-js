@@ -1025,7 +1025,11 @@ export default class ContractFunctionResult {
      */
     _convertEthersValue(value, type) {
         const typeStr =
-            typeof type === "string" ? type : type.type || String(type);
+            typeof type === "string"
+                ? type
+                : // ethers always sets ParamType.type, String() is a last resort.
+                  // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                  type.type || String(type);
 
         if (Array.isArray(value)) {
             const baseType = typeStr.replace(/\[]$/, "");

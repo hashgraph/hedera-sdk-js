@@ -1753,6 +1753,6 @@ function argumentToBytes(param, ty) {
             return value;
         }
         default:
-            throw new Error(`Unsupported argument type: ${ty.toString()}`);
+            throw new Error(`Unsupported argument type: ${ty.ty}`);
     }
 }

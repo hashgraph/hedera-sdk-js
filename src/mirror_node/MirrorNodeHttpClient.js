@@ -342,7 +342,9 @@ export default class MirrorNodeHttpClient {
             );
         }
 
-        // `maxAttempts >= 1`, so the loop always returns or throws.
+        // `maxAttempts >= 1`, so the loop always returns or throws. Rethrow
+        // the last attempt's error unchanged.
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw lastError ?? new Error("unreachable");
     }
 

@@ -401,11 +401,16 @@ export default class AccountInfo {
                     : null,
             // eslint-disable-next-line deprecation/deprecation
             proxyReceived: this.proxyReceived.toString(),
+            // Every concrete Key subclass implements toString().
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             key: this.key != null ? this.key.toString() : null,
             sendRecordThreshold: this.sendRecordThreshold.toString(),
             receiveRecordThreshold: this.receiveRecordThreshold.toString(),
             isReceiverSignatureRequired: this.isReceiverSignatureRequired,
             expirationTime: this.expirationTime.toString(),
+            // Duration has no toString(), so this is "[object Object]". Kept
+            // as is here, changing the toJSON() output is a separate fix.
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             autoRenewPeriod: this.autoRenewPeriod.toString(),
             accountMemo: this.accountMemo,
             ownedNfts: this.ownedNfts.toString(),

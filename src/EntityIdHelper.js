@@ -531,7 +531,7 @@ export function aliasToPublicKey(alias) {
     let key;
     try {
         key = HieroProto.proto.Key.decode(bytes);
-    } catch (e) {
+    } catch {
         throw new Error(
             "The alias is created with hollow account. Please use aliasToEvmAddress!",
         );
@@ -566,7 +566,7 @@ export function aliasToEvmAddress(alias) {
         throw new Error(
             "The alias is created with ed25519 or ECDSASecp256k1 account. Please use aliasToPublicKey!",
         );
-    } catch (e) {
+    } catch {
         return toHexString(bytes);
     }
 }
