@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Unreleased
+
+### Changed
+
+-   The published `@hiero-ledger/proto` package no longer contains `src/proto.d.ts` and `src/index.d.ts`, which are copies of the `lib/` type files that `types` points at, or the `src/proto/*.proto` sources, which nothing loads at runtime. The `files` field now lists only `lib/` and the `src/*.js` browser entry files, so the package goes from 15.4 MB and 194 files to 10.8 MB and 7 files unpacked, and its size budget is lowered to 15 MB and 20 files. Applies from `@hiero-ledger/proto` 2.32.1. [#4527](https://github.com/hiero-ledger/hiero-sdk-js/issues/4527)
+
 # v2.90.1
 
 ### Fixed
