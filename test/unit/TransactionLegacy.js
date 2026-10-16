@@ -290,7 +290,7 @@ describe("Transaction legacy", function () {
         // Declare integer number from float number
         const INTEGER_NUMBER = Math.floor(FLOAT_NUMBER);
 
-        // Declare diffrent number types
+        // Declare different number types
         const NUMBERS = {
             INTEGER: INTEGER_NUMBER,
             FLOAT: FLOAT_NUMBER,

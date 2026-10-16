@@ -1,9 +1,10 @@
 import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import { browserEncodingAlias } from "./browser-encoding-alias.js";
+import { mswServiceWorker } from "./msw-service-worker.js";
 
 export default defineConfig({
-    plugins: [browserEncodingAlias()],
+    plugins: [browserEncodingAlias(), mswServiceWorker()],
     test: {
         watch: false,
         globals: true,

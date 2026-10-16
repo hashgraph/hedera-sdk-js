@@ -10,7 +10,7 @@ import {
 
 describe("NodeCreateTransaction", function () {
     // setting these variables outside of the beforeEach function to avoid
-    // as there is a lint setting that doesnt allow function calls
+    // as there is a lint setting that doesn't allow function calls
     // in the describe block
     let tx,
         accountId,
@@ -50,7 +50,7 @@ describe("NodeCreateTransaction", function () {
             .setAccountId(accountId)
             .setDescription(DESCRIPTION)
             .setGossipCaCertificate(gossipCaCertificate)
-            .setCertificateHash(gossipCaCertificate) // TODO: change this vlaue to a proper one
+            .setCertificateHash(gossipCaCertificate) // TODO: change this value to a proper one
             .setAdminKey(TEST_ADMIN_KEY)
             .setServiceEndpoints(serviceEndpoints)
             .setGossipEndpoints(gossipEndpoints)
@@ -131,7 +131,7 @@ describe("NodeCreateTransaction", function () {
         expect(tx.accountId.toString()).to.equal(newAccountId.toString());
     });
 
-    it("should not change accound id if frozen", function () {
+    it("should not change account id if frozen", function () {
         const newAccountId = AccountId.fromString("0.4.20");
         tx.freeze();
         let err = false;
