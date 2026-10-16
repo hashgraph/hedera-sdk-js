@@ -4,7 +4,7 @@
  * A custom list type which round robins, supports locking, and as additional
  * QoL improvements.
  *
- * @template {any} T
+ * @template T
  */
 export default class List {
     constructor() {
@@ -17,7 +17,7 @@ export default class List {
     /**
      * Overwrite the entire list.
      *
-     * @throws if the list is locked
+     * @throws {Error} if the list is locked
      * @param {T[]} list
      * @returns {this}
      */
@@ -35,7 +35,7 @@ export default class List {
     /**
      * Push items to the end of the list.
      *
-     * @throws if the list is locked
+     * @throws {Error} if the list is locked
      * @param {T[]} items
      * @returns {this}
      */
@@ -96,9 +96,10 @@ export default class List {
     }
 
     /**
-     * Set value at index if it's not already set
+     * Set value at index if it's not already set.
+     * Unlike `setList()` and `push()`, this does not check whether the list is
+     * locked, so it does not throw on a locked list.
      *
-     * @throws if the list is locked
      * @param {number} index
      * @param {() => T} lambda
      * @returns {this}
