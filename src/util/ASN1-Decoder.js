@@ -249,7 +249,7 @@ const isHexKeyList = (hexString) => {
         const decodedData = proto.KeyList.decode(binaryData);
 
         return !!decodedData.keys && Array.isArray(decodedData.keys);
-    } catch (error) {
+    } catch {
         return false;
     }
 };

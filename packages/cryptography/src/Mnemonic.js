@@ -133,7 +133,7 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     toPrivateKey(passphrase = "") {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return this.toEd25519PrivateKey(passphrase);
     }
 

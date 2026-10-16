@@ -398,6 +398,8 @@ export default class NodeHttpTransport extends HttpTransport {
                     return;
                 }
                 settle();
+                // Callers pass an error they caught or built; pass it on as is.
+                // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                 reject(error);
             };
 

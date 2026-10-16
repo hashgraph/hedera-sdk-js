@@ -127,7 +127,7 @@ export default class MirrorNetwork extends ManagedNetwork {
         try {
             const index = this._restRoundRobinIndex % this._nodes.length;
             return this._nodes[index].mirrorRestApiBaseUrl;
-        } catch (error) {
+        } catch {
             // Re-throw with a more descriptive error message
             throw new Error(
                 "Client has no mirror network configured or no healthy mirror nodes are available",

@@ -15,6 +15,9 @@ export function valueToLong(value) {
     if (BigNumber.isBigNumber(value)) {
         return value;
     } else {
+        // Long, number and string stringify to their value. A plain
+        // LongObject does not, unchanged here.
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         return new BigNumber(value.toString());
     }
 }

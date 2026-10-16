@@ -73,7 +73,7 @@ export default class NodeMirrorChannel extends MirrorChannel {
                 callback(data);
             })
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
-                if (status.code == 0) {
+                if (status.code == grpc.status.OK) {
                     end();
                 }
             })

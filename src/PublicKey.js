@@ -213,7 +213,7 @@ export default class PublicKey extends Key {
      * @returns {string}
      */
     toString() {
-        return this._key.toString();
+        return this._key.toStringDer();
     }
 
     /**

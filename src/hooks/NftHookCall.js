@@ -2,7 +2,6 @@
 
 import HookCall from "./HookCall.js";
 import EvmHookCall from "./EvmHookCall.js";
-import NftHookType from "./NftHookType.js";
 /**
  * @namespace proto
  * @typedef {import("@hiero-ledger/proto").proto.IHookCall} HieroProto.proto.IHookCall
@@ -10,7 +9,8 @@ import NftHookType from "./NftHookType.js";
  */
 
 /**
- * @typedef {typeof NftHookType[keyof typeof NftHookType]} NftHookTypeValue
+ * @typedef {typeof import("./NftHookType.js").default} NftHookType
+ * @typedef {NftHookType[keyof NftHookType]} NftHookTypeValue
  */
 
 /**

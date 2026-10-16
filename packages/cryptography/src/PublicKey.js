@@ -44,11 +44,9 @@ export default class PublicKey extends Key {
         let message;
         try {
             return new PublicKey(Ed25519PublicKey.fromBytes(data));
-        } catch (error) {
-            message =
-                error != null && /** @type {Error} */ (error).message != null
-                    ? /** @type {Error} */ (error).message
-                    : "";
+        } catch {
+            // Not an Ed25519 key, try ECDSA next. Only the ECDSA error is
+            // reported.
         }
 
         try {
