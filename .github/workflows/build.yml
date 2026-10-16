@@ -659,11 +659,14 @@ jobs:
 
       # Creates the kind cluster and deploys a consensus node, a mirror node,
       # the explorer and the relay. Consensus gRPC ends up on 127.0.0.1:35211
-      # and the mirror ingress on 127.0.0.1:38081.
+      # and the mirror ingress on 127.0.0.1:38081. The runner is itself a
+      # Kubernetes pod, and without --namespace Solo takes the runner pod's
+      # namespace from the in-cluster context.
       - name: Deploy the network with Solo
         timeout-minutes: 30
         run: |
           solo one-shot single deploy --quiet-mode \
+            --namespace "${SOLO_DEPLOYMENT}" \
             --consensus-node-version "${CONSENSUS_NODE_VERSION}" \
             --mirror-node-version "${MIRROR_NODE_VERSION}"
 
@@ -696,7 +699,7 @@ jobs:
         continue-on-error: true
         run: |
           kubectl get pods -A -o wide || true
-          kubectl get events -n "${SOLO_DEPLOYMENT}" --sort-by=.lastTimestamp | tail -100 || true
+          kubectl get events -A --sort-by=.lastTimestamp | tail -100 || true
           timeout 600 solo deployment diagnostics all --deployment "${SOLO_DEPLOYMENT}" --quiet-mode || true
 
       - name: Upload diagnostics
