@@ -1417,7 +1417,8 @@ export default class ContractFunctionParameters {
  */
 function argumentToBytes(param, ty) {
     let value = new Uint8Array(32);
-    let valueView = util.safeView(value);
+    /** @type {DataView} */
+    let valueView;
     /** @type {Uint8Array} */
     let par;
 

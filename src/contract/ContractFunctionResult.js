@@ -95,7 +95,7 @@ export default class ContractFunctionResult {
          * there is no longer a simple relationship between the new contract's 0.0.X id
          * and its Solidity address.)
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.createdContractIds = result.createdContractIds;
 
         this.evmAddress = result.evmAddress;
@@ -103,7 +103,7 @@ export default class ContractFunctionResult {
         /**
          * @deprecated - Use mirror node for contract traceability instead
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.stateChanges = result.stateChanges;
 
         /**
@@ -1077,7 +1077,7 @@ export default class ContractFunctionResult {
             bloom: this.bloom,
             gasUsed: this.gasUsed,
             logInfo: this.logs.map((log) => log._toProtobuf()),
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             createdContractIDs: this.createdContractIds.map((id) =>
                 id._toProtobuf(),
             ),

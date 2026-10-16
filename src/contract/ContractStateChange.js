@@ -27,7 +27,7 @@ export default class ContractStateChange {
      * @returns {ContractStateChange}
      */
     static _fromProtobuf(change) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
                 /** @type {HieroProto.proto.IContractID} */ (change.contractId),
@@ -36,7 +36,7 @@ export default class ContractStateChange {
                 ? change.storageChanges
                 : []
             )
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 .map((change) => StorageChange._fromProtobuf(change)),
         });
     }
@@ -46,7 +46,7 @@ export default class ContractStateChange {
      * @returns {ContractStateChange}
      */
     static fromBytes(bytes) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return ContractStateChange._fromProtobuf(
             HieroProto.proto.ContractStateChange.decode(bytes),
         );
