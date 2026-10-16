@@ -53,19 +53,21 @@ export default class CustomFractionalFee extends CustomFee {
             this.setMin(props.min);
         }
 
+        // Declares the field type only, setMax() assigns it.
         /**
          * @type {?Long}
          */
-        this._max;
+        this._max; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
         if (props.max != null) {
             this.setMax(props.max);
         }
 
+        // Declares the field type only, setAssessmentMethod() assigns it.
         /**
          * @type {?FeeAssessmentMethod}
          */
-        this._assessmentMethod;
+        this._assessmentMethod; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
         if (props.assessmentMethod != null) {
             this.setAssessmentMethod(props.assessmentMethod);

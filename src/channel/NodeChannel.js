@@ -77,6 +77,8 @@ export default class NodeChannel extends Channel {
                             reject(new Error("No certificate retrieved."));
                         }
                     } catch (err) {
+                        // Pass on whatever getPeerCertificate() threw.
+                        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                         reject(err);
                     } finally {
                         socket.end();

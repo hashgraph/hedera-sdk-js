@@ -1,8 +1,7 @@
-import Long from "long";
-
 /**
  * @namespace proto
  * @typedef {import("@hiero-ledger/proto").proto.IEvmHookCall} HieroProto.proto.IEvmHookCall
+ * @typedef {import("long").default} Long
  */
 
 /**

@@ -303,10 +303,22 @@ export default class TokenInfo {
                     ? Key._fromProtobufKey(info.feeScheduleKey)
                     : null,
             defaultFreezeStatus:
-                defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
+                defaultFreezeStatus ===
+                HieroProto.proto.TokenFreezeStatus.FreezeNotApplicable
+                    ? null
+                    : defaultFreezeStatus ==
+                      HieroProto.proto.TokenFreezeStatus.Frozen,
             defaultKycStatus:
-                defaultKycStatus === 0 ? null : defaultKycStatus == 1,
-            pauseStatus: pauseStatus === 0 ? null : pauseStatus == 1,
+                defaultKycStatus ===
+                HieroProto.proto.TokenKycStatus.KycNotApplicable
+                    ? null
+                    : defaultKycStatus ==
+                      HieroProto.proto.TokenKycStatus.Granted,
+            pauseStatus:
+                pauseStatus ===
+                HieroProto.proto.TokenPauseStatus.PauseNotApplicable
+                    ? null
+                    : pauseStatus == HieroProto.proto.TokenPauseStatus.Paused,
             isDeleted: /** @type {boolean} */ (info.deleted),
             autoRenewAccountId: !(
                 autoRenewAccountId.shard.toInt() == 0 &&

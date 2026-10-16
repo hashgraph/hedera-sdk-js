@@ -237,9 +237,10 @@ export default class Client {
             );
         }
 
+        // Declares the field type only, it is assigned when the timer starts.
         /** @internal */
         /** @type {NodeJS.Timeout} */
-        this._timer;
+        this._timer; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
         /**
          * Logger
