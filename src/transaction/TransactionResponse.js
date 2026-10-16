@@ -138,7 +138,7 @@ export default class TransactionResponse {
             // The receipt needs to be called in order to wait for transaction to be included in the consensus. Otherwise we are going to get "DUPLICATE_TRANSACTION".
             await this.getReceiptQuery(client).execute(client);
             return this.getRecordQuery(client).execute(client);
-        } catch (e) {
+        } catch {
             return this.getRecordQuery(client).execute(client);
         }
     }

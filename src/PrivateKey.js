@@ -538,7 +538,7 @@ export default class PrivateKey extends Key {
             const decoder = new ASN1Decoder(data);
             decoder.read(); // Attempt to read the ASN.1 structure
             return true;
-        } catch (error) {
+        } catch {
             return false;
         }
     }
