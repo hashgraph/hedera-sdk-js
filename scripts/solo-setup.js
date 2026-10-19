@@ -216,6 +216,18 @@ function parseArgs(argv) {
         }
     }
 
+    // Solo refuses block node charts 0.41.0+ below consensus node 0.77.0 and
+    // charts below 0.41.0 from 0.77.0 on, so only pin the old chart there.
+    if (!blockNodeReleaseTag) {
+        const [major, minor] = consensusVersion
+            .replace(/^v/u, "")
+            .split(".")
+            .map(Number);
+        if (major === 0 && minor < 77) {
+            blockNodeReleaseTag = DEFAULT_BLOCK_NODE_RELEASE_TAG;
+        }
+    }
+
     return {
         numNodes,
         consensusVersion,
