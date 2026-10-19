@@ -50,7 +50,7 @@ function showHelp() {
         "  --local-build-path <path>            Path to local build (overrides consensus-node-version for node setup)",
     );
     console.log(
-        `  --block-node-release-tag <version>   Block node Helm chart version, maps to --chart-version (default: ${DEFAULT_BLOCK_NODE_RELEASE_TAG})`,
+        `  --block-node-release-tag <version>   Block node Helm chart version, maps to --chart-version (default: ${DEFAULT_BLOCK_NODE_RELEASE_TAG} below consensus node v0.77.0)`,
     );
     console.log(
         "  -h, --help                           Show this help message",
