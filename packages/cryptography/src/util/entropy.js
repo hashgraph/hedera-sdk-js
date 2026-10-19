@@ -7,9 +7,9 @@ import * as sha256 from "../primitive/sha256.js";
  * @returns {[Uint8Array, number]}
  */
 export function legacy1(words, wordlist) {
-    const indicies = words.map((word) => wordlist.indexOf(word.toLowerCase()));
+    const indices = words.map((word) => wordlist.indexOf(word.toLowerCase()));
 
-    const data = convertRadix(indicies, wordlist.length, 256, 33);
+    const data = convertRadix(indices, wordlist.length, 256, 33);
     const checksum = data[data.length - 1];
     const result = new Uint8Array(data.length - 1);
 
