@@ -1409,7 +1409,7 @@ export default class Transaction extends Executable {
         this._transactionIds.setLocked();
         this._nodeAccountIds.setLocked();
         // Construct a signature map from this transaction
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return SignatureMapLegacy._fromTransaction(this);
     }
 
@@ -2017,9 +2017,7 @@ export default class Transaction extends Executable {
         );
 
         if (this._logger) {
-            this._logger.info(
-                `Network used: ${client._network.networkName}`, // eslint-disable-line @typescript-eslint/restrict-template-expressions
-            );
+            this._logger.info(`Network used: ${client._network.networkName}`);
         }
 
         // Make sure we're frozen
@@ -2536,7 +2534,7 @@ export default class Transaction extends Executable {
      */
     _requireOneNodeAccountId() {
         if (this._nodeAccountIds.length != 1) {
-            throw "transaction did not have exactly one node ID set";
+            throw new Error("transaction did not have exactly one node ID set");
         }
     }
 

@@ -6,7 +6,6 @@ const { fixupConfigRules, fixupPluginRules } = require("@eslint/compat");
 
 const tsParser = require("@typescript-eslint/parser");
 const typescriptEslint = require("@typescript-eslint/eslint-plugin");
-const deprecation = require("eslint-plugin-deprecation");
 // eslint-plugin-n v18+ is ESM-only and no longer resolvable through
 // FlatCompat's "plugin:n/recommended" string, so consume its flat config directly.
 const nodePluginModule = require("eslint-plugin-n");
@@ -71,7 +70,6 @@ module.exports = defineConfig([
 
         plugins: {
             "@typescript-eslint": fixupPluginRules(typescriptEslint),
-            deprecation: fixupPluginRules(deprecation),
         },
 
         settings: {
@@ -116,7 +114,7 @@ module.exports = defineConfig([
                 },
             ],
 
-            "deprecation/deprecation": "warn",
+            "@typescript-eslint/no-deprecated": "warn",
         },
     },
     {

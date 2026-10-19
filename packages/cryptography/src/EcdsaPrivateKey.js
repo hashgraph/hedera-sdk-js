@@ -82,7 +82,7 @@ export default class EcdsaPrivateKey {
      */
     static fromBytesDer(data) {
         /** @type {Uint8Array} */
-        let ecdsaPrivateKeyBytes = new Uint8Array();
+        let ecdsaPrivateKeyBytes;
 
         if (arrayStartsWith(data, derPrefixBytes)) {
             ecdsaPrivateKeyBytes = data.subarray(derPrefixBytes.length);

@@ -45,7 +45,7 @@ module.exports = defineConfig([
             "@typescript-eslint/restrict-plus-operands": "off",
             "@typescript-eslint/restrict-template-expressions": "off",
             "@typescript-eslint/unbound-method": "off",
-            "deprecation/deprecation": "off",
+            "@typescript-eslint/no-deprecated": "off",
             "n/no-unsupported-features/node-builtins": "off",
             "jsdoc/*": "off",
             "import/no-unresolved": "off",

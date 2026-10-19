@@ -25,7 +25,7 @@ export default class StorageChange {
      * @returns {StorageChange}
      */
     static _fromProtobuf(change) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return new StorageChange({
             slot: /** @type {Uint8Array} */ (change.slot),
             valueRead: /** @type {Uint8Array} */ (change.valueRead),
@@ -41,7 +41,7 @@ export default class StorageChange {
      * @returns {StorageChange}
      */
     static fromBytes(bytes) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return StorageChange._fromProtobuf(
             HieroProto.proto.StorageChange.decode(bytes),
         );

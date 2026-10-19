@@ -43,7 +43,7 @@ export default class LedgerId {
                 try {
                     let ledgerIdDecoded = hex.decode(ledgerId);
                     return new LedgerId(ledgerIdDecoded);
-                } catch (error) {
+                } catch {
                     throw new Error("Default reached for fromString");
                 }
             }

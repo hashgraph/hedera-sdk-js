@@ -133,15 +133,9 @@ export default class AccountInfoQuery extends Query {
      * @override
      * @internal
      * @param {HieroProto.proto.IResponse} response
-     * @param {AccountId} _nodeAccountId
-     * @param {HieroProto.proto.IQuery} _request
      * @returns {Promise<AccountInfo>}
      */
-    _mapResponse(response, _nodeAccountId, _request) {
-        // Removed unused parameters
-        // void _nodeAccountId;
-        // void _request;
-
+    _mapResponse(response) {
         const info = /** @type {HieroProto.proto.ICryptoGetInfoResponse} */ (
             response.cryptoGetInfo
         );

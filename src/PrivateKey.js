@@ -162,7 +162,7 @@ export default class PrivateKey extends Key {
         // previous versions of the library used to accept non-der encoded private keys here
         // and it fallbacked to PrivateKey.fromString() so we need to keep this behavior
         if (!PrivateKey.isDerKey(text)) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             return PrivateKey.fromString(text);
         }
 
@@ -226,7 +226,7 @@ export default class PrivateKey extends Key {
     static async fromMnemonic(mnemonic, passphrase = "") {
         if (mnemonic instanceof Mnemonic) {
             return new PrivateKey(
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 await PrivateKeyCrypto.fromMnemonic(
                     mnemonic._mnemonic,
                     passphrase,
@@ -235,7 +235,7 @@ export default class PrivateKey extends Key {
         }
 
         return new PrivateKey(
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             await PrivateKeyCrypto.fromMnemonic(mnemonic, passphrase),
         );
     }
@@ -538,7 +538,7 @@ export default class PrivateKey extends Key {
             const decoder = new ASN1Decoder(data);
             decoder.read(); // Attempt to read the ASN.1 structure
             return true;
-        } catch (error) {
+        } catch {
             return false;
         }
     }

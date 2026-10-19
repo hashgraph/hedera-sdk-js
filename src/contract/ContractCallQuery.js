@@ -271,6 +271,7 @@ export default class ContractCallQuery extends Query {
                 error instanceof Error ? error.message : String(error);
             throw new Error(
                 `ContractCallQuery requires gas to be set. Automatic gas estimation via the mirror node failed: ${cause}. Set the gas explicitly using setGas(), e.g. with a value obtained from MirrorNodeContractEstimateQuery.`,
+                { cause: error },
             );
         }
     }

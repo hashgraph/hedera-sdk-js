@@ -2,7 +2,6 @@
 
 import HookCall from "./HookCall.js";
 import EvmHookCall from "./EvmHookCall.js";
-import FungibleHookType from "./FungibleHookType.js";
 
 /**
  * @namespace proto
@@ -11,7 +10,8 @@ import FungibleHookType from "./FungibleHookType.js";
  */
 
 /**
- * @typedef {typeof FungibleHookType[keyof typeof FungibleHookType]} FungibleHookTypeValue
+ * @typedef {typeof import("./FungibleHookType.js").default} FungibleHookType
+ * @typedef {FungibleHookType[keyof FungibleHookType]} FungibleHookTypeValue
  */
 
 /**

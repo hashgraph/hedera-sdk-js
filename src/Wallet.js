@@ -55,7 +55,7 @@ export default class Wallet {
         if (typeof privateKey === "string" && PrivateKey.isDerKey(privateKey)) {
             key = PrivateKey.fromStringDer(privateKey);
         } else if (typeof privateKey === "string") {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             key = PrivateKey.fromString(privateKey);
         } else {
             key = privateKey;

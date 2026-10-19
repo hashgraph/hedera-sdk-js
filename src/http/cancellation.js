@@ -54,6 +54,9 @@ export function abortReason(signal) {
         return reason;
     }
     const error = new Error(
+        // An abort reason can be any value; String() is the fallback for
+        // the ones that are not an Error.
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         reason != null ? String(reason) : "This operation was aborted",
     );
     error.name = "AbortError";

@@ -131,7 +131,6 @@ const update = (state, /** @type {string | number[]} */ message) => {
     var hex = "";
     var block;
     var j = 0;
-    i = 0; //NOSONAR
     while (j < outputBlocks) {
         for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
             block = s[i];
@@ -147,7 +146,6 @@ const update = (state, /** @type {string | number[]} */ message) => {
         }
         if (j % blockCount === 0) {
             f(s);
-            i = 0; //NOSONAR
         }
     }
     // @ts-ignore

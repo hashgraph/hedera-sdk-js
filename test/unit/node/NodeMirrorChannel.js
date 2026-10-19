@@ -28,6 +28,7 @@ vi.mock("@grpc/grpc-js", () => {
             createSsl: vi.fn(() => "ssl-credentials"),
             createInsecure: vi.fn(() => "insecure-credentials"),
         },
+        status: { OK: 0 },
     };
 });
 
