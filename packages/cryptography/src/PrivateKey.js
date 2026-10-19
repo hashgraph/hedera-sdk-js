@@ -144,11 +144,9 @@ export default class PrivateKey extends Key {
 
         try {
             return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
-        } catch (error) {
-            message =
-                error != null && /** @type {Error} */ (error).message != null
-                    ? /** @type {Error} */ (error).message
-                    : "";
+        } catch {
+            // Not an Ed25519 key, try ECDSA next. Only the ECDSA error is
+            // reported.
         }
 
         try {
@@ -249,7 +247,7 @@ export default class PrivateKey extends Key {
                     ? CACHE.mnemonicFromString(mnemonic)
                     : mnemonic
             )
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 .toEd25519PrivateKey(passphrase)
         );
     }

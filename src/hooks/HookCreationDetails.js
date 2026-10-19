@@ -1,5 +1,8 @@
 import Long from "long";
-import HookExtensionPoint from "./HookExtensionPoint.js";
+
+/**
+ * @typedef {import("./HookExtensionPoint.js").default} HookExtensionPoint
+ */
 
 /**
  * The details of a hook's creation.

@@ -1,15 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Long from "long";
+import * as HieroProto from "@hiero-ledger/proto";
 import TokenId from "../token/TokenId.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hiero-ledger/proto").proto.ITokenRelationship} HieroProto.proto.ITokenRelationship
- * @typedef {import("@hiero-ledger/proto").proto.TokenKycStatus} HieroProto.proto.TokenKycStatus
- * @typedef {import("@hiero-ledger/proto").proto.TokenFreezeStatus} HieroProto.proto.TokenFreezeStatus
- * @typedef {import("@hiero-ledger/proto").proto.ITokenID} HieroProto.proto.ITokenID
- */
 
 /**
  * Token's information related to the given Account
@@ -82,13 +75,19 @@ export default class TokenRelationship {
             /** @type {HieroProto.proto.ITokenID} */ (relationship.tokenId),
         );
         const isKycGranted =
-            relationship.kycStatus == null || relationship.kycStatus === 0
+            relationship.kycStatus == null ||
+            relationship.kycStatus ===
+                HieroProto.proto.TokenKycStatus.KycNotApplicable
                 ? null
-                : relationship.kycStatus === 1;
+                : relationship.kycStatus ===
+                  HieroProto.proto.TokenKycStatus.Granted;
         const isFrozen =
-            relationship.freezeStatus == null || relationship.freezeStatus === 0
+            relationship.freezeStatus == null ||
+            relationship.freezeStatus ===
+                HieroProto.proto.TokenFreezeStatus.FreezeNotApplicable
                 ? null
-                : relationship.freezeStatus === 1;
+                : relationship.freezeStatus ===
+                  HieroProto.proto.TokenFreezeStatus.Frozen;
 
         return new TokenRelationship({
             tokenId,

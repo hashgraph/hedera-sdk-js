@@ -1,4 +1,4 @@
-/* eslint-disable deprecation/deprecation */
+/* eslint-disable @typescript-eslint/no-deprecated */
 import NodeAccountIdSignatureMapLegacy from "./NodeAccountIdSignatureMapLegacy.js";
 import ObjectMap from "../ObjectMap.js";
 import AccountId from "../account/AccountId.js";

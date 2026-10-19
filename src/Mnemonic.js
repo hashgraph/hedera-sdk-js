@@ -71,7 +71,7 @@ export default class Mnemonic {
      */
     async toPrivateKey(passphrase = "") {
         return CACHE.privateKeyConstructor(
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             await this._mnemonic.toPrivateKey(passphrase),
         );
     }
@@ -86,7 +86,7 @@ export default class Mnemonic {
      */
     async toEd25519PrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             await this._mnemonic.toEd25519PrivateKey(passphrase, path),
         );
     }
@@ -115,7 +115,7 @@ export default class Mnemonic {
      */
     async toEcdsaPrivateKey(passphrase = "", path) {
         return CACHE.privateKeyConstructor(
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             await this._mnemonic.toEcdsaPrivateKey(passphrase, path),
         );
     }
@@ -173,7 +173,7 @@ export default class Mnemonic {
         passphrase,
         derivationPathValues,
     ) {
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         return await this.toEcdsaPrivateKey(passphrase, derivationPathValues);
     }
 

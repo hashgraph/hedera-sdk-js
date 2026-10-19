@@ -55,7 +55,7 @@ export async function readPemED25519(pem, passphrase) {
 
         const decrypted = await encrypted.decrypt(passphrase);
 
-        let privateKey = null;
+        let privateKey;
 
         if (decrypted.algId.algIdent === ID_ED25519) {
             privateKey = Ed25519PrivateKey;

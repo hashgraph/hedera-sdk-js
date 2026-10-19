@@ -157,7 +157,7 @@ export default class ContractUpdateTransaction extends Transaction {
         }
 
         if (props.proxyAccountId != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setProxyAccountId(props.proxyAccountId);
         }
 

@@ -95,7 +95,7 @@ export default class ContractFunctionResult {
          * there is no longer a simple relationship between the new contract's 0.0.X id
          * and its Solidity address.)
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.createdContractIds = result.createdContractIds;
 
         this.evmAddress = result.evmAddress;
@@ -103,7 +103,7 @@ export default class ContractFunctionResult {
         /**
          * @deprecated - Use mirror node for contract traceability instead
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.stateChanges = result.stateChanges;
 
         /**
@@ -1025,7 +1025,11 @@ export default class ContractFunctionResult {
      */
     _convertEthersValue(value, type) {
         const typeStr =
-            typeof type === "string" ? type : type.type || String(type);
+            typeof type === "string"
+                ? type
+                : // ethers always sets ParamType.type, String() is a last resort.
+                  // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                  type.type || String(type);
 
         if (Array.isArray(value)) {
             const baseType = typeStr.replace(/\[]$/, "");
@@ -1073,7 +1077,7 @@ export default class ContractFunctionResult {
             bloom: this.bloom,
             gasUsed: this.gasUsed,
             logInfo: this.logs.map((log) => log._toProtobuf()),
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             createdContractIDs: this.createdContractIds.map((id) =>
                 id._toProtobuf(),
             ),

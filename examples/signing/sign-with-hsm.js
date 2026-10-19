@@ -40,7 +40,7 @@ async function main() {
         );
     }
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    // eslint-disable-next-line deprecation/deprecation
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
     const networkName = process.env.HEDERA_NETWORK;
 

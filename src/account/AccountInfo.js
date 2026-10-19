@@ -107,7 +107,7 @@ export default class AccountInfo {
          * running a node, then it will behave as if proxyAccountID was null.
          * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.proxyAccountId = props.proxyAccountId;
 
         /**
@@ -116,7 +116,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        // eslint-disable-next-line deprecation/deprecation
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
         this.proxyReceived = props.proxyReceived;
 
         /**
@@ -320,12 +320,12 @@ export default class AccountInfo {
             contractAccountID: this.contractAccountId,
             deleted: this.isDeleted,
             proxyAccountID:
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 this.proxyAccountId != null
-                    ? // eslint-disable-next-line deprecation/deprecation
+                    ? // eslint-disable-next-line @typescript-eslint/no-deprecated
                       this.proxyAccountId._toProtobuf()
                     : null,
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             proxyReceived: this.proxyReceived.toTinybars(),
             key: this.key._toProtobufKey(),
             balance: this.balance.toTinybars(),
@@ -394,18 +394,23 @@ export default class AccountInfo {
             contractAccountId: this.contractAccountId,
             isDeleted: this.isDeleted,
             proxyAccountId:
-                // eslint-disable-next-line deprecation/deprecation
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 this.proxyAccountId != null
-                    ? // eslint-disable-next-line deprecation/deprecation
+                    ? // eslint-disable-next-line @typescript-eslint/no-deprecated
                       this.proxyAccountId.toString()
                     : null,
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             proxyReceived: this.proxyReceived.toString(),
+            // Every concrete Key subclass implements toString().
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             key: this.key != null ? this.key.toString() : null,
             sendRecordThreshold: this.sendRecordThreshold.toString(),
             receiveRecordThreshold: this.receiveRecordThreshold.toString(),
             isReceiverSignatureRequired: this.isReceiverSignatureRequired,
             expirationTime: this.expirationTime.toString(),
+            // Duration has no toString(), so this is "[object Object]". Kept
+            // as is here, changing the toJSON() output is a separate fix.
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             autoRenewPeriod: this.autoRenewPeriod.toString(),
             accountMemo: this.accountMemo,
             ownedNfts: this.ownedNfts.toString(),

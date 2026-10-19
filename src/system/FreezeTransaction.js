@@ -91,12 +91,12 @@ export default class FreezeTransaction extends Transaction {
         this._freezeType = null;
 
         if (props.startTime != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setStartTime(props.startTime.hour, props.startTime.minute);
         }
 
         if (props.endTime != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setEndTime(props.endTime.hour, props.endTime.minute);
         }
 
@@ -105,7 +105,7 @@ export default class FreezeTransaction extends Transaction {
         }
 
         if (props.updateFileId != null) {
-            // eslint-disable-next-line deprecation/deprecation
+            // eslint-disable-next-line @typescript-eslint/no-deprecated
             this.setUpdateFileId(props.updateFileId);
         }
 

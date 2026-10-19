@@ -237,7 +237,7 @@ export default class AbstractTokenTransferTransaction extends Transaction {
                         : /** @type {AccountId} */ (
                               receiverAccountIdOrSenderAccountId
                           );
-            } catch (_) {
+            } catch {
                 const tokenId = TokenId.fromString(tokenIdOrNftId);
                 nftId = new NftId(
                     tokenId,
