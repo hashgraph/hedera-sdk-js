@@ -84,8 +84,7 @@ function parseArgs(argv) {
     let mirrorVersion = DEFAULT_MIRROR_NODE_VERSION;
     let mirrorNodeChartDir = "";
     let localBuildPath = "";
-    let blockNodeReleaseTag =
-        process.env.BLOCK_NODE_RELEASE_TAG || DEFAULT_BLOCK_NODE_RELEASE_TAG;
+    let blockNodeReleaseTag = process.env.BLOCK_NODE_RELEASE_TAG || "";
 
     for (let index = 0; index < argv.length; index += 1) {
         const argument = argv[index];
