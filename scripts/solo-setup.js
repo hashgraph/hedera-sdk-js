@@ -3,6 +3,7 @@
 import {
     DEFAULT_CONSENSUS_NODE_VERSION,
     DEFAULT_MIRROR_NODE_VERSION,
+    DEFAULT_BLOCK_NODE_RELEASE_TAG,
     DEFAULT_NUM_NODES,
     DEFAULT_HBAR_AMOUNT,
     SOLO_CLUSTER_NAME,
@@ -49,7 +50,7 @@ function showHelp() {
         "  --local-build-path <path>            Path to local build (overrides consensus-node-version for node setup)",
     );
     console.log(
-        "  --block-node-release-tag <version>   Optional block node Helm chart version (maps to --chart-version)",
+        `  --block-node-release-tag <version>   Block node Helm chart version, maps to --chart-version (default: ${DEFAULT_BLOCK_NODE_RELEASE_TAG} below consensus node v0.77.0)`,
     );
     console.log(
         "  -h, --help                           Show this help message",
@@ -212,6 +213,18 @@ function parseArgs(argv) {
                 throw new Error(
                     `Unknown option: ${argument}\nRun './scripts/solo-setup.js --help' for usage information`,
                 );
+        }
+    }
+
+    // Solo refuses block node charts 0.41.0+ below consensus node 0.77.0 and
+    // charts below 0.41.0 from 0.77.0 on, so only pin the old chart there.
+    if (!blockNodeReleaseTag) {
+        const [major, minor] = consensusVersion
+            .replace(/^v/u, "")
+            .split(".")
+            .map(Number);
+        if (major === 0 && minor < 77) {
+            blockNodeReleaseTag = DEFAULT_BLOCK_NODE_RELEASE_TAG;
         }
     }
 
