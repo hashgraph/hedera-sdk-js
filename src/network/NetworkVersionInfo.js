@@ -4,7 +4,7 @@ import SemanticVersion from "./SemanticVersion.js";
 import * as HieroProto from "@hiero-ledger/proto";
 
 /**
- * Response when the client sends the node CryptoGetVersionInfoQuery.
+ * Response when the client sends the node NetworkVersionInfoQuery.
  */
 export default class NetworkVersionInfo {
     /**
@@ -15,14 +15,14 @@ export default class NetworkVersionInfo {
      */
     constructor(props) {
         /**
-         * The account ID for which this information applies.
+         * The Hedera API (HAPI) protobuf version accepted by the network.
          *
          * @readonly
          */
         this.protobufVersion = props.protobufVersion;
 
         /**
-         * The account ID for which this information applies.
+         * The version of the Hedera Services software operating the network.
          *
          * @readonly
          */

@@ -37,7 +37,7 @@ export default class ManagedNetwork {
         this._network = new Map();
 
         /**
-         * List of node account IDs.
+         * List of all nodes in the network.
          *
          * @protected
          * @type {NetworkNodeT[]}
@@ -45,7 +45,7 @@ export default class ManagedNetwork {
         this._nodes = [];
 
         /**
-         * List of node account IDs.
+         * List of the nodes that are currently healthy.
          *
          * @protected
          * @type {NetworkNodeT[]}
