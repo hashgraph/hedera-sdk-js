@@ -15,7 +15,7 @@ import dotenv from "dotenv";
 import { clientForName } from "../client.js";
 
 /**
- * @description Change ot remove token keys
+ * @description Change or remove token keys
  */
 
 /**
