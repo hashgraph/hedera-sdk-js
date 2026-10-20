@@ -280,20 +280,23 @@ class GrpcServer {
     }
 
     /**
-     * @param {string} port
+     * Binds to `address` and resolves with the port actually bound, so a
+     * port of `0` lets the OS pick a free one.
+     *
+     * @param {string} address
      * @param {grpc.ServerCredentials} creds
-     * @returns {Promise<this>}
+     * @returns {Promise<number>}
      */
-    listen(port, creds = grpc.ServerCredentials.createInsecure()) {
+    listen(address, creds = grpc.ServerCredentials.createInsecure()) {
         return new Promise((resolve, reject) =>
-            this.server.bindAsync(port, creds, (error) => {
+            this.server.bindAsync(address, creds, (error, port) => {
                 if (error != null) {
                     reject(error);
                     return;
                 }
 
                 this.server.start();
-                resolve(this);
+                resolve(port);
             }),
         );
     }
@@ -369,14 +372,9 @@ class GrpcServers {
         this._servers = [];
 
         /** @type {string[]} */
-        this._addresses = [];
-
-        /** @type {string[]} */
         this._nodeAccountIds = [];
 
         this._nodeIndex = 0;
-
-        this.GRPC_PORT_OFFSET_MULTIPLIER = 30;
     }
 
     /**
@@ -384,33 +382,15 @@ class GrpcServers {
      * @returns {this}
      */
     addServer(responses) {
-        const port = this.getNextGrpcPort();
-        const address = `0.0.0.0:${port}`;
         const nodeAccountId = `0.0.${3 + this._nodeIndex}`;
         const server = new GrpcServer(PROTOS).addResponses(responses);
 
         this._servers.push(server);
-        this._addresses.push(address);
         this._nodeAccountIds.push(nodeAccountId);
 
         this._nodeIndex += 1;
 
         return this;
-    }
-
-    /**
-     * @returns {number}
-     */
-    getNextGrpcPortOffset() {
-        const vitestWorkerId = process.env.VITEST_WORKER_ID || 0;
-
-        return (
-            vitestWorkerId * this.GRPC_PORT_OFFSET_MULTIPLIER + this._nodeIndex
-        );
-    }
-
-    getNextGrpcPort() {
-        return 50213 + this.getNextGrpcPortOffset();
     }
 
     /**
@@ -420,11 +400,10 @@ class GrpcServers {
         const network = {};
 
         for (let i = 0; i < this._servers.length; i++) {
-            const server = this._servers[i];
-            const address = this._addresses[i];
-            network[address] = this._nodeAccountIds[i];
-
-            await server.listen(address);
+            // Port 0 lets the OS pick a free port, so servers from test files
+            // running at the same time can never collide.
+            const port = await this._servers[i].listen("0.0.0.0:0");
+            network[`0.0.0.0:${port}`] = this._nodeAccountIds[i];
         }
 
         return new Client({ network, scheduleNetworkUpdate: false })
