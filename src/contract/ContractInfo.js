@@ -19,7 +19,7 @@ const { proto } = HieroProto;
  */
 
 /**
- * Response when the client sends the node CryptoGetInfoQuery.
+ * Response when the client sends the node ContractInfoQuery.
  */
 export default class ContractInfo {
     /**
@@ -94,7 +94,7 @@ export default class ContractInfo {
         this.autoRenewPeriod = props.autoRenewPeriod;
 
         /**
-         * ID of the an account to charge for auto-renewal of this contract. If not set, or set
+         * ID of an account to charge for auto-renewal of this contract. If not set, or set
          * to an account with zero hbar balance, the contract's own hbar balance will be used
          * to cover auto-renewal fees.
          *
@@ -151,7 +151,7 @@ export default class ContractInfo {
         this.ledgerId = props.ledgerId;
 
         /**
-         * Staking metadata for this account.
+         * Staking metadata for this contract.
          */
         this.stakingInfo = props.stakingInfo;
 
