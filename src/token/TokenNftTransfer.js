@@ -36,7 +36,7 @@ export default class TokenNftTransfer {
      */
     constructor(props) {
         /**
-         * The Token ID that sends or receives cryptocurrency.
+         * The ID of the token the NFT belongs to.
          */
         this.tokenId =
             props.tokenId instanceof TokenId
@@ -44,7 +44,7 @@ export default class TokenNftTransfer {
                 : TokenId.fromString(props.tokenId);
 
         /**
-         * The Account ID that sends or receives cryptocurrency.
+         * The account ID that sends the NFT.
          */
         this.senderAccountId =
             props.senderAccountId instanceof AccountId
@@ -52,7 +52,7 @@ export default class TokenNftTransfer {
                 : AccountId.fromString(props.senderAccountId);
 
         /**
-         * The Account ID that sends or receives cryptocurrency.
+         * The account ID that receives the NFT.
          */
         this.receiverAccountId =
             props.receiverAccountId instanceof AccountId

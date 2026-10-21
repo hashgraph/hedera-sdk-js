@@ -291,8 +291,8 @@ export default class TransactionRecord {
         this.evmAddress = props.evmAddress;
 
         /**
-         * The new default EVM address of the account created by this transaction.
-         * This field is populated only when the EVM address is not specified in the related transaction body.
+         * The pending token airdrops created by this transaction.
+         * Each one is a transfer that the recipient must claim before it completes.
          *
          * @readonly
          */
