@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   The `MaxAttemptsOrTimeoutError` thrown when a request runs past its request timeout now names the last error an attempt failed with, as the max attempts error already does, for example `timeout exceeded with last error being: GrpcServiceError: gRPC service failed with: Status: TIMEOUT, Code: 17`. The message stays `timeout exceeded` when no attempt failed, so code that compares the message to `"timeout exceeded"` should check that it starts with it instead. [#4515](https://github.com/hiero-ledger/hiero-sdk-js/issues/4515) [#4536](https://github.com/hiero-ledger/hiero-sdk-js/pull/4536)
 -   The published `@hiero-ledger/proto` package no longer contains `src/proto.d.ts` and `src/index.d.ts`, which are copies of the `lib/` type files that `types` points at, or the `src/proto/*.proto` sources, which nothing loads at runtime. The `files` field now lists only `lib/` and the `src/*.js` browser entry files, so the package goes from 15.4 MB and 194 files to 10.8 MB and 7 files unpacked, and its size budget is lowered to 15 MB and 20 files. Applies from `@hiero-ledger/proto` 2.32.1. [#4527](https://github.com/hiero-ledger/hiero-sdk-js/issues/4527)
 
+### Fixed
+
+-   `TransactionId.fromString()` now throws an `Error` that names the input and the expected `{account}@{seconds}.{nanos}[?scheduled][/{nonce}]` format when the string is malformed, instead of a `TypeError` or silently dropping or misreading a part (extra parts, a non-numeric or negative timestamp, a non-numeric or negative nonce). Valid strings parse as before. [#4552](https://github.com/hiero-ledger/hiero-sdk-js/issues/4552)
+
 # v2.90.1
 
 ### Fixed
