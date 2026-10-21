@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   `TransactionId.fromString()` now throws an `Error` that names the input and the expected `{account}@{seconds}.{nanos}[?scheduled][/{nonce}]` format when the string is malformed, instead of a `TypeError` or silently dropping or misreading a part (extra parts, a non-numeric or negative timestamp, a non-numeric or negative nonce). Valid strings parse as before. [#4552](https://github.com/hiero-ledger/hiero-sdk-js/issues/4552)
+-   `clearAccountMemo()`, `clearFileMemo()`, `clearContractMemo()` and `clearTokenMemo()` now clear the memo on the network. They used to reset the field to `null`, so the memo was left out of the transaction and the old memo stayed. They now send an empty memo, the memo getters return `""` after a clear, and `fromBytes()` keeps an explicitly empty memo instead of turning it into `null`. [#4556](https://github.com/hiero-ledger/hiero-sdk-js/issues/4556)
 
 # v2.90.1
 

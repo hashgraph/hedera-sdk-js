@@ -859,4 +859,33 @@ describe("ContractUpdateTransaction", function () {
             });
         });
     });
+
+    describe("clearContractMemo", function () {
+        it("should send an empty memo wrapper when the memo is cleared", function () {
+            const tx = new ContractUpdateTransaction()
+                .setContractMemo("old memo")
+                .clearContractMemo();
+
+            expect(tx.contractMemo).to.equal("");
+            expect(tx._makeTransactionData().memoWrapper).to.deep.equal({
+                value: "",
+            });
+        });
+
+        it("should keep an explicitly empty memo through a bytes round trip", function () {
+            const tx = new ContractUpdateTransaction().clearContractMemo();
+            const tx2 = ContractUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx2.contractMemo).to.equal("");
+            expect(tx2._makeTransactionData().memoWrapper).to.deep.equal({
+                value: "",
+            });
+        });
+
+        it("should not send a memo wrapper when the memo was never set", function () {
+            const tx = new ContractUpdateTransaction();
+
+            expect(tx._makeTransactionData().memoWrapper).to.be.null;
+        });
+    });
 });

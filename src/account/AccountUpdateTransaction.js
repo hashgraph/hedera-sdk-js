@@ -255,11 +255,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? Timestamp._fromProtobuf(update.expirationTime)
                         : undefined,
                 accountMemo:
-                    update.memo != null
-                        ? Object.hasOwn(update.memo, "value")
-                            ? update.memo.value
-                            : undefined
-                        : undefined,
+                    update.memo != null ? update.memo.value ?? "" : undefined,
                 maxAutomaticTokenAssociations:
                     update.maxAutomaticTokenAssociations != null &&
                     update.maxAutomaticTokenAssociations.value != null &&
@@ -435,7 +431,7 @@ export default class AccountUpdateTransaction extends Transaction {
      */
     clearAccountMemo() {
         this._requireNotFrozen();
-        this._accountMemo = null;
+        this._accountMemo = "";
 
         return this;
     }

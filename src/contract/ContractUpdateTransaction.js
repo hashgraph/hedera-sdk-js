@@ -235,12 +235,8 @@ export default class ContractUpdateTransaction extends Transaction {
         }
 
         let contractMemo = undefined;
-        if (
-            update.memoWrapper != null &&
-            Object.hasOwn(update.memoWrapper, "value") &&
-            update.memoWrapper.value != null
-        ) {
-            contractMemo = update.memoWrapper.value;
+        if (update.memoWrapper != null) {
+            contractMemo = update.memoWrapper.value ?? "";
         }
 
         let maxAutomaticTokenAssociations = undefined;
@@ -466,7 +462,7 @@ export default class ContractUpdateTransaction extends Transaction {
      */
     clearContractMemo() {
         this._requireNotFrozen();
-        this._contractMemo = null;
+        this._contractMemo = "";
 
         return this;
     }
