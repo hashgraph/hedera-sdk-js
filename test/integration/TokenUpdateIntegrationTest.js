@@ -120,6 +120,27 @@ describe("TokenUpdate", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
+    it("should clear the token memo", async function () {
+        const token = await createFungibleToken(env.client);
+
+        let info = await new TokenInfoQuery()
+            .setTokenId(token)
+            .execute(env.client);
+
+        expect(info.tokenMemo).to.eql("asdf");
+
+        await (
+            await new TokenUpdateTransaction()
+                .setTokenId(token)
+                .clearTokenMemo()
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new TokenInfoQuery().setTokenId(token).execute(env.client);
+
+        expect(info.tokenMemo).to.eql("");
+    });
+
     it("should be able to update treasury", async function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;

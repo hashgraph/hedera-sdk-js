@@ -120,6 +120,65 @@ describe("ContractUpdate", function () {
         ).getReceipt(env.client);
     });
 
+    it("should clear the contract memo", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        let response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents(smartContractBytecode)
+            .execute(env.client);
+
+        const file = (await response.getReceipt(env.client)).fileId;
+
+        response = await new ContractCreateTransaction()
+            .setAdminKey(operatorKey)
+            .setGas(300_000)
+            .setConstructorParameters(
+                new ContractFunctionParameters().addString("Hello from Hiero."),
+            )
+            .setBytecodeFileId(file)
+            .setContractMemo("[e2e::ContractCreateTransaction]")
+            .execute(env.client);
+
+        const contract = (await response.getReceipt(env.client)).contractId;
+
+        let info = await new ContractInfoQuery()
+            .setContractId(contract)
+            .setQueryPayment(new Hbar(1))
+            .execute(env.client);
+
+        expect(info.contractMemo).to.be.equal(
+            "[e2e::ContractCreateTransaction]",
+        );
+
+        await (
+            await new ContractUpdateTransaction()
+                .setContractId(contract)
+                .clearContractMemo()
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new ContractInfoQuery()
+            .setContractId(contract)
+            .setQueryPayment(new Hbar(5))
+            .execute(env.client);
+
+        expect(info.contractMemo).to.be.equal("");
+
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .execute(env.client)
+        ).getReceipt(env.client);
+    });
+
     it("should error when contract ID is not set", async function () {
         const operatorKey = env.operatorKey.publicKey;
 

@@ -83,6 +83,44 @@ describe("AccountUpdate", function () {
         });
     });
 
+    it("should clear the account memo", async function () {
+        const { accountId, newKey: key } = await createAccount(
+            env.client,
+            (transaction) => {
+                transaction.setAccountMemo("[e2e::AccountCreateTransaction]");
+            },
+        );
+
+        let info = await new AccountInfoQuery()
+            .setAccountId(accountId)
+            .execute(env.client);
+
+        expect(info.accountMemo).to.be.equal("[e2e::AccountCreateTransaction]");
+
+        await (
+            await (
+                await new AccountUpdateTransaction()
+                    .setAccountId(accountId)
+                    .clearAccountMemo()
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new AccountInfoQuery()
+            .setAccountId(accountId)
+            .execute(env.client);
+
+        expect(info.accountMemo).to.be.equal("");
+
+        await deleteAccount(env.client, key, (transaction) => {
+            transaction
+                .setAccountId(accountId)
+                .setTransferAccountId(env.operatorId)
+                .setTransactionId(TransactionId.generate(accountId));
+        });
+    });
+
     // Hook-related tests
 
     describe.skip("AccountUpdate with Hooks", function () {

@@ -75,6 +75,45 @@ describe("FileUpdate", function () {
         ).getReceipt(env.client);
     });
 
+    it("should clear the file memo", async function () {
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setContents("[e2e::FileCreateTransaction]")
+            .setFileMemo("[e2e::FileCreateTransaction]")
+            .execute(env.client);
+
+        const file = (await response.getReceipt(env.client)).fileId;
+
+        let info = await new FileInfoQuery()
+            .setFileId(file)
+            .setQueryPayment(new Hbar(22))
+            .execute(env.client);
+
+        expect(info.fileMemo).to.be.equal("[e2e::FileCreateTransaction]");
+
+        await (
+            await new FileUpdateTransaction()
+                .setFileId(file)
+                .clearFileMemo()
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new FileInfoQuery()
+            .setFileId(file)
+            .setQueryPayment(new Hbar(22))
+            .execute(env.client);
+
+        expect(info.fileMemo).to.be.equal("");
+
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .execute(env.client)
+        ).getReceipt(env.client);
+    });
+
     it("should error when file ID is not set", async function () {
         let err = false;
 
