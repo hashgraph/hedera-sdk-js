@@ -68,7 +68,7 @@
         "@types/node": "26.1.1",
         "@typescript-eslint/eslint-plugin": "8.71.1",
         "@typescript-eslint/parser": "8.71.1",
-        "@vitest/browser": "5.0.4",
+        "@vitest/browser": "5.0.5",
         "@vitest/browser-playwright": "5.0.4",
         "@vitest/coverage-istanbul": "5.0.4",
         "@vitest/coverage-v8": "5.0.4",
