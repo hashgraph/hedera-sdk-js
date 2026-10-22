@@ -480,7 +480,7 @@ export function toStringWithChecksum(string, client) {
 
     if (client._network._ledgerId == null) {
         throw new Error(
-            "cannot calculate checksum with a client that does not contain a recognzied ledger ID",
+            "cannot calculate checksum with a client that does not contain a recognized ledger ID",
         );
     }
 

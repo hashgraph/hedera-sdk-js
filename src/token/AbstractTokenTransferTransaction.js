@@ -342,7 +342,7 @@ export default class AbstractTokenTransferTransaction extends Transaction {
                     tokenTransfer.expectedDecimals != null &&
                     tokenTransfer.expectedDecimals !== decimals
                 ) {
-                    throw new Error("expected decimals mis-match");
+                    throw new Error("expected decimals mismatch");
                 } else {
                     tokenTransfer.expectedDecimals = decimals;
                 }
