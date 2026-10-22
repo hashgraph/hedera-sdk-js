@@ -231,4 +231,105 @@ describe("TransactionId", function () {
             secondNonceToSet.getTime(),
         );
     });
+
+    describe("fromString() validation", function () {
+        const malformed = [
+            "0.0.3",
+            "0.0.3@1",
+            "0.0.3@1.2?foo",
+            "0.0.3@1.2/abc",
+            "0.0.3@1.2/5/6",
+            "0.0.3@1.2.3",
+            "0.0.3@abc.def",
+            "0.0.3@-1.2",
+            "0.0.3@1.-2",
+            "0.0.3@1.2/-1",
+            "",
+            "@1.2",
+            "0.0.3@@1.2",
+            "0.0.3@.2",
+            "0.0.3@1.",
+            "0.0.3@1.1234567890",
+            "0.0.3@1.2?scheduled/",
+            "0.0.3@1.2/",
+            "0.0.3@1.2/?scheduled",
+            "0.0.3@1.2/5?scheduled",
+            "0.0.3@1.2?scheduled?scheduled",
+            "0.0.3@ 1.2",
+            "0.0.3@1.2 ",
+            "0.0.3@1.2\n",
+            "0.0.3@1.2.",
+            "0.0.3@1e3.2",
+            "0.0.3@+1.2",
+        ];
+
+        for (const input of malformed) {
+            it(`should reject ${JSON.stringify(input)}`, function () {
+                let error;
+                try {
+                    TransactionId.fromString(input);
+                } catch (err) {
+                    error = err;
+                }
+
+                expect(error).to.be.instanceOf(Error);
+                expect(error).to.not.be.instanceOf(TypeError);
+                expect(error.message).to.include(`"${input}"`);
+                expect(error.message).to.include("{account}@{seconds}.{nanos}");
+            });
+        }
+
+        it("should reject an invalid account ID and name the input", function () {
+            expect(() => TransactionId.fromString("abc@1.2")).to.throw(
+                Error,
+                '"abc@1.2"',
+            );
+            expect(() => TransactionId.fromString("0.0.3.4@1.2")).to.throw(
+                Error,
+                '"0.0.3.4@1.2"',
+            );
+        });
+
+        it("should parse a checksummed account", function () {
+            expect(
+                TransactionId.fromString("0.0.3-tzfmz@1.2").toString(),
+            ).to.equal("0.0.3@1.000000002");
+        });
+
+        it("should parse zero-padded nanos", function () {
+            const transactionId = TransactionId.fromString("0.0.3@1.000000002");
+
+            expect(transactionId.validStart.nanos.toString()).to.equal("2");
+            expect(transactionId.toString()).to.equal("0.0.3@1.000000002");
+        });
+
+        it("should accept nine-digit nanos and zero seconds", function () {
+            expect(
+                TransactionId.fromString("0.0.3@0.999999999").toString(),
+            ).to.equal("0.0.3@0.999999999");
+        });
+
+        it("should round trip toString() output", function () {
+            const strings = [
+                "0.0.3@1.000000002",
+                "0.0.3@1.000000002?scheduled",
+                "0.0.3@1.000000002/5",
+                "0.0.3@1.000000002?scheduled/5",
+                "1.2.3@1700000000.123456789",
+            ];
+
+            for (const string of strings) {
+                expect(TransactionId.fromString(string).toString()).to.equal(
+                    string,
+                );
+            }
+        });
+
+        it("should turn a zero nonce into no nonce", function () {
+            const transactionId = TransactionId.fromString("0.0.3@1.2/0");
+
+            expect(transactionId.nonce).to.be.null;
+            expect(transactionId.toString()).to.equal("0.0.3@1.000000002");
+        });
+    });
 });

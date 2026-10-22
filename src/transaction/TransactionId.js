@@ -14,6 +14,9 @@ import CACHE from "../Cache.js";
  * @typedef {import("./TransactionRecord.js").default} TransactionRecord
  */
 
+const TRANSACTION_ID_PATTERN =
+    /^([^@]+)@(\d+)\.(\d{1,9})(\?scheduled)?(?:\/(\d+))?$/;
+
 /**
  * The client-generated ID for a transaction.
  *
@@ -96,35 +99,37 @@ export default class TransactionId {
     }
 
     /**
+     * Parses `{account}@{seconds}.{nanos}[?scheduled][/{nonce}]`.
+     *
      * @param {string} wholeId
      * @returns {TransactionId}
+     * @throws {Error} if the string does not match the format above
      */
     static fromString(wholeId) {
-        let account, seconds, nanos, isScheduled, nonce;
-        let rest;
-        // 1.1.1@5.4?scheduled/117
+        const match = TRANSACTION_ID_PATTERN.exec(wholeId);
 
-        [account, rest] = wholeId.split("@");
-        [seconds, rest] = rest.split(".");
-        if (rest.includes("?")) {
-            [nanos, rest] = rest.split("?scheduled");
-            isScheduled = true;
-            if (rest.includes("/")) {
-                nonce = rest.replace("/", "");
-            } else {
-                nonce = null;
-            }
-        } else if (rest.includes("/")) {
-            [nanos, nonce] = rest.split("/");
-            isScheduled = false;
-        } else {
-            nanos = rest;
+        if (match == null) {
+            throw new Error(
+                `invalid transaction ID "${wholeId}", expected {account}@{seconds}.{nanos}[?scheduled][/{nonce}]`,
+            );
+        }
+
+        const [, account, seconds, nanos, scheduled, nonce] = match;
+
+        let accountId;
+        try {
+            accountId = AccountId.fromString(account);
+        } catch (error) {
+            throw new Error(
+                `invalid transaction ID "${wholeId}": invalid account ID "${account}"`,
+                { cause: error },
+            );
         }
 
         return new TransactionId(
-            AccountId.fromString(account),
-            new Timestamp(Long.fromValue(seconds), Long.fromValue(nanos)),
-            isScheduled,
+            accountId,
+            new Timestamp(Long.fromString(seconds), Long.fromString(nanos)),
+            scheduled != null,
             nonce != null ? Long.fromString(nonce) : null,
         );
     }
