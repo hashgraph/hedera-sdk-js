@@ -43,7 +43,7 @@ export default defineConfig({
             exclude: [
                 "src/contract/ContractStateChange.js",
                 "src/contract/StorageChange.js",
-                "src/token/TokenNftsUpdateTransaction.js",
+
                 "src/transaction/NodeAccountIdSignatureMapLegacy.js",
                 "src/transaction/SignatureMapLegacy.js",
             ],
