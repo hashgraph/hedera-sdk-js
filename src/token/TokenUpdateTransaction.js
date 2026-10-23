@@ -312,11 +312,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         ? Duration._fromProtobuf(update.autoRenewPeriod)
                         : undefined,
                 tokenMemo:
-                    update.memo != null
-                        ? Object.hasOwn(update.memo, "value")
-                            ? update.memo.value
-                            : undefined
-                        : undefined,
+                    update.memo != null ? update.memo.value ?? "" : undefined,
                 feeScheduleKey:
                     update.feeScheduleKey != null
                         ? Key._fromProtobufKey(update.feeScheduleKey)
@@ -701,7 +697,7 @@ export default class TokenUpdateTransaction extends Transaction {
      */
     clearTokenMemo() {
         this._requireNotFrozen();
-        this._tokenMemo = null;
+        this._tokenMemo = "";
 
         return this;
     }

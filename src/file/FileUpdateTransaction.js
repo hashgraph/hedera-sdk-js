@@ -88,7 +88,7 @@ export default class FileUpdateTransaction extends Transaction {
             this.setContents(props.contents);
         }
 
-        if (props.fileMemo && props.fileMemo != null) {
+        if (props.fileMemo != null) {
             this.setFileMemo(props.fileMemo);
         }
     }
@@ -135,11 +135,7 @@ export default class FileUpdateTransaction extends Transaction {
                         : undefined,
                 contents: update.contents != null ? update.contents : undefined,
                 fileMemo:
-                    update.memo != null
-                        ? Object.hasOwn(update.memo, "value")
-                            ? update.memo.value
-                            : undefined
-                        : undefined,
+                    update.memo != null ? update.memo.value ?? "" : undefined,
             }),
             transactions,
             signedTransactions,
@@ -299,7 +295,7 @@ export default class FileUpdateTransaction extends Transaction {
      */
     clearFileMemo() {
         this._requireNotFrozen();
-        this._fileMemo = null;
+        this._fileMemo = "";
 
         return this;
     }

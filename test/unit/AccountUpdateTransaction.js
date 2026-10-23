@@ -563,4 +563,33 @@ describe("AccountUpdateTransaction", function () {
             });
         });
     });
+
+    describe("clearAccountMemo", function () {
+        it("should send an empty memo wrapper when the memo is cleared", function () {
+            const tx = new AccountUpdateTransaction()
+                .setAccountMemo("old memo")
+                .clearAccountMemo();
+
+            expect(tx.accountMemo).to.equal("");
+            expect(tx._makeTransactionData().memo).to.deep.equal({
+                value: "",
+            });
+        });
+
+        it("should keep an explicitly empty memo through a bytes round trip", function () {
+            const tx = new AccountUpdateTransaction().clearAccountMemo();
+            const tx2 = AccountUpdateTransaction.fromBytes(tx.toBytes());
+
+            expect(tx2.accountMemo).to.equal("");
+            expect(tx2._makeTransactionData().memo).to.deep.equal({
+                value: "",
+            });
+        });
+
+        it("should not send a memo wrapper when the memo was never set", function () {
+            const tx = new AccountUpdateTransaction();
+
+            expect(tx._makeTransactionData().memo).to.be.null;
+        });
+    });
 });
