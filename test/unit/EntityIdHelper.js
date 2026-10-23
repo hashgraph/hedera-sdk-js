@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import Long from "long";
 import * as EntityIdHelper from "../../src/EntityIdHelper.js";
 import { longFromOtherCopy } from "./utils/foreignLong.js";
+import LedgerId from "../../src/LedgerId.js";
 
 describe("EntityIdHelper", function () {
     it("should return hex encoded solidity address using toSolidityAddress", function () {
@@ -113,6 +114,41 @@ describe("EntityIdHelper", function () {
             expect(shardLong.toString()).to.equal("9007199254740993");
             expect(realmLong.toString()).to.equal("9007199254740993");
             expect(num.toString()).to.equal("10");
+        });
+    });
+    describe("_parseAddress()", function () {
+        const ledgerId = LedgerId.MAINNET._ledgerId;
+
+        it("should return status 2 for an address without checksum", function () {
+            const result = EntityIdHelper._parseAddress(ledgerId, "0.0.123");
+            expect(result.status).to.equal(2);
+            expect(result.noChecksumFormat).to.equal("0.0.123");
+            expect(result.withChecksumFormat).to.equal("0.0.123-vfmkw");
+        });
+
+        it("should return status 3 for an address with a correct checksum", function () {
+            const result = EntityIdHelper._parseAddress(
+                ledgerId,
+                "0.0.123-vfmkw",
+            );
+            expect(result.status).to.equal(3);
+        });
+
+        it("should return status 1 for an address with a wrong checksum", function () {
+            const result = EntityIdHelper._parseAddress(
+                ledgerId,
+                "0.0.123-abcde",
+            );
+            expect(result.status).to.equal(1);
+            expect(result.correctChecksum).to.equal("vfmkw");
+        });
+
+        it("should return status 0 for malformed input", function () {
+            for (const text of ["0.0.12ab34", "0.0", "abc", "0.0.123-ABCDE"]) {
+                expect(
+                    EntityIdHelper._parseAddress(ledgerId, text).status,
+                ).to.equal(0);
+            }
         });
     });
 });

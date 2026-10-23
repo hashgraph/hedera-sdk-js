@@ -66,15 +66,11 @@ export default class AccountId {
         } else {
             const result = EntityIdHelper.fromStringSplitter(text);
 
-            if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
-                throw new Error("invalid format for entity ID");
-            }
-
             if (result.shard != null) shard = Long.fromString(result.shard);
             if (result.realm != null) realm = Long.fromString(result.realm);
 
             if (result.numOrHex.length < 20) {
-                num = Long.fromString(result.numOrHex);
+                num = EntityIdHelper.parseEntityNum(result.numOrHex, text);
             } else if (result.numOrHex.length == 40) {
                 evmAddress = EvmAddress.fromString(result.numOrHex);
             } else {

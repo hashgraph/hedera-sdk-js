@@ -77,17 +77,16 @@ export default class ContractId extends Key {
     static fromString(text) {
         const result = EntityIdHelper.fromStringSplitter(text);
 
-        if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
-            throw new Error("invalid format for entity ID");
-        }
-
         const shard =
             result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
         const realm =
             result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
         const [num, evmAddress] =
             result.numOrHex.length < 40
-                ? [Long.fromString(result.numOrHex), undefined]
+                ? [
+                      EntityIdHelper.parseEntityNum(result.numOrHex, text),
+                      undefined,
+                  ]
                 : [Long.ZERO, hex.decode(result.numOrHex)];
 
         return new ContractId(shard, realm, num, evmAddress);

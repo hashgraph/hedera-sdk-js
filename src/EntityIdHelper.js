@@ -47,7 +47,7 @@ import EvmAddress from "./EvmAddress.js";
  */
 
 const regex =
-    /"^(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))(?:-([a-z]{5}))?$/;
+    /^(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))\.(0|(?:[1-9]\d*))(?:-([a-z]{5}))?$/;
 
 /**
  * This regex supports entity IDs
@@ -193,24 +193,33 @@ export function fromStringSplitter(text) {
 }
 
 /**
+ * Parse the entity number part of an entity ID string. The part must
+ * consist of decimal digits only, otherwise `Long.fromString()` would
+ * silently drop everything from the first non-digit on.
+ *
+ * @param {string} num
+ * @param {string} text
+ * @returns {Long}
+ */
+export function parseEntityNum(num, text) {
+    if (!/^\d+$/.test(num)) {
+        throw new Error(`failed to parse entity id: ${text}`);
+    }
+
+    return Long.fromString(num);
+}
+
+/**
  * @param {string} text
  * @returns {IEntityIdResultWithChecksum}
  */
 export function fromString(text) {
     const result = fromStringSplitter(text);
 
-    if (
-        Number.isNaN(result.shard) ||
-        Number.isNaN(result.realm) ||
-        Number.isNaN(result.numOrHex)
-    ) {
-        throw new Error("invalid format for entity ID");
-    }
-
     return {
         shard: result.shard != null ? Long.fromString(result.shard) : Long.ZERO,
         realm: result.realm != null ? Long.fromString(result.realm) : Long.ZERO,
-        num: Long.fromString(result.numOrHex),
+        num: parseEntityNum(result.numOrHex, text),
         checksum: result.checksum,
     };
 }

@@ -1,4 +1,4 @@
-import { ContractId } from "../../src/index.js";
+import { ContractId, DelegateContractId } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Long from "long";
 
@@ -187,6 +187,43 @@ describe("ContractId", function () {
 
             // Then the resulting EVM address is the evm address
             expect(result).to.equal(evmAddress);
+        });
+    });
+
+    describe("fromString()", function () {
+        it("should parse valid entity IDs", function () {
+            expect(ContractId.fromString("0.0.123").toString()).to.equal(
+                "0.0.123",
+            );
+            expect(ContractId.fromString("123").toString()).to.equal("0.0.123");
+            expect(ContractId.fromString("1.2.3").toString()).to.equal("1.2.3");
+            expect(ContractId.fromString("0.0.0123").toString()).to.equal(
+                "0.0.123",
+            );
+            expect(ContractId.fromString("0.0.123-vfmkw").toString()).to.equal(
+                "0.0.123",
+            );
+        });
+
+        it("should throw when the entity number contains letters", function () {
+            for (const text of ["0.0.12ab34", "0.0.ff", "0.0.5a", "0.0.1e3"]) {
+                expect(() => ContractId.fromString(text)).to.throw(
+                    `failed to parse entity id: ${text}`,
+                );
+            }
+        });
+
+        it("should throw for DelegateContractId when the entity number contains letters", function () {
+            expect(() => DelegateContractId.fromString("0.0.12ab34")).to.throw(
+                "failed to parse entity id: 0.0.12ab34",
+            );
+        });
+
+        it("should still parse a 40 character EVM address", function () {
+            const evm = "0011223344556677889900112233445577889900";
+            expect(ContractId.fromString(`0.0.${evm}`).toString()).to.equal(
+                `0.0.${evm}`,
+            );
         });
     });
 });
