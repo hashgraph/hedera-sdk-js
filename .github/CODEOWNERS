@@ -9,7 +9,9 @@
 
 # Protection Rules for Github Configuration Files and Actions Workflows
 /.github/                                       @hiero-ledger/github-maintainers
-/.github/workflows/                             @hiero-ledger/github-maintainers
+/.github/dependabot.yaml                        @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-maintainers
+/.github/workflows/                             @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-maintainers
+/.github/scripts/                               @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-maintainers
 
 # Codacy Tool Configurations
 /config/                                        @hiero-ledger/hiero-sdk-js-maintainers @hiero-ledger/github-maintainers
