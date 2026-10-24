@@ -276,7 +276,8 @@ export default class TokenNftInfoQuery extends Query {
 
     /**
      * @override
-     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
+     * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
      * @returns {Promise<Hbar>}
      */
     async getCost(client) {
