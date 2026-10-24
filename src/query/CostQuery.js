@@ -61,7 +61,8 @@ export default class CostQuery extends QueryBase {
     /**
      * @abstract
      * @protected
-     * @param {import("../client/Client.js").default<*, *>} client
+     * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
+     * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
